@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.9 2004/12/03 19:13:29 bob Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.10 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/03 19:13:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module module_name
  */
 
@@ -61,9 +61,9 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
         return ObjectEntities.TRANSPATHTYPE_ENTITY;
     }
     
-    protected String getColumns() {
+    protected String getColumns(int mode) {
         if (columns == null){
-            columns  = super.getColumns() + COMMA
+            columns  = super.getColumns(mode) + COMMA
                 + COLUMN_CODENAME + COMMA
                 + COLUMN_DESCRIPTION + COMMA
                 + COLUMN_NAME;                
@@ -71,9 +71,9 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
         return columns;
     }
     
-    protected String getUpdateMultiplySQLValues() {
+    protected String getUpdateMultiplySQLValues(int mode) {
         if (updateMultiplySQLValues == null){
-            updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+            updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
                 + QUESTION + COMMA
                 + QUESTION + COMMA
                 + QUESTION;
@@ -93,12 +93,12 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
     }
     
     protected int setEntityForPreparedStatement(StorableObject storableObject,
-            PreparedStatement preparedStatement) throws IllegalDataException,
+            PreparedStatement preparedStatement, int mode) throws IllegalDataException,
             UpdateObjectException {
         TransmissionPathType transmissionPathType = fromStorableObject(storableObject);
         int i;
         try {
-            i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+            i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
             preparedStatement.setString( ++i, transmissionPathType.getCodename());
             preparedStatement.setString( ++i, transmissionPathType.getDescription());
             preparedStatement.setString( ++i, transmissionPathType.getName());

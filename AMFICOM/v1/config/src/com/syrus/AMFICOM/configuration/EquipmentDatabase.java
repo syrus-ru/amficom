@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.49 2004/12/03 19:03:51 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.50 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/12/03 19:03:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.50 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -77,9 +77,9 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		return ObjectEntities.EQUIPMENT_ENTITY;
 	}
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
@@ -89,9 +89,9 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -114,12 +114,12 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement) throws IllegalDataException,
+			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
 		Equipment equipment = fromStorableObject(storableObject);
 		int i;
 		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getDomainId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getType().getId());
 			preparedStatement.setString( ++i, equipment.getName());

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.21 2004/12/03 19:13:29 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.22 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/12/03 19:13:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -51,9 +51,9 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		return ObjectEntities.EQUIPMENTTYPE_ENTITY;
 	}
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
@@ -61,9 +61,9 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	return updateMultiplySQLValues;
 	}
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION;
@@ -96,12 +96,12 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement) throws IllegalDataException,
+			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
 		EquipmentType equipmentType = fromStorableObject(storableObject);
 		int i;
 		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			preparedStatement.setString( ++i, equipmentType.getCodename());
 			preparedStatement.setString( ++i, equipmentType.getDescription());
 			preparedStatement.setString( ++i, equipmentType.getName());
@@ -141,24 +141,34 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		EquipmentType equipmentType = this.fromStorableObject(storableObject);
-		super.insertEntity(equipmentType);		
+		super.insertEntity(equipmentType);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        characteristicDatabase.insert(equipmentType.getCharacteristics());
 	}
 
 	public void insert(List storableObjects) throws IllegalDataException,
 			CreateObjectException {
 		super.insertEntities(storableObjects);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+            Domain domain = (Domain) it.next();
+            characteristicDatabase.insert(domain.getCharacteristics()); 
+        }
 	}
 	
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        switch (updateKind) {
 		case UPDATE_FORCE:
 			super.checkAndUpdateEntity(storableObject, true);
-			break;
+			characteristicDatabase.updateCharacteristics(storableObject);
+            break;
 		case UPDATE_CHECK: 					
 		default:
 			super.checkAndUpdateEntity(storableObject, false);
-		break;
+            characteristicDatabase.updateCharacteristics(storableObject);
+		    break;
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.30 2004/12/02 09:30:14 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.31 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/02 09:30:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -70,9 +70,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		return ObjectEntities.ME_ENTITY;
 	}
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-    		columns = super.getColumns() + COMMA
+    		columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_MEASUREMENT_PORT_ID + COMMA
@@ -82,9 +82,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA 
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
@@ -107,12 +107,12 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement) throws IllegalDataException,
+			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
 		MonitoredElement monitoredElement = fromStorableObject(storableObject);
 		int i;
 		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getDomainId());
 			preparedStatement.setString( ++i, monitoredElement.getName());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getMeasurementPortId());
@@ -264,7 +264,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
                 else {
                     sql.append(CLOSE_BRACKET);
                     sql.append(SQL_OR);
-                    sql.append(COLUMN_ID);
+                    sql.append(LINK_COLUMN_MONITORED_ELEMENT_ID);
                     sql.append(SQL_IN);
                     sql.append(OPEN_BRACKET);
                 }                   
@@ -350,7 +350,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
                 else {
                     sql.append(CLOSE_BRACKET);
                     sql.append(SQL_OR);
-                    sql.append(COLUMN_ID);
+                    sql.append(LINK_COLUMN_MONITORED_ELEMENT_ID);
                     sql.append(SQL_IN);
                     sql.append(OPEN_BRACKET);
                 }                   

@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.22 2004/11/19 13:24:33 bob Exp $
+ * $Id: DomainDatabase.java,v 1.23 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,9 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
@@ -32,8 +34,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/11/19 13:24:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -54,9 +56,9 @@ public class DomainDatabase extends StorableObjectDatabase {
 		return ObjectEntities.DOMAIN_ENTITY;
 	}
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION;
@@ -64,9 +66,9 @@ public class DomainDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
@@ -106,19 +108,19 @@ public class DomainDatabase extends StorableObjectDatabase {
 							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 							 domainId,
 							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
+							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));		
 		
-		return domain;
+        return domain;
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement) throws IllegalDataException,
+			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
 		Domain domain = fromStorableObject(storableObject);
 		Identifier domainId = domain.getDomainId();
 		int i;
 		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, domainId);
 			preparedStatement.setString( ++i, domain.getName());
 			preparedStatement.setString( ++i, domain.getDescription());
@@ -140,24 +142,34 @@ public class DomainDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Domain domain = this.fromStorableObject(storableObject);
-		super.insertEntity(domain);		
+		super.insertEntity(domain);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        characteristicDatabase.insert(domain.getCharacteristics());                
 	}
 
 	public void insert(List storableObjects) throws IllegalDataException,
 			CreateObjectException {
 		super.insertEntities(storableObjects);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			Domain domain = (Domain) it.next();
+            characteristicDatabase.insert(domain.getCharacteristics()); 
+        }
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) 
 			throws IllegalDataException, VersionCollisionException, 
 			UpdateObjectException {
-		switch (updateKind) {
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        switch (updateKind) {
 		case UPDATE_FORCE:
 			super.checkAndUpdateEntity(storableObject, true);
+            characteristicDatabase.updateCharacteristics(storableObject);            
 			break;
 		case UPDATE_CHECK: 					
 		default:
 			super.checkAndUpdateEntity(storableObject, false);
+            characteristicDatabase.updateCharacteristics(storableObject);
 			break;
 		}
 	}
@@ -165,13 +177,16 @@ public class DomainDatabase extends StorableObjectDatabase {
 	public void update(List storableObjects, int updateKind, Object arg)
 			throws IllegalDataException, VersionCollisionException,
 			UpdateObjectException {
-		switch (updateKind) {
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        switch (updateKind) {
 		case UPDATE_FORCE:
 			super.checkAndUpdateEntities(storableObjects, true);
+            characteristicDatabase.updateCharacteristics(storableObjects);
 			break;
 		case UPDATE_CHECK: 					
 		default:
 			super.checkAndUpdateEntities(storableObjects, false);
+            characteristicDatabase.updateCharacteristics(storableObjects);
 			break;
 		}
 	}
@@ -179,8 +194,20 @@ public class DomainDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids ,String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return super.retrieveByIdsOneQuery(null, condition);
-		return super.retrieveByIdsOneQuery(ids, condition);	
-		//return retriveByIdsPreparedStatement(ids);
+		
+        List retrivedDomains = super.retrieveByIdsOneQuery(ids, condition);
+        
+        if (retrivedDomains != null && !retrivedDomains.isEmpty()) {
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            Map storableObjectCharacteristics = characteristicDatabase.retrieveCharacteristicsByOneQuery(retrivedDomains, CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN);
+            for (Iterator iter = storableObjectCharacteristics.keySet().iterator(); iter.hasNext();) {
+				Domain domain = (Domain) iter.next();
+                domain.setCharacteristics((List)storableObjectCharacteristics.get(domain));				
+			}
+        }
+        return retrivedDomains;
+		
+        //return retriveByIdsPreparedStatement(ids);
 	}
 	
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {

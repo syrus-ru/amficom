@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.44 2004/12/03 19:13:29 bob Exp $
+ * $Id: KISDatabase.java,v 1.45 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/12/03 19:13:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -75,9 +75,9 @@ public class KISDatabase extends StorableObjectDatabase {
 		return ObjectEntities.KIS_ENTITY;
 	}
 
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null) {
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
@@ -89,9 +89,9 @@ public class KISDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -125,14 +125,14 @@ public class KISDatabase extends StorableObjectDatabase {
         kis.setCharacteristics(characteristicDatabase.retrieveCharacteristics(kis.getId(), CharacteristicSort.CHARACTERISTIC_SORT_KIS));
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		KIS kis = fromStorableObject(storableObject);
 		int i;
 		try {
 			Identifier equipmentId = kis.getEquipmentId();
 			Identifier mcmId = kis.getMCMId();
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kis.getDomainId());
 			preparedStatement.setString( ++i, kis.getName());
 			preparedStatement.setString( ++i, kis.getDescription());
@@ -250,7 +250,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(COLUMN_ID);
+					sql.append(MeasurementPortDatabase.COLUMN_KIS_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}                   
@@ -391,7 +391,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(COLUMN_ID);
+					sql.append(MeasurementPortDatabase.COLUMN_KIS_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}

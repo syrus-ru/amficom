@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.25 2004/12/03 19:13:29 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.26 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/03 19:13:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -62,9 +62,9 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		return ObjectEntities.MEASUREMENTPORT_ENTITY;
 	}
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-    		columns = super.getColumns() + COMMA
+    		columns = super.getColumns(mode) + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
@@ -74,9 +74,9 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		return columns; 
 	}
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -102,7 +102,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement) throws IllegalDataException,
+			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
 		MeasurementPort measurementPort = fromStorableObject(storableObject);
 		Identifier typeId = measurementPort.getType().getId();
@@ -110,7 +110,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		Identifier portId = measurementPort.getPortId();
 		int i;
 		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, typeId);
 			preparedStatement.setString( ++i, measurementPort.getName());
 			preparedStatement.setString( ++i, measurementPort.getDescription());

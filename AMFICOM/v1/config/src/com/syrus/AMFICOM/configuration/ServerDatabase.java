@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.31 2004/12/03 19:13:29 bob Exp $
+ * $Id: ServerDatabase.java,v 1.32 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/03 19:13:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -65,9 +65,9 @@ public class ServerDatabase extends StorableObjectDatabase {
 		return ObjectEntities.SERVER_ENTITY;
 	}
 	
-	protected String getColumns() {		
+	protected String getColumns(int mode) {		
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
@@ -76,9 +76,9 @@ public class ServerDatabase extends StorableObjectDatabase {
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -122,10 +122,10 @@ public class ServerDatabase extends StorableObjectDatabase {
 		return server;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 		throws IllegalDataException, UpdateObjectException {
 		Server server = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getDomainId());
 			preparedStatement.setString(++i, server.getName());

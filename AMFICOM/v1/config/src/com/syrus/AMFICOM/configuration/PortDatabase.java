@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.30 2004/12/03 19:13:29 bob Exp $
+ * $Id: PortDatabase.java,v 1.31 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/03 19:13:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
@@ -64,9 +64,9 @@ public class PortDatabase extends StorableObjectDatabase {
 		return ObjectEntities.PORT_ENTITY;
 	}
 	
-	protected String getColumns() {		
+	protected String getColumns(int mode) {		
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_EQUIPMENT_ID + COMMA
@@ -75,9 +75,9 @@ public class PortDatabase extends StorableObjectDatabase {
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -210,13 +210,13 @@ public class PortDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 		throws IllegalDataException, UpdateObjectException {
 		Port port = fromStorableObject(storableObject);
 		Identifier typeId = port.getType().getId();
 		Identifier equipmentId = port.getEquipmentId();
 
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, typeId);
 			preparedStatement.setString(++i, port.getDescription());

@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.22 2004/12/03 19:13:29 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.23 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/03 19:13:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -59,9 +59,9 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		return ObjectEntities.PORTTYPE_ENTITY;
 	}	
 	
-	protected String getColumns() {		
+	protected String getColumns(int mode) {		
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_NAME + COMMA
@@ -70,9 +70,9 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
                 + QUESTION + COMMA
@@ -191,10 +191,10 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		return list;
 	}
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 		throws IllegalDataException, UpdateObjectException {
 		PortType portType = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
 			preparedStatement.setString(++i, portType.getCodename());
 			preparedStatement.setString(++i, portType.getDescription());

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.48 2004/12/06 11:47:11 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.49 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/12/06 11:47:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.49 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -70,9 +70,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return ObjectEntities.CHARACTERISTIC_ENTITY;
 	}
     
-    protected String getColumns() {
+    protected String getColumns(int mode) {
     	if (columns == null){
-    		columns = super.getColumns() + COMMA
+    		columns = super.getColumns(mode) + COMMA
     			+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
@@ -85,9 +85,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return columns;
 	}
     
-    protected String getUpdateMultiplySQLValues() {
+    protected String getUpdateMultiplySQLValues(int mode) {
     	if (updateMultiplySQLValues == null){
-    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -119,12 +119,12 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement) throws IllegalDataException, UpdateObjectException{
+			PreparedStatement preparedStatement, int mode) throws IllegalDataException, UpdateObjectException{
 		Characteristic characteristic = fromStorableObject(storableObject);
 		int sort = characteristic.getSort().value();
 		int i;
 		try {
-			i = super.setEntityForPreparedStatement(storableObject , preparedStatement);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getType().getId());
 			preparedStatement.setString( ++i, characteristic.getName());
 			preparedStatement.setString( ++i, characteristic.getDescription());
@@ -455,6 +455,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     public void updateCharacteristics(List storableObjects) throws UpdateObjectException {
         
     	// Construction of Map <StorableObjectIdentifier> <List <CharacteristicIdentifier>> 
+        if(storableObjects == null || storableObjects.isEmpty())
+            return;
         Map storableObjectIdCharIdsMap = new HashMap();
         List characteristics = new LinkedList();
         for (Iterator it = storableObjects.iterator(); it.hasNext();) {

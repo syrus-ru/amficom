@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.2 2004/11/23 09:45:59 bob Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.3 2004/12/07 15:32:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/23 09:45:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/12/07 15:32:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -53,9 +53,9 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		return ObjectEntities.CABLETHREADTYPE_ENTITY;
 	}
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -65,9 +65,9 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 	return updateMultiplySQLValues;
 	}
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_MARK + COMMA
@@ -101,12 +101,12 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement) throws IllegalDataException,
+			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
 		CableThreadType cableThreadType = fromStorableObject(storableObject);
 		int i;
 		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			preparedStatement.setString( ++i, cableThreadType.getCodename());
 			preparedStatement.setString( ++i, cableThreadType.getDescription());
 			preparedStatement.setString( ++i, cableThreadType.getMark());
