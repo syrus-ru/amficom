@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.6 2004/07/28 12:54:18 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.7 2004/08/09 11:55:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,13 +24,15 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/07/28 12:54:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2004/08/09 11:55:47 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class MonitoredElementDatabase extends StorableObjectDatabase {
     public static final String COLUMN_KIS_ID = "kis_id";
+    // sort NUMBER(2) NOT NULL,
+    public static final String COLUMN_SORT = "sort";
     public static final String COLUMN_LOCAL_ADDRESS = "local_address";
 
 	private MonitoredElement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -53,6 +55,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA		
 			+ COLUMN_KIS_ID + COMMA
+			+ COLUMN_SORT + COMMA
 			+ COLUMN_LOCAL_ADDRESS
 			+ SQL_FROM + ObjectEntities.ME_ENTITY
 			+ SQL_WHERE + COLUMN_ID + EQUALS + meIdStr;
@@ -85,6 +88,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 												 *       getLong()
 												 */
 											   new Identifier(resultSet.getString(COLUMN_KIS_ID)),
+											   resultSet.getInt(COLUMN_SORT),
 											   resultSet.getString(COLUMN_LOCAL_ADDRESS));
 			else
 				throw new ObjectNotFoundException("No such monitored element: " + meIdStr);
@@ -151,6 +155,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_KIS_ID + COMMA
+			+ COLUMN_SORT + COMMA
 			+ COLUMN_LOCAL_ADDRESS
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET			
 			+ meIdStr + COMMA
@@ -160,6 +165,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			+ monitoredElement.getModifierId().toSQLString() + COMMA
 			+ monitoredElement.getDomainId().toSQLString() + COMMA
 			+ monitoredElement.getKISId().toSQLString() + COMMA
+			+ monitoredElement.getSort().value() + COMMA
 			+ APOSTOPHE + monitoredElement.getLocalAddress() + APOSTOPHE
 			+ CLOSE_BRACKET;
 		Statement statement = null;
