@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.4 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: MarkController.java,v 1.5 2005/02/02 09:05:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/02 09:05:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -74,8 +74,7 @@ public final class MarkController extends AbstractNodeController
 
 	public Image getImage(AbstractNode node)
 	{
-		Identifier creatorId = new Identifier(
-			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+		Identifier creatorId = getLogicalNetLayer().getUserId();
 
 		Identifier imageId = NodeTypeController.getImageId(creatorId, IMAGE_NAME, IMAGE_PATH);
 		if(MapPropertiesManager.getImage(imageId) == null)

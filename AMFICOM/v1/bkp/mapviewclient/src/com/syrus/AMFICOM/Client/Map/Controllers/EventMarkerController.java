@@ -1,5 +1,5 @@
 /**
- * $Id: EventMarkerController.java,v 1.4 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: EventMarkerController.java,v 1.5 2005/02/02 09:05:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.mapview.EventMarker;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/02/01 13:29:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/02 09:05:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -73,8 +73,7 @@ public final class EventMarkerController extends MarkerController
 	{
 		if(needInit)
 		{
-			Identifier creatorId = new Identifier(
-				getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+			Identifier creatorId = getLogicalNetLayer().getUserId();
 
 			MapPropertiesManager.setOriginalImage(
 				NodeTypeController.getImageId(creatorId, EVENT_IMAGE_NAME, EVENT_IMAGE_PATH),

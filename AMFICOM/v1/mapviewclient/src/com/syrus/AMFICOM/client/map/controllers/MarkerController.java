@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.7 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: MarkerController.java,v 1.8 2005/02/02 09:05:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/02/01 13:29:56 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/02 09:05:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -102,8 +102,7 @@ public class MarkerController extends AbstractNodeController
 	{
 		if(needInit)
 		{
-			Identifier creatorId = new Identifier(
-				getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+			Identifier creatorId = getLogicalNetLayer().getUserId();
 
 			MapPropertiesManager.setOriginalImage(
 				NodeTypeController.getImageId(creatorId, IMAGE_NAME, IMAGE_PATH),

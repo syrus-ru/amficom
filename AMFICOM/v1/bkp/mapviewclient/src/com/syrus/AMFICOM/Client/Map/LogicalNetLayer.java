@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.42 2005/02/02 08:58:39 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.43 2005/02/02 09:05:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import java.util.Set;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/02/02 08:58:39 $
+ * @version $Revision: 1.43 $, $Date: 2005/02/02 09:05:10 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -1711,10 +1711,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		if(currentPen == null)
 		{
-			Identifier creatorId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().user_id);
-
-			currentPen = LinkTypeController.getDefaultPen(creatorId);
+			currentPen = LinkTypeController.getDefaultPen(getUserId());
 		}
 		return currentPen;
 	}
@@ -1727,10 +1724,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		if(unboundProto == null)
 		{
-			Identifier creatorId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().user_id);
-
-			unboundProto = NodeTypeController.getDefaultUnboundProto(creatorId);
+			unboundProto = NodeTypeController.getDefaultUnboundProto(getUserId());
 		}
 		return unboundProto;
 	}
@@ -1743,10 +1737,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		if(unboundLinkProto == null)
 		{
-			Identifier creatorId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().user_id);
 
-			unboundLinkProto = LinkTypeController.getDefaultUnboundPen(creatorId);
+			unboundLinkProto = LinkTypeController.getDefaultUnboundPen(getUserId());
 		}
 		return unboundLinkProto;
 	}

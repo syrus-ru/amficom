@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.4 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: AlarmMarkerController.java,v 1.5 2005/02/02 09:05:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/02/01 13:29:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/02 09:05:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -78,8 +78,7 @@ public final class AlarmMarkerController extends MarkerController
 
 	public Image getAlarmedImage(AbstractNode node)
 	{
-		Identifier creatorId = new Identifier(
-			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+		Identifier creatorId = getLogicalNetLayer().getUserId();
 
 		return MapPropertiesManager.getScaledImage(
 				NodeTypeController.getImageId(creatorId, ALARM_IMAGE2_NAME, ALARM_IMAGE2_PATH));
@@ -89,8 +88,7 @@ public final class AlarmMarkerController extends MarkerController
 	{
 		if(needInit)
 		{
-			Identifier creatorId = new Identifier(
-				getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+			Identifier creatorId = getLogicalNetLayer().getUserId();
 
 			MapPropertiesManager.setOriginalImage(
 				NodeTypeController.getImageId(creatorId, ALARM_IMAGE_NAME, ALARM_IMAGE_PATH),

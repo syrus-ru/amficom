@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.6 2005/02/01 13:29:56 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.7 2005/02/02 09:05:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/02/01 13:29:56 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/02 09:05:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -95,15 +95,11 @@ public class TopologicalNodeController extends AbstractNodeController
 
 	public void setActive(TopologicalNode node, boolean active)
 	{
-//		Identifier creatorId = new Identifier(
-//			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
-
 		node.setActive(active);
 
 		if(needInit)
 		{
-			Identifier creatorId = 
-				((RISDSessionInfo )(getLogicalNetLayer().getContext().getSessionInterface())).getUserIdentifier();
+			Identifier creatorId = getLogicalNetLayer().getUserId();
 
 			openImageId = NodeTypeController.getImageId(creatorId, OPEN_NODE, OPEN_NODE_IMAGE);
 			closedImageId = NodeTypeController.getImageId(creatorId, CLOSED_NODE, CLOSED_NODE_IMAGE);

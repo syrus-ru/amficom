@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCollectorCommandAtomic.java,v 1.6 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: CreateCollectorCommandAtomic.java,v 1.7 2005/02/02 09:05:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.map.Map;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/02 09:05:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -60,7 +60,7 @@ public class CreateCollectorCommandAtomic extends MapActionCommand
 		try
 		{
 			collector = Collector.createInstance(
-					new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id),
+					logicalNetLayer.getUserId(),
 					logicalNetLayer.getMapView().getMap(),
 					name,
 					"");

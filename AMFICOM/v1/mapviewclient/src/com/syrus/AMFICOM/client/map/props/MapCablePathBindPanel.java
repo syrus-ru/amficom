@@ -342,8 +342,7 @@ public final class MapCablePathBindPanel
 	
 	private void setBindingPanels()
 	{
-		Identifier creatorId = new Identifier(
-			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
+		Identifier creatorId = getLogicalNetLayer().getUserId();
 			
 		PhysicalLinkType unboundType = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
 

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.11 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.12 2005/02/02 09:05:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/02 09:05:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -80,7 +80,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 		try
 		{
 			node = TopologicalNode.createInstance(
-				new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id),
+					logicalNetLayer.getUserId(),
 				physicalLink,
 				point);
 		}
