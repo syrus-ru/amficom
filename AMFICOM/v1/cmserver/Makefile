@@ -33,6 +33,8 @@ $(LIBNAME_INTERFACE):	.corba
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMConfigurationReceive.java \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMConfigurationMeasurementReceive.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMServerImpl.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/ClientMeasurementServer.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/DatabaseContextSetup.java
