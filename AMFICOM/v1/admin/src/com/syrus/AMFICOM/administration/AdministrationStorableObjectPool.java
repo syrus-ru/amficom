@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.11 2005/02/25 08:16:56 bob Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.12 2005/03/18 17:29:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,29 +25,29 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/25 08:16:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/03/18 17:29:41 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
-	private static final int			OBJECT_POOL_MAP_SIZE			= 5;		/* Number of entities */
+	private static final int OBJECT_POOL_MAP_SIZE = 5; /* Number of entities */
 
-	private static final int			USER_OBJECT_POOL_SIZE			= 4;
-	private static final int			DOMAIN_OBJECT_POOL_SIZE			= 4;
-	private static final int			SERVER_OBJECT_POOL_SIZE			= 4;
-	private static final int			MCM_OBJECT_POOL_SIZE			= 4;
-	private static final int			PERMATTR_OBJECT_POOL_SIZE		= 4;
+	private static final int USER_OBJECT_POOL_SIZE = 4;
+	private static final int DOMAIN_OBJECT_POOL_SIZE = 4;
+	private static final int SERVER_OBJECT_POOL_SIZE = 4;
+	private static final int MCM_OBJECT_POOL_SIZE = 4;
+	private static final int PERMATTR_OBJECT_POOL_SIZE = 4;
 
-	private static AdministrationObjectLoader	aObjectLoader;
+	private static AdministrationObjectLoader aObjectLoader;
 	private static AdministrationStorableObjectPool instance;
 
 	private AdministrationStorableObjectPool() {
 		// singleton
 		super(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE);
 	}
-	
+
 	private AdministrationStorableObjectPool(Class cacheMapClass) {
 		super(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, cacheMapClass);
 	}
@@ -64,9 +64,9 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, size);		
-		
-		instance.populatePools();		
+		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, size);
+
+		instance.populatePools();
 	}
 
 	public static void init(AdministrationObjectLoader aObjectLoader1) {
@@ -82,17 +82,10 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, SERVER_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, MCM_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, PERMATTR_OBJECT_POOL_SIZE);
-		
+
 		instance.populatePools();
 	}
 
-	/**
-	 * 
-	 * @param aObjectLoader1
-	 * @param cacheClass
-	 *                class must extend LRUMap
-	 * @param size
-	 */
 	public static void init(AdministrationObjectLoader aObjectLoader1, Class cacheClass, final int size) {
 		Class clazz = null;
 		try {
@@ -100,9 +93,23 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 			instance = new AdministrationStorableObjectPool(clazz);
 		}
 		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			instance = new AdministrationStorableObjectPool();
 		}
 		init(aObjectLoader1, size);
+	}
+
+	public static void init(AdministrationObjectLoader aObjectLoader1, Class cacheClass) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new AdministrationStorableObjectPool(clazz);
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			instance = new AdministrationStorableObjectPool();
+		}
+		init(aObjectLoader1);
 	}
 
 	public static void refresh() throws ApplicationException {
