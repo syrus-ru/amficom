@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.45 2004/12/14 16:48:20 max Exp $
+ * $Id: Equipment.java,v 1.46 2004/12/15 07:49:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/12/14 16:48:20 $
+ * @version $Revision: 1.46 $, $Date: 2004/12/15 07:49:55 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -386,5 +386,41 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	}
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+	public String getHwSerial() {
+		return this.hwSerial;
+	}
+	public void setHwSerial(String hwSerial) {
+		this.hwSerial = hwSerial;
+	}
+	public String getHwVersion() {
+		return this.hwVersion;
+	}
+	public void setHwVersion(String hwVersion) {
+		this.hwVersion = hwVersion;
+	}
+	public String getInventoryNumber() {
+		return this.inventoryNumber;
+	}
+	public void setInventoryNumber(String inventoryNumber) {
+		this.inventoryNumber = inventoryNumber;
+	}
+	public String getSupplierCode() {
+		return this.supplierCode;
+	}
+	public void setSupplierCode(String supplierCode) {
+		this.supplierCode = supplierCode;
+	}
+	public String getSwSerial() {
+		return this.swSerial;
+	}
+	public void setSwSerial(String swSerial) {
+		this.swSerial = swSerial;
+	}
+	public String getSwVersion() {
+		return this.swVersion;
+	}
+	public void setSwVersion(String swVersion) {
+		this.swVersion = swVersion;
 	}
 }
