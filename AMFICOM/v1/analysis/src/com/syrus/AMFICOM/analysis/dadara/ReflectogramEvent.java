@@ -1,7 +1,7 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/13 18:09:27 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/14 09:06:02 $
  * @author $Author: saa $
  * @module general_v1
  */
@@ -233,7 +233,7 @@ public class ReflectogramEvent
 
 	public double getWidth0()
 	{
-		return end - begin;
+		return (end - begin) * delta_x;
 	}
 
 	/*
