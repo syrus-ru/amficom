@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.24 2005/03/15 16:16:22 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.25 2005/03/24 10:56:47 arseniy Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -8,15 +8,16 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/03/15 16:16:22 $
+ * @version $Revision: 1.25 $, $Date: 2005/03/24 10:56:47 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -36,11 +37,6 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
-//
-//	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-//		this.linkedIds = Collections.singletonList(identifier);
-//		this.entityCode = entityCode;
-//	}
 
 	/**
 	 * @return <code>true</code>
@@ -69,31 +65,63 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 *         </li>
 	 *         </ul>
 	 */
-	public boolean isConditionTrue(Object object) throws ApplicationException {
+	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
 		boolean condition = false;
-		Collection params = new LinkedList();
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
 				AnalysisType analysisType = (AnalysisType) object;
-				params.addAll(analysisType.getCriteriaParameterTypes());
-				params.addAll(analysisType.getInParameterTypes());
-				params.addAll(analysisType.getOutParameterTypes());
-				params.addAll(analysisType.getEtalonParameterTypes());
-				condition = super.conditionTest(params);
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+						Collection params = new HashSet();
+						params.addAll(analysisType.getCriteriaParameterTypes());
+						params.addAll(analysisType.getInParameterTypes());
+						params.addAll(analysisType.getOutParameterTypes());
+						params.addAll(analysisType.getEtalonParameterTypes());
+						condition = super.conditionTest(params);
+						break;
+					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+						//TODO
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
 				break;
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 				EvaluationType evaluationType = (EvaluationType) object;
-				params.addAll(evaluationType.getThresholdParameterTypes());
-				params.addAll(evaluationType.getInParameterTypes());
-				params.addAll(evaluationType.getOutParameterTypes());
-				params.addAll(evaluationType.getEtalonParameterTypes());
-				condition = super.conditionTest(params);
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+						Collection params = new HashSet();
+						params.addAll(evaluationType.getThresholdParameterTypes());
+						params.addAll(evaluationType.getInParameterTypes());
+						params.addAll(evaluationType.getOutParameterTypes());
+						params.addAll(evaluationType.getEtalonParameterTypes());
+						condition = super.conditionTest(params);
+						break;
+					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+						//TODO
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
 				break;
 			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
 				ModelingType modelingType = (ModelingType)object;
-				params.addAll(modelingType.getInParameterTypes());
-				params.addAll(modelingType.getOutParameterTypes());
-				condition = super.conditionTest(params);
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+						Collection params = new HashSet();
+						params.addAll(modelingType.getInParameterTypes());
+						params.addAll(modelingType.getOutParameterTypes());
+						condition = super.conditionTest(params);
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
 				break;
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
@@ -102,8 +130,16 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				condition = super.conditionTest(parentActionId);
 				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				Identifier testId = ((Measurement) object).getTestId();
-				condition = super.conditionTest(testId);
+				Measurement measurement = (Measurement) object;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.TEST_ENTITY_CODE:
+						condition = super.conditionTest(measurement.getTestId());
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
 				/* measurement haven't parent action*/
 				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE: {
@@ -112,22 +148,44 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 						condition = super.conditionTest(measurementType.getMeasurementPortTypes());
 						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
 			}
 			case ObjectEntities.MS_ENTITY_CODE:
 				MeasurementSetup measurementSetup = (MeasurementSetup) object;
-				params.addAll(measurementSetup.getMonitoredElementIds());
-				condition = super.conditionTest(params);
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.ME_ENTITY_CODE:
+						Collection params = new HashSet();
+						params.addAll(measurementSetup.getMonitoredElementIds());
+						condition = super.conditionTest(params);
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				Result result = (Result) object;
-				for (Action a = result.getAction(); a != null; a = a.getParentAction()) {
-					if (super.conditionTest(a.getId())) {
-						condition = true;
-						break;
+				if (this.linkedEntityCode == ObjectEntities.MEASUREMENT_ENTITY_CODE
+						|| this.linkedEntityCode == ObjectEntities.ANALYSIS_ENTITY_CODE
+						|| this.linkedEntityCode == ObjectEntities.EVALUATION_ENTITY_CODE
+						|| this.linkedEntityCode == ObjectEntities.MODELING_ENTITY_CODE) {
+					for (Action a = result.getAction(); a != null; a = a.getParentAction()) {
+						if (super.conditionTest(a.getId())) {
+							condition = true;
+							break;
+						}
 					}
 				}
+				else
+					throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+							+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+							IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				break;
 			case ObjectEntities.TEST_ENTITY_CODE:
 				Test test = (Test) object;
@@ -141,11 +199,16 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					case ObjectEntities.MCM_ENTITY_CODE:
 						condition = super.conditionTest(test.getMCMId());
 						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
 			default:
-				throw new UnsupportedOperationException("entityCode "
-						+ ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
+				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
+						+ ", " + ObjectEntities.codeToString(this.entityCode),
+						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 		return condition;
 	}

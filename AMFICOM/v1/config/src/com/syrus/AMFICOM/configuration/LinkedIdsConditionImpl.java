@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.11 2005/03/23 19:06:13 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.12 2005/03/24 10:56:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,10 +16,12 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/03/23 19:06:13 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/24 10:56:41 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -31,32 +33,29 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		this.entityCode = entityCode;
 	}
 
-//
-//	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-//		this.linkedIds = Collections.singletonList(identifier);
-//		this.entityCode = entityCode;
-//	}
-
-	private boolean checkDomain(DomainMember domainMember) throws ApplicationException {
-		Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+	private boolean checkDomain(DomainMember domainMember) {
 		boolean condition = false;
-		/* if linked ids is domain id */
-		for (Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
-			Identifier id = (Identifier) it.next();
-			if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
-				Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
-				if (dmDomain.isChild(domain))
-					condition = true;
-
+		try {
+			Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			Identifier id;
+			Domain domain;
+			for (Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
+				id = (Identifier) it.next();
+				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
+					domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
+					if (dmDomain.isChild(domain))
+						condition = true;
+				}
 			}
-
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
 		}
 		return condition;
 	}
 
-	public boolean isConditionTrue(Object object) throws ApplicationException {
+	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
 		boolean condition = false;
-		DomainMember domainMember = null;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 				CableThreadType cableThreadType = (CableThreadType) object;
@@ -64,10 +63,23 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 					case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
 						condition = super.conditionTest(cableThreadType.getLinkType().getId());
 						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-				domainMember = (Equipment) object;
+				Equipment equipment = (Equipment) object;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.DOMAIN_ENTITY_CODE:
+						condition = this.checkDomain(equipment);
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
 				break;
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:
 				TransmissionPath transmissionPath = (TransmissionPath) object;
@@ -76,8 +88,13 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 						condition = super.conditionTest(transmissionPath.getStartPortId())
 								|| super.conditionTest(transmissionPath.getFinishPortId());
 						break;
+					case ObjectEntities.DOMAIN_ENTITY_CODE:
+						condition = this.checkDomain(transmissionPath);
+						break;
 					default:
-						domainMember = transmissionPath;
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
 			case ObjectEntities.KIS_ENTITY_CODE:
@@ -86,12 +103,26 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 					case ObjectEntities.MCM_ENTITY_CODE:
 						condition = super.conditionTest(kis.getMCMId());
 						break;
+					case ObjectEntities.DOMAIN_ENTITY_CODE:
+						condition = this.checkDomain(kis);
+						break;
 					default:
-						domainMember = kis;
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
 			case ObjectEntities.ME_ENTITY_CODE:
-				domainMember = (MonitoredElement) object;
+				MonitoredElement monitoredElement = (MonitoredElement) object;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.DOMAIN_ENTITY_CODE:
+						condition = this.checkDomain(monitoredElement);
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
 				break;
 			case ObjectEntities.PORT_ENTITY_CODE:
 				Port port = (Port) object;
@@ -99,34 +130,58 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 					case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 						condition = super.conditionTest(port.getEquipmentId());
 						break;
+					case ObjectEntities.DOMAIN_ENTITY_CODE:
+						try {
+							Equipment equipment1 = (Equipment) ConfigurationStorableObjectPool.getStorableObject(port.getEquipmentId(), true);
+							condition = this.checkDomain(equipment1);
+						}
+						catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
 					default:
-						domainMember = (DomainMember) ConfigurationStorableObjectPool.getStorableObject(port.getEquipmentId(), true);
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				MeasurementPort measurementPort = (MeasurementPort) object;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.KIS_ENTITY_CODE:
-						super.conditionTest(measurementPort.getKISId());
+						condition = super.conditionTest(measurementPort.getKISId());
 						break;
 					case ObjectEntities.MCM_ENTITY_CODE:
-						KIS kis1 = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
-						super.conditionTest(kis1.getMCMId());
+						try {
+							KIS kis1 = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+							condition = super.conditionTest(kis1.getMCMId());
+						}
+						catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
 						break;
+					case ObjectEntities.DOMAIN_ENTITY_CODE:
+						try {
+							KIS kis1 = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+							condition = this.checkDomain(kis1);
+						}
+						catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
 					default:
-						domainMember = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
 			default:
-				throw new UnsupportedOperationException("LinkedIdsConditionImpl.isConditionTrue | entityCode "
-						+ ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
+				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
+						+ ", " + ObjectEntities.codeToString(this.entityCode),
+						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
-		if (domainMember != null)
-			condition = this.checkDomain(domainMember);
 		return condition;
 	}
 
-	public void setEntityCode(Short entityCode) {
+	public void setEntityCode(Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
@@ -138,8 +193,9 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 				this.entityCode = entityCode;
 				break;
 			default:
-				throw new UnsupportedOperationException("LinkedIdsConditionImpl.setEntityCode | entityCode "
-						+ ObjectEntities.codeToString(entityCode.shortValue()) + " is unknown for this condition");
+				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
+						+ ", " + ObjectEntities.codeToString(this.entityCode),
+						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 	}
 
