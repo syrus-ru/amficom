@@ -51,3 +51,4 @@ public abstract class StorableObject_Database {
 			int update_kind,
 			Object arg) throws Exception;
 }
+

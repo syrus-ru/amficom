@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2004/06/22 11:27:59 cvsadmin Exp $
+# $Id: Makefile,v 1.2 2004/06/25 10:48:54 cvsadmin Exp $
 #
 # vim:set ft=make:
 #
@@ -154,5 +154,5 @@ distclean: clean
 
 $(LIBNAME): .all
 	$(JAR) cf $@ \
-		-C $(CLASSDIR) com
+		-C $(CLASSDIR) com/syrus/AMFICOM/general
 

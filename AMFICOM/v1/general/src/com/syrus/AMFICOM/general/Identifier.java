@@ -95,4 +95,8 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 	public String getCode() {
 		return this.identifier_string;
 	}
+
+	public static String getNullSQLString() {
+		return "''";
+	}
 }
