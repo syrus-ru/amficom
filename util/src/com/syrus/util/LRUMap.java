@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.22 2005/03/18 16:50:25 arseniy Exp $
+ * $Id: LRUMap.java,v 1.23 2005/03/21 16:20:12 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/18 16:50:25 $
+ * @version $Revision: 1.23 $, $Date: 2005/03/21 16:20:12 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -42,7 +42,7 @@ public class LRUMap implements Serializable {
 			throw new IllegalArgumentException("Illegal capacity: " + capacity); //$NON-NLS-1$
 	}
 
-	public synchronized void clear(){
+	public synchronized void clear() {
 		for (int i = 0; i < this.array.length; i++) {
 			this.array[i] = null;
 		}
@@ -59,24 +59,28 @@ public class LRUMap implements Serializable {
 	/**
 	 * key iterator
 	 */
-	public Iterator keyIterator(){
+	public Iterator keyIterator() {
 		return new Itr(true);
 	}
-    
-    public int indexOf(Object key) {
-    	int index = -1;
-    	if (key != null) {
-	    	for(int i = 0; i < this.array.length; i++) {
-	    		Entry entry = this.array[i];
-	    		if ((entry != null) && (entry.key.equals(key))) {
-						index = i;
-						break;
-					}
+
+	public int size() {
+		return this.entityCount;
+	}
+
+	public int indexOf(Object key) {
+		int index = -1;
+		if (key != null) {
+			for (int i = 0; i < this.array.length; i++) {
+				Entry entry = this.array[i];
+				if ((entry != null) && (entry.key.equals(key))) {
+					index = i;
+					break;
 				}
 			}
-    	return index;
-    }
-	
+		}
+		return index;
+	}
+
 	public synchronized Object put(Object key, Object value) {
 		this.modCount++;
 		this.entityCount += (this.entityCount == this.array.length) ? 0 : 1;
