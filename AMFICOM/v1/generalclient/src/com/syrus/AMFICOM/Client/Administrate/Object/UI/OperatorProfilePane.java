@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfilePane.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: OperatorProfilePane.java,v 1.3 2004/08/20 12:05:00 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,8 @@ package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
 import java.awt.*;
 import java.text.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.Client.Resource.Object.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.3 $, $Date: 2004/08/20 12:05:00 $
  * @module generalclient_v1
  */
 public class OperatorProfilePane extends PropertiesPanel
@@ -179,13 +180,13 @@ public class OperatorProfilePane extends PropertiesPanel
     operatorProfileUser.login = profile.login;
 
     {
-      operatorProfileUser.group_ids = new Vector();
+      operatorProfileUser.group_ids = new ArrayList();
       for(int i=0; i<profile.group_ids.size(); i++)
       {
         operatorProfileUser.group_ids.add(profile.group_ids.get(i));
       }
 
-      operatorProfileUser.category_ids = new Vector();
+      operatorProfileUser.category_ids = new ArrayList();
       for(int i=0; i<profile.category_ids.size(); i++)
       {
         operatorProfileUser.category_ids.add(profile.category_ids.get(i));
@@ -308,10 +309,10 @@ public class OperatorProfilePane extends PropertiesPanel
     {
 //      System.out.println("Removing of the object "+profile.getName());
 
-      profile.group_ids = new Vector();
-      profile.category_ids = new Vector();
-      operatorProfileUser.group_ids = new Vector();
-      operatorProfileUser.category_ids = new Vector();
+      profile.group_ids = new ArrayList();
+      profile.category_ids = new ArrayList();
+      operatorProfileUser.group_ids = new ArrayList();
+      operatorProfileUser.category_ids = new ArrayList();
 
       Pool.put(OperatorProfile.typ, profile.id, profile);
       Pool.put(User.typ, operatorProfileUser.id, operatorProfileUser);

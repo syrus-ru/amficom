@@ -35,12 +35,13 @@
 
 package com.syrus.AMFICOM.Client.General.Command;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 public class CommandBundle extends VoidCommand implements Command
 {
-	protected Vector commands = new Vector();			// список команд
+	protected List commands = new ArrayList();			// список команд
 
 	public CommandBundle()
 	{
@@ -50,10 +51,10 @@ public class CommandBundle extends VoidCommand implements Command
 	{
 		Command c;
 		CommandBundle cb = new CommandBundle();
-		cb.commands = new Vector();
-		for(Enumeration e = commands.elements(); e.hasMoreElements();)
+		cb.commands = new ArrayList();
+		for(ListIterator e = commands.listIterator(); e.hasNext();)
 		{
-			c = (Command )e.nextElement();
+			c = (Command )e.next();
 			cb.commands.add(c.clone());
 		}
 		return cb;
@@ -76,11 +77,9 @@ public class CommandBundle extends VoidCommand implements Command
 
 	public void execute()				// выполнить - все команды в списке
 	{
-		int i;
-		int count = getCount();
-		for(i = 0; i < count; i++)
+		for(ListIterator it = commands.listIterator();it.hasNext();)
 		{
-			Command command = (Command )commands.get(i);
+			Command command = (Command )it.next();
 			command.execute();
 		}
 	}
@@ -88,11 +87,9 @@ public class CommandBundle extends VoidCommand implements Command
 	public void undo()					// обратно выполнить - все команды 
 										// в списке в обратном порядке
 	{
-		int i;
-		int count = getCount();
-		for(i = count - 1; i >= 0; i--)
+		for(ListIterator it = commands.listIterator(commands.size());it.hasPrevious();)
 		{
-			Command command = (Command )commands.get(i);
+			Command command = (Command )it.previous();
 			command.undo();
 		}
 	}

@@ -1,10 +1,11 @@
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+
 
 /**
  * <p>Title: </p>
@@ -22,14 +23,13 @@ public class OrListBox extends ObjectResourceListBox
   {
   }
 
-  public Vector getVectorIDfromList()
+  public List getVectorIDfromList()
   {
     int l = this.getModel().getSize();
-    Vector v = new Vector();
+    List v = new ArrayList();
     for(int i=0; i<l; i++)
     {
       String s = ((ObjectResource)this.getModel().getElementAt(i)).getId();
-//      System.out.println(s);
       v.add(s);
     }
     return v;

@@ -1,7 +1,8 @@
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.*;
 
@@ -198,7 +199,7 @@ public class DomainPaneConfig extends PropertiesPanel
     if(Checker.checkCommand(user, Checker.removeDomain))
     {
       domain.domain_id = "";
-      domain.domain_ids = new Vector();
+      domain.domain_ids = new ArrayList();
       updater.updateDomain(domain, true);
       String[] s = new String[1];
       s[0] = domain.id;

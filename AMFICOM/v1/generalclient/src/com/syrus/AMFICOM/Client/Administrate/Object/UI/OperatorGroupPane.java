@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroupPane.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: OperatorGroupPane.java,v 1.3 2004/08/20 12:05:00 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,8 @@ package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
 import java.awt.*;
 import java.text.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.*;
 
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.Client.Resource.Object.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.3 $, $Date: 2004/08/20 12:05:00 $
  * @module generalclient_v1
  */
 public class OperatorGroupPane extends PropertiesPanel // implements OperationListener
@@ -190,7 +191,7 @@ public class OperatorGroupPane extends PropertiesPanel // implements OperationLi
   {
     if(Checker.checkCommand(user, Checker.removeGroup))
     {
-      this.group.user_ids = new Vector();
+      this.group.user_ids = new ArrayList();
 
       updater.updateObjectResources(group, true);
 
