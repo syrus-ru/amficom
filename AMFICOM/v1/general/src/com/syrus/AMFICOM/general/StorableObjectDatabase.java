@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.61 2004/12/10 16:06:49 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.62 2004/12/17 16:01:45 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2004/12/10 16:06:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.62 $, $Date: 2004/12/17 16:01:45 $
+ * @author $Author: max $
  * @module general_v1
  */
 
@@ -74,6 +74,7 @@ public abstract class StorableObjectDatabase {
 	public static final String	SQL_UPDATE			= " UPDATE ";
 	public static final String	SQL_VALUES			= " VALUES ";
 	public static final String	SQL_WHERE			= " WHERE ";
+	public static final String 	SQL_EMPTY_BLOB 		= " EMPTY_BLOB() ";
 	
 	public static final int 	UPDATE_TOTAL 		= -1;
 	public static final int 	UPDATE_FORCE 		= -2;
