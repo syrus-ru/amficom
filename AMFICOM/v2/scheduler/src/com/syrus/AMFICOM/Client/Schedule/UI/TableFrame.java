@@ -572,6 +572,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 							Test test = line.getTest();
 							skipTestUpdate = true;
 							dispatcher.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
+							//System.out.println("send test:"+test.getId());
 							skipTestUpdate = false;
 						}
 					} else if (SwingUtilities.isRightMouseButton(evt)) {

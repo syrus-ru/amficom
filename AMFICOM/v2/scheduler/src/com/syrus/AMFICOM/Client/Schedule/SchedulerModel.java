@@ -41,6 +41,7 @@ public class SchedulerModel implements OperationListener {
 	public static final String	COMMAND_SEND_DATA				= "SendData";		//$NON-NLS-1$
 	public static final String	COMMAND_TEST_SAVED_OK			= "TestSavedOk";	//$NON-NLS-1$
 	public static final String	COMMAND_CLEAN					= "Clean";
+	public static final String	COMMAND_AVAILABLE_ME			= "AvailableMe";
 	
 
 	public static final int		DATA_ID_ELEMENTS				= 5;
