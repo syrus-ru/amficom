@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.Vector;
-
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -17,8 +15,13 @@ import com.syrus.io.BellcoreStructure;
 public class OverallStatsFrame extends ATableFrame
 																		implements OperationListener
 {
+	private static StringBuffer km = new StringBuffer(' ').append(LangModelAnalyse.getString("km"));
+	private static StringBuffer db = new StringBuffer(' ').append(LangModelAnalyse.getString("dB"));
+	private static StringBuffer dbkm = new StringBuffer(' ').append(LangModelAnalyse.getString("dB")).
+			append('/').append(LangModelAnalyse.getString("km"));
+
 	private Dispatcher dispatcher;
-	private GeneralTableModel tModel;
+	private FixedSizeEditableTableModel tModel;
 	private ATable jTable;
 
 	BorderLayout borderLayout = new BorderLayout();
@@ -77,7 +80,6 @@ public class OverallStatsFrame extends ATableFrame
 				String id = (String)(rce.getSource());
 				if (id.equals("primarytrace"))
 				{
-					setTableModel();
 					updTableModel(id);
 					setVisible(true);
 					wctModel.clearTable();
@@ -161,11 +163,20 @@ public class OverallStatsFrame extends ATableFrame
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-		tModel = new GeneralTableModel(
+		tModel = new FixedSizeEditableTableModel(
 					new String[] {LangModelAnalyse.getString("overallKey"),
 												LangModelAnalyse.getString("overallValue")},
 					new String[] {"1", "2"},
-					0);
+					new String[] {
+						LangModelAnalyse.getString("totalLength"),
+						LangModelAnalyse.getString("totalLoss"),
+						LangModelAnalyse.getString("totalAttenuation"),
+						LangModelAnalyse.getString("totalReturnLoss"),
+						LangModelAnalyse.getString("totalNoiseLevel"),
+						LangModelAnalyse.getString("totalNoiseDD"),
+						LangModelAnalyse.getString("totalEvents")
+					},
+					null);
 		jTable = new ATable(tModel);
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 
@@ -278,60 +289,23 @@ public class OverallStatsFrame extends ATableFrame
 			return;
 
 		double range = (ev.last_point) * (double)(3 * bs.fxdParams.DS[0]) / (double)(bs.fxdParams.GI * 10000);
-		tModel.setValueAt(String.valueOf(MathRef.round_3(range)) + " " + LangModelAnalyse.getString("km"), 0, 1);
 		double loss = Math.abs(ev.data[0] -  ev.data[1]);
-		tModel.setValueAt(String.valueOf(MathRef.round_2(loss))+ " " + LangModelAnalyse.getString("dB"), 1, 1);
 		double attenuation = loss / range;
-		tModel.setValueAt(String.valueOf(MathRef.round_4(attenuation))+ " " + LangModelAnalyse.getString("dB")+ "/" + LangModelAnalyse.getString("km"), 2, 1);
 		double orl = MathRef.ORL(ev.data[0], ev.data[1]);
-		tModel.setValueAt(String.valueOf(MathRef.round_2(orl)) + " " + LangModelAnalyse.getString("dB"), 3, 1);
 		double noise = ev.data[2];
-		tModel.setValueAt(String.valueOf(MathRef.round_2(noise)) + " " + LangModelAnalyse.getString("dB"), 4, 1);
 		double DD = ev.data[2] - ev.data[3];
-		tModel.setValueAt(String.valueOf(MathRef.round_2(DD)) + " " + LangModelAnalyse.getString("dB"), 5, 1);
 		int evNum = (int)ev.data[4];
-		tModel.setValueAt(String.valueOf(evNum), 6, 1);
+
+		tModel.updateColumn(new Object[] {
+			new StringBuffer().append(MathRef.round_3(range)).append(km).toString(),
+			new StringBuffer().append(MathRef.round_2(loss)).append(db).toString(),
+			new StringBuffer().append(MathRef.round_4(attenuation)).append(dbkm).toString(),
+			new StringBuffer().append(MathRef.round_2(orl)).append(db).toString(),
+			new StringBuffer().append(MathRef.round_2(noise)).append(db).toString(),
+			new StringBuffer().append(MathRef.round_2(DD)).append(db).toString(),
+			String.valueOf(evNum)
+		}, 1);
 		jTable.updateUI();
-	}
-
-	void setTableModel()
-	{
-		tModel.clearTable();
-
-		Vector length = new Vector(2);
-		length.add(LangModelAnalyse.getString("totalLength"));
-		length.add("");
-		tModel.insertRow(length);
-
-		Vector loss = new Vector(2);
-		loss.add(LangModelAnalyse.getString("totalLoss"));
-		loss.add("");
-		tModel.insertRow(loss);
-
-		Vector attenuation = new Vector(2);
-		attenuation.add(LangModelAnalyse.getString("totalAttenuation"));
-		attenuation.add("");
-		tModel.insertRow(attenuation);
-
-		Vector orl = new Vector(2);
-		orl.add(LangModelAnalyse.getString("totalReturnLoss"));
-		orl.add("");
-		tModel.insertRow(orl);
-
-		Vector noise = new Vector(2);
-		noise.add(LangModelAnalyse.getString("totalNoiseLevel"));
-		noise.add("");
-		tModel.insertRow(noise);
-
-		Vector dd = new Vector(2);
-		dd.add(LangModelAnalyse.getString("totalNoiseDD"));
-		dd.add("");
-		tModel.insertRow(dd);
-
-		Vector evNum = new Vector(2);
-		evNum.add(LangModelAnalyse.getString("totalEvents"));
-		evNum.add("");
-		tModel.insertRow(evNum);
 	}
 }
 

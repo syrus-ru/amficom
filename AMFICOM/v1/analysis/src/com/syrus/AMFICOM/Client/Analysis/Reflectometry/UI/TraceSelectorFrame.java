@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.Vector;
+import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import javax.swing.*;
@@ -9,16 +10,16 @@ import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
+import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.io.BellcoreStructure;
 
 public class TraceSelectorFrame extends JInternalFrame
 																		implements OperationListener
 {
-	private static Vector traces = new Vector();
+	private static List traces = new ArrayList();
 	private Dispatcher dispatcher;
-	private GeneralTableModel tModel; //DefaultTableModel
+	private FixedSizeEditableTableModel tModel; //DefaultTableModel
 	private ColorChooserTable jTable;
 
 	BorderLayout borderLayout = new BorderLayout();
@@ -72,10 +73,7 @@ public class TraceSelectorFrame extends JInternalFrame
 				if (bs != null)
 					title = bs.title;
 
-				Vector trace = new Vector(2);
-				trace.add(title);
-				trace.add(ColorManager.getColor(id));
-				tModel.insertRow(trace);
+				tModel.addRow(title, new Color[] {ColorManager.getColor(id)});
 				setVisible(true);
 			}
 
@@ -94,7 +92,7 @@ public class TraceSelectorFrame extends JInternalFrame
 				if (id.equals("all"))
 				{
 					tModel.clearTable();
-					traces = new Vector();
+					traces = new ArrayList();
 					setVisible(false);
 				}
 				else
@@ -102,7 +100,7 @@ public class TraceSelectorFrame extends JInternalFrame
 					int index = traces.indexOf(id);
 					if (index != -1)
 					{
-						tModel.deleteRow(index);
+						tModel.removeRow(index);
 						traces.remove(id);
 					}
 				}
@@ -114,11 +112,12 @@ public class TraceSelectorFrame extends JInternalFrame
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-		tModel = new GeneralTableModel(
+		tModel = new FixedSizeEditableTableModel(
 					new String[] {LangModelAnalyse.getString("selectorKey"),
 												LangModelAnalyse.getString("selectorValue")},
-					new Object[] {"Syrus systems", Color.black},
-					0);
+					new Object[] {Color.BLACK},
+					null,
+					null);
 
 //		tModel = new GeneralTableModel();
 

@@ -16,8 +16,14 @@ import com.syrus.io.BellcoreStructure;
 public class PrimaryParametersFrame extends ATableFrame
 																		implements OperationListener
 {
+	private static StringBuffer km = new StringBuffer(' ').append(LangModelAnalyse.getString("km"));
+	private static StringBuffer mt = new StringBuffer(' ').append(LangModelAnalyse.getString("mt"));
+	private static StringBuffer nm = new StringBuffer(' ').append(LangModelAnalyse.getString("nm"));
+	private static StringBuffer db = new StringBuffer(' ').append(LangModelAnalyse.getString("dB"));
+	private static StringBuffer ns = new StringBuffer(' ').append(LangModelAnalyse.getString("ns"));
+
 	private Dispatcher dispatcher;
-	private GeneralTableModel tModel;
+	private FixedSizeEditableTableModel tModel;
 	private ATable jTable;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
@@ -63,7 +69,6 @@ public class PrimaryParametersFrame extends ATableFrame
 				String id = (String)(rce.getSource());
 				if (id.equals("primarytrace"))
 				{
-					setTableModel();
 					setVisible(true);
 				}
 			}
@@ -98,11 +103,23 @@ public class PrimaryParametersFrame extends ATableFrame
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-		tModel = new GeneralTableModel(
+		tModel = new FixedSizeEditableTableModel(
 					new String[] {LangModelAnalyse.getString("parametersKey"),
 												LangModelAnalyse.getString("parametersValue")},
-					new String[] {"1", "2"},
-					0);
+					new String[] {""},
+					new String[] {
+						LangModelAnalyse.getString("module id"),
+						LangModelAnalyse.getString("wavelength"),
+						LangModelAnalyse.getString("pulsewidth"),
+						LangModelAnalyse.getString("groupindex"),
+						LangModelAnalyse.getString("averages"),
+						LangModelAnalyse.getString("resolution"),
+						LangModelAnalyse.getString("range"),
+						LangModelAnalyse.getString("date"),
+						LangModelAnalyse.getString("time"),
+						LangModelAnalyse.getString("backscatter")
+					},
+					null);
 		jTable = new ATable(tModel);
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(160);
 
@@ -138,85 +155,31 @@ public class PrimaryParametersFrame extends ATableFrame
 
 	void updTableModel(String id)
 	{
-		setTableModel();
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 		if (bs == null)
 			return;
-		tModel.setValueAt(bs.supParams.OMID, 0, 1);
-		tModel.setValueAt(String.valueOf(bs.fxdParams.AW / 10)  + " " + LangModelAnalyse.getString("nm"), 1, 1);
-		tModel.setValueAt(String.valueOf(bs.fxdParams.PWU[0]) + " " + LangModelAnalyse.getString("ns"), 2, 1);
-		tModel.setValueAt(String.valueOf((double)bs.fxdParams.GI / 100000d), 3, 1);
-		tModel.setValueAt(String.valueOf(bs.fxdParams.NAV), 4, 1);
 
-		double tmp = (double)bs.fxdParams.DS[0] * .3d / (double)bs.fxdParams.GI;
-		if (bs.fxdParams.UD.equals("km")) tmp*=1000d;
-		tModel.setValueAt(String.valueOf(Math.round(tmp)) + " " + LangModelAnalyse.getString("mt"), 5, 1);
+		double res = (double)bs.fxdParams.DS[0] * .3d / (double)bs.fxdParams.GI;
+		if (bs.fxdParams.UD.equals("km"))
+			res *= 1000d;
+		double range = (double)bs.fxdParams.AR * 3d / (double)bs.fxdParams.GI * 1000;
+		if (bs.fxdParams.UD.equals("mt"))
+			range /= 1000d;
+		String date = sdf.format(new Date(bs.fxdParams.DTS * 1000));
 
-		tmp = (double)bs.fxdParams.AR * 3d / (double)bs.fxdParams.GI * 1000;
-		if (bs.fxdParams.UD.equals("mt")) tmp/=1000d;
-		tModel.setValueAt(String.valueOf(Math.round(tmp)) + " " + LangModelAnalyse.getString("km"), 6, 1);
-
-		String str = sdf.format(new Date(bs.fxdParams.DTS * 1000));
-		tModel.setValueAt(str.substring(0, 9), 7, 1);
-		tModel.setValueAt(str.substring(9), 8, 1);
-
-		str = String.valueOf(bs.fxdParams.BC);
-		tModel.setValueAt(String.valueOf(- (double)bs.fxdParams.BC / 10. + " " + LangModelAnalyse.getString("dB")), 9, 1);
-
+		tModel.updateColumn(new Object[] {
+			bs.supParams.OMID,
+			new StringBuffer().append(bs.fxdParams.AW / 10).append(nm).toString(),
+			new StringBuffer().append(bs.fxdParams.PWU[0]).append(ns).toString(),
+			String.valueOf((double)bs.fxdParams.GI / 100000d),
+			String.valueOf(bs.fxdParams.NAV),
+			new StringBuffer().append(Math.round(res)).append(mt).toString(),
+			new StringBuffer().append(Math.round(range)).append(km).toString(),
+			date.substring(0, 9),
+			date.substring(9),
+			new StringBuffer().append(-(double)bs.fxdParams.BC / 10.).append(db).toString(),
+		}, 1);
 		jTable.updateUI();
 	}
 
-	void setTableModel()
-	{
-		tModel.clearTable();
-
-		Vector omid = new Vector(2);
-		omid.add(LangModelAnalyse.getString("module id"));
-		omid.add("");
-		tModel.insertRow(omid);
-
-		Vector aw = new Vector(2);
-		aw.add(LangModelAnalyse.getString("wavelength"));
-		aw.add("");
-		tModel.insertRow(aw);
-
-		Vector pwu = new Vector(2);
-		pwu.add(LangModelAnalyse.getString("pulsewidth"));
-		pwu.add("");
-		tModel.insertRow(pwu);
-
-		Vector gi  = new Vector(2);
-		gi.add(LangModelAnalyse.getString("groupindex"));
-		gi.add("");
-		tModel.insertRow(gi);
-
-		Vector nav = new Vector(2);
-		nav.add(LangModelAnalyse.getString("averages"));
-		nav.add("");
-		tModel.insertRow(nav);
-
-		Vector res = new Vector(2);
-		res.add(LangModelAnalyse.getString("resolution"));
-		res.add("");
-		tModel.insertRow(res);
-
-		Vector range  = new Vector(2);
-		range.add(LangModelAnalyse.getString("range"));
-		range.add("");
-		tModel.insertRow(range);
-
-		Vector date = new Vector(2);
-		date.add(LangModelAnalyse.getString("date"));
-		date.add("");
-		tModel.insertRow(date);
-		Vector time = new Vector(2);
-		time.add(LangModelAnalyse.getString("time"));
-		time.add("");
-		tModel.insertRow(time);
-
-		Vector bc = new Vector(2);
-		bc.add(LangModelAnalyse.getString("backscatter"));
-		bc.add("");
-		tModel.insertRow(bc);
-	}
 }

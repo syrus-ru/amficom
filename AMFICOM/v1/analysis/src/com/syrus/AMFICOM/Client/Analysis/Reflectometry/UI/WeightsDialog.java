@@ -1,7 +1,8 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.io.*;
-import java.util.Vector;
+import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -177,7 +178,7 @@ public class WeightsDialog extends JDialog
 
 	private int []getArchitecture(String s)
 	{
-		Vector v = new Vector();
+		List v = new ArrayList();
 		int from = 0;
 		for(int i=0; i<s.length(); i++)
 		{
@@ -201,7 +202,7 @@ public class WeightsDialog extends JDialog
 
 	private String canBeArchitecture(String s)
 	{
-		Vector v = new Vector();
+		List v = new ArrayList();
 		String ret = "";
 		int from = 0;
 		for(int i=0; i<s.length(); i++)
@@ -217,13 +218,13 @@ public class WeightsDialog extends JDialog
 
 		for(int i=0; i<v.size(); i++)
 		{
-			if(!canBeInteger((String)(v.elementAt(i))))
+			if(!canBeInteger((String)(v.get(i))))
 			{
 				return "false";
 			}
 			else
 			{
-				ret = ret + (String)v.elementAt(i) + " ";
+				ret = ret + (String)v.get(i) + " ";
 			}
 		}
 //    System.out.println(ret);

@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.Vector;
+import java.util.*;
 
 import java.awt.*;
 import javax.swing.*;
@@ -22,7 +22,8 @@ public class DetailedEventsFrame extends JInternalFrame
 	private ReflectogramEvent []etalon;
 
 	private Dispatcher dispatcher;
-	private GeneralTableModel tModel;
+	private Map tModels = new HashMap(6);
+
 	private ATable jTable;
 	private int selected = 0;
 	private int concSelected = 0;
@@ -47,6 +48,16 @@ public class DetailedEventsFrame extends JInternalFrame
 	JViewport viewportComp = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
+	private static StringBuffer km = new StringBuffer(' ').append(LangModelAnalyse.getString("km"));
+	private static StringBuffer mt = new StringBuffer(' ').append(LangModelAnalyse.getString("mt"));
+	private static StringBuffer db = new StringBuffer(' ').append(LangModelAnalyse.getString("dB"));
+
+	private static String linear = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.LINEAR));
+	private static String connector = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.CONNECTOR));
+	private static String weld = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.WELD));
+	private static String initiate = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.INITIATE));
+	private static String terminate = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.TERMINATE));
+	private static String noid = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.NON_IDENTIFIED));
 
 	public DetailedEventsFrame()
 	{
@@ -93,7 +104,7 @@ public class DetailedEventsFrame extends JInternalFrame
 						updTableModel (0);
 					}*/
 					data_ = null;
-					ctModel.clearTable();
+//					ctModel.clearTable();
 					tabbedPane.setSelectedIndex(0);
 					tabbedPane.setEnabledAt(0, true);
 					tabbedPane.setEnabledAt(1, false);
@@ -106,7 +117,7 @@ public class DetailedEventsFrame extends JInternalFrame
 				if (id.equals("all"))
 				{
 					data_ = null;
-					tModel.clearTable();
+//					tModel.clearTable();
 					ctModel.clearTable();
 					tabbedPane.setSelectedIndex(0);
 					tabbedPane.setEnabledAt(0, true);
@@ -181,11 +192,6 @@ public class DetailedEventsFrame extends JInternalFrame
 				updTableModel (selected);
 				setData(selected);
 			}
-			if (rue.CONCAVITY_SELECTED)
-			{
-				concSelected = Integer.parseInt((String)rue.getSource());
-				updConcTableModel (concSelected);
-			}
 		}
 	}
 
@@ -193,15 +199,94 @@ public class DetailedEventsFrame extends JInternalFrame
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-		tModel = new GeneralTableModel(
-					new String[] {LangModelAnalyse.getString("eventDetailedParam"),
-												LangModelAnalyse.getString("eventDetailedValue")},
-					new Object[] {"", ""},
-					0);
 
-		jTable = new ATable (tModel);
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
-		jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
+		FixedSizeEditableTableModel linearModel = new FixedSizeEditableTableModel(
+				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
+											LangModelAnalyse.getString("eventDetailedValue")},
+				new Object[] {""},
+				new String[] {
+						"",
+						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventStartLevel"),
+						LangModelAnalyse.getString("eventEndLevel"),
+						LangModelAnalyse.getString("eventRMSDeviation"),
+						LangModelAnalyse.getString("eventMaxDeviation")
+				},
+				null);
+		tModels.put(linear, linearModel);
+
+		FixedSizeEditableTableModel initialModel = new FixedSizeEditableTableModel(
+				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
+											LangModelAnalyse.getString("eventDetailedValue")},
+				new Object[] {""},
+				new String[] {
+						"",
+						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventStartLevel"),
+						LangModelAnalyse.getString("eventEndLevel"),
+						LangModelAnalyse.getString("eventRMSDeviation"),
+						LangModelAnalyse.getString("eventMaxDeviation")
+				},
+				null);
+		tModels.put(initiate, initialModel);
+
+		FixedSizeEditableTableModel noidModel = new FixedSizeEditableTableModel(
+				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
+											LangModelAnalyse.getString("eventDetailedValue")},
+				new Object[] {""},
+				new String[] {
+						"",
+						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventMaxLevel"),
+						LangModelAnalyse.getString("eventMinLevel"),
+						LangModelAnalyse.getString("eventMaxDeviation")
+				},
+				null);
+		tModels.put(noid, noidModel);
+
+		FixedSizeEditableTableModel connectorModel = new FixedSizeEditableTableModel(
+				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
+											LangModelAnalyse.getString("eventDetailedValue")},
+				new Object[] {""},
+				new String[] {
+						"",
+						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventStartLevel"),
+						LangModelAnalyse.getString("eventEndLevel"),
+						LangModelAnalyse.getString("eventReflectionLevel"),
+						LangModelAnalyse.getString("eventFormFactor")
+				},
+				null);
+		tModels.put(connector, connectorModel);
+
+		FixedSizeEditableTableModel spliceModel = new FixedSizeEditableTableModel(
+				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
+											LangModelAnalyse.getString("eventDetailedValue")},
+				new Object[] {""},
+				new String[] {
+						"",
+						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventStartLevel"),
+						LangModelAnalyse.getString("eventEndLevel")
+				},
+				null);
+		tModels.put(weld, spliceModel);
+
+		FixedSizeEditableTableModel terminateModel = new FixedSizeEditableTableModel(
+				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
+											LangModelAnalyse.getString("eventDetailedValue")},
+				new Object[] {""},
+				new String[] {
+						"",
+						LangModelAnalyse.getString("eventLength"), // протяженность
+						LangModelAnalyse.getString("eventStartLevel"),
+						LangModelAnalyse.getString("eventReflectionLevel"),
+						LangModelAnalyse.getString("eventFormFactor")
+				},
+				null);
+		tModels.put(terminate, terminateModel);
+
+		jTable = new ATable();
 
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
@@ -353,175 +438,100 @@ public class DetailedEventsFrame extends JInternalFrame
 		if (num == -1)
 			return;
 		TraceEvent ev = a.events[num];
-		Vector row;
-		tModel.clearTable();
 
-		row = new Vector(2);
-		row.add(LangModelAnalyse.getString("eventType" + String.valueOf(ev.getType()))); // тип
-		row.add(String.valueOf(num+1));
-		tModel.insertRow(row);
-
-		row = new Vector(2);
-		row.add(LangModelAnalyse.getString("eventLength")); // протяженность
-		row.add(String.valueOf(MathRef.round_3((ev.last_point - ev.first_point)*res) + " " + LangModelAnalyse.getString("km")));
-		tModel.insertRow(row);
-
+		FixedSizeEditableTableModel tModel = null;
 		switch (ev.getType())
-			{
-				case TraceEvent.LINEAR:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventEndLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-//							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.getString("eventFade"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[2] * 1000d / res) + " " + LangModelAnalyse.getString("dB/km")));
-//							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventRMSDeviation"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[3]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventMaxDeviation"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[4]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 break;
-				case TraceEvent.INITIATE:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventAmplitude"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventPoLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventEDZ"));
-							 row.add(String.valueOf(Math.round(ev.data[2] * res * 1000d) + " " + LangModelAnalyse.getString("mt")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventADZ"));
-							 row.add(String.valueOf(Math.round(ev.data[3] * res * 1000d) + " " + LangModelAnalyse.getString("mt")));
-							 tModel.insertRow(row);
-						 break;
-				case TraceEvent.NON_IDENTIFIED:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventMaxLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventMinLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventMaxDeviation"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-						 break;
-				case TraceEvent.CONNECTOR:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventEndLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventReflectionLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-//							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.getString("eventLoss"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[1] - ev.data[2]) + " " + LangModelAnalyse.getString("dB")));
-//							 tModel.insertRow(row);
-//							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.getString("eventAmplitude"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[0] - ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
-//							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventFormFactor"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[3])));
-							 tModel.insertRow(row);
-						 break;
-				case TraceEvent.WELD:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventEndLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-//							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.getString("eventLoss"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.getString("dB")));
-//							 tModel.insertRow(row);
-						 break;
-				case TraceEvent.TERMINATE:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventReflectionLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
-							 tModel.insertRow(row);
-//							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.getString("eventAmplitude"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[0] - ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
-//							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.getString("eventFormFactor"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[2])));
-							 tModel.insertRow(row);
-						 break;
+		{
+			case TraceEvent.LINEAR:
+				tModel = (FixedSizeEditableTableModel)tModels.get(linear);
+				tModel.setValueAt(linear,	0, 0);
+				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+								.append(km).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[3]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[4]))
+								.append(db).toString()
+				}, 1);
+				break;
+			case TraceEvent.INITIATE:
+				tModel = (FixedSizeEditableTableModel)tModels.get(initiate);
+				tModel.setValueAt(initiate,	0, 0);
+				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+								.append(km).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+								.append(db).toString(),
+						new StringBuffer().append(Math.round(ev.data[2] * res * 1000d))
+								.append(mt).toString(),
+						new StringBuffer().append(Math.round(ev.data[3] * res * 1000d))
+								.append(mt).toString()
+					}, 1);
+					break;
+			case TraceEvent.NON_IDENTIFIED:
+				tModel = (FixedSizeEditableTableModel)tModels.get(noid);
+				tModel.setValueAt(noid,	0, 0);
+				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+								.append(km).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[2]))
+								.append(db).toString()
+					}, 1);
+					break;
+			case TraceEvent.CONNECTOR:
+				tModel = (FixedSizeEditableTableModel)tModels.get(connector);
+				tModel.setValueAt(connector, 0, 0);
+				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+								.append(km).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[2]))
+								.append(db).toString(),
+						String.valueOf(MathRef.round_4(ev.data[3]))
+					}, 1);
+					break;
+			case TraceEvent.WELD:
+				tModel = (FixedSizeEditableTableModel)tModels.get(weld);
+				tModel.setValueAt(weld,	0, 0);
+				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+								.append(km).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+								.append(db).toString()
+					}, 1);
+					break;
+			case TraceEvent.TERMINATE:
+				tModel = (FixedSizeEditableTableModel)tModels.get(terminate);
+				tModel.setValueAt(terminate, 0, 0);
+				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+								.append(km).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+								.append(db).toString(),
+						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+								.append(db).toString(),
+						String.valueOf(MathRef.round_4(ev.data[2]))
+					}, 1);
+				 break;
 			}
-			jTable.updateUI();
-	}
-
-	void updConcTableModel(int num)
-	{
-		if (num == -1)
-			return;
-		TraceEvent ev = a.concavities[num];
-		Vector row;
-		tModel.clearTable();
-
-		row = new Vector(2);
-		row.add(LangModelAnalyse.getString("eventType" + String.valueOf(ev.getType()))); // тип
-		if ((int)(ev.data[ev.data.length - 2]) == (int)(ev.data[ev.data.length - 1]))
-				row.add( String.valueOf ((int)(ev.data[ev.data.length - 2]) + 1));
-			else
-				row.add( String.valueOf ((int)(ev.data[ev.data.length - 2]) + 1)
-								 + "-" + String.valueOf ((int)(ev.data[ev.data.length - 1]) + 1) ); // номер
-		tModel.insertRow(row);
-		row = new Vector(2);
-		row.add(LangModelAnalyse.getString("eventLength")); // протяженность
-		row.add(String.valueOf(MathRef.round_3((ev.last_point - ev.first_point)*res) + " " + LangModelAnalyse.getString("km")));
-		tModel.insertRow(row);
-		row = new Vector(2);
-		row.add(LangModelAnalyse.getString("eventStartLevel"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
-		tModel.insertRow(row);
-		row = new Vector(2);
-		row.add(LangModelAnalyse.getString("eventEndLevel"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
-		tModel.insertRow(row);
-		row = new Vector(2);
-		row.add(LangModelAnalyse.getString("eventMaxDeviation"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.getString("dB")));
-		tModel.insertRow(row);
-
-		row = new Vector(2);
-		row.add(LangModelAnalyse.getString("eventCurveFactor"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[3])));
-		tModel.insertRow(row);
-
+		jTable.setModel(tModel);
+		jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
+		jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
 		jTable.updateUI();
 	}
 }
@@ -530,7 +540,6 @@ public class DetailedEventsFrame extends JInternalFrame
 
 class CompareTableModel extends AbstractTableModel
 {
-
 //  String[] columnNames = {LangModelModel.String("parameter") ,
 //    LangModelModel.String("value")};
 
@@ -607,10 +616,6 @@ class CompareTableModel extends AbstractTableModel
 		fireTableCellUpdated(row, col);
 	}
 }
-
-
-
-
 
 
 class CompareTableRenderer extends DefaultTableCellRenderer

@@ -129,7 +129,7 @@ public class OpticalLength extends SchemePathDecompositor
 
 		for(int i = 0; i < pe.length; i++) // count through all of the Path Elements
 		{
-			if(pe[i].is_cable) // CABLE LINK
+			if(pe[i].getType() == PathElement.CABLE_LINK) // CABLE LINK
 			{
 				SchemeCableLink schemeCableLink =
 						(SchemeCableLink)Pool.get(SchemeCableLink.typ, pe[i].link_id);
@@ -159,7 +159,7 @@ public class OpticalLength extends SchemePathDecompositor
 						schemeCableLink.getOpticalLength());
 				vec.add(lc);
 			}
-			else               // simple link
+			else if (pe[i].getType() == PathElement.LINK)              // simple link
 			{
 				SchemeLink schemeLink =
 						(SchemeLink)Pool.get(SchemeLink.typ, pe[i].link_id);
@@ -172,6 +172,13 @@ public class OpticalLength extends SchemePathDecompositor
 						schemeLink,
 						schemeLink.getPhysicalLength(),
 						schemeLink.getOpticalLength());
+				vec.add(lc);
+			}
+			else
+			{
+				SchemeElement se =
+					(SchemeElement)Pool.get(SchemeElement.typ, pe[i].scheme_element_id);
+				LengthContainer lc = new LengthContainer(se, 0, 0);
 				vec.add(lc);
 			}
 		} // ending of the PathElement counter

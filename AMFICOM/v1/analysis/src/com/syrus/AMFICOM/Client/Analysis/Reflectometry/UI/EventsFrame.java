@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.Vector;
-
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
@@ -18,12 +16,20 @@ import com.syrus.io.BellcoreStructure;
 public class EventsFrame extends ATableFrame
 												 implements OperationListener
 {
+	private static String linear = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.LINEAR));
+	private static String connector = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.CONNECTOR));
+	private static String weld = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.WELD));
+	private static String initiate = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.INITIATE));
+	private static String terminate = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.TERMINATE));
+	private static String noid = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.NON_IDENTIFIED));
+	private static String dash = "-----";
+
 	private ReflectogramEvent []data_;
 	private ReflectogramEvent []data;
 	private ReflectogramEvent []etalon;
 
 	private Dispatcher dispatcher;
-	private GeneralTableModel tModel;
+	private FixedSizeEditableTableModel tModel;
 	private ATable jTable;
 	private int selected = 0;
 	private boolean skip = false;
@@ -150,12 +156,11 @@ public class EventsFrame extends ATableFrame
 			{
 				updTableModel (Integer.parseInt((String)rue.getSource()));
 			}
-
-			if (rue.CONCAVITY_SELECTED)
-			{
-				if (jTable.getSelectedRow() != -1)
-					jTable.removeRowSelectionInterval(jTable.getSelectedRow(), jTable.getSelectedRow());
-			}
+//			if (rue.CONCAVITY_SELECTED)
+//			{
+//				if (jTable.getSelectedRow() != -1)
+//					jTable.removeRowSelectionInterval(jTable.getSelectedRow(), jTable.getSelectedRow());
+//			}
 		}
 	}
 
@@ -204,7 +209,7 @@ public class EventsFrame extends ATableFrame
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 
-		tModel = new GeneralTableModel(
+		tModel = new FixedSizeEditableTableModel(
 					new String[] {LangModelAnalyse.getString("eventNum"),
 												LangModelAnalyse.getString("eventType"),
 												LangModelAnalyse.getString("eventStartLocationKM"),
@@ -213,7 +218,8 @@ public class EventsFrame extends ATableFrame
 												LangModelAnalyse.getString("eventLossDB"),
 												LangModelAnalyse.getString("eventLeadAttenuationDBKM")},
 					new Object[] {"", "", "", "", "", "", "", ""},
-					0);
+					null,
+					null);
 
 		jTable = new ATable(tModel);
 
@@ -298,79 +304,75 @@ public class EventsFrame extends ATableFrame
 
 	void setTableModel(BellcoreStructure bs, TraceEvent[] events)
 	{
-
 		double res = (double)(3 * bs.fxdParams.DS[0]) / (double)(bs.fxdParams.GI * 10000);
 		double sigma = MathRef.calcSigma(bs.fxdParams.AW/10, bs.fxdParams.PWU[0]);
-		Vector row;
+
 		tModel.clearTable();
 
 		for (int i = 0; i < events.length; i++)
 		{
-			row = new Vector(6);
-
 			switch (events[i].getType())
 			{
 				case TraceEvent.INITIATE:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add("-----"); // отраж
-						 row.add("0.0"); // потери
-						 row.add("-----"); //затух
-						 tModel.insertRow(row);
-						 break;
+					tModel.addRow(String.valueOf(i + 1), new Object[] {
+						 initiate,
+						 Double.toString(MathRef.round_3(res * (double)events[i].first_point)), //начало
+						 Double.toString(MathRef.round_3(res * (events[i].last_point - events[i].first_point))), //протяженность
+						 dash, // отраж
+						 "0.0", // потери
+						 dash //затух
+					});
+					break;
 				case TraceEvent.LINEAR:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add("-----"); // отраж
-						 row.add(Double.toString( MathRef.round_4 (events[i].data[1] - events[i].data[0]))); // потери
-						 row.add(Double.toString( MathRef.round_4 (events[i].data[2] / res))); //затух
-						 tModel.insertRow(row);
-						 break;
+						 tModel.addRow(String.valueOf(i + 1), new Object[] {
+						 linear,
+						 Double.toString(MathRef.round_3(res * (double)events[i].first_point)), //начало
+						 Double.toString(MathRef.round_3(res * (events[i].last_point - events[i].first_point))), //протяженность
+						 dash, // отраж
+						 Double.toString(MathRef.round_4(events[i].data[1] - events[i].data[0])), // потери
+						 Double.toString(MathRef.round_4(events[i].data[2] / res)) //затух
+					});
+					break;
 				case TraceEvent.NON_IDENTIFIED:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add("-----"); // отраж
-						 row.add("-----"); // потери
-						 row.add("-----"); //затух
-						 tModel.insertRow(row);
-						 break;
+						 tModel.addRow(String.valueOf(i + 1), new Object[] {
+						 noid,
+						 Double.toString(MathRef.round_3(res * (double)events[i].first_point)), //начало
+						 Double.toString(MathRef.round_3(res * (events[i].last_point - events[i].first_point))), //протяженность
+						 dash, // отраж
+						 dash, // потери
+						 dash //затух
+					});
+					break;
 				case TraceEvent.CONNECTOR:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add(Double.toString( MathRef.round_4 (MathRef.calcReflectance(sigma, Math.abs(events[i].data[0] - events[i].data[2]))))); // отраж
-						 row.add(Double.toString( MathRef.round_4 ( events[i].data[1] - events[i].data[0]))); // потери
-						 row.add("-----"); //затух
-						 tModel.insertRow(row);
-						 break;
+						 tModel.addRow(String.valueOf(i + 1), new Object[] {
+						 connector,
+						 Double.toString(MathRef.round_3(res * (double)events[i].first_point)), //начало
+						 Double.toString(MathRef.round_3(res * (events[i].last_point - events[i].first_point))), //протяженность
+						 Double.toString(MathRef.round_4(MathRef.calcReflectance(sigma, Math.abs(events[i].data[0] - events[i].data[2])))), // отраж
+						 Double.toString(MathRef.round_4(events[i].data[1] - events[i].data[0])), // потери
+						 dash //затух
+					});
+					break;
 				case TraceEvent.WELD:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add("-----"); // отраж
-						 row.add(Double.toString( MathRef.round_4 ( events[i].data[2]))); // потери
-						 row.add("-----"); //затух
-						 tModel.insertRow(row);
-						 break;
+						 tModel.addRow(String.valueOf(i + 1), new Object[] {
+						 weld,
+						 Double.toString(MathRef.round_3 (res * (double)events[i].first_point)), //начало
+						 Double.toString(MathRef.round_3 (res * (events[i].last_point - events[i].first_point))), //протяженность
+						 dash, // отраж
+						 Double.toString( MathRef.round_4 ( events[i].data[2])), // потери
+						 dash //затух
+					});
+					break;
 				case TraceEvent.TERMINATE:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add(Double.toString( MathRef.round_4 (MathRef.calcReflectance(sigma, Math.abs(events[i].data[0]-events[i].data[1]))))); // отраж
-						 row.add("-----"); // потери
-						 row.add("-----"); //затух
-						 tModel.insertRow(row);
-						 break;
-				default: ;
+						 tModel.addRow(String.valueOf(i + 1), new Object[] {
+						 terminate,
+						 Double.toString(MathRef.round_3(res * (double)events[i].first_point)), //начало
+						 Double.toString(MathRef.round_3(res * (events[i].last_point - events[i].first_point))), //протяженность
+						 Double.toString(MathRef.round_4(MathRef.calcReflectance(sigma, Math.abs(events[i].data[0]-events[i].data[1])))), // отраж
+						 dash, // потери
+						 dash //затух
+					});
+					break;
 			}
 
 		}
