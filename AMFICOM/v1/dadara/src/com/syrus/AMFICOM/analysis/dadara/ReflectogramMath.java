@@ -80,10 +80,6 @@ public class ReflectogramMath
 			for(int i = 0; i < y.length; i++)
 			{
 				y[i].shiftY(dA);
-		/*a1_connector += dA;
-				y[i].a2_connector += dA;
-				y[i].a_linear += dA;
-				y[i].a_weld += dA;*/
 			}
 	}
 
@@ -107,6 +103,32 @@ public class ReflectogramMath
 			for(int i = 0; i < etalon.length; i++)
 				etalon[i].shiftY(dA);
 		}
+	}
+
+	public static void alignArrayToEtalon(double[] y, final ModelTrace etalon)
+	{
+		int len = Math.min(y.length, etalon.getLength());
+		if (len == 0)
+			return;
+		double maxEt = etalon.getY(0);
+		double maxDat = y[0];
+		for (int i = 1; i < len; i++)
+		{
+			if (maxDat < y[i])
+				maxDat = y[i];
+			if (maxEt < etalon.getY(i))
+				maxEt = etalon.getY(i);
+		}
+
+		for (int i = 0; i < len; i++)
+			y[i] += maxEt - maxDat;
+	}
+
+	public static ArrayModelTrace createAlignedArrayModelTrace(ModelTrace data, ModelTrace etalon)
+	{
+		double[] y = data.getYArray();
+		alignArrayToEtalon(y, etalon);
+		return new ArrayModelTrace(y);
 	}
 
 	public static ReflectogramEvent[] alignClone(ReflectogramEvent[] y, ReflectogramEvent[] etalon)
@@ -148,7 +170,21 @@ public class ReflectogramMath
 		}
 		return null;
 	}
-	
+
+	public static SimpleReflectogramEvent getEvent(int coord, SimpleReflectogramEvent[] re)
+	{
+		if(re == null)
+			return null;
+
+		// ищем справа налево, чтобы отдать предпочтение [i].begin перед [i-1].end
+		for(int i = re.length - 1; i >= 0; i--)
+		{
+			if(re[i].getBegin() <= coord && re[i].getEnd() >= coord)
+				return re[i];
+		}
+		return null;
+	}
+
 	// takes amplitude with protection against for NullPointer //saa, 2004-10
 	public static double getEventAmplitudeAt(int coord, ReflectogramEvent[] re)
 	{
@@ -179,7 +215,7 @@ public class ReflectogramMath
 		return -1;
 	}
 
-	public static int getLastSplash(ReflectogramEvent[] re)
+	public static int getLastConnectorBegin(SimpleReflectogramEvent[] re)
 	{
 		for(int i = re.length - 1; i >= 0; i--)
 			if(re[i].getEventType() == ReflectogramEvent.CONNECTOR)

@@ -1,15 +1,16 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/12 18:42:23 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/25 14:16:50 $
  * @author $Author: saa $
  * @module general_v1
  */
 
 /*
- * Два варианта создания объектов:
+ * варианты создания объектов:
  * 1. Native-код AnalysisManager'а
- * 2. static метод fromByteArray() 
+ * 2. static метод fromByteArray()
+ * 3. (новый) фабрика - только для своего пакета
  */
 
 // TODO: упорядочить методы согласно хотя бы доступу
@@ -29,13 +30,13 @@ public class ReflectogramEvent
 {
     //private static final long serialVersionUID = 8468909716459300200L;
     private static final long SIGNATURE = 8468920041210182200L;
-    
+
     // event types
 	public static final int RESERVED_VALUE = -1; // заведомо не использующееся значение
-	public static final int LINEAR = 1;
-	public static final int WELD = 2;
-	public static final int CONNECTOR = 3;
-	public static final int SINGULARITY = 4;
+	public static final int LINEAR = SimpleReflectogramEvent.LINEAR;
+	public static final int WELD = SimpleReflectogramEvent.SPLICE;
+	public static final int CONNECTOR = SimpleReflectogramEvent.CONNECTOR;
+	public static final int SINGULARITY = SimpleReflectogramEvent.NOTIDENTIFIED;
 
 	// store flags for int vars
 	private static final int STORE_MASK_INT		= 0xff;
@@ -633,6 +634,16 @@ public class ReflectogramEvent
 		updated();
 	}
 
+	/**
+	 * @deprecated 
+	 */
+	public static ReflectogramEvent readFromDIS2(DataInputStream dis) throws IOException, SignatureMismatchException
+	{
+		ReflectogramEvent ret = new ReflectogramEvent();
+		ret.readFromDIS(dis);
+		return ret;
+	}
+
 	// xtodo: change name: toByteArray -> arrayToBytes
 	// xtodo: use stream operations instead of byte arrays - for simplicity
 	public static byte[] toByteArray(ReflectogramEvent[] revents)
@@ -707,6 +718,7 @@ public class ReflectogramEvent
 		return ret;
 	}
 
+	// FIXME: нарушает left-right связи (убрать их или скрыть этот метод)
 	public ReflectogramEvent getThresholdReflectogramEvent(int thresholdNumeral)
 	{
 		//кэширование результата makeThresholdEvent в thresholdsCache
@@ -728,6 +740,15 @@ public class ReflectogramEvent
 		}
 		return makeThresholdEvent(threshold, thresholdNumeral);
 	}
+
+	public static final ReflectogramEvent[] getThresholdReflectogramEvents(ReflectogramEvent[] re, int key)
+	{
+		ReflectogramEvent[] ret = new ReflectogramEvent[re.length];
+		for (int i = 0; i < re.length; i++)
+			ret[i] = re[i].getThresholdReflectogramEvent(key);
+		createLeftRightLinks(ret);
+		return ret;
+	}	
 
 	public void changeThresholdType(int newType, double[] y)
 	{
@@ -982,6 +1003,32 @@ public class ReflectogramEvent
 	{
 		threshold = new Threshold(); // для амфикома нужно значение по умолчанию
 	} // FIXIT
+	
+	ReflectogramEvent createInstance(int begin, int end, int type)
+	{
+		ReflectogramEvent ret = new ReflectogramEvent();
+		ret.begin = begin;
+		ret.end = end;
+		ret.eventType = type;
+		ret.mf = ModelFunction.createLinear();
+		return ret;
+	}
+	
+	// этот метод потребовался для конвертации в новый формат
+	public ModelFunction getMFClone()
+	{
+		return mf.copy();
+	}
 
+	public static Threshold[] getThresholds(ReflectogramEvent[] re)
+	{
+		Threshold[] ret = new Threshold[re.length];
+		for (int i = 0; i < re.length; i++)
+		{
+			ret[i] = re[i].getThreshold();
+			if (ret[i] == null)
+				ret[i] = new Threshold();
+		}
+		return ret;
+	}
 }
-

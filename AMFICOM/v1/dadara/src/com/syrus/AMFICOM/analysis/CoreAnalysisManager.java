@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.6 2005/01/12 18:42:23 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.7 2005/01/25 14:16:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/01/12 18:42:23 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/25 14:16:50 $
  * @module
  */
 
@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 
 public class CoreAnalysisManager
@@ -96,7 +98,7 @@ public class CoreAnalysisManager
 	 *   Если null, то не используются.
 	 * @return относительная величина шума (дБ) по уровню 3 сигма  
 	 */
-	private static double[] calcNoiseArray(double[] y, ReflectogramEvent[] ev)
+	private static double[] calcNoiseArray(double[] y, SimpleReflectogramEvent[] ev)
 	{
 		double[] ret = nCalcNoiseArray(y);
 		for (int i = 0; i < ret.length; i++)
@@ -168,7 +170,7 @@ public class CoreAnalysisManager
 	 */
 
 	// strategy == 0: min fitting
-	public static ReflectogramEvent[] makeAnalysis(
+	public static ModelTraceManager makeAnalysis(
 			int strategy, BellcoreStructure bs,
 			double[] pars, Map bellcoreTraces)
 	{
@@ -213,7 +215,7 @@ public class CoreAnalysisManager
 		for (int i = 0; i < ep.length; i++)
 			ep[i].setDefaultThreshold(bs, bellcoreTraces);
 
-		return ep;
+		return new ModelTraceManager(ep);
 	}
 
 	private static ReflectogramEvent[] fitTrace(double[] y, double deltaX,

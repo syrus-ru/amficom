@@ -8,22 +8,15 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 public class Threshold {
-	public static final int THRESHOLD_SIZE = 128;
-
-	public static final int UP1 = 0; // soft up
-
-	public static final int UP2 = 1; // hard up
-
-	public static final int DOWN1 = 2; // soft down
-
-	public static final int DOWN2 = 3; // hard down
+	//public static final int THRESHOLD_SIZE = 128;
+	public static final int UP1 = 0; // soft high
+	public static final int UP2 = 1; // hard high
+	public static final int DOWN1 = 2; // soft low
+	public static final int DOWN2 = 3; // hard low
 
 	private double[] dA = new double[] { .2, .4, -.2, -.4 };
-
 	private double[] dC = new double[] { 0, 0, 0, 0 };
-
 	private double[] dX = new double[] { 1, 2, -1, -2 };
-
 	private double[] dL = new double[] { 0, 0, 0, 0 };
 	
 	private long serialNumber = 0; // для обнуления кэшей
@@ -58,7 +51,8 @@ public class Threshold {
 	}
 
 	public void changeThresholdBy(double da, double dc, double dx, double dl,
-			ReflectogramEvent ep, int key)
+			//ReflectogramEvent ep,
+			int key)
 	{
 		serialNumber++;
 		
@@ -116,24 +110,25 @@ public class Threshold {
 		dC[3] -= dc;
 	}
 
-	public void setThresholdValue(double val, int col, ReflectogramEvent ep,
+	public void setThresholdValue(double val, int col,
+			//ReflectogramEvent ep
 			int key) {
 		switch (col) {
 		case 1:
-			changeThresholdBy(val - dA[key], 0, 0, 0, ep, key);
+			changeThresholdBy(val - dA[key], 0, 0, 0, key);
 			break;
 		case 2:
-			changeThresholdBy(0, -val + dC[key], 0, 0, ep, key);
+			changeThresholdBy(0, -val + dC[key], 0, 0, key);
 			break;
 		case 3:
-			changeThresholdBy(0, 0, val - dX[key], 0, ep, key);
+			changeThresholdBy(0, 0, val - dX[key], 0, key);
 			break;
 		case 4:
-			changeThresholdBy(0, 0, 0, val - dL[key], ep, key);
+			changeThresholdBy(0, 0, 0, val - dL[key], key);
 			break;
 		}
 	}
-	
+
 	public void initFromDY(double dymA, double dymW, double dypW, double dypA)
 	{
 		serialNumber++;
@@ -193,6 +188,7 @@ public class Threshold {
 	 * /
 	 }*/
 
+	/*
 	public byte[] getByteArray() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
@@ -211,7 +207,9 @@ public class Threshold {
 		}
 		return baos.toByteArray();
 	}
+	*/
 
+	/*
 	public static byte[] toByteArray(Threshold[] ts) {
 		byte[] bar = new byte[THRESHOLD_SIZE * ts.length];
 		byte[] bar1;
@@ -235,6 +233,47 @@ public class Threshold {
 			e.printStackTrace();
 		}
 		return (Threshold[]) ll.toArray(new Threshold[ll.size()]);
+	}
+	*/
+	
+	public void writeToDOS(DataOutputStream dos)
+	throws IOException
+	{
+		double[][] data = new double[][] {dA, dC, dX, dL};
+		for (int i = 0; i < data.length; i++)
+			for (int k = 0; k < data[i].length; k++)
+				dos.writeDouble(data[i][k]);
+	}
+
+	public static Threshold readFromDIS(DataInputStream dis)
+	throws IOException
+	{
+		Threshold ret = new Threshold();
+		double[][] data = new double[][] {ret.dA, ret.dC, ret.dX, ret.dL};
+		for (int i = 0; i < data.length; i++)
+			for (int k = 0; k < data[i].length; k++)
+				data[i][k] = dis.readDouble();
+		return ret;
+	}
+
+	public static void writeArrayToDOS(Threshold[] th, DataOutputStream dos)
+	throws IOException
+	{
+		dos.writeInt(th.length);
+		for (int i = 0; i < th.length; i++)
+		{
+			th[i].writeToDOS(dos);
+		}
+	}
+
+	public static Threshold[] readArrayFromDIS(DataInputStream dis)
+	throws IOException
+	{
+		int len = dis.readInt();
+		Threshold[] ret = new Threshold[len];
+		for (int i = 0; i < len; i++)
+			ret[i] = readFromDIS(dis);
+		return ret;
 	}
 }
 

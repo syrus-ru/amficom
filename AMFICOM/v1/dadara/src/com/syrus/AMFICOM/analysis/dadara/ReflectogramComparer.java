@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
+
 //*
 
 /**
@@ -10,25 +11,25 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * (1) нестатическа€ часть - пользователь создает объект
  * класса ReflectogramComparer, дав на входе два массива
- * ReflectogramEvent[] - один - пробные событи€, второй - эталонные.
+ * ComplexReflectogramEvent[] - один - пробные событи€, второй - эталонные.
  * (—ама рефлектограмма пока не используетс€).
  * —озданный объект находит соответстви€ событий, и после этого
  * умеет отвечать на вопросы об изменении состава и параметров событий.
  * 
  * (2) статическа€ часть - сравнивает модельные кривые, построенные
- * по ReflectogramEvent[] - MaxDeviation и пр.
+ * по ModelTrace - MaxDeviation и пр.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2004/12/17 18:16:20 $
+ * @author $Author: saa $
+ * @version $Revision: 1.3 $, $Date: 2005/01/25 14:16:50 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
 {
 	//private ReflectogramEvent[] hardAlarms;
 	//private ReflectogramEvent[] softAlarms;
-	double[] probeTrace;
-	private ReflectogramEvent[] probeEvents = null;
-	private ReflectogramEvent[] etalonEvents;
+	//double[] probeTrace;
+	private ComplexReflectogramEvent[] probeEvents = null;
+	private ComplexReflectogramEvent[] etalonEvents;
 
 	// ќтображение событий пробной р/г на событи€ эталонной
 	// и наоборот.
@@ -43,21 +44,22 @@ public class ReflectogramComparer
 	//public static long COMPARE_EVALUATE = 0x2;
 
 	public ReflectogramComparer(
-			double[] _probeTrace, // may be null if evaluation not desires
-			ReflectogramEvent[] _probeEvents, // may be null if analysis not performed
-			ReflectogramEvent[] _etalonEvents, // not null
-			Threshold[] etalonThresholds // may be null if evaluation not desired
+			//double[] _probeTrace, // may be null if evaluation not desires
+			ComplexReflectogramEvent[] _probeEvents, // may be null if analysis not performed
+			ComplexReflectogramEvent[] _etalonEvents // not null
+			//Threshold[] etalonThresholds // may be null if evaluation not desired
 			)
 	{
 		probeEvents = _probeEvents;
-		probeTrace = _probeTrace;
+		//probeTrace = _probeTrace;
 
 		// ‘ормируем эталон с заданными порогами.
 		// XXX: ѕорогов пока нет.  огда по€в€тс€ - вспомнить что тут есть такое ветвление.
 		// Ѕыть может, лучше сделать два конструктора - один - €вно с evaluation, другой - €вно без него.
+		/*
 		if (etalonThresholds != null)
 		{
-			etalonEvents = new ReflectogramEvent[_etalonEvents.length];
+			etalonEvents = new ComplexReflectogramEvent[_etalonEvents.length];
 	        for (int i = 0; i < _etalonEvents.length; i++)
 	        {
 	            etalonEvents[i] = _etalonEvents[i].copy();
@@ -65,7 +67,8 @@ public class ReflectogramComparer
 	        }
 		}
 		else
-			etalonEvents = _etalonEvents;
+		*/
+		etalonEvents = _etalonEvents;
 
 		// начальный анализ - ищем соответствие событий эталона и пробы
 		if (probeEvents != null)
@@ -122,8 +125,8 @@ public class ReflectogramComparer
 	public static final int CHANGETYPE_NEW_OR_LOST = 0x10;
 	
 	public static boolean eventsAreDifferent(
-			ReflectogramEvent a, // not null
-			ReflectogramEvent b, // not null
+			ComplexReflectogramEvent a, // not null
+			ComplexReflectogramEvent b, // not null
 			int changeType, // one of CHANGETYPE...
 			double changeThreshold) // may be zero
 	{
@@ -180,12 +183,12 @@ public class ReflectogramComparer
 
 	// internal events comparison
 
-	private boolean eventsOverlaps(ReflectogramEvent x, ReflectogramEvent y)
+	private boolean eventsOverlaps(SimpleReflectogramEvent x, SimpleReflectogramEvent y)
 	{
 		return Math.max(x.getBegin(), y.getBegin()) <= Math.min(x.getEnd(), y.getEnd());
 	}
 
-	private int calcEventsDistance(ReflectogramEvent x, ReflectogramEvent y)
+	private int calcEventsDistance(SimpleReflectogramEvent x, SimpleReflectogramEvent y)
 	{
 		return Math.abs(x.getBegin() - y.getBegin()) + Math.abs(x.getEnd() - y.getEnd());
 	}
@@ -200,7 +203,7 @@ public class ReflectogramComparer
 		}
 	}
 
-	private int[] findNearestOverlappingEvent(ReflectogramEvent[] X, ReflectogramEvent[] Y)
+	private int[] findNearestOverlappingEvent(SimpleReflectogramEvent[] X, SimpleReflectogramEvent[] Y)
 	{
 		int[] ret = new int[X.length];
 		for (int i = 0; i < X.length; i++)
@@ -226,15 +229,14 @@ public class ReflectogramComparer
 
 	//
 
-	private static int[] getChangedProbeEventsList(ReflectogramEvent[] data,
-			ReflectogramEvent[] etalon,
+	private static int[] getChangedProbeEventsList(ComplexReflectogramEvent[] data,
+			ComplexReflectogramEvent[] etalon,
 			int changeType,
 			double changeThreshold)
 	{
 		if (data == null || etalon == null)
 			return new int[0];
-		ReflectogramComparer comparer = new ReflectogramComparer(
-			null, data, etalon, null);
+		ReflectogramComparer comparer = new ReflectogramComparer(data, etalon);
 		int count = 0;
 		for (int i = 0; i < data.length; i++)
 			if (comparer.isProbeEventChanged(i, changeType, changeThreshold))
@@ -249,80 +251,144 @@ public class ReflectogramComparer
 
 	// NEW IMPLEMENTATION OF OLD CONTRACT (as far as I guess it)
 	public static int[] getNewEventsList(
-			ReflectogramEvent[] data,
-			ReflectogramEvent[] etalon)
+			ComplexReflectogramEvent[] data,
+			ComplexReflectogramEvent[] etalon)
 	{
 		return getChangedProbeEventsList(data, etalon, CHANGETYPE_NEW_OR_LOST, 0);
 	}
-	
+
 	public static int[] getChangedAmplitudeEventsList(
-			ReflectogramEvent[] data,
-			ReflectogramEvent[] etalon,
+			ComplexReflectogramEvent[] data,
+			ComplexReflectogramEvent[] etalon,
 			double threshold)
 	{
 		return getChangedProbeEventsList(data, etalon, CHANGETYPE_AMPL, threshold);
 	}
 	
 	public static int[] getChangedLossEventsList(
-			ReflectogramEvent[] data,
-			ReflectogramEvent[] etalon,
+			ComplexReflectogramEvent[] data,
+			ComplexReflectogramEvent[] etalon,
 			double threshold)
 	{
 		return getChangedProbeEventsList(data, etalon, CHANGETYPE_LOSS, threshold);
 	}
-	
+
 	// —татические методы - дл€ сверки модельных кривых, не вдава€сь в
 	// вопросы соответстви€ событий.
-	// OLD METHODS, with patches
 	//---------------------------------------------------------------------
 	//---------------------------------------------------------------------
 	//---------------------------------------------------------------------
-	public static double getDeviation(ReflectogramEvent[] etalon,
-			ReflectogramEvent[] data, int nEvent)
-	{
-		if (data == null || etalon == null)
-			return 0.;
-
-		double ret = 0.;
-
-		for (int i = data[nEvent].getBegin(); i < data[nEvent].getEnd(); i++)
-		{
-			if (i < etalon[etalon.length - 1].getEnd())
-			{
-				double a1 = data[nEvent].refAmplitude(i);
-				double a2 = ReflectogramMath.getEventAmplitudeAt(i, etalon);
-				if (Math.abs(ret) < Math.abs(a1 - a2))
-				{
-					ret = a1 - a2;
-				}
-			}
-		}
-
-		return Math.abs(ret);
-	}
-
 	//-----------------------------------------------------------------------------
-	public static double getMeanDeviation(ReflectogramEvent[] data,
-			ReflectogramEvent[] etalon, int nEvent)
+	private static double getMaxDeviation(ModelTrace mt1,
+			ModelTrace mt2, int iFrom, int iToEx)
 	{
 		double ret = 0.;
-		int norma = 0;
-		for (int i = data[nEvent].getBegin(); i < data[nEvent].getEnd(); i++)
+		for (int i = iFrom; i < iToEx; i++)
 		{
-			if (i < etalon[etalon.length - 1].getEnd())
-			{
-				double a1 = data[nEvent].refAmplitude(i);
-				double a2 = ReflectogramMath.getEventAmplitudeAt(i, etalon);
-				ret += Math.abs(a1 - a2);
-				norma++;
-			}
+				double a1 = mt1.getY(i);
+				double a2 = mt2.getY(i);
+				double diff = Math.abs(a1 - a2);
+				if (diff > ret)
+					ret = diff;
 		}
-		if (norma > 0)
-			ret = ret / norma;
-
 		return ret;
 	}
+	
+	private static double getMeanDeviation(ModelTrace mt1,
+			ModelTrace mt2, int iFrom, int iToEx)
+	{
+		double sum = 0.;
+		int count = 0;
+		for (int i = iFrom; i < iToEx; i++)
+		{
+				double a1 = mt1.getY(i);
+				double a2 = mt2.getY(i);
+				sum += Math.abs(a1 - a2);
+				count++;
+		}
+		return count > 0 ? sum / count : 0.0;
+	}
+	
+	private static double getRMSDeviation(ModelTrace mt1,
+			ModelTrace mt2, int iFrom, int iToEx)
+	{
+		double sum = 0.;
+		int count = 0;
+		for (int i = iFrom; i < iToEx; i++)
+		{
+				double diff = mt1.getY(i) - mt2.getY(i);
+				sum += diff * diff;
+				count++;
+		}
+		return count > 0 ? Math.sqrt(sum / count) : 0.0;
+	}
 
+	public static double getMaxDeviation(ModelTraceManager data,
+			ModelTrace etalon, int nEvent)
+	{
+		int iFrom = data.getEventBegin(nEvent);
+		int iToEx = Math.min(data.getEventEnd(nEvent) + 1, etalon.getLength());
+		ModelTrace dataMT = data.getModelTrace();
+		return getMaxDeviation(dataMT, etalon, iFrom, iToEx);
+	}
+
+	public static double getMeanDeviation(ModelTraceManager data,
+			ModelTrace etalon, int nEvent)
+	{
+		int iFrom = data.getEventBegin(nEvent);
+		int iToEx = Math.min(data.getEventEnd(nEvent) + 1, etalon.getLength());
+		ModelTrace dataMT = data.getModelTrace();
+		return getMeanDeviation(dataMT, etalon, iFrom, iToEx);
+	}
+
+	public static double getMaxDeviation(ModelTrace data, ModelTrace etalon)
+	{
+		int iFrom = 0;
+		int iToEx = Math.min(data.getLength(), etalon.getLength());
+		return getMaxDeviation(data, etalon, iFrom, iToEx);
+	}
+
+	public static double getMeanDeviation(ModelTrace data, ModelTrace etalon)
+	{
+		int iFrom = 0;
+		int iToEx = Math.min(data.getLength(), etalon.getLength());
+		return getMeanDeviation(data, etalon, iFrom, iToEx);
+	}
+
+	public static double getLossDifference(ModelTraceManager etalon,
+			ModelTraceManager data)
+	{
+		ComplexReflectogramEvent[] dataCRE = data.getComplexEvents();
+		ComplexReflectogramEvent[] etalonCRE = etalon.getComplexEvents();
+
+		int length1 = ReflectogramMath.getLastConnectorBegin(dataCRE);
+		int length2 = ReflectogramMath.getLastConnectorBegin(etalonCRE);
+
+		int c = etalonCRE[0].getEnd();
+
+		double a1 = data.getY(c);
+		double a2 = data.getY(length1);
+		double b1 = etalon.getY(c);
+		double b2 = etalon.getY(length2);
+
+		return (a1 - a2) - (b1 - b2);
+	}
+
+	public static double getRMSDeviation(ModelTrace mt1, ModelTrace mt2, SimpleReflectogramEvent range)
+	{
+		int iFrom = range.getBegin();
+		int iToEx = range.getEnd() + 1;
+		return getRMSDeviation(mt1, mt2, iFrom, iToEx);
+	}
+
+	public static double getMaxDeviation(ModelTrace mt1, ModelTrace mt2, SimpleReflectogramEvent range)
+	{
+		int iFrom = range.getBegin();
+		int iToEx = range.getEnd() + 1;
+		return getMaxDeviation(mt1, mt2, iFrom, iToEx);
+	}
+
+/*
 	//-----------------------------------------------------------------------------
 	public static double getLossChange(ReflectogramEvent[] etalon,
 			ReflectogramEvent[] data, int nEvent)
@@ -450,6 +516,7 @@ public class ReflectogramComparer
 
 		return ret;
 	}
+	*/
 }
 
 /*/
