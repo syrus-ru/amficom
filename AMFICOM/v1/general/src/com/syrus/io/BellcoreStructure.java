@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.3 2004/10/29 09:39:31 max Exp $
+ * $Id: BellcoreStructure.java,v 1.4 2004/10/29 10:11:54 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/29 09:39:31 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/29 10:11:54 $
  * @author $Author: max $
  * @module general_v1
  */
@@ -112,7 +112,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- General Parameters ------------//
-	class GenParams
+	public class GenParams
 	{
 		public String LC = "EN";       // Language Code (2 bytes)
 		public String CID = " ";       // Cable ID
@@ -136,7 +136,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Supplier Parameters ------------//
-	class SupParams
+	public class SupParams
 	{
 		public String SN = " ";          // Supplier Name
 		public String MFID = " ";        // OTDR Mainframe ID
@@ -154,7 +154,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Fixed Parameters ------------//
-	class FxdParams
+	public class FxdParams
 	{
 		public long DTS = 0;           // Date/Time Stamp (in ms)
 		public String UD = "km";          // Units of Distanse (2 bytes)
@@ -188,7 +188,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Key Events ------------//
-	class KeyEvents
+	public class KeyEvents
 	{
 		public short TNKE;         // Number of Key Events
 		public short[] EN;         // Event Number
@@ -214,7 +214,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Link Parameters ------------//
-	class LnkParams
+	public class LnkParams
 	{
 		public short TNL;          // Total Number of Landmarks
 		public short[] LMN;        // Landmark Number
@@ -239,7 +239,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Data Points ------------//
-	class DataPts
+	public class DataPts
 	{
 		public int TNDP;           // Number of Data Points
 		public short TSF;          // Total number Scale Factor Used
@@ -257,7 +257,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Checksum ------------//
-	class Cksum
+	public class Cksum
 	{
 		public int CSM;            // Checksum
 
@@ -268,7 +268,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Special Field ------------//
-	class Special
+	public class Special
 	{
 		//public int size;           // Size Of Special Field
 		public byte [] spec_data;  // Special Data Field
