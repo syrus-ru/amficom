@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.2 2004/10/09 13:33:40 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.3 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,16 +12,21 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+
+import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
@@ -29,7 +34,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/09 13:33:40 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/11 16:48:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -61,6 +66,8 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
 
+		DataSourceInterface dataSource = aContext.getDataSource();
+
 		mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 
@@ -89,13 +96,14 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 		if(link.getEndNode() == node)
 			link.setEndNode(site);
 
-		MapPhysicalLinkElement link1 = super.createUnboundLink(link.getStartNode(), site);
+		MapUnboundLinkElement link1 = super.createUnboundLink(link.getStartNode(), site);
 		link1.setProto(link.getProto());
 
 		// single cpath, as long as link is UnboundLink
 		MapCablePathElement cpath = (MapCablePathElement )(mapView.getCablePaths(link).getFirst());
 		
 		cpath.addLink(link1);
+		link1.setCablePath(cpath);
 
 		// получить все фрагменты первой филической линии
 		java.util.List nodelinks = link.getNodeLinks();

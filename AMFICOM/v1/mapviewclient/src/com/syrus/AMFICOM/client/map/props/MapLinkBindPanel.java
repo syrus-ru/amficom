@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.Box;
@@ -49,6 +50,8 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 
 	private JLabel topDownLabel = new JLabel();
 	private JLabel leftRightLabel = new JLabel();
+	
+	private List unboundElements = new LinkedList();
 
 	public MapLinkBindPanel()
 	{
@@ -203,6 +206,7 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 		MapPhysicalLinkBinding binding = link.getBinding();
 		binding.unbind(or);
 		tunnelLayout.updateElements();
+//		unboundElements.add(or);
 	}
 
 	public boolean modify()
@@ -242,5 +246,10 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 	public boolean cancel()
 	{
 		return false;
+	}
+
+	public List getUnboundElements()
+	{
+		return unboundElements;
 	}
 }

@@ -109,12 +109,14 @@ public class EmptyMapViewDataSource
 		el1.description = "Описалово";
 		el1.devices.add(dev1);
 		el1.name = "Один элемент";
+		el1.setSchemeId("scheme1");
 		Pool.put(SchemeElement.typ, el1.getId(), el1);
 
 		el2 = new SchemeElement("el2");
 		el2.description = "Описалово";
 		el2.devices.add(dev2);
 		el2.name = "Другой элемент";
+		el2.setSchemeId("scheme1");
 		Pool.put(SchemeElement.typ, el2.getId(), el2);
 
 		link = new SchemeLink("link");
@@ -166,6 +168,7 @@ public class EmptyMapViewDataSource
 		path.links.add(pel3);
 		path.name = "Путяра измерений";
 		path.startDeviceId = "dev1";
+		path.setSchemeId("scheme1");
 		Pool.put(SchemePath.typ, path.getId(), path);
 
 		scheme = new Scheme();

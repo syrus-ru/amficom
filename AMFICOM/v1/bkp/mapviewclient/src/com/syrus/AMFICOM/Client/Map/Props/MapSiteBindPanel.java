@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.Box;
@@ -29,7 +30,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-	MapSiteNodeElement site;
+	private MapSiteNodeElement site;
 	private JLabel titleLabel = new JLabel();
 	private ObjectResourceListBox elementsList = new ObjectResourceListBox();
 
@@ -38,6 +39,8 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 	private JButton unbindButton = new JButton();
 
 	private UgoPanel schemePanel = new UgoPanel(null);
+	
+	private List unboundElements = new LinkedList();
 
 	public MapSiteBindPanel()
 	{
@@ -71,7 +74,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					ObjectResource or = elementsList.getSelectedObjectResource();
+//					ObjectResource or = elementsList.getSelectedObjectResource();
 //					bind(or);
 				}
 			});
@@ -107,6 +110,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 		SchemeElement se = (SchemeElement )or;
 		se.siteId = "";
 		elementsList.remove(se);
+		unboundElements.add(se);
 	}
 
 	public void showElement(SchemeElement se)
@@ -181,5 +185,11 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 	public boolean cancel()
 	{
 		return false;
+	}
+
+
+	public List getUnboundElements()
+	{
+		return unboundElements;
 	}
 }

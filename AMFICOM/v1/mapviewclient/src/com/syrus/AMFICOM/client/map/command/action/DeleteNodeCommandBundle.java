@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.3 2004/10/09 13:33:40 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.4 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
@@ -22,11 +21,12 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+
 import java.util.Iterator;
+import java.util.List;
 
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/09 13:33:40 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/11 16:48:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -67,6 +67,8 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		}
 
 		MapView mapView = logicalNetLayer.getMapView();
+		
+		List cablePathsToScan = mapView.getCablePaths(node);
 
 		for(Iterator it = mapView.getCablePaths(node).iterator(); it.hasNext();)
 		{
@@ -130,7 +132,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 
 		removeNode(node);
 
-		for(Iterator it = mapView.getCablePaths(node).iterator(); it.hasNext();)
+		for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
 		{
 			MapCablePathElement cpath = (MapCablePathElement )it.next();
 			mapView.scanCable(cpath.getSchemeCableLink());
@@ -142,8 +144,6 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 */
 	public void deletePhysicalNode(MapPhysicalNodeElement node)
 	{
-		DataSourceInterface dataSource = getContext().getDataSource();
-
 		if ( !getContext().getApplicationModel().isEnabled("mapActionDeleteNode"))
 			return;
 
@@ -248,7 +248,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			// За управление этой проверкой отвечает переменная do_remove_link
 			// и дополнительная соответствующая проверка
 			
-			boolean do_remove_link = (nodeLeft == nodeRight)
+			boolean doRemoveLink = (nodeLeft == nodeRight)
 					|| ((physicalLink.getNodeLinks().size() == 2)
 						&& nodeLeft instanceof MapPhysicalNodeElement
 						&& nodeRight instanceof MapPhysicalNodeElement);
@@ -259,7 +259,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			physicalLink.removeNodeLink(nodeLinkLeft);
 			physicalLink.removeNodeLink(nodeLinkRight);
 			
-			if(do_remove_link)
+			if(doRemoveLink)
 			{
 				removePhysicalLink(physicalLink);
 				if(nodeLeft instanceof MapPhysicalNodeElement)

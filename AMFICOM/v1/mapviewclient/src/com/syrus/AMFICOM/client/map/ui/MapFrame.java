@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.4 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapFrame.java,v 1.5 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -66,7 +66,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/11 16:48:33 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -291,6 +291,7 @@ public class MapFrame extends JInternalFrame
 		if(this.aContext != null)
 			if(this.aContext.getDispatcher() != null)
 			{
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_ELEMENT_CHANGED);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_ELEMENT_SELECTED);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_ELEMENT_DESELECTED);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_NAVIGATE);
@@ -309,6 +310,7 @@ public class MapFrame extends JInternalFrame
 			if(aContext.getApplicationModel() == null)
 				aContext.setApplicationModel(new ApplicationModel());
 			setModel(aContext.getApplicationModel());
+			aContext.getDispatcher().register(this, MapEvent.MAP_ELEMENT_CHANGED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_ELEMENT_SELECTED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_ELEMENT_DESELECTED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_NAVIGATE);
@@ -437,6 +439,11 @@ public class MapFrame extends JInternalFrame
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.PLACE_ELEMENT))
+		{
+			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
+		}
+		else
+		if(ae.getActionCommand().equals(MapEvent.MAP_ELEMENT_CHANGED))
 		{
 			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.9 2004/10/05 12:55:58 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.10 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,6 +43,9 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -65,7 +68,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/05 12:55:58 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/11 16:48:33 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -756,6 +759,28 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			repaint();
 		}
 		else
+		if(ae.getActionCommand().equals(MapEvent.MAP_ELEMENT_CHANGED))
+		{
+			Object me = ae.getSource();
+			if(me instanceof SchemeElement)
+			{
+				getMapView().scanElement((SchemeElement )me);
+				getMapView().scanCables((Scheme )Pool.get(Scheme.typ, ((SchemeElement )me).getSchemeId()));
+			}
+			else
+			if(me instanceof SchemeCableLink)
+			{
+				getMapView().scanCable((SchemeCableLink )me);
+				getMapView().scanPaths((Scheme )Pool.get(Scheme.typ, ((SchemeCableLink )me).getSchemeId()));
+			}
+			else
+			if(me instanceof MapCablePathElement)
+			{
+				getMapView().scanCable(((MapCablePathElement )me).getSchemeCableLink());
+				getMapView().scanPaths((Scheme )Pool.get(Scheme.typ, ((MapCablePathElement )me).getSchemeCableLink().getSchemeId()));
+			}
+		}
+		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent )ae;
@@ -1022,26 +1047,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					}
 				}
 			}
-*/
-/*
-			if(mne.MAP_PATH_SELECTED)
-				if(lnl().performProcessing)
-				{
-//					System.out.println("event_DATA_MAP_PATH_SELECTED");
-					MapTransmissionPathElement mtpe = 
-							lnl().getMap().getMapTransmissionPathElement(mne.mappathID);
-					if(mtpe != null)
-						mtpe.select();
-				}
-			if(mne.MAP_PATH_DESELECTED)
-				if(lnl().performProcessing)
-				{
-//					System.out.println("event_DATA_MAP_PATH_DESELECTED");
-					MapTransmissionPathElement mtpe = 
-							lnl().getMap().getMapTransmissionPathElement(mne.mappathID);
-					if(mtpe != null)
-						mtpe.deselect();
-				}
 */
 			if(mne.isMapElementSelected())
 				if(performProcessing)

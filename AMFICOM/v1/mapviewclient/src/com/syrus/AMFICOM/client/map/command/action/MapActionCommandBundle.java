@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.4 2004/10/09 13:33:40 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.5 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,13 +31,15 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import java.awt.geom.Point2D;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *  
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/09 13:33:40 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/11 16:48:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -253,18 +255,27 @@ public class MapActionCommandBundle extends CommandBundle
 			{
 				removePhysicalLink(link);
 				link.sortNodes();
-				for(Iterator it2 = link.getSortedNodes().iterator(); it2.hasNext();)
+				List sortedNodes = new LinkedList();
+				sortedNodes.addAll(link.getSortedNodes());
+				for(Iterator it2 = sortedNodes.iterator(); it2.hasNext();)
 				{
 					MapNodeElement node = (MapNodeElement )it2.next();
 					if(node instanceof MapPhysicalNodeElement)
-						removeNode(node);
+						this.removeNode(node);
+				}
+				List sortedNodeLinks = new LinkedList();
+				sortedNodeLinks.addAll(link.getNodeLinks());
+				for(Iterator it3 = sortedNodeLinks.iterator(); it3.hasNext();)
+				{
+					this.removeNodeLink((MapNodeLinkElement )it3.next());
 				}
 			}
 			else
 			{
-				link.getBinding().unbind(cablePath.getSchemeCableLink());
+				link.getBinding().remove(cablePath.getSchemeCableLink());
 			}
 		}
+		cablePath.clearLinks();
 	}
 
 	protected void removeMeasurementPathCables(MapMeasurementPathElement mPath)

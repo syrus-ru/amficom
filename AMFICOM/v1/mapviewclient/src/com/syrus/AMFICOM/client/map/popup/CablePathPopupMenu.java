@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
 import java.awt.Dimension;
@@ -92,7 +93,6 @@ public class CablePathPopupMenu extends MapPopupMenu
 	private void showProperties()
 	{
 		super.showProperties(path);
-		getLogicalNetLayer().getMapView().scanCable(path.getSchemeCableLink());
 	}
 
 	private void removeCablePath()
@@ -134,9 +134,12 @@ public class CablePathPopupMenu extends MapPopupMenu
 
 	private void generateCabling()
 	{
-		super.generatePathCabling(path);
-
-		getLogicalNetLayer().repaint();
+		MapNodeProtoElement proto = super.selectNodeProto();
+		if(proto != null)
+		{
+			super.generatePathCabling(path, proto);
+			getLogicalNetLayer().repaint();
+		}
 	}
 	
 }

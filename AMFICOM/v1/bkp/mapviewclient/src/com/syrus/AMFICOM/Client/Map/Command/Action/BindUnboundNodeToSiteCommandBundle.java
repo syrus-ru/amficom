@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.1 2004/10/09 13:33:40 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.2 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,16 +12,15 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +31,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/09 13:33:40 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/11 16:48:33 $
  * @module
  * @author $Author: krupenn $
  * @see

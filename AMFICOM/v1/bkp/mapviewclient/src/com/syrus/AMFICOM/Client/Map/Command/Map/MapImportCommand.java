@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.4 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.5 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
 import java.io.File;
 
 import java.util.Iterator;
@@ -35,7 +36,7 @@ import java.util.List;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/11 16:48:33 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -78,13 +79,20 @@ public class MapImportCommand extends ImportCommand
 		if(!type.equals(Map.typ))
 			return;
 
+		String field;
+		String value;
+
 		MapElement me;
 		List loadedObjects = new LinkedList();
 
 		map = new Map();
 		for (int i = 1; i < exportColumns.length; i++) 
 		{
-			map.setColumn(exportColumns[i][0], exportColumns[i][1]);
+			field = exportColumns[i][0];
+			value = exportColumns[i][1];
+			if(field.equals(Map.COLUMN_ID))
+				value = super.getClonedId(Map.typ, value);
+			map.setColumn(field, value);
 		}
 		Pool.put(Map.typ, map.getId(), map);
 		loadedObjects.add(map);
@@ -122,7 +130,84 @@ public class MapImportCommand extends ImportCommand
 			me.setMap(map);
 			for (int i = 1; i < exportColumns.length; i++) 
 			{
-				me.setColumn(exportColumns[i][0], exportColumns[i][1]);
+				field = exportColumns[i][0];
+				value = exportColumns[i][1];
+				if(type.equals(MapMarkElement.typ))
+				{
+					if(field.equals(MapMarkElement.COLUMN_ID))
+						value = super.getClonedId(MapMarkElement.typ, value);
+					else
+					if(field.equals(MapMarkElement.COLUMN_PHYSICAL_LINK_ID))
+						value = super.getClonedId(MapPhysicalLinkElement.typ, value);
+				}
+				else
+				if(type.equals(MapNodeLinkElement.typ))
+				{
+					if(field.equals(MapNodeLinkElement.COLUMN_ID))
+						value = super.getClonedId(MapNodeLinkElement.typ, value);
+					else
+					if(field.equals(MapNodeLinkElement.COLUMN_PHYSICAL_LINK_ID))
+						value = super.getClonedId(MapPhysicalLinkElement.typ, value);
+					else
+					if(field.equals(MapNodeLinkElement.COLUMN_START_NODE_ID))
+						value = super.getClonedId(MapSiteNodeElement.typ, value);
+					else
+					if(field.equals(MapNodeLinkElement.COLUMN_END_NODE_ID))
+						value = super.getClonedId(MapSiteNodeElement.typ, value);
+				}
+				else
+				if(type.equals(MapPhysicalLinkElement.typ))
+				{
+					if(field.equals(MapPhysicalLinkElement.COLUMN_ID))
+						value = super.getClonedId(MapPhysicalLinkElement.typ, value);
+					else
+					if(field.equals(MapPhysicalLinkElement.COLUMN_START_NODE_ID))
+						value = super.getClonedId(MapSiteNodeElement.typ, value);
+					else
+					if(field.equals(MapPhysicalLinkElement.COLUMN_END_NODE_ID))
+						value = super.getClonedId(MapSiteNodeElement.typ, value);
+					else
+					if(field.equals(MapPhysicalLinkElement.COLUMN_NODE_LINKS))
+					{
+						String val2 = "";
+						for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
+						{
+							val2 += super.getClonedId(MapNodeLinkElement.typ, (String )(it.next())) + " ";
+						}
+						value = val2;
+					}
+				}
+				else
+				if(type.equals(MapPhysicalNodeElement.typ))
+				{
+					if(field.equals(MapPhysicalNodeElement.COLUMN_ID))
+						value = super.getClonedId(MapSiteNodeElement.typ, value);
+					else
+					if(field.equals(MapNodeLinkElement.COLUMN_PHYSICAL_LINK_ID))
+						value = super.getClonedId(MapPhysicalLinkElement.typ, value);
+				}
+				else
+				if(type.equals(MapPipePathElement.typ))
+				{
+					if(field.equals(MapPipePathElement.COLUMN_ID))
+						value = super.getClonedId(MapPipePathElement.typ, value);
+					if(field.equals(MapPipePathElement.COLUMN_LINKS))
+					{
+						String val2 = "";
+						for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
+						{
+							val2 += super.getClonedId(MapPhysicalLinkElement.typ, (String )(it.next())) + " ";
+						}
+						value = val2;
+					}
+				}
+				else
+				if(type.equals(MapSiteNodeElement.typ))
+				{
+					if(field.equals(MapSiteNodeElement.COLUMN_ID))
+						value = super.getClonedId(MapSiteNodeElement.typ, value);
+				}
+				me.setColumn(field, value);
 			}
 			Pool.put(((ObjectResource )me).getTyp(), me.getId(), me);
 			loadedObjects.add(me);

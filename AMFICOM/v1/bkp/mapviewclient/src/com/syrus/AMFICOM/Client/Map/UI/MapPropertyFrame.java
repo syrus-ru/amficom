@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.5 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.6 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import javax.swing.event.TableModelListener;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/11 16:48:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -76,7 +76,11 @@ public final class MapPropertyFrame extends JInternalFrame
 
 	private void jbInit()
 	{
+		this.setClosable(true);
 		this.setIconifiable(true);
+		this.setMaximizable(false);
+		this.setResizable(true);
+
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setTitle(LangModelMap.getString("Properties"));
 

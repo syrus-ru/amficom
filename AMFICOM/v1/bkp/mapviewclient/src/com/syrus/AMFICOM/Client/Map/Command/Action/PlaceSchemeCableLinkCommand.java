@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.1 2004/10/09 13:33:40 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.2 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.List;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/09 13:33:40 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/11 16:48:33 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -86,7 +86,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		else
 			super.removeCablePathLinks(cablePath);
 
-		scl.channelingItems = sortCCIS(startNode, endNode, scl.channelingItems);
+//		scl.channelingItems = sortCCIS(startNode, endNode, scl.channelingItems);
 		List ccis = (List )scl.channelingItems;
 
 		MapSiteNodeElement bufferStartSite = startNode;
@@ -102,17 +102,38 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				continue;
 			}
 
-			MapPhysicalLinkElement link = map.getPhysicalLink(cci.physicalLinkId);
-			if(link == null)
+			// a link between bufferStartSite and current cci exists
+			boolean exists = false;
+			
+			MapPhysicalLinkElement link = null;
+			if(bufferStartSite.equals(smsne))
+			{
+				bufferStartSite = emsne;
+				exists = true;
+			}
+			else
+			if(bufferStartSite.equals(smsne))
+			{
+				bufferStartSite = smsne;
+				exists = true;
+			}
+
+			if(!exists)
 			{
 				unbound = super.createUnboundLink(bufferStartSite, smsne);
 				cablePath.addLink(unbound);
 				unbound.setCablePath(cablePath);
 
-				nodeLink = super.createNodeLink(bufferStartSite, endNode);
+				nodeLink = super.createNodeLink(bufferStartSite, smsne);
 				unbound.addNodeLink(nodeLink);
 				nodeLink.setPhysicalLinkId(unbound.getId());
+
+				bufferStartSite = emsne;
 			}
+			
+			link = map.getPhysicalLink(cci.physicalLinkId);
+			if(link == null)
+				continue;
 
 			link.getBinding().add(scl);
 			if(cci.row_x != -1
@@ -121,7 +142,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 
 			cablePath.addLink(link);
 
-			bufferStartSite = emsne;
+//			bufferStartSite = emsne;
 		}
 
 		if(endNode != bufferStartSite)

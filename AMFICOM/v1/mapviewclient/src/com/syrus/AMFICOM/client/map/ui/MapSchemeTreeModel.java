@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.2 2004/09/15 08:12:50 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.3 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -84,7 +84,7 @@ import javax.swing.ImageIcon;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:12:50 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/11 16:48:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -178,10 +178,10 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				for (Iterator it = parsc.elements.iterator(); it.hasNext();)
 				{
 					SchemeElement el = (SchemeElement)it.next();
-					if (!el.getSchemeId().equals(""))
+					if (!el.getInternalSchemeId().equals(""))
 					{
 						ds.add(el);
-//						Scheme sc = (Scheme )Pool.get(Scheme.typ, el.getSchemeId());
+//						Scheme sc = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
 //						if (sc != null)
 //							ds.add(sc);
 					}
@@ -195,7 +195,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					{
 //						Scheme sc = (Scheme )it.next();
 						SchemeElement el = (SchemeElement )it.next();
-						Scheme sc = (Scheme )Pool.get(Scheme.typ, el.getSchemeId());
+						Scheme sc = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
 
 						if(	!sc.schemeType.equals(Scheme.CABLESUBNETWORK) )
 						{
@@ -260,7 +260,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				ArrayList ds = new ArrayList();
 				if (par instanceof Scheme
 					|| (par instanceof SchemeElement
-						&& ((SchemeElement )par).getSchemeId().length() != 0)
+						&& ((SchemeElement )par).getInternalSchemeId().length() != 0)
 					)
 				{
 					Scheme scheme;
@@ -269,13 +269,13 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					else
 					{
 						SchemeElement el = (SchemeElement )par;
-						scheme = (Scheme )Pool.get(Scheme.typ, el.getSchemeId());
+						scheme = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
 					}
 					
 					for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 					{
 						SchemeElement element = (SchemeElement )it.next();
-						if (element.getSchemeId().equals(""))
+						if (element.getInternalSchemeId().equals(""))
 							ds.add(element);
 					}
 				}
@@ -299,7 +299,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 						SchemeElement element = (SchemeElement)it.next();
 						boolean isFinal = (element.links.isEmpty() || element.elementIds.isEmpty());
 
-						if (element.getSchemeId().equals("")
+						if (element.getInternalSchemeId().equals("")
 							&& parent.isTopological())
 						{
 							nod = new MapSchemeTreeNode(
@@ -326,7 +326,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				Object par = parent.getObject();
 				if (par instanceof Scheme
 					|| (par instanceof SchemeElement
-						&& ((SchemeElement )par).getSchemeId().length() != 0)
+						&& ((SchemeElement )par).getInternalSchemeId().length() != 0)
 					)
 				{
 					Scheme scheme;
@@ -335,7 +335,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					else
 					{
 						SchemeElement el = (SchemeElement )par;
-						scheme = (Scheme )Pool.get(Scheme.typ, el.getSchemeId());
+						scheme = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
 					}
 					
 					ObjectResourceSorter sorter = SchemeLink.getSorter();
@@ -367,7 +367,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				else
 				{
 					SchemeElement el = (SchemeElement )parent.getObject();
-					parsc = (Scheme )Pool.get(Scheme.typ, el.getSchemeId());
+					parsc = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
 				}
 					
 				ObjectResourceSorter sorter = SchemeCableLink.getSorter();
@@ -405,7 +405,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				else
 				{
 					SchemeElement el = (SchemeElement )parent.getObject();
-					parsc = (Scheme )Pool.get(Scheme.typ, el.getSchemeId());
+					parsc = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
 				}
 					
 				ObjectResourceSorter sorter = SchemePath.getSorter();
@@ -471,7 +471,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 			else
 			if(node.getObject() instanceof Scheme
 				|| (node.getObject() instanceof SchemeElement
-					&& ((SchemeElement )(node.getObject())).getSchemeId().length() != 0)
+					&& ((SchemeElement )(node.getObject())).getInternalSchemeId().length() != 0)
 				)
 			{
 				Scheme s;
@@ -480,7 +480,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				else
 				{
 					SchemeElement el = (SchemeElement )node.getObject();
-					s = (Scheme )Pool.get(Scheme.typ, el.getSchemeId());
+					s = (Scheme )Pool.get(Scheme.typ, el.getInternalSchemeId());
 				}
 
 				if (!s.elements.isEmpty())
@@ -490,7 +490,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					for (Iterator it = s.elements.iterator(); it.hasNext();)
 					{
 						SchemeElement el = (SchemeElement )it.next();
-						if (el.getSchemeId().length() == 0)
+						if (el.getInternalSchemeId().length() == 0)
 						{
 							has_elements = true;
 							break;
@@ -500,7 +500,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					for (Iterator it = s.elements.iterator(); it.hasNext();)
 					{
 						SchemeElement el = (SchemeElement )it.next();
-						if (el.getSchemeId().length() != 0)
+						if (el.getInternalSchemeId().length() != 0)
 						{
 							has_schemes = true;
 							break;
@@ -522,13 +522,13 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 			else if(node.getObject() instanceof SchemeElement)
 			{
 				SchemeElement schel = (SchemeElement )node.getObject();
-				if (!schel.getSchemeId().equals(""))
+				if (!schel.getInternalSchemeId().equals(""))
 				{
-					Scheme scheme = (Scheme)Pool.get(Scheme.typ, schel.getSchemeId());
+					Scheme scheme = (Scheme)Pool.get(Scheme.typ, schel.getInternalSchemeId());
 					for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 					{
 						SchemeElement element = (SchemeElement)it.next();
-						if (element.getSchemeId().equals(""))
+						if (element.getInternalSchemeId().equals(""))
 						{
 							vec.add(new MapSchemeTreeNode(
 									element, 

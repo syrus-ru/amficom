@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -8,8 +10,11 @@ import com.syrus.AMFICOM.Client.Map.Props.MapLinkBindPanel;
 import com.syrus.AMFICOM.Client.Map.Props.MapLinkGeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import java.awt.BorderLayout;
 
+import java.util.Iterator;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -85,7 +90,16 @@ public final class MapLinkPane extends JPanel implements ObjectResourcePropertie
 	{
 		if(gPanel.modify()
 			&& bPanel.modify())
+		{
+			Dispatcher disp  = aContext.getDispatcher();
+			if(disp != null)
+				for(Iterator it = bPanel.getUnboundElements().iterator(); it.hasNext();)
+				{
+					SchemeCableLink scl = (SchemeCableLink )it.next();
+					disp.notify(new MapEvent(scl, MapEvent.MAP_ELEMENT_CHANGED));
+				}
 			return true;
+		}
 		return false;
 	}
 

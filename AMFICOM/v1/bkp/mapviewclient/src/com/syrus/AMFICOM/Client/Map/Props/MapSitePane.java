@@ -1,26 +1,28 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import java.util.Iterator;
 
-public class MapSitePane extends JPanel implements ObjectResourcePropertiesPane
+public final class MapSitePane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
-	
-	MapSiteGeneralPanel gPanel = new MapSiteGeneralPanel();
-	MapSiteBindPanel bPanel = new MapSiteBindPanel();
+	private JTabbedPane tabbedPane = new JTabbedPane();
+	private MapSiteGeneralPanel gPanel = new MapSiteGeneralPanel();
+	private MapSiteBindPanel bPanel = new MapSiteBindPanel();
 
-	MapSiteNodeElement site;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
+	private MapSiteNodeElement site;
+	private ApplicationContext aContext;
 
 	private static MapSitePane instance = new MapSitePane();
 
@@ -77,7 +79,16 @@ public class MapSitePane extends JPanel implements ObjectResourcePropertiesPane
 	{
 		if(gPanel.modify()
 			&& bPanel.modify())
+		{
+			Dispatcher disp  = aContext.getDispatcher();
+			if(disp != null)
+				for(Iterator it = bPanel.getUnboundElements().iterator(); it.hasNext();)
+				{
+					SchemeElement se = (SchemeElement )it.next();
+					disp.notify(new MapEvent(se, MapEvent.MAP_ELEMENT_CHANGED));
+				}
 			return true;
+		}
 		return false;
 	}
 

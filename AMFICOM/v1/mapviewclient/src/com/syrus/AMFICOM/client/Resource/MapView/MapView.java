@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.10 2004/10/09 13:34:24 krupenn Exp $
+ * $Id: MapView.java,v 1.11 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/09 13:34:24 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/11 16:48:33 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -495,9 +495,13 @@ public final class MapView extends StubResource
 		}
 		else
 		{
-			if(mne[0] == null && mne[1] == null)
+			if(mne[0] == null || mne[1] == null)
 			{
 				unplaceElement(cp);
+			}
+			else
+			{
+				placeElement(schemeCableLink);
 			}
 		}
 	}
@@ -514,12 +518,22 @@ public final class MapView extends StubResource
 
 	public void scanPath(SchemePath schemePath)
 	{
+		MapSiteNodeElement[] mne = getSideNodes(schemePath);
 		MapMeasurementPathElement mp = findMeasurementPath(schemePath);
 		if(mp == null)
 		{
-			MapSiteNodeElement[] mne = getSideNodes(schemePath);
-	
 			if(mne[0] != null && mne[1] != null)
+			{
+				placeElement(schemePath);
+			}
+		}
+		else
+		{
+			if(mne[0] == null || mne[1] == null)
+			{
+				unplaceElement(mp);
+			}
+			else
 			{
 				placeElement(schemePath);
 			}

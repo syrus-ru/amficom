@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.8 2004/10/09 13:34:24 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.9 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
-import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateCablePathCablingCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateCablePathCablingCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCollectorCommandAtomic;
@@ -56,7 +56,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/09 13:34:24 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/11 16:48:33 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -321,11 +321,11 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().repaint();
 	}
 
-	protected void generatePathCabling(MapCablePathElement path)
+	protected void generatePathCabling(MapCablePathElement path, MapNodeProtoElement proto)
 	{
-		MapNodeProtoElement proto = (MapNodeProtoElement )Pool.get(
-				MapNodeProtoElement.typ, 
-				MapNodeProtoElement.WELL);
+//		MapNodeProtoElement proto = (MapNodeProtoElement )Pool.get(
+//				MapNodeProtoElement.typ, 
+//				MapNodeProtoElement.WELL);
 
 		GenerateCablePathCablingCommandBundle command = 
 				new GenerateCablePathCablingCommandBundle(path, proto);

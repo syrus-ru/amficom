@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommand.java,v 1.5 2004/10/09 13:33:40 krupenn Exp $
+ * $Id: InsertSiteCommand.java,v 1.6 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import java.util.ListIterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/09 13:33:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/11 16:48:33 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -126,7 +126,7 @@ public class InsertSiteCommand extends MapActionCommandBundle
 		{
 			link1 = super.createPhysicalLink(link.getStartNode(), site);
 			link1.setProto(link.getProto());
-			MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+			MapPipePathElement collector = map.getCollector(link);
 			if(collector != null)
 				collector.addLink(link1);
 
@@ -190,6 +190,7 @@ public class InsertSiteCommand extends MapActionCommandBundle
 			for(Iterator it = mapView.getCablePaths(link).iterator(); it.hasNext();)
 			{
 				MapCablePathElement cpath = (MapCablePathElement )it.next();
+				cpath.addLink(link1);
 				List ccis = cpath.getSchemeCableLink().channelingItems;
 				for(ListIterator lit = ccis.listIterator(); lit.hasNext();)
 				{

@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.1 2004/10/09 13:34:04 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.2 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,10 +18,11 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
-
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * В данном классе реализуется алгоритм удаления NodeLink. В зависимости
@@ -30,7 +31,7 @@ import java.util.Iterator;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/09 13:34:04 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/11 16:48:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -67,6 +68,8 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		MapView mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 		
+		List cablePathsToScan = mapView.getCablePaths(link);
+
 		link.sortNodes();
 		
 		for(Iterator it = link.getSortedNodes().iterator(); it.hasNext();)
@@ -87,7 +90,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		
 		super.removePhysicalLink(link);
 		
-		for(Iterator it = mapView.getCablePaths(link).iterator(); it.hasNext();)
+		for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
 		{
 			MapCablePathElement cpath = (MapCablePathElement )it.next();
 			mapView.scanCable(cpath.getSchemeCableLink());

@@ -168,6 +168,8 @@ public final class SelectionPopupMenu extends MapPopupMenu
 	{
 		List alreadyBound = new LinkedList();
 		MapNodeProtoElement proto = null;
+		if(proto == null)
+			proto = super.selectNodeProto();
 		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 		{
 			MapElement me = (MapElement )it.next();
@@ -176,15 +178,13 @@ public final class SelectionPopupMenu extends MapPopupMenu
 				MapCablePathElement path = ((MapUnboundLinkElement )me).getCablePath();
 				if(!alreadyBound.contains(path))
 				{
-					super.generatePathCabling(path);
+					super.generatePathCabling(path, proto);
 					alreadyBound.add(path);
 				}
 			}
 			else
 			if(me instanceof MapUnboundNodeElement)
 			{
-				if(proto == null)
-					proto = super.selectNodeProto();
 				super.convertUnboundNodeToSite((MapUnboundNodeElement )me, proto);
 			}
 		}

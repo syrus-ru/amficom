@@ -139,7 +139,8 @@ public class TunnelLayout implements OperationListener
 	public void setActiveElement(ObjectResource or)
 	{
 		activeCoordinates = binding.getBinding(or);
-		panel.getGraph().setSelectionCell(cells[activeCoordinates.x][activeCoordinates.y]);
+		if(activeCoordinates != null)
+			panel.getGraph().setSelectionCell(cells[activeCoordinates.x][activeCoordinates.y]);
 	}
 	
 //	public ObjectResource getActiveElement()

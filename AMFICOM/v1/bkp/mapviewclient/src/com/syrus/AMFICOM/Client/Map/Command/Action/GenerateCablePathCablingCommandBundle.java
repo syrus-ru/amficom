@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.1 2004/10/09 13:33:40 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.2 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/09 13:33:40 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/11 16:48:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -70,7 +70,10 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 		MapSiteNodeElement site = (MapSiteNodeElement )path.getStartNode();
 		MapSiteNodeElement linkedsite = checkSite(site);
 
-		for(Iterator it = path.getLinks().iterator(); it.hasNext();)
+		List list  = new LinkedList();
+		list.addAll(path.getLinks());
+
+		for(Iterator it = list.iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 
@@ -117,6 +120,15 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 					link.setStartNode(site2);
 				if(link.getEndNode() == site)
 					link.setEndNode(site2);
+			}
+			for(Iterator it = mapView.getCablePaths(site).iterator(); it.hasNext();)
+			{
+				MapCablePathElement cpath = (MapCablePathElement )it.next();
+				if(cpath.getStartNode().equals(site))
+					cpath.setStartNode(site2);
+				else
+				if(cpath.getEndNode().equals(site))
+					cpath.setEndNode(site2);
 			}
 		}
 		return site2;

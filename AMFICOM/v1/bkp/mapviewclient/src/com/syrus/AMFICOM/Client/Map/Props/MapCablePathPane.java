@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -90,7 +92,12 @@ public class MapCablePathPane extends JPanel implements ObjectResourceProperties
 	{
 		if(gPanel.modify()
 			&& bPanel.modify())
+		{
+			Dispatcher disp  = aContext.getDispatcher();
+			if(disp != null)
+				disp.notify(new MapEvent(path, MapEvent.MAP_ELEMENT_CHANGED));
 			return true;
+		}
 		return false;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.10 2004/10/09 13:34:24 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.11 2004/10/11 16:48:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -49,7 +49,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/09 13:34:24 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/11 16:48:33 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -387,6 +387,12 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return links;
 	}
 
+	public void clearLinks()
+	{	
+		links.clear();
+		linksSorted = false;
+	}
+
 	/**
 	 * Внимание! концевые точки линии не обновляются
 	 */
@@ -411,7 +417,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		{
 			MapNodeElement smne = this.getStartNode();
 			ArrayList vec = new ArrayList();
-			while(!smne.equals(this.getEndNode()))
+			int count = getLinks().size();
+			for (int i = 0; i < count; i++) 
+//			while(!smne.equals(this.getEndNode()))
 			{
 				for(Iterator it = getLinks().iterator(); it.hasNext();)
 				{
