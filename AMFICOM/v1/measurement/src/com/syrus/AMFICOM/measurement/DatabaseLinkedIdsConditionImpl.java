@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.7 2005/03/10 11:45:11 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.8 2005/03/10 15:22:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import com.syrus.AMFICOM.configuration.MonitoredElementWrapper;
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -15,7 +16,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/10 11:45:11 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/10 15:22:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -26,43 +27,58 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 	}
 	
 	public String getSQLQuery() throws IllegalDataException {
-		StringBuffer query = new StringBuffer();
+		String query = null;
 		switch (super.condition.getEntityCode().shortValue()) {
 		case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-			query.append(super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
+			query = super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
 					StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
-					ObjectEntities.ANATYPPARTYPLINK_ENTITY));
+					ObjectEntities.ANATYPPARTYPLINK_ENTITY);
 			break;
 		case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-			query.append(getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, 
+			query = getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, 
 					StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
-					ObjectEntities.EVATYPPARTYPLINK_ENTITY));
+					ObjectEntities.EVATYPPARTYPLINK_ENTITY);
 			break;
 		case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 			switch (super.condition.getLinkedEntityCode()) {
 				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-					query.append(super.getLinkedQuery(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
+					query = super.getLinkedQuery(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
 							MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
-							ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY));
+							ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY);
 					break;
 			}
 			break;
 		case ObjectEntities.MS_ENTITY_CODE:
-			query.append(getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID, 
+			query = super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID, 
 					MeasurementSetupWrapper.LINK_COLUMN_ME_ID, 
-					ObjectEntities.MSMELINK_ENTITY));				
+					ObjectEntities.MSMELINK_ENTITY);
 			break;
 		case ObjectEntities.RESULT_ENTITY_CODE:
-			query.append(super.getQuery(ResultWrapper.COLUMN_MEASUREMENT_ID));
-			query.append(super.getQuery(ResultWrapper.COLUMN_ANALYSIS_ID));
-			query.append(super.getQuery(ResultWrapper.COLUMN_EVALUATION_ID));
-			query.append(super.getQuery(ResultWrapper.COLUMN_MODELING_ID));
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_MEASUREMENT_ID));
+			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_ANALYSIS_ID));
+			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_EVALUATION_ID));
+			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_MODELING_ID));
+			query = stringBuffer.toString();
+			break;
+		case ObjectEntities.TEST_ENTITY_CODE:
+			switch (super.condition.getLinkedEntityCode()) {
+				case ObjectEntities.ME_ENTITY_CODE:
+					query = super.getQuery(TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
+					break;
+				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+					query = super.getLinkedQuery(TestWrapper.COLUMN_MONITORED_ELEMENT_ID,
+							StorableObjectWrapper.COLUMN_ID,
+							MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID,
+							ObjectEntities.ME_ENTITY);
+					break;
+			}
 			break;
 		default:
 			throw new IllegalDataException(
 					"Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity type");
 		}
-		return query.toString();
+		return query;
 	}
 	
 }
