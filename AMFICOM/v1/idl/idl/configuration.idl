@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.37 2004/10/22 13:54:34 bob Exp $
+ * $Id: configuration.idl,v 1.38 2004/10/25 06:55:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -406,6 +406,8 @@ module corba {
 		wstring supplier;
 		wstring supplierCode;
 	};
+	
+	typedef sequence <Link_Transferable> LinkSeq_Transferable;
 
 //////////////// Conditions //////////////
 
