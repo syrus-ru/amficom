@@ -30,6 +30,7 @@ COMPILER=$(JAVAC)
 
 
 TARGET=$(LIB)\map.jar
+TARGET_RUN=$(LIB)\run\maprun.jar
 TARGET_CLASS_LIST=src_map.txt
 TARGET_SRC=$(LIBSRC)\mapsource.jar
 
@@ -61,6 +62,7 @@ $(TARGET):	clean impl loc jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
+	$(JAR) -cf $(TARGET_RUN) -C $(CLASSES) com\syrus\AMFICOM\Client\Map\Editor\MapEditorRun.class
 	$(JAR) -cf $(TARGET_SRC) -C $(SRC) com
 
 impl:

@@ -10,6 +10,7 @@ JAVAC=javac
 JAR=jar
 
 TARGET=$(LIB)\survey.jar
+TARGET_RUN=$(LIB)\run\surveyrun.jar
 TARGET_RES=$(LIB)\surveyresource.jar
 TARGET_CLASS_LIST=src_survey.txt
 SURVEY_RESOURCE_CLASS_LIST=class_survey_resource.txt
@@ -43,6 +44,7 @@ $(TARGET):	clean impl loc jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
+	$(JAR) -cf $(TARGET_RUN) -C $(CLASSES) com\syrus\AMFICOM\Client\Survey\SurveyRun.class
 	$(JAR) -cf $(TARGET_SRC) -C $(SRC) com
 	cd $(CLASSES)
 	$(JAR) -cf ..\$(TARGET_RES) @..\$(SURVEY_RESOURCE_CLASS_LIST)
