@@ -1,5 +1,5 @@
 /*
- * $Id: PasswordVerifier.java,v 1.3 2004/07/07 14:48:07 bass Exp $
+ * $Id: PasswordVerifier.java,v 1.4 2004/08/04 06:10:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Arrays;
  * This class brings the same functionality as the Linux crypt() function does.
  * See <b><tt>crypt(3)</tt></b> manual entry for details.
  *
- * @version $Revision: 1.3 $, $Date: 2004/07/07 14:48:07 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/04 06:10:02 $
  * @author $Author: bass $
  * @module servermisc_v1
  * @see "<b><tt>crypt(3)</tt></b> manual entry."
@@ -129,8 +129,7 @@ public final class PasswordVerifier {
 			throws NoSuchAlgorithmException {
 		if (LIBRARY_LOADED)
 			return nativeCrypt(key, salt);
-		else
-			return portableCrypt(key, salt);
+		return portableCrypt(key, salt);
 	}
 
 	/**
