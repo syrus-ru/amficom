@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.26 2004/09/16 07:57:30 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.27 2004/09/17 11:36:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/09/16 07:57:30 $
+ * @version $Revision: 1.27 $, $Date: 2004/09/17 11:36:12 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -468,6 +468,10 @@ public abstract class StorableObjectDatabase {
 	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException;
 	
+	public List retrieveButIds(List ids) throws IllegalDataException, RetrieveObjectException {
+		return retrieveButIds(ids, null);
+	}
+	
 	/**
 	 * retrive storable objects by additional condition and identifiers not in ids  
 	 * @param ids
@@ -490,10 +494,18 @@ public abstract class StorableObjectDatabase {
 
 				int i = 1;
 				for (Iterator it = ids.iterator(); it.hasNext(); i++) {
-					Identifier id = (Identifier) it.next();
-					buffer.append(id.toSQLString());
-					if (i < idsLength)
-						buffer.append(COMMA);
+					Object object = it.next();
+					Identifier id = null;
+					if (object instanceof Identifier)
+						id = (Identifier) object;
+					else if (object instanceof StorableObject){
+						id = ((StorableObject)object).getId();
+					}
+					if (id != null){
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
 				}
 				buffer.append(CLOSE_BRACKET);
 			}
