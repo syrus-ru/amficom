@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.4 2005/02/02 08:54:45 krupenn Exp $
+ * $Id: Marker.java,v 1.5 2005/02/02 15:17:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,39 +50,72 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/02/02 08:54:45 $
- * @module map_v2
+ * @version $Revision: 1.5 $, $Date: 2005/02/02 15:17:30 $
+ * @module mapview_v1
  * @author $Author: krupenn $
- * @see
  */
 
 public class Marker extends AbstractNode
 {
 	private static final long serialVersionUID = 02L;
 	
-	protected Identifier meId;
+	/**
+	 * Идентификатор исследуемого объекта.
+	 */
+	protected Identifier monitoredElementId;
 
+	/**
+	 * Дистанция от начала измерительного пути до маркера.
+	 */
 	protected double distance = 0.0;
 
+	/**
+	 * Описатель. Интерпретируется в соответствии с типом маркера.
+	 */
 	protected Object descriptor;
 
+	/**
+	 * Вид карты.
+	 */
 	protected MapView mapView;
+	/**
+	 * Измерительный путь, на котором находится маркер.
+	 */
 	protected MeasurementPath measurementPath;
+	/**
+	 * Декомпозитор пути, позволяющий маркеру передвигаться вдоль 
+	 * измерительного пути.
+	 */
 	protected PathDecompositor spd = null;
+	/**
+	 * Текущий кабель, на котором находится маркер.
+	 */
 	protected CablePath cpath;
+	/**
+	 * Текущий фрагмент линии, на котором находится маркер.
+	 */
 	protected NodeLink nodeLink;
+	/**
+	 * Начальный узел на фрагменте линии, на котором находится маркер.
+	 */
 	protected AbstractNode startNode;
+	/**
+	 * Конечный узел на фрагменте линии, на котором находится маркер.
+	 */
 	protected AbstractNode endNode;
 
 	/**
-	 * Создание маркера пользователем на карте
+	 * Создание маркера пользователем на карте.
 	 * 
-	 * @param id
-	 * @param mapView
-	 * @param startNode
-	 * @param mnle
-	 * @param topologicalDistance
-	 * @param path
+	 * @param id ижентификатор
+	 * @param creatorId пользователь
+	 * @param mapView вид карты
+	 * @param startNode начальный узел фрагмента
+	 * @param endNode конечный узел фрагмента
+	 * @param nodeLink фрагмент
+	 * @param path измерительный путь
+	 * @param monitoredElementId исследуемый объект
+	 * @param dpoint географические координаты меркера
 	 */
 	protected Marker(
 			Identifier id, 
@@ -90,7 +123,7 @@ public class Marker extends AbstractNode
 			MapView mapView,
 			AbstractNode startNode,
 			AbstractNode endNode,
-			NodeLink mnle,
+			NodeLink nodeLink,
 			MeasurementPath path,
 			Identifier monitoredElementId,
 			DoublePoint dpoint)
@@ -99,16 +132,30 @@ public class Marker extends AbstractNode
 		
 		this.startNode = startNode;
 		this.endNode = endNode;
-		this.nodeLink = mnle;
+		this.nodeLink = nodeLink;
 		setLocation(dpoint);
 	}
 
+	/**
+	 * Создание маркера пользователем на карте.
+	 * 
+	 * @param creatorId пользователь
+	 * @param mapView вид карты
+	 * @param startNode начальный узел фрагмента
+	 * @param endNode конечный узел фрагмента
+	 * @param nodeLink фрагмент
+	 * @param path измерительный путь
+	 * @param monitoredElementId исследуемый объект
+	 * @param dpoint географические координаты меркера
+	 * @return новый маркер
+	 * @throws com.syrus.AMFICOM.general.CreateObjectException нельзя создать
+	 */
 	public static Marker createInstance(
 			Identifier creatorId,
 			MapView mapView,
 			AbstractNode startNode,
 			AbstractNode endNode,
-			NodeLink mnle,
+			NodeLink nodeLink,
 			MeasurementPath path,
 			Identifier monitoredElementId,
 			DoublePoint dpoint)
@@ -128,7 +175,7 @@ public class Marker extends AbstractNode
 				mapView,
 				startNode,
 				endNode,
-				mnle,
+				nodeLink,
 				path,
 				monitoredElementId,
 				dpoint);
@@ -145,13 +192,15 @@ public class Marker extends AbstractNode
 
 	/**
 	 * Создание маркера на основе полученного сообщения с указанием оптической 
-	 * дистанции
+	 * дистанции.
 	 * 
-	 * @param id
-	 * @param mapView
-	 * @param opticalDistance
-	 * @param path
-	 * @param meId
+	 * @param id идентификатор
+	 * @param creatorId пользователь
+	 * @param mapView вид карты
+	 * @param opticalDistance оптическая дистанция от начала пути
+	 * @param path измерительный путь
+	 * @param monitoredElementId идентификатор исследуемого объекта
+	 * @param name название маркера
 	 */
 	public Marker(
 			Identifier id, 
@@ -159,7 +208,7 @@ public class Marker extends AbstractNode
 			MapView mapView,
 			double opticalDistance, 
 			MeasurementPath path,
-			Identifier meId,
+			Identifier monitoredElementId,
 			String name)
 	{
 		super(id);
@@ -175,30 +224,42 @@ public class Marker extends AbstractNode
 		super.name = name;
 
 		this.mapView = mapView;
-		this.meId = meId;
+		this.monitoredElementId = monitoredElementId;
 		if(mapView != null)
 		{
 			this.map = mapView.getMap();
-			setMap(map);
+			setMap(this.map);
 		}
-//		this.setImageId(IMAGE_NAME);
 
 		this.measurementPath = path;
-		this.startNode = measurementPath.getStartNode();
+		this.startNode = this.measurementPath.getStartNode();
 		
-		spd = new PathDecompositor(measurementPath.getSchemePath());
+		this.spd = new PathDecompositor(this.measurementPath.getSchemePath());
 	}
 
+	/**
+	 * Создание маркера на основе полученного сообщения с указанием оптической 
+	 * дистанции.
+	 * 
+	 * @param creatorId пользователь
+	 * @param mapView вид карты
+	 * @param opticalDistance оптическая дистанция от начала пути
+	 * @param path измерительный путь
+	 * @param monitoredElementId идентификатор исследуемого объекта
+	 * @param name название маркера
+	 * @throws com.syrus.AMFICOM.general.CreateObjectException
+	 * @return новый маркер
+	 */
 	public static Marker createInstance(
 			Identifier creatorId,
 			MapView mapView,
 			double opticalDistance, 
 			MeasurementPath path,
-			Identifier meId,
+			Identifier monitoredElementId,
 			String name)
 		throws CreateObjectException 
 	{
-		if (meId == null || mapView == null || path == null)
+		if (monitoredElementId == null || mapView == null || path == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try
@@ -211,7 +272,7 @@ public class Marker extends AbstractNode
 				mapView,
 				opticalDistance, 
 				path,
-				meId,
+				monitoredElementId,
 				name);
 		}
 		catch (IdentifierGenerationException e)
@@ -224,16 +285,28 @@ public class Marker extends AbstractNode
 		}
 	}
 
+	/**
+	 * Установить идентификатор.
+	 * @param id идентификатор
+	 */
 	public void setId(Identifier id)
 	{
 		super.id = id;
 	}
 
+	/**
+	 * Установить вид карты.
+	 * @param mapView вид карты
+	 */
 	public void setMapView(MapView mapView)
 	{
 		this.mapView = mapView;
 	}
 	
+	/**
+	 * Получить вид карты.
+	 * @return вид карты
+	 */
 	public MapView getMapView()
 	{
 		return this.mapView;
@@ -246,64 +319,62 @@ public class Marker extends AbstractNode
 
 	public NodeLink previousNodeLink()
 	{
-		NodeLink nl;
-		int index = measurementPath.getSortedNodeLinks().indexOf(nodeLink);
+		NodeLink nLink;
+		int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
 		if(index == 0)
-			nl = null;
+			nLink = null;
 		else
-			nl = (NodeLink)(measurementPath.getSortedNodeLinks().get(index - 1));
-		return nl;
+			nLink = (NodeLink )(this.measurementPath.getSortedNodeLinks().get(index - 1));
+		return nLink;
 	}
 
 	public NodeLink nextNodeLink()
 	{
-		NodeLink nl;
-		int index = measurementPath.getSortedNodeLinks().indexOf(nodeLink);
-		if(index == measurementPath.getSortedNodeLinks().size() - 1)
-			nl = null;
+		NodeLink nLink;
+		int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
+		if(index == this.measurementPath.getSortedNodeLinks().size() - 1)
+			nLink = null;
 		else
-			nl = (NodeLink)(measurementPath.getSortedNodeLinks().get(index + 1));
-		return nl;
+			nLink = (NodeLink )(this.measurementPath.getSortedNodeLinks().get(index + 1));
+		return nLink;
 	}
 
 	public SiteNode getLeft()
 	{
-		List nodes = cpath.getSortedNodes();
+		List nodes = this.cpath.getSortedNodes();
 		AbstractNode node = null;
-		for(ListIterator lit = nodes.listIterator(nodes.indexOf(startNode)); lit.hasPrevious();)
+		for(ListIterator lit = nodes.listIterator(nodes.indexOf(this.startNode)); lit.hasPrevious();)
 		{
-			node = (AbstractNode)lit.previous();
+			node = (AbstractNode )lit.previous();
 			if(node instanceof SiteNode)
 				break;
 			node = null;
 		}
-		return (SiteNode)node;
+		return (SiteNode )node;
 	}
 
 	public SiteNode getRight()
 	{
-		List nodes = cpath.getSortedNodes();
+		List nodes = this.cpath.getSortedNodes();
 		AbstractNode node = null;
-		for(ListIterator lit = nodes.listIterator(nodes.indexOf(endNode) - 1); lit.hasNext();)
+		for(ListIterator lit = nodes.listIterator(nodes.indexOf(this.endNode) - 1); lit.hasNext();)
 		{
-			node = (AbstractNode)lit.next();
+			node = (AbstractNode )lit.next();
 			if(node instanceof SiteNode)
 				break;
 			node = null;
 		}
-		return (SiteNode)node;
+		return (SiteNode )node;
 	}
-
 
 	public void setMeasurementPath(MeasurementPath measurementPath)
 	{
 		this.measurementPath = measurementPath;
 	}
 
-
 	public MeasurementPath getMeasurementPath()
 	{
-		return measurementPath;
+		return this.measurementPath;
 	}
 
 	public void setDescriptor(Object descriptor)
@@ -311,15 +382,14 @@ public class Marker extends AbstractNode
 		this.descriptor = descriptor;
 	}
 
-
 	public Object getDescriptor()
 	{
-		return descriptor;
+		return this.descriptor;
 	}
 
 	public PathDecompositor getPathDecompositor()
 	{
-		return spd;
+		return this.spd;
 	}
 	
 	public void setPathDecompositor(PathDecompositor spd)
@@ -332,40 +402,34 @@ public class Marker extends AbstractNode
 		this.nodeLink = nodeLink;
 	}
 
-
 	public NodeLink getNodeLink()
 	{
-		return nodeLink;
+		return this.nodeLink;
 	}
-
 
 	public void setStartNode(AbstractNode startNode)
 	{
 		this.startNode = startNode;
 	}
 
-
 	public AbstractNode getStartNode()
 	{
-		return startNode;
+		return this.startNode;
 	}
-
 
 	public void setEndNode(AbstractNode endNode)
 	{
 		this.endNode = endNode;
 	}
 
-
 	public AbstractNode getEndNode()
 	{
-		return endNode;
+		return this.endNode;
 	}
-
 
 	public CablePath getCablePath()
 	{
-		return cpath;
+		return this.cpath;
 	}
 
 	public void setCablePath(CablePath cpath)
@@ -373,16 +437,14 @@ public class Marker extends AbstractNode
 		this.cpath = cpath;
 	}
 
-
 	public void setMeId(Identifier meId)
 	{
-		this.meId = meId;
+		this.monitoredElementId = meId;
 	}
-
 
 	public Identifier getMeId()
 	{
-		return meId;
+		return this.monitoredElementId;
 	}
 
 	public void setDistance(double distance)
@@ -390,10 +452,9 @@ public class Marker extends AbstractNode
 		this.distance = distance;
 	}
 
-
 	public double getDistance()
 	{
-		return distance;
+		return this.distance;
 	}
 
 	/**

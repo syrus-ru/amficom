@@ -1,5 +1,5 @@
 /**
- * $Id: Selection.java,v 1.2 2005/02/01 15:11:28 krupenn Exp $
+ * $Id: Selection.java,v 1.3 2005/02/02 15:17:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,17 +30,26 @@ import java.util.List;
  * Набор выбранных элементов.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/02/01 15:11:28 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/02 15:17:30 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
 public final class Selection
     implements MapElement 
 {
+	/**
+	 * Список выбранных элементов.
+	 */
 	protected List elements = new LinkedList();
 
+	/**
+	 * Общий центр выбранных элементов.
+	 */
 	protected DoublePoint location = new DoublePoint(0, 0);
 	
+	/**
+	 * Топологическая схема.
+	 */
 	protected Map map;
 	
 	/** 
@@ -114,37 +124,55 @@ public final class Selection
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Очистить список выделенных элементов.
+	 */
 	public void clear()
 	{
-		elements.clear();
+		this.elements.clear();
 		recalcLocation();
 		recalcType();
 	}
 
-	public void add(MapElement me)
+	/**
+	 * Добавить в список новый выделенный элемент карты.
+	 * @param mapElement элемент карты
+	 */
+	public void add(MapElement mapElement)
 	{
-		elements.add(me);
+		this.elements.add(mapElement);
 		recalcLocation();
 		recalcType();
 	}
 
+	/**
+	 * Добавить в список множество выделенных элементов.
+	 * @param coll набор элементов
+	 */
 	public void addAll(Collection coll)
 	{
-		elements.addAll(coll);
+		this.elements.addAll(coll);
 		recalcLocation();
 		recalcType();
 	}
 
-	public void remove(MapElement me)
+	/**
+	 * Убрать из списка элемент карты.
+	 * @param mapElement элемент карты
+	 */
+	public void remove(MapElement mapElement)
 	{
-		elements.remove(me);
+		this.elements.remove(mapElement);
 		recalcLocation();
 		recalcType();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public DoublePoint getLocation()
 	{
-		return location;
+		return this.location;
 	}
 
 	/**
@@ -155,7 +183,7 @@ public final class Selection
 		MapElement me;
 		double x = 0.0D;
 		double y = 0.0D;
-		for(Iterator it = elements.iterator(); it.hasNext();)
+		for(Iterator it = this.elements.iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			DoublePoint pt = me.getLocation();
@@ -163,10 +191,10 @@ public final class Selection
 			x += pt.getX();
 			y += pt.getY();
 		}
-		x /= elements.size();
-		y /= elements.size();
+		x /= this.elements.size();
+		y /= this.elements.size();
 		
-		location.setLocation(x, y);
+		this.location.setLocation(x, y);
 	}
 
 	/**
@@ -174,35 +202,39 @@ public final class Selection
 	 */
 	private void recalcType()
 	{
-		physicalNodeSelection = true;
-		unboundNodeSelection = true;
-		unboundLinkSelection = true;
-		unboundCableSelection = true;
-		unboundSelection = true;
-		physicalLinkSelection = true;
+		this.physicalNodeSelection = true;
+		this.unboundNodeSelection = true;
+		this.unboundLinkSelection = true;
+		this.unboundCableSelection = true;
+		this.unboundSelection = true;
+		this.physicalLinkSelection = true;
 
-		for(Iterator it = elements.iterator(); it.hasNext();)
+		for(Iterator it = this.elements.iterator(); it.hasNext();)
 		{
 			MapElement me = (MapElement)it.next();
 			if(! (me instanceof TopologicalNode))
-				physicalNodeSelection = false;
+				this.physicalNodeSelection = false;
 			if(! (me instanceof UnboundNode))
-				unboundNodeSelection = false;
+				this.unboundNodeSelection = false;
 			if(! (me instanceof UnboundLink))
-				unboundLinkSelection = false;
+				this.unboundLinkSelection = false;
 			if(! (me instanceof CablePath))
-				unboundCableSelection = false;
+				this.unboundCableSelection = false;
 			if(	! (me instanceof UnboundNode) &&
 				! (me instanceof UnboundLink) &&
 				! (me instanceof CablePath))
-				unboundSelection = false;
+				this.unboundSelection = false;
 			if(! (me instanceof PhysicalLink))
-				physicalLinkSelection = false;
+				this.physicalLinkSelection = false;
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setLocation(DoublePoint aLocation)
 	{
+		throw new UnsupportedOperationException("Cannot set location to selection");
 	}
 
 	/**
@@ -223,6 +255,9 @@ public final class Selection
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setSelected(boolean selected)
 	{
 	}
@@ -236,6 +271,9 @@ public final class Selection
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getName()
 	{
 		return "selection";
@@ -282,7 +320,7 @@ public final class Selection
 	 */
 	public Map getMap()
 	{
-		return map;
+		return this.map;
 	}
 	
 	/**
@@ -293,19 +331,12 @@ public final class Selection
 		this.map = map;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
 	public String getToolTipText()
 	{
-		return getName();
+		return this.getName();
 	}
 
 	/**
@@ -317,45 +348,73 @@ public final class Selection
 		throw new UnsupportedOperationException();
 	}
 	
+	/**
+	 * Получить список выделенных элементов.
+	 * @return список выделенных элементов
+	 */
 	public List getElements()
 	{
-		return elements;
+		return Collections.unmodifiableList(this.elements);
 	}
 
 
+	/**
+	 * Get {@link #physicalNodeSelection}.
+	 * @return this.physicalNodeSelection
+	 */
 	public boolean isPhysicalNodeSelection()
 	{
-		return physicalNodeSelection;
+		return this.physicalNodeSelection;
 	}
 
 
+	/**
+	 * Get {@link #unboundNodeSelection}.
+	 * @return this.unboundNodeSelection
+	 */
 	public boolean isUnboundNodeSelection()
 	{
-		return unboundNodeSelection;
+		return this.unboundNodeSelection;
 	}
 
 
+	/**
+	 * Get {@link #unboundLinkSelection}.
+	 * @return this.unboundLinkSelection
+	 */
 	public boolean isUnboundLinkSelection()
 	{
-		return unboundLinkSelection;
+		return this.unboundLinkSelection;
 	}
 
 
+	/**
+	 * Get {@link #unboundSelection}.
+	 * @return this.unboundSelection
+	 */
 	public boolean isUnboundSelection()
 	{
-		return unboundSelection;
+		return this.unboundSelection;
 	}
 
 
+	/**
+	 * Get {@link #physicalLinkSelection}.
+	 * @return this.physicalLinkSelection
+	 */
 	public boolean isPhysicalLinkSelection()
 	{
-		return physicalLinkSelection;
+		return this.physicalLinkSelection;
 	}
 
 
+	/**
+	 * Get {@link #unboundCableSelection}.
+	 * @return this.unboundCableSelection
+	 */
 	public boolean isUnboundCableSelection()
 	{
-		return unboundCableSelection;
+		return this.unboundCableSelection;
 	}
 
 	/**

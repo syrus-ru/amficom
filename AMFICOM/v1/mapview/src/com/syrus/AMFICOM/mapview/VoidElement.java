@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.2 2005/02/01 15:11:29 krupenn Exp $
+ * $Id: VoidElement.java,v 1.3 2005/02/02 15:17:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,19 +25,33 @@ import java.util.List;
  * Пустой элемент.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/02/01 15:11:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/02 15:17:30 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement 
 {
+	/**
+	 * Вид карты.
+	 */
 	protected MapView mapView;
 	
+	/**
+	 * Instance.
+	 */
 	protected static VoidElement singleton = new VoidElement();
 
+	/**
+	 * Protected constructor.
+	 */
 	protected VoidElement()
 	{
 	}
 
+	/**
+	 * Get instance.
+	 * @param mapView вид карты
+	 * @return instance
+	 */
 	public static VoidElement getInstance(MapView mapView)
 	{
 		singleton.mapView = mapView;
@@ -49,12 +63,16 @@ public final class VoidElement implements MapElement
 	 */
 	public Map getMap()
 	{
-		return mapView.getMap();
+		return this.mapView.getMap();
 	}
 
+	/**
+	 * Получить вид карты.
+	 * @return вид карты
+	 */
 	public MapView getMapView()
 	{
-		return mapView;
+		return this.mapView;
 	}
 
 	/**
@@ -62,11 +80,12 @@ public final class VoidElement implements MapElement
 	 */
 	public String getToolTipText()
 	{
-		String s1 = getMapView().getName();
-
-		return s1;
+		return getMapView().getName();
 	}
 
+	/**
+	 * {@inheritDoc} 
+	 */
 	public boolean isSelected()
 	{
 		return true;

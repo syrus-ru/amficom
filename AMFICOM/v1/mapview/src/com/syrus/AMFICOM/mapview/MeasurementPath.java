@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.4 2005/02/01 15:11:28 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.5 2005/02/02 15:17:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,32 +44,60 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/01 15:11:28 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/02 15:17:30 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
 {
 	private static final long serialVersionUID = 02L;
 
+	/**
+	 * Идентификатор.
+	 */
 	protected Identifier id;
 
+	/**
+	 * Название.
+	 */
 	protected String	name;
 
+	/**
+	 * Описание.
+	 */
 	protected String	description;
 
-	protected List		characteristics;
-
+	/**
+	 * Флаг выделения.
+	 */
 	protected transient boolean selected = false;
 
+	/**
+	 * Флаг наличия сигнала тревоги.
+	 */
 	protected transient boolean alarmState = false;
 
+	/**
+	 * Флаг удаления.
+	 */
 	protected transient boolean removed = false;
 
+	/**
+	 * Топологическая схема.
+	 */
 	protected transient Map map = null;
 
+	/**
+	 * Схемный путь.
+	 */
 	protected SchemePath schemePath;
+	/**
+	 * Схема.
+	 */
 	protected Scheme scheme;
 
+	/**
+	 * Вид карты.
+	 */
 	protected MapView mapView;
 
 	/**
@@ -90,11 +118,17 @@ public class MeasurementPath implements MapElement
 		this.name = schemePath.name();
 		if(mapView != null)
 		{
-			map = mapView.getMap();
+			this.map = mapView.getMap();
 		}
-		this.characteristics = new LinkedList();
 	}
 
+	/**
+	 * Сохдать новый элемент пути.
+	 * @param schemePath схемный путь
+	 * @param mapView вид карты
+	 * @return новый элемент пути
+	 * @throws com.syrus.AMFICOM.general.CreateObjectException нельзя создать
+	 */
 	public static MeasurementPath createInstance(
 			SchemePath schemePath,
 			MapView mapView)
@@ -127,7 +161,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public List getCharacteristics() 
 	{
-		return Collections.unmodifiableList(this.characteristics);
+		return Collections.unmodifiableList(this.schemePath.characteristicsImpl().getValue());
 	}
 
 	/**
@@ -135,7 +169,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public void addCharacteristic(Characteristic ch)
 	{
-		this.characteristics.add(ch);
+		this.schemePath.addCharacteristic(ch);
 	}
 
 	/**
@@ -143,9 +177,13 @@ public class MeasurementPath implements MapElement
 	 */
 	public void removeCharacteristic(Characteristic ch)
 	{
-		this.characteristics.remove(ch);
+		this.schemePath.removeCharacteristic(ch);
 	}
 	
+	/**
+	 * Установить идентификатор
+	 * @param id идентификатор
+	 */
 	public void setId(Identifier id)
 	{
 		this.id = id;
@@ -156,24 +194,38 @@ public class MeasurementPath implements MapElement
 	 */
 	public Identifier getId()
 	{
-		return id;
+		return this.id;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getName() 
 	{
 		return this.name;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setName(String name) 
 	{
 		this.name = name;
 	}
 
+	/**
+	 * Получить описание.
+	 * @return описание
+	 */
 	public String getDescription() 
 	{
 		return this.description;
 	}
 
+	/**
+	 * Установить описание.
+	 * @param description описание
+	 */
 	public void setDescription(String description) 
 	{
 		this.description = description;
@@ -184,7 +236,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public Map getMap()
 	{
-		return map;
+		return this.map;
 	}
 
 	/**
@@ -200,7 +252,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public boolean isSelected()
 	{
-		return selected;
+		return this.selected;
 	}
 
 	/**
@@ -225,7 +277,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public boolean getAlarmState()
 	{
-		return alarmState;
+		return this.alarmState;
 	}
 
 	protected DoublePoint location = new DoublePoint(0.0, 0.0);
@@ -247,9 +299,9 @@ public class MeasurementPath implements MapElement
 			y += an.getY();
 			count++;
 		}
-		location.setLocation(x /= count, y /= count);
+		this.location.setLocation(x /= count, y /= count);
 		
-		return location;
+		return this.location;
 	}
 
 
@@ -258,7 +310,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public boolean isRemoved()
 	{
-		return removed;
+		return this.removed;
 	}
 
 	/**
@@ -269,16 +321,28 @@ public class MeasurementPath implements MapElement
 		this.removed = removed;
 	}
 
+	/**
+	 * Установить вид карты.
+	 * @param mapView вид карты
+	 */
 	public void setMapView(MapView mapView)
 	{
 		this.mapView = mapView;
 	}
 	
+	/**
+	 * получить вид карты.
+	 * @return вид карты
+	 */
 	public MapView getMapView()
 	{
 		return this.mapView;
 	}
 
+	/**
+	 * Установить схемный путь.
+	 * @param schemePath схемный путь.
+	 */
 	public void setSchemePath(SchemePath schemePath)
 	{
 		this.schemePath = schemePath;
@@ -286,9 +350,13 @@ public class MeasurementPath implements MapElement
 		this.scheme = schemePath.scheme();
 	}
 
+	/**
+	 * получить схемный путь.
+	 * @return схемный путь
+	 */
 	public SchemePath getSchemePath()
 	{
-		return schemePath;
+		return this.schemePath;
 	}
 
 	/**
@@ -299,7 +367,10 @@ public class MeasurementPath implements MapElement
 		return isSelected();
 	}
 
-	//Возвращает топологическую длинну в метрах
+	/**
+	 * Возвращает топологическую длинну в метрах
+	 * @return топологическая длина
+	 */
 	public double getLengthLt()
 	{
 		double length = 0;
@@ -312,32 +383,49 @@ public class MeasurementPath implements MapElement
 		return length;
 	}
 
+	/**
+	 * Возвращает физическую длину в метрах.
+	 * @return физическая длина
+	 */
 	public double getLengthLf()
 	{
-		return SchemeUtils.getPhysicalLength(schemePath);
+		return SchemeUtils.getPhysicalLength(this.schemePath);
 	}
 
+	/**
+	 * Возвращает оптическую длину в метрах.
+	 * @return оптическая длина
+	 */
 	public double getLengthLo()
 	{
-		return SchemeUtils.getOpticalLength(schemePath);
+		return SchemeUtils.getOpticalLength(this.schemePath);
 	}
 
-	// to avoid instantiation of multiple objects
+	/**
+	 * Несортированный список кабельных путей, из которых строится 
+	 * измерительный путь.
+	 * to avoid instantiation of multiple objects.
+	 */
 	protected List unsortedCablePaths = new LinkedList();
 
+	/**
+	 * Получить список топологических кабелей, которые входят в состав пути.
+	 * Список строится динамически.
+	 * @return список кабельных путей
+	 */
 	protected List getCablePaths()
 	{
-		synchronized(unsortedCablePaths)
+		synchronized(this.unsortedCablePaths)
 		{
-			unsortedCablePaths.clear();
-			for(int i = 0; i < schemePath.links().length; i++)
+			this.unsortedCablePaths.clear();
+			for(int i = 0; i < this.schemePath.links().length; i++)
 			{
-				PathElement pe = (PathElement )schemePath.links()[i];
+				PathElement pe = this.schemePath.links()[i];
 				switch(pe.type().value())
 				{
 					case Type._SCHEME_ELEMENT:
 						SchemeElement se = (SchemeElement )pe.abstractSchemeElement();
-						SiteNode site = mapView.findElement(se);
+						SiteNode site = this.mapView.findElement(se);
 						if(site != null)
 						{
 							//TODO think if link to 'site' is needed for mPath
@@ -346,10 +434,10 @@ public class MeasurementPath implements MapElement
 						break;
 					case Type._SCHEME_LINK:
 						SchemeLink link = (SchemeLink )pe.abstractSchemeElement();
-						SchemeElement sse = SchemeUtils.getSchemeElementByDevice(scheme, link.sourceSchemePort().schemeDevice());
-						SchemeElement ese = SchemeUtils.getSchemeElementByDevice(scheme, link.targetSchemePort().schemeDevice());
-						SiteNode ssite = mapView.findElement(sse);
-						SiteNode esite = mapView.findElement(ese);
+						SchemeElement sse = SchemeUtils.getSchemeElementByDevice(this.scheme, link.sourceSchemePort().schemeDevice());
+						SchemeElement ese = SchemeUtils.getSchemeElementByDevice(this.scheme, link.targetSchemePort().schemeDevice());
+						SiteNode ssite = this.mapView.findElement(sse);
+						SiteNode esite = this.mapView.findElement(ese);
 						if(ssite == esite)
 						{
 							//TODO think if link to 'link' is needed for mPath
@@ -358,10 +446,10 @@ public class MeasurementPath implements MapElement
 						break;
 					case Type._SCHEME_CABLE_LINK:
 						SchemeCableLink clink = (SchemeCableLink )pe.abstractSchemeElement();
-						CablePath cp = mapView.findCablePath(clink);
+						CablePath cp = this.mapView.findCablePath(clink);
 						if(cp != null)
 						{
-							unsortedCablePaths.add(cp);
+							this.unsortedCablePaths.add(cp);
 						}
 						break;
 					default:
@@ -369,95 +457,143 @@ public class MeasurementPath implements MapElement
 				}
 			}
 		}
-		return unsortedCablePaths;
+		return this.unsortedCablePaths;
 	}
 
-	// to avoid instantiation of multiple objects
+	/**
+	 * Сортированный список кабельных путей, из которых строится 
+	 * измерительный путь.
+	 * to avoid instantiation of multiple objects.
+	 */
 	protected List sortedCablePaths = new LinkedList();
-	// to avoid instantiation of multiple objects
+	/**
+	 * Сортированный список фрагментов линий, из которых строится 
+	 * измерительный путь.
+	 * to avoid instantiation of multiple objects.
+	 */
 	protected List sortedNodeLinks = new LinkedList();
-	// to avoid instantiation of multiple objects
+	/**
+	 * Сортированный список узлов, по которым проходит 
+	 * измерительный путь.
+	 * to avoid instantiation of multiple objects.
+	 */
 	protected List sortedNodes = new LinkedList();
 
+	/**
+	 * Get {@link #sortedNodeLinks}.
+	 * @return this.sortedNodeLinks
+	 */
 	public List getSortedNodeLinks()
 	{
-		return sortedNodeLinks;
+		return this.sortedNodeLinks;
 	}
 	
+	/**
+	 * Get {@link #sortedNodes}.
+	 * @return this.sortedNodes
+	 */
 	public List getSortedNodes()
 	{
-		return sortedNodes;
+		return this.sortedNodes;
 	}
 	
+	/**
+	 * Get {@link #sortedCablePaths}.
+	 * @return this.sortedCablePaths
+	 */
 	public List getSortedCablePaths()
 	{
-		return sortedCablePaths;
+		return this.sortedCablePaths;
 	}
 	
+	/**
+	 * Получить начальный узел пути. Определяется динамически.
+	 * @return узел
+	 */
 	public AbstractNode getStartNode()
 	{
 		return getMapView().getStartNode(this.getSchemePath());
 	}
 	
+	/**
+	 * Получить конечный узел пути. Определяется динамически.
+	 * @return узел
+	 */
 	public AbstractNode getEndNode()
 	{
 		return getMapView().getEndNode(this.getSchemePath());
 	}
 	
+	/**
+	 * Сортировать элементы пути. Включает сортировку кабельных путей,
+	 * фрагментов линий и узлов.
+	 */
 	public void sortPathElements()
 	{
-		sortedCablePaths.clear();
-		sortedNodeLinks.clear();
-		sortedNodes.clear();
+		this.sortedCablePaths.clear();
+		this.sortedNodeLinks.clear();
+		this.sortedNodes.clear();
 		
 		AbstractNode node = getStartNode();
 
-		sortedCablePaths.addAll(getCablePaths());
+		this.sortedCablePaths.addAll(getCablePaths());
 		
-		for(Iterator it = sortedCablePaths.iterator(); it.hasNext();)
+		for(Iterator it = this.sortedCablePaths.iterator(); it.hasNext();)
 		{
 			CablePath cpath = (CablePath)it.next();
 			cpath.sortNodeLinks();
 			if(cpath.getStartNode().equals(node))
 			{
-				sortedNodeLinks.addAll(cpath.getSortedNodeLinks());
-				sortedNodes.addAll(cpath.getSortedNodes());
+				this.sortedNodeLinks.addAll(cpath.getSortedNodeLinks());
+				this.sortedNodes.addAll(cpath.getSortedNodes());
 			}
 			else
 			{
 				for(ListIterator lit = cpath.getSortedNodeLinks().listIterator(cpath.getSortedNodeLinks().size()); lit.hasPrevious();)
 				{
-					sortedNodeLinks.add(lit.previous());
+					this.sortedNodeLinks.add(lit.previous());
 				}
 				for(ListIterator lit = cpath.getSortedNodes().listIterator(cpath.getSortedNodes().size()); lit.hasPrevious();)
 				{
-					sortedNodes.add(lit.previous());
+					this.sortedNodes.add(lit.previous());
 				}
 			}
 			node = cpath.getOtherNode(node);
 
 			// to avoid duplicate entry
-			sortedNodes.remove(node);
+			this.sortedNodes.remove(node);
 		}
-		sortedNodes.add(node);
+		this.sortedNodes.add(node);
 	}
 
-	public NodeLink nextNodeLink(NodeLink nl)
+	/**
+	 * Получить следующий фрагмент по цепочке сортированных фрагментов.
+	 * @param nodeLink фрагмент
+	 * @return следующий фрагмент, или <code>null</code>, если nl - последний 
+	 * в списке
+	 */
+	public NodeLink nextNodeLink(NodeLink nodeLink)
 	{
-		int index = getSortedNodeLinks().indexOf(nl);
+		int index = getSortedNodeLinks().indexOf(nodeLink);
 		if(index == getSortedNodeLinks().size() - 1)
 			return null;
-		else
-			return (NodeLink)getSortedNodeLinks().get(index + 1);
+
+		return (NodeLink)getSortedNodeLinks().get(index + 1);
 	}
 
-	public NodeLink previousNodeLink(NodeLink nl)
+	/**
+	 * Получить предыдущий фрагмент по цепочке сортированных фрагментов.
+	 * @param nodeLink фрагмент
+	 * @return предыдущий фрагмент, или <code>null</code>, если nl - первый 
+	 * в списке
+	 */
+	public NodeLink previousNodeLink(NodeLink nodeLink)
 	{
-		int index = getSortedNodeLinks().indexOf(nl);
+		int index = getSortedNodeLinks().indexOf(nodeLink);
 		if(index == 0)
 			return null;
-		else
-			return (NodeLink)getSortedNodeLinks().get(index - 1);
+
+		return (NodeLink)getSortedNodeLinks().get(index - 1);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.3 2005/02/02 08:54:45 krupenn Exp $
+ * $Id: UnboundLink.java,v 1.4 2005/02/02 15:17:30 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,13 +30,29 @@ import java.util.List;
  * {@link CablePath} в случае, когда кабель не прив€зан на каком-либо участке 
  * между узлами.
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/02 08:54:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/02 15:17:30 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
 {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 3762820380682828088L;
+	/**
+	 *  абельный путь, в который входит неприв€занна€ лини€.
+	 */
 	protected CablePath cablePath;
 	
+	/**
+	 *  онструктор.
+	 * @param id идентификатор
+	 * @param creatorId пользователь
+	 * @param stNode начальный узел
+	 * @param eNode конечный узел
+	 * @param map топологическа€ схема
+	 * @param proto тип (должен быть {@link PhysicalLinkType#UNBOUND})
+	 */
 	protected UnboundLink(
 			Identifier id,
 			Identifier creatorId,
@@ -48,6 +64,17 @@ public class UnboundLink extends PhysicalLink
 		super(id, creatorId, id.toString(), "", proto, stNode, eNode, "", "", "", 0, 0, true, true);
 	}
 
+	/**
+	 * —оздать неприв€занную линию.
+	 * @param creatorId пользователь
+	 * @param stNode начальный узел
+	 * @param eNode конечный узел
+	 * @param map топологическа€ схема
+	 * @param proto тип (должен быть {@link PhysicalLinkType#UNBOUND})
+	 * @return нова€ лини€
+	 * @throws com.syrus.AMFICOM.general.CreateObjectException если
+	 * нельз€ создать объект
+	 */
 	public static UnboundLink createInstance(
 			Identifier creatorId,
 			AbstractNode stNode, 
@@ -81,15 +108,23 @@ public class UnboundLink extends PhysicalLink
 		}
 	}
 
+	/**
+	 * ”становить кабельный путь.
+	 * @param cablePath кабельный путь
+	 */
 	public void setCablePath(CablePath cablePath)
 	{
 		this.cablePath = cablePath;
 	}
 
 
+	/**
+	 * ѕолучить кабельный путь.
+	 * @return кабельный путь
+	 */
 	public CablePath getCablePath()
 	{
-		return cablePath;
+		return this.cablePath;
 	}
 
 ////////////////////////////////////////////////////////////////////////////////

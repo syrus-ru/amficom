@@ -1,5 +1,5 @@
 /**
- * $Id: EventMarker.java,v 1.3 2005/02/02 08:54:45 krupenn Exp $
+ * $Id: EventMarker.java,v 1.4 2005/02/02 15:17:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,12 +16,17 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * Стационарный маркер собития на пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/02 08:54:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/02 15:17:30 $
  * @module mapviewclient_v1
  * @todo EventMarker functionality
  */
 public class EventMarker extends Marker
 {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 3834312821583655217L;
+
 	public EventMarker(
 			Identifier id, 
 			Identifier creatorId,

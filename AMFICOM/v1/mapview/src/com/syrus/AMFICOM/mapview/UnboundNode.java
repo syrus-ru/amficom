@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.3 2005/02/02 08:54:45 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.4 2005/02/02 15:17:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,11 +31,16 @@ import java.util.List;
  * ни к какому элементу топологической схемы.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/02 08:54:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/02 15:17:30 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
 {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 4121131437689942576L;
+
 	/**
 	 * элемент схемы.
 	 */
@@ -46,7 +51,7 @@ public class UnboundNode extends SiteNode
 	 * карты. Используется при перемещении непривязанного элемента мышкой.
 	 * При перемещении его через элемент топологической карты флаг получает
 	 * значение <code>true</code>, что означает, что при отпускании мыши
-	 * схемный элемент {@link schemeElement} будет привязан к элементу.
+	 * схемный элемент {@link #schemeElement} будет привязан к элементу.
 	 * При перемещении мыши за пределы элемента топологической карты 
 	 * флаг опять принимает значение <code>false</code>.
 	 */
@@ -81,7 +86,8 @@ public class UnboundNode extends SiteNode
 				"", 
 				"");
 
-		setSchemeElement(schemeElement);
+		this.schemeElement = schemeElement;
+		this.name = schemeElement.name();
 	}
 
 	/**
@@ -130,16 +136,30 @@ public class UnboundNode extends SiteNode
 		}
 	}
 
+	/**
+	 * Установить флаг возможности привязки непривязанного узла к сетевому
+	 * узлу.
+	 * @param canBind значение флага
+	 */
 	public void setCanBind(boolean canBind)
 	{
 		this.canBind = canBind;
 	}
 	
+	/**
+	 * получить флаг возможности привязки непривязанного узла к сетевому
+	 * узлу.
+	 * @return значение флага
+	 */
 	public boolean getCanBind()
 	{
 		return this.canBind;
 	}
 
+	/**
+	 * Установить элемент схемы.
+	 * @param schemeElement элемент схемы
+	 */
 	public void setSchemeElement(SchemeElement schemeElement)
 	{
 		this.schemeElement = schemeElement;
@@ -147,9 +167,13 @@ public class UnboundNode extends SiteNode
 	}
 
 
+	/**
+	 * Получить элемент схемы.
+	 * @return элемент схемы
+	 */
 	public SchemeElement getSchemeElement()
 	{
-		return schemeElement;
+		return this.schemeElement;
 	}
 
 ////////////////////////////////////////////////////////////////////////////////

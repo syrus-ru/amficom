@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.7 2005/02/01 14:34:23 krupenn Exp $
+* $Id: MapView.java,v 1.8 2005/02/02 15:17:30 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import java.util.List;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/01 14:34:23 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/02 15:17:30 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -634,7 +634,7 @@ public class MapView extends StorableObject {
 	 */
 	public List getCablePaths()
 	{
-		return cablePaths;
+		return this.cablePaths;
 	}
 
 	/**
@@ -643,7 +643,7 @@ public class MapView extends StorableObject {
 	 */
 	public void addCablePath(CablePath cable)
 	{
-		cablePaths.add(cable);
+		this.cablePaths.add(cable);
 	}
 
 	/**
@@ -652,7 +652,7 @@ public class MapView extends StorableObject {
 	 */
 	public void removeCablePath(CablePath cable)
 	{
-		cablePaths.remove(cable);
+		this.cablePaths.remove(cable);
 		cable.setSelected(false);
 	}
 
@@ -717,7 +717,7 @@ public class MapView extends StorableObject {
 	 */
 	public List getMeasurementPaths()
 	{
-		return measurementPaths;
+		return this.measurementPaths;
 	}
 
 	/**
@@ -726,7 +726,7 @@ public class MapView extends StorableObject {
 	 */
 	public void addMeasurementPath(MeasurementPath path)
 	{
-		measurementPaths.add(path);
+		this.measurementPaths.add(path);
 	}
 
 	/**
@@ -735,7 +735,7 @@ public class MapView extends StorableObject {
 	 */
 	public void removeMeasurementPath(MeasurementPath path)
 	{
-		measurementPaths.remove(path);
+		this.measurementPaths.remove(path);
 		path.setSelected(false);
 	}
 
@@ -837,8 +837,8 @@ public class MapView extends StorableObject {
 	 */
 	public void removeMarkers()
 	{
-		getMap().getNodes().removeAll(markers);
-		markers.clear();
+		getMap().getNodes().removeAll(this.markers);
+		this.markers.clear();
 	}
 
 	/**
@@ -847,7 +847,7 @@ public class MapView extends StorableObject {
 	 */
 	public void removeMarker(Marker marker)
 	{
-		markers.remove(marker);
+		this.markers.remove(marker);
 		getMap().removeNode(marker);
 		marker.setSelected(false);
 	}
@@ -858,7 +858,7 @@ public class MapView extends StorableObject {
 	 */
 	public List getMarkers()
 	{
-		return markers;
+		return this.markers;
 	}
 
 	/**
@@ -867,7 +867,7 @@ public class MapView extends StorableObject {
 	 */
 	public void addMarker(Marker marker)
 	{
-		markers.add(marker);
+		this.markers.add(marker);
 		getMap().addNode(marker);
 	}
 
@@ -878,7 +878,7 @@ public class MapView extends StorableObject {
 	 */
 	public Marker getMarker(Identifier markerId)
 	{
-		Iterator e = markers.iterator();
+		Iterator e = this.markers.iterator();
 		while( e.hasNext())
 		{
 			Marker marker = (Marker)e.next();
@@ -912,7 +912,7 @@ public class MapView extends StorableObject {
 			returnVector.add( mapElement);
 		}
 
-		e = markers.iterator();
+		e = this.markers.iterator();
 		while (e.hasNext())
 		{
 			MapElement mapElement = (MapElement)e.next();

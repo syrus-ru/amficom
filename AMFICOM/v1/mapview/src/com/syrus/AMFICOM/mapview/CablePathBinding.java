@@ -1,5 +1,5 @@
 /**
- * $Id: CablePathBinding.java,v 1.1 2005/02/01 09:28:17 krupenn Exp $
+ * $Id: CablePathBinding.java,v 1.2 2005/02/02 15:17:30 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -21,11 +21,15 @@ import java.util.Iterator;
 /**
  *  ласс хранит данные о прив€зке кабел€ к лини€м.
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/02/01 09:28:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/02 15:17:30 $
  * @module mapviewclient_v1
  */
 public final class CablePathBinding extends HashMap
 {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 3257291309759868982L;
 	/**
 	 * кабель.
 	 */
@@ -108,7 +112,7 @@ public final class CablePathBinding extends HashMap
 	 */
 	public CablePath getCablePath()
 	{
-		return cablePath;
+		return this.cablePath;
 	}
 
 /*
