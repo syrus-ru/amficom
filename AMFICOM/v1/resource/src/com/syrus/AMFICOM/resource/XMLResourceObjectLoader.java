@@ -1,5 +1,5 @@
 /*
- * $Id: XMLResourceObjectLoader.java,v 1.4 2005/02/25 12:06:35 bass Exp $
+ * $Id: XMLResourceObjectLoader.java,v 1.5 2005/04/01 09:07:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,9 @@
 package com.syrus.AMFICOM.resource;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,8 +25,8 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/25 12:06:35 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/04/01 09:07:54 $
+ * @author $Author: bob $
  * @module resource_v1
  */
 public class XMLResourceObjectLoader implements ResourceObjectLoader {
@@ -45,7 +43,7 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 		this.resourceXML.flush();
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Set ids) throws IllegalDataException {
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
 				this.resourceXML.delete(id);
@@ -58,8 +56,8 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 		return this.resourceXML.retrieve(id);
 	}
 	
-	private Collection loadStorableObjects(Collection ids) throws ApplicationException {
-		Collection objects = new ArrayList(ids.size());
+	private Set loadStorableObjects(Set ids) throws ApplicationException {
+		Set objects = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			objects.add(this.loadStorableObject(id));
@@ -67,7 +65,7 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 		return objects;
 	}
 
-	private List loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	private Set loadStorableObjectButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.resourceXML.retrieveByCondition(ids, condition);
 	}
 
@@ -76,7 +74,7 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 		this.resourceXML.updateObject(storableObject, force, modifierId);
 	}
 	
-	private void saveStorableObjects(Collection storableObjects, boolean force) throws ApplicationException {
+	private void saveStorableObjects(Set storableObjects, boolean force) throws ApplicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			this.saveStorableObject(storableObject, force);
@@ -88,12 +86,12 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 		return this.loadStorableObject(id);
 	}
 
-	public Collection loadImageResources(Collection ids) throws ApplicationException {
+	public Set loadImageResources(Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
 
-	public Collection loadImageResourcesButIds(	StorableObjectCondition condition,
-												Collection ids) throws ApplicationException {
+	public Set loadImageResourcesButIds(	StorableObjectCondition condition,
+												Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -107,7 +105,7 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 		this.saveStorableObject(abstractImageResource, force);
 	}
 	
-	public void saveImageResources(	Collection collection,
+	public void saveImageResources(	Set collection,
 									boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 	}

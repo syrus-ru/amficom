@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.8 2005/02/15 08:41:26 bob Exp $
+ * $Id: BitmapImageResource.java,v 1.9 2005/04/01 09:07:53 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,15 @@
 
 package com.syrus.AMFICOM.resource;
 
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.*;
@@ -16,7 +24,7 @@ import java.util.Date;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.8 $, $Date: 2005/02/15 08:41:26 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/01 09:07:53 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {

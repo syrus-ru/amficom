@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.5 2005/02/15 08:13:16 bob Exp $
+ * $Id: AbstractImageResource.java,v 1.6 2005/04/01 09:07:53 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,22 @@
 
 package com.syrus.AMFICOM.resource;
 
-import com.syrus.AMFICOM.general.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
-import java.util.*;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/02/15 08:13:16 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 09:07:53 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -56,8 +64,8 @@ public abstract class AbstractImageResource extends StorableObject {
 		super(imageResource.header);
 	}
 
-	public List getDependencies() {
-		return Collections.EMPTY_LIST;
+	public Set getDependencies() {
+		return Collections.EMPTY_SET;
 	}
 
 	public abstract byte[] getImage();	

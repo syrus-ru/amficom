@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.11 2005/02/24 16:10:22 bob Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.12 2005/04/01 09:07:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.resource;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.util.Log;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Set;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/02/24 16:10:22 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/01 09:07:54 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -88,16 +87,16 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 	
-	public static Collection getStorableObjects(Collection objectIds, boolean useLoader)
+	public static Set getStorableObjects(Set objectIds, boolean useLoader)
 			throws ApplicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 	
-	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+	public static Set getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static Collection getStorableObjectsByConditionButIds(Collection ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+	public static Set getStorableObjectsByConditionButIds(Set ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 	
@@ -116,9 +115,9 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 	
-	protected Collection loadStorableObjects(Short entityCode, Collection ids)
+	protected Set loadStorableObjects(Short entityCode, Set ids)
 			throws ApplicationException {
-		Collection storableObjects;
+		Set storableObjects;
 		switch (entityCode.shortValue()) {
 		case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
 			storableObjects = rObjectLoader.loadImageResources(ids);
@@ -130,9 +129,9 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		return storableObjects;
 	}
 	
-	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
+	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids)
 			throws ApplicationException {
-		Collection loadedList = null;
+		Set loadedList = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
@@ -145,7 +144,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		return loadedList;
 	}
 	
-	protected void saveStorableObjects(short code, Collection list, boolean force) throws ApplicationException{
+	protected void saveStorableObjects(short code, Set list, boolean force) throws ApplicationException{
 		if (!list.isEmpty()) {
 			boolean alone = (list.size()==1);			
 			switch (code) {
@@ -182,7 +181,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		rObjectLoader.delete(id);
 	}
 	
-	protected void deleteStorableObjects(Collection ids) throws IllegalDataException {
+	protected void deleteStorableObjects(Set ids) throws IllegalDataException {
 		rObjectLoader.delete(ids);
 	}
 
@@ -190,7 +189,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Collection ids) throws IllegalDataException {
+	public static void delete(Set ids) throws IllegalDataException {
 		instance.deleteImpl(ids);
 	}
 

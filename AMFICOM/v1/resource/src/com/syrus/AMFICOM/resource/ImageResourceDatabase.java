@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.19 2005/03/24 13:02:28 arseniy Exp $
+ * $Id: ImageResourceDatabase.java,v 1.20 2005/04/01 09:07:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/03/24 13:02:28 $
+ * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/04/01 09:07:54 $
  * @module resource_v1
  */
 
@@ -200,7 +200,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		}
 	}
     
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
 		for(Iterator it = storableObjects.iterator();it.hasNext();){
 			AbstractImageResource abstractImageResource = this.fromStorableObject((StorableObject)it.next());
@@ -229,7 +229,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+	public void update(Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException,
 			UpdateObjectException {
 		switch (updateKind) {

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.9 2005/03/11 11:01:30 bob Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.10 2005/04/01 09:07:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,8 @@ package com.syrus.AMFICOM.resource;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +31,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/11 11:01:30 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 09:07:53 $
  * @author $Author: bob $
  * @module resource_v1
  */
@@ -65,21 +64,21 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		}
 	}
 
-	public Collection loadImageResources(Collection ids) throws DatabaseException {
+	public Set loadImageResources(Set ids) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
-		Collection list = Collections.EMPTY_LIST;
+		Set set = Collections.EMPTY_SET;
 		try {
-			list = database.retrieveByIdsByCondition(ids, null);
+			set = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.loadImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.loadImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
 		}
-		return list;
+		return set;
 	}
 
-	public Collection loadImageResourcesButIds (StorableObjectCondition condition, Collection ids) throws DatabaseException {
+	public Set loadImageResourcesButIds (StorableObjectCondition condition, Set ids) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
-		Collection list = Collections.EMPTY_LIST;
+		Set list = Collections.EMPTY_SET;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
@@ -130,7 +129,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		}
 	}
 
-	public void saveImageResources(Collection list, boolean force) throws DatabaseException {
+	public void saveImageResources(Set list, boolean force) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -147,7 +146,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		delete(id, null);		
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Set ids) throws IllegalDataException {
 		if (ids == null || ids.isEmpty())
 			return;
 		/**
@@ -168,9 +167,9 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 			else
 				throw new IllegalDataException("ResourceObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identifiable"); //$NON-NLS-1$ //$NON-NLS-2$
 			Short entityCode = new Short(identifier.getMajor());
-			Collection list = (Collection)map.get(entityCode);
+			Set list = (Set)map.get(entityCode);
 			if (list == null) {
-				list = new LinkedList();
+				list = new HashSet();
 				map.put(entityCode, list);
 			}
 			list.add(object);
@@ -179,7 +178,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
-			Collection list = (Collection)map.get(entityCode);
+			Set list = (Set)map.get(entityCode);
 			delete(null, list);
 		}
 
@@ -191,7 +190,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 	 * @param ids
 	 * @throws IllegalDataException
 	 */
-	private void delete(Identifier id, Collection ids) throws IllegalDataException {
+	private void delete(Identifier id, Set ids) throws IllegalDataException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
 			if (ids.isEmpty())
