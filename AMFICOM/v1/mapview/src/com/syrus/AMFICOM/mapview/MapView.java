@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.3 2004/12/30 16:16:41 krupenn Exp $
+* $Id: MapView.java,v 1.4 2005/01/30 15:13:50 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mapview;
 
+import com.syrus.AMFICOM.map.DoublePoint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -35,9 +36,10 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/30 16:16:41 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/30 15:13:50 $
  * @author $Author: krupenn $
  * @module mapview_v1
+ * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
 public class MapView extends StorableObject {
 
@@ -206,6 +208,10 @@ public class MapView extends StorableObject {
 				schemeIdsTransferable);
 	}
 
+	/**
+	 * Получить список схем.
+	 * @return список схем
+	 */
 	public List getSchemes() {
 		return  Collections.unmodifiableList(this.schemes);
 	}
@@ -233,28 +239,52 @@ public class MapView extends StorableObject {
 		super.currentVersion = super.getNextVersion();
 	}
 	
+	/**
+	 * Получить описание вида.
+	 * @return описание вида
+	 */
 	public String getDescription() {
 		return this.description;
 	}
 	
+	/**
+	 * Установить описание вида.
+	 * @param description описание вида
+	 */
 	public void setDescription(String description) {
 		this.description = description;
 		super.currentVersion = super.getNextVersion();
 	}
 	
+	/**
+	 * Получить идентификатор домена.
+	 * @return идентификатор домена
+	 */
 	public Identifier getDomainId() {
 		return this.domainId;
 	}
 	
+	/**
+	 * Установить идентификатор домена.
+	 * @param domainId новый идентификатор домена
+	 */
 	public void setDomainId(Identifier domainId) {
 		this.domainId = domainId;
 		super.currentVersion = super.getNextVersion();
 	}
 	
+	/**
+	 * Получить название вида.
+	 * @return название
+	 */
 	public String getName() {
 		return this.name;
 	}
 	
+	/**
+	 * Установить новое название вида.
+	 * @param name новое название
+	 */
 	public void setName(String name) {
 		this.name = name;
 		super.currentVersion = super.getNextVersion();
@@ -314,22 +344,60 @@ public class MapView extends StorableObject {
 		super.currentVersion = super.getNextVersion();
 	}
 	
+	/**
+	 * Получить топологическую схему.
+	 * @return топологическая схема
+	 */
 	public Map getMap() {
 		return this.map;
 	}
 	
+	/**
+	 * Установить топологическую схему.
+	 * @param map топологическая схема
+	 */
 	public void setMap(Map map) {
 		this.map = map;
 		super.currentVersion = super.getNextVersion();
 	}
 	
+	/**
+	 * Возвращает масштаб вида.
+	 * @return масштаб
+	 */
 	public double getScale() {
 		return this.scale;
 	}
 	
+	/**
+	 * Установить масштаб вида.
+	 * @param scale масштаб
+	 */
 	public void setScale(double scale) {
 		this.scale = scale;
 		super.currentVersion = super.getNextVersion();
 	}
+
+	/**
+	 * Установить центральную точку вида в географических координатах.
+	 * @param center центр вида
+	 */
+	public void setCenter(DoublePoint center)
+	{
+		setLongitude(center.getX());
+		setLatitude(center.getY());
+	}
+
+	/**
+	 * Получить центральную точку вида в географических координатах.
+	 * @return центр вида
+	 */
+	public DoublePoint getCenter()
+	{
+		return new DoublePoint(
+			getLongitude(),
+			getLatitude());
+	}
+
 }
 
