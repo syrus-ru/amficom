@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.13 2004/08/29 10:54:24 bob Exp $
+ * $Id: PortDatabase.java,v 1.14 2004/08/30 07:37:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/29 10:54:24 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/30 07:37:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -209,7 +209,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
-		String portIdCode = port.getId().getCode();	
+		String portIdCode = port.getId().toSQLString();	
 
 		/**
 		 * @todo when change DB Identifier model ,change String to long
@@ -221,7 +221,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		String sql = null;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
-			buffer.append(ObjectEntities.MEASUREMENTPORT_ENTITY);
+			buffer.append(ObjectEntities.PORT_ENTITY);
 			buffer.append(OPEN_BRACKET);
 			buffer.append(COLUMN_ID);
 			buffer.append(COMMA);
@@ -253,16 +253,15 @@ public class PortDatabase extends StorableObjectDatabase {
 			buffer.append(COMMA);
 			buffer.append(port.getModifierId().toSQLString());
 			buffer.append(COMMA);
-			buffer.append((typeId != null)?typeId.getCode():Identifier.getNullSQLString());
+			buffer.append((typeId != null)?typeId.toSQLString():Identifier.getNullSQLString());
 			buffer.append(COMMA);
 			buffer.append(APOSTOPHE);
 			buffer.append(port.getDescription());
 			buffer.append(APOSTOPHE);
 			buffer.append(COMMA);
-			buffer.append((equipmentId != null)?equipmentId.getCode():Identifier.getNullSQLString());
+			buffer.append((equipmentId != null)?equipmentId.toSQLString():Identifier.getNullSQLString());
 			buffer.append(COMMA);
 			buffer.append(port.getSort());
-			buffer.append(COMMA);
 			buffer.append(CLOSE_BRACKET);
 			sql = buffer.toString();
 		}
@@ -298,44 +297,11 @@ public class PortDatabase extends StorableObjectDatabase {
 			}
 	}
 	
-	public static List retrieveAll() throws RetrieveObjectException {
-		List ports = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.PORT_ENTITY;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("PortDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				ports.add(new Port(new Identifier(resultSet.getString(COLUMN_ID))));			
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-		catch (SQLException sqle) {
-			String mesg = "PortDatabase.retrieveAll | Cannot retrieve port";
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return ports;
+	public List retrieveAll() throws RetrieveObjectException {
+		return retriveByIdsOneQuery(null);
 	}
 
-	public static void delete(Port port) {
+	public void delete(Port port) {
 		String portIdStr = port.getId().toSQLString();
 		Statement statement = null;
 		try {

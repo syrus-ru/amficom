@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.8 2004/08/29 10:54:23 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.9 2004/08/30 07:37:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/29 10:54:23 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/30 07:37:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -214,7 +214,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
-		String mpIdCode = measurementPort.getId().getCode();	
+		String mpIdCode = measurementPort.getId().toSQLString();	
 
 		/**
 		 * @todo when change DB Identifier model ,change String to long
@@ -268,7 +268,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			buffer.append(COMMA);
 			buffer.append(measurementPort.getModifierId().toSQLString());
 			buffer.append(COMMA);
-			buffer.append((typeId != null)?typeId.getCode():Identifier.getNullSQLString());
+			buffer.append((typeId != null)?typeId.toSQLString():Identifier.getNullSQLString());
 			buffer.append(COMMA);
 			buffer.append(APOSTOPHE);
 			buffer.append(measurementPort.getName());
@@ -278,10 +278,9 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			buffer.append(measurementPort.getDescription());
 			buffer.append(APOSTOPHE);
 			buffer.append(COMMA);
-			buffer.append((kisId != null)?kisId.getCode():Identifier.getNullSQLString());
+			buffer.append((kisId != null)?kisId.toSQLString():Identifier.getNullSQLString());
 			buffer.append(COMMA);
-			buffer.append((portId != null)?portId.getCode():Identifier.getNullSQLString());
-			buffer.append(COMMA);
+			buffer.append((portId != null)?portId.toSQLString():Identifier.getNullSQLString());
 			buffer.append(CLOSE_BRACKET);
 			sql = buffer.toString();
 		}
