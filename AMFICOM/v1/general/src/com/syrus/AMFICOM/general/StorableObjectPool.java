@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.4 2004/12/21 12:24:53 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.5 2004/12/23 11:21:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/21 12:24:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2004/12/23 11:21:03 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -68,27 +68,27 @@ public abstract class StorableObjectPool {
 				Short short1 = new Short(objectEntityCode);
 				this.objectPoolMap.put(short1, objectPool);
 //				Log.debugMessage("StorableObjectPool.addObjectPool | pool for " + ObjectEntities.codeToString(short1.shortValue()) + "/" + short1 + "(" + objectEntityCode +") size  " + poolSize + " added", Log.DEBUGLEVEL07);
-			} else
-				throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-						+ " must extends LRUMap");
-		} catch (SecurityException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " SecurityException " + e.getMessage());
-		} catch (IllegalArgumentException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " IllegalArgumentException " + e.getMessage());
-		} catch (NoSuchMethodException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " NoSuchMethodException " + e.getMessage());
-		} catch (InstantiationException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " InstantiationException " + e.getMessage());
-		} catch (IllegalAccessException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " IllegalAccessException " + e.getMessage());
-		} catch (InvocationTargetException e) {
-			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " InvocationTargetException " + e.getMessage());
+			}
+			else
+				throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName() + " must extend LRUMap");
+		}
+		catch (SecurityException e) {
+			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName() + " SecurityException " + e.getMessage());
+		}
+		catch (IllegalArgumentException e) {
+			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName() + " IllegalArgumentException " + e.getMessage());
+		}
+		catch (NoSuchMethodException e) {
+			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName() + " NoSuchMethodException " + e.getMessage());
+		}
+		catch (InstantiationException e) {
+			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName() + " InstantiationException " + e.getMessage());
+		}
+		catch (IllegalAccessException e) {
+			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName() + " IllegalAccessException " + e.getMessage());
+		}
+		catch (InvocationTargetException e) {
+			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName() + " InvocationTargetException " + e.getMessage());
 		}
 
 	}

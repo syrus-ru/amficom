@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.52 2004/12/16 13:01:38 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.53 2004/12/23 11:19:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2004/12/16 13:01:38 $
- * @author $Author: bob $
+ * @version $Revision: 1.53 $, $Date: 2004/12/23 11:19:52 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -65,7 +65,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		// singleton
 	}
 	
-	private ConfigurationStorableObjectPool(Class cacheMapClass){
+	private ConfigurationStorableObjectPool(Class cacheMapClass) {
 		super(cacheMapClass);
 	}
 
@@ -145,7 +145,8 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		try {
 			clazz = Class.forName(cacheClass.getName());
 			instance = new ConfigurationStorableObjectPool(clazz);
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default '" 
 							 + ((clazz == null) ? "null" : clazz.getName()) + "'");
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.9 2004/12/22 09:44:58 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.10 2004/12/23 11:19:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/22 09:44:58 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/23 11:19:52 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -40,11 +40,11 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 	public LinkedIdsCondition(LinkedIdsCondition_Transferable transferable) throws DatabaseException,
 			CommunicationException {
-		this.domain = (Domain) ConfigurationStorableObjectPool
-				.getStorableObject(new Identifier(transferable.domain_id), true);
+		this.domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(new Identifier(transferable.domain_id), true);
 		if (transferable.linked_ids.length == 1) {
 			this.identifier = new Identifier(transferable.linked_ids[0]);
-		} else {
+		}
+		else {
 			this.linkedIds = new ArrayList(transferable.linked_ids.length);
 			for (int i = 0; i < transferable.linked_ids.length; i++) {
 				this.linkedIds.add(new Identifier(transferable.linked_ids[i]));

@@ -10,5 +10,6 @@
 *.log
 classes
 logs
+cache
 orb.db
 SerializedLRUMaps
