@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.32 2004/11/23 08:59:06 bass Exp $
+ * $Id: general.idl,v 1.33 2004/11/24 09:23:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,6 +84,17 @@ module corba {
 
 		Identifier_Transferable reverseLookupUserName(in wstring<64> userName) raises (AMFICOMRemoteException);
 	};
+	
+	struct ElementAttribute_Transferable {
+			StorableObject_Transferable header;
+			wstring name;
+			wstring value;
+			Identifier_Transferable _typeId;
+			boolean editable;
+			boolean visible;
+		};
+	
+	typedef sequence <ElementAttribute_Transferable> ElementAttributeSeq_Transferable;
 
 //	abstract
 	interface IdentifierGeneratorServer {
