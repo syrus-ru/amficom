@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
-import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class TransmissionPathTypePane extends PropertiesPanel
 {

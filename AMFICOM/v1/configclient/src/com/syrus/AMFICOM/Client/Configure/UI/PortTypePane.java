@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
-import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 import oracle.jdeveloper.layout.XYConstraints;
 
 

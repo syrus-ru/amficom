@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
-import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 import oracle.jdeveloper.layout.XYConstraints;
 
 public class AccessPortTypePane extends PropertiesPanel
