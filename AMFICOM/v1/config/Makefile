@@ -106,5 +106,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/configuration.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/*.java
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 
