@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoElement.java,v 1.6 2005/03/21 16:46:50 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.7 2005/03/22 11:29:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,20 +19,12 @@ import java.util.*;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/21 16:46:50 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/22 11:29:22 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer, Characterizable {
 	private static final long serialVersionUID = 3689348806202569782L;
-
-	protected Identifier characteristicIds[] = null;
-
-	protected Identifier deviceIds[] = null;
-
-	protected Identifier linkIds[] = null;
-
-	protected Identifier protoElementIds[] = null;
 
 	private String description;
 
@@ -274,9 +266,21 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
+	 * @see Characterizable#addCharacteristic(Characteristic)
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeDevice(final SchemeDevice schemeDevice) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeLink(final SchemeLink schemeLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -289,27 +293,15 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		return schemeProtoElement;
 	}
 
-	public SchemeDevice[] devices() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @param newDevices
-	 * @see com.syrus.AMFICOM.scheme.SchemeProtoElement#devices(com.syrus.AMFICOM.scheme.corba.SchemeDevice[])
-	 */
-	public void devices(SchemeDevice[] newDevices) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
+	 * @see Characterizable#getCharacteristics()
 	 */
 	public Collection getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 * @see Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
 		throw new UnsupportedOperationException();
@@ -396,6 +388,21 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * Returns <code>schemeCablePort</code> s (as an unmodifiable
+	 * collection) for this <code>schemeProtoElement</code>, recursively.
+	 */
+	public Collection getSchemeCablePortsRecursively() {
+		final Collection schemeDevices = getSchemeDevices();
+		final Iterator schemeDeviceIterator = schemeDevices.iterator();
+		if (schemeDevices.size() == 1)
+			return ((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts();
+		final Collection schemeCablePorts = new LinkedList();
+		for (; schemeDeviceIterator.hasNext();)
+			schemeCablePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts());
+		return Collections.unmodifiableCollection(schemeCablePorts);
+	}
+
+	/**
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
@@ -409,6 +416,33 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			Log.debugException(ae, Log.SEVERE);
 			return null;
 		}
+	}
+
+	public Collection getSchemeDevices() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeLinks() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Returns <code>schemePort</code> s (as an unmodifiable collection)
+	 * for this <code>schemeProtoElement</code>, recursively.
+	 */
+	public Collection getSchemePortsRecursively() {
+		final Collection schemeDevices = getSchemeDevices();
+		final Iterator schemeDeviceIterator = schemeDevices.iterator();
+		if (schemeDevices.size() == 1)
+			return ((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts();
+		final Collection schemePorts = new LinkedList();
+		for (; schemeDeviceIterator.hasNext();)
+			schemePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts());
+		return Collections.unmodifiableCollection(schemePorts);
+	}
+
+	public Collection getSchemeProtoElements() {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -451,41 +485,29 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 	}
 
-	public SchemeLink[] links() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newLinks
-	 * @see com.syrus.AMFICOM.scheme.SchemeProtoElement#links(com.syrus.AMFICOM.scheme.corba.SchemeLink[])
-	 */
-	public void links(SchemeLink[] newLinks) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeProtoElement[] protoElements() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newProtoElements
-	 * @see com.syrus.AMFICOM.scheme.SchemeProtoElement#protoElements(com.syrus.AMFICOM.scheme.corba.SchemeProtoElement[])
-	 */
-	public void protoElements(SchemeProtoElement[] newProtoElements) {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
+	 * @see Characterizable#removeCharacteristic(Characteristic)
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
 		throw new UnsupportedOperationException();
 	}
 
+	public void removeSchemeDevice(final SchemeDevice schemeDevice) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeSchemeLink(final SchemeLink schemeLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see Characterizable#setCharacteristics(Collection)
 	 */
 	public void setCharacteristics(final Collection characteristics) {
 		throw new UnsupportedOperationException();
@@ -493,7 +515,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see Characterizable#setCharacteristics0(Collection)
 	 */
 	public void setCharacteristics0(final Collection characteristics) {
 		throw new UnsupportedOperationException();
@@ -575,6 +597,18 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			return;
 		this.schemeCellId = newSchemeCellId;
 		this.changed = true;
+	}
+
+	public void setSchemeDevices(final Collection schemeDevices) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemeLinks(final Collection schemeLinks) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemeProtoElements(final Collection schemeProtoElements) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**

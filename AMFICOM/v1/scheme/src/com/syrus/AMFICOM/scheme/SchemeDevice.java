@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeDevice.java,v 1.3 2005/03/17 18:17:27 bass Exp $ Copyright ¿ 2004
+ * $Id: SchemeDevice.java,v 1.4 2005/03/22 11:29:22 bass Exp $ Copyright ¿ 2004
  * Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/22 11:29:22 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -86,7 +86,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeCablePort[] schemeCablePorts() {
+	/**
+	 * @deprecated
+	 */
+	public SchemeCablePort[] getSchemeCablePortsAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeCablePorts() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -98,7 +105,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemePort[] schemePorts() {
+	/**
+	 * @deprecated
+	 */
+	public SchemePort[] getSchemePortsAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemePorts() {
 		throw new UnsupportedOperationException();
 	}
 

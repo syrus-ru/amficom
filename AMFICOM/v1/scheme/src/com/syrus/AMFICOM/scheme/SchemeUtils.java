@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.10 2005/03/17 09:40:22 bass Exp $
+ * $Id: SchemeUtils.java,v 1.11 2005/03/22 11:29:22 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
  * Functionality will be partially moved to {@link PathElement}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/22 11:29:22 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -35,32 +35,13 @@ public class SchemeUtils {
 	public static List getCablePorts(SchemeElement se)
 	{
 		if (se.schemeDevices().length == 1) {
-			return Collections.unmodifiableList(Arrays.asList(se.schemeDevices()[0].schemeCablePorts()));
+			return Collections.unmodifiableList(Arrays.asList(se.schemeDevices()[0].getSchemeCablePortsAsArray()));
 		}
 
 		List ports = new LinkedList();
 		SchemeDevice[] devices = se.schemeDevices();
 		for (int i = 0; i < devices.length; i++) {
-			ports.addAll(Arrays.asList(devices[i].schemeCablePorts()));
-		}
-		return Collections.unmodifiableList(ports);
-	}
-
-	/**
-	 * returns cableports for certain protoelement
-	 * @param proto SchemeProtoElement
-	 * @return List of SchemeCablePort
-	 */
-	public static List getCablePorts(SchemeProtoElement proto)
-	{
-		if (proto.devices().length == 1) {
-			return Collections.unmodifiableList(Arrays.asList(proto.devices()[0].schemeCablePorts()));
-		}
-
-		List ports = new LinkedList();
-		SchemeDevice[] devices = proto.devices();
-		for (int i = 0; i < devices.length; i++) {
-			ports.addAll(Arrays.asList(devices[i].schemeCablePorts()));
+			ports.addAll(Arrays.asList(devices[i].getSchemeCablePortsAsArray()));
 		}
 		return Collections.unmodifiableList(ports);
 	}
@@ -73,32 +54,13 @@ public class SchemeUtils {
 	public static List getPorts(SchemeElement se)
 	{
 		if (se.schemeDevices().length == 1) {
-			return Collections.unmodifiableList(Arrays.asList(se.schemeDevices()[0].schemePorts()));
+			return Collections.unmodifiableList(Arrays.asList(se.schemeDevices()[0].getSchemePortsAsArray()));
 		}
 
 		List ports = new LinkedList();
 		SchemeDevice[] devices = se.schemeDevices();
 		for (int i = 0; i < devices.length; i++) {
-			ports.addAll(Arrays.asList(devices[i].schemePorts()));
-		}
-		return Collections.unmodifiableList(ports);
-	}
-
-	/**
-	 * returns ports for certain protoelement
-	 * @param proto SchemeProtoElement
-	 * @return List of SchemePort
-	 */
-	public static List getPorts(SchemeProtoElement proto)
-	{
-		if (proto.devices().length == 1) {
-			return Collections.unmodifiableList(Arrays.asList(proto.devices()[0].schemePorts()));
-		}
-
-		List ports = new LinkedList();
-		SchemeDevice[] devices = proto.devices();
-		for (int i = 0; i < devices.length; i++) {
-			ports.addAll(Arrays.asList(devices[i].schemePorts()));
+			ports.addAll(Arrays.asList(devices[i].getSchemePortsAsArray()));
 		}
 		return Collections.unmodifiableList(ports);
 	}
@@ -362,8 +324,8 @@ public class SchemeUtils {
 	{
 		SchemeDevice[] devices = se.schemeDevices();
 		for (int i = 0; i < devices.length; i++) {
-			if (Arrays.asList(devices[i].schemePorts()).contains(port) ||
-					Arrays.asList(devices[i].schemeCablePorts()).contains(port))
+			if (Arrays.asList(devices[i].getSchemePortsAsArray()).contains(port) ||
+					Arrays.asList(devices[i].getSchemeCablePortsAsArray()).contains(port))
 				return true;
 		}
 		SchemeElement[] elements = se.schemeElements();
