@@ -96,19 +96,6 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 			int n = 0;
 			double deltaX = 0;
 
-//			Measurement m = null;
-//			try
-//			{
-//				m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-//								new Identifier(bs.measurementId), true);
-//			}
-//			catch(ApplicationException ex)
-//			{
-//				System.err.println("Exception retrieving measurenent with " + bs.measurementId);
-//				ex.printStackTrace();
-//				return;
-//			}
-
 			MeasurementSetup ms = Heap.getContextMeasurementSetup();
 			if (ms == null)
 				return;
@@ -123,7 +110,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 					{
 						deltaX = new ByteArray(params[i].getValue()).toDouble();
 					}
-					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_LENGTH))
+					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_LENGTH)) // FIXME: подозреваю, нам больше подойдет длина из BS, а не из параметров теста
 					{
 						len = new ByteArray(params[i].getValue()).toDouble();
 					}

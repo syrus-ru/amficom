@@ -421,8 +421,7 @@ public class AnalysisUtil
 			{
 				try
 				{
-					Double minLevel = new Double(new ByteArray(params[i].getValue()).toDouble());
-					Heap.setMinTraceLevel(minLevel);
+					Heap.setMinTraceLevel(new Double(new ByteArray(params[i].getValue()).toDouble()));
 				}
 				catch (IOException ex)
 				{
