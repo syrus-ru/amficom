@@ -321,13 +321,13 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 						System.err.println("this.returnType != null):" + (this.returnType
 			 != null));
 						System.err.println("this.receiveData.get(TestSetup.typ):" +
-			 (this.receiveData.get(TestSetup.typ) != null));
+			 (this.receiveData.get(TestSetup.TYPE) != null));
 						System.err.println("this.receiveData.get(AnalysisType.typ):"
 								+ (this.receiveData.get(AnalysisType.typ) != null));
 						System.err.println("this.receiveData.get(EvaluationType.typ):"
-								+ (this.receiveData.get(EvaluationType.typ) != null));
+								+ (this.receiveData.get(EvaluationType.TYPE) != null));
 						System.err.println("this.receiveData.get(TestArgumentSet.typ):"
-								+ (this.receiveData.get(TestArgumentSet.typ) != null));
+								+ (this.receiveData.get(TestArgumentSet.TYPE) != null));
 						System.err.println("this.receiveTreeElements:" +
 			 (this.receiveTreeElements != null));
 						System.err.println("this.receiveData.get(TimeStamp.TYPE):" +
@@ -651,8 +651,14 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 							testRequest.setChanged(false);
 						}
 					} else if (obj instanceof Test) {
-						// nothing ???
 						Test test = (Test) obj;
+						if (this.unsavedTests!=null){
+							this.unsavedTests.remove(test);
+						}
+						if (this.allUnsavedTests!=null){
+							this.allUnsavedTests.remove(test);
+						}
+
 						Environment.log(Environment.LOG_LEVEL_INFO, "test:" + test.getId());
 						test.setChanged(false);
 					}
