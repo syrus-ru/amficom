@@ -1,17 +1,8 @@
 package com.syrus.AMFICOM.Client.Prediction.UI.Calendar;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 

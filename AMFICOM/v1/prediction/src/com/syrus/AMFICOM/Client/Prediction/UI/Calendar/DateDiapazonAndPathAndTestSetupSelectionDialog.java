@@ -1,38 +1,28 @@
 package com.syrus.AMFICOM.Client.Prediction.UI.Calendar;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
 import java.text.SimpleDateFormat;
-import java.util.Hashtable;
-import java.util.*;
+import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.DomainCondition;
+import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 {
-	public long from = 0;
-	public long to = 0;
+	public long from;
+	public long to;
 	public int retCode = 0;
-	public String me_id = "";
-	public String testSetup_id = "";
+	public MonitoredElement me;
+	public MeasurementSetup ms;
 
 	private JPanel mainPanel = new JPanel();
 	private JLabel label2 = new JLabel();
@@ -49,7 +39,7 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 	private ObjectResourceComboBox pathComboBox = new ObjectResourceComboBox();
 	private ObjectResourceComboBox testSetupComboBox = new ObjectResourceComboBox();
 
-	private DataSourceInterface dataSource;
+	private ApplicationContext aContext;
 	private VerticalFlowLayout verticalFlowLayout1 = new VerticalFlowLayout();
 	private JPanel jPanel1 = new JPanel();
 	private BorderLayout borderLayout1 = new BorderLayout();
@@ -60,10 +50,10 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 	private BorderLayout borderLayout2 = new BorderLayout();
 
 	public DateDiapazonAndPathAndTestSetupSelectionDialog(Frame frame, String title, boolean modal,
-			DataSourceInterface dataSource)
+			ApplicationContext aContext)
 	{
 		super(frame, title, modal);
-		this.dataSource = dataSource;
+		this.aContext = aContext;
 
 		try
 		{
@@ -77,9 +67,8 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 
 	private void jbInit() throws Exception
 	{
-
-		pathComboBox.setDomainId(dataSource.getSession().getDomainId());
-		pathComboBox.restrictToDomain(true);
+		Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					new Identifier(aContext.getSessionInterface().getDomainId()), true);
 
 		mainPanel.setLayout(verticalFlowLayout1);
 		label2.setPreferredSize(new Dimension(20, 23));
@@ -123,7 +112,7 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 		buttonPanel.setLayout(borderLayout2);
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
 
-		setComboBoxes();
+		setComboBoxes(domain);
 
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -170,13 +159,8 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 		from = tsp1.getSelectedTime();
 		to   = tsp2.getSelectedTime();
 
-		me_id = pathComboBox.getSelectedId();
-		if(me_id == null)
-			me_id = "";
-
-		testSetup_id = testSetupComboBox.getSelectedId();
-		if(testSetup_id == null)
-			testSetup_id = "";
+		me = (MonitoredElement)pathComboBox.getSelected();
+		ms = (MeasurementSetup)testSetupComboBox.getSelected();
 
 		if (from > to)
 		{
@@ -195,56 +179,53 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 	}
 
 
-	private void setComboBoxes()
+	private void setComboBoxes(Domain domain)
 	{
-		new ConfigDataSourceImage(dataSource).LoadISM();
-
-		Map h = Pool.getMap(MonitoredElement.typ);
-
 		pathComboBox.removeAllItems();
-		pathComboBox.setContents(MonitoredElement.typ, false);
-		pathComboBox.setEditable(false);
 
-		testSetupComboBox.removeAllItems();
-		String []testSetupIds = dataSource.getTestSetupsByME(pathComboBox.getSelectedId());
-
-		Collection v = new ArrayList();
-		for(int i=0; i<testSetupIds.length; i++)
+		StorableObjectCondition meCondition = new DomainCondition(domain,
+				ObjectEntities.ME_ENTITY_CODE);
+		try
 		{
-			if(Pool.get(TestSetup.TYPE, testSetupIds[i]) != null)
-			{
-				Object o = Pool.get(TestSetup.TYPE, testSetupIds[i]);
-				v.add(o);
-			}
+			List mes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+					meCondition, true);
+
+			pathComboBox.setContents(mes, false);
+			pathComboBox.setEditable(false);
+			testSetupComboBox.removeAllItems();
+
+			MonitoredElement me = (MonitoredElement) pathComboBox.
+					getSelectedObjectResource();
+			setTestSetupComboBox(me);
 		}
-
-		testSetupComboBox.setContents(v, false);
-		testSetupComboBox.setEditable(false);
+		catch (ApplicationException ex)
+		{
+			ex.printStackTrace();
+		}
 	}
-
-
 
 	void pathComboBox_itemStateChanged(ItemEvent e)
 	{
-		setTestSetupComboBox();
+		MonitoredElement me = (MonitoredElement)pathComboBox.getSelectedObjectResource();
+		setTestSetupComboBox(me);
 	}
 
-	private void setTestSetupComboBox()
+	private void setTestSetupComboBox(MonitoredElement me)
 	{
 		testSetupComboBox.removeAllItems();
-		String []testSetupIds = dataSource.getTestSetupsByME(pathComboBox.getSelectedId());
-
-		Collection v = new ArrayList();
-		for(int i=0; i<testSetupIds.length; i++)
+		LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
+		condition.setIdentifier(me.getId());
+		condition.setEntityCode(ObjectEntities.MS_ENTITY_CODE);
+		try
 		{
-			if(Pool.get(TestSetup.TYPE, testSetupIds[i]) != null)
-			{
-				v.add(Pool.get(TestSetup.TYPE, testSetupIds[i]));
-			}
-		}
+			List mSetups = MeasurementStorableObjectPool.
+					getStorableObjectsByCondition(condition, true);
 
-		testSetupComboBox.setContents(v, false);
-		testSetupComboBox.setEditable(false);
+			testSetupComboBox.setContents(mSetups, false);
+			testSetupComboBox.setEditable(false);
+		}
+		catch (ApplicationException ex)
+		{
+		}
 	}
 }
-

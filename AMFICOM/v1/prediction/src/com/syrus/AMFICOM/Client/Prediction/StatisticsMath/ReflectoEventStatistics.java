@@ -1,16 +1,13 @@
 package com.syrus.AMFICOM.Client.Prediction.StatisticsMath;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.analysis.dadara.Histogramm;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.ShortReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.io.BellcoreStructure;
 // Author: Alexandre S. Levchenko
 
@@ -49,17 +46,16 @@ public class ReflectoEventStatistics
 
 	public long lowerTime;
 	public long upperTime;
-	public String pathID;
-
+	public MonitoredElement me;
 
 	public ReflectoEventStatistics(ReflectoEventContainer []statData,
 																 ReflectoEventContainer reference,
 																 long lowerTime, long upperTime,
-																 String pathID)
+																 MonitoredElement me)
 	{
 		this.lowerTime = lowerTime;
 		this.upperTime = upperTime;
-		this.pathID = pathID;
+		this.me = me;
 		setStatData(statData);
 		setReference(reference);
 		setRefArray(reference);
@@ -69,10 +65,10 @@ public class ReflectoEventStatistics
 
 	public ReflectoEventStatistics(ReflectoEventContainer []statData,
 															 ReflectoEventContainer reference,
-															 long lowerTime, long upperTime, String pathID,
+															 long lowerTime, long upperTime, MonitoredElement me,
 															 int waveLength)
 	{
-		this(statData, reference, lowerTime, upperTime, pathID);
+		this(statData, reference, lowerTime, upperTime, me);
 		this.waveLength = waveLength;
 	}
 
@@ -107,7 +103,7 @@ public class ReflectoEventStatistics
 		BellcoreStructure bs = reference.bs;
 		if(bs != null)
 		{
-			this.delta_x = bs.getDeltaX();
+			this.delta_x = bs.getResolution();
 			referenceArray = bs.getTraceData();
 		}
 		else
@@ -629,11 +625,9 @@ public class ReflectoEventStatistics
 		cache.put(s+this.linFit, lc);
 	}
 
-	public String getPathID()
+	public MonitoredElement getMonitoredElement()
 	{
-		if(pathID != null)
-			return pathID;
-		return "Unknown";
+		return me;
 	}
 
 

@@ -1,30 +1,19 @@
 package com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Image;
-import java.awt.Toolkit;
-
-import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.WindowConstants;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ATableFrame;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
-
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.TimeDependenceData;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
-// Author: Levchenko Alexandre S.
-
+/**
+ * @author: Levchenko Alexandre S.
+ */
 public class TimeDependenceTable extends ATableFrame implements OperationListener
 {
 	Dispatcher dispatcher;
@@ -32,9 +21,6 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 	ATable dataTable = new ATable();
 	TimeDependenceTableModel timeDependenceTableModel;
 
-
-
-//-------------------------------------------------
 	public TimeDependenceTable(Dispatcher dispatcher)
 	{
 		this.setDispatcher(dispatcher);
@@ -48,7 +34,6 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 		}
 	}
 
-//-------------------------------------------------
 	private void jbInit() throws Exception
 	{
 		this.setClosable(true);
@@ -83,14 +68,11 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 		return timeDependenceTableModel;
 	}
 
-//-------------------------------------------------
 	public void setDispatcher(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, "timeDependentDataIsSet");
 	}
-
-
 
 	public void operationPerformed(OperationEvent oe)
 	{
@@ -119,8 +101,6 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 		else if(dim.equals("linear_db/km"))
 			dim = "ไม/๊์";
 		else dim = "";
-
-
 
 		double day = 1000.*60.*60.*24;
 
@@ -168,17 +148,8 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 
 		this.timeDependenceTableModel.setTableData(data);
 	}
-
-
 }
 
-
-
-
-
-
-
-//==============================================================================
 class TimeDependenceTableModel extends AbstractTableModel
 {
 	String[] columnNames = {"", ""};
@@ -244,5 +215,3 @@ class TimeDependenceTableModel extends AbstractTableModel
 		fireTableCellUpdated(row, col);
 	}
 }
-
-

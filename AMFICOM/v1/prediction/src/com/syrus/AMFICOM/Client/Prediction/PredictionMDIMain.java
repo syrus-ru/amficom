@@ -1,79 +1,33 @@
 package com.syrus.AMFICOM.Client.Prediction;
 
-import java.awt.AWTEvent;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.JOptionPane;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
-import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
-import com.syrus.AMFICOM.Client.General.Command.Prediction.CountPredictedReflectogramm;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
+import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.Command.*;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
+import com.syrus.AMFICOM.Client.General.Command.Prediction.*;
 import com.syrus.AMFICOM.Client.General.Command.Prediction.LoadTraceFromDatabaseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Prediction.SavePredictionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Command.Session.*;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalysisFrame;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.HistogrammFrame;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ColorManager;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.DetailedEventsFrame;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.EventsFrame;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MarkersInfoFrame;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.OverallStatsFrame;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.PrimaryParametersFrame;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceSelectorFrame;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventStatistics;
-import com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence.TimeDependenceFrame;
-import com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence.TimeDependenceTable;
+import com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
 public class PredictionMDIMain extends JFrame implements OperationListener
 {
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 //Temporary Levchenko' data
 	double delta_x;
 
@@ -96,7 +50,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 	ArrayList tables = new ArrayList();
 	ArrayList graphs = new ArrayList();
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	private Dispatcher internal_dispatcher = new Dispatcher();
 	public ApplicationContext aContext = new ApplicationContext();
 
@@ -115,7 +68,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 
 	String predictedModelId = new String();
 
-//------------------------------------------------------
 	public PredictionMDIMain(ApplicationContext aContext)
 	{
 		super();
@@ -131,13 +83,11 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		setContext(aContext);
 	}
 
-//------------------------------------------------------
 	public PredictionMDIMain()
 	{
 		this(new ApplicationContext());
 	}
 
-//------------------------------------------------------
 	private void jbInit() throws Exception
 	{
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
@@ -161,7 +111,7 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 
 		statusBar.add("status");
 		statusBar.add("server");
-		statusBar.add(Domain.typ);
+		statusBar.add("domain");
 		statusBar.add("session");
 		statusBar.add("user");
 		statusBar.add("time");
@@ -220,8 +170,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		setLocation(0, 0);
 	}
 
-
-//------------------------------------------------------
 	public void setDomainSelected()
 	{
 //		DataSourceInterface dataSource = aContext.getDataSourceInterface();
@@ -239,9 +187,17 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 			ApplicationModel aModel = aContext.getApplicationModel();
 			aModel.setEnabled("menuViewDataLoad", true);
 			aModel.fireModelChanged("");
+
+		try {
+			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					new Identifier(aContext.getSessionInterface().getDomainId()),
+					true);
+			statusBar.setText("domain", domain.getName());
+		}
+		catch (ApplicationException ex) {
+		}
 	}
 
-//------------------------------------------------------
 	public void init_module()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
@@ -249,7 +205,7 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		statusBar.distribute();
 		statusBar.setWidth("status", 100);
 		statusBar.setWidth("server", 250);
-		statusBar.setWidth(Domain.typ, 250);
+		statusBar.setWidth("domain", 250);
 		statusBar.setWidth("session", 200);
 		statusBar.setWidth("user", 100);
 		statusBar.setWidth("time", 50);
@@ -265,14 +221,14 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 
 		internal_dispatcher.register(this, RefChangeEvent.typ);
 		internal_dispatcher.register(this, "contextchange");
-		Environment.the_dispatcher.register(this, "contextchange");
+		Environment.getDispatcher().register(this, "contextchange");
 
-		aModel.setCommand("menuSessionOpen", new SessionOpenCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionOpen", new SessionOpenCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		aModel.setCommand("menuViewDataLoad", new LoadTraceFromDatabaseCommand(internal_dispatcher, aContext));
@@ -303,37 +259,28 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 
 		aModel.fireModelChanged("");
 
-		if(ConnectionInterface.getActiveConnection() != null)
-	 {
-		 aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
-		 if(aContext.getConnectionInterface().isConnected())
-			 internal_dispatcher.notify(new ContextChangeEvent(
-					 aContext.getConnectionInterface(),
-					 ContextChangeEvent.CONNECTION_OPENED_EVENT));
-	 }
-	 else
-	 {
-		 aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
-		 ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-//			new CheckConnectionCommand(internal_dispatcher, aContext).execute();
-	 }
-	 if(SessionInterface.getActiveSession() != null)
-	 {
-		 aContext.setSessionInterface(SessionInterface.getActiveSession());
-		 aContext.setConnectionInterface(aContext.getSessionInterface().getConnectionInterface());
-		 if(aContext.getSessionInterface().isOpened())
-			 internal_dispatcher.notify(new ContextChangeEvent(
-					 aContext.getSessionInterface(),
-					 ContextChangeEvent.SESSION_OPENED_EVENT));
-	 }
-	 else
-	 {
-		 aContext.setSessionInterface(Environment.getDefaultSessionInterface(aContext.getConnectionInterface()));
-		 SessionInterface.setActiveSession(aContext.getSessionInterface());
+		if(ConnectionInterface.getInstance() != null)
+		{
+			if(ConnectionInterface.getInstance().isConnected())
+				internal_dispatcher.notify(new ContextChangeEvent(
+						ConnectionInterface.getInstance(),
+						ContextChangeEvent.CONNECTION_OPENED_EVENT));
+		}
+		if(SessionInterface.getActiveSession() != null)
+		{
+			aContext.setSessionInterface(SessionInterface.getActiveSession());
+			if(aContext.getSessionInterface().isOpened())
+				internal_dispatcher.notify(new ContextChangeEvent(
+						aContext.getSessionInterface(),
+						ContextChangeEvent.SESSION_OPENED_EVENT));
+		}
+		else
+		{
+			aContext.setSessionInterface(Environment.getDefaultSessionInterface(ConnectionInterface.getInstance()));
+			SessionInterface.setActiveSession(aContext.getSessionInterface());
 		}
 	}
 
-//------------------------------------------------------
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
@@ -342,13 +289,11 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		setModel(aContext.getApplicationModel());
 	}
 
-//------------------------------------------------------
 	public ApplicationContext getContext()
 	{
 		return aContext;
 	}
 
-//------------------------------------------------------
 	public void setModel(ApplicationModel aModel)
 	{
 		aModel.addListener(menuBar);
@@ -360,15 +305,11 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		aModel.fireModelChanged("");
 	}
 
-
-//------------------------------------------------------
 	public ApplicationModel getModel()
 	{
 		return aContext.getApplicationModel();
 	}
 
-
-//------------------------------------------------------
 	public void operationPerformed(OperationEvent ae)
 	{
 		if(ae.getActionCommand().equals(RefChangeEvent.typ)) //Setting of the data
@@ -474,7 +415,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 			}
 		}
 
-
 		if(ae.getActionCommand().equals("contextchange"))
 		{
 			ContextChangeEvent cce = (ContextChangeEvent)ae;
@@ -486,9 +426,9 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 
 				if(aContext.getSessionInterface().equals(ssi))
 				{
-					aContext.setSessionInterface(ssi);
-					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
-					DataSourceInterface dataSource = aContext.getDataSourceInterface();
+//					aContext.setSessionInterface(ssi);
+//					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
+
 					setSessionOpened();
 					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
@@ -500,8 +440,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 				SessionInterface ssi = (SessionInterface)cce.getSource();
 				if(aContext.getSessionInterface().equals(ssi))
 				{
-					aContext.setDataSourceInterface(null);
-
 					setSessionClosed();
 
 					statusBar.setText("status", LangModel.getString("statusReady"));
@@ -512,18 +450,18 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 			if(cce.CONNECTION_OPENED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					setConnectionOpened();
 
 					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
+					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
 				}
 			}
 			if(cce.CONNECTION_CLOSED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					statusBar.setText("status", LangModel.getString("statusError"));
 					statusBar.setText("server", LangModel.getString("statusConnectionError"));
@@ -537,7 +475,7 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 			if(cce.CONNECTION_FAILED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if (ConnectionInterface.getInstance().equals(cci))
 				{
 					statusBar.setText("status", LangModel.getString("statusError"));
 					statusBar.setText("server", LangModel.getString("statusConnectionError"));
@@ -548,9 +486,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 			if(cce.DOMAIN_SELECTED)
 			{
 				setDomainSelected();
-				String name = ((ObjectResource)Pool.get(Domain.typ, aContext.getSessionInterface().getDomainId())).getName();
-				if(name != null)
-					statusBar.setText("domain", name);
 			}
 		}
 	}
@@ -561,8 +496,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		aModel.getCommand("menuTraceRemoveCompare").setParameter("activeRefId", id);
 	}
 
-
-//------------------------------------------------------
 	public void setConnectionOpened()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
@@ -575,7 +508,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		aModel.fireModelChanged("");
 	}
 
-//------------------------------------------------------
 	public void setConnectionClosed()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
@@ -590,7 +522,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		aModel.fireModelChanged("");
 	}
 
-//------------------------------------------------------
 	public void setConnectionFailed()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
@@ -603,22 +534,20 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		aModel.fireModelChanged("");
 	}
 
-//------------------------------------------------------
 	public void setSessionOpened()
 	{
-		Checker checker = new Checker(aContext.getDataSourceInterface());
+		Checker checker = new Checker(aContext.getDataSource());
 		if(!checker.checkCommand(checker.enterExtendedAnalysisModul))
 		{
 			JOptionPane.showMessageDialog(this, "Недостаточно прав для работы с модулем прогнозирования.", "Ошибка", JOptionPane.OK_OPTION);
 			return;
 		}
-
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-		new SurveyDataSourceImage(dataSource).LoadTestTypes();
-		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
+//		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
+//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
+//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
+//		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
+//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionDomain", true);
@@ -626,20 +555,11 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuSessionOptions", true);
 		aModel.setEnabled("menuSessionChangePassword", true);
 		aModel.setEnabled("menuSessionOpen", false);
-
 		aModel.fireModelChanged("");
 
-		String domain_id = aContext.getSessionInterface().getDomainId();
-		if (domain_id != null && !domain_id.equals(""))
-		{
-			String name = ((ObjectResource)Pool.get("domain", domain_id)).getName();
-			if(name != null)
-				statusBar.setText(Domain.typ, name);
-			setDomainSelected();
-		}
+		setDomainSelected();
 	}
 
-//------------------------------------------------------
 	public void setSessionClosed()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
@@ -662,14 +582,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		aModel.fireModelChanged("");
 	}
 
-
-//------------------------------------------------------
-	public Dispatcher getInternalDispatcher()
-	{
-		return internal_dispatcher;
-	}
-
-//------------------------------------------------------
 	void this_componentShown(ComponentEvent e)
 	{
 		init_module();
@@ -702,15 +614,13 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		histoFrame.setLocation(2*w/3, h - minh);
 	}
 
-//------------------------------------------------------
 	void this_windowClosing(WindowEvent e)
 	{
 		internal_dispatcher.unregister(this, "contextchange");
-		Environment.the_dispatcher.unregister(this, "contextchange");
+		Environment.getDispatcher().unregister(this, "contextchange");
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
 
-//------------------------------------------------------
 	protected void processWindowEvent(WindowEvent e)
 	{
 		if (e.getID() == WindowEvent.WINDOW_ACTIVATED)
@@ -722,13 +632,12 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
 			internal_dispatcher.unregister(this, "contextchange");
-			Environment.the_dispatcher.unregister(this, "contextchange");
+			Environment.getDispatcher().unregister(this, "contextchange");
 			aContext.getApplicationModel().getCommand("menuExit").execute();
 			return;
 		}
 		super.processWindowEvent(e);
 	}
-
 }
 
 class StatisticsMDIMain_this_componentAdapter extends java.awt.event.ComponentAdapter
@@ -745,5 +654,3 @@ class StatisticsMDIMain_this_componentAdapter extends java.awt.event.ComponentAd
 		adaptee.this_componentShown(e);
 	}
 }
-
-

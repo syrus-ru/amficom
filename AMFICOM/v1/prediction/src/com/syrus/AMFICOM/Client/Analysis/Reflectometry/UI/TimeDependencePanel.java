@@ -1,12 +1,11 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.LinearCoeffs;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.TimeDependenceData;
+import java.awt.*;
+
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.*;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class TimeDependencePanel extends TraceEventsPanel

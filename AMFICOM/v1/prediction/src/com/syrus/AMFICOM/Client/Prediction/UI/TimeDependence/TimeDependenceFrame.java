@@ -1,16 +1,16 @@
 package com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence;
 
-import java.util.*;
+import java.util.Iterator;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 public class TimeDependenceFrame extends ScalableFrame implements OperationListener
 {

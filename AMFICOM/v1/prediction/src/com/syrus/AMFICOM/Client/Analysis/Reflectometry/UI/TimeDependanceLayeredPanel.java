@@ -1,16 +1,16 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.*;
+import java.util.Map;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 
 public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements OperationListener
 {

@@ -1,38 +1,23 @@
 package com.syrus.AMFICOM.Client.General.Command.Prediction;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.*;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.Etalon;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventContainer;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventStatistics;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.*;
 import com.syrus.AMFICOM.Client.Prediction.UI.Calendar.DateDiapazonAndPathAndTestSetupSelectionDialog;
-//import com.syrus.AMFICOM.analysis.dadara.AnalysResult;
-//import com.syrus.AMFICOM.analysis.dadara.EventReader;
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.ShortReflectogramEvent;
-import com.syrus.io.BellcoreReader;
-import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.io.*;
 
 public class LoadTraceFromDatabaseCommand extends VoidCommand
 {
@@ -75,66 +60,39 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 	public void execute()
 	{
-
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-
-		if(dataSource == null)
-		{
-			String error = "Ошибка базы данных.\n";
-			error += "Неизвестная ошибка базы данных. В случае повторения, обратитесь \n";
-			error += "к специалистам SYRUS systems.";
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка", JOptionPane.OK_OPTION);
-			return;
-		}
-
 		DateDiapazonAndPathAndTestSetupSelectionDialog dialog =
-				new DateDiapazonAndPathAndTestSetupSelectionDialog((JFrame)Environment.getActiveWindow(), "Выбор статистических данных", true, dataSource);
+				new DateDiapazonAndPathAndTestSetupSelectionDialog(
+						Environment.getActiveWindow(),
+						"Выбор статистических данных",
+						true, aContext);
 		if (dialog.retCode == 0)
 			return;
 
 		long from = dialog.from;
 		long to   = dialog.to;
-		String path_id = dialog.me_id;
-		String testSetupId = dialog.testSetup_id;
+		MonitoredElement me = dialog.me;
+		MeasurementSetup ms = dialog.ms;
 
-//    MonitoredElement path = (MonitoredElement)Pool.get(MonitoredElement.typ, path_id);
-
-		TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, testSetupId);
-		if(ts == null)
-		{
-			String error = "Ошибка загрузки тестовых установок.\n";
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка", JOptionPane.OK_OPTION);
-			return;
-		}
-
-		dataSource.LoadEtalons(new String[] {ts.getEthalonId()});
-		Etalon et = (Etalon)Pool.get(Etalon.TYPE, ts.getEthalonId());
-		if(et == null)
-		{
-			String error = "Ошибка загрузки эталона.\n";
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка", JOptionPane.OK_OPTION);
-			return;
-		}
+		AnalysisUtil.load_Etalon(ms);
 
 		BellcoreStructure bs = null;
 		ReflectogramEvent []re = null;
 		ShortReflectogramEvent []sre = null;
 
-		for(Iterator it = et.getEthalonParameterList().iterator(); it.hasNext(); )
+		SetParameter[] parameters = ms.getEtalon().getParameters();
+		for(int i = 0; i < parameters.length; i++)
 		{
-			Parameter p = (Parameter)it.next();
-			if(p.getCodename().equals("reflectogramm"))
+			ParameterType p = (ParameterType)parameters[i].getType();
+			if(p.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
 			{
-				bs = new BellcoreReader().getData(p.getValue());
+				bs = new BellcoreReader().getData(parameters[i].getValue());
 			}
-			else if(p.getCodename().equals("dadara_etalon_event_array"))
+			else if(p.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_EVENTS))
 			{
-				re = ReflectogramEvent.fromByteArray(p.getValue());
+				re = ReflectogramEvent.fromByteArray(parameters[i].getValue());
 				sre = new ShortReflectogramEvent[re.length];
-				for(int i=0; i<re.length; i++)
-				{
-					sre[i] = new ShortReflectogramEvent(re[i]);
-				}
+				for(int j = 0; j < re.length; j++)
+					sre[j] = new ShortReflectogramEvent(re[j]);
 			}
 		}
 		if(bs == null || re == null)
@@ -146,39 +104,46 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			return;
 		}
 
-		SimpleDateFormat sdf_ = new java.text.SimpleDateFormat("dd.MM.yyyy");
+		SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy");
 
-		bs.title = "Состояние на " + sdf_.format(new Date(et.getCreated()));
+		bs.title = "Состояние на " + sdf.format(ms.getCreated());
 		ReflectoEventContainer statEtalon =
-				new ReflectoEventContainer(path_id, sre, re, bs, et.getCreated()); //???
+				new ReflectoEventContainer(sre, re, bs, me.getCreated().getTime()); //???
 
+		LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
+		condition.setIdentifier(me.getId());
+		condition.setEntityCode(ObjectEntities.RESULT_ENTITY_CODE);
+		List results = null;
+		try {
+			results = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+		}
+		catch (ApplicationException ex) {
+			System.err.println("Exception retrieving result");
+			ex.printStackTrace();
+		}
 
-
-		ArrayList v = new ArrayList();
-		String []analysisResultIds = dataSource.GetAnalysisResultsForStatistics(path_id, from, to, testSetupId);
-		Result analysisResult;
-		for(int i=0; i<analysisResultIds.length; i++)
+		List v = new ArrayList();
+		for (Iterator it = results.iterator(); it.hasNext(); )
 		{
-			analysisResult = (Result)Pool.get(Result.TYPE, analysisResultIds[i]);
-			if(analysisResult != null)
+			Result r = (Result)it.next();
+			if (r.getCreated().getTime() > from && r.getCreated().getTime() < to)
 			{
-				for (Iterator it = analysisResult.getParameterList().iterator(); it.hasNext();)
+				parameters = r.getParameters();
+				for (int i = 0; i < parameters.length; i++)
 				{
-					Parameter param = (Parameter)it.next();
-					if(param.getGpt() != null && param.getGpt().getId() != null && param.getGpt().getId().equals("dadara_event_array"))
+					ParameterType p = (ParameterType)parameters[i].getType();
+					if (p.getCodename().equals(ParameterTypeCodenames.DADARA_EVENTS))
 					{
-						re = ReflectogramEvent.fromByteArray(param.getValue());
+						re = ReflectogramEvent.fromByteArray(parameters[i].getValue());
 						if(re != null)
 						{
 							sre = new ShortReflectogramEvent[re.length];
-
 							for (int k = 0; k < sre.length; k++)
-							{
 								sre[k] = new ShortReflectogramEvent(re[k]);
-							}
 
 							ReflectoEventContainer rec =
-									new ReflectoEventContainer(analysisResultIds[i], sre, re, bs, analysisResult.getElementaryStartTime());
+									new ReflectoEventContainer(sre, re, bs, r.getMeasurement().getStartTime().getTime());
+
 							v.add(rec);
 						}
 					}
@@ -194,8 +159,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 		if(refEvCont.length <= 3)
 		{
-			SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-
+			sdf = new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 			String error = "Слишком мало рефлектограмм для составления статистики.\n";
 			error += "С " + sdf.format(new Date(from)) + " по " +
 							 sdf.format(new Date(to)) + " получено " + refEvCont.length + " рефлектограмм(ы).";
@@ -203,7 +167,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			return;
 		}
 
-		ReflectoEventStatistics res = new ReflectoEventStatistics(refEvCont, statEtalon, from, to, path_id);
+		ReflectoEventStatistics res = new ReflectoEventStatistics(refEvCont, statEtalon, from, to, me);
 		Pool.put("statData", "theStatData", res);
 
 		bs = statEtalon.bs;
@@ -217,7 +181,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 //    new MinuitAnalyseCommand(dispatcher, "primarytrace", aContext).execute();
 		{
-				double delta_x = bs.getDeltaX();
+				double delta_x = bs.getResolution();
 				double[] y = bs.getTraceData();
 
 				//ReflectogramEvent[] ep = AnalysisManager.analyseTrace(y, delta_x, params);

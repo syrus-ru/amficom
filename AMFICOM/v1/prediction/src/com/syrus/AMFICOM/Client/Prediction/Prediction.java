@@ -1,13 +1,9 @@
 package com.syrus.AMFICOM.Client.Prediction;
 
 import java.awt.Toolkit;
-
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.DefaultPredictionApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.PredictionApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class Prediction
 {
