@@ -1,5 +1,5 @@
 /*
-* $Id: ADefaultTableCellRenderer.java,v 1.1 2005/03/22 10:39:18 bob Exp $
+* $Id: ADefaultTableCellRenderer.java,v 1.2 2005/03/22 10:42:56 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/22 10:39:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/22 10:42:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
@@ -50,7 +50,7 @@ public class ADefaultTableCellRenderer extends JLabel implements TableCellRender
 
 	public ADefaultTableCellRenderer() {
 		setOpaque(true);
-		setBorder(UIManager.getBorder(ResourceKeys.TABLE_BORDER));
+		setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		this.renderers = new HashMap();
 		this.renderers.put(Color.class, ColorCellRenderer.getInstance());
 		this.renderers.put(Boolean.class, BooleanRenderer.getInstance());		
@@ -119,7 +119,7 @@ public class ADefaultTableCellRenderer extends JLabel implements TableCellRender
 				component.setBackground(UIManager.getColor("Table.focusCellBackground"));
 			}
 		} else {
-			setBorder(UIManager.getBorder(ResourceKeys.TABLE_BORDER));
+			setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		}
 
 		return this.component;

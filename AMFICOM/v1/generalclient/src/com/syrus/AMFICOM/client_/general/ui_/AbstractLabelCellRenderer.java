@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.7 $, $Date: 2005/03/22 10:39:43 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/22 10:42:56 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -42,7 +42,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 
 	public AbstractLabelCellRenderer() {
 		setOpaque(true);
-		setBorder(UIManager.getBorder(ResourceKeys.TABLE_BORDER));
+		setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		this.renderers = new HashMap();
 		this.renderers.put(Color.class, ColorCellRenderer.getInstance());
 		this.renderers.put(Boolean.class, BooleanRenderer.getInstance());		
@@ -131,7 +131,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 				// component.setBackground(UIManager.getColor("Table.focusCellBackground"));
 			}
 		} else {
-			setBorder(UIManager.getBorder(ResourceKeys.TABLE_BORDER));
+			setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		}
 
 		return this.component;
