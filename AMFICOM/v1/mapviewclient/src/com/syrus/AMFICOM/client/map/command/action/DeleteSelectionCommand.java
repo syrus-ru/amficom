@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.8 2004/11/11 18:09:29 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.9 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
@@ -36,7 +35,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/11/11 18:09:29 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/08 16:20:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -78,7 +77,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 				&& showMode == MapState.SHOW_NODE_LINK)
 			{
 				MapNodeLinkElement nodeLink = (MapNodeLinkElement )me;
-				MapLinkElement link = map.getPhysicalLink(nodeLink.getPhysicalLinkId());
+				MapPhysicalLinkElement link = nodeLink.getPhysicalLink();
 				if(!(link instanceof MapUnboundLinkElement))
 					nodeLinksToDelete.add(nodeLink);
 			}

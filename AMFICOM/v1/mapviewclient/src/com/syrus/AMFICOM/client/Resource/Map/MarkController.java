@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.1 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MarkController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -55,7 +55,7 @@ public final class MarkController extends AbstractNodeController
 	{
 	}
 	
-	public static MarkController getInstance()
+	public static MapElementController getInstance()
 	{
 		if(instance == null)
 			instance = new MarkController();
@@ -73,7 +73,7 @@ public final class MarkController extends AbstractNodeController
 		
 		super.paint(me, g, visibleBounds);
 
-		MapCoordinatesConverter converter = mark.getMap().getConverter();
+		MapCoordinatesConverter converter = getLogicalNetLayer();
 
 		Point p = converter.convertMapToScreen( mark.getLocation());
 
@@ -110,7 +110,7 @@ public final class MarkController extends AbstractNodeController
 
 	public void updateSizeInDoubleLt(MapMarkElement mark)
 	{
-		MapCoordinatesConverter converter = mark.getMap().getConverter();
+		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
 		mark.getLink().sortNodes();
 		
@@ -133,7 +133,7 @@ public final class MarkController extends AbstractNodeController
 	 */
 	public void moveToFromStartLt(MapMarkElement mark, double topologicalDistance)
 	{
-		MapCoordinatesConverter converter = mark.getMap().getConverter();
+		MapCoordinatesConverter converter = getLogicalNetLayer();
 
 		mark.getLink().sortNodeLinks();
 		
@@ -168,6 +168,7 @@ public final class MarkController extends AbstractNodeController
 			mark.setStartNode(mark.getNodeLink().getOtherNode(mark.getStartNode()));
 		}
 		
+		updateSizeInDoubleLt(mark);
 	}
 
 	/**
@@ -176,7 +177,7 @@ public final class MarkController extends AbstractNodeController
 	 */
 	public void adjustPosition(MapMarkElement mark, double screenDistance)
 	{
-		MapCoordinatesConverter converter = mark.getMap().getConverter();
+		MapCoordinatesConverter converter = getLogicalNetLayer();
 
 		Point sp = converter.convertMapToScreen(mark.getStartNode().getLocation());
 	

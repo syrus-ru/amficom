@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
+import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 
@@ -61,6 +62,7 @@ class MarkerInfoReportTableModel extends DividableTableModel
 
 		MapMarker marker =
       (MapMarker)Pool.get(MapMarker.typ,markerId);
+		MarkerController mc = (MarkerController )MarkerController.getInstance();
       
 		if (marker == null)
 			throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
@@ -95,10 +97,10 @@ class MarkerInfoReportTableModel extends DividableTableModel
     tableData[1][curCCI++] = "";
 
     tableData[0][curCCI] = "fornode" + " " + marker.getLeft().getName();
-    tableData[1][curCCI++] = Double.toString(marker.getPhysicalDistanceFromLeft());
+    tableData[1][curCCI++] = Double.toString(mc.getPhysicalDistanceFromLeft(marker));
 
     tableData[0][curCCI] = "fornode" + " " + marker.getRight().getName();
-    tableData[1][curCCI++] = Double.toString(marker.getPhysicalDistanceFromFight());
+    tableData[1][curCCI++] = Double.toString(mc.getPhysicalDistanceFromFight(marker));
     
     tableData[0][curCCI] = "";
     tableData[1][curCCI++] = "";

@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
@@ -37,12 +38,16 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public final class MapLinkBindPanel extends JPanel implements ObjectResourcePropertiesPane
+public final class MapLinkBindPanel
+		extends JPanel 
+		implements ObjectResourcePropertiesPane, MapPropertiesPane
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private MapPhysicalLinkElement link;
 	
+	private LogicalNetLayer lnl;
+
 	private JLabel titleLabel = new JLabel();
 	private ObjectResourceListBox cableList = new ObjectResourceListBox();
 
@@ -90,6 +95,16 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
+		this.lnl = lnl;
+	}
+
+	public LogicalNetLayer getLogicalNetLayer()
+	{
+		return lnl;
 	}
 
 	private void jbInit()
@@ -261,7 +276,7 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 					for(Iterator it = list.iterator(); it.hasNext();)
 					{
 						MapCablePathElement cp = (MapCablePathElement )it.next();
-						Point position = cp.getBindingPosition(link);
+						IntPoint position = cp.getBindingPosition(link);
 						if(position.x == col
 							&& position.y == row)
 						{

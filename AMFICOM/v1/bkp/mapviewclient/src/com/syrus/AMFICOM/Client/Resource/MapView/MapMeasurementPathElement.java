@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.13 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.14 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
@@ -25,22 +24,12 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Stroke;
-import java.awt.geom.Rectangle2D;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.HashMap;
@@ -54,7 +43,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/08 16:20:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -70,12 +59,6 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	protected String mapViewId = "";
 	
 	protected MapView mapView;
-
-	public Object clone(DataSourceInterface dataSource)
-		throws CloneNotSupportedException
-	{
-		throw new UnsupportedOperationException();
-	}
 
 	public String[][] getExportColumns()
 	{
@@ -215,74 +198,6 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		return isSelected();
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public boolean isVisible(Rectangle2D.Double visibleBounds)
-	{
-		boolean vis = false;
-		for(Iterator it = getSortedCablePaths().iterator(); it.hasNext();)
-		{
-			MapCablePathElement cpath = (MapCablePathElement )it.next();
-			if(cpath.isVisible(visibleBounds))
-			{
-				vis = true;
-				break;
-			}
-		}
-		return vis;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		for(Iterator it = getSortedCablePaths().iterator(); it.hasNext();)
-		{
-			MapCablePathElement cpath = (MapCablePathElement )it.next();
-			cpath.paint(g, visibleBounds, stroke, color, selectionVisible);
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		BasicStroke stroke = (BasicStroke )this.getStroke();
-		Stroke str = new BasicStroke(
-				this.getLineSize(), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
-				stroke.getDashPhase());
-		Color color = this.getColor();
-
-		paint(g, visibleBounds, str, color, isSelectionVisible());
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public boolean isMouseOnThisObject(Point currentMousePoint)
-	{
-		for(Iterator it = getSortedCablePaths().iterator(); it.hasNext();)
-		{
-			MapElement me = (MapElement )it.next();
-			if(me.isMouseOnThisObject(currentMousePoint))
-				return true;
-		}
-		return false;
-	}
-	
 	/**
 	 * @deprecated
 	 */

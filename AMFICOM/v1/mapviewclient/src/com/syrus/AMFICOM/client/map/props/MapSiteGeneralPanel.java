@@ -25,7 +25,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropertiesPane
+public class MapSiteGeneralPanel
+		extends JPanel 
+		implements ObjectResourcePropertiesPane, MapPropertiesPane
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
@@ -54,6 +56,8 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 
 	MapSiteNodeElement site;
 
+	private LogicalNetLayer lnl;
+
 	public MapSiteGeneralPanel()
 	{
 		try
@@ -65,6 +69,16 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
+		this.lnl = lnl;
+	}
+
+	public LogicalNetLayer getLogicalNetLayer()
+	{
+		return lnl;
 	}
 
 	private void jbInit()
@@ -171,10 +185,10 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 			site.setMapProtoId(typeComboBox.getSelectedId());
 			site.setDescription(descTextArea.getText());
 			
-			LogicalNetLayer lnl = (LogicalNetLayer )(site.getMap().getConverter());
+//			LogicalNetLayer lnl = (LogicalNetLayer )(site.getMap().getConverter());
 			
-			SiteNodeController snc = (SiteNodeController )lnl.getMapViewController().getController(site);
-			snc.updateScaleCoefficient(site);
+//			SiteNodeController snc = (SiteNodeController )lnl.getMapViewController().getController(site);
+//			snc.updateScaleCoefficient(site);
 //			site.setScaleCoefficient(lnl.getDefaultScale() / lnl.getCurrentScale());
 
 			try 

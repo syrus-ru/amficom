@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
@@ -10,7 +11,9 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-public class MapCablePathPane extends JPanel implements ObjectResourcePropertiesPane
+public class MapCablePathPane
+		extends JPanel 
+		implements ObjectResourcePropertiesPane, MapPropertiesPane
 {
 	public ApplicationContext aContext;
 	
@@ -18,6 +21,8 @@ public class MapCablePathPane extends JPanel implements ObjectResourceProperties
 	MapCablePathBindPanel bPanel = new MapCablePathBindPanel();
 
 	MapCablePathElement path;
+
+	private LogicalNetLayer lnl;
 
 	public JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -47,6 +52,18 @@ public class MapCablePathPane extends JPanel implements ObjectResourceProperties
 		setObjectResource(path);
 	}
 	
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
+		this.lnl = lnl;
+		gPanel.setLogicalNetLayer(lnl);
+		bPanel.setLogicalNetLayer(lnl);
+	}
+
+	public LogicalNetLayer getLogicalNetLayer()
+	{
+		return lnl;
+	}
+
 	private void jbInit()
 	{
 		this.setLayout(new BorderLayout());

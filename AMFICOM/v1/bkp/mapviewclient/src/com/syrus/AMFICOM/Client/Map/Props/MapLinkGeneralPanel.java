@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.Map.IntDimension;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
@@ -22,7 +23,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropertiesPane
+public class MapLinkGeneralPanel
+		extends JPanel 
+		implements ObjectResourcePropertiesPane, MapPropertiesPane
 {
 	private JLabel nameLabel = new JLabel();
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -48,6 +51,9 @@ public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropert
 	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 
 	MapPhysicalLinkElement link;
+
+	private LogicalNetLayer lnl;
+
 	private JLabel dimensionLabel = new JLabel();
 	private JPanel dimensionPanel = new JPanel();
 	private JLabel xLabel = new JLabel();
@@ -65,6 +71,16 @@ public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropert
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
+		this.lnl = lnl;
+	}
+
+	public LogicalNetLayer getLogicalNetLayer()
+	{
+		return lnl;
 	}
 
 	private void jbInit()

@@ -45,21 +45,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	/**
 	 * Получить экранные координаты по географическим координатам
 	 */
-	public Point convertMapToScreen(Point2D.Double point)
-	{
-		try
-		{
-			com.mapinfo.util.DoublePoint mapdp = new com.mapinfo.util.DoublePoint(point.x, point.y);
-			com.mapinfo.util.DoublePoint screendp = visualMapJ.getMapJ().transformNumericToScreen(mapdp);
-			return new Point((int )screendp.x, (int )screendp.y);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	public Point convertMapToScreen(DoublePoint point)
 	{
 		try
@@ -78,21 +63,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	/**
 	 * Получить географические координаты по экранным
 	 */
-	public Point2D.Double convertScreenToMap1(Point point)
-	{
-		try
-		{
-			com.mapinfo.util.DoublePoint screendp = new com.mapinfo.util.DoublePoint(point.x, point.y);
-			com.mapinfo.util.DoublePoint mapdp = visualMapJ.getMapJ().transformScreenToNumeric(screendp);
-			return new Point2D.Double(mapdp.x, mapdp.y);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	public DoublePoint convertScreenToMap(Point point)
 	{
 		try
@@ -110,8 +80,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 
 	public double convertScreenToMap(double screenDistance)
 	{
-		Point2D.Double p1 = convertScreenToMap1(new Point(0, 0));
-		Point2D.Double p2 = convertScreenToMap1(new Point((int )screenDistance, 0));
+		DoublePoint p1 = convertScreenToMap(new Point(0, 0));
+		DoublePoint p2 = convertScreenToMap(new Point((int )screenDistance, 0));
 		double d = distance(p1, p2);
 
 		return d;
@@ -120,20 +90,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public double convertMapToScreen(double topologicalDistance)
 	{
 		throw new UnsupportedOperationException();
-	}
-
-	public Point2D.Double pointAtDistance(
-			Point2D.Double startPoint, 
-			Point2D.Double endPoint, 
-			double dist)
-	{
-		Point2D.Double point = new Point2D.Double(startPoint.x, startPoint.y);
-		double len = distance(
-				startPoint, 
-				endPoint);
-		point.x += (endPoint.x - startPoint.x) / len * dist;
-		point.y += (endPoint.y - startPoint.y) / len * dist;
-		return point;
 	}
 
 	public DoublePoint pointAtDistance(
@@ -153,21 +109,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	/**
 	 * Получить дистанцию между двумя точками в экранных координатах
 	 */
-	public double distance(Point2D.Double from, Point2D.Double to)
-	{
-		try
-		{
-			return visualMapJ.getMapJ().sphericalDistance(
-				new com.mapinfo.util.DoublePoint(from.x, from.y),
-				new com.mapinfo.util.DoublePoint(to.x, to.y));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return 0.0D;
-	}
-
 	public double distance(DoublePoint from, DoublePoint to)
 	{
 		try
@@ -186,21 +127,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	/**
 	 * Установить центральную точку вида карты
 	 */
-	public void setCenter(Point2D.Double center)
-	{
-		System.out.println("Set center (" + center.x + ", " +center.y + ")");
-		try
-		{
-			visualMapJ.setOffsets(0, 0);
-			visualMapJ.getMapJ().setCenter(new com.mapinfo.util.DoublePoint(center.x, center.y));
-			repaint(true);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	public void setCenter(DoublePoint center)
 	{
 		System.out.println("Set center (" + center.x + ", " +center.y + ")");
@@ -218,26 +144,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 
 	/**
 	 * Получить центральную точку вида карты
-	 * @deprecated
 	 */
-	public Point2D.Double getCenter1()
-	{
-		Point2D.Double center;
-		try 
-		{
-			center = new Point2D.Double(
-				visualMapJ.getMapJ().getCenter().x,
-				visualMapJ.getMapJ().getCenter().y);
-		} 
-		catch (Exception ex) 
-		{
-			center = null;
-			ex.printStackTrace();
-		} 
-		
-		return center;
-	}
-
 	public DoublePoint getCenter()
 	{
 		DoublePoint center;
@@ -395,27 +302,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	/**
 	 * Приблизить вид выделенного участка карты (в координатах карты)
 	 * по координатам угловых точек
-	 * @deprecated
 	 */
-	public void zoomToBox(Point2D.Double from, Point2D.Double to)
-	{
-		System.out.println("Zoom to box (" + from.x + ", " + from.y + ") - (" + to.x + ", " + to.y + ")");
-		try
-		{
-			visualMapJ.getMapJ().setBounds(new DoubleRect(
-					from.x, 
-					from.y,
-					to.x, 
-					to.y));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		updateZoom();
-		repaint(true);
-	}
-
 	public void zoomToBox(DoublePoint from, DoublePoint to)
 	{
 		System.out.println("Zoom to box (" + from.x + ", " + from.y + ") - (" + to.x + ", " + to.y + ")");

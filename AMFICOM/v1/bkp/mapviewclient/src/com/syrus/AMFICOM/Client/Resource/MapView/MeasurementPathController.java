@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.1 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.AbstractLinkController;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -45,7 +46,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -58,7 +59,7 @@ public final class MeasurementPathController extends AbstractLinkController
 	{
 	}
 	
-	public static MeasurementPathController getInstance()
+	public static MapElementController getInstance()
 	{
 		if(instance == null)
 			instance = new MeasurementPathController();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.30 2004/12/07 17:02:03 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.31 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,24 +13,9 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalLinkElement_Transferable;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Stroke;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -46,7 +31,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.30 $, $Date: 2004/12/07 17:02:03 $
+ * @version $Revision: 1.31 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -162,7 +147,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	/**
 	 * @deprecated
 	 */
-	public Object clone(DataSourceInterface dataSource)
+/*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
 		String clonedId = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
@@ -202,7 +187,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 		return mple;
 	}
-
+*/
 	/**
 	 * @deprecated
 	 */
@@ -324,47 +309,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public String getToolTipText()
-	{
-		String s1 = name;
-		String s2 = "";
-		String s3 = "";
-		try
-		{
-			MapNodeElement smne = getStartNode();
-			s2 =  ":\n" 
-				+ "   " 
-				+ LangModelMap.getString("From") 
-				+ " " 
-				+ smne.getName() 
-				+ " ["
-				+ LangModel.getString("node" + smne.getTyp()) 
-				+ "]";
-			MapNodeElement emne = getEndNode();
-			s3 = "\n" 
-				+ "   " 
-				+ LangModelMap.getString("To") 
-				+ " " 
-				+ emne.getName() 
-				+ " [" 
-				+ LangModel.getString("node" + emne.getTyp()) 
-				+ "]";
-		}
-		catch(Exception e)
-		{
-			Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"getToolTipText()", 
-				e);
-		}
-		return s1 + s2 + s3;
-	}
-
 	public void setStartNode(MapNodeElement startNode)
 	{
 		super.setStartNode(startNode);
@@ -383,114 +327,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	protected boolean selectionVisible = false;
 
 	/**
-	 * @deprecated
-	 */
-	public boolean isSelectionVisible()
-	{
-		return isSelected() || selectionVisible;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public boolean isVisible(Rectangle2D.Double visibleBounds)
-	{
-		boolean vis = false;
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
-			if(nodelink.isVisible(visibleBounds))
-			{
-				vis = true;
-				break;
-			}
-		}
-		return vis;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		updateLengthLt();
-
-		boolean showName = false;
-		if(MapPropertiesManager.isShowLinkNames())
-		{
-			showName = true;
-		}
-
-		this.selectionVisible = selectionVisible;
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
-			nodelink.paint(g, visibleBounds, stroke, color);
-			
-			if(showName)
-			{
-				MapCoordinatesConverter converter = getMap().getConverter();
-				Point from = converter.convertMapToScreen(nodelink.getStartNode().getAnchor());
-				Point to = converter.convertMapToScreen(nodelink.getEndNode().getAnchor());
-
-				g.setColor(MapPropertiesManager.getBorderColor());
-				g.setFont(MapPropertiesManager.getFont());
-	
-				int fontHeight = g.getFontMetrics().getHeight();
-				String text = getName();
-				int textWidth = g.getFontMetrics().stringWidth(text);
-				int centerX = (from.x + to.x) / 2;
-				int centerY = (from.y + to.y) / 2;
-
-				g.drawRect(
-						centerX,
-						centerY - fontHeight + 2,
-						textWidth,
-						fontHeight);
-	
-				g.setColor(MapPropertiesManager.getTextBackground());
-				g.fillRect(
-						centerX,
-						centerY - fontHeight + 2,
-						textWidth,
-						fontHeight);
-	
-				g.setColor(MapPropertiesManager.getTextColor());
-				g.drawString(
-						text,
-						centerX,
-						centerY);
-
-				showName = false;
-			}
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		BasicStroke stroke = (BasicStroke )this.getStroke();
-		Stroke str = new BasicStroke(
-				this.getLineSize(),
-				stroke.getEndCap(),
-				stroke.getLineJoin(),
-				stroke.getMiterLimit(),
-				stroke.getDashArray(),
-				stroke.getDashPhase());
-		Color color = getColor();
-
-		paint(g, visibleBounds, str, color, false);
-	}
-
-	/**
 	 * Возвращяет топологическую длинну линии
 	 */
 	public double getLengthLt()
@@ -504,32 +340,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return returnValue;
 	}
 
-	public void updateLengthLt()
-	{
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
-			nodeLink.updateLengthLt();
-		}
-	}
-
-	/**
-	 * возвращает false, поскольку проверка проводится как правило по всем
-	 * элементам, и в частности по фрагментам линии, что вернет true
-	 * для фрагмента. Поэтому в режиме работы с линиями ищется фрагмент
-	 * и из него уже берется ссылка на эту линию
-	 * @deprecated
-	 */
-	public boolean isMouseOnThisObject(Point currentMousePoint)
-	{
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			MapElement me = (MapElement )it.next();
-			if(me.isMouseOnThisObject(currentMousePoint))
-				return true;
-		}
-		return false;
-	}
 
 	public List getNodeLinks()
 	{	
@@ -591,29 +401,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 				returnNodeLink.add(nodeLink);
 		}
 		return returnNodeLink;
-	}
-
-	/**
-	 * получить центр (ГМТ) линии
-	 * @deprecated
-	 */
-	public Point2D.Double getAnchor()
-	{
-		int count = 0;
-		Point2D.Double point = new Point2D.Double(0.0, 0.0);
-
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
-			Point2D.Double an = mnle.getAnchor();
-			point.x += an.x;
-			point.y += an.y;
-			count ++;
-		}
-		point.x /= count;
-		point.y /= count;
-		
-		return point;
 	}
 
 	public DoublePoint getLocation()
@@ -741,7 +528,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		
 		nodeLinksSorted = false;
 
-		updateLengthLt();
+//		updateLengthLt();
 	}
 
 	public String[][] getExportColumns()
@@ -938,60 +725,4 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return proto;
 	}
 
-	/**
-	 * Получить толщину линии
-	 * @deprecated
-	 */
-	public int getLineSize ()
-	{
-		return proto.getLineSize();
-	}
-
-	/**
-	 * Получить вид линии
-	 * @deprecated
-	 */
-	public String getStyle ()
-	{
-		return proto.getStyle();
-	}
-
-	/**
-	 * Получить стиль линии
-	 * @deprecated
-	 */
-	public Stroke getStroke ()
-	{
-		return proto.getStroke();
-	}
-
-	/**
-	 * Получить цвет
-	 * @deprecated
-	 */
-	public Color getColor()
-	{
-		return proto.getColor();
-	}
-
-	/**
-	 * получить цвет при наличии сигнала тревоги
-	 * @deprecated
-	 */
-	public Color getAlarmedColor()
-	{
-		return proto.getAlarmedColor();
-	}
-
-	/**
-	 * получить толщину линии при наличи сигнала тревоги
-	 * @deprecated
-	 */
-	public int getAlarmedLineSize ()
-	{
-		return proto.getAlarmedLineSize();
-	}
-
-
-	
 }

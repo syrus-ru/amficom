@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.1 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -56,7 +56,7 @@ public final class LinkTypeController extends AbstractLinkController
 	{
 	}
 	
-	public static LinkTypeController getInstance()
+	public static MapElementController getInstance()
 	{
 		if(instance == null)
 			instance = new LinkTypeController();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElement.java,v 1.20 2004/12/07 17:02:03 krupenn Exp $
+ * $Id: MapMarkElement.java,v 1.21 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,36 +13,21 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapMarkElement_Transferable;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
-import java.awt.BasicStroke;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-
-import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ListIterator;
-
-import javax.swing.ImageIcon;
 
 /**
  * Метка имеет координаты и привязана по дистанции к тоннелю (MapLink) 
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2004/12/07 17:02:03 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -68,20 +53,10 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	public static final String COLUMN_X = "x";
 	public static final String COLUMN_Y = "y";
 
-	/** Размер пиктограммы маркера */
-	/**
-	 * @deprecated
-	 */
-	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(14, 14);
-	
 	/**
 	 * @deprecated
 	 */
 	public static final String IMAGE_NAME = "mark";
-	/**
-	 * @deprecated
-	 */
-	public static final String IMAGE_PATH = "images/mark.gif";
 
 	/**
 	 * @deprecated
@@ -110,11 +85,6 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	
 	protected double sizeInDoubleLt;
 
-	static
-	{
-		MapPropertiesManager.setOriginalImage(IMAGE_NAME, new ImageIcon(IMAGE_PATH).getImage());
-	}
-
 	public MapMarkElement()
 	{
 		this.setImageId(IMAGE_NAME);
@@ -141,7 +111,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			mapId = map.getId();
 		attributes = new HashMap();
 
-		this.moveToFromStartLt(len);
+//		this.moveToFromStartLt(len);
 
 		transferable = new MapMarkElement_Transferable();
 	}
@@ -161,7 +131,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	/**
 	 * @deprecated
 	 */
-	public Object clone(DataSourceInterface dataSource)
+/*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
 		String clonedId = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
@@ -197,7 +167,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 		return mme;
 	}
-	
+*/	
 	/**
 	 * @deprecated
 	 */
@@ -206,8 +176,8 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		this.id = transferable.id;
 		this.name = transferable.name;
 		this.description = transferable.description;
-		this.anchor.x = Double.parseDouble(transferable.longitude);
-		this.anchor.y = Double.parseDouble(transferable.latitude);
+//		this.anchor.x = Double.parseDouble(transferable.longitude);
+//		this.anchor.y = Double.parseDouble(transferable.latitude);
 		this.mapId = transferable.mapId;
 		this.linkId = transferable.physicalLinkId;
 		this.distance = transferable.distance;
@@ -224,8 +194,8 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		transferable.id = this.id;
 		transferable.name = this.name;
 		transferable.description = this.description;
-		transferable.longitude = String.valueOf(this.anchor.x);
-		transferable.latitude = String.valueOf(this.anchor.y);
+//		transferable.longitude = String.valueOf(this.anchor.x);
+//		transferable.latitude = String.valueOf(this.anchor.y);
 		transferable.mapId = map.getId();
 		transferable.physicalLinkId = this.linkId;
 		transferable.distance = this.distance;
@@ -259,7 +229,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		{
 			map = (Map )Pool.get(Map.typ, this.mapId);
 		}
-		this.moveToFromStartLt(distance);
+//		this.moveToFromStartLt(distance);
 	}
 
 	/**
@@ -283,64 +253,10 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
-	/**
-	 * @deprecated
-	 */
-	public void setAnchor(Point2D.Double aAnchor)
-	{
-		anchor = aAnchor;
-		distance = this.getFromStartLengthLt();
-	}
-
 	public void setLocation(DoublePoint location)
 	{
 		super.setLocation(location);
 		distance = this.getFromStartLengthLt();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		super.paint(g, visibleBounds);
-
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		Point p = converter.convertMapToScreen( this.getAnchor());
-
-		Graphics2D pg = ( Graphics2D)g;
-		pg.setStroke(new BasicStroke(MapPropertiesManager.getBorderThickness()));
-		
-		pg.setColor(MapPropertiesManager.getBorderColor());
-		pg.setBackground(MapPropertiesManager.getTextBackground());
-		pg.setFont(MapPropertiesManager.getFont());
-
-		int width = this.getBounds().width;
-		int height = g.getFontMetrics().getHeight();
-
-		String s1 = this.getName();
-		pg.drawRect(
-				p.x + width, 
-				p.y - height + 2,
-				pg.getFontMetrics().stringWidth(s1), 
-				height );
-
-		pg.setColor(MapPropertiesManager.getTextBackground());
-		pg.fillRect(
-				p.x + width, 
-				p.y - height + 2,
-				pg.getFontMetrics().stringWidth(s1), 
-				height );
-
-		g.setColor(MapPropertiesManager.getTextColor());
-		g.drawString(
-				s1, 
-				p.x + width, 
-				p.y - 2 );
 	}
 
 	public double getFromStartLengthLt()
@@ -389,110 +305,13 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 	public double getSizeInDoubleLt()
 	{
-		updateSizeInDoubleLt();
+//		updateSizeInDoubleLt();
 		return sizeInDoubleLt;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void updateSizeInDoubleLt()
-	{
-		MapCoordinatesConverter converter = this.getMap().getConverter();
-		
-		link.sortNodes();
-		
-		List nodes = link.getSortedNodes();
-		
-		Point2D.Double from;
-		Point2D.Double to = this.getAnchor();
-
-		if(nodes.indexOf(nodeLink.getStartNode()) < nodes.indexOf(nodeLink.getEndNode()))
-			from = nodeLink.getStartNode().getAnchor();
-		else
-			from = nodeLink.getEndNode().getAnchor();
-
-		sizeInDoubleLt = converter.distance(from, to);
 	}
 
 	public double getDistance()
 	{
 		return distance;
-	}
-
-	/**
-	 * Передвинуть в точку на заданной расстоянии от начала
-	 * @deprecated
-	 */
-	public void moveToFromStartLt(double topologicalDistance)
-	{
-		MapCoordinatesConverter converter = this.getMap().getConverter();
-
-		link.sortNodeLinks();
-		
-		startNode = link.getStartNode();
-
-		if ( topologicalDistance > link.getLengthLt())
-		{
-			topologicalDistance = link.getLengthLt();
-		}
-
-		this.distance = topologicalDistance;
-
-		double cumulativeDistance = 0;
-		
-		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
-		{
-			nodeLink = (MapNodeLinkElement )it.next();
-			nodeLink.updateLengthLt();
-			if(cumulativeDistance + nodeLink.getLengthLt() > topologicalDistance)
-			{
-				double distanceFromStart = topologicalDistance - cumulativeDistance;
-				Point2D.Double newPoint = converter.pointAtDistance(
-						startNode.getAnchor(), 
-						nodeLink.getOtherNode(startNode).getAnchor(),
-						distanceFromStart);
-				setAnchor(newPoint);
-//				adjustPosition(converter.convertMapToScreen(distanceFromStart));
-				break;
-			}
-
-			cumulativeDistance += nodeLink.getLengthLt();
-			startNode = nodeLink.getOtherNode(startNode);
-		}
-		
-	}
-
-	/**
-	 * adjust marker position accurding to topological distance relative
-	 * to current node link (which comprises startNode and endNode)
-	 * @deprecated
-	 */
-	public void adjustPosition(double screenDistance)
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		Point sp = converter.convertMapToScreen(startNode.getAnchor());
-	
-		double startNodeX = sp.x;
-		double startNodeY = sp.y;
-
-		Point ep = converter.convertMapToScreen(nodeLink.getOtherNode(startNode).getAnchor());
-
-		double endNodeX = ep.x;
-		double endNodeY = ep.y;
-
-		double nodeLinkLength =  Math.sqrt( 
-				(endNodeX - startNodeX) * (endNodeX - startNodeX) +
-				(endNodeY - startNodeY) * (endNodeY - startNodeY) );
-
-		double sinB = (endNodeY - startNodeY) / nodeLinkLength;
-
-		double cosB = (endNodeX - startNodeX) / nodeLinkLength;
-
-		setAnchor(converter.convertScreenToMap1(new Point(
-			(int )Math.round(startNodeX + cosB * screenDistance),
-			(int )Math.round(startNodeY + sinB * screenDistance) ) ) );
 	}
 
 	public String[][] getExportColumns()
@@ -513,8 +332,8 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		exportColumns[2][1] = getDescription();
 		exportColumns[3][1] = linkId;
 		exportColumns[4][1] = String.valueOf(getDistance());
-		exportColumns[5][1] = String.valueOf(getAnchor().x);
-		exportColumns[6][1] = String.valueOf(getAnchor().y);
+		exportColumns[5][1] = String.valueOf(getLocation().x);
+		exportColumns[6][1] = String.valueOf(getLocation().y);
 		
 		return exportColumns;
 	}
@@ -537,16 +356,16 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			distance = Double.parseDouble(value);
 		else
 		if(field.equals(COLUMN_X))
-			anchor.x = Double.parseDouble(value);
+			location.x = Double.parseDouble(value);
 		else
 		if(field.equals(COLUMN_Y))
-			anchor.y = Double.parseDouble(value);
+			location.y = Double.parseDouble(value);
 	}
 
 	/**
 	 * @deprecated
 	 */
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException
+/*	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
 		out.writeObject(name);
@@ -561,11 +380,9 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 		out.writeObject(attributes);
 	}
+*/
 
-	/**
-	 * @deprecated
-	 */
-	private void readObject(java.io.ObjectInputStream in)
+/*	private void readObject(java.io.ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{
 		id = (String )in.readObject();
@@ -587,7 +404,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 //		this.moveToFromStart(this.distance);
 	}
-
+*/
 	public void setNodeLink(MapNodeLinkElement nodeLink)
 	{
 		this.nodeLink = nodeLink;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeProtoElement.java,v 1.10 2004/12/07 17:02:03 krupenn Exp $
+ * $Id: MapNodeProtoElement.java,v 1.11 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapNodeProtoElement_Transferable;
 import com.syrus.AMFICOM.Client.Map.UI.MapDataFlavor;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 
 import java.awt.datatransfer.DataFlavor;
@@ -31,7 +30,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/07 17:02:03 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -93,14 +92,6 @@ public final class MapNodeProtoElement
 	{
 		this.transferable = transferable;
 		setLocalFromTransferable();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public Object clone(DataSourceInterface dataSource)
-	{
-		throw new UnsupportedOperationException();
 	}
 
 	/**

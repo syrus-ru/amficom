@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.25 2004/12/07 17:05:53 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.26 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
+import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapAlarmMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapEventMarker;
@@ -52,6 +53,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapViewController;
+import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
@@ -90,7 +92,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.25 $, $Date: 2004/12/07 17:05:53 $
+ * @version $Revision: 1.26 $, $Date: 2004/12/08 16:20:22 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -206,37 +208,27 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 	/**
 	 * Получить экранные координаты по географическим координатам
-	 * @deprecated
 	 */
-	public abstract Point convertMapToScreen(Point2D.Double point);
 	public abstract Point convertMapToScreen(DoublePoint point);
 	
 	/**
 	 * Получить географические координаты по экранным
-	 * @deprecated
 	 */
-	public abstract Point2D.Double convertScreenToMap1(Point point);
 	public abstract DoublePoint convertScreenToMap(Point point);
 
 	/**
 	 * Получить дистанцию между двумя точками в экранных координатах
-	 * @deprecated
 	 */
-	public abstract double distance(Point2D.Double from, Point2D.Double to);
 	public abstract double distance(DoublePoint from, DoublePoint to);
 
 	/**
 	 * Установить центральную точку вида карты
-	 * @deprecated
 	 */
-	public abstract void setCenter(Point2D.Double center);
 	public abstract void setCenter(DoublePoint center);
 
 	/**
 	 * Получить центральную точку вида карты
-	 * @deprecated
 	 */
-	public abstract Point2D.Double getCenter1();
 	public abstract DoublePoint getCenter();
 
 	public abstract Rectangle2D.Double getVisibleBounds();
@@ -290,9 +282,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Приблизить вид выделенного участка карты (в координатах карты)
 	 * по координатам угловых точек
-	 * @deprecated
 	 */
-	public abstract void zoomToBox(Point2D.Double from, Point2D.Double to);
 	public abstract void zoomToBox(DoublePoint from, DoublePoint to);
 
 	/**
@@ -888,6 +878,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				getMapView().scanCable(((MapCablePathElement )me).getSchemeCableLink());
 				getMapView().scanPaths((Scheme )Pool.get(Scheme.typ, ((MapCablePathElement )me).getSchemeCableLink().getSchemeId()));
 			}
+			else
+			if(me instanceof MapSiteNodeElement)
+			{
+				MapSiteNodeElement site = (MapSiteNodeElement )me;
+				SiteNodeController snc = (SiteNodeController )getMapViewController().getController(site);
+				snc.updateScaleCoefficient(site);
+			}
 
 			repaint(false);
 		}
@@ -910,7 +907,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						path,
 						mne.getMeId());
 					getMapView().addMarker(marker);
-					marker.moveToFromStartLo(mne.getDistance());
+
+					MarkerController mc = (MarkerController )getMapViewController().getController(marker);
+					mc.moveToFromStartLo(marker, mne.getDistance());
 				}
 			}
 			else
@@ -928,7 +927,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						mne.getMeId());
 //					marker.descriptor = mne.descriptor;
 					getMapView().addMarker(marker);
-					marker.moveToFromStartLo(mne.getDistance());
+
+					MarkerController mc = (MarkerController )getMapViewController().getController(marker);
+
+					mc.moveToFromStartLo(marker, mne.getDistance());
 				}
 			}
 			else
@@ -967,7 +969,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					{
 						marker.setId(mne.getMarkerId());
 					}
-					marker.moveToFromStartLo(mne.getDistance());
+
+					MarkerController mc = (MarkerController )getMapViewController().getController(marker);
+
+					mc.moveToFromStartLo(marker, mne.getDistance());
 				}
 /*
 				boolean found = false;
@@ -998,7 +1003,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				{
 					if(marker.getPathDecompositor() == null)
 						marker.setPathDecompositor((PathDecompositor )mne.getSchemePathDecompositor());
-					marker.moveToFromStartLo(mne.getDistance());
+
+					MarkerController mc = (MarkerController )getMapViewController().getController(marker);
+
+					mc.moveToFromStartLo(marker, mne.getDistance());
 				}
 			}
 			else
@@ -1645,7 +1653,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		MapLinkProtoElement mlpe = null;
 		
-		LinkTypeController ltc = LinkTypeController.getInstance();
+		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 		ltc.setLogicalNetLayer(this);
 		
 		mlpe = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.TUNNEL);
@@ -1702,7 +1710,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		MapLinkProtoElement mlpe = null;
 
-		LinkTypeController ltc = LinkTypeController.getInstance();
+		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 		ltc.setLogicalNetLayer(this);
 		
 		mlpe = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.UNBOUND);

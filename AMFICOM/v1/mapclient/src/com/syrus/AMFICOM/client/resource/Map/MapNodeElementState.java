@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElementState.java,v 1.4 2004/12/07 17:02:03 krupenn Exp $
+ * $Id: MapNodeElementState.java,v 1.5 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,10 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.geom.Point2D;
-
 import java.util.HashMap;
 
 /**
@@ -22,7 +18,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/07 17:02:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see

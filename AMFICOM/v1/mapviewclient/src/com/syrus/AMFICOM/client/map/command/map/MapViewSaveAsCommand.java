@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.5 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.6 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/08 16:20:22 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -67,7 +67,7 @@ public class MapViewSaveAsCommand extends VoidCommand
 			
 		MapView mv = mapFrame.getMapView();
 
-		MapView mv2 = (MapView)mv.clone(dataSource);
+		MapView mv2 = null;//(MapView)mv.clone(dataSource);
 
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 

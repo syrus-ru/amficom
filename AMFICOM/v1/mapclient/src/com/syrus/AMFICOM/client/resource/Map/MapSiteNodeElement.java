@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.13 2004/12/07 17:02:03 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.14 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,7 +36,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/12/07 17:02:03 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -109,20 +109,6 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		setLocalFromTransferable();
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public MapSiteNodeElement(
-		String id,
-		Point2D.Double anchor,
-		Map map,
-		MapNodeProtoElement pe)
-	{
-		this(id, anchor, map, pe.getImageId(), pe.getId());
-
-		name = pe.getName();
-	}
-
 	public MapSiteNodeElement(
 		String id,
 		DoublePoint location,
@@ -159,35 +145,7 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	/**
 	 * @deprecated
 	 */
-	public MapSiteNodeElement(
-		String id,
-		Point2D.Double anchor,
-		Map map,
-		String imageId,
-		String mapProtoId)
-	{
-		this.map = map;
-
-		this.id = id;
-		this.name = id;
-		this.mapProtoId = mapProtoId;
-		description = "";
-		setAnchor(anchor);
-
-		if(map != null)
-			mapId = map.getId();
-		attributes = new HashMap();
-		setImageId( imageId);
-//		setScaleCoefficient(coef);
-		selected = false;
-
-		transferable = new MapSiteElement_Transferable();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public Object clone(DataSourceInterface dataSource)
+/*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
 		String clonedid = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
@@ -225,17 +183,7 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 
 		return mene;
 	}
-
-	/**
-	 * @deprecated
-	 */
-	public void updateAttributes()
-	{
-		attributes.clear();
-	    for(int i = 0; i < transferable.attributes.length; i++)
-			attributes.put(transferable.attributes[i].type_id, Pool.get(ElementAttribute.typ, transferable.attributes[i].id));
-	}
-
+*/
 	//”станавливаем переменные класса из базы данных
 	/**
 	 * @deprecated
@@ -246,8 +194,8 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		this.name = transferable.name;
 		this.mapProtoId = transferable.mapProtoId;
 		this.description = transferable.description;
-		this.anchor.x = Double.parseDouble(transferable.longitude);
-		this.anchor.y = Double.parseDouble(transferable.latitude);
+//		this.anchor.x = Double.parseDouble(transferable.longitude);
+//		this.anchor.y = Double.parseDouble(transferable.latitude);
 		this.mapId = transferable.mapId;
 		this.setImageId( transferable.symbolId);
 
@@ -264,8 +212,8 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		transferable.name = this.name;
 		transferable.mapProtoId = this.mapProtoId;
 		transferable.description = this.description;
-		transferable.longitude = String.valueOf(this.anchor.x);
-		transferable.latitude = String.valueOf(this.anchor.y);
+//		transferable.longitude = String.valueOf(this.anchor.x);
+//		transferable.latitude = String.valueOf(this.anchor.y);
 		transferable.mapId = map.getId();
 		transferable.symbolId = this.imageId;
 
@@ -302,55 +250,6 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	public Object getTransferable()
 	{
 		return transferable;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		super.paint(g, visibleBounds);
-		
-		if(MapPropertiesManager.isShowNodesNames())
-		{
-			MapCoordinatesConverter converter = getMap().getConverter();
-			
-			Point p = converter.convertMapToScreen(getAnchor());
-	
-			int width = getBounds().width;
-			int height = getBounds().height;
-
-			g.setColor(MapPropertiesManager.getBorderColor());
-			g.setFont(MapPropertiesManager.getFont());
-
-			int fontHeight = g.getFontMetrics().getHeight();
-			String text = getName();
-			int textWidth = g.getFontMetrics().stringWidth(text);
-			int centerX = p.x + width / 2;
-			int centerY = p.y + height;
-
-			g.drawRect(
-					centerX,
-					centerY - fontHeight + 2,
-					textWidth,
-					fontHeight);
-
-			g.setColor(MapPropertiesManager.getTextBackground());
-			g.fillRect(
-					centerX,
-					centerY - fontHeight + 2,
-					textWidth,
-					fontHeight);
-
-			g.setColor(MapPropertiesManager.getTextColor());
-			g.drawString(
-					text,
-					centerX,
-					centerY);
-		}
 	}
 
 	public static String getPropertyPaneClassName()
@@ -393,12 +292,12 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		exportColumns[1][1] = getName();
 		exportColumns[2][1] = getDescription();
 		exportColumns[3][1] = getMapProtoId();
-		exportColumns[4][1] = String.valueOf(getAnchor().x);
-		exportColumns[5][1] = String.valueOf(getAnchor().y);
+		exportColumns[4][1] = String.valueOf(getLocation().x);
+		exportColumns[5][1] = String.valueOf(getLocation().y);
 		exportColumns[6][1] = getCity();
 		exportColumns[7][1] = getStreet();
 		exportColumns[8][1] = getBuilding();
-		exportColumns[9][1] = String.valueOf(scaleCoefficient);
+//		exportColumns[9][1] = String.valueOf(scaleCoefficient);
 		exportColumns[10][1] = getImageId();
 		
 		return exportColumns;
@@ -419,10 +318,10 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 			setMapProtoId(value);
 		else
 		if(field.equals(COLUMN_X))
-			anchor.x = Double.parseDouble(value);
+			location.x = Double.parseDouble(value);
 		else
 		if(field.equals(COLUMN_Y))
-			anchor.y = Double.parseDouble(value);
+			location.y = Double.parseDouble(value);
 		else
 		if(field.equals(COLUMN_CITY))
 			setCity(value);
@@ -432,9 +331,9 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		else
 		if(field.equals(COLUMN_BUILDING))
 			setBuilding(value);
-		else
-		if(field.equals(COLUMN_COEF))
-			setScaleCoefficient(Double.parseDouble(value));
+//		else
+//		if(field.equals(COLUMN_COEF))
+//			setScaleCoefficient(Double.parseDouble(value));
 		else
 		if(field.equals(COLUMN_IMAGE_ID))
 			setImageId( imageId);
@@ -449,8 +348,8 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		out.writeObject(name);
 		out.writeObject(mapProtoId);
 		out.writeObject(description);
-		out.writeDouble(anchor.x);
-		out.writeDouble(anchor.y);
+		out.writeDouble(location.x);
+		out.writeDouble(location.y);
 		out.writeObject(mapId);
 		out.writeObject(this.getImageId());
 
@@ -467,9 +366,9 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		name = (String )in.readObject();
 		mapProtoId = (String )in.readObject();
 		description = (String )in.readObject();
-		anchor = new Point2D.Double( );
-		anchor.x = in.readDouble();
-		anchor.y = in.readDouble();
+		location = new DoublePoint( );
+		location.x = in.readDouble();
+		location.y = in.readDouble();
 		mapId = (String )in.readObject();
 		this.setImageId((String )in.readObject());
 		attributes = (HashMap )in.readObject();

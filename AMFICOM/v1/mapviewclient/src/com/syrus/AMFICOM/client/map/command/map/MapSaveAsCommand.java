@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.8 2004/11/25 13:00:49 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.9 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/11/25 13:00:49 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/08 16:20:22 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -103,14 +103,14 @@ public class MapSaveAsCommand extends VoidCommand
 
 		if ( dialog.ifAccept())
 		{
-			try
-			{
-				mc2 = (Map )mc.clone(dataSource);
-			}
-			catch(CloneNotSupportedException e)
-			{
-				return;
-			}
+//			try
+//			{
+//				mc2 = (Map )mc.clone(dataSource);
+//			}
+//			catch(CloneNotSupportedException e)
+//			{
+//				return;
+//			}
 /*
 			if(!mc2.scheme_id.equals(mc.scheme_id))
 			{

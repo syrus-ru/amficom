@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.19 2004/12/07 17:02:02 krupenn Exp $
+ * $Id: Map.java,v 1.20 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2004/12/07 17:02:02 $
+ * @version $Revision: 1.20 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -169,7 +169,7 @@ public final class Map extends StubResource implements Serializable
 	/**
 	 * @deprecated
 	 */
-	protected MapCoordinatesConverter converter;
+//	protected MapCoordinatesConverter converter;
 
 	/** Список выделенных объектов */
 	protected Set selectedElements = new HashSet();
@@ -218,7 +218,7 @@ public final class Map extends StubResource implements Serializable
 	 * в котором по ключу старого Id хранится Id нового клонированного объекта
 	 * @deprecated
 	 */
-	public Object clone(DataSourceInterface dataSource)
+/*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
 		Environment.log(
@@ -300,7 +300,7 @@ public final class Map extends StubResource implements Serializable
 			
 		return mc;
 	}
-	
+*/	
 	/**
 	 * Восстановление локальных переменных класса при подгрузке из базы данных
 	 * @deprecated
@@ -515,15 +515,15 @@ public final class Map extends StubResource implements Serializable
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 
-	public MapCoordinatesConverter getConverter()
-	{
-		return converter;
-	}
-	
-	public void setConverter(MapCoordinatesConverter converter)
-	{
-		this.converter = converter;
-	}
+//	public MapCoordinatesConverter getConverter()
+//	{
+//		return converter;
+//	}
+//	
+//	public void setConverter(MapCoordinatesConverter converter)
+//	{
+//		this.converter = converter;
+//	}
 	
 	/**
 	 * Получение элементов - наследников класса Node

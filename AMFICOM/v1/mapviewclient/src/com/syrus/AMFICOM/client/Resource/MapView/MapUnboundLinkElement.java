@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundLinkElement.java,v 1.8 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapUnboundLinkElement.java,v 1.9 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,16 +11,10 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-
-import java.awt.BasicStroke;
-import java.awt.Graphics;
-import java.awt.Stroke;
-import java.awt.geom.Rectangle2D;
 
 import java.io.Serializable;
 
@@ -29,7 +23,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/08 16:20:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -57,37 +51,6 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}
-
-	/**
-	 * @deprecated
-	 */
-	public boolean isSelectionVisible()
-	{
-		return isSelected() || cablePath.isSelectionVisible();
-	}
-
-	/**
-	 * –исуем NodeLink взависимости от того выбрана она или нет
-	 * а так же если она выбрана выводим еЄ рамер
-	 * @deprecated
-	 */
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		BasicStroke stroke = (BasicStroke )this.getStroke();
-		Stroke str = new BasicStroke(
-				MapPropertiesManager.getUnboundThickness(), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
-				stroke.getDashPhase());
-
-		paint(g, visibleBounds, str, MapPropertiesManager.getUnboundLinkColor(), false);
-	}
-
 
 	public void setCablePath(MapCablePathElement cablePath)
 	{

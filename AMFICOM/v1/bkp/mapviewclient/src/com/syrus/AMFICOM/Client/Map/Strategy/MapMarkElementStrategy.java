@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.8 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.9 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/08 16:20:22 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -80,7 +80,7 @@ public final class MapMarkElementStrategy implements  MapStrategy
 		MapState mapState = logicalNetLayer.getMapState();
 		Map map = mark.getMap();
 		
-		MapCoordinatesConverter converter = map.getConverter();
+		MapCoordinatesConverter converter = logicalNetLayer;
 
 		int mouseMode = mapState.getMouseMode();
 		int actionMode = mapState.getActionMode();

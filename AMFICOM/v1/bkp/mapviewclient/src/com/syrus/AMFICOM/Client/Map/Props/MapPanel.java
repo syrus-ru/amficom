@@ -18,7 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class MapPanel extends JPanel implements ObjectResourcePropertiesPane
+public class MapPanel
+		extends JPanel 
+		implements ObjectResourcePropertiesPane
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 

@@ -5,6 +5,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
 
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
+import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -58,7 +59,8 @@ public final class MarkerPopupMenu extends MapPopupMenu
 	{
 		super.removeMapElement(marker);
 		
-		marker.notifyMarkerDeleted();
+		MarkerController mc = (MarkerController )getLogicalNetLayer().getMapViewController().getController(marker);
+		mc.notifyMarkerDeleted(marker);
 
 		getLogicalNetLayer().repaint(false);
 	}

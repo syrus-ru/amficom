@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.18 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.19 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Props.MapPropertiesPane;
 import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
@@ -59,7 +60,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.19 $, $Date: 2004/12/08 16:20:22 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -96,6 +97,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		if(prop == null)
 			return;
 		prop.setContext(logicalNetLayer.getContext());
+		((MapPropertiesPane )prop).setLogicalNetLayer(logicalNetLayer);
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 
 				LangModel.getString("Properties"), 

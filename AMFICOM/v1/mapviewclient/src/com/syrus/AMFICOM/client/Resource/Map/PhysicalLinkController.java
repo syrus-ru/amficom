@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.1 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.2 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/08 16:20:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -127,7 +127,7 @@ public class PhysicalLinkController extends AbstractLinkController
 		if(!isElementVisible(link, visibleBounds))
 			return;
 
-		link.updateLengthLt();
+		updateLengthLt(link);
 
 		boolean showName = false;
 		if(MapPropertiesManager.isShowLinkNames())
@@ -144,7 +144,7 @@ public class PhysicalLinkController extends AbstractLinkController
 			
 			if(showName)
 			{
-				MapCoordinatesConverter converter = link.getMap().getConverter();
+				MapCoordinatesConverter converter = getLogicalNetLayer();
 				Point from = converter.convertMapToScreen(nodelink.getStartNode().getLocation());
 				Point to = converter.convertMapToScreen(nodelink.getEndNode().getLocation());
 
@@ -181,6 +181,16 @@ public class PhysicalLinkController extends AbstractLinkController
 		}
 	}
 
+	public void updateLengthLt(MapPhysicalLinkElement link)
+	{
+		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
+		{
+			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
+			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(nodeLink);
+			nlc.updateLengthLt(nodeLink);
+		}
+	}
+
 	/**
 	 * точка находится на фрагменте, если она находится в рамках линий выделения
 	 */
@@ -211,7 +221,7 @@ public class PhysicalLinkController extends AbstractLinkController
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = LinkTypeController.getInstance();
+		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 		return ltc.getLineSize(plink.getProto());
 //		Characteristic ea = (Characteristic )link.attributes.get("thickness");
 //		if(ea == null)
@@ -229,7 +239,7 @@ public class PhysicalLinkController extends AbstractLinkController
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = LinkTypeController.getInstance();
+		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 		return ltc.getStyle(plink.getProto());
 //		Characteristic ea = (Characteristic )link.attributes.get("style");
 //		if(ea == null)
@@ -247,7 +257,7 @@ public class PhysicalLinkController extends AbstractLinkController
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = LinkTypeController.getInstance();
+		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 		return ltc.getStroke(plink.getProto());
 //		Characteristic ea = (Characteristic )link.attributes.get("style");
 //		if(ea == null)
@@ -267,7 +277,7 @@ public class PhysicalLinkController extends AbstractLinkController
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = LinkTypeController.getInstance();
+		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 		return ltc.getColor(plink.getProto());
 //		Characteristic ea = (Characteristic )link.attributes.get("color");
 //		if(ea == null)
@@ -285,7 +295,7 @@ public class PhysicalLinkController extends AbstractLinkController
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = LinkTypeController.getInstance();
+		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 		return ltc.getAlarmedColor(plink.getProto());
 //		Characteristic ea = (Characteristic )link.attributes.get("alarmed_color");
 //		if(ea == null)
@@ -303,7 +313,7 @@ public class PhysicalLinkController extends AbstractLinkController
 
 		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
 
-		LinkTypeController ltc = LinkTypeController.getInstance();
+		LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 		return ltc.getAlarmedLineSize(plink.getProto());
 //		Characteristic ea = (Characteristic )link.attributes.get("alarmed_thickness");
 //		if(ea == null)

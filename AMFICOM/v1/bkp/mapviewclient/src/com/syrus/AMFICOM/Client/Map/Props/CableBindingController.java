@@ -102,7 +102,7 @@ public final class CableBindingController implements ObjectResourceController
 			if (key.equals(KEY_LINK))
 			{
 				result = (link instanceof MapUnboundLinkElement) ? "" : link.getName();
-//				MapLinkElement mle = (MapLinkElement )map.getPhysicalLink(cci.physicalLinkId);
+//				MapPhysicalLinkElement mle = (MapPhysicalLinkElement )map.getPhysicalLink(cci.physicalLinkId);
 //				result = (mle == null) ? "" : mle.getName();
 			}
 			else

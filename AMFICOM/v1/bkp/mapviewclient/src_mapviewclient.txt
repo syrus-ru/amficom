@@ -143,6 +143,7 @@ src\com\syrus\AMFICOM\Client\Map\Props\MapNodeLinkPropertiesController.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapPhysicalLinkPropertiesController.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapPhysicalNodePropertiesController.java
+src\com\syrus\AMFICOM\Client\Map\Props\MapPropertiesPane.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapPropsManager.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapProtoPane.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapSelectionPropertiesController.java

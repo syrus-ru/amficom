@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.17 2004/12/07 17:02:03 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.18 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,19 +13,8 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalNodeElement_Transferable;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.awt.BasicStroke;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -33,14 +22,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import javax.swing.ImageIcon;
-
 /**
  * топологический узел 
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/12/07 17:02:03 $
+ * @version $Revision: 1.18 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -77,28 +64,6 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	public static final String OPEN_NODE = "void";
 
 	/**
-	 * @deprecated
-	 */
-	public static final String CLOSED_NODE_IMAGE = "images/node.gif";
-	/**
-	 * @deprecated
-	 */
-	public static final String OPEN_NODE_IMAGE = "images/void.gif";
-
-	/**
-	 * @deprecated
-	 */
-	public final static Rectangle DEFAULT_BOUNDS = new Rectangle(10, 10);
-	/**
-	 * @deprecated
-	 */
-	public final static Rectangle MIN_BOUNDS = new Rectangle(2, 2);
-	/**
-	 * @deprecated
-	 */
-	public final static Rectangle MAX_BOUNDS = new Rectangle(15, 15);
-
-	/**
 	 * physical node can be bound to site only if it is part of an unbound link
 	 */
 	private boolean canBind = false;
@@ -115,18 +80,12 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
-	static
-	{
-		MapPropertiesManager.setOriginalImage(OPEN_NODE, new ImageIcon(OPEN_NODE_IMAGE).getImage());
-		MapPropertiesManager.setOriginalImage(CLOSED_NODE, new ImageIcon(CLOSED_NODE_IMAGE).getImage());
-	}
-
 	public MapPhysicalNodeElement()
 	{
 		setImageId(CLOSED_NODE);
 		attributes = new HashMap();
 
-		setBounds(bounds);
+//		setBounds(bounds);
 		selected = false;
 
 		transferable = new MapPhysicalNodeElement_Transferable();
@@ -139,29 +98,6 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	{
 		this.transferable = transferable;
 		setLocalFromTransferable();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public MapPhysicalNodeElement (
-			String id, 
-			String physicalLinkId, 
-			Point2D.Double anchor,
-            Map map)
-	{
-		this.map = map;
-		this.id = id;
-		this.name = id;
-		setAnchor(anchor);
-		this.mapId = map.getId();
-		setImageId(CLOSED_NODE);
-		this.physicalLinkId = physicalLinkId;
-		attributes = new HashMap();
-
-		selected = false;
-
-		transferable = new MapPhysicalNodeElement_Transferable();
 	}
 
 	public MapPhysicalNodeElement (
@@ -187,7 +123,7 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	/**
 	 * @deprecated
 	 */
-	public Object clone(DataSourceInterface dataSource)
+/*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
 		String clonedId = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
@@ -222,7 +158,7 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 
 		return mpne;
 	}
-
+*/
 	/**
 	 * @deprecated
 	 */
@@ -231,8 +167,8 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		this.id = transferable.id;
 		this.name = transferable.name;
 		this.description = transferable.description;
-		this.anchor.x = Double.parseDouble(transferable.longitude);
-		this.anchor.y = Double.parseDouble(transferable.latitude);
+//		this.anchor.x = Double.parseDouble(transferable.longitude);
+//		this.anchor.y = Double.parseDouble(transferable.latitude);
 		this.mapId = transferable.mapId;
 		this.active = transferable.active;
 		this.physicalLinkId = transferable.physicalLinkId;
@@ -249,8 +185,8 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		transferable.id = this.id;
 		transferable.name = this.name;
 		transferable.description = this.description;
-		transferable.longitude = String.valueOf(this.anchor.x);
-		transferable.latitude = String.valueOf(this.anchor.y);
+//		transferable.longitude = String.valueOf(this.anchor.x);
+//		transferable.latitude = String.valueOf(this.anchor.y);
 		transferable.mapId = map.id;
 		transferable.physicalLinkId = this.physicalLinkId;
 		transferable.active = this.active;
@@ -297,30 +233,6 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	}
 	
 	/**
-	 * @deprecated
-	 */
-	public Rectangle getDefaultBounds()
-	{
-		return DEFAULT_BOUNDS;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public Rectangle getMinBounds()
-	{
-		return MIN_BOUNDS;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public Rectangle getMaxBounds()
-	{
-		return MAX_BOUNDS;
-	}
-
-	/**
 	 * установить активность топологического узла.
 	 * узел активен, если он находится в середине связи, и не активен, если
 	 * он находится на конце связи. активные и неактивные топологические узлы
@@ -332,7 +244,7 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 			setImageId(CLOSED_NODE);
 		else
 			setImageId(OPEN_NODE);
-		setScaleCoefficient(this.scaleCoefficient);
+//		setScaleCoefficient(this.scaleCoefficient);
 		this.active = active;
 	}
 
@@ -349,37 +261,6 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	public void setPhysicalLinkId(String pId)
 	{
 		this.physicalLinkId = pId;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		super.paint(g, visibleBounds);
-
-		if (isCanBind())
-		{
-			MapCoordinatesConverter converter = getMap().getConverter();
-			
-			Point p = converter.convertMapToScreen(getAnchor());
-	
-			Graphics2D pg = (Graphics2D )g;
-			
-			int width = getBounds().width + 20;
-			int height = getBounds().height + 20;
-			
-			pg.setStroke(new BasicStroke(MapPropertiesManager.getUnboundThickness()));
-			pg.setColor(MapPropertiesManager.getCanBindColor());
-			pg.drawRect( 
-					p.x - width / 2,
-					p.y - height / 2,
-					width,
-					height);
-		}
 	}
 
 	public MapElementState getState()
@@ -414,8 +295,8 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		exportColumns[1][1] = getName();
 		exportColumns[2][1] = getDescription();
 		exportColumns[3][1] = physicalLinkId;
-		exportColumns[4][1] = String.valueOf(getAnchor().x);
-		exportColumns[5][1] = String.valueOf(getAnchor().y);
+		exportColumns[4][1] = String.valueOf(getLocation().x);
+		exportColumns[5][1] = String.valueOf(getLocation().y);
 		exportColumns[6][1] = String.valueOf(isActive());
 		
 		return exportColumns;
@@ -436,10 +317,10 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 			physicalLinkId = value;
 		else
 		if(field.equals(COLUMN_X))
-			anchor.x = Double.parseDouble(value);
+			location.x = Double.parseDouble(value);
 		else
 		if(field.equals(COLUMN_Y))
-			anchor.y = Double.parseDouble(value);
+			location.y = Double.parseDouble(value);
 		else
 		if(field.equals(COLUMN_ACTIVE))
 			setActive(Boolean.valueOf(value).booleanValue());
@@ -450,8 +331,8 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		out.writeObject(id);
 		out.writeObject(name);
 		out.writeObject(description);
-		out.writeDouble(anchor.x);
-		out.writeDouble(anchor.y);
+		out.writeDouble(location.x);
+		out.writeDouble(location.y);
 		out.writeObject(mapId);
 		out.writeObject(getImageId());
 		out.writeBoolean(active);
@@ -465,9 +346,9 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		id = (String )in.readObject();
 		name = (String )in.readObject();
 		description = (String )in.readObject();
-		anchor = new Point2D.Double( );
-		anchor.x = in.readDouble();
-		anchor.y = in.readDouble();
+		location = new DoublePoint( );
+		location.x = in.readDouble();
+		location.y = in.readDouble();
 		mapId = (String )in.readObject();
 		this.setImageId((String )in.readObject());
 		active = in.readBoolean();

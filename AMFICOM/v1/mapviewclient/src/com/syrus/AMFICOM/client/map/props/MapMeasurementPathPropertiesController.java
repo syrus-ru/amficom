@@ -75,7 +75,7 @@ public final class MapMeasurementPathPropertiesController
 		{
 			MapMeasurementPathElement path = (MapMeasurementPathElement )object;
 			
-			MeasurementPathController mpc = MeasurementPathController.getInstance();
+			MeasurementPathController mpc = (MeasurementPathController )MeasurementPathController.getInstance();
 	
 			if (key.equals(PROPERTY_NAME))
 			{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapCoordinatesConverter.java,v 1.5 2004/12/07 17:02:02 krupenn Exp $
+ * $Id: MapCoordinatesConverter.java,v 1.6 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/07 17:02:02 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -34,25 +34,9 @@ public interface MapCoordinatesConverter
 	 * Перевести географические координаты в экранные
 	 * @param point
 	 * @return 
-	 * @deprecated
-	 */
-	Point convertMapToScreen(Point2D.Double point);
-
-	/**
-	 * Перевести географические координаты в экранные
-	 * @param point
-	 * @return 
 	 */
 	Point convertMapToScreen(DoublePoint point);
 	
-	/**
-	 * перевести экранные координаты в географические
-	 * @param point
-	 * @return 
-	 * @deprecated
-	 */
-	Point2D.Double convertScreenToMap1(Point point);
-
 	/**
 	 * перевести экранные координаты в географические
 	 * @param point
@@ -81,34 +65,11 @@ public interface MapCoordinatesConverter
 	 * @param endPoint
 	 * @param dist
 	 * @return 
-	 * @deprecated
-	 */
-	Point2D.Double pointAtDistance(
-			Point2D.Double startPoint, 
-			Point2D.Double endPoint, 
-			double dist);
-
-	/**
-	 * получить точку на линии (startPoint, endPoint), отлежащий от
-	 * точки startPoint на дистанцию dist
-	 * @param startPoint
-	 * @param endPoint
-	 * @param dist
-	 * @return 
 	 */
 	DoublePoint pointAtDistance(
 			DoublePoint startPoint, 
 			DoublePoint endPoint, 
 			double dist);
-
-	/**
-	 * найти расстояние между двумя точками в географической системе координат
-	 * @param from
-	 * @param to
-	 * @return 
-	 * @deprecated
-	 */
-	double distance(Point2D.Double from, Point2D.Double to);
 
 	/**
 	 * найти расстояние между двумя точками в географической системе координат

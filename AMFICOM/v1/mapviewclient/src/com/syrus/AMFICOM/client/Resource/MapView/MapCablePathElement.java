@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.19 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.20 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,27 +11,15 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Stroke;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -47,7 +35,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.20 $, $Date: 2004/12/08 16:20:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -55,6 +43,10 @@ import java.util.ListIterator;
 public class MapCablePathElement extends MapLinkElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
+
+	/**
+	 * @deprecated
+	 */	
 	public static final String typ = "mapcablepathelement";
 
 	protected List sortedNodes = new LinkedList();
@@ -116,54 +108,6 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	public MapView getMapView()
 	{
 		return this.mapView;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public Object clone(DataSourceInterface dataSource)
-	{
-/*
-		String cloned_id = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
-		if (cloned_id != null)
-			return Pool.get(MapPathElement.typ, cloned_id);
-
-		MapPathElement mtpe = new MapPathElement(
-				dataSource.GetUId(MapPathElement.typ),
-				(MapNodeElement )startNode.clone(dataSource),
-				(MapNodeElement )endNode.clone(dataSource),
-				(Map )map.clone(dataSource) );
-				
-		mtpe.changed = changed;
-		mtpe.description = description;
-//		mtpe.endNode = (MapNodeElement )endNode.clone(dataSource);
-		mtpe.endNode_id = endNode_id;
-		mtpe.name = name;
-		mtpe.scheme_path_id = (String )Pool.get("schemeclonedids", scheme_path_id);
-		mtpe.selected = selected;
-		mtpe.show_alarmed = show_alarmed;
-//		mtpe.startNode = (MapNodeElement )startNode.clone(dataSource);
-		mtpe.startNode_id = startNode_id;
-		mtpe.type_id = type_id;
-
-		Pool.put(MapPathElement.typ, mtpe.getId(), mtpe);
-		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mtpe.getId());
-
-		mtpe.physicalLink_ids = new Vector(physicalLink_ids.size());
-		for (int i = 0; i < physicalLink_ids.size(); i++)
-			mtpe.physicalLink_ids.add(Pool.get(MapPropertiesManager.MAP_CLONED_IDS, (String )physicalLink_ids.get(i)));
-
-		mtpe.attributes = new Hashtable();
-		for(Enumeration enum = attributes.elements(); enum.hasMoreElements();)
-		{
-			ElementAttribute ea = (ElementAttribute )enum.nextElement();
-			ElementAttribute ea2 = (ElementAttribute )ea.clone(dataSource);
-			mtpe.attributes.put(ea2.type_id, ea2);
-		}
-
-		return mtpe;
-*/
-		return null;
 	}
 
 	//этот класс используется для востановления данных из базы
@@ -264,96 +208,6 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	/**
 	 * @deprecated
 	 */
-	public boolean isSelectionVisible()
-	{
-		boolean isv = isSelected();
-		if(!isv)
-		{
-			for(Iterator it = getMapView().getMeasurementPaths(this).iterator(); it.hasNext();)
-			{
-				MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
-				if(mp.isSelectionVisible())
-				{
-					isv = true;
-					break;
-				}
-			}
-		}
-		return isv;
-//		return isSelected() || getMapView().getMeasurementPaths(this).isSelectionVisible();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public boolean isVisible(Rectangle2D.Double visibleBounds)
-	{
-		boolean vis = false;
-		for(Iterator it = getLinks().iterator(); it.hasNext();)
-		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			if(link.isVisible(visibleBounds))
-			{
-				vis = true;
-				break;
-			}
-		}
-		return vis;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		for(Iterator it = getLinks().iterator(); it.hasNext();)
-		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			link.paint(g, visibleBounds, stroke, color, selectionVisible);
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		BasicStroke stroke = (BasicStroke )this.getStroke();
-		Stroke str = new BasicStroke(
-				this.getLineSize(), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
-				stroke.getDashPhase());
-		Color color = this.getColor();
-
-		paint(g, visibleBounds, str, color, isSelectionVisible());
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public boolean isMouseOnThisObject(Point currentMousePoint)
-	{
-		for(Iterator it = getLinks().iterator(); it.hasNext();)
-		{
-			MapElement me = (MapElement )it.next();
-			if(me.isMouseOnThisObject(currentMousePoint))
-				return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * @deprecated
-	 */
 	public Object getTransferable()
 	{
 		return null;
@@ -394,34 +248,6 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public double getDistanceFromStartLt(Point pt)
-	{
-		double distance = 0.0;
-		MapNodeElement node = getStartNode();
-		sortNodeLinks();
-		for(Iterator it = getSortedNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
-			if(mnle.isMouseOnThisObject(pt))
-			{
-				DoublePoint dpoint = getMap().getConverter().convertScreenToMap(pt);
-				distance += getMap().getConverter().distance(dpoint, node.getLocation());
-				break;
-			}
-			else
-				distance += mnle.getLengthLt();
-
-			if(mnle.getStartNode().equals(node))
-				node = mnle.getEndNode();
-			else
-				node = mnle.getStartNode();
-		}
-		return distance;
-	}
-
-	/**
 	 * возвращает коэффициент топологической привязки
 	 */
 	public double getKd()
@@ -435,17 +261,6 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 		double kd = phLen / topLen;
 		return kd;
-	}
-
-	/**
-	 * Возвращяет длинну линии пересчитанную на коэффициент топологической 
-	 * привязки
-	 * @deprecated
-	 */
-	public double getDistanceFromStartLf(Point pt)
-	{
-		double kd = getKd();
-		return getDistanceFromStartLt(pt) * kd;
 	}
 
 	public List getLinks()
@@ -712,64 +527,10 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		Pool.put("serverimage", getId(), this);
 	}
 
-	/**
-	 * Получить толщину линии
-	 * @deprecated
-	 */
-	public int getLineSize ()
-	{
-		return MapPropertiesManager.getUnboundThickness();
-	}
-
-	/**
-	 * Получить вид линии
-	 * @deprecated
-	 */
-	public String getStyle ()
-	{
-		return MapPropertiesManager.getStyle();
-	}
-
-	/**
-	 * Получить стиль линии
-	 * @deprecated
-	 */
-	public Stroke getStroke ()
-	{
-		return MapPropertiesManager.getStroke();
-	}
-
-	/**
-	 * Получить цвет
-	 * @deprecated
-	 */
-	public Color getColor()
-	{
-		return MapPropertiesManager.getUnboundLinkColor();
-	}
-
-	/**
-	 * получить цвет при наличии сигнала тревоги
-	 * @deprecated
-	 */
-	public Color getAlarmedColor()
-	{
-		return MapPropertiesManager.getAlarmedColor();
-	}
-
-	/**
-	 * получить толщину линии при наличи сигнала тревоги
-	 * @deprecated
-	 */
-	public int getAlarmedLineSize ()
-	{
-		return MapPropertiesManager.getAlarmedThickness();
-	}
-
-	public Point getBindingPosition(MapPhysicalLinkElement link)
+	public IntPoint getBindingPosition(MapPhysicalLinkElement link)
 	{
 		CableChannelingItem cci = (CableChannelingItem )getBinding().get(link);
-		return new Point(cci.row_x, cci.place_y);
+		return new IntPoint(cci.row_x, cci.place_y);
 	}
 
 	public void setBinding(MapCablePathBinding binding)

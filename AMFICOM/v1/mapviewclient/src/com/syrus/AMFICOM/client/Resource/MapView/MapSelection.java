@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.11 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapSelection.java,v 1.12 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,11 +16,6 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,7 +26,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/08 16:20:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -42,10 +37,6 @@ public final class MapSelection extends StubResource
 {
 	protected List elements = new LinkedList();
 
-	/**
-	 * @deprecated
-	 */
-	protected Point2D.Double anchor = new Point2D.Double(0, 0);
 	protected DoublePoint location = new DoublePoint(0, 0);
 	
 	protected Map map;
@@ -86,63 +77,34 @@ public final class MapSelection extends StubResource
 	public void clear()
 	{
 		elements.clear();
-		recalcAnchor();
+		recalcLocation();
 		recalcType();
 	}
 
 	public void add(MapElement me)
 	{
 		elements.add(me);
-		recalcAnchor();
+		recalcLocation();
 		recalcType();
 	}
 
 	public void addAll(Collection coll)
 	{
 		elements.addAll(coll);
-		recalcAnchor();
+		recalcLocation();
 		recalcType();
 	}
 
 	public void remove(MapElement me)
 	{
 		elements.remove(me);
-		recalcAnchor();
+		recalcLocation();
 		recalcType();
 	}
-
-	/**
-	 * @deprecated
-	 */
-	public Point2D.Double getAnchor()
-	{
-		return anchor;
-	}
-
 
 	public DoublePoint getLocation()
 	{
 		return location;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	protected void recalcAnchor()
-	{
-		MapElement me;
-		anchor.x = 0.0D;
-		anchor.y = 0.0D;
-		for(Iterator it = elements.iterator(); it.hasNext();)
-		{
-			me = (MapElement )it.next();
-			Point2D.Double pt = (Point2D.Double )me.getAnchor();
-
-			anchor.x += pt.x;
-			anchor.y += pt.y;
-		}
-		anchor.x /= elements.size();
-		anchor.y /= elements.size();
 	}
 
 	protected void recalcLocation()
@@ -191,13 +153,6 @@ public final class MapSelection extends StubResource
 		}
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public void setAnchor(Point2D.Double aAnchor)
-	{
-	}
-
 	public void setLocation(DoublePoint aLocation)
 	{
 	}
@@ -236,16 +191,6 @@ public final class MapSelection extends StubResource
 		throw new UnsupportedOperationException();
 	}
 
-	public boolean isVisible(Rectangle2D.Double visibleBounds)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		throw new UnsupportedOperationException();
-	}
-
 	public Map getMap()
 	{
 		return map;
@@ -254,11 +199,6 @@ public final class MapSelection extends StubResource
 	public void setMap(Map map)
 	{
 		this.map = map;
-	}
-
-	public boolean isMouseOnThisObject(Point currentMousePoint)
-	{
-		return true;
 	}
 
 	private static final String PROPERTY_PANE_CLASS_NAME = "";

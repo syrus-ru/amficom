@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
@@ -67,6 +69,7 @@ public final class SitePopupMenu extends MapPopupMenu
 	private void showProperties()
 	{
 		super.showProperties(site);
+		getLogicalNetLayer().sendMapEvent(new MapEvent(site, MapEvent.MAP_ELEMENT_CHANGED));
 	}
 
 	private void removeSite()

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPipePathElement.java,v 1.11 2004/12/07 17:02:03 krupenn Exp $
+ * $Id: MapPipePathElement.java,v 1.12 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,23 +12,12 @@
 package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.Map.MapPipePathElement_Transferable;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Stroke;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-
 import java.io.IOException;
-
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,7 +29,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/07 17:02:03 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -119,7 +108,7 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 	/**
 	 * @deprecated
 	 */
-	public Object clone(DataSourceInterface dataSource)
+/*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
 		String clonedId = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
@@ -156,7 +145,7 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 
 		return mppe;
 	}
-
+*/
 	/**
 	 * Используется для для загрузки класса из базы данных
 	 * @deprecated
@@ -179,49 +168,6 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 		return name;
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public boolean isVisible(Rectangle2D.Double visibleBounds)
-	{
-		boolean vis = false;
-		for(Iterator it = getLinks().iterator(); it.hasNext();)
-		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			if(link.isVisible(visibleBounds))
-			{
-				vis = true;
-				break;
-			}
-		}
-		return vis;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		BasicStroke stroke = (BasicStroke )this.getStroke();
-		Stroke str = new BasicStroke(
-				this.getLineSize(), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
-				stroke.getDashPhase());
-		Color color = getColor();
-
-		for(Iterator it = getLinks().iterator(); it.hasNext();)
-		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			link.paint(g, visibleBounds, str, color, false);
-		}
-	}
-
 	public List getLinks()
 	{	
 		return links;
@@ -241,29 +187,6 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 	public void addLink(MapPhysicalLinkElement link)
 	{
 		links.add(link);
-	}
-
-	/**
-	 * получить центр (ГМТ) линии
-	 * @deprecated
-	 */
-	public Point2D.Double getAnchor()
-	{
-		int count = 0;
-		Point2D.Double point = new Point2D.Double(0.0, 0.0);
-
-		for(Iterator it = getLinks().iterator(); it.hasNext();)
-		{
-			MapPhysicalLinkElement mle = (MapPhysicalLinkElement )it.next();
-			Point2D.Double an = mle.getAnchor();
-			point.x += an.x;
-			point.y += an.y;
-			count ++;
-		}
-		point.x /= count;
-		point.y /= count;
-		
-		return point;
 	}
 
 	public DoublePoint getLocation()
@@ -299,11 +222,11 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 	}
 
 	/**
-	 * @deprecated
+	 * получить текущее состояние
 	 */
-	public boolean isMouseOnThisObject(Point currentMousePoint)
+	public MapElementState getState()
 	{
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public String[][] getExportColumns()
@@ -363,7 +286,7 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 		this.physicalLinkIds = new ArrayList();
 		for(Iterator it = getLinks().iterator(); it.hasNext();)
 		{
-			MapLinkElement mle = (MapLinkElement )it.next();
+			MapPhysicalLinkElement mle = (MapPhysicalLinkElement )it.next();
 			physicalLinkIds.add(mle.getId());
 		}
 		out.writeObject(physicalLinkIds);

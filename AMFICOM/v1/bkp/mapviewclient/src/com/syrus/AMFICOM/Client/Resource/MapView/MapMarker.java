@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.19 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapMarker.java,v 1.20 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,38 +11,17 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-
 import com.syrus.AMFICOM.general.Identifier;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import javax.swing.ImageIcon;
 
 /**
  * Название: Маркер связывания оптической дистанции Lo, полученной      * 
@@ -65,7 +44,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.20 $, $Date: 2004/12/08 16:20:22 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -80,20 +59,10 @@ public class MapMarker extends MapNodeElement
 	 */
 	public static final String typ = "mapmarker";
 
-	/** Размер пиктограммы маркера */
-	/**
-	 * @deprecated
-	 */
-	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(20, 20);
-	
 	/**
 	 * @deprecated
 	 */
 	public static final String IMAGE_NAME = "marker";
-	/**
-	 * @deprecated
-	 */
-	public static final String IMAGE_PATH = "images/marker.gif";
 
 	protected Identifier meId;
 	protected double distance = 0.0;
@@ -112,12 +81,6 @@ public class MapMarker extends MapNodeElement
 	protected MapNodeElement startNode;
 	protected MapNodeElement endNode;
 
-	static
-	{
-		MapPropertiesManager.setOriginalImage(IMAGE_NAME, new ImageIcon(IMAGE_PATH).getImage());
-	}
-
-	
 	/**
 	 * Создание маркера пользователем на карте
 	 * 
@@ -127,25 +90,7 @@ public class MapMarker extends MapNodeElement
 	 * @param mnle
 	 * @param topologicalDistance
 	 * @param path
-	 * @deprecated
 	 */
-	public MapMarker(
-			String id, 
-			MapView mapView,
-			MapNodeElement startNode,
-			MapNodeElement endNode,
-			MapNodeLinkElement mnle,
-			MapMeasurementPathElement path,
-			Point2D.Double dpoint)
-	{
-		this(id, mapView, 0.0, path, path.getMonitoredElementId());
-		
-		this.startNode = startNode;
-		this.endNode = endNode;
-		this.nodeLink = mnle;
-		setAnchor(dpoint);
-	}
-
 	public MapMarker(
 			String id, 
 			MapView mapView,
@@ -198,27 +143,11 @@ public class MapMarker extends MapNodeElement
 
 		spd = new PathDecompositor(measurementPath.getSchemePath());
 
-		anchor = new Point2D.Double(0.0, 0.0);
+		location = new DoublePoint(0.0, 0.0);
 
-		moveToFromStartLo(opticalDistance);
+//		moveToFromStartLo(opticalDistance);
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public Rectangle getDefaultBounds()
-	{
-		return DEFAULT_BOUNDS;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public Object clone(DataSourceInterface dataSource)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
 	/**
 	 * @deprecated
 	 */
@@ -227,19 +156,10 @@ public class MapMarker extends MapNodeElement
 		return typ;
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public void setAnchor(Point2D.Double aAnchor)
-	{
-		super.setAnchor(aAnchor);
-		distance = this.getFromStartLengthLo();
-	}
-
 	public void setLocation(DoublePoint aLocation)
 	{
 		super.setLocation(aLocation);
-		distance = this.getFromStartLengthLo();
+//		distance = this.getFromStartLengthLo();
 	}
 
 	public void setMapView(MapView mapView)
@@ -259,47 +179,6 @@ public class MapMarker extends MapNodeElement
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
-	//Послать сообщения что маркер создан
-	public void notifyMarkerCreated()
-	{
-		spd = new PathDecompositor(measurementPath.getSchemePath());
-
-		getMapView().getLogicalNetLayer().sendMapEvent(
-			new MapNavigateEvent(
-				this,
-				MapNavigateEvent.MAP_MARKER_CREATED_EVENT,
-				getId(),
-				getFromStartLengthLf(),
-				measurementPath.getSchemePath().getId(),
-				meId));
-	}
-
-	//Послать сообщения что маркер удален
-	public void notifyMarkerDeleted()
-	{
-		getMapView().getLogicalNetLayer().sendMapEvent(
-			new MapNavigateEvent(
-				this,
-				MapNavigateEvent.MAP_MARKER_DELETED_EVENT,
-				getId(),
-				0.0D,
-				measurementPath.getSchemePath().getId(),
-				meId) );
-	}
-
-	//Послать сообщения что маркер перемещается
-	public void notifyMarkerMoved()
-	{
-		getMapView().getLogicalNetLayer().sendMapEvent(
-			new MapNavigateEvent(
-				this,
-				MapNavigateEvent.MAP_MARKER_MOVED_EVENT,
-				getId(),
-				getFromStartLengthLo(),
-				measurementPath.getSchemePath().getId(),
-				meId) );
-	}
-
 //	public Point2D.Double getAnchor()
 //	{
 /*
@@ -420,163 +299,6 @@ public class MapMarker extends MapNodeElement
 			point);
 	}
 */
-	public double getFromStartLengthLt()
-	{
-		double path_length = 0;
-/*
-		Vector nl = transmissionPath.sortNodeLinks();
-		Vector pl = transmissionPath.sortPhysicalLinks();
-		Vector n = transmissionPath.sortNodes();
-		
-		MapNodeLinkElement mnle;
-		boolean point_reached = false;
-		for(Enumeration plen = pl.elements(); plen.hasMoreElements() && !point_reached;)
-		{
-			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )plen.nextElement();
-			if(nodeLink.PhysicalLinkID.equals(mple.getId()))
-			{
-				Vector nl2 = mple.sortNodeLinks();
-				point_reached = true;
-				boolean direct_order = (nl.indexOf(nl2.get(0)) <= nl.indexOf(nodeLink));
-				int size = nl2.size();
-				for(int i = 0; i < size; i++)
-				{
-					if(direct_order)
-						mnle = (MapNodeLinkElement )nl2.get(i);
-					else
-						mnle = (MapNodeLinkElement )nl2.get(size - i - 1);
-							
-					if ( mnle == nodeLink)
-					{
-						if ( n.indexOf(startNode) < n.indexOf(endNode))
-							return path_length + getSizeInDoubleLt();
-						else
-							return path_length + nodeLink.getSizeInDoubleLt() - getSizeInDoubleLt();
-					}
-					else
-					{
-						path_length += mnle.getSizeInDoubleLt();
-					}
-				}// for(int i
-			}// if(nodeLink.PhysicalLinkID
-			else
-			{
-				path_length += mple.getSizeInDoubleLt();
-			}
-		}// for(Enumeration plen
-*/
-		return 0;
-	}
-
-	public double getFromStartLengthLf()
-	{
-/*
-		if(schemePath == null)
-			return 0.0D;
-
-		Vector nl = transmissionPath.sortNodeLinks();
-		Vector pl = transmissionPath.sortPhysicalLinks();
-		Vector n = transmissionPath.sortNodes();
-		
-		double path_length = 0;
-		MapNodeElement bufferNode = transmissionPath.startNode;
-
-		boolean point_reached = false;
-		MapNodeLinkElement mnle;
-
-		PathElement pes[] = new PathElement[schemePath.links.size()];
-		for(int i = 0; i < schemePath.links.size(); i++)
-		{
-			PathElement pe = (PathElement )schemePath.links.get(i);
-			pes[pe.n] = pe;
-		}
-		Vector pvec = new Vector();
-		for(int i = 0; i < pes.length; i++)
-		{
-			pvec.add(pes[i]);
-		}
-
-		Enumeration enum = pvec.elements();
-		PathElement pe = null;
-
-		for(Enumeration plen = pl.elements(); plen.hasMoreElements() && !point_reached;)
-		{
-			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )plen.nextElement();
-
-			pe = (PathElement )enum.nextElement();
-			bufferNode.countPhysicalLength(schemePath, pe, enum);
-			path_length += bufferNode.getPhysicalLength();
-
-			if(bufferNode.equals(mple.startNode))
-				bufferNode = mple.endNode;
-			else
-				bufferNode = mple.startNode;
-
-			if(nodeLink.PhysicalLinkID.equals(mple.getId()))
-			{
-				Vector nl2 = mple.sortNodeLinks();
-				point_reached = true;
-				double temp_length = 0.0D; // Count topological length over cable until marker reached
-				boolean direct_order = (nl.indexOf(nl2.get(0)) <= nl.indexOf(nodeLink));
-				int size = nl2.size();
-				for(int i = 0; i < size; i++)
-				{
-					if(direct_order)
-						mnle = (MapNodeLinkElement )nl2.get(i);
-					else
-						mnle = (MapNodeLinkElement )nl2.get(size - i - 1);
-							
-					if ( mnle == nodeLink)
-					{
-						if ( n.indexOf(startNode) < n.indexOf(endNode))
-							temp_length += getSizeInDoubleLt();
-						else
-							temp_length += nodeLink.getSizeInDoubleLt() - getSizeInDoubleLt();
-						return path_length + mple.getKd() * temp_length;// Convert to physical length
-					}
-					else
-					{
-						temp_length += mnle.getSizeInDoubleLt();
-					}
-				}// for(int i
-			}// if(nodeLink.PhysicalLinkID
-			else
-			{
-				path_length += mple.getSizeInDoubleLf();
-			}
-		}// for(Enumeration plen
-*/
-		return 0.0D;
-	}
-
-	/**
-	 * returns distance from nodelink starting node to marker's anchor
-	 * in geographical coordinates
-	 * @return 
-	 */
-	public double startToThis()
-	{
-		DoublePoint from = startNode.getLocation();
-		DoublePoint to = getLocation();
-
-		MapCoordinatesConverter converter = getMap().getConverter();
-		return converter.distance(from, to);
-	}
-
-	/**
-	 * returns distance from nodelink ending node to marker's anchor
-	 * in geographical coordinates
-	 * @return 
-	 */
-	public double endToThis()
-	{
-		DoublePoint from = endNode.getLocation();
-		DoublePoint to = getLocation();
-
-		MapCoordinatesConverter converter = getMap().getConverter();
-		return converter.distance(from, to);
-	}
-
 
 	public double getOpticalDistanceFromStart()
 	{
@@ -633,293 +355,6 @@ public class MapMarker extends MapNodeElement
 		return (MapSiteNodeElement )node;
 	}
 
-	public double getPhysicalDistanceFromLeft()
-	{
-		MapSiteNodeElement left = getLeft();
-		double kd = cpath.getKd();
-		double dist = startToThis();
-
-		MapNodeElement node = startNode;
-		List nodeLinks = cpath.getSortedNodeLinks();
-		for(ListIterator lit = nodeLinks.listIterator(nodeLinks.indexOf(nodeLink)); lit.hasPrevious();)
-		{
-			MapNodeLinkElement nl = (MapNodeLinkElement )lit.previous();
-			if(nl != nodeLink)
-				dist += nl.getLengthLt();
-			if(node instanceof MapSiteNodeElement)
-				break;
-		}
-		return dist * kd;
-	}
-
-	public double getPhysicalDistanceFromFight()
-	{
-		MapSiteNodeElement left = getRight();
-		double kd = cpath.getKd();
-		double dist = endToThis();
-
-		MapNodeElement node = endNode;
-		List nodeLinks = cpath.getSortedNodeLinks();
-		for(ListIterator lit = nodeLinks.listIterator(nodeLinks.indexOf(nodeLink)); lit.hasNext();)
-		{
-			MapNodeLinkElement nl = (MapNodeLinkElement )lit.next();
-			if(nl != nodeLink)
-				dist += nl.getLengthLt();
-			if(node instanceof MapSiteNodeElement)
-				break;
-		}
-		return dist * kd;
-	}
-
-	//Передвинуть в точку на заданной расстоянии от нсчала
-//	public void moveToFromStartLt(double distance)
-//	{
-/*
-		LogicalNetLayer lnl = getLogicalNetLayer();
-		if ( lnl.mapMainFrame
-				.aContext.getApplicationModel().isEnabled(
-					MapApplicationModel.ACTION_USE_MARKER))
-		{
-			double pathl = transmissionPath.getSizeInDoubleLt();
-			if ( distance > pathl)
-				distance = pathl;
-
-			Vector nl = transmissionPath.sortNodeLinks();
-			Vector pl = transmissionPath.sortPhysicalLinks();
-			Vector n = transmissionPath.sortNodes();
-		
-			double path_length = 0;
-
-			boolean point_reached = false;
-			MapNodeLinkElement mnle;
-			
-			for(Enumeration plen = pl.elements(); plen.hasMoreElements() && !point_reached;)
-			{
-				MapPhysicalLinkElement mple = (MapPhysicalLinkElement )plen.nextElement();
-
-				if ( path_length + mple.getSizeInDoubleLt() > distance)
-				{
-					Vector nl2 = mple.sortNodeLinks();
-					point_reached = true;
-					boolean direct_order = (nl.indexOf(nl2.get(0)) <= nl.indexOf(nodeLink));
-					int size = nl2.size();
-					for(int i = 0; i < size; i++)
-					{
-						if(direct_order)
-							mnle = (MapNodeLinkElement )nl2.get(i);
-						else
-							mnle = (MapNodeLinkElement )nl2.get(size - i - 1);
-							
-						if ( path_length + mnle.getSizeInDoubleLt() > distance)
-						{
-							nodeLink = mnle;
-							nodeLinkIndex = nl.indexOf(mnle);
-							if ( n.indexOf(mnle.startNode) < n.indexOf(mnle.endNode))
-							{
-								startNode = mnle.startNode;
-								endNode = mnle.endNode;
-							}
-							else
-							{
-								startNode = mnle.endNode;
-								endNode = mnle.startNode;
-							}
-
-							double nl_distance = distance - path_length;
-
-							adjustPosition(nl_distance, false);
-							return;
-						}// if ( ... > distance
-						else
-						{
-							path_length += mnle.getSizeInDoubleLt();
-						}
-					}// for(int i
-				}// if ( ... > distance
-				else
-				{
-					path_length += mple.getSizeInDoubleLt();
-				}
-			}// for(Enumeration plen
-		}// if ( lnl.mapMainFrame
-*/
-//	}
-
-	public double getFromStartLengthLo()
-	{
-		if(spd == null)
-			return getFromStartLengthLf();
-		else
-			return spd.getOpticalDistanceByPhysical(getFromStartLengthLf());
-	}
-
-	public void moveToFromStartLo(double dist)
-	{
-		if(spd == null)
-			moveToFromStartLf(dist);
-		else
-			moveToFromStartLf(spd.getPhysicalDistanceByOptical(dist));
-	}
-
-	//Передвинуть в точку на заданном расстоянии от начала (физ)
-	public void moveToFromStartLf(double physicalDistance)
-	{
-		distance = physicalDistance;
-
-		double pathl = measurementPath.getLengthLf();
-		if ( distance > pathl)
-			distance = pathl;
-
-		MapElement me = null;
-		double pathLength = 0;
-		double localDistance = 0.0;
-
-		for(Iterator it = measurementPath.getSchemePath().links.iterator(); it.hasNext();)
-		{
-			PathElement pe = (PathElement )it.next();
-			double d = pe.getPhysicalLength();
-			if(pathLength + d > distance)
-			{
-				me = measurementPath.getMapElement(pe);
-				localDistance = distance - pathLength;
-				break;
-			}
-			else
-			{
-				pathLength += d;
-			}
-		}
-		
-		if(me != null)
-		{
-			if(me instanceof MapCablePathElement)
-			{
-				this.cpath = (MapCablePathElement )me;
-				setRelativeToCablePath(localDistance);
-			}
-			else
-			{
-				this.startNode = (MapNodeElement )me;
-				setRelativeToNode(startNode);
-			}
-		}
-	}
-
-	/**
-	 * adjust marker position accurding to physical distance relative
-	 * to current cable path
-	 * 
-	 */
-	public void setRelativeToNode(MapNodeElement node)
-	{
-		this.startNode = node;
-		
-		MapNodeLinkElement nl = null;
-		
-		for(Iterator it = node.getNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement nlink = (MapNodeLinkElement )it.next();
-			if(nl == null 
-				|| measurementPath.getSortedNodeLinks().indexOf(nl)
-					> measurementPath.getSortedNodeLinks().indexOf(nlink))
-				nl = nlink;
-		}
-		if(measurementPath.getSortedNodes().indexOf(node) 
-			> measurementPath.getSortedNodes().indexOf(nl.getOtherNode(node)))
-				node = nl.getOtherNode(node);
-		
-		endNode = nl.getOtherNode(node);
-		nodeLink = nl;
-		adjustPosition(0.0);
-	}
-
-	/**
-	 * adjust marker position accurding to physical distance relative
-	 * to current cable path
-	 * 
-	 */
-	public void setRelativeToCablePath(double physicalDistance)
-	{
-		MapCoordinatesConverter converter = this.getMap().getConverter();
-
-		double kd = cpath.getKd();
-		double topologicalDistance = physicalDistance / kd;
-		double cumulativeDistance = 0.0;
-		
-		MapNodeElement sn = cpath.getStartNode();
-		MapNodeElement on = cpath.getEndNode();
-		if(cpath.getSortedNodes().indexOf(sn) > cpath.getSortedNodes().indexOf(on))
-			sn = on;
-		
-		// serch for a node link
-		for(Iterator it = cpath.getSortedNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement nl = (MapNodeLinkElement )it.next();
-			if(cumulativeDistance + nl.getLengthLt() > topologicalDistance)
-			{
-				nodeLink = nl;
-				startNode = sn;
-				endNode = nl.getOtherNode(sn);
-
-				double distanceFromStart = topologicalDistance - cumulativeDistance;
-				Point2D.Double newPoint = converter.pointAtDistance(
-						startNode.getAnchor(), 
-						endNode.getAnchor(),
-						distanceFromStart);
-				setAnchor(newPoint);
-
-//				adjustPosition(converter.convertMapToScreen(distanceFromStart));
-				break;
-			}
-			else
-			{
-				cumulativeDistance += nl.getLengthLt();
-				sn = nl.getOtherNode(sn);
-			}
-		}
-	}
-
-	/**
-	 * adjust marker position accurding to topological distance relative
-	 * to current node link (which comprises startNode and endNode)
-	 * 
-	 */
-	public void adjustPosition(double screenDistance)
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		Point sp = converter.convertMapToScreen(startNode.getAnchor());
-	
-		double startNodeX = sp.x;
-		double startNodeY = sp.y;
-
-		Point ep = converter.convertMapToScreen(endNode.getAnchor());
-
-		double endNodeX = ep.x;
-		double endNodeY = ep.y;
-
-		double nodeLinkLength =  Math.sqrt( 
-				(endNodeX - startNodeX) * (endNodeX - startNodeX) +
-				(endNodeY - startNodeY) * (endNodeY - startNodeY) );
-
-		double sinB = (endNodeY - startNodeY) / nodeLinkLength;
-
-		double cosB = (endNodeX - startNodeX) / nodeLinkLength;
-
-		setAnchor(converter.convertScreenToMap1(new Point(
-			(int )Math.round(startNodeX + cosB * screenDistance),
-			(int )Math.round(startNodeY + sinB * screenDistance) ) ) );
-	}
-
-
-	public String getToolTipText()
-	{
-		String s1 = getName() 
-			+ " (" + LangModelMap.getString("Path_lowercase") 
-			+ " " + measurementPath.getName() + ")";
-
-		return s1;
-	}
 
 	public MapElementState getState()
 	{
@@ -1012,6 +447,18 @@ public class MapMarker extends MapNodeElement
 	public MapCablePathElement getCablePath()
 	{
 		return cpath;
+	}
+
+
+	public void setMeId(Identifier meId)
+	{
+		this.meId = meId;
+	}
+
+
+	public Identifier getMeId()
+	{
+		return meId;
 	}
 
 }

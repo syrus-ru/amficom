@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.22 2004/12/07 17:02:03 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.23 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,22 +12,8 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapNodeLinkElement_Transferable;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.Stroke;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -40,7 +26,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.22 $, $Date: 2004/12/07 17:02:03 $
+ * @version $Revision: 1.23 $, $Date: 2004/12/08 16:20:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -69,9 +55,6 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	/** идентификатор линии, в составе которой находится фрагмент */
 	protected String physicalLinkId;
 
-	/** границы объекта, отображающего длину фрагмента */
-	protected Rectangle labelBox = new Rectangle();
-	
 	/** топологическая длина */
 	protected double lengthLt = 0.0D;
 
@@ -121,7 +104,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	/**
 	 * @deprecated
 	 */
-	public Object clone(DataSourceInterface dataSource)
+/*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
 		String clonedId = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
@@ -153,7 +136,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 		return mnle;
 	}
-
+*/
 	/**
 	 * @deprecated
 	 */
@@ -253,256 +236,6 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		return getPhysicalLink().getAlarmState();
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public boolean isSelectionVisible()
-	{
-		return isSelected() 
-			|| getPhysicalLink().isSelectionVisible();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public boolean isVisible(Rectangle2D.Double visibleBounds)
-	{
-		return visibleBounds.intersectsLine(
-			getStartNode().getAnchor().x,
-			getStartNode().getAnchor().y,
-			getEndNode().getAnchor().x,
-			getEndNode().getAnchor().y);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		BasicStroke basistroke;
-		Color color;
-		int lineSize;
-
-		lineSize = getMap().getPhysicalLink(getPhysicalLinkId()).getLineSize();
-		basistroke = (BasicStroke )getMap().getPhysicalLink(getPhysicalLinkId()).getStroke();
-		color = getMap().getPhysicalLink(getPhysicalLinkId()).getColor();
-	
-		Stroke str = new BasicStroke(
-				lineSize, 
-				basistroke.getEndCap(), 
-				basistroke.getLineJoin(), 
-				basistroke.getMiterLimit(), 
-				basistroke.getDashArray(), 
-				basistroke.getDashPhase());
-
-		paint(g, visibleBounds, str, color);
-
-		MapCoordinatesConverter converter = getMap().getConverter();
-		Point from = converter.convertMapToScreen(startNode.getAnchor());
-		Point to = converter.convertMapToScreen(endNode.getAnchor());
-
-		//Рисовать табличку с длинной NodeLink
-		if ( MapPropertiesManager.isShowLength() )
-		{
-			int fontHeight = g.getFontMetrics().getHeight();
-			String text = 
-					MapPropertiesManager.getDistanceFormat().format(getLengthLt()) 
-					+ " " 
-					+ MapPropertiesManager.getMetric();
-			int textWidth = g.getFontMetrics().stringWidth(text);
-			int centerX = (from.x + to.x) / 2;
-			int centerY = (from.y + to.y) / 2;
-
-			g.setColor(MapPropertiesManager.getBorderColor());
-			g.setFont(MapPropertiesManager.getFont());
-
-			labelBox = new Rectangle(
-					centerX,
-					centerY - fontHeight + 2,
-					textWidth,
-					fontHeight);
-
-			g.drawRect(
-					centerX,
-					centerY - fontHeight + 2,
-					textWidth,
-					fontHeight);
-
-			g.setColor(MapPropertiesManager.getTextBackground());
-			g.fillRect(
-					centerX,
-					centerY - fontHeight + 2,
-					textWidth,
-					fontHeight);
-
-			g.setColor(MapPropertiesManager.getTextColor());
-			g.drawString(
-					text,
-					centerX,
-					centerY);
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint (
-			Graphics g, 
-			Rectangle2D.Double visibleBounds, 
-			Stroke stroke, 
-			Color color)
-	{
-		if(!isVisible(visibleBounds))
-			return;
-
-		updateLengthLt();
-
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		Point from = converter.convertMapToScreen(startNode.getAnchor());
-		Point to = converter.convertMapToScreen(endNode.getAnchor());
-
-		Graphics2D p = (Graphics2D )g;
-
-		p.setStroke( stroke);
-
-		//Если alarm есть то специальный thread будет менять showAlarmState и
-		// NodeLink будет мигать
-		if ( (this.getAlarmState()) && MapPropertiesManager.isShowAlarmState() )
-		{
-			p.setColor(this.getAlarmedColor());
-		}
-		else
-		{
-			p.setColor(color);
-		}
-
-		if (isSelectionVisible())
-		{
-			p.setColor(MapPropertiesManager.getSelectionColor());
-			p.setStroke(new BasicStroke(MapPropertiesManager.getSelectionThickness()));
-		}
-
-		p.drawLine(from.x, from.y, to.x, to.y);
-
-		if (isSelectionVisible())
-		{
-			p.setStroke(MapPropertiesManager.getSelectionStroke());
-			
-			double dx = (to.x - from.x);
-			double dy = (to.y - from.y);
-
-			double length = Math.sqrt( dx * dx + dy * dy );
-
-			// рисуем по линии выделения, которые идут параллельно фрагменту
-			// с отступом 4 и 6 точек с каждой стороны
-			double l = 4;
-			double l1 = 6;
-			
-			// a - угол наклона nodelink
-			double sinA = dy / length;
-
-			double cosA = dx / length;
-
-			// смещение по x и по y для линии выделения
-			int lxshift = (int )(l * sinA);
-			int lyshift = (int )(l * cosA);
-
-			int l1xshift = (int )(l1 * sinA);
-			int l1yshift = (int )(l1 * cosA);
-
-			p.setColor(MapPropertiesManager.getFirstSelectionColor());
-			p.drawLine(
-					from.x + lxshift, 
-					from.y - lyshift, 
-					to.x + lxshift, 
-					to.y - lyshift);
-			p.drawLine(
-					from.x - lxshift, 
-					from.y + lyshift, 
-					to.x - lxshift, 
-					to.y + lyshift);
-
-			p.setColor(MapPropertiesManager.getSecondSelectionColor());
-			p.drawLine(
-					from.x + l1xshift, 
-					from.y - l1yshift, 
-					to.x + l1xshift, 
-					to.y - l1yshift);
-			p.drawLine(
-					from.x - l1xshift, 
-					from.y + l1yshift, 
-					to.x - l1xshift, 
-					to.y + l1yshift);
-		}
-
-	}
-
-	/**
-	 * @deprecated
-	 */
-	private static Polygon searchPolygon = new Polygon(new int[6], new int[6], 6);
-
-	/**
-	 * точка находится на фрагменте, если она находится в рамках линий выделения
-	 * @deprecated
-	 */
-	public boolean isMouseOnThisObject(Point currentMousePoint)
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		int[] xx = searchPolygon.xpoints;
-		int[] yy = searchPolygon.ypoints;
-
-		Point from = converter.convertMapToScreen(startNode.getAnchor());
-		Point to = converter.convertMapToScreen(endNode.getAnchor());
-
-		int minX = (int )from.getX();
-		int maxX = (int )to.getX();
-
-		int minY = (int )from.getY();
-		int maxY = (int )to.getY();
-		
-		int mouseTolerancy = MapPropertiesManager.getMouseTolerancy();
-
-		if (Math.abs(maxX - minX) < Math.abs(maxY - minY))
-		{
-			xx[0] = minX - mouseTolerancy; yy[0] = minY;
-			xx[1] = maxX - mouseTolerancy; yy[1] = maxY;
-			xx[2] = maxX; yy[2] = maxY + mouseTolerancy;
-			xx[3] = maxX + mouseTolerancy; yy[3] = maxY;
-			xx[4] = minX + mouseTolerancy; yy[4] = minY;
-			xx[5] = minX; yy[5] = minY - mouseTolerancy;
-		}
-		else
-		{
-			xx[0] = minX; yy[0] = minY + mouseTolerancy;
-			xx[1] = maxX; yy[1] = maxY + mouseTolerancy;
-			xx[2] = maxX + mouseTolerancy; yy[2] = maxY;
-			xx[3] = maxX; yy[3] = maxY - mouseTolerancy;
-			xx[4] = minX; yy[4] = minY - mouseTolerancy;
-			xx[5] = minX - mouseTolerancy; yy[5] = minY;
-		}
-
-		searchPolygon.invalidate();
-		if(searchPolygon.contains(currentMousePoint))
-		{
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public boolean isMouseOnThisObjectsLabel(Point currentMousePoint)
-	{
-		return labelBox.contains(currentMousePoint);
-	}
-	
 	public String getPhysicalLinkId()
 	{
 		return this.physicalLinkId;
@@ -518,127 +251,11 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public Rectangle getLabelBox()
-	{
-		return labelBox;
-	}
-
-	/**
 	 * Получить топологическую длинну NodeLink
 	 */
 	public double getLengthLt()
 	{
 		return lengthLt;
-	}
-
-	/**
-	 * обновить топологическую длину линии по координатам концевых узлов
-	 * @deprecated
-	 */	
-	public void updateLengthLt()
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		if(converter != null)
-			lengthLt = converter.distance(startNode.getAnchor(), endNode.getAnchor());
-	}
-
-	/**
-	 * установить дистанцию от противоположного узла
-	 * @deprecated
-	 */
-	public void setSizeFrom(MapNodeElement node, double dist)
-	{
-		MapNodeElement oppositeNode = 
-			(startNode.equals(node)) 
-					? endNode 
-					: startNode;
-
-		double prevDist = getLengthLt();
-		
-		double coef = dist / prevDist;
-
-		double absc = coef * (node.getAnchor().x - oppositeNode.getAnchor().x) 
-				+ oppositeNode.getAnchor().x;
-		double ordi = coef * (node.getAnchor().y - oppositeNode.getAnchor().y) 
-				+ oppositeNode.getAnchor().y;
-
-		node.setAnchor(new Point2D.Double(absc, ordi));
-		
-		updateLengthLt();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public double getScreenLength()
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-		
-		Point start = converter.convertMapToScreen(startNode.getAnchor());
-		Point end = converter.convertMapToScreen(endNode.getAnchor());
-
-		return Math.sqrt( 
-				(end.x - start.x) * (end.x - start.x) +
-				(end.y - start.y) * (end.y - start.y) );
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	protected double cosB;
-	/**
-	 * @deprecated
-	 */
-	protected double sinB;
-	
-	/**
-	 * @deprecated
-	 */
-	public void calcScreenSlope()
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-		
-		Point start = converter.convertMapToScreen(startNode.getAnchor());
-		Point end = converter.convertMapToScreen(endNode.getAnchor());
-
-		double nodeLinkLength =  Math.sqrt( 
-				(end.x - start.x) * (end.x - start.x) +
-				(end.y - start.y) * (end.y - start.y) );
-
-		sinB = (end.y - start.y) / nodeLinkLength;
-
-		cosB = (end.x - start.x) / nodeLinkLength;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public double getScreenSin()
-	{
-		return sinB;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public double getScreenCos()
-	{
-		return cosB;
-	}
-
-	/**
-	 * получить центр (середину) фрагмента линии
-	 * @deprecated
-	 */
-	public Point2D.Double getAnchor()
-	{
-		return new Point2D.Double(
-				(startNode.getAnchor().getX() + endNode.getAnchor().getX()) / 2,
-				(startNode.getAnchor().getY() + endNode.getAnchor().getY()) / 2);
 	}
 
 	public DoublePoint getLocation()
@@ -667,7 +284,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 		setPhysicalLinkId(mnles.physicalLinkId);
 
-		updateLengthLt();
+//		updateLengthLt();
 	}
 	
 	public String[][] getExportColumns()

@@ -5,6 +5,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ImagesDialog;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
@@ -26,7 +27,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public final class MapProtoPane extends JPanel implements ObjectResourcePropertiesPane
+public final class MapProtoPane
+		extends JPanel 
+		implements ObjectResourcePropertiesPane, MapPropertiesPane
 {
 	private JLabel nameLabel = new JLabel();
 
@@ -36,6 +39,8 @@ public final class MapProtoPane extends JPanel implements ObjectResourceProperti
 	private JTextArea descTextArea = new JTextArea();
 
 	MapNodeProtoElement proto;
+
+	private LogicalNetLayer lnl;
 
 	String imageId;
 	private JLabel imageLabel = new JLabel();
@@ -62,6 +67,16 @@ public final class MapProtoPane extends JPanel implements ObjectResourceProperti
 	public static ObjectResourcePropertiesPane getInstance()
 	{
 		return instance;
+	}
+
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
+		this.lnl = lnl;
+	}
+
+	public LogicalNetLayer getLogicalNetLayer()
+	{
+		return lnl;
 	}
 
 	private void jbInit()

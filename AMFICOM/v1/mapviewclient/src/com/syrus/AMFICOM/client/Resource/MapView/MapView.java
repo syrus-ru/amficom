@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.22 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapView.java,v 1.23 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -60,7 +60,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.22 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.23 $, $Date: 2004/12/08 16:20:22 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -146,7 +146,7 @@ public final class MapView extends StubResource implements Serializable
 		setLocalFromTransferable();
 	}
 
-	public Object clone(DataSourceInterface dataSource)
+/*	public Object clone(DataSourceInterface dataSource)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -179,7 +179,7 @@ public final class MapView extends StubResource implements Serializable
 		
 		return mv;
 	}
-
+*/
 	/**
 	 * ¬осстановление локальных переменных класса при подгрузке из базы данных
 	 */
@@ -409,14 +409,7 @@ public final class MapView extends StubResource implements Serializable
 	}
 	/**
 	 * ”становить центральную точку вида карты
-	 * @deprecated
 	 */
-	public void setCenter(Point2D.Double center)
-	{
-		longitude = center.x;
-		latitude = center.y;
-	}
-
 	public void setCenter(DoublePoint center)
 	{
 		longitude = center.x;
@@ -425,13 +418,7 @@ public final class MapView extends StubResource implements Serializable
 
 	/**
 	 * ѕолучить центральную точку вида карты
-	 * @deprecated
 	 */
-	public Point2D.Double getCenter1()
-	{
-		return new Point2D.Double(longitude, latitude);
-	}
-
 	public DoublePoint getCenter()
 	{
 		return new DoublePoint(longitude, latitude);
@@ -460,10 +447,10 @@ public final class MapView extends StubResource implements Serializable
 
 			revert();
 
-			if(map != null)
-			{
-				map.setConverter(logicalNetLayer);
-			}
+//			if(map != null)
+//			{
+//				map.setConverter(logicalNetLayer);
+//			}
 		}
 	}
 

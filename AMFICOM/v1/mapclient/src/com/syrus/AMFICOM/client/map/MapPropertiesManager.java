@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.12 2004/12/07 17:02:02 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.13 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.util.Map;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/12/07 17:02:02 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -309,24 +309,6 @@ public final class MapPropertiesManager
 		}
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public static Point2D.Double getCenter1()
-	{
-		try
-		{
-			double lng = Double.parseDouble(lastLong);
-			double lat = Double.parseDouble(lastLat);
-			
-			return new Point2D.Double(lng, lat);
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
-	}
-
 	public static DoublePoint getCenter()
 	{
 		try
@@ -339,25 +321,6 @@ public final class MapPropertiesManager
 		catch(Exception e)
 		{
 			return null;
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static void setCenter(Point2D.Double center)
-	{
-		String longoldval = lastLong;
-		String latoldval = lastLat;
-		try
-		{
-			lastLong = String.valueOf(center.x);
-			lastLat = String.valueOf(center.y);
-		}
-		catch(Exception e)
-		{
-			lastLong = longoldval;
-			lastLat = latoldval;
 		}
 	}
 

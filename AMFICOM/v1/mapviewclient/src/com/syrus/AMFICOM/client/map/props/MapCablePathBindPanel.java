@@ -7,6 +7,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
@@ -39,13 +40,17 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public final class MapCablePathBindPanel extends JPanel implements ObjectResourcePropertiesPane
+public final class MapCablePathBindPanel
+		extends JPanel 
+		implements ObjectResourcePropertiesPane, MapPropertiesPane
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 	private GridBagLayout gridBagLayout3 = new GridBagLayout();
 
 	private MapCablePathElement path;
+
+	private LogicalNetLayer lnl;
 	
 	/**
 	 * таблица
@@ -109,6 +114,16 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
+		this.lnl = lnl;
+	}
+
+	public LogicalNetLayer getLogicalNetLayer()
+	{
+		return lnl;
 	}
 
 	private boolean doChanges = true;

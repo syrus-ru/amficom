@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.12 2004/12/07 17:02:03 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.13 2004/12/08 16:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,26 +13,14 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapLinkProtoElement_Transferable;
-import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
-
-import com.syrus.AMFICOM.Client.Resource.General.ElementAttributeType;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Stroke;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 import java.io.IOException;
 import java.io.Serializable;
 
 import java.lang.UnsupportedOperationException;
+
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -41,16 +29,18 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/12/07 17:02:03 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/08 16:20:01 $
  * @module
  * @author $Author: krupenn $
  * @see
  */	
 public final class MapLinkProtoElement extends StubResource
-//		extends MapLinkElement
 		implements Serializable
 {
 	private static final long serialVersionUID = 02L;
+	/**
+	 * @deprecated
+	 */
 	public static final String typ = "maplinkproto";
 
 	public static final String TUNNEL = "tunnel";
@@ -195,57 +185,9 @@ public final class MapLinkProtoElement extends StubResource
 	/**
 	 * @deprecated
 	 */
-	public boolean isVisible(Rectangle2D.Double visibleBounds)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public boolean isMouseOnThisObject(Point currentMousePoint)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public String getToolTipText()
-	{
-		return "proto " + this.getName();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public Point2D.Double getAnchor()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public Object clone(DataSourceInterface dataSource)
-	{
-		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -325,200 +267,6 @@ public final class MapLinkProtoElement extends StubResource
 	public void setDescription(String description)
 	{
 		this.description = description;
-	}
-
-	/**
-	 * Установить толщину линии
-	 * @deprecated
-	 */
-	public void setLineSize (int size)
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("thickness");
-		if(ea == null)
-		{
-			ElementAttributeType eat = (ElementAttributeType )Pool.get(
-					ElementAttributeType.typ, 
-					"thickness");
-			if(eat == null)
-				return;
-			ea = new ElementAttribute(
-					"attr" + System.currentTimeMillis(),
-					eat.getName(),
-					String.valueOf(size),
-					"thickness");
-			attributes.put("thickness", ea);
-		}
-		ea.value = String.valueOf(size);
-	}
-
-	/**
-	 * Получить толщину линии
-	 * @deprecated
-	 */
-	public int getLineSize ()
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("thickness");
-		if(ea == null)
-			return MapPropertiesManager.getThickness();
-		return Integer.parseInt(ea.value);
-	}
-
-	/**
-	 * Установить вид линии
-	 * @deprecated
-	 */
-	public void setStyle (String style)
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("style");
-		if(ea == null)
-		{
-			ElementAttributeType eat = (ElementAttributeType )Pool.get(
-					ElementAttributeType.typ,
-					"style");
-			if(eat == null)
-				return;
-			ea = new ElementAttribute(
-					"attr" + System.currentTimeMillis(),
-					eat.getName(),
-					style,
-					"style");
-			attributes.put("style", ea);
-		}
-		ea.value = style;
-	}
-
-	/**
-	 * Получить вид линии
-	 * @deprecated
-	 */
-	public String getStyle ()
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("style");
-		if(ea == null)
-			return MapPropertiesManager.getStyle();
-		return ea.value;
-	}
-
-	/**
-	 * Получить стиль линии
-	 * @deprecated
-	 */
-	public Stroke getStroke ()
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("style");
-		if(ea == null)
-			return MapPropertiesManager.getStroke();
-
-		return LineComboBox.getStrokeByType(ea.value);
-
-	}
-
-	/**
-	 * Установить цвет
-	 * @deprecated
-	 */
-	public void setColor (Color color)
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("color");
-		if(ea == null)
-		{
-			ElementAttributeType eat = (ElementAttributeType )Pool.get(
-					ElementAttributeType.typ,
-					"color");
-			if(eat == null)
-				return;
-			ea = new ElementAttribute(
-					"attr" + System.currentTimeMillis(),
-					eat.getName(),
-					String.valueOf(color.getRGB()),
-					"color");
-			attributes.put("color", ea);
-		}
-		ea.value = String.valueOf(color.getRGB());
-	}
-
-	/**
-	 * Получить цвет
-	 * @deprecated
-	 */
-	public Color getColor()
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("color");
-		if(ea == null)
-			return MapPropertiesManager.getColor();
-		return new Color(Integer.parseInt(ea.value));
-	}
-
-	/**
-	 * установить цвет при наличии сигнала тревоги
-	 * @deprecated
-	 */
-	public void setAlarmedColor (Color color)
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("alarmed_color");
-		if(ea == null)
-		{
-			ElementAttributeType eat = (ElementAttributeType )Pool.get(
-					ElementAttributeType.typ,
-					"alarmed_color");
-			if(eat == null)
-				return;
-			ea = new ElementAttribute(
-					"attr" + System.currentTimeMillis(),
-					eat.getName(),
-					String.valueOf(color.getRGB()),
-					"alarmed_color");
-			attributes.put("alarmed_color", ea);
-		}
-		ea.value = String.valueOf(color.getRGB());
-	}
-
-	/**
-	 * получить цвет при наличии сигнала тревоги
-	 * @deprecated
-	 */
-	public Color getAlarmedColor()
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("alarmed_color");
-		if(ea == null)
-			return MapPropertiesManager.getAlarmedColor();
-		return new Color(Integer.parseInt(ea.value));
-	}
-
-	/**
-	 * установить толщину линии при наличи сигнала тревоги
-	 * @deprecated
-	 */
-	public void setAlarmedLineSize (int size)
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("alarmed_thickness");
-		if(ea == null)
-		{
-			ElementAttributeType eat = (ElementAttributeType )Pool.get(
-					ElementAttributeType.typ, 
-					"alarmed_thickness");
-			if(eat == null)
-				return;
-			ea = new ElementAttribute(
-					"attr" + System.currentTimeMillis(),
-					eat.getName(),
-					String.valueOf(size),
-					"alarmed_thickness");
-			attributes.put("alarmed_thickness", ea);
-		}
-		ea.value = String.valueOf(size);
-	}
-
-	/**
-	 * получить толщину линии при наличи сигнала тревоги
-	 * @deprecated
-	 */
-	public int getAlarmedLineSize ()
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("alarmed_thickness");
-		if(ea == null)
-			return MapPropertiesManager.getAlarmedThickness();
-		return Integer.parseInt(ea.value);
 	}
 
 }

@@ -1,24 +1,13 @@
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-
 import com.syrus.AMFICOM.general.Identifier;
-import java.awt.Rectangle;
-import javax.swing.ImageIcon;
 
 public class MapEventMarker extends MapMarker
 {
 	static final public String typ = "mapeventmarker";
 
 	public static final String IMAGE_NAME = "eventmarker";
-	public static final String IMAGE_PATH = "images/eventmarker.gif";
-
-	static
-	{
-		MapPropertiesManager.setOriginalImage(IMAGE_NAME, new ImageIcon(IMAGE_PATH).getImage());
-	}
 
 	public MapEventMarker(
 			String id, 
@@ -31,16 +20,6 @@ public class MapEventMarker extends MapMarker
 
 		this.setImageId(IMAGE_NAME);
 		this.setName(LangModelMap.getString("Event"));
-	}
-
-	public String getToolTipText()
-	{
-		String s1 = LangModelMap.getString("Event") 
-			+ " " + getName() 
-			+ " (" + LangModelMap.getString("Path_lowercase")
-			+ " " + measurementPath.getName() + ")";
-
-		return s1;
 	}
 
 	public String getTyp()

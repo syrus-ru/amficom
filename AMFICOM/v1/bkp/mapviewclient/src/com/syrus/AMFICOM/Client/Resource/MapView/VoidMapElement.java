@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.7 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.8 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import java.awt.geom.Rectangle2D;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/08 16:20:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -60,11 +60,6 @@ public final class VoidMapElement extends StubResource implements MapElement
 		return singleton;
 	}
 
-	public Object clone(DataSourceInterface dataSource)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	public static String getPropertyPaneClassName()
@@ -77,27 +72,12 @@ public final class VoidMapElement extends StubResource implements MapElement
 		return new VoidMapState();
 	}
 
-	public boolean isVisible(Rectangle2D.Double visibleBounds)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		throw new UnsupportedOperationException();
-	}
-
 	public boolean isSelected()
 	{
 		return true;
 	}
 
 	public void setSelected(boolean selected)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -122,14 +102,6 @@ public final class VoidMapElement extends StubResource implements MapElement
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public Point2D.Double getAnchor()
-	{
-		throw new UnsupportedOperationException();
-	}
-
 	public DoublePoint getLocation()
 	{
 		throw new UnsupportedOperationException();
@@ -148,16 +120,6 @@ public final class VoidMapElement extends StubResource implements MapElement
 	public MapView getMapView()
 	{
 		return mapView;
-	}
-
-	public ObjectResourceModel getModel()
-	{
-		return null;//new MapModel(getMap());
-	}
-
-	public boolean isMovable()
-	{
-		throw new UnsupportedOperationException();
 	}
 
 	public String getToolTipText()

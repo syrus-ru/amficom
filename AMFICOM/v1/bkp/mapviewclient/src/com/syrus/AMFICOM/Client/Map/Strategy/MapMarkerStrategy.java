@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.9 2004/12/07 17:05:54 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.10 2004/12/08 16:20:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MotionDescriptor;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
+import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
@@ -34,7 +35,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/07 17:05:54 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/08 16:20:22 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -74,8 +75,10 @@ public final class MapMarkerStrategy implements  MapStrategy
 		
 		MapState mapState = logicalNetLayer.getMapState();
 		Map map = marker.getMap();
+		
+		MarkerController mc = (MarkerController )logicalNetLayer.getMapViewController().getController(marker);
 
-		MapCoordinatesConverter converter = map.getConverter();
+		MapCoordinatesConverter converter = logicalNetLayer;
 
 		int mouseMode = mapState.getMouseMode();
 		int actionMode = mapState.getActionMode();
@@ -187,10 +190,10 @@ public final class MapMarkerStrategy implements  MapStrategy
 						}
 					}
 
-					marker.adjustPosition(lengthFromStartNode);
+					mc.adjustPosition(marker, lengthFromStartNode);
 
 					//Посылаем сообщение что маркер перемещается
-					marker.notifyMarkerMoved();
+					mc.notifyMarkerMoved(marker);
 				}// MapApplicationModel.ACTION_USE_MARKER
 			}//MapState.MOUSE_DRAGGED
 			else

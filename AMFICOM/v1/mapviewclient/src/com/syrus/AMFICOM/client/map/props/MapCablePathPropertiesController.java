@@ -83,7 +83,7 @@ public final class MapCablePathPropertiesController
 		Object result = null;
 		MapCablePathElement path = (MapCablePathElement )object;
 		
-		CableController cc = CableController.getInstance();
+		CableController cc = (CableController )CableController.getInstance();
 
 		if (key.equals(PROPERTY_NAME))
 		{

@@ -5,6 +5,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
@@ -19,7 +20,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class MapCablePathGeneralPanel extends JPanel implements ObjectResourcePropertiesPane
+public class MapCablePathGeneralPanel
+		extends JPanel 
+		implements ObjectResourcePropertiesPane, MapPropertiesPane
 {
 	private JLabel nameLabel = new JLabel();
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -30,6 +33,8 @@ public class MapCablePathGeneralPanel extends JPanel implements ObjectResourcePr
 	private JTextArea descTextArea = new JTextArea();
 
 	MapCablePathElement path;
+
+	private LogicalNetLayer lnl;
 
 	public MapCablePathGeneralPanel()
 	{
@@ -42,6 +47,16 @@ public class MapCablePathGeneralPanel extends JPanel implements ObjectResourcePr
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
+		this.lnl = lnl;
+	}
+
+	public LogicalNetLayer getLogicalNetLayer()
+	{
+		return lnl;
 	}
 
 	private void jbInit()

@@ -49,11 +49,16 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
-public final class MapSiteBindPanel extends JPanel implements ObjectResourcePropertiesPane
+public final class MapSiteBindPanel 
+		extends JPanel 
+		implements ObjectResourcePropertiesPane, MapPropertiesPane
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private MapSiteNodeElement site;
+
+	private LogicalNetLayer lnl;
+
 	private JLabel titleLabel = new JLabel();
 	private JTree elementsTree;
 
@@ -79,6 +84,16 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
+		this.lnl = lnl;
+	}
+
+	public LogicalNetLayer getLogicalNetLayer()
+	{
+		return lnl;
 	}
 
 	private void jbInit()
@@ -154,7 +169,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 
 	private void unbindSchemeElement(SchemeElement se)
 	{
-		MapView mapView = ((LogicalNetLayer )(site.getMap().getConverter())).getMapView();
+		MapView mapView = getLogicalNetLayer().getMapView();
 
 		se.siteId = "";
 		for (int i = 0; i < elementsBranch.getChildCount(); i++) 
@@ -184,7 +199,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 
 	private void unbindSchemeCableLink(SchemeCableLink scl)
 	{
-		MapView mapView = ((LogicalNetLayer )(site.getMap().getConverter())).getMapView();
+		MapView mapView = getLogicalNetLayer().getMapView();
 
 		for (int i = 0; i < cablesBranch.getChildCount(); i++) 
 		{
@@ -266,7 +281,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 
 	private void unbindElement(Object or)
 	{
-		MapView mapView = ((LogicalNetLayer )(site.getMap().getConverter())).getMapView();
+		MapView mapView = getLogicalNetLayer().getMapView();
 			
 		if(or instanceof SchemeElement)
 		{
@@ -302,7 +317,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 				schemePanel.setVisible(false);
 				crossingScrollPane.setVisible(true);
 				
-				MapView mapView = ((LogicalNetLayer )(site.getMap().getConverter())).getMapView();
+				MapView mapView = getLogicalNetLayer().getMapView();
 
 				crossingPanel.setCable(mapView.findCablePath(scl));
 
@@ -407,6 +422,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 
 	private DefaultMutableTreeNode createTree(MapSiteNodeElement site)
 	{
+		this.
 		elementsBranch.removeAllChildren();
 		cablesBranch.removeAllChildren();
 		if(site != null)
@@ -414,7 +430,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 			DefaultMutableTreeNode elementNode;
 			DefaultMutableTreeNode cableNode;
 
-			MapView mapView = ((LogicalNetLayer )(site.getMap().getConverter())).getMapView();
+			MapView mapView = getLogicalNetLayer().getMapView();
 
 			List schemeElements = new LinkedList();
 			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)

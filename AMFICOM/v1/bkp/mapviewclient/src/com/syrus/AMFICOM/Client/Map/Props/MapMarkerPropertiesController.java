@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
+import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
@@ -68,6 +69,8 @@ public final class MapMarkerPropertiesController
 	{
 		Object result = null;
 		MapMarker marker = (MapMarker )object;
+		
+		MarkerController mc = (MarkerController )MarkerController.getInstance();
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -91,7 +94,8 @@ public final class MapMarkerPropertiesController
 		else
 		if (key.equals(PROPERTY_DISTANCE))
 		{
-			result = MapPropertiesManager.getDistanceFormat().format(marker.getFromStartLengthLf());
+			result = MapPropertiesManager.getDistanceFormat().format(
+					mc.getFromStartLengthLf(marker));
 		}
 		else
 		if (key.equals(PROPERTY_PATH_ID))
@@ -114,12 +118,14 @@ public final class MapMarkerPropertiesController
 	{
 		MapMarker marker = (MapMarker )object;
 
+		MarkerController mc = (MarkerController )MarkerController.getInstance();
+
 		if (key.equals(PROPERTY_DISTANCE))
 		{
 			try
 			{
 				double dist = Double.parseDouble((String )value);
-				marker.moveToFromStartLf(dist);
+				mc.moveToFromStartLf(marker, dist);
 			}
 			catch(NumberFormatException e)
 			{
