@@ -1,56 +1,16 @@
-MODULE_NAME = config_v1
-MODULE_VERSION = $(shell date +%Y%m%d)
+MODULE_NAME = configuration_v1
+LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-SRCDIR=./src
-CLASSDIR=./classes
 IDLDIR=../idl_v1/idl
 LIBDIR=../lib
-EXTLIBDIR=../../extlib
 
-DBHOSTNAME=mongol
-CONNECTSTRING=mongol
-USER=amficom
-PASSWORD=amficom
+HOST=mongol
+SERVICE_NAME=mongol
 
-LIBNAME=configuration.jar
-ARCHFILE=configuration.tar.gz
-
-ORACLECLASSPATH = $(ORACLE_HOME)/jdbc/lib/classes12.jar:$(ORACLE_HOME)/sqlj/lib/translator.jar:$(ORACLE_HOME)/sqlj/lib/runtime12ee.jar
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
-EXTCLASSPATH = $(EXTLIBDIR)/jgraphpad.jar:$(EXTLIBDIR)/jfreechartK.jar:$(EXTLIBDIR)/ofx.spatialfx.jar
-
-IDL2JAVA_FLAGS = \
-	-C \
-	-H \
-	-no_bind \
-	-no_examples \
-	-no_tie \
-	-narrow_compliance \
-	-portable \
-	-strict \
-	-root_dir $(SRCDIR) \
-	-I$(IDLDIR)
-
-SUNJAVAC_FLAGS = -target 1.4.2
-
-JIKES_FLAGS = \
-	-target 1.4.2 \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	-extdirs $(JAVA_HOME)/jre/lib/ext \
-	+E \
-	+Pmodifier-order \
-	+Predundant-modifiers \
-	+Pswitchcheck \
-	+Pnaming-convention \
-	+T=2
-JAVAC_FLAGS = \
-	-d $(CLASSDIR) \
-	-source 1.4 \
-	-g \
-	-O \
-	-deprecation
-
-JAVAC_FLAGS := $(JIKES_FLAGS) $(JAVAC_FLAGS)
+JAVACFLAGS = -source 1.3
+SUNJAVACFLAGS = -target 1.2
+JIKESFLAGS = -target 1.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -63,8 +23,8 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 .mach:	.corba $(CLASSDIR)
-	$(JAVAC) $(JAVAC_FLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(AMFICOMCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicTypeDatabase.java \
@@ -83,10 +43,10 @@ $(LIBNAME): .mach
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVA_FLAGS) \
+	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
 		$(IDLDIR)/configuration.idl
-	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
-		-classpath $(APPCLASSPATH) \
+	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(AMFICOMCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/corba/*.java
 	touch $@
