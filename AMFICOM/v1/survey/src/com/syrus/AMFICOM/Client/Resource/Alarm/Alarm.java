@@ -44,12 +44,12 @@ public class Alarm extends ObjectResource implements Serializable
 
 	public Alarm()
 	{
-		super(typ);
+//		super(typ);
 	}
 
 	public Alarm(Alarm_Transferable transferable)
 	{
-		super(typ);
+//		super(typ);
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}

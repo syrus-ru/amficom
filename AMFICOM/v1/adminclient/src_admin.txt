@@ -31,6 +31,15 @@ src/com/syrus/AMFICOM/Client/General/Lang/LangModelAdmin_ru.java
 src/com/syrus/AMFICOM/Client/General/Model/AdminApplicationModel.java
 src/com/syrus/AMFICOM/Client/General/Model/AdminApplicationModelFactory.java
 src/com/syrus/AMFICOM/Client/General/Model/DefaultAdminApplicationModelFactory.java
+src/com/syrus/AMFICOM/Client/Resource/Alarm/ui/DefaultObjectResourceListModel.java
+src/com/syrus/AMFICOM/Client/Resource/Alarm/ui/JAddUserDialog.java
+src/com/syrus/AMFICOM/Client/Resource/Alarm/ui/JAddUserDialogBeanInfo.java
+src/com/syrus/AMFICOM/Client/Resource/Alarm/ui/JAlertingConfigDialog.java
+src/com/syrus/AMFICOM/Client/Resource/Alarm/ui/JAlertingConfigPanel.java
+src/com/syrus/AMFICOM/Client/Resource/Alarm/ui/JObjectResourceComboBox.java
+src/com/syrus/AMFICOM/Client/Resource/Alarm/ui/JObjectResourceComboBoxBeanInfo.java
+src/com/syrus/AMFICOM/Client/Resource/Alarm/ui/JObjectResourceList.java
+src/com/syrus/AMFICOM/Client/Resource/Alarm/ui/JObjectResourceListBeanInfo.java
 src/com/syrus/AMFICOM/Client/Resource/EmptyObjectDataSource.java
 src/com/syrus/AMFICOM/Client/Resource/Object/OperatorCategory.java
 src/com/syrus/AMFICOM/Client/Resource/Object/OperatorCategoryDisplayModel.java

@@ -72,12 +72,12 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 
 	public OperatorProfile()
 	{
-		super("operatorprofile");
+//		super("operatorprofile");
 	}
 
 	public OperatorProfile(OperatorProfile_Transferable transferable)
 	{
-		super("operatorprofile");
+//		super("operatorprofile");
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
@@ -93,7 +93,7 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 			long modified,
 			String modified_by)
 	{
-		super("operatorprofile");
+//		super("operatorprofile");
 
 		this.id = id;
 		this.name = name;

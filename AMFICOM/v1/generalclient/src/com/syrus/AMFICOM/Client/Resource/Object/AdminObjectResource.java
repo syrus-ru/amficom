@@ -14,7 +14,7 @@ import java.util.Enumeration;
 
 public abstract class AdminObjectResource extends ObjectResource
 {
-
+/*
   public AdminObjectResource(String typ)
   {
     super(typ);
@@ -25,12 +25,11 @@ public abstract class AdminObjectResource extends ObjectResource
     super();
   }
 
-
   public AdminObjectResource(String typ, boolean changed)
   {
     super(typ, changed);
   }
-
+*/
 
   public abstract Vector getChildIds(String key);
   public abstract void addChildId(String key, String id);

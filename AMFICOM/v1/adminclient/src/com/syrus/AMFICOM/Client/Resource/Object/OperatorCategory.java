@@ -37,12 +37,12 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
 
   public OperatorCategory()
   {
-    super("operatorcategory");
+//    super("operatorcategory");
   }
 
   public OperatorCategory(OperatorCategory_Transferable transferable)
   {
-    super("operatorcategory");
+//    super("operatorcategory");
     this.transferable = transferable;
     setLocalFromTransferable();
   }
@@ -54,7 +54,7 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
       String description,
       Vector user_ids)
   {
-    super("operatorcategory");
+//    super("operatorcategory");
     this.id = id;
     this.name = name;
     this.codename = codename;

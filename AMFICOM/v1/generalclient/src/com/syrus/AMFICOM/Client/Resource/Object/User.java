@@ -30,12 +30,12 @@ public class User extends AdminObjectResource
 
   public User()
   {
-    super("user");
+//    super("user");
   }
 
   public User(User_Transferable transferable)
   {
-    super("user");
+//    super("user");
     this.transferable = transferable;
     setLocalFromTransferable();
   }

@@ -40,12 +40,12 @@ public class Domain extends AdminObjectResource
 
   public Domain()
   {
-    super("domain");
+//    super("domain");
   }
 
   public Domain(Domain_Transferable transferable)
   {
-    super("domain");
+//    super("domain");
     this.transferable = transferable;
     setLocalFromTransferable();
   }
@@ -63,7 +63,7 @@ public class Domain extends AdminObjectResource
       String domain_id,
       Vector domain_ids)
   {
-    super("domain");
+//    super("domain");
     this.id = id;
     this.name = name;
     this.codename = codename;

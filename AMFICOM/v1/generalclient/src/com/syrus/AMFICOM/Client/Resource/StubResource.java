@@ -51,12 +51,12 @@ public class StubResource extends ObjectResource
 	{
 		super();
 	}
-
+/*
 	public StubResource(String typ)
 	{
 		super(typ);
 	}
-	
+*/	
 	public String getTyp()
 	{
 		return typ;

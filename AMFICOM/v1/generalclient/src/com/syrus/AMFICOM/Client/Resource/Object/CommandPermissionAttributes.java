@@ -49,14 +49,14 @@ public class CommandPermissionAttributes extends AdminObjectResource implements 
       // for the first time. All attributes MUST be
   // using appropriate functions.
   {
-    super("comm_perm_attrib");
+//    super("comm_perm_attrib");
     this.id = "";
     this.owner_id = "";
     this.name = "";
   }
   public CommandPermissionAttributes(CommandPermissionAttributes_Transferable transferable)
   {
-    super("comm_perm_attrib");
+//    super("comm_perm_attrib");
     this.transferable = transferable;
     setLocalFromTransferable();
   }

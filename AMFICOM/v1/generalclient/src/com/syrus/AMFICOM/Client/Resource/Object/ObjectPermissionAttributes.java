@@ -44,14 +44,14 @@ public class ObjectPermissionAttributes extends AdminObjectResource implements A
       // for the first time. All attributes MUST be
   // using appropriate functions.
   {
-    super("obj_perm_attrib");
+//    super("obj_perm_attrib");
     this.id = "";
     this.owner_id = "";
     this.name = "";
   }
   public ObjectPermissionAttributes(ObjectPermissionAttributes_Transferable transferable)
   {
-    super("obj_perm_attrib");
+//    super("obj_perm_attrib");
     this.transferable = transferable;
     setLocalFromTransferable();
   }

@@ -36,12 +36,12 @@ public class OperatorGroup extends AdminObjectResource implements Serializable
 
   public OperatorGroup()
   {
-    super("operatorgroup");
+//    super("operatorgroup");
   }
 
   public OperatorGroup(OperatorGroup_Transferable transferable)
   {
-    super("operatorgroup");
+//    super("operatorgroup");
     this.transferable = transferable;
     setLocalFromTransferable();
   }
@@ -61,7 +61,7 @@ public class OperatorGroup extends AdminObjectResource implements Serializable
       Vector privilege_ids,
       Vector execIds)
   {
-    super("operatorgroup");
+//    super("operatorgroup");
     this.id = id;
     this.name = name;
     this.codename = codename;

@@ -60,7 +60,7 @@ public abstract class ObjectResource extends Object
 
 //	public boolean loaded = false;
 	protected boolean changed = false;
-
+/*
 	public ObjectResource()
 	{
 	}
@@ -78,7 +78,7 @@ public abstract class ObjectResource extends Object
 
 		this.changed = changed;
 	}
-
+*/
 	public abstract String getTyp();
 /*
 	{
@@ -96,6 +96,10 @@ public abstract class ObjectResource extends Object
 		this.changed = changed;
 	}
 
+	/**
+	 * @deprecated
+	 * @see ObjectResourceModel
+	 */
 	public Enumeration getChildren(String key)
 	{
 		System.out.println(" ObjectResource: getChildren " + key);
@@ -132,27 +136,30 @@ public abstract class ObjectResource extends Object
 	{
 		return new ObjectResourceNameSorter();
 	}
-	
+/*	
 	public void prepareRemoval()
 	{
 		System.out.println("                    ObjectResource: prepareRemoval");
 	}
-
+*/
 	public ObjectResourceModel getModel()
 	{
 		return new ObjectResourceModel();
 	}
-/*
-	public ObjectResourceReportModel getReportModel()
-	{
-		return new ObjectResourceReportModel();
-	}
-*/
+
+	/**
+	 * @deprecated
+	 * @see ObjectResourceModel
+	 */
 	public Enumeration getChildTypes()
     {
         return new Vector().elements();
     }
 		
+	/**
+	 * @deprecated
+	 * @see ObjectResourceModel
+	 */
 	public Class getChildClass(String type)
     {
         return ObjectResource.class;
