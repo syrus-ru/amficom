@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.8 2004/09/15 10:40:40 max Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.9 2004/09/28 10:05:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,18 +8,20 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/15 10:40:40 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2004/09/28 10:05:46 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -276,5 +278,493 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         }
         return list;
     }
-    
+
+	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws DatabaseException, CommunicationException{
+		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
+		try {
+			database.update(characteristicType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicType | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicType | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicType | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicType | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicType | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws DatabaseException, CommunicationException{
+		EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase();
+		try {
+			database.update(equipmentType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipmentType | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipmentType | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipmentType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipmentType | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipmentType | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipmentType | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void savePortType(PortType portType, boolean force) throws DatabaseException, CommunicationException{
+		PortTypeDatabase database = (PortTypeDatabase)ConfigurationDatabaseContext.getPortTypeDatabase();
+		try {
+			database.update(portType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePortType | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePortType | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePortType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePortType | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePortType | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePortType | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws DatabaseException, CommunicationException{
+		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase)ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
+		try {
+			database.update(measurementPortType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortType | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPortType | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPortType | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortType | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPortType | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, CommunicationException{
+		CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+		try {
+			database.update(characteristic, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristic | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristic | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristic | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristic | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristic | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristic | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException, CommunicationException;
+
+	public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException{
+		UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
+		try {
+			database.update(user, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUser | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUser | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUser | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUser | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUser | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUser | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveDomain(Domain domain, boolean force) throws DatabaseException, CommunicationException{
+		DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
+		try {
+			database.update(domain, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomain | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomain | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomain | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomain | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomain | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomain | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveServer(Server server, boolean force) throws DatabaseException, CommunicationException{
+		ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
+		try {
+			database.update(server, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServer | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServer | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServer | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServer | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServer | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServer | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveMCM(MCM mcm, boolean force) throws DatabaseException, CommunicationException{
+		MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
+		try {
+			database.update(mcm, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCM | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCM | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCM | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCM | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCM | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCM | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveEquipment(Equipment equipment, boolean force) throws DatabaseException, CommunicationException{
+		EquipmentDatabase database = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
+		try {
+			database.update(equipment, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipment | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipment | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipment | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipment | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipment | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipment | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void savePort(Port port, boolean force) throws DatabaseException, CommunicationException{
+		PortDatabase database = (PortDatabase)ConfigurationDatabaseContext.getPortDatabase();
+		try {
+			database.update(port, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePort | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePort | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePort | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePort | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePort | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePort | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws DatabaseException, CommunicationException{
+		TransmissionPathDatabase database = (TransmissionPathDatabase)ConfigurationDatabaseContext.getTransmissionPathDatabase();
+		try {
+			database.update(transmissionPath, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPath | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPath | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPath | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPath | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPath | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPath | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveKIS(KIS kis, boolean force) throws DatabaseException, CommunicationException{
+		KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
+		try {
+			database.update(kis, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKIS | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKIS | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKIS | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKIS | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKIS | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKIS | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws DatabaseException, CommunicationException{
+		MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
+		try {
+			database.update(measurementPort, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPort | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPort | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPort | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPort | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPort | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPort | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws DatabaseException, CommunicationException{
+		MonitoredElementDatabase database = (MonitoredElementDatabase)ConfigurationDatabaseContext.getMonitoredElementDatabase();
+		try {
+			database.update(monitoredElement, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElement | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMonitoredElement | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElement | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMonitoredElement | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElement | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMonitoredElement | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveCharacteristicTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+
+	public void saveEquipmentTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+		EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipmentTypes | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipmentTypes | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipmentTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipmentTypes | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipmentTypes | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipmentTypes | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+
+	public void savePortTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+		PortTypeDatabase database = (PortTypeDatabase)ConfigurationDatabaseContext.getPortTypeDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePortTypes | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePortTypes | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePortTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePortTypes | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePortTypes | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePortTypes | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveMeasurementPortTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase)ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortTypes | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPortTypes | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortTypes | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPortTypes | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveCharacteristics(List list, boolean force) throws DatabaseException, CommunicationException{
+		CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristics | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristics | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristics | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristics | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristics | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristics | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+
+//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException, CommunicationException;
+
+	public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException{
+		UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUsers | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUsers | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUsers | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUsers | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUsers | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUsers | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveDomains(List list, boolean force) throws DatabaseException, CommunicationException{
+		DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomains | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomains | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomains | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomains | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomains | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomains | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+
+	public void saveServers(List list, boolean force) throws DatabaseException, CommunicationException{
+		ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServers | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServers | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServers | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServers | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServers | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServers | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveMCMs(List list, boolean force) throws DatabaseException, CommunicationException{
+		MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCMs | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCMs | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCMs | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCMs | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCMs | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCMs | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveEquipments(List list, boolean force) throws DatabaseException, CommunicationException{
+		EquipmentDatabase database = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipments | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipments | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipments | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipments | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipments | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveEquipments | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void savePorts(List list, boolean force) throws DatabaseException, CommunicationException{
+		PortDatabase database = (PortDatabase)ConfigurationDatabaseContext.getPortDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePorts | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePorts | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePorts | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePorts | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.savePorts | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.savePorts | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveTransmissionPaths(List list, boolean force) throws DatabaseException, CommunicationException{
+		TransmissionPathDatabase database = (TransmissionPathDatabase)ConfigurationDatabaseContext.getTransmissionPathDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPaths | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPaths | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPaths | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPaths | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPaths | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPaths | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveKISs(List list, boolean force) throws DatabaseException, CommunicationException{
+		KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISs | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISs | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISs | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISs | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISs | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISs | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveMeasurementPorts(List list, boolean force) throws DatabaseException, CommunicationException{
+		MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPorts | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPorts | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPorts | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPorts | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPorts | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPorts | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public void saveMonitoredElements(List list, boolean force) throws DatabaseException, CommunicationException{
+		MonitoredElementDatabase database = (MonitoredElementDatabase)ConfigurationDatabaseContext.getMonitoredElementDatabase();
+		try {
+			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElements | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMonitoredElements | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElements | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMonitoredElements | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElements | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMonitoredElements | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
 }

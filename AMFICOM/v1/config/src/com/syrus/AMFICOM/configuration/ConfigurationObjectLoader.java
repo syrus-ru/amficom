@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.8 2004/09/28 07:44:30 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.9 2004/09/28 10:05:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/28 07:44:30 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/28 10:05:46 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -114,7 +114,7 @@ public interface ConfigurationObjectLoader {
 
 	public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws DatabaseException, CommunicationException;
 
-	public void saveKIS(KIS kIS, boolean force) throws DatabaseException, CommunicationException;
+	public void saveKIS(KIS kis, boolean force) throws DatabaseException, CommunicationException;
 
 	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws DatabaseException, CommunicationException;
 
