@@ -8,9 +8,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 public class ReflectogramAlarm {
-	public static final int LEVEL_NONE = 0;
-	public static final int LEVEL_SOFT = 1;
-	public static final int LEVEL_HARD = 2;
+	// Alarm levels. Must be comparable with >; >=
+	public static final int LEVEL_NONE = 0; // just a convenience level, not a real alarm
+	public static final int LEVEL_SOFT = 1; // soft alarm ('warning')
+	public static final int LEVEL_HARD = 2; // hard alarm ('alarm')
 
 	public static final int TYPE_UNDEFINED = 0;
 	public static final int TYPE_LINEBREAK = 1;
@@ -35,6 +36,7 @@ public class ReflectogramAlarm {
 		return alarmType;
 	}
 */
+	// create 'no alarm' alarm
 	public ReflectogramAlarm()
 	{
 	}
