@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.14 2005/02/14 09:09:37 arseniy Exp $
+ * $Id: Characteristic.java,v 1.15 2005/03/05 21:26:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/14 09:09:37 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/05 21:26:16 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -30,7 +30,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	private String description;
 	private int sort;
 	private String value;
-	private Identifier characterizedId;
+	private Identifier characterizableId;
 	private boolean editable;
 	private boolean visible;
 
@@ -61,7 +61,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.description = new String(ct.description);
 		this.sort = ct.sort.value();
 		this.value = new String(ct.value);
-		this.characterizedId = new Identifier(ct.characterized_id);
+		this.characterizableId = new Identifier(ct.characterizable_id);
 		this.editable = ct.is_editable;
 		this.visible = ct.is_visible;
 
@@ -76,7 +76,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 						String description,
 						int sort,
 						String value,
-						Identifier characterizedId,
+						Identifier characterizableId,
 						boolean editable,
 						boolean visible) {
 				super(id,
@@ -90,7 +90,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 				this.description = description;
 				this.sort = sort;
 				this.value = value;
-				this.characterizedId = characterizedId;
+				this.characterizableId = characterizableId;
 
 				this.editable = editable;
 				this.visible = visible;
@@ -106,7 +106,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * @param description
 	 * @param sort
 	 * @param value
-	 * @param characterizedId
+	 * @param characterizableId
 	 * @throws CreateObjectException
 	 */
 	public static Characteristic createInstance(Identifier creatorId,
@@ -115,12 +115,12 @@ public class Characteristic extends StorableObject implements TypedObject {
 												 String description,
 												 int sort,
 												 String value,
-												 Identifier characterizedId,
+												 Identifier characterizableId,
 												 boolean editable,
 												 boolean visible) throws CreateObjectException {
 
 		if (creatorId == null || type == null || name == null || description == null ||
-				value == null || characterizedId == null)
+				value == null || characterizableId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -132,7 +132,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 										description,
 										sort,
 										value,
-										characterizedId,
+										characterizableId,
 										editable,
 										visible);
 			characteristic.changed = true;
@@ -150,7 +150,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 												 new String(this.description),
 												 CharacteristicSort.from_int(this.sort),
 												 new String(this.value),
-												 (Identifier_Transferable)this.characterizedId.getTransferable(),
+												 (Identifier_Transferable)this.characterizableId.getTransferable(),
 												 this.editable,
 												 this.visible);
 	}
@@ -240,16 +240,16 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return this.value;
 	}
 
-	public Identifier getCharacterizedId() {
-		return this.characterizedId;
+	public Identifier getCharacterizableId() {
+		return this.characterizableId;
 	}
 	
-	protected void setCharacterizedId0(Identifier characterizedId) {
-		this.characterizedId = characterizedId;
+	protected void setCharacterizableId0(Identifier characterizableId) {
+		this.characterizableId = characterizableId;
 	}
 	
-	public void setCharacterizedId(Identifier characterizedId){
-		this.setCharacterizedId0(characterizedId);
+	public void setCharacterizableId(Identifier characterizableId) {
+		this.setCharacterizableId0(characterizableId);
 		super.changed = true;
 	}
 	
@@ -263,7 +263,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 												String description,
 												int sort,
 												String value,
-												Identifier characterizedId,
+												Identifier characterizableId,
 												boolean editable,
 												boolean visible) {
 		super.setAttributes(created,
@@ -276,7 +276,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.description = description;
 		this.sort = sort;
 		this.value = value;
-		this.characterizedId = characterizedId;
+		this.characterizableId = characterizableId;
 		this.editable = editable;
 		this.visible = visible;
 	}
@@ -335,7 +335,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 				csort = CharacteristicSort.CHARACTERISTIC_SORT_CABLELINKTYPE;
 				break;
 			default:
-				throw new IllegalDataException("Unknown characterized entity, id: '" + id.getIdentifierString() + '\'');
+				throw new IllegalDataException("Unknown characterizable entity, id: '" + id.getIdentifierString() + '\'');
 		}
 
 		return csort;
@@ -343,7 +343,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 
 	public List getDependencies() {
 		List dependencies = new ArrayList(2);
-		dependencies.add(this.characterizedId);
+		dependencies.add(this.characterizableId);
 		dependencies.add(this.type);
 		return dependencies;
 	}	
