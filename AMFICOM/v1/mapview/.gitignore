@@ -1,4 +1,7 @@
+.classpath
+.project
 .corba
+docs
 .mach
 *.jar
 *.jpr*

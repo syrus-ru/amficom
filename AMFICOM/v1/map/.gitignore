@@ -1,4 +1,5 @@
 classes
+docs
 *.deploy
 *.jar
 *.jpr
