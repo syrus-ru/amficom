@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.4 2005/03/09 12:02:24 saa Exp $
+ * $Id: ThreshDY.java,v 1.5 2005/03/14 10:10:54 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/03/09 12:02:24 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/14 10:10:54 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -54,14 +54,21 @@ public class ThreshDY extends Thresh
 	{
 		return typeL;
 	}
-	protected void setDY(int n, double val)
+	protected void setDY(int key, double val)
 	{
 		if (VALUE_FRACTION > 0)
 			val = Math.rint(val * VALUE_FRACTION) / VALUE_FRACTION;
-		if (IS_KEY_UPPER[n] && val < 0)
+		if (val * (IS_KEY_UPPER[key] ? 1 : -1) < 0)
 			val = 0;
-		if (!IS_KEY_UPPER[n] && val > 0)
-			val = 0;
-		values[n] = val;
+		values[key] = val;
+		int compareSign = IS_KEY_HARD[key] ^ IS_KEY_UPPER[key] ? -1 : 1;
+		if (values[key] * compareSign < values[LIMIT_KEY[key]] * compareSign)
+			values[key] = values[LIMIT_KEY[key]];
+	}
+	protected void arrangeLimits(int key)
+	{
+		int compareSign = IS_KEY_HARD[key] ^ IS_KEY_UPPER[key] ? -1 : 1;
+		if (values[key] * compareSign < values[FORCEMOVE_KEY[key]] * compareSign)
+			values[FORCEMOVE_KEY[key]] = values[key];
 	}
 }

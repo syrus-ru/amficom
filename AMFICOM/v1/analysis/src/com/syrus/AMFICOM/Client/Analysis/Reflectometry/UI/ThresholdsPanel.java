@@ -157,7 +157,12 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		}
 		else
 		{
-			c_TH = null;
+			if (c_TH != null)
+			{
+				c_TH.release();
+				parent.repaint();
+				c_TH = null;
+			}
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.18 2005/03/09 10:49:50 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.19 2005/03/14 10:10:54 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.18 $, $Date: 2005/03/09 10:49:50 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/14 10:10:54 $
  * @module
  */
 public class ModelTraceManager
@@ -272,6 +272,8 @@ public class ModelTraceManager
 			}
 			else
 				((ThreshDY )th).setDY(key, value);
+			th.arrangeLimits(key);
+			invalidateThMTCache(); // сбрасываем кэш всех кривых
 		}
 	}
 
@@ -476,6 +478,7 @@ public class ModelTraceManager
 		public void moveBy(double dx, double dy);
 		public int getX();
 		public double getY();
+		public void release();
 	}
 
 	protected class ThresholdHandleDX
@@ -510,6 +513,11 @@ public class ModelTraceManager
 		public double getY()
 		{
 			return posY;
+		}
+		public void release()
+		{
+			th.arrangeLimits(key);
+			invalidateThMTCache(); // сбрасываем кэш всех кривых
 		}
 	}
 
@@ -589,6 +597,11 @@ public class ModelTraceManager
 		public double getY()
 		{
 			return posY;
+		}
+		public void release()
+		{
+			th.arrangeLimits(key);
+			invalidateThMTCache(); // сбрасываем кэш всех кривых
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.4 2005/03/09 11:30:01 saa Exp $
+ * $Id: ThreshDX.java,v 1.5 2005/03/14 10:10:54 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/03/09 11:30:01 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/14 10:10:54 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -61,5 +61,15 @@ public class ThreshDX extends Thresh
 		dX[key] = (int )val;
 		if (dX[key] * goodSign(key) < 0)
 			dX[key] = 0;
+		int compareSign = goodSign(key) * (IS_KEY_HARD[key] ? 1 : -1);
+		if (dX[key] * compareSign < dX[LIMIT_KEY[key]] * compareSign)
+			dX[key] = dX[LIMIT_KEY[key]];
+	}
+
+	protected void arrangeLimits(int key)
+	{
+		int compareSign = goodSign(key) * (IS_KEY_HARD[key] ? 1 : -1);
+		if (dX[key] * compareSign < dX[FORCEMOVE_KEY[key]] * compareSign)
+			dX[FORCEMOVE_KEY[key]] = dX[key];
 	}
 }
