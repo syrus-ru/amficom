@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.61 2005/04/05 16:02:18 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.62 2005/04/06 12:57:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/04/05 16:02:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/04/06 12:57:45 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -442,8 +442,36 @@ public abstract class StorableObjectPool {
 						idsSet.add(id);
 				}
 			}
+			
+			/* logging */
+			{
+				StringBuffer buffer = new StringBuffer();
+				for (Iterator it = idsSet.iterator(); it.hasNext();) {
+					Identifier identifier = (Identifier) it.next();
+					if (buffer.length() != 0)
+						buffer.append(", ");
+					buffer.append(identifier.getIdentifierString());
+				}
+				Log.debugMessage(
+					"StorableObjectPool.getStorableObjectsByConditionButIdsImpl | before loadStorableObjectsButIds : " + buffer.toString(),
+					Log.DEBUGLEVEL10);
+			}
 
 			loadedSet = this.loadStorableObjectsButIds(condition, idsSet);
+			
+			/* logging */
+			{
+				StringBuffer buffer = new StringBuffer();
+				for (Iterator it = loadedSet.iterator(); it.hasNext();) {
+					StorableObject storableObject = (StorableObject) it.next();
+					if (buffer.length() != 0)
+						buffer.append(", ");
+					buffer.append(storableObject.getId().getIdentifierString());
+				}
+				Log.debugMessage(
+					"StorableObjectPool.getStorableObjectsByConditionButIdsImpl | loaded : " + buffer.toString(),
+					Log.DEBUGLEVEL10);
+			}
 		}
 
 //		/*
