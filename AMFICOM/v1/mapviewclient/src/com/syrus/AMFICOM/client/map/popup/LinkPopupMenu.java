@@ -2,8 +2,8 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JMenuItem;
 
@@ -280,9 +280,9 @@ public final class LinkPopupMenu extends MapPopupMenu
 		Collector collector = this.logicalNetLayer.getMapView().getMap().getCollector(this.link);
 		if(collector != null)
 		{
-			List list = new LinkedList();
-			list.addAll(collector.getPhysicalLinks());
-			super.removeLinksFromCollector(collector, list);
+			Set set = new HashSet();
+			set.addAll(collector.getPhysicalLinks());
+			super.removeLinksFromCollector(collector, set);
 			super.removeCollector(collector);
 
 			try

@@ -79,7 +79,6 @@ src\com\syrus\AMFICOM\Client\Map\Command\Editor\MapEditorSaveMapCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\MapEditorSaveViewAsCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\MapEditorSaveViewCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapAllCommand.java
-src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapElementsBarCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapElementsCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapNavigatorCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapPropertiesCommand.java
@@ -217,7 +216,6 @@ src\com\syrus\AMFICOM\Client\Map\UI\MapChooserDialog.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapDataFlavor.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapDropTargetListener.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapElementLabel.java
-src\com\syrus\AMFICOM\Client\Map\UI\MapElementsBarFrame.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapElementsBarPanel.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapElementsFrame.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapElementsPanel.java

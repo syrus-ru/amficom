@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.17 2005/03/17 12:29:50 peskovsky Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.18 2005/04/05 15:48:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,8 +26,8 @@ import java.awt.Point;
 
 /**
  * Стратегия управления выделенными объектами.
- * @author $Author: peskovsky $
- * @version $Revision: 1.17 $, $Date: 2005/03/17 12:29:50 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/04/05 15:48:07 $
  * @module mapviewclient_v1
  */
 public final class MapSelectionElementStrategy extends AbstractMapStrategy 
@@ -97,7 +97,7 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 					}
 					else if (this.selection.getElements().size() == 1)
 					{
-						super.logicalNetLayer.setCurrentMapElement((MapElement)this.selection.getElements().get(0));
+						super.logicalNetLayer.setCurrentMapElement((MapElement)this.selection.getElements().iterator().next());
 					}
 				}// mel.isSelected()
 				else

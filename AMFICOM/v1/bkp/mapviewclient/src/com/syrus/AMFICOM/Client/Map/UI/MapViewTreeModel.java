@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.6 2005/04/05 13:53:58 krupenn Exp $
+ * $Id: MapViewTreeModel.java,v 1.7 2005/04/05 15:48:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,35 +11,22 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
-import com.syrus.AMFICOM.client_.general.ui_.tree.StorableObjectTreeNode;
-import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.mapview.MapView;
-
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.mapview.MapView;
+
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/05 13:53:58 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/05 15:48:07 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -101,13 +88,13 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 
 	public MapViewTreeModel(MapView mapView) {
 		super(null);
-		buildTree(mapView);
+//		buildTree(mapView);
 	}
 	
 	public void setMapView(MapView mapView) {
-		buildTree(mapView);
+//		buildTree(mapView);
 	}
-
+/*
 	public StorableObjectTreeNode findNode(Object object)
 	{
 		return findNode((StorableObjectTreeNode )(this.root), object);
@@ -543,7 +530,7 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 			i++;
 		}
 	}
-
+*/
 }
 
 final class SiteNodeTypeComparator implements Comparator {

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.18 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.19 2005/04/05 15:48:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import java.util.List;
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/05 15:48:07 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -136,13 +136,13 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		}
 
 		//При удалении узла удаляются все фрагменты линий, исходящие из него
-		java.util.List nodeLinksToDelete = site.getNodeLinks();
-		Iterator e = nodeLinksToDelete.iterator();
+		java.util.Set nodeLinksToDelete = site.getNodeLinks();
+		Iterator iter = nodeLinksToDelete.iterator();
 
 		// бежим по списку удаляемых фрагментов
-		while(e.hasNext())
+		while(iter.hasNext())
 		{
-			NodeLink nodeLink = (NodeLink)e.next();
+			NodeLink nodeLink = (NodeLink)iter.next();
 			PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 					
 			if(physicalLink instanceof UnboundLink)
@@ -215,14 +215,14 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		if ( !topologicalNode.isActive() )
 		{
 			//При удалении узла удаляются все фрагменты линий, исходящие из него
-			java.util.List nodeLinksToDelete = topologicalNode.getNodeLinks();
-			Iterator e = nodeLinksToDelete.iterator();
+			java.util.Set nodeLinksToDelete = topologicalNode.getNodeLinks();
+			Iterator iter = nodeLinksToDelete.iterator();
 	
 			// бежим по списку удаляемых фрагментов (фактически там только 
 			// один элемент)
-			while(e.hasNext())
+			while(iter.hasNext())
 			{
-				NodeLink nodeLink = (NodeLink)e.next();
+				NodeLink nodeLink = (NodeLink)iter.next();
 				AbstractNode oppositeNode = nodeLink.getOtherNode(topologicalNode);
 						
 				// если фрагмент соединяет топологический узел и узел сети
@@ -280,9 +280,9 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		{
 			// получить смежные фрагменты линии
 			NodeLink nodeLinkLeft = 
-					(NodeLink)topologicalNode.getNodeLinks().get(0);
+					(NodeLink)topologicalNode.getNodeLinks().first();
 			NodeLink nodeLinkRight = 
-					(NodeLink)topologicalNode.getNodeLinks().get(1);
+					(NodeLink)topologicalNode.getNodeLinks().last();
 			
 			// получить концевые узлы смежных фрагментов
 			AbstractNode nodeLeft =

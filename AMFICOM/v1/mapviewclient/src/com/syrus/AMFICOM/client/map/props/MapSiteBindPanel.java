@@ -213,13 +213,13 @@ public final class MapSiteBindPanel
 	
 		CablePath cablePath = mapView.findCablePath(scl);
 
-		List pathLinks = cablePath.getLinks();
+		Set cablePathLinks = cablePath.getLinks();
 		Collection siteLinks = mapView.getMap().getPhysicalLinksAt(this.site);
 
 		PhysicalLink linkRight = null;
 		PhysicalLink linkLeft = null;
 
-		for(Iterator it = pathLinks.iterator(); it.hasNext();)
+		for(Iterator it = cablePathLinks.iterator(); it.hasNext();)
 		{
 			PhysicalLink mple = (PhysicalLink)it.next();
 			if(siteLinks.contains(mple))

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.31 2005/03/17 12:29:50 peskovsky Exp $
+ * $Id: MapPopupMenu.java,v 1.32 2005/04/05 15:48:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -61,8 +62,8 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
  * Контекстное меню элемента карты
- * @author $Author: peskovsky $
- * @version $Revision: 1.31 $, $Date: 2005/03/17 12:29:50 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.32 $, $Date: 2005/04/05 15:48:07 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu
@@ -281,7 +282,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		return null;
 	}
 	
-	protected void addLinksToCollector(Collector collector, List links)
+	protected void addLinksToCollector(Collector collector, Set links)
 	{
 		for(Iterator it = links.iterator(); it.hasNext();)
 		{
@@ -312,7 +313,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().getCommandList().execute();
 	}
 
-	protected void removeLinksFromCollector(Collector collector, List links)
+	protected void removeLinksFromCollector(Collector collector, Set links)
 	{
 		for(Iterator it = links.iterator(); it.hasNext();)
 		{

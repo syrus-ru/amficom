@@ -1,23 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.tree.StorableObjectTreeNode;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.mapview.MapView;
-
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
 
-import javax.swing.Icon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -27,6 +11,15 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.mapview.MapView;
 
 public final class MapViewTreePanel extends JPanel 
 		implements OperationListener, TreeSelectionListener {
@@ -66,7 +59,7 @@ public final class MapViewTreePanel extends JPanel
 		this.add(this.scroll, BorderLayout.CENTER);
 
 		this.model = new MapViewTreeModel(null);
-		this.treeRenderer = new MapViewTreeCellRenderer(this.model);
+//		this.treeRenderer = new MapViewTreeCellRenderer(this.model);
 		this.tree = new JTree(this.model);
 		this.scroll.getViewport().add(this.tree);
 		this.tree.addTreeSelectionListener(this);
@@ -126,20 +119,20 @@ public final class MapViewTreePanel extends JPanel
 				MapNavigateEvent mne = (MapNavigateEvent )operationEvent;
 				if(mne.isMapElementSelected()) {
 					MapElement mapElement = (MapElement )mne.getSource();
-					StorableObjectTreeNode node = this.model.findNode(mapElement);
-					if(node != null) {
-						TreePath path = new TreePath(node.getPath());
-						this.tree.getSelectionModel().addSelectionPath(path);
-						this.tree.scrollPathToVisible(path);
-					}
+//					StorableObjectTreeNode node = this.model.findNode(mapElement);
+//					if(node != null) {
+//						TreePath path = new TreePath(node.getPath());
+//						this.tree.getSelectionModel().addSelectionPath(path);
+//						this.tree.scrollPathToVisible(path);
+//					}
 				}
 				else if (mne.isMapElementDeselected()) {
 					MapElement mapElement = (MapElement )mne.getSource();
-					StorableObjectTreeNode node = this.model.findNode(mapElement);
-					if(node != null) {
-						TreePath path = new TreePath(node.getPath());
-						this.tree.getSelectionModel().removeSelectionPath(path);
-					}
+//					StorableObjectTreeNode node = this.model.findNode(mapElement);
+//					if(node != null) {
+//						TreePath path = new TreePath(node.getPath());
+//						this.tree.getSelectionModel().removeSelectionPath(path);
+//					}
 				}
 			}
 		}
@@ -173,7 +166,7 @@ public final class MapViewTreePanel extends JPanel
 		}
 	}
 }
-
+/*
 class MapViewTreeCellRenderer extends JLabel implements TreeCellRenderer {
 	public static Color selectedBackground = Color.BLUE;
 	public static Color selectedForeground = Color.WHITE;
@@ -217,3 +210,4 @@ class MapViewTreeCellRenderer extends JLabel implements TreeCellRenderer {
 		super.paintComponent(g);
 	}
 }
+*/

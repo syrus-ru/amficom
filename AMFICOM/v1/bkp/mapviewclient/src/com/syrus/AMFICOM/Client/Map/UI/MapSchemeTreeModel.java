@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.13 2005/03/24 17:03:16 bass Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.14 2005/04/05 15:48:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import java.awt.Toolkit;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 
@@ -76,8 +77,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemeKind;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.13 $, $Date: 2005/03/24 17:03:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/05 15:48:07 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapSchemeTreeModel extends ObjectResourceTreeModel
@@ -402,7 +403,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 		{
 			if(objectResourceTreeNode.getObject() instanceof MapView)
 			{
-				List schemes = this.mapView.getSchemes();
+				Set schemes = this.mapView.getSchemes();
 
 				for(Iterator it = schemes.iterator(); it.hasNext();)
 				{

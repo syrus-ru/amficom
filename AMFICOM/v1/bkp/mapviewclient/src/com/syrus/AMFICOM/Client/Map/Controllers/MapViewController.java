@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.21 2005/03/17 12:56:19 bass Exp $
+ * $Id: MapViewController.java,v 1.22 2005/04/05 15:48:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/03/17 12:56:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/04/05 15:48:07 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -366,9 +366,9 @@ public final class MapViewController
 	 */
 	public void removeSchemes()
 	{
-		while(this.mapView.getSchemes().size() != 0)
+		while(! this.mapView.getSchemes().isEmpty())
 		{
-			Scheme sch = (Scheme )this.mapView.getSchemes().get(0);
+			Scheme sch = (Scheme )this.mapView.getSchemes().iterator().next();
 			removeScheme(sch);
 		}
 	}
