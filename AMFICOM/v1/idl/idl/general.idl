@@ -31,8 +31,8 @@
 // *                                                                      * //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef _general_idl_
-#define _general_idl_
+#ifndef _GENERAL_IDL_
+#define _GENERAL_IDL_
 
 module com
 {
