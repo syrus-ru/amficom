@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.59 2004/10/20 14:54:25 bob Exp $
+ * $Id: CMServerImpl.java,v 1.60 2004/10/25 13:26:03 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,6 +29,12 @@ import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
+import com.syrus.AMFICOM.configuration.KISType;
+import com.syrus.AMFICOM.configuration.KISTypeDatabase;
+import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.configuration.LinkDatabase;
+import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.MCMDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -54,7 +60,10 @@ import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
+import com.syrus.AMFICOM.configuration.corba.KISType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
@@ -143,8 +152,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2004/10/20 14:54:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.60 $, $Date: 2004/10/25 13:26:03 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 
@@ -1903,7 +1912,243 @@ public class CMServerImpl implements CMServerOperations {
         }
 
     }
+    
+    public void receiveKISType(KISType_Transferable kisType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        Log.debugMessage("CMServerImpl.receiveKISType | Received " + " kis", Log.DEBUGLEVEL07);
+        try {
 
+            KISType kisType = new KISType(kisType_Transferable);
+            ConfigurationStorableObjectPool.putStorableObject(kisType);
+            KISTypeDatabase kisTypeDatabase = (KISTypeDatabase) ConfigurationDatabaseContext
+                    .getKISTypeDatabase();
+            kisTypeDatabase.update(kisType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+
+        } catch (UpdateObjectException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                .getMessage());
+        } catch (IllegalDataException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (IllegalObjectEntityException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (VersionCollisionException e){
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+                                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (CreateObjectException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                .getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+    }
+    
+    public void receiveKISTypes(KISType_Transferable[] kisType_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        Log.debugMessage("CMServerImpl.receiveKISTypes | Received " + kisType_Transferables.length
+                + " kiss", Log.DEBUGLEVEL07);
+        List kisTypeList = new ArrayList(kisType_Transferables.length);
+        try {
+
+            for (int i = 0; i < kisType_Transferables.length; i++) {
+                KISType kisType = new KISType(kisType_Transferables[i]);
+                ConfigurationStorableObjectPool.putStorableObject(kisType);
+                kisTypeList.add(kisType);
+            }
+
+            KISTypeDatabase kisTypeDatabase = (KISTypeDatabase) ConfigurationDatabaseContext
+                    .getKISTypeDatabase();
+            kisTypeDatabase.update(kisTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+
+        } catch (UpdateObjectException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                    .getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (IllegalObjectEntityException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (VersionCollisionException e){
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+                                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (CreateObjectException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                    .getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+
+    }
+
+	public void receiveLink(Link_Transferable link_Transferable, boolean force,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.receiveLink | Received " + " link", Log.DEBUGLEVEL07);
+        try {
+
+            Link link = new Link(link_Transferable);
+            ConfigurationStorableObjectPool.putStorableObject(link);
+            LinkDatabase linkDatabase = (LinkDatabase) ConfigurationDatabaseContext
+                    .getLinkDatabase();
+            linkDatabase.update(link, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+
+        } catch (UpdateObjectException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                .getMessage());
+        } catch (IllegalDataException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (IllegalObjectEntityException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (VersionCollisionException e){
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+                                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (CreateObjectException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                .getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+
+	public void receiveLinks(Link_Transferable[] link_Transferables,
+			boolean force, AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.receiveLinks | Received " + link_Transferables.length
+                + " links", Log.DEBUGLEVEL07);
+        List linkList = new ArrayList(link_Transferables.length);
+        try {
+
+            for (int i = 0; i < link_Transferables.length; i++) {
+                Link list = new Link(link_Transferables[i]);
+                ConfigurationStorableObjectPool.putStorableObject(list);
+                linkList.add(list);
+            }
+
+            LinkDatabase linkDatabase = (LinkDatabase) ConfigurationDatabaseContext
+                    .getLinkDatabase();
+            linkDatabase.update(linkList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+
+        } catch (UpdateObjectException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                    .getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (IllegalObjectEntityException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (VersionCollisionException e){
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+                                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (CreateObjectException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                    .getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+
+	public void receiveLinkType(LinkType_Transferable linkType_Transferable,
+			boolean force, AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.receiveLinkType | Received " + " linkType", Log.DEBUGLEVEL07);
+        try {
+
+            LinkType linkType = new LinkType(linkType_Transferable);
+            ConfigurationStorableObjectPool.putStorableObject(linkType);
+            LinkTypeDatabase linkTypeDatabase = (LinkTypeDatabase) ConfigurationDatabaseContext
+                    .getLinkTypeDatabase();
+            linkTypeDatabase.update(linkType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+
+        } catch (UpdateObjectException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                .getMessage());
+        } catch (IllegalDataException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (IllegalObjectEntityException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (VersionCollisionException e){
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+                                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+
+	public void receiveLinkTypes(
+			LinkType_Transferable[] linkType_Transferables, boolean force,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.receiveLinkTypes | Received " + linkType_Transferables.length
+                + " links", Log.DEBUGLEVEL07);
+        List linkTypeList = new ArrayList(linkType_Transferables.length);
+        try {
+
+            for (int i = 0; i < linkType_Transferables.length; i++) {
+                LinkType list = new LinkType(linkType_Transferables[i]);
+                ConfigurationStorableObjectPool.putStorableObject(list);
+                linkTypeList.add(list);
+            }
+
+            LinkTypeDatabase linkTypeDatabase = (LinkTypeDatabase) ConfigurationDatabaseContext
+                    .getLinkTypeDatabase();
+            linkTypeDatabase.update(linkTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+
+        } catch (UpdateObjectException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                    .getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (IllegalObjectEntityException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (VersionCollisionException e){
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+                                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+    
     public void receiveMCM(MCM_Transferable mcm_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveMCM | Received " + " mcm", Log.DEBUGLEVEL07);
         try {
@@ -2748,6 +2993,37 @@ public class CMServerImpl implements CMServerOperations {
         try {
             KIS kis = (KIS) MeasurementStorableObjectPool.getStorableObject(id, true);
             return (KIS_Transferable) kis.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+    }
+    
+    public KISType_Transferable transmitKISType(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.KISType | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            KISType kisType = (KISType) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (KISType_Transferable) kisType.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
@@ -3770,7 +4046,357 @@ public class CMServerImpl implements CMServerOperations {
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
         }
     }
+    
+    public KISType_Transferable[] transmitKISTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        try {
+            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Log.debugMessage("CMServerImpl.transmitKISTypes | requiere "
+                    + (ids_Transferable.length == 0 ? "all" : Integer
+                            .toString(ids_Transferable.length))
+                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+            List list;
+            if (ids_Transferable.length > 0) {
+                List idsList = new ArrayList(ids_Transferable.length);
+                for (int i = 0; i < ids_Transferable.length; i++)
+                    idsList.add(new Identifier(ids_Transferable[i]));
+                list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+            } else
+                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
 
+            KISType_Transferable[] transferables = new KISType_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                KISType kisType = (KISType) it.next();
+                transferables[i] = (KISType_Transferable) kisType.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (IllegalDataException ide) {
+            Log.errorException(ide);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+                    .getMessage());
+        } catch (IllegalObjectEntityException ioee) {
+            Log.errorException(ioee);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+    }
+    
+    public KISType_Transferable[] transmitKISTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        try {
+            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Log.debugMessage("CMServerImpl.transmitKISTypes | requiere "
+                    + (ids_Transferable.length == 0 ? "all" : Integer
+                            .toString(ids_Transferable.length))
+                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+            List list;
+            if (ids_Transferable.length > 0) {
+                List idsList = new ArrayList(ids_Transferable.length);
+                for (int i = 0; i < ids_Transferable.length; i++)
+                    idsList.add(new Identifier(ids_Transferable[i]));
+                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.KISTYPE_ENTITY_CODE), idsList, true);
+            } else
+                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
+
+            KISType_Transferable[] transferables = new KISType_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                KISType kisType = (KISType) it.next();
+                transferables[i] = (KISType_Transferable) kisType.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (IllegalDataException ide) {
+            Log.errorException(ide);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+                    .getMessage());
+        } catch (IllegalObjectEntityException ioee) {
+            Log.errorException(ioee);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+    }
+
+	public Link_Transferable transmitLink(
+			Identifier_Transferable id_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.transmitLink | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            Link link = (Link) ConfigurationStorableObjectPool.getStorableObject(id, true);
+            return (Link_Transferable) link.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+
+	public Link_Transferable[] transmitLinks(
+			Identifier_Transferable[] ids_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		try {
+            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Log.debugMessage("CMServerImpl.transmitLinks | requiere "
+                    + (ids_Transferable.length == 0 ? "all" : Integer
+                            .toString(ids_Transferable.length))
+                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+            List list;
+            if (ids_Transferable.length > 0) {
+                List idsList = new ArrayList(ids_Transferable.length);
+                for (int i = 0; i < ids_Transferable.length; i++)
+                    idsList.add(new Identifier(ids_Transferable[i]));
+                list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+            } else
+                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
+
+            Link_Transferable[] transferables = new Link_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                Link link = (Link) it.next();
+                transferables[i] = (Link_Transferable) link.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (IllegalDataException ide) {
+            Log.errorException(ide);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+                    .getMessage());
+        } catch (IllegalObjectEntityException ioee) {
+            Log.errorException(ioee);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+
+	public Link_Transferable[] transmitLinksButIds(
+			Identifier_Transferable[] ids_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		try {
+            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Log.debugMessage("CMServerImpl.transmitLinksButIds | requiere "
+                    + (ids_Transferable.length == 0 ? "all" : Integer
+                            .toString(ids_Transferable.length))
+                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+            List list;
+            if (ids_Transferable.length > 0) {
+                List idsList = new ArrayList(ids_Transferable.length);
+                for (int i = 0; i < ids_Transferable.length; i++)
+                    idsList.add(new Identifier(ids_Transferable[i]));
+                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.LINK_ENTITY_CODE), idsList, true);
+            } else
+                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
+
+            Link_Transferable[] transferables = new Link_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                Link link = (Link) it.next();
+                transferables[i] = (Link_Transferable) link.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (IllegalDataException ide) {
+            Log.errorException(ide);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+                    .getMessage());
+        } catch (IllegalObjectEntityException ioee) {
+            Log.errorException(ioee);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+
+	public LinkType_Transferable transmitLinkType(
+			Identifier_Transferable id_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.transmitLinkType | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            LinkType linkType = (LinkType) ConfigurationStorableObjectPool.getStorableObject(id, true);
+            return (LinkType_Transferable) linkType.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+
+	public LinkType_Transferable[] transmitLinkTypes(
+			Identifier_Transferable[] ids_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		try {
+            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Log.debugMessage("CMServerImpl.transmitLinks | requiere "
+                    + (ids_Transferable.length == 0 ? "all" : Integer
+                            .toString(ids_Transferable.length))
+                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+            List list;
+            if (ids_Transferable.length > 0) {
+                List idsList = new ArrayList(ids_Transferable.length);
+                for (int i = 0; i < ids_Transferable.length; i++)
+                    idsList.add(new Identifier(ids_Transferable[i]));
+                list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+            } else
+                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
+
+            LinkType_Transferable[] transferables = new LinkType_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                LinkType linkType = (LinkType) it.next();
+                transferables[i] = (LinkType_Transferable) linkType.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (IllegalDataException ide) {
+            Log.errorException(ide);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+                    .getMessage());
+        } catch (IllegalObjectEntityException ioee) {
+            Log.errorException(ioee);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+
+	public LinkType_Transferable[] transmitLinkTypesButIds(
+			Identifier_Transferable[] ids_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		try {
+            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Log.debugMessage("CMServerImpl.transmitLinksButIds | requiere "
+                    + (ids_Transferable.length == 0 ? "all" : Integer
+                            .toString(ids_Transferable.length))
+                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+            List list;
+            if (ids_Transferable.length > 0) {
+                List idsList = new ArrayList(ids_Transferable.length);
+                for (int i = 0; i < ids_Transferable.length; i++)
+                    idsList.add(new Identifier(ids_Transferable[i]));
+                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.LINKTYPE_ENTITY_CODE), idsList, true);
+            } else
+                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
+
+            LinkType_Transferable[] transferables = new LinkType_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                LinkType linkType = (LinkType) it.next();
+                transferables[i] = (LinkType_Transferable) linkType.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (IllegalDataException ide) {
+            Log.errorException(ide);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+                    .getMessage());
+        } catch (IllegalObjectEntityException ioee) {
+            Log.errorException(ioee);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+    
     public MCM_Transferable[] transmitMCMs(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
