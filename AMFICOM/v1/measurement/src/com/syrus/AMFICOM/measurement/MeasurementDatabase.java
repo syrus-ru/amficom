@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.39 2004/11/16 15:48:45 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.40 2004/11/22 13:49:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.40 $, $Date: 2004/11/22 13:49:36 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -238,7 +238,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -323,7 +323,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}	

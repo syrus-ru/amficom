@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.48 2004/11/19 15:30:31 bob Exp $
+ * $Id: TestDatabase.java,v 1.49 2004/11/22 13:49:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/11/19 15:30:31 $
+ * @version $Revision: 1.49 $, $Date: 2004/11/22 13:49:36 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -269,7 +269,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}  finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		if (!msList.isEmpty())
@@ -359,7 +359,7 @@ public class TestDatabase extends StorableObjectDatabase {
             } catch (SQLException sqle1) {
                 Log.errorException(sqle1);
             } finally {
-                DatabaseConnection.closeConnection(connection);
+                DatabaseConnection.releaseConnection(connection);
             }
         }
     }
@@ -422,7 +422,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		((ArrayList)measurements).trimToSize();
@@ -476,7 +476,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -515,7 +515,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -561,7 +561,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -630,7 +630,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -710,7 +710,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -743,7 +743,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}

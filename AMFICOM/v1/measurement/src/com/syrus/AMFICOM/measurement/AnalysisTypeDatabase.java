@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.39 2004/11/19 09:01:07 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.40 2004/11/22 13:49:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/11/19 09:01:07 $
+ * @version $Revision: 1.40 $, $Date: 2004/11/22 13:49:36 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -181,7 +181,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		((ArrayList)inParTyps).trimToSize();
@@ -320,7 +320,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
             catch (SQLException sqle1) {
                 Log.errorException(sqle1);
             } finally{
-                DatabaseConnection.closeConnection(connection);
+                DatabaseConnection.releaseConnection(connection);
             }
         }        
     }
@@ -432,7 +432,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -491,7 +491,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}

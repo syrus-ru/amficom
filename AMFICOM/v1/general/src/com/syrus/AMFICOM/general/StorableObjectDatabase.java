@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.54 2004/11/19 11:31:39 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.55 2004/11/22 13:49:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2004/11/19 11:31:39 $
+ * @version $Revision: 1.55 $, $Date: 2004/11/22 13:49:12 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -117,7 +117,7 @@ public abstract class StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 			finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -203,7 +203,7 @@ public abstract class StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 			finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -292,7 +292,7 @@ public abstract class StorableObjectDatabase {
 					Log.errorException(sqle1);
 				}
 				finally{
-					DatabaseConnection.closeConnection(connection);
+					DatabaseConnection.releaseConnection(connection);
 				}
 			}
 			
@@ -361,7 +361,7 @@ public abstract class StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 			finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -399,7 +399,7 @@ public abstract class StorableObjectDatabase {
 							statement.close();
 					}
 					finally {
-						DatabaseConnection.closeConnection(connection);
+						DatabaseConnection.releaseConnection(connection);
 					}
 				}
 			}
@@ -519,7 +519,7 @@ public abstract class StorableObjectDatabase {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -684,7 +684,7 @@ public abstract class StorableObjectDatabase {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		return ids;
@@ -867,7 +867,7 @@ public abstract class StorableObjectDatabase {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		return result;
@@ -934,7 +934,7 @@ public abstract class StorableObjectDatabase {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 
@@ -988,7 +988,7 @@ public abstract class StorableObjectDatabase {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -1058,7 +1058,7 @@ public abstract class StorableObjectDatabase {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}

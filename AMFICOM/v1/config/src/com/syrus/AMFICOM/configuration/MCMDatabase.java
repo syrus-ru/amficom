@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.31 2004/11/17 07:56:25 bob Exp $
+ * $Id: MCMDatabase.java,v 1.32 2004/11/22 13:49:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/11/17 07:56:25 $
+ * @version $Revision: 1.32 $, $Date: 2004/11/22 13:49:24 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -203,7 +203,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		mcm.setKISs(kiss);
@@ -301,7 +301,7 @@ public class MCMDatabase extends StorableObjectDatabase {
             } catch (SQLException sqle1) {
                 Log.errorException(sqle1);
             } finally {
-                DatabaseConnection.closeConnection(connection);
+                DatabaseConnection.releaseConnection(connection);
             }
         }
     }

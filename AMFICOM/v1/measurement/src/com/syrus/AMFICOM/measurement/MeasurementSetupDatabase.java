@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.43 2004/11/17 08:13:30 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.44 2004/11/22 13:49:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/11/17 08:13:30 $
+ * @version $Revision: 1.44 $, $Date: 2004/11/22 13:49:36 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -190,7 +190,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -224,7 +224,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -334,7 +334,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -412,7 +412,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		measurementSetup.setMonitoredElementIds(meIds);
@@ -499,7 +499,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
             } catch (SQLException sqle1) {
                 Log.errorException(sqle1);
             } finally {
-                DatabaseConnection.closeConnection(connection);
+                DatabaseConnection.releaseConnection(connection);
             }
         }
     }
@@ -532,7 +532,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}	

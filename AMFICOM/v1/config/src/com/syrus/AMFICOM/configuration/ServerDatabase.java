@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.28 2004/11/16 12:33:17 bob Exp $
+ * $Id: ServerDatabase.java,v 1.29 2004/11/22 13:49:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.29 $, $Date: 2004/11/22 13:49:24 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -184,7 +184,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		return mcmIds;

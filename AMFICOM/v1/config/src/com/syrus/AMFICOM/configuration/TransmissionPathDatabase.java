@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.27 2004/11/17 07:56:25 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.28 2004/11/22 13:49:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/17 07:56:25 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/22 13:49:24 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -210,7 +210,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -296,7 +296,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
             } catch (SQLException sqle1) {
                 Log.errorException(sqle1);
             } finally {
-                DatabaseConnection.closeConnection(connection);
+                DatabaseConnection.releaseConnection(connection);
             }
         }
     }
@@ -376,7 +376,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally{
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}

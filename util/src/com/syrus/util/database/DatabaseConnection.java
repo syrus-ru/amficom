@@ -108,7 +108,7 @@ public class DatabaseConnection {
 		}
 	}
 	
-	public static void closeConnection(Connection connection) {
+	public static void releaseConnection(Connection connection) {
 		if (connection != null) {
 			try {
 				// пока не организовано взаимодействие с ConnectionPool

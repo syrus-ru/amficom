@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.38 2004/11/19 08:59:52 bob Exp $
+ * $Id: KISDatabase.java,v 1.39 2004/11/22 13:49:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/11/19 08:59:52 $
+ * @version $Revision: 1.39 $, $Date: 2004/11/22 13:49:24 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -225,7 +225,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		kis.setMeasurementPortIds(measurementPortIds);
@@ -325,7 +325,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
@@ -376,7 +376,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-                DatabaseConnection.closeConnection(connection);
+                DatabaseConnection.releaseConnection(connection);
             }
 		}
 		return monitoredElements;
@@ -467,7 +467,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.closeConnection(connection);
+				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
