@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2004/09/14 13:46:08 bass Exp $
+# $Id: Makefile,v 1.4 2004/12/21 10:44:03 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -14,7 +14,6 @@ JIKESFLAGS = -target 1.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
 
 .PHONY: export
 export: $(LIBNAME)
@@ -80,3 +79,8 @@ distclean: clean
 $(LIBNAME): .all
 	$(JAR) cf $@ \
 		-C $(CLASSDIR) com
+
+#### Install ####
+install: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)
+
