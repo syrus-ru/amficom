@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.4 2005/01/17 10:54:59 bob Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.5 2005/01/26 08:59:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,23 +31,12 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/17 10:54:59 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/26 08:59:41 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class SiteNodeTypeDatabase extends StorableObjectDatabase {
-	 // codename VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_CODENAME      = "codename";
-    // name VARCHAR2(128),
-    public static final String COLUMN_NAME  = "name";
-    // description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-    // image_id VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_IMAGE_ID      = "image_id";
-    // topological NUMBER(1),
-    public static final String COLUMN_TOPOLOGICAL   = "topological";
-    
-	private static String columns;
+	 private static String columns;
 	
 	private static String updateMultiplySQLValues;
 
@@ -70,11 +59,11 @@ public class SiteNodeTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_IMAGE_ID + COMMA
-				+ COLUMN_TOPOLOGICAL;
+				+ SiteNodeTypeWrapper.COLUMN_CODENAME + COMMA
+				+ SiteNodeTypeWrapper.COLUMN_NAME + COMMA
+				+ SiteNodeTypeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ SiteNodeTypeWrapper.COLUMN_IMAGE_ID + COMMA
+				+ SiteNodeTypeWrapper.COLUMN_TOPOLOGICAL;
 		}
 		return columns;
 	}	
@@ -129,11 +118,11 @@ public class SiteNodeTypeDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_IMAGE_ID),
-							   resultSet.getInt(COLUMN_TOPOLOGICAL) == 1);		
+							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeTypeWrapper.COLUMN_CODENAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeTypeWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeTypeWrapper.COLUMN_DESCRIPTION)),
+							   DatabaseIdentifier.getIdentifier(resultSet, SiteNodeTypeWrapper.COLUMN_IMAGE_ID),
+							   resultSet.getInt(SiteNodeTypeWrapper.COLUMN_TOPOLOGICAL) == 1);		
 		return siteNodeType;
 	}
 
