@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.1 2004/08/04 12:59:53 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.2 2004/08/04 17:30:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/04 12:59:53 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/04 17:30:50 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -46,17 +46,8 @@ public class CORBAServer /*extends Thread */{
 	private NamingContextExt namingContext;
 
 	public CORBAServer() throws CommunicationException {
-		Properties properties = System.getProperties();
-		String host = ApplicationProperties.getString("ORBInitialHost", DEFAULT_ORB_INITIAL_HOST);
-		int port = ApplicationProperties.getInt("ORBInitialPort", DEFAULT_ORB_INITIAL_PORT);
-		System.out.println("host: " + host + ", port: " + Integer.parseInt(Integer.toString(port)));
-		properties.setProperty("org.omg.CORBA.ORBInitialHost", host);
-		properties.setProperty("org.omg.CORBA.ORBInitialPort", Integer.toString(port));
-		String[] args = null;
-		this.orb = ORB.init(args, properties);
-
-		this.initNamingContext();
-		
+		this.initORB();
+	
 		try {
 			this.initPOA();
 		}
@@ -64,12 +55,9 @@ public class CORBAServer /*extends Thread */{
 			throw new CommunicationException("Cannot activate POA", ue);
 		}
 
-		try {
-			this.poa.the_POAManager().activate();
-		}
-		catch (org.omg.PortableServer.POAManagerPackage.AdapterInactive ai) {
-			throw new CommunicationException("Cannot activate POA Manager", ai);
-		}
+		this.initNamingContext();
+
+		this.runORB();
 	}
 /*
 	public void activateServant(org.omg.CORBA.Object reference, String name) throws CommunicationException {
@@ -111,19 +99,15 @@ public class CORBAServer /*extends Thread */{
 		return this.orb;
 	}
 
-	public void run() {
-		this.orb.run();
-	}
-
-	public void shutdown() {
-		try {
-			this.poa.the_POAManager().deactivate(false, false);
-		}
-		catch (UserException ue) {
-			Log.errorException(ue);
-		}
-		this.poa.destroy(false, false);
-		this.orb.shutdown(true);
+	private void initORB() {
+		Properties properties = System.getProperties();
+		String host = ApplicationProperties.getString("ORBInitialHost", DEFAULT_ORB_INITIAL_HOST);
+		int port = ApplicationProperties.getInt("ORBInitialPort", DEFAULT_ORB_INITIAL_PORT);
+		System.out.println("host: " + host + ", port: " + Integer.parseInt(Integer.toString(port)));
+		properties.setProperty("org.omg.CORBA.ORBInitialHost", host);
+		properties.setProperty("org.omg.CORBA.ORBInitialPort", Integer.toString(port));
+		String[] args = null;
+		this.orb = ORB.init(args, properties);
 	}
 
 	private void initPOA() throws UserException {
@@ -137,7 +121,7 @@ public class CORBAServer /*extends Thread */{
 		}
 		Policy[] policies = new Policy[7];
 		policies[0] = rootPoa.create_thread_policy(ThreadPolicyValue.ORB_CTRL_MODEL);
-		policies[1] = rootPoa.create_lifespan_policy(LifespanPolicyValue.PERSISTENT);
+		policies[1] = rootPoa.create_lifespan_policy(LifespanPolicyValue.TRANSIENT);
 		policies[2] = rootPoa.create_id_uniqueness_policy(IdUniquenessPolicyValue.UNIQUE_ID);
 		policies[3] = rootPoa.create_id_assignment_policy(IdAssignmentPolicyValue.SYSTEM_ID);
 		policies[4] = rootPoa.create_servant_retention_policy(ServantRetentionPolicyValue.RETAIN);
@@ -145,6 +129,8 @@ public class CORBAServer /*extends Thread */{
 		policies[6] = rootPoa.create_implicit_activation_policy(ImplicitActivationPolicyValue.IMPLICIT_ACTIVATION);
 
 		this.poa = rootPoa.create_POA("poa1", rootPoa.the_POAManager(), policies);
+
+		this.poa.the_POAManager().activate();
 	}
 
 	private void initNamingContext() {
@@ -154,5 +140,32 @@ public class CORBAServer /*extends Thread */{
 		catch (org.omg.CORBA.ORBPackage.InvalidName in) {
 			Log.errorException(in);
 		}
+	}
+
+	private void runORB() {
+		Thread thread = new Thread() {
+			public void run() {
+				CORBAServer.this.orb.run();
+			}
+		};
+		thread.setDaemon(true);
+		thread.setName(this.orb.getClass().getName());
+		thread.start();
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				CORBAServer.this.shutdown();
+			}
+		});
+	}
+
+	private void shutdown() {
+		try {
+			this.poa.the_POAManager().deactivate(false, false);
+		}
+		catch (UserException ue) {
+			Log.errorException(ue);
+		}
+		this.poa.destroy(false, false);
+		this.orb.shutdown(true);
 	}
 }

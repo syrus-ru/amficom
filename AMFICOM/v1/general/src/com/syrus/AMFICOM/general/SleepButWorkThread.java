@@ -24,6 +24,7 @@ public abstract class SleepButWorkThread extends Thread {
 	
 	protected void sleepCauseOfFall() {
 		if (this.fallsCounter < this.maxFalls) {
+			Log.debugMessage("WARNING: the fall N" + this.fallsCounter + " of " + this.maxFalls  + " maximum", Log.DEBUGLEVEL05);
 			try {
 				sleep(this.timeToSleep);
 			}
