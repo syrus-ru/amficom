@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/02/11 16:09:06 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.5 2005/02/24 09:16:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,10 +10,9 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/11 16:09:06 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/24 09:16:06 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -21,7 +20,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	protected static final Short CHARACTERISTIC_SHORT	= new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 
-	private LinkedIdsConditionImpl(List linkedIds, Short entityCode) {
+	private LinkedIdsConditionImpl(Collection linkedIds, Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.entityCode = entityCode;
 	}

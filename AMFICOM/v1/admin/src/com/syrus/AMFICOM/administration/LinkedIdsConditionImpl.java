@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.7 2005/02/11 16:18:30 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.8 2005/02/24 09:16:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,20 +11,19 @@ package com.syrus.AMFICOM.administration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/11 16:18:30 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/24 09:16:12 $
  * @author $Author: bob $
  * @module admin_v1
  */
 final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
-	private LinkedIdsConditionImpl(List linkedIds, Short entityCode) {
+	private LinkedIdsConditionImpl(Collection linkedIds, Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.entityCode = entityCode;
 	}

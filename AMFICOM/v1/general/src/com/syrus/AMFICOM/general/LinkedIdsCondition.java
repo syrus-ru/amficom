@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.12 2005/02/11 16:09:06 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.13 2005/02/24 09:16:06 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,11 @@ package com.syrus.AMFICOM.general;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -67,7 +65,7 @@ import com.syrus.util.Log;
  * </ul>
  * 
  * @author $Author: bob $
- * @version $Revision: 1.12 $, $Date: 2005/02/11 16:09:06 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/24 09:16:06 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -89,7 +87,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * Field is used by descendants only, and never directly.
 	 */
 
-	protected List linkedIds;
+	protected Collection linkedIds;
 	
 	private LinkedIdsCondition delegate;
 
@@ -101,16 +99,16 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this(Collections.singletonList(identifier), entityCode);
 	}
 
-	public LinkedIdsCondition(final List linkedIds, final short entityCode) {
+	public LinkedIdsCondition(final Collection linkedIds, final short entityCode) {
 		this(linkedIds, new Short(entityCode));
 	}
 
 	public LinkedIdsCondition(final LinkedIdsCondition_Transferable transferable) {
 		Short code = new Short(transferable.entity_code);
 		//Identifier id = null;
-		List linkIds = null;
+		Collection linkIds = null;
 		
-		linkIds = new ArrayList(transferable.linked_ids.length);
+		linkIds = new HashSet(transferable.linked_ids.length);
 		for (int i = 0; i < transferable.linked_ids.length; i++) {
 			linkIds.add(new Identifier(transferable.linked_ids[i]));
 		}
@@ -118,7 +116,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl"; //$NON-NLS-1$
 		try {
 			Constructor ctor;
-			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { List.class, Short.class});
+			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { Collection.class, Short.class});
 			ctor.setAccessible(true);
 			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { linkIds, code});								
 		}
@@ -195,11 +193,11 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		// Empty constructor used by descendants only.
 	}
 
-	private LinkedIdsCondition(final List linkedIds, final Short entityCode) {
+	private LinkedIdsCondition(final Collection linkedIds, final Short entityCode) {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor;
-			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { List.class, Short.class});
+			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { Collection.class, Short.class});
 			ctor.setAccessible(true);
 			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { linkedIds, entityCode});			
 		}
@@ -313,7 +311,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	/**
 	 * @param list
 	 * @throws ApplicationException
-	 * @see StorableObjectCondition#isNeedMore(List)
+	 * @see StorableObjectCondition#isNeedMore(Collection)
 	 */
 	public boolean isNeedMore(final Collection list) throws ApplicationException {
 		return this.delegate.isNeedMore(list);
@@ -330,11 +328,11 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.delegate.setEntityCode(entityCode);
 	}
 
-	public void setLinkedIds(List linkedIds) {
+	public void setLinkedIds(Collection linkedIds) {
 		this.delegate.linkedIds = linkedIds;		
 	}
 
-	public List getLinkedIds() {
+	public Collection getLinkedIds() {
 		return this.delegate.linkedIds;
 	}
 	
@@ -342,14 +340,14 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.delegate.linkedIds = Collections.singletonList(linkedId);
 	}
 	
-	public Map sort(List linkIds) {
+	public Map sort(Collection linkIds) {
 		Map codeIdsMap = new Hashtable();
 		for (Iterator it = linkIds.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			short code = id.getMajor();
-			List ids = (List) codeIdsMap.get(new Short(code));
+			Collection ids = (Collection) codeIdsMap.get(new Short(code));
 			if(ids == null) {
-				ids = new LinkedList();
+				ids = new HashSet();
 				codeIdsMap.put(new Short(code), ids);
 			}
 			ids.add(id);
@@ -357,11 +355,11 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return codeIdsMap;		
 	}
 	
-	public boolean conditionTest(List params) {		
+	public boolean conditionTest(Collection params) {		
 		return this.conditionTest(params, this.linkedIds);
 	}
 	
-	public boolean conditionTest(List params, List links) {
+	public boolean conditionTest(Collection params, Collection links) {
 		if (params != null) {
 			for (Iterator it = params.iterator(); it.hasNext();) {
 				Identified identified = (Identified) it.next();
