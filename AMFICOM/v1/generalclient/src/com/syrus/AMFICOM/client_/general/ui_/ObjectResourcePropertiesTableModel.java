@@ -59,7 +59,7 @@ public class ObjectResourcePropertiesTableModel extends AbstractTableModel
 		if(columnIndex == 0)
 			name = LangModel.getString(KEY_PROPERTY);
 		else
-		if(columnIndex == 0)
+		if(columnIndex == 1)
 			name = LangModel.getString(KEY_VALUE);
 
 		return name;
