@@ -6,25 +6,20 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
+import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.corba.PathElement;
-import com.syrus.AMFICOM.Client.Map.mapview.Marker;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-
-import java.awt.Point;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.mapview.CablePath;
 
 import javax.swing.table.TableColumn;
 

@@ -4,7 +4,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
+import com.syrus.AMFICOM.mapview.VoidElement;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +14,8 @@ import javax.swing.JMenuItem;
 public class VoidElementPopupMenu extends MapPopupMenu 
 {
 
-	private JMenuItem propertiesMenuItem = new JMenuItem();
+	private JMenuItem mapPropertiesMenuItem = new JMenuItem();
+	private JMenuItem mapViewPropertiesMenuItem = new JMenuItem();
 	private JMenuItem addSiteMenuItem = new JMenuItem();
 
 	private static VoidElementPopupMenu instance = new VoidElementPopupMenu();
@@ -43,12 +44,20 @@ public class VoidElementPopupMenu extends MapPopupMenu
 	
 	private void jbInit()
 	{
-		propertiesMenuItem.setText(LangModelMap.getString("Properties"));
-		propertiesMenuItem.addActionListener(new ActionListener()
+		mapPropertiesMenuItem.setText(LangModelMap.getString("MapProperties"));
+		mapPropertiesMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					showProperties();
+					showMapProperties();
+				}
+			});
+		mapViewPropertiesMenuItem.setText(LangModelMap.getString("MapViewProperties"));
+		mapViewPropertiesMenuItem.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					showMapViewProperties();
 				}
 			});
 		addSiteMenuItem.setText(LangModelMap.getString("AddSite"));
@@ -61,12 +70,18 @@ public class VoidElementPopupMenu extends MapPopupMenu
 			});
 		this.add(addSiteMenuItem);
 		this.addSeparator();
-		this.add(propertiesMenuItem);
+		this.add(mapPropertiesMenuItem);
+		this.add(mapViewPropertiesMenuItem);
 	}
 
-	private void showProperties()
+	private void showMapProperties()
 	{
-		super.showProperties(com.syrus.AMFICOM.Client.Map.mapview.VoidElement.getInstance(getLogicalNetLayer().getMapView()));
+		super.showProperties(getLogicalNetLayer().getMapView().getMap());
+	}
+
+	private void showMapViewProperties()
+	{
+		super.showProperties(getLogicalNetLayer().getMapView());
 	}
 
 	private void addSite()

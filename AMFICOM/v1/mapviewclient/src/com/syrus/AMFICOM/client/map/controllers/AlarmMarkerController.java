@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.2 2004/12/30 16:17:48 krupenn Exp $
+ * $Id: AlarmMarkerController.java,v 1.3 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,15 +23,15 @@ import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.ImageIcon;
-import com.syrus.AMFICOM.Client.Map.mapview.AlarmMarker;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.AlarmMarker;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/30 16:17:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 12:19:18 $
  * @module
  * @author $Author: krupenn $
  * @see

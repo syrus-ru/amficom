@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.7 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.8 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,13 +13,14 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.MapView;
 
 import java.util.Iterator;
@@ -32,7 +33,7 @@ import java.util.List;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/31 12:19:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -102,14 +103,16 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		// и прохождение по ней заменяется непривязанной связью
 		for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
 		{
-			CablePath cpath = (CablePath)it.next();
+			CablePath cablePath = (CablePath)it.next();
 			
-			cpath.removeLink(link);
+			cablePath.removeLink(link);
 			UnboundLink unbound = super.createUnboundLinkWithNodeLink(
 					link.getStartNode(),
 					link.getEndNode());
-			unbound.setCablePath(cpath);
-			cpath.addLink(unbound);
+			unbound.setCablePath(cablePath);
+			CableController cableController = (CableController )
+				getLogicalNetLayer().getMapViewController().getController(cablePath);
+			cablePath.addLink(unbound, cableController.generateCCI(unbound));
 		}
 
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

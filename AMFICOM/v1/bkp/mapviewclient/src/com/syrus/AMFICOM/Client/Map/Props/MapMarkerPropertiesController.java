@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 
 public final class MapMarkerPropertiesController 
 		extends MapElementPropertiesController 
@@ -118,7 +118,7 @@ public final class MapMarkerPropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		Marker marker = (Marker )object;
+		Marker marker = (Marker)object;
 
 		MarkerController mc = (MarkerController)com.syrus.AMFICOM.Client.Map.Controllers.MarkerController.getInstance();
 

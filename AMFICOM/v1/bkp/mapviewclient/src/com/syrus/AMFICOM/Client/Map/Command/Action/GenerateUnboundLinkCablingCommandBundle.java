@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.7 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.8 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,11 +13,12 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.MapView;
 
 import java.util.Iterator;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/31 12:19:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -87,7 +88,9 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 			mnle.setPhysicalLink(link);
 			link.addNodeLink(mnle);
 		}
-		path.addLink(link);
+		CableController cableController = (CableController )
+			getLogicalNetLayer().getMapViewController().getController(path);
+		path.addLink(link, cableController.generateCCI(link));
 		link.getBinding().add(path);
 
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

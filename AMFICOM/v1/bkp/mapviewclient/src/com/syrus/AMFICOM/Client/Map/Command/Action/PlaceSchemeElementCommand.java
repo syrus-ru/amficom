@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.9 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.10 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
@@ -31,7 +31,7 @@ import java.awt.geom.Point2D;
  * Разместить c[tvysq элемент на карте в соответствии с привязкой
  * или по координатам
  * 
- * @version $Revision: 1.9 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/31 12:19:18 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

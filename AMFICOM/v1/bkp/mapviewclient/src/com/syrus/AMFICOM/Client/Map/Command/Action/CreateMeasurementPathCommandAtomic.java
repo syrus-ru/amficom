@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.6 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.7 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,12 +13,13 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/31 12:19:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -40,21 +41,11 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 	/** схемный путь */
 	SchemePath path;
 	
-	/** начальный узел */
-	AbstractNode startNode;
-	
-	/** конечный узел */
-	AbstractNode endNode;
-	
 	public CreateMeasurementPathCommandAtomic(
-			SchemePath path,
-			AbstractNode startNode,
-			AbstractNode endNode)
+			SchemePath path)
 	{
 		super(MapActionCommand.ACTION_DRAW_LINE);
 		this.path = path;
-		this.startNode = startNode;
-		this.endNode = endNode;
 	}
 	
 	public MeasurementPath getPath()
@@ -73,16 +64,13 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 		
 		try
 		{
-			mp = new MeasurementPath(
+			mp = com.syrus.AMFICOM.mapview.MeasurementPath.createInstance(
 					path,
-					IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
-					startNode, 
-					endNode, 
 					logicalNetLayer.getMapView());
 	
 			logicalNetLayer.getMapViewController().addMeasurementPath(mp);
 		}
-		catch (IllegalObjectEntityException e)
+		catch (ApplicationException e)
 		{
 			e.printStackTrace();
 		}

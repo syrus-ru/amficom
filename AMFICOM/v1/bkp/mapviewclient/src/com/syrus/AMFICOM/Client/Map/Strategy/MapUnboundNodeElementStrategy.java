@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.9 2004/12/24 15:42:13 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.10 2005/01/31 12:19:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
-import com.syrus.AMFICOM.Client.Map.mapview.Selection;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
+import com.syrus.AMFICOM.mapview.Selection;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:13 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/31 12:19:19 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -99,7 +99,7 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 					}
 					else
 					{
-						Selection sel = new Selection(logicalNetLayer);
+						Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
 						sel.addAll(logicalNetLayer.getSelectedElements());
 						logicalNetLayer.setCurrentMapElement(sel);
 					}

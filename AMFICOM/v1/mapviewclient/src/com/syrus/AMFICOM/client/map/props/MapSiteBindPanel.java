@@ -7,9 +7,10 @@ import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
+import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -264,7 +265,10 @@ public final class MapSiteBindPanel
 
 			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(cablePath);
-			cablePath.addLink(unbound);
+
+			CableController cableController = (CableController )
+				getLogicalNetLayer().getMapViewController().getController(cablePath);
+			cablePath.addLink(unbound, cableController.generateCCI(unbound));
 		}
 		
 		elementsTree.updateUI();

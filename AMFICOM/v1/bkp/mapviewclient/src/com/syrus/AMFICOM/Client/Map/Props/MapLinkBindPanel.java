@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
+import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
@@ -13,8 +14,8 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import java.awt.GridBagConstraints;
@@ -39,7 +40,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePathBinding;
+import com.syrus.AMFICOM.mapview.CablePathBinding;
 
 public final class MapLinkBindPanel
 		extends JPanel 
@@ -326,9 +327,9 @@ public final class MapLinkBindPanel
 
 	public void unbind(Object or)
 	{
-		CablePath path = (CablePath)or;
+		CablePath cablePath = (CablePath)or;
 
-		path.removeLink(link);
+		cablePath.removeLink(link);
 
 		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 				link.getStartNode(),
@@ -337,11 +338,14 @@ public final class MapLinkBindPanel
 		command.execute();
 
 		UnboundLink unbound = command.getUnbound();
-		unbound.setCablePath(path);
-		path.addLink(unbound);
-		link.getBinding().remove(path);
+		unbound.setCablePath(cablePath);
+
+		CableController cableController = (CableController )
+			getLogicalNetLayer().getMapViewController().getController(cablePath);
+		cablePath.addLink(unbound, cableController.generateCCI(unbound));
+		link.getBinding().remove(cablePath);
 		
-		((ObjListModel )cableList.getModel()).removeElement(path);
+		((ObjListModel )cableList.getModel()).removeElement(cablePath);
 
 		tunnelLayout.updateElements();
 	}

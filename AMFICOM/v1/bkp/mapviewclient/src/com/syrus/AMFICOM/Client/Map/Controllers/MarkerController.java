@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.5 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MarkerController.java,v 1.6 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,9 +15,9 @@ import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.Marker;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.Marker;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -44,7 +44,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/31 12:19:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -72,6 +72,13 @@ public class MarkerController extends AbstractNodeController
 		return instance;
 	}
 
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+	
 	public Rectangle getDefaultBounds()
 	{
 		return DEFAULT_BOUNDS;

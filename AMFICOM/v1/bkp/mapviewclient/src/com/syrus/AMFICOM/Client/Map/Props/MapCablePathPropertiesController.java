@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
 import com.syrus.AMFICOM.scheme.SchemeUtils;

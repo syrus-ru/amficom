@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.2 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.3 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,13 +14,10 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.Controllers.AbstractLinkController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
-
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.PathElement;
@@ -28,6 +25,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemeLink;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -38,14 +36,10 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
 /**
- * линейный элемента карты 
- * 
- * 
- * 
- * @version $Revision: 1.2 $, $Date: 2005/01/30 15:38:18 $
- * @module
+ * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 12:19:18 $
+ * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController
 {
@@ -62,6 +56,16 @@ public final class MeasurementPathController extends AbstractLinkController
 		return instance;
 	}
 
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isSelectionVisible(MapElement me)
 	{
 		if(! (me instanceof MeasurementPath))
@@ -72,6 +76,9 @@ public final class MeasurementPathController extends AbstractLinkController
 		return mpath.isSelected();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
 	{
 		if(! (me instanceof MeasurementPath))
@@ -93,6 +100,9 @@ public final class MeasurementPathController extends AbstractLinkController
 		return vis;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getToolTipText(MapElement me)
 	{
 		if(! (me instanceof MeasurementPath))
@@ -136,6 +146,9 @@ public final class MeasurementPathController extends AbstractLinkController
 		return s1 + s2 + s3;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(! (me instanceof MeasurementPath))
@@ -159,6 +172,16 @@ public final class MeasurementPathController extends AbstractLinkController
 		paint(mpath, g, visibleBounds, str, color, isSelectionVisible(mpath));
 	}
 
+	/**
+	 * Отрисовать путь с заданным стилем и цветом.
+	 * и цветом линии
+	 * @param mpath путь
+	 * @param g графический контекст
+	 * @param visibleBounds видимая область
+	 * @param stroke стиль линии
+	 * @param color цвет линии
+	 * @param selectionVisible рисовать рамку выделения
+	 */
 	public void paint(MeasurementPath mpath, Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
 	{
 		if(!isElementVisible(mpath, visibleBounds))
@@ -173,7 +196,9 @@ public final class MeasurementPathController extends AbstractLinkController
 	}
 
 	/**
-	 * точка находится на фрагменте, если она находится в рамках линий выделения
+	 * {@inheritDoc}
+	 * <br>Точка находится на пути, если она находится на любом кабеле,
+	 * котораый входит в путь.
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
 	{
@@ -192,6 +217,12 @@ public final class MeasurementPathController extends AbstractLinkController
 		return false;
 	}
 
+	/**
+	 * Получить топологический элемент, соответствующий участку схемного пути.
+	 * @param path путь
+	 * @param pe элемент пути
+	 * @return элемент карты
+	 */
 	public MapElement getMapElement(MeasurementPath path, PathElement pe)
 	{
 		MapElement me = null;

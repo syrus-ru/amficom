@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.7 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.8 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.MapView;
 
 import java.util.Iterator;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/31 12:19:18 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -206,12 +207,15 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 			// и добавить новую линию
 			for(Iterator it = logicalNetLayer.getMapViewController().getCablePaths(link).iterator(); it.hasNext();)
 			{
-				CablePath cpath = (CablePath)it.next();
-				cpath.addLink(newLink);
+				CablePath cablePath = (CablePath)it.next();
+
+				CableController cableController = (CableController )
+					getLogicalNetLayer().getMapViewController().getController(cablePath);
+				cablePath.addLink(newLink, cableController.generateCCI(newLink));
 				if(newLink instanceof UnboundLink)
-					((UnboundLink)newLink).setCablePath(cpath);
+					((UnboundLink)newLink).setCablePath(cablePath);
 				else
-					newLink.getBinding().add(cpath);
+					newLink.getBinding().add(cablePath);
 			}
 		}
 

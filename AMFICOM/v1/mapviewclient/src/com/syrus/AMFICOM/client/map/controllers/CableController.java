@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.2 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: CableController.java,v 1.3 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,18 +15,20 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.Controllers.AbstractLinkController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
-import com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItemDefaultFactory;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -35,23 +37,22 @@ import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
 import java.util.Iterator;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MeasurementPathController;
-import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * линейный элемента карты 
+ * Контроллер кабеля.
  * 
- * 
- * 
- * @version $Revision: 1.2 $, $Date: 2005/01/30 15:38:18 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 12:19:18 $
+ * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
 {
 	private static CableController instance = null;
+
+	/**
+	 * Фабричный объект создания привязки кабеля к линии.
+	 */
+	private static CableChannelingItemDefaultFactory cciFactory = new CableChannelingItemDefaultFactory();
 	
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane";
@@ -72,6 +73,9 @@ public final class CableController extends AbstractLinkController
 		return instance;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isSelectionVisible(MapElement me)
 	{
 		if(! (me instanceof CablePath))
@@ -96,6 +100,9 @@ public final class CableController extends AbstractLinkController
 		return isv;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
 	{
 		if(! (me instanceof CablePath))
@@ -117,6 +124,9 @@ public final class CableController extends AbstractLinkController
 		return vis;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getToolTipText(MapElement me)
 	{
 		if(! (me instanceof CablePath))
@@ -160,6 +170,9 @@ public final class CableController extends AbstractLinkController
 		return s1 + s2 + s3;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(! (me instanceof CablePath))
@@ -183,6 +196,16 @@ public final class CableController extends AbstractLinkController
 		paint(cpath, g, visibleBounds, str, color, isSelectionVisible(cpath));
 	}
 
+	/**
+	 * Отрисовать все линии, из которых состоит кабель, с заданным стилем.
+	 * и цветом линии
+	 * @param cpath кабель
+	 * @param g графический контекст
+	 * @param visibleBounds видимая область
+	 * @param stroke стиль линии
+	 * @param color цвет линии
+	 * @param selectionVisible рисовать рамку выделения
+	 */
 	public void paint(CablePath cpath, Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
 	{
 		if(!isElementVisible(cpath, visibleBounds))
@@ -197,7 +220,9 @@ public final class CableController extends AbstractLinkController
 	}
 
 	/**
-	 * точка находится на фрагменте, если она находится в рамках линий выделения
+	 * {@inheritDoc}
+	 * <br>Точка находится на кабеле, если она находится на любой линии,
+	 * которая входит в кабель.
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
 	{
@@ -216,6 +241,41 @@ public final class CableController extends AbstractLinkController
 		return false;
 	}
 
+	/**
+	 * Создать новый объект привязки к линии.
+	 * @param link лниия
+	 * @return объект привязки, или <code>null</code> при возникновении ошибки
+	 */
+	public static CableChannelingItem generateCCI(PhysicalLink link)
+	{
+		CableChannelingItem cci = cciFactory.newInstance();
+		cci.startSiteNodeImpl((SiteNode )link.getStartNode());
+		if(! (link instanceof UnboundLink))
+		{
+			cci.startSpare(MapPropertiesManager.getSpareLength());
+			cci.physicalLinkImpl(link);
+			cci.endSpare(MapPropertiesManager.getSpareLength());
+		}
+		cci.endSiteNodeImpl((SiteNode )link.getEndNode());
+		
+		try
+		{
+			SchemeStorableObjectPool.putStorableObject(cci);
+		}
+		catch (IllegalObjectEntityException e)
+		{
+			e.printStackTrace();
+			cci = null;
+		}
+
+		return cci;
+	}
+	/**
+	 * Получить расстояние от начального узла кабеля до заданной точки.
+	 * @param cpath кабель
+	 * @param pt точка в экранных координатах
+	 * @return дистанция топологическая
+	 */
 	public double getDistanceFromStartLt(CablePath cpath, Point pt)
 	{
 		double distance = 0.0;
@@ -244,8 +304,11 @@ public final class CableController extends AbstractLinkController
 	}
 
 	/**
-	 * Возвращяет длинну линии пересчитанную на коэффициент топологической 
-	 * привязки
+	 * Возвращяет расстояние от начального узла кабеля до заданной точки, 
+	 * пересчитанное на коэффициент топологической привязки.
+	 * @param cpath кабель
+	 * @param pt точка в экранных координатах
+	 * @return дистанция физическая
 	 */
 	public double getDistanceFromStartLf(CablePath cpath, Point pt)
 	{
@@ -253,31 +316,49 @@ public final class CableController extends AbstractLinkController
 		return getDistanceFromStartLt(cpath, pt) * kd;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public int getLineSize (MapElement link)
 	{
 		return MapPropertiesManager.getUnboundThickness();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getStyle (MapElement link)
 	{
 		return MapPropertiesManager.getStyle();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Stroke getStroke (MapElement link)
 	{
 		return MapPropertiesManager.getStroke();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Color getColor(MapElement link)
 	{
 		return MapPropertiesManager.getUnboundLinkColor();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Color getAlarmedColor(MapElement link)
 	{
 		return MapPropertiesManager.getAlarmedColor();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public int getAlarmedLineSize (MapElement link)
 	{
 		return MapPropertiesManager.getAlarmedThickness();

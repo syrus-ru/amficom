@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.23 2005/01/11 16:43:05 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.24 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,9 +42,9 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.Dimension;
@@ -63,7 +63,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.23 $, $Date: 2005/01/11 16:43:05 $
+ * @version $Revision: 1.24 $, $Date: 2005/01/31 12:19:18 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

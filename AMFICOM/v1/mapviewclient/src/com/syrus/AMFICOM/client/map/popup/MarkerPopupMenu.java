@@ -4,7 +4,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;
 
-import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

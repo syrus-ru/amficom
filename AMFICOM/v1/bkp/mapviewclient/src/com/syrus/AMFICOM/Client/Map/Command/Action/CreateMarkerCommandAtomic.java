@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.9 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.10 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,13 +12,14 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
-import com.syrus.AMFICOM.Client.Map.mapview.Marker;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.Marker;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -41,10 +42,9 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.9 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/31 12:19:18 $
  * @module map_v2
  * @author $Author: krupenn $
- * @see
  */
 public class CreateMarkerCommandAtomic extends MapActionCommand
 {
@@ -57,14 +57,14 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 	 * Выбранный фрагмент линии
 	 */
 	MeasurementPath path;
-	
+
 	MapView mapView;
-	
+
 	/**
 	 * дистанция от начала линии, на которой создается метка
 	 */
 	double distance;
-	
+
 	/**
 	 * точка, в которой создается новый топологический узел
 	 */
@@ -90,7 +90,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 		if ( !getLogicalNetLayer().getContext().getApplicationModel()
 				.isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 			return;
-		
+
 		mapView = logicalNetLayer.getMapView();
 
 		AbstractNode node = path.getStartNode();
@@ -99,7 +99,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 		for(Iterator it = nodeLinks.iterator(); it.hasNext();)
 		{
 			NodeLink mnle = (NodeLink)it.next();
-				
+
 			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(mnle);
 
 			if(nlc.isMouseOnElement(mnle, point))
@@ -108,8 +108,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 
 				try
 				{
-					marker = new Marker(
-							IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_ENTITY_CODE),
+					marker = com.syrus.AMFICOM.mapview.Marker.createInstance(
 							mapView, 
 							node,
 							mnle.getOtherNode(node),
@@ -118,18 +117,18 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 							dpoint);
 
 					logicalNetLayer.getMapViewController().addMarker(marker);
-					
+
 					MarkerController mc = (MarkerController)getLogicalNetLayer().getMapViewController().getController(marker);
-	
+
 					mc.updateScaleCoefficient(marker);
-					
+
 					mc.notifyMarkerCreated(marker);
 				}
-				catch (IllegalObjectEntityException e)
+				catch (ApplicationException e)
 				{
 					e.printStackTrace();
 				}
-		
+
 				break;
 			}
 			else

@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.Collector;
 
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

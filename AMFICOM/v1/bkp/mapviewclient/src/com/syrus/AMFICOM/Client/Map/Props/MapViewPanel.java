@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
+import com.syrus.AMFICOM.mapview.VoidElement;
 
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 import java.awt.Dimension;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.7 2004/12/24 15:42:13 krupenn Exp $
+ * $Id: MapSiteNodeElementStrategy.java,v 1.8 2005/01/31 12:19:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.mapview.Selection;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -34,7 +34,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/24 15:42:13 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/31 12:19:19 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -95,7 +95,7 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 					}
 					else
 					{
-						Selection sel = new Selection(logicalNetLayer);
+						Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
 						sel.addAll(logicalNetLayer.getSelectedElements());
 						logicalNetLayer.setCurrentMapElement(sel);
 					}

@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.8 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.9 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * –азместить элемент типа mpe на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.8 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/31 12:19:18 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -85,7 +85,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 		
 		mPath = logicalNetLayer.getMapViewController().findMeasurementPath(path);
 		if(mPath == null)
-			mPath = super.createMeasurementPath(path, startNode, endNode);
+			mPath = super.createMeasurementPath(path);
 		else
 		// если путь уже есть, все его составл€ющие нанос€тс€ заново
 			super.removeMeasurementPathCables(mPath);

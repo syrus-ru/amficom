@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.12 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.13 2005/01/31 12:19:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,9 +28,9 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.Marker;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.Marker;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
@@ -59,7 +59,7 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.13 $, $Date: 2005/01/31 12:19:19 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.38 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.39 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
@@ -33,13 +34,13 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
-import com.syrus.AMFICOM.Client.Map.mapview.AlarmMarker;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.EventMarker;
-import com.syrus.AMFICOM.Client.Map.mapview.Marker;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
-import com.syrus.AMFICOM.Client.Map.mapview.Selection;
-import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
+import com.syrus.AMFICOM.mapview.AlarmMarker;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.EventMarker;
+import com.syrus.AMFICOM.mapview.Marker;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.Selection;
+import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -81,7 +82,7 @@ import java.util.Set;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.38 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.39 $, $Date: 2005/01/31 12:19:18 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -428,7 +429,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		getMapViewController().setMapView(mapView);
 
 		//Поумолчанию текущий элемент Void
-		currentMapElement = VoidElement.getInstance(this.mapView);
+		currentMapElement = com.syrus.AMFICOM.mapview.VoidElement.getInstance(this.mapView);
 
 		commandList.flush();
 
@@ -869,7 +870,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				Selection sel;
 				if(! (getCurrentMapElement() instanceof Selection))
 				{
-					sel = new Selection(this);
+					sel = new Selection(this.getMapView().getMap());
 					setCurrentMapElement(sel);
 				}
 				else
@@ -894,7 +895,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 //				if(getCurrentMapElement() instanceof MapSelection)
 //				{
-					setCurrentMapElement(com.syrus.AMFICOM.Client.Map.mapview.VoidElement.getInstance(getMapView()));
+					setCurrentMapElement(com.syrus.AMFICOM.mapview.VoidElement.getInstance(getMapView()));
 					this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
 //				}
 			}
@@ -963,7 +964,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	                    getMapView(),
 						mne.getDistance(),
 						path,
-						mne.getMeId());
+						mne.getMeId(),
+						LangModelMap.getString("Marker"));
 					getMapViewController().addMarker(marker);
 
 					MarkerController mc = (MarkerController)getMapViewController().getController(marker);
@@ -996,8 +998,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	                    getMapView(),
 						mne.getDistance(),
 						path,
-						mne.getMeId());
-//					marker.descriptor = mne.descriptor;
+						mne.getMeId(),
+						LangModelMap.getString("Event"));
 					getMapViewController().addMarker(marker);
 
 					MarkerController mc = (MarkerController)getMapViewController().getController(marker);
@@ -1048,8 +1050,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 							getMapView(),
 							mne.getDistance(),
 							path,
-							mne.getMeId());
-//						marker.descriptor = mne.descriptor;
+							mne.getMeId(),
+							LangModelMap.getString("Alarm"));
 						getMapViewController().addMarker(marker);
 					}
 					else
@@ -1460,7 +1462,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapElementAtPoint(" + point + ")");
 		
 		int showMode = getMapState().getShowMode();
-		MapElement curME = VoidElement.getInstance(this.getMapView());
+		MapElement curME = com.syrus.AMFICOM.mapview.VoidElement.getInstance(this.getMapView());
 
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
 		

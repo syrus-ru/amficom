@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLinkController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: UnboundLinkController.java,v 1.2 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,26 +12,19 @@
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.map.MapElement;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 
 /**
- * линейный элемента карты 
- * 
- * 
- * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
- * @module
+ * Элемент непривязанной линии (участка непривязанного кабеля). 
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 12:19:18 $
+ * @module mapviewclient_v1
  */
 public final class UnboundLinkController extends PhysicalLinkController
 {
@@ -48,6 +41,17 @@ public final class UnboundLinkController extends PhysicalLinkController
 		return instance;
 	}
 
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isSelectionVisible(MapElement me)
 	{
 		if(! (me instanceof UnboundLink))
@@ -60,6 +64,9 @@ public final class UnboundLinkController extends PhysicalLinkController
 		return link.isSelected() || cc.isSelectionVisible(link.getCablePath());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(! (me instanceof UnboundLink))

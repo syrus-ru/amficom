@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.3 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MapViewController.java,v 1.4 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,10 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.Marker;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -32,52 +36,35 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
+
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 
 import java.util.Collection;
 import java.util.HashMap;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.CollectorController;
-import com.syrus.AMFICOM.Client.Map.Controllers.TopologicalNodeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
-import com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
-import com.syrus.AMFICOM.Client.Map.Controllers.UnboundNodeController;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
-import com.syrus.AMFICOM.Client.Map.mapview.Marker;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
- * Класс используется для хранения и информации по канализационной
- * прокладке кабелей и положению узлов и других топологических объектов
+ * Класс используется для управления информацией о канализационной
+ * прокладке кабелей и положении узлов и других топологических объектов.
  * 
- * 
- * 
- * @version $Revision: 1.3 $, $Date: 2005/01/30 15:38:18 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.4 $, $Date: 2005/01/31 12:19:18 $
+ * @module mapviewclient_v1
  */
 public final class MapViewController
 {
@@ -102,11 +89,21 @@ public final class MapViewController
 	/** Список маркеров. */
 	protected List markers = new LinkedList();
 	
+	/**
+	 * Приветный конструктор. Использовать 
+	 * {@link MapViewController#getInstance(LogicalNetLayer)}.
+	 * @param logicalNetLayer логический слой
+	 */
 	private MapViewController(LogicalNetLayer logicalNetLayer)
 	{
 		this.logicalNetLayer = logicalNetLayer;
 	}
 	
+	/**
+	 * Instance getter.
+	 * @param logicalNetLayer логический слой
+	 * @return контроллер вида
+	 */
 	public static MapViewController getInstance(LogicalNetLayer logicalNetLayer)
 	{
 		if(instance == null)
@@ -129,18 +126,23 @@ public final class MapViewController
 		ctlMap.put(com.syrus.AMFICOM.map.Collector.class,
 			CollectorController.getInstance());
 
-		ctlMap.put(com.syrus.AMFICOM.Client.Map.mapview.CablePath.class,
+		ctlMap.put(com.syrus.AMFICOM.mapview.CablePath.class,
 			CableController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath.class,
+		ctlMap.put(com.syrus.AMFICOM.mapview.MeasurementPath.class,
 			MeasurementPathController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.Client.Map.mapview.UnboundNode.class,
+		ctlMap.put(com.syrus.AMFICOM.mapview.UnboundNode.class,
 			UnboundNodeController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.Client.Map.mapview.UnboundLink.class,
+		ctlMap.put(com.syrus.AMFICOM.mapview.UnboundLink.class,
 			UnboundLinkController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.Client.Map.mapview.Marker.class,
+		ctlMap.put(com.syrus.AMFICOM.mapview.Marker.class,
 			MarkerController.getInstance());
 	}
 
+	/**
+	 * Получить контроллер для элемента карты.
+	 * @param me элемент карты
+	 * @return контроллер
+	 */
 	public MapElementController getController(MapElement me)
 	{
 		MapElementController controller = (MapElementController)ctlMap.get(me.getClass());
@@ -151,7 +153,12 @@ public final class MapViewController
 
 
 	/**
-	 * отрисовка элемента
+	 * Отрисовать элемент. При отрисовке необходимо производить проверку 
+	 * вхождения элемента карты в вилимую область, и отрисовывать только
+	 * в этом случае.
+	 * @param me элемент карты, который необходимо отрисовать
+	 * @param g графический контекст
+	 * @param visibleBounds видимая облать
 	 */
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
@@ -159,10 +166,14 @@ public final class MapViewController
 	}
 
 	/**
-	 * возвращает флаг, указывающий, что точка currentMousePoint находится
+	 * Возвращает флаг, указывающий, что точка currentMousePoint находится
 	 * в определенных границах элемента. Для узла границы определяются
 	 * размерами иконки, для линии дельта-окрестностью линии. Дельта задается
-	 * полем mouseTolerancy
+	 * полем {@link com.syrus.AMFICOM.Client.Map.MapPropertiesManager#getMouseTolerancy()}.
+	 * @param me элемент карты
+	 * @param currentMousePoint точка в экранных координатах
+	 * @return <code>true</code>, если точка на элементе карты, иначе 
+	 * <code>false</code>
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
 	{
@@ -170,9 +181,13 @@ public final class MapViewController
 	}
 
 	/**
-	 * определить, попадает ли элемент в область visibleBounds.
+	 * Определить, попадает ли элемент в область visibleBounds.
 	 * Используется при отрисовке (отображаются только элементы, попавшие
-	 * в видимую область)
+	 * в видимую область).
+	 * @param me элемент карты
+	 * @param visibleBounds видимая облать
+	 * @return <code>true</code>, если элемент попадает в область, иначе 
+	 * <code>false</code>
 	 */
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
 	{
@@ -180,7 +195,9 @@ public final class MapViewController
 	}
 
 	/**
-	 * текст всплывающей подсказки
+	 * Получить текст всплывающей подсказки для элемента карты.
+	 * @param me элемент карты
+	 * @return строка для всплывающей подсказки
 	 */
 	String getToolTipText(MapElement me)
 	{
@@ -200,6 +217,10 @@ public final class MapViewController
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 
+	/**
+	 * Установить вид, с которым будет работать контроллер.
+	 * @param mapView вид
+	 */
 	public void setMapView(com.syrus.AMFICOM.mapview.MapView mapView)
 	{
 		this.mapView = mapView;
@@ -213,7 +234,7 @@ public final class MapViewController
 	}
 
 	/**
-	 * получить хранимый объект вида.
+	 * Получить хранимый объект вида.
 	 * @return хранимый объект вида
 	 */
 	public com.syrus.AMFICOM.mapview.MapView getMapView()
@@ -226,17 +247,28 @@ public final class MapViewController
 	 * @param creatorId идентификатор пользователя
 	 * @param domainId идентификатор домена
 	 * @param map Ссылка на топологическую схему
+	 * @return new MapView
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
-	 *  см. {@link com.syrus.AMFICOM.mapview.MapView#createInstance(
-	 *  	Identifier,
-	 *		Identifier,
-	 *		String,
-	 *		String,
-	 *		double,
-	 *		double,
-	 *		double,
-	 *		double,
-	 *		Map)}
+	 *    см. {@link com.syrus.AMFICOM.mapview.MapView#createInstance(
+	 *    	Identifier,
+	 *  		Identifier,
+	 *  		String,
+	 *  		String,
+	 *  		double,
+	 *  		double,
+	 *  		double,
+	 *  		double,
+	 *  		Map)}
+	 * @deprecated use {@link com.syrus.AMFICOM.mapview.MapView#createInstance(
+	 *    	Identifier,
+	 *  		Identifier,
+	 *  		String,
+	 *  		String,
+	 *  		double,
+	 *  		double,
+	 *  		double,
+	 *  		double,
+	 *  		Map)}
 	 */
 	public static MapView createMapView(Identifier creatorId, Identifier domainId, Map map)
 		throws CreateObjectException
@@ -314,18 +346,16 @@ public final class MapViewController
 		SiteNode node = findElement(schemeElement);
 		if(node == null)
 		{
-			if(schemeElement.equipmentImpl() != null)
+			Equipment equipment = schemeElement.equipmentImpl();
+			if(equipment != null 
+				&& (equipment.getLongitude() != 0.0D
+					|| equipment.getLatitude() != 0.0D) )
 			{
-				Equipment equipment = schemeElement.equipmentImpl();
-				if(equipment.getLongitude() != 0.0D
-					|| equipment.getLatitude() != 0.0D)
-				{
-					placeElement(
-						schemeElement, 
-						new DoublePoint(
-							equipment.getLongitude(), 
-							equipment.getLatitude()));
-				}
+				placeElement(
+					schemeElement, 
+					new DoublePoint(
+						equipment.getLongitude(), 
+						equipment.getLatitude()));
 			}
 		}
 	}

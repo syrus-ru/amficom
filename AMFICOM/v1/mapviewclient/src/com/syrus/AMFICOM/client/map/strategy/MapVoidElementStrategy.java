@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.13 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.14 2005/01/31 12:19:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,9 +20,9 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
+import com.syrus.AMFICOM.mapview.VoidElement;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -38,7 +38,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.14 $, $Date: 2005/01/31 12:19:19 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -204,7 +204,7 @@ public final class MapVoidElementStrategy implements  MapStrategy
 		else
 		if(selection.size() > 1)
 		{
-			Selection sel = new Selection(logicalNetLayer);
+			Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
 			sel.addAll(selection);
 			logicalNetLayer.setCurrentMapElement(sel);
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.12 2005/01/21 16:19:58 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.13 2005/01/31 12:19:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
 import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
-import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.mapview.Selection;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/01/21 16:19:58 $
+ * @version $Revision: 1.13 $, $Date: 2005/01/31 12:19:19 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -103,7 +103,7 @@ public final class MapMarkElementStrategy implements  MapStrategy
 					}
 					else
 					{
-						Selection sel = new Selection(logicalNetLayer);
+						Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
 						sel.addAll(logicalNetLayer.getSelectedElements());
 						logicalNetLayer.setCurrentMapElement(sel);
 					}

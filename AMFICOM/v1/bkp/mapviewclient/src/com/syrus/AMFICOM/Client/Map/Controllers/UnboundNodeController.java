@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNodeController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: UnboundNodeController.java,v 1.2 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,8 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.map.MapElement;
 
 import java.awt.BasicStroke;
@@ -22,17 +21,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 
 /**
- * элемент карты - узел 
- * 
- * 
- * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
- * @module
+ * Элемент карты - непривязанный узел (элемент схемы).
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 12:19:18 $
+ * @module mapviewclient_v1
  */
 public class UnboundNodeController extends SiteNodeController
 {
@@ -49,6 +43,18 @@ public class UnboundNodeController extends SiteNodeController
 		return instance;
 	}
 
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!(me instanceof UnboundNode))

@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.14 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.15 2005/01/31 12:19:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,10 +23,10 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.15 $, $Date: 2005/01/31 12:19:18 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -173,11 +173,9 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Создается измерительный путь
 	 */
 	protected MeasurementPath createMeasurementPath(
-			SchemePath path,
-			AbstractNode startNode,
-			AbstractNode endNode)
+			SchemePath path)
 	{
-		CreateMeasurementPathCommandAtomic cmd = new CreateMeasurementPathCommandAtomic(path, startNode, endNode);
+		CreateMeasurementPathCommandAtomic cmd = new CreateMeasurementPathCommandAtomic(path);
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		cmd.execute();
 		add(cmd);

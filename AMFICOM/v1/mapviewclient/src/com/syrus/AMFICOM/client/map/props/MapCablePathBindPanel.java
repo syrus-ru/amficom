@@ -5,11 +5,12 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
@@ -41,6 +42,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import com.syrus.AMFICOM.mapview.CablePathBinding;
 
 public final class MapCablePathBindPanel
 		extends JPanel 
@@ -498,7 +500,9 @@ public final class MapCablePathBindPanel
 
 			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(path);
-			path.addLink(unbound);
+			CableController cableController = (CableController )
+				getLogicalNetLayer().getMapViewController().getController(path);
+			path.addLink(unbound, cableController.generateCCI(unbound));
 			link.getBinding().remove(path);
 		}
 		model.setContents(path.getLinks());
@@ -516,7 +520,9 @@ public final class MapCablePathBindPanel
 		command.execute();
 
 		UnboundLink unbound = command.getUnbound();
-		path.addLink(unbound);
+		CableController cableController = (CableController )
+			getLogicalNetLayer().getMapViewController().getController(path);
+		path.addLink(unbound, cableController.generateCCI(unbound));
 		unbound.setCablePath(path);
 
 		model.fireTableDataChanged();
@@ -559,7 +565,9 @@ public final class MapCablePathBindPanel
 					nl.setEndNode(link.getOtherNode(fromSite));
 			}
 		}
-		path.addLink(link);
+		CableController cableController = (CableController )
+			getLogicalNetLayer().getMapViewController().getController(path);
+		path.addLink(link, cableController.generateCCI(link));
 		link.getBinding().add(path);
 	}
 
