@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldConditionTestCase.java,v 1.2 2004/12/15 10:31:59 bass Exp $
+ * $Id: StringFieldConditionTestCase.java,v 1.3 2004/12/15 14:44:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,12 @@ package com.syrus.AMFICOM.resource;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import com.syrus.AMFICOM.resource.corba.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 import junit.framework.TestCase;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/12/15 10:31:59 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/15 14:44:39 $
  * @module resource_v1
  */
 public class StringFieldConditionTestCase extends TestCase {

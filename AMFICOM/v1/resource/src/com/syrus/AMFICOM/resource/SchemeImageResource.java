@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.3 2004/12/15 12:02:44 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.4 2004/12/15 14:44:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,9 @@
 package com.syrus.AMFICOM.resource;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.resource.corba.*;
-import com.syrus.AMFICOM.resource.corba.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
+import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
+import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 import com.syrus.util.Log;
 import java.io.*;
 import java.util.*;
@@ -18,7 +19,7 @@ import java.util.zip.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/12/15 12:02:44 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/15 14:44:39 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
