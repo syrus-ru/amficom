@@ -1,5 +1,5 @@
 /*
- * $Id: EventWrapper.java,v 1.3 2005/02/03 15:51:00 arseniy Exp $
+ * $Id: EventWrapper.java,v 1.4 2005/02/08 20:26:50 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/03 15:51:00 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 20:26:50 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -37,8 +36,10 @@ public class EventWrapper implements StorableObjectWrapper {
 	public static final String LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING	= "value_string";
 	public static final String LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW	= "value_raw";
 
+	public static final String LINK_COLUMN_EVENT_ID	= "event_id";
+
 	public static final String LINK_FIELD_EVENT_SOURCES = "event_sources";
-	public static final String LINK_FIELD_SOURCE_ENTITY_ID	= "entity_id";
+	public static final String LINK_COLUMN_SOURCE_ID	= "source_id";
 
 	private static EventWrapper instance;
 
@@ -103,23 +104,13 @@ public class EventWrapper implements StorableObjectWrapper {
 				}
 				return values;
 			}
-			if (key.equals(LINK_FIELD_EVENT_SOURCES)) {
-				List eventSources = event.getEventSources();
-				Map values = new HashMap(eventSources.size() * 2);
-				EventSource eventSource;
-				int i = 0;
-				for (Iterator it = eventSources.iterator(); it.hasNext(); i++) {
-					eventSource = (EventSource) it.next();
-					values.put(COLUMN_ID + i, eventSource.getId());
-					values.put(LINK_FIELD_SOURCE_ENTITY_ID + i, eventSource.getEntityId());
-				}
-				return values;
-			}
+			if (key.equals(LINK_FIELD_EVENT_SOURCES))
+				return event.getEventSourceIds();
 		}
 		return null;
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	public void setValue(Object object, final String key, final Object value) {
 		if (object instanceof Event) {
 			Event event = (Event) object;
 			if (key.equals(COLUMN_TYPE_ID))
@@ -165,16 +156,8 @@ public class EventWrapper implements StorableObjectWrapper {
 							event.setEventParameters(parameters);
 						}
 						else
-							if (key.equals(LINK_FIELD_EVENT_SOURCES)) {
-								Map eventSourcesMap = (Map) value;
-								/* there are 2*N keys for N EventSources */
-								int n = eventSourcesMap.size() / 2;
-								List eventSources = new ArrayList(n);
-								for (int i = 0; i < n; i++)
-									eventSources.add(new EventSource((Identifier) eventSourcesMap.get(COLUMN_ID + i),
-											(Identifier) eventSourcesMap.get(LINK_FIELD_SOURCE_ENTITY_ID + i) ));
-								event.setEventSources(eventSources);
-							}
+							if (key.equals(LINK_FIELD_EVENT_SOURCES))
+								event.setEventSourceIds((List) value);
 		}
 	}
 
@@ -203,7 +186,7 @@ public class EventWrapper implements StorableObjectWrapper {
 		if (key.equals(LINK_FIELD_EVENT_PARAMETERS))
 			return Map.class;
 		if (key.equals(LINK_FIELD_EVENT_SOURCES))
-			return Map.class;
+			return List.class;
 		return String.class;
 	}
 
