@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.3 2004/12/27 13:05:54 arseniy Exp $
+ * $Id: AlarmType.java,v 1.1 2004/12/27 13:05:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,38 +25,37 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.event.corba.EventType_Transferable;
+import com.syrus.AMFICOM.event.corba.AlarmType_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/27 13:05:54 $
+ * @version $Revision: 1.1 $, $Date: 2004/12/27 13:05:54 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
-public class EventType extends StorableObjectType {
-	private static final long serialVersionUID = -8660055955879452510L;
+public class AlarmType extends StorableObjectType {
 
-	private StorableObjectDatabase eventTypeDatabase;
+	private StorableObjectDatabase alarmTypeDatabase;
 
-	public EventType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	public AlarmType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.eventTypeDatabase = EventDatabaseContext.eventTypeDatabase;
+		this.alarmTypeDatabase = EventDatabaseContext.alarmTypeDatabase;
 		try {
-			this.eventTypeDatabase.retrieve(this);
+			this.alarmTypeDatabase.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
 
-	public EventType(EventType_Transferable ett) throws CreateObjectException {
-		super(ett.header,
-					new String(ett.codename),
-					new String(ett.description));
+	public AlarmType(AlarmType_Transferable att) throws CreateObjectException {
+		super(att.header,
+					new String(att.codename),
+					new String(att.description));
 	}
 
-	protected EventType(Identifier id,
+	protected AlarmType(Identifier id,
 								Identifier creatorId,
 								String codename,
 								String description) {
@@ -77,27 +76,27 @@ public class EventType extends StorableObjectType {
 	 * @return a newly generated object
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 */
-	public static EventType createInstance(Identifier creatorId,
+	public static AlarmType createInstance(Identifier creatorId,
 															String codename,
 															String description) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null)
 			throw new IllegalArgumentException("Argument is null'");
 
 		try {
-			return new EventType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTTYPE_ENTITY_CODE),
+			return new AlarmType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ALARMTYPE_ENTITY_CODE),
 										creatorId,
 										codename,
 										description);
 		}
 		catch (IllegalObjectEntityException ioee) {
-			throw new CreateObjectException("EventType.createInstance | cannot generate identifier ", ioee);
+			throw new CreateObjectException("AlarmType.createInstance | cannot generate identifier ", ioee);
 		}
 	}
 
 	public void insert() throws CreateObjectException {
 		try {
-			if (this.eventTypeDatabase != null)
-				this.eventTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+			if (this.alarmTypeDatabase != null)
+				this.alarmTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -105,7 +104,7 @@ public class EventType extends StorableObjectType {
 	}
 
 	public Object getTransferable() {
-		return new EventType_Transferable(super.getHeaderTransferable(),
+		return new AlarmType_Transferable(super.getHeaderTransferable(),
 										new String(super.codename),
 										(super.description != null) ? (new String(super.description)) : "");
 	}
