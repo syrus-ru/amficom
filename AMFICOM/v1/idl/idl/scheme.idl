@@ -1,5 +1,5 @@
 /*
- * $Id: scheme.idl,v 1.6 2004/09/13 08:10:45 krupenn Exp $
+ * $Id: scheme.idl,v 1.7 2004/09/13 10:23:59 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -202,6 +202,8 @@ module Scheme
 
 		wstring siteId;
 		
+		wstring imageId;
+
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <SchemeElement_Transferable> SchemeElementSeq_Transferable;
@@ -247,6 +249,8 @@ module Scheme
 		::CORBA::OctetSeq clonez;
 		
 		wstring mapId;
+
+		wstring imageId;
 	};
 	typedef sequence <Scheme_Transferable> SchemeSeq_Transferable;
 
