@@ -1,0 +1,47 @@
+#!/bin/bash
+
+. `dirname $0`/cvsenv
+
+
+
+if [ ! $# -eq 1 ];
+then
+	echo "Usage: `basename $0` <module_name>"
+	exit
+fi
+
+MODULE_NAME=$1
+MODULE_DIR=$REPOSITORY/$MODULE_NAME
+if [ ! -d $MODULE_DIR ];
+then
+	echo "ERROR: Directory $MODULE_DIR does not exists - cannot find module \"$MODULE_NAME\""
+	exit;
+fi
+
+echo "module:	$MODULE_NAME; directory: $MODULE_DIR"
+
+echo "Checking permissions on module $MODULE_NAME..."
+OUTPUT=(`getfacl --tabular --access --omit-header --no-effective --absolute-names $MODULE_DIR | grep user | awk {'print($2);print($3)'}`)
+echo "Known permissions:  ${OUTPUT[@]}"
+
+echo
+
+echo "Setting default permissions on module $MODULE_NAME..."
+. `dirname $0`/permitdefault $MODULE_NAME
+echo "...done"
+
+echo
+
+echo "Setting per-user permissions..."
+for ((i = 0; i < ${#OUTPUT[@]}; i += 2))
+do
+	USER=${OUTPUT[$i]}
+	if [ ${OUTPUT[$i + 1]} = $MODE_RW ];
+	then
+		USERMODE=$RW
+	else
+		USERMODE=$RO
+	fi
+	. `dirname $0`/permituser $MODULE_NAME $USER $USERMODE
+done
+echo "...done"
