@@ -1,5 +1,5 @@
 /*
- * $Id: JDBCConnectionManager.java,v 1.1 2004/05/27 11:17:16 bass Exp $
+ * $Id: JDBCConnectionManager.java,v 1.2 2004/06/02 06:37:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import sqlj.runtime.ExecutionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:17:16 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/02 06:37:32 $
  * @author $Author: bass $
  * @module serveradd
  */
