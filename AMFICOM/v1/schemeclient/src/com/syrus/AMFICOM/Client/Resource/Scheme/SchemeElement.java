@@ -368,6 +368,50 @@ public class SchemeElement extends ObjectResource
 		}
 	}
 
+	public SchemePort getPort(String port_id)
+	{
+		for(Iterator it = devices.iterator(); it.hasNext();)
+		{
+			SchemeDevice sd = (SchemeDevice)it.next();
+			for(Iterator it2 = sd.ports.iterator(); it2.hasNext();)
+			{
+				SchemePort port = (SchemePort)it2.next();
+				if(port.getId().equals(port_id))
+					return port;
+			}
+		}
+		for(Iterator it = element_ids.iterator(); it.hasNext();)			// Search inner elements
+		{
+			SchemeElement child_element = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
+			SchemePort port = child_element.getPort(port_id);
+			if (port != null)
+				return port;
+		}
+		return null;
+	}
+
+	public SchemeCablePort getCablePort(String cable_port_id)
+	{
+		for(Iterator it = devices.iterator(); it.hasNext();)
+		{
+			SchemeDevice sd = (SchemeDevice)it.next();
+			for(Iterator it2 = sd.cableports.iterator(); it2.hasNext();)
+			{
+				SchemeCablePort port = (SchemeCablePort)it2.next();
+				if(port.getId().equals(cable_port_id))
+					return port;
+			}
+		}
+		for(Iterator it = element_ids.iterator(); it.hasNext();)			// Search inner elements
+		{
+			SchemeElement child_element = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
+			SchemeCablePort port = child_element.getCablePort(cable_port_id);
+			if (port != null)
+				return port;
+		}
+		return null;
+	}
+
 	public Enumeration getAllElementsLinks()
 	{
 		Hashtable ht = new Hashtable();

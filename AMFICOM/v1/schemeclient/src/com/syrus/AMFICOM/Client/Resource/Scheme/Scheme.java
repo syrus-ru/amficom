@@ -1083,18 +1083,20 @@ public class Scheme extends ObjectResource implements Serializable
 
 	protected SchemeElement getSchemeElementByPort(SchemeElement element, String port_id)
 	{
-		for(int j = 0; j < element.devices.size(); j++)
+		for(Iterator it = element.devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice sd = (SchemeDevice )element.devices.get(j);
-			for(int k = 0; k < sd.ports.size(); k++)
-				if(((SchemePort )sd.ports.get(k)).getId().equals(port_id))
+			SchemeDevice sd = (SchemeDevice)it.next();
+			for(Iterator it2 = sd.ports.iterator(); it2.hasNext();)
+			{
+				SchemePort port = (SchemePort)it2.next();
+				if(port.getId().equals(port_id))
 					return element;
+			}
 		}
 
-		for(int j = 0; j < element.element_ids.size(); j++)			// Search inner elements
+		for(Iterator it = element.element_ids.iterator(); it.hasNext();)			// Search inner elements
 		{
-			SchemeElement child_element = (SchemeElement)Pool.get(SchemeElement.typ, (String)element.element_ids.get(j));
-
+			SchemeElement child_element = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
 			SchemeElement el = getSchemeElementByPort(child_element, port_id);
 			if (el != null)
 				return el;
@@ -1228,6 +1230,12 @@ public class Scheme extends ObjectResource implements Serializable
 		}
 
 		return null;
+	}
+
+	public SchemeElement getTopLevelNonSchemeElement(String se_id)
+	{
+		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, se_id);
+		return getTopLevelNonSchemeElement(se);
 	}
 
 	//find top level element at this scheme for element se
