@@ -20,45 +20,7 @@ $(call checkenve,ORACLE_HOME)
 APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 
-SOURCES := com/syrus/AMFICOM/configuration/DatabaseConfigurationObjectLoader.java \
-		com/syrus/AMFICOM/configuration/ConfigurationObjectLoader.java \
-		com/syrus/AMFICOM/configuration/ConfigurationStorableObjectPool.java \
-		com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
-		com/syrus/AMFICOM/configuration/MonitoredDomainMember.java \
-		com/syrus/AMFICOM/configuration/AbstractLinkType.java \
-		com/syrus/AMFICOM/configuration/CableLinkType.java \
-		com/syrus/AMFICOM/configuration/CableLinkTypeDatabase.java \
-		com/syrus/AMFICOM/configuration/CableThread.java \
-		com/syrus/AMFICOM/configuration/CableThreadDatabase.java \
-		com/syrus/AMFICOM/configuration/CableThreadType.java \
-		com/syrus/AMFICOM/configuration/CableThreadTypeDatabase.java \
-		com/syrus/AMFICOM/configuration/Equipment.java \
-		com/syrus/AMFICOM/configuration/EquipmentDatabase.java \
-		com/syrus/AMFICOM/configuration/EquipmentType.java \
-		com/syrus/AMFICOM/configuration/EquipmentTypeDatabase.java \
-		com/syrus/AMFICOM/configuration/KIS.java \
-		com/syrus/AMFICOM/configuration/KISDatabase.java \
-		com/syrus/AMFICOM/configuration/Link.java \
-		com/syrus/AMFICOM/configuration/LinkDatabase.java \
-		com/syrus/AMFICOM/configuration/LinkType.java \
-		com/syrus/AMFICOM/configuration/LinkTypeDatabase.java \
-		com/syrus/AMFICOM/configuration/MeasurementPort.java \
-		com/syrus/AMFICOM/configuration/MeasurementPortDatabase.java \
-		com/syrus/AMFICOM/configuration/MeasurementPortType.java \
-		com/syrus/AMFICOM/configuration/MeasurementPortTypeDatabase.java \
-		com/syrus/AMFICOM/configuration/MonitoredElement.java \
-		com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java \
-		com/syrus/AMFICOM/configuration/Port.java \
-		com/syrus/AMFICOM/configuration/PortDatabase.java \
-		com/syrus/AMFICOM/configuration/PortType.java \
-		com/syrus/AMFICOM/configuration/PortTypeDatabase.java \
-		com/syrus/AMFICOM/configuration/TransmissionPath.java \
-		com/syrus/AMFICOM/configuration/TransmissionPathDatabase.java \
-		com/syrus/AMFICOM/configuration/TransmissionPathType.java \
-		com/syrus/AMFICOM/configuration/TransmissionPathTypeDatabase.java \
-		com/syrus/AMFICOM/configuration/StringFieldConditionImpl.java \
-		com/syrus/AMFICOM/configuration/LinkedIdsConditionImpl.java
-
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -67,7 +29,7 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
