@@ -56,6 +56,7 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementStorableObjectPool.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterTypeCodenames.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ActionType.java \
