@@ -1,11 +1,10 @@
 #
-# $Id: Makefile,v 1.20 2005/03/02 10:50:20 arseniy Exp $
+# $Id: Makefile,v 1.21 2005/03/02 10:51:07 arseniy Exp $
 #
 # vim:ft=make:
 #
 
 MODULE_NAME = idl_v1
-
 
 LIBNAME = corba.jar
 LIBNAME_OBJECT = ServerObjectInterface.jar
