@@ -128,7 +128,7 @@ class StatusBarField
 
 public class StatusBarModel extends JPanel implements OperationListener
 {
-	public ProgressBar pbar = new ProgressBar();
+	public ProgressBar pbar = null;
 
 	StatusBarField fields[];
 	int field_num;
@@ -152,6 +152,18 @@ public class StatusBarModel extends JPanel implements OperationListener
 		catch (Exception e)
 		{
 			e.printStackTrace();
+		}
+	}
+
+	public StatusBarModel(boolean withStatusBar)
+	{
+		this();
+
+		if (withStatusBar)
+		{
+//		pbar.setBorder(border);
+			pbar = new ProgressBar();
+			this.add(pbar, new XYConstraints(0, 0, -1, -1));
 		}
 	}
 
@@ -344,10 +356,6 @@ public class StatusBarModel extends JPanel implements OperationListener
 						Color.white,
 						new Color(142, 142, 142),
 						new Color(99, 99, 99));
-
-		pbar.setBorder(border);
-
-		this.add(pbar,new XYConstraints(0,0,-1,-1));
 	}
 
 	public void setVisible(boolean aFlag)
@@ -367,7 +375,10 @@ public class StatusBarModel extends JPanel implements OperationListener
 		int width = getWidth();
 		int f_width = width / field_num;
 //		int f_start = 0;
-		int f_start = pbar.getWidth();
+		int f_start = 0;
+		if (pbar != null)
+			f_start = pbar.getWidth();
+
 		for(i = 0; i < field_num; i++)
 		{
 			if(i == field_num - 1)
@@ -518,6 +529,18 @@ public class StatusBarModel extends JPanel implements OperationListener
 			setText("status", sme.getText());
 		}
 	}
+
+	public void enableProgressBar (boolean en)
+	{
+		if (pbar == null)
+			return;
+
+		if (en)
+			pbar.start("Идёт загрузка. Подождите.");
+		else
+			pbar.stop();
+	}
+
 }
 
 
