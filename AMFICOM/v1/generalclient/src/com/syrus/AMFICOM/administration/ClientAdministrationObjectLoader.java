@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAdministrationObjectLoader.java,v 1.11 2005/04/04 15:29:09 bob Exp $
+ * $Id: ClientAdministrationObjectLoader.java,v 1.12 2005/04/06 07:58:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -40,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/04 15:29:09 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/06 07:58:54 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -59,7 +58,7 @@ public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader
 	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws CreateObjectException {
 		StorableObject so = null;
 		try {
-			so = GeneralStorableObjectPool.getStorableObject(id, false);
+			so = AdministrationStorableObjectPool.getStorableObject(id, false);
 		} catch (ApplicationException e) {
 			// nothing do
 		}
