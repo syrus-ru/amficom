@@ -1,12 +1,18 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.Collection;
-import java.util.Vector;
+import java.util.*;
 
-public class MiscUtil 
+public class MiscUtil
 {
+	public static List convert(Map map)
+	{
+		List list = new LinkedList();
+		for(Iterator it = map.values().iterator(); it.hasNext();)
+			list.add(it.next());
+		return list;
+	}
 
-	static public void addToCollection(Collection vec, Object []objs)
+	public static void addToCollection(Collection vec, Object []objs)
 	{
 		for(int i = 0; i < objs.length; i++)
 			vec.add(objs[i]);
@@ -19,7 +25,7 @@ public class MiscUtil
 		return d2 / 10000;
 	}
 
-	static public boolean validName(String name)
+	public static boolean validName(String name)
 	{
 		if(name == null)
 			return false;
@@ -30,9 +36,9 @@ public class MiscUtil
 		return true;
 	}
 
-	static public double diagonale(double x1, double y1, double x1_, double y1_)
+	public static double diagonale(double x1, double y1, double x1_, double y1_)
 	{
-		return Math.sqrt( 
+		return Math.sqrt(
 				(x1_ - x1) * (x1_ - x1) +
 				(y1_ - y1) * (y1_ - y1) );
 	}
