@@ -1,5 +1,5 @@
 /*
- * $Id: DomainCondition.java,v 1.6 2004/10/03 10:20:39 bob Exp $
+ * $Id: DomainCondition.java,v 1.7 2004/10/04 06:41:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,46 +22,35 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/10/03 10:20:39 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/04 06:41:07 $
  * @author $Author: bob $
  * @module measurement_v1
  */
-public class DomainCondition implements StorableObjectCondition {
+public class DomainCondition extends com.syrus.AMFICOM.configuration.DomainCondition implements StorableObjectCondition {
 
-	private Domain	domain;
-
-	private Short	entityCode;
-	
 	public DomainCondition(DomainCondition_Transferable transferable) throws DatabaseException, CommunicationException {
-		this.domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(new Identifier(transferable.domain_id), true);
-		this.entityCode = new Short(transferable.entity_code);
+		super(transferable);
 	}
 
-	public DomainCondition(Domain domain) {
-		this.domain = domain;
-	}
-
-	public DomainCondition(Domain domain, Short entityCode) {
-		this(domain);
-		this.entityCode = entityCode;
-	}
+    public DomainCondition(Domain domain, Short entityCode) {
+        super(domain, entityCode); 
+    }
 
 	public DomainCondition(Domain domain, short entityCode) {
-		this(domain);
-		this.entityCode = new Short(entityCode);
+		super(domain, entityCode);
 	}
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
-		if ((this.domain != null) && (object instanceof StorableObject)) {
+		Domain domain = getDomain();
+		if ((domain != null) && (object instanceof StorableObject)) {
 			StorableObject storableObject = (StorableObject) object;
 			/**
 			 * TODO check for entites
 			 */
-			switch (this.entityCode.shortValue()) {
+			switch (getEntityCode().shortValue()) {
 				case ObjectEntities.SET_ENTITY_CODE:
 					Set set = (Set) storableObject;
 					{
@@ -74,7 +63,7 @@ public class DomainCondition implements StorableObjectCondition {
 								Domain meDomain = (Domain) ConfigurationStorableObjectPool
 										.getStorableObject(me.getDomainId(),
 													true);
-								if (meDomain.isChild(this.domain)) {
+								if (meDomain.isChild(domain)) {
 									condition = true;
 									break;
 								}
@@ -91,7 +80,7 @@ public class DomainCondition implements StorableObjectCondition {
 											true);
 						Domain meDomain = (Domain) ConfigurationStorableObjectPool
 								.getStorableObject(me.getDomainId(), true);
-						if (meDomain.isChild(this.domain)) {
+						if (meDomain.isChild(domain)) {
 							condition = true;
 							break;
 						}
@@ -109,7 +98,7 @@ public class DomainCondition implements StorableObjectCondition {
 								Domain meDomain = (Domain) ConfigurationStorableObjectPool
 										.getStorableObject(me.getDomainId(),
 													true);
-								if (meDomain.isChild(this.domain)) {
+								if (meDomain.isChild(domain)) {
 									condition = true;
 									break;
 								}
@@ -126,7 +115,7 @@ public class DomainCondition implements StorableObjectCondition {
 											true);
 						Domain meDomain = (Domain) ConfigurationStorableObjectPool
 								.getStorableObject(me.getDomainId(), true);
-						if (meDomain.isChild(this.domain)) {
+						if (meDomain.isChild(domain)) {
 							condition = true;
 							break;
 						}
@@ -140,7 +129,7 @@ public class DomainCondition implements StorableObjectCondition {
 											true);
 						Domain meDomain = (Domain) ConfigurationStorableObjectPool
 								.getStorableObject(me.getDomainId(), true);
-						if (meDomain.isChild(this.domain)) {
+						if (meDomain.isChild(domain)) {
 							condition = true;
 							break;
 						}
@@ -154,7 +143,7 @@ public class DomainCondition implements StorableObjectCondition {
 											true);
 						Domain meDomain = (Domain) ConfigurationStorableObjectPool
 								.getStorableObject(me.getDomainId(), true);
-						if (meDomain.isChild(this.domain)) {
+						if (meDomain.isChild(domain)) {
 							condition = true;
 							break;
 						}
@@ -166,7 +155,7 @@ public class DomainCondition implements StorableObjectCondition {
 						MonitoredElement me = test.getMonitoredElement();
 						Domain meDomain = (Domain) ConfigurationStorableObjectPool
 								.getStorableObject(me.getDomainId(), true);
-						if (meDomain.isChild(this.domain)) {
+						if (meDomain.isChild(domain)) {
 							condition = true;
 							break;
 						}
@@ -183,40 +172,19 @@ public class DomainCondition implements StorableObjectCondition {
 											true);
 						Domain meDomain = (Domain) ConfigurationStorableObjectPool
 								.getStorableObject(me.getDomainId(), true);
-						if (meDomain.isChild(this.domain)) {
+						if (meDomain.isChild(domain)) {
 							condition = true;
 							break;
 						}
 					}
 					break;
 				default:
-					condition = true;
+					super.isConditionTrue(object);
 					break;
 
 			}
 		}
 
 		return condition;
-	}
-
-	public Short getEntityCode() {
-		return null;
-	}
-
-	public Domain getDomain() {
-		return this.domain;
-	}
-
-	public void setDomain(Domain domain) {
-		this.domain = domain;
-	}
-
-	public void setEntityCode(Short entityCode) {
-		this.entityCode = entityCode;
-	}
-
-	public Object getTransferable() {
-		return new DomainCondition_Transferable(this.entityCode
-						.shortValue(), (Identifier_Transferable) this.domain.getId().getTransferable());
 	}
 }
