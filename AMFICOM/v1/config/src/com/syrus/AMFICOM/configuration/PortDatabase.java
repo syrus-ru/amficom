@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.3 2004/08/11 12:49:06 bob Exp $
+ * $Id: PortDatabase.java,v 1.4 2004/08/11 13:05:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/11 12:49:06 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/11 13:05:51 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -121,7 +121,7 @@ public class PortDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such port: " + portIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "PortDatabase.retrieveEquipment | Cannot retrieve port " + portIdStr;
+			String mesg = "PortDatabase.retrievePort | Cannot retrieve port " + portIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
