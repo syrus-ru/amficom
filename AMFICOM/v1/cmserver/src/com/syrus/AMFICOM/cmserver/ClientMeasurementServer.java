@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.25 2004/12/22 12:14:17 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.26 2004/12/22 12:48:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/22 12:14:17 $
+ * @version $Revision: 1.26 $, $Date: 2004/12/22 12:48:25 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -117,7 +117,6 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 		/* Add shutdown hook */
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-
 			public void run() {
 				clientMeasurementServer.shutdown();
 			}
@@ -173,9 +172,9 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 		try {
 			corbaServer.deactivateServant("CMServer");
 		}
-		catch (Exception e) {
-			Log.errorException(e);
-			System.err.println(e);
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+			System.err.println(ce);
 			System.exit(-1);
 		}
 	}
@@ -185,18 +184,21 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 		case FALL_CODE_NO_ERROR:
 			break;
 		default:
-			Log.errorMessage("processError | Unknown error code: "
-					+ super.fallCode);
+			Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
 		super.clearFalls();
 	}
 
 	protected synchronized void shutdown() {/* !! Need synchronization */
 		this.running = false;
+
+		deactivateCORBAServer();
+
 		Log.debugMessage("ClientMeasurementServer.shutdown | serialize ConfigurationStorableObjectPool" , Log.DEBUGLEVEL03);
 		ConfigurationStorableObjectPool.serializePool();
 		Log.debugMessage("ClientMeasurementServer.shutdown | serialize MeasurementStorableObjectPool" , Log.DEBUGLEVEL03);
 		MeasurementStorableObjectPool.serializePool();
+		
 	}
 
 	public void run() {
@@ -205,11 +207,11 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 //				resetMServerConnection();
 			try {				
 				sleep(super.initialTimeToSleep);
-			} catch (InterruptedException ie) {
+			}
+			catch (InterruptedException ie) {
 				Log.errorException(ie);
 			}
 		}
-		deactivateCORBAServer();
 	}
 		
 }
