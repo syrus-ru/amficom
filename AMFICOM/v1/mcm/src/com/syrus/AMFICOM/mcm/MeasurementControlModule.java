@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.26 2004/08/23 20:48:29 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.27 2004/08/29 13:37:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/08/23 20:48:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2004/08/29 13:37:32 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -196,18 +196,20 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void prepareTestList() {
 		testList = Collections.synchronizedList(new ArrayList());
 		List tests;
+		
+		TestDatabase testDatabase = TestDatabase.getInstance();
 
 		try {
-			tests = TestDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_SCHEDULED);
+			tests = testDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_SCHEDULED);
 			Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
 			testList.addAll(tests);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
 		}
-
+		
 		try {
-			tests = TestDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_PROCESSING);
+			tests = testDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_PROCESSING);
 			Log.debugMessage("Found " + tests.size() + " tests of status PROCESSING", Log.DEBUGLEVEL07);
 			for (Iterator it = tests.iterator(); it.hasNext();)
 				startTestProcessor((Test)it.next());

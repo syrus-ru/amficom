@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.14 2004/08/26 07:20:28 bob Exp $
+ * $Id: MeasurementServer.java,v 1.15 2004/08/29 13:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/26 07:20:28 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/29 13:38:02 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -232,13 +232,14 @@ public class MeasurementServer extends SleepButWorkThread {
 	}
 	
 	private static void fillMCMTestQueueMap() {
+		TestDatabase testDatabase = TestDatabase.getInstance();
 		Identifier mcmId;
 		List tests = null;
 //		synchronized (mcmTestQueueMap) {
 			for (Iterator it = mcmTestQueueMap.getMCMIdsIterator(); it.hasNext();) {
 				mcmId = (Identifier)it.next();
 				try {
-					tests = TestDatabase.retrieveTestsForMCM(mcmId, TestStatus.TEST_STATUS_NEW);
+					tests = testDatabase.retrieveTestsForMCM(mcmId, TestStatus.TEST_STATUS_NEW);
 				}
 				catch (RetrieveObjectException roe) {
 					Log.errorException(roe);
