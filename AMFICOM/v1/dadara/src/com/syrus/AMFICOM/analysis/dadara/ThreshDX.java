@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.9 2005/03/21 17:09:31 saa Exp $
+ * $Id: ThreshDX.java,v 1.10 2005/03/21 18:06:53 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/03/21 17:09:31 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/21 18:06:53 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -22,7 +22,7 @@ public class ThreshDX extends Thresh
 	private boolean isRise;
 
 	protected ThreshDX()
-	{
+	{ // do nothing
 	}
 	
 	private int goodSign(int key)

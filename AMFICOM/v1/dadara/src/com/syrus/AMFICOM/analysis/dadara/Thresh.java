@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.7 2005/03/21 17:09:31 saa Exp $
+ * $Id: Thresh.java,v 1.8 2005/03/21 18:06:53 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/03/21 17:09:31 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/21 18:06:53 $
  * @module
  */
 
@@ -36,7 +36,7 @@ public abstract class Thresh
 	protected int xMax;
 
 	protected Thresh()
-	{
+	{ // do nothing
 	}
 	protected Thresh(int eventId0, int eventId1, int xMin, int xMax)
 	{
