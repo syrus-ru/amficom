@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.19 2004/09/01 15:08:01 bob Exp $
+ * $Id: KIS.java,v 1.20 2004/10/26 12:46:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,25 +12,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/01 15:08:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2004/10/26 12:46:57 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
-public class KIS extends DomainMember {
-	protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
+public class KIS extends DomainMember implements TypedObject {
+	
+    protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
 
-	private Identifier equipmentId;
+	private KISType type;
+    private Identifier equipmentId;
 	private Identifier mcmId;
 	private String name;
 	private String description;
@@ -66,6 +72,14 @@ public class KIS extends DomainMember {
 		this.measurementPortIds = new ArrayList(kt.measurement_port_ids.length);
 		for (int i = 0; i < kt.measurement_port_ids.length; i++)
 			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));
+        
+        try {
+            this.type = (KISType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(kt.type_id), true);
+        }
+        catch (ApplicationException ae) {
+            throw new CreateObjectException(ae);
+        }   
+        
 		
 	}
 	
@@ -74,6 +88,7 @@ public class KIS extends DomainMember {
 							Identifier domainId,
 							String name,
 							String description,
+                            KISType type,
 							Identifier equipmentId,
 							Identifier mcmId) {
 		super(id,
@@ -85,6 +100,7 @@ public class KIS extends DomainMember {
 		this.name = name;
 		this.description = description;
 		this.equipmentId = equipmentId;
+        this.type = type;
 		this.mcmId = mcmId;
 		this.measurementPortIds = new ArrayList();
 		
@@ -106,6 +122,7 @@ public class KIS extends DomainMember {
 																	 Identifier domainId,
 																	 String name,
 																	 String description,
+                                                                     KISType type,
 																	 Identifier equipmentId,
 																	 Identifier mcmId){
 		return new KIS(id,
@@ -113,6 +130,7 @@ public class KIS extends DomainMember {
 									 domainId,
 									 name,
 									 description,
+                                     type,
 									 equipmentId,
 									 mcmId);
 	}
@@ -147,6 +165,7 @@ public class KIS extends DomainMember {
 																(Identifier_Transferable)super.domainId.getTransferable(),
 																new String(this.name),
 																new String(this.description),
+                                                                (Identifier_Transferable)this.type.getId().getTransferable(),
 																(Identifier_Transferable)this.equipmentId.getTransferable(),
 																(Identifier_Transferable)this.mcmId.getTransferable(),
 																mportIds);
@@ -159,6 +178,10 @@ public class KIS extends DomainMember {
 	public String getDescription() {
 		return this.description;
 	}
+    
+    public StorableObjectType getType() {       
+        return this.type;
+    }
 
 	public Identifier getEquipmentId() {
 		return this.equipmentId;
@@ -188,6 +211,7 @@ public class KIS extends DomainMember {
 																						Identifier domainId,
 																						String name,
 																						String description,
+                                                                                        KISType type,
 																						Identifier equipmentId,
 																						Identifier mcmId) {
 		super.setAttributes(created,
@@ -197,6 +221,7 @@ public class KIS extends DomainMember {
 												domainId);
 		this.name = name;
 		this.description = description;
+        this.type = type;
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
 	}

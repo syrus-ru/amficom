@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.26 2004/10/19 07:48:58 bob Exp $
+ * $Id: KISDatabase.java,v 1.27 2004/10/26 12:46:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,8 +34,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/10/19 07:48:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2004/10/26 12:46:57 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -49,6 +50,8 @@ public class KISDatabase extends StorableObjectDatabase {
 	// mcm_id Identifier NOT NULL
 	public static final String COLUMN_MCM_ID = "mcm_id";
 	
+    public static final String COLUMN_TYPE_ID       = "type_id";
+    
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
 	private String updateColumns;
@@ -72,6 +75,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		if (this.updateColumns == null){
 			this.updateColumns = super.getUpdateColumns()
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+                + COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_EQUIPMENT_ID + COMMA
@@ -84,6 +88,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		if (this.updateMultiplySQLValues == null){
 			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues()
 				+ QUESTION + COMMA
+                + QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -97,6 +102,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		KIS kis = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject)
 		+ kis.getDomainId().toSQLString() + COMMA
+        + kis.getType().getId().toSQLString() + COMMA
 		+ APOSTOPHE + kis.getName() + APOSTOPHE + COMMA
 		+ APOSTOPHE + kis.getDescription() + APOSTOPHE + COMMA
 		+ kis.getEquipmentId().toSQLString() + COMMA
@@ -114,6 +120,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	protected String retrieveQuery(String condition){
 		return super.retrieveQuery(condition)
 		+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+        + COLUMN_TYPE_ID + COMMA
 		+ COLUMN_NAME + COMMA
 		+ COLUMN_DESCRIPTION + COMMA
 		+ COLUMN_EQUIPMENT_ID + COMMA
@@ -122,8 +129,30 @@ public class KISDatabase extends StorableObjectDatabase {
 		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
 	}
-	
-	protected StorableObject updateEntityFromResultSet(
+
+	protected int setEntityForPreparedStatement(StorableObject storableObject,
+			PreparedStatement preparedStatement) throws IllegalDataException,
+			UpdateObjectException {
+		KIS kis = fromStorableObject(storableObject);
+        int i;
+        try {
+            Identifier equipmentId = kis.getEquipmentId();
+            Identifier mcmId = kis.getMCMId();
+            i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+            preparedStatement.setString( ++i , kis.getDomainId().getCode());
+            preparedStatement.setString( ++i, kis.getType().getId().getCode());            
+            preparedStatement.setString( ++i, kis.getName());
+            preparedStatement.setString( ++i, kis.getDescription());
+            preparedStatement.setString( ++i, equipmentId != null ? equipmentId.getCode() : "");
+            preparedStatement.setString( ++i, mcmId != null ? mcmId.getCode() : "");            
+        } catch (SQLException sqle) {
+            throw new UpdateObjectException("KISDatabase." +
+                    "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+        }
+        return i;
+	}
+    
+    protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		KIS kis = storableObject == null ? null : fromStorableObject(storableObject);
@@ -131,9 +160,16 @@ public class KISDatabase extends StorableObjectDatabase {
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			kis = new KIS(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null);			
+			kis = new KIS(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null, null);			
 		}
-		kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		KISType kisType;
+        try {
+            kisType = (KISType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+        }
+        catch (ApplicationException ae) {
+            throw new RetrieveObjectException(ae);
+        }
+        kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 							DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							/**
 								* @todo when change DB Identifier model ,change getString() to getLong()
@@ -149,6 +185,7 @@ public class KISDatabase extends StorableObjectDatabase {
 							new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),													
 							resultSet.getString(COLUMN_NAME),
 							resultSet.getString(COLUMN_DESCRIPTION),
+                            kisType,
 							/**
 								* @todo when change DB Identifier model ,change getString() to getLong()
 								*/
