@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.2 2005/02/03 08:52:48 bob Exp $
+ * $Id: StorableObjectWrapper.java,v 1.3 2005/02/10 12:46:14 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.util.Wrapper;
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
  * 
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/02/03 08:52:48 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/02/10 12:46:14 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -31,21 +31,22 @@ import com.syrus.util.Wrapper;
  */
 public interface StorableObjectWrapper extends Wrapper {
 
-	String	COLUMN_CREATED					= "created";
-	String	COLUMN_CREATOR_ID				= "creator_id";
-	String	COLUMN_ID						= "id";
-	String	COLUMN_MODIFIED					= "modified";
-	String	COLUMN_MODIFIER_ID				= "modifier_id";
+	String COLUMN_CREATED = "created";
+	String COLUMN_CREATOR_ID = "creator_id";
+	String COLUMN_ID = "id";
+	String COLUMN_MODIFIED = "modified";
+	String COLUMN_MODIFIER_ID = "modifier_id";
+	String COLUMN_VERSION = "version";
 
-	String	COLUMN_CODENAME					= "codename";
-	String	COLUMN_DESCRIPTION				= "description";
-	String	COLUMN_NAME						= "name";
+	String COLUMN_CODENAME = "codename";
+	String COLUMN_DESCRIPTION = "description";
+	String COLUMN_NAME = "name";
 
-	String	COLUMN_TYPE_ID					= "type_id";
+	String COLUMN_TYPE_ID = "type_id";
 
-	String	COLUMN_CHARACTERISTICS			= "characteristics";
+	String COLUMN_CHARACTERISTICS = "characteristics";
 
-	String	LINK_COLUMN_PARAMETER_MODE		= "parameter_mode";
-	String	LINK_COLUMN_PARAMETER_TYPE_ID	= "parameter_type_id";
+	String LINK_COLUMN_PARAMETER_MODE = "parameter_mode";
+	String LINK_COLUMN_PARAMETER_TYPE_ID = "parameter_type_id";
 
 }
