@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.7 2005/03/01 08:55:22 stas Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.8 2005/03/01 10:11:23 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/03/01 08:55:22 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/01 10:11:23 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
@@ -412,7 +412,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		setLayout(new BorderLayout());
 		add(jPanel, BorderLayout.CENTER);
 
-		table.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
 		{
 			public void valueChanged(ListSelectionEvent e)
 			{
@@ -520,10 +520,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 				Object res = data.get(n);
 				int selected = model.getIndexOfObject(res);
 				if (selected != -1)
-				{
 					table.getSelectionModel().setSelectionInterval(selected, selected);
-					updateSelection();
-				}
 			}
 			else
 			{
