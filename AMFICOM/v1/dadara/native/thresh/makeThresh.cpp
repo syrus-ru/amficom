@@ -2,6 +2,24 @@
 #include "../BreakL/BreakL-enh.h"
 #include "makeThresh.h"
 
+/* ќпредел€ет коэффициент коррекции дл€ данного Y-порога
+ * по его весу.
+ * ќпределена на 0 <= x <= 1; допустимые значени€: >=0
+ * *ƒолжна* обладать свойствами:
+ * k(x) * x + k(1-x) * (1-x) = 1
+ * k(0) = 0
+ * ќстальные свойства - из соображений практичности
+ */
+double wei2koeff(double w)
+{
+	if (w > 0.5)
+		return (1 - wei2koeff(1 - w) * (1 - w)) / w;
+	double k = -0.5 * (1 - 5 * w + 2 * w * w) / (1 - 2 * w + 2 * w * w);
+	if (k < 0)
+		k = 0;
+	return k;
+}
+
 // определ€ем расчетную поправку дл€ порогов по участкам, определ€емых flags
 // flags: 0x1: пропускать участки с неоднозначным порогом
 static void calcThAdd(THX *thX, THY *thY, int thXc, int thYc, int isUpper,
@@ -26,8 +44,9 @@ static void calcThAdd(THX *thX, THY *thY, int thXc, int thYc, int isUpper,
 		if (ttdy[i].nextWei != 0 && (flags & 0x1))
 			continue; // если запрошено, пропускаем участки неоднозначного соответстви€ порогам
 		double diff = yTgt[i] - yTemp[i];
-		if (diff * sign > thAdd[thId] * sign)
-			thAdd[thId] = diff;
+		double koeff = 1.0 - ttdy[i].nextWei;
+		if (diff * koeff * sign > thAdd[thId] * sign)
+			thAdd[thId] = diff * koeff;
 	}
 }
 
