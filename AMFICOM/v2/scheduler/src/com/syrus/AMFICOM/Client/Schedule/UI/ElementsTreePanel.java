@@ -49,26 +49,27 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			this.root = new ObjectResourceTreeNode(ROOT_NODE_NAME, LangModelSchedule.getString("TestType"), true, //$NON-NLS-1$ //$NON-NLS-2$
 													(ImageIcon) UIStorage.FOLDER_ICON);
 
-			Hashtable kisTable = Pool.getHash(KIS.typ);
-			Hashtable meTable = Pool.getHash(MonitoredElement.typ);
-			Hashtable aptTable = Pool.getHash(AccessPortType.typ);
+			Map kisMap = Pool.getMap(KIS.typ);
+			Map meMap = Pool.getMap(MonitoredElement.typ);
+			Map aptMap = Pool.getMap(AccessPortType.typ);
 			java.util.List meList = new ArrayList();
 
 			if (ElementsTreePanel.this.surveyDsi == null)
 				ElementsTreePanel.this.surveyDsi = new SurveyDataSourceImage(aContext.getDataSourceInterface());
 
-			for (Enumeration testTypeEn = Pool.getHash(TestType.typ).elements(); testTypeEn.hasMoreElements();) {
-				TestType testType = (TestType) testTypeEn.nextElement();
+			Map testTypeMap = Pool.getMap(TestType.typ);
+			for (Iterator testTypeIt = testTypeMap.keySet().iterator(); testTypeIt.hasNext();) {
+				TestType testType = (TestType) testTypeMap.get(testTypeIt.next());
 				ElementsTreePanel.this.surveyDsi.getTestSetupByTestType(testType.getId());
 				ObjectResourceTreeNode testTypeNode = new ObjectResourceTreeNode(testType, testType.getName(), true,
 																					(ImageIcon) UIStorage.FOLDER_ICON);
 				this.root.add(testTypeNode);
-				if (kisTable != null) {
-					for (Enumeration kisTypeEnum = kisTable.elements(); kisTypeEnum.hasMoreElements();) {
-						KIS kis = (KIS) kisTypeEnum.nextElement();
+				if (kisMap != null) {
+					for (Iterator kisTypeIt = kisMap.keySet().iterator(); kisTypeIt.hasNext();) {
+						KIS kis = (KIS) kisMap.get(kisTypeIt.next());
 						for (Iterator it = kis.access_ports.iterator(); it.hasNext();) {
 							AccessPort acessPort = (AccessPort) it.next();
-							AccessPortType apt = (AccessPortType) aptTable.get(acessPort.type_id);
+							AccessPortType apt = (AccessPortType) aptMap.get(acessPort.type_id);
 							if (apt.test_type_ids.contains(testType.getId())) {
 								ObjectResourceTreeNode kisNode = new ObjectResourceTreeNode(
 																							kis,
@@ -83,8 +84,8 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 										ObjectResourceTreeNode accessPortNode = new ObjectResourceTreeNode(aport, aport
 												.getName(), true, (ImageIcon) UIStorage.PORT_ICON, false);
 										kisNode.add(accessPortNode);
-										for (Enumeration meEnum = meTable.elements(); meEnum.hasMoreElements();) {
-											MonitoredElement me = (MonitoredElement) meEnum.nextElement();
+										for (Iterator meIt = meMap.keySet().iterator(); meIt.hasNext();) {
+											MonitoredElement me = (MonitoredElement) meMap.get(meIt.next());
 											ElementsTreePanel.this.surveyDsi.getTestSetupByME(me.getId());
 											if (me.access_port_id.equals(aport.getId())) {
 												meList.add(me);
@@ -106,7 +107,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 		}
 
-		public Vector getChildNodes(ObjectResourceTreeNode node) {
+		public java.util.List getChildNodes(ObjectResourceTreeNode node) {
 
 			//		Object obj = node.getObject();
 			int count = node.getChildCount();
@@ -115,10 +116,10 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			//		System.out.println("getChildNodes\t" + obj.getClass().getName()
 			//				+ "\tnode.getChildCount():" + count);
 
-			Vector vec = new Vector();
+			java.util.List list = new LinkedList();
 			for (int i = 0; i < count; i++)
-				vec.add(model.getChild(node, i));
-			return vec;
+				list.add(this.model.getChild(node, i));
+			return list;
 		}
 
 		public Class getNodeChildClass(ObjectResourceTreeNode node) {
@@ -159,9 +160,9 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				ret = MonitoredElement.class;
 				dispatcher.notify(new OperationEvent(port, 0, SchedulerModel.COMMAND_CHANGE_PORT_TYPE));
 
-				Vector vec = this.getChildNodes(node);
-				for (int i = 0; i < vec.size(); i++) {
-					ObjectResourceTreeNode n = (ObjectResourceTreeNode) vec.get(i);
+				java.util.List list = this.getChildNodes(node);
+				for (Iterator it=list.iterator();it.hasNext();) {
+					ObjectResourceTreeNode n = (ObjectResourceTreeNode) it.next();
 					Object o = n.getObject();
 					MonitoredElement me = (MonitoredElement) o;
 					dispatcher.notify(new OperationEvent(me.getId(), 0, SchedulerModel.COMMAND_CHANGE_ME_TYPE));
@@ -414,9 +415,9 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	}
 
 	private void expandAll(ObjectResourceTreeNode node, TreePath parent, boolean expand) {
-		Vector vec = ((SchedulerModel) this.aContext.getApplicationModel()).getTreeModel().getChildNodes(node);
-		for (int i = 0; i < vec.size(); i++) {
-			ObjectResourceTreeNode n = (ObjectResourceTreeNode) vec.get(i);
+		java.util.List list = ((SchedulerModel) this.aContext.getApplicationModel()).getTreeModel().getChildNodes(node);
+		for (Iterator it=list.iterator();it.hasNext();) {
+			ObjectResourceTreeNode n = (ObjectResourceTreeNode) it.next();
 			Object obj = n.getObject();
 			TreePath path = parent.pathByAddingChild(n);
 			//System.out.println("obj:" + obj.getClass().getName() + "\t" +

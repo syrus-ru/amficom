@@ -1,5 +1,5 @@
 /*
- * ObjectResourceTableCellRenderer.java
+ * LabelCellRenderer.java
  * Created on 02.08.2004 10:13:20
  * 
  */

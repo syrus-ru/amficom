@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.CORBA.General.TestReturnType;
@@ -552,16 +553,17 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 	private void commitChanges() {
 		DataSourceInterface dataSource = this.aContext.getDataSourceInterface();
-		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.TYPE);
-		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.TYPE);
-		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.TYPE);
-		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYPE);
-		Hashtable unsavedTest = Pool.getChangedHash(Test.TYPE);
+		Map unsavedTestArgumentSet = Pool.getChangedMap(TestArgumentSet.TYPE);
+		Map unsavedAnalysis = Pool.getChangedMap(Analysis.TYPE);
+		Map unsavedEvaluation = Pool.getChangedMap(Evaluation.TYPE);
+		Map unsavedTestRequest = Pool.getChangedMap(TestRequest.TYPE);
+		Map unsavedTest = Pool.getChangedMap(Test.TYPE);
 
 		// remove tests
 		if (unsavedTest != null) {
 			java.util.List deleteTests = new ArrayList();
-			for (Iterator it = unsavedTest.keySet().iterator(); it.hasNext();) {
+			Map _unsavedTest = new HashMap(unsavedTest);
+			for (Iterator it = _unsavedTest.keySet().iterator(); it.hasNext();) {
 				Object key = it.next();
 				Test test = (Test) unsavedTest.get(key);
 				if (test.getDeleted() != 0) {
@@ -583,7 +585,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		}
 
 		for (int i = 0; i < 5; i++) {
-			Hashtable table;
+			Map table;
 			switch (i) {
 				case 0:
 					table = unsavedTestArgumentSet;
