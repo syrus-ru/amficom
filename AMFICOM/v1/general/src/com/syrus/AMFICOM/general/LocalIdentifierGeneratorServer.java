@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.util.Log;
 
 public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer {
+	private static final long serialVersionUID = -2532203077213374260L;
 
 	public LocalIdentifierGeneratorServer() {
 	}
