@@ -21,7 +21,7 @@ LIBNAME_SRC=$(LIBSRC)\corbasource.jar
 $(LIBNAME):	clean object server2 jar
 
 jar:
-	$(JAR) -cf $(LIBNAME) -C $(CLASSES) com\syrus\AMFICOM\CORBA
+	$(JAR) -cf $(LIBNAME) -C $(CLASSES) com
 	$(JAR) -cf $(LIBNAME_SRC) -C $(SRC) com
 
 object:	alllibs
