@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.9 2004/10/03 12:46:44 bob Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.10 2004/11/17 09:30:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/03 12:46:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/11/17 09:30:13 $
+ * @author $Author: max $
  * @module mcm_v1
  */
 
@@ -633,6 +633,11 @@ public final class MCMMeasurementObjectLoader implements MeasurementObjectLoader
             Log.errorMessage("MCMMeasumentObjectLoader.loadTests | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("MCMMeasumentObjectLoader.loadTests | Illegal Storable Object: " + e.getMessage());
         }
+    }
+    
+    public java.util.Set refresh(java.util.Set s) {
+//      TODO method isn't complete
+       throw new UnsupportedOperationException("method isn't complete");
     }
 	
 	public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, CommunicationException {
