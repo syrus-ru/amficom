@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemePortImpl.java,v 1.6 2004/12/15 14:56:08 bass Exp $
+ * $Id: AbstractSchemePortImpl.java,v 1.7 2004/12/17 15:58:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.*;
  * {@link AbstractSchemePort} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/12/15 14:56:08 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/17 15:58:58 $
  * @module schemecommon_v1
  */
 final class AbstractSchemePortImpl extends AbstractSchemePort {
@@ -58,6 +58,13 @@ final class AbstractSchemePortImpl extends AbstractSchemePort {
 	 * @see JavaUtilIStorableObject#createdImpl()
 	 */
 	public Date createdImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#creatorId()
+	 */
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -141,6 +148,13 @@ final class AbstractSchemePortImpl extends AbstractSchemePort {
 	 * @see JavaUtilIStorableObject#modifiedImpl()
 	 */
 	public Date modifiedImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#modifierId()
+	 */
+	public Identifier modifierId() {
 		throw new UnsupportedOperationException();
 	}
 

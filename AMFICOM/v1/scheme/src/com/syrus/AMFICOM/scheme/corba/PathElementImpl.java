@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementImpl.java,v 1.6 2004/12/15 15:08:31 bass Exp $
+ * $Id: PathElementImpl.java,v 1.7 2004/12/17 15:58:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/12/15 15:08:31 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/17 15:58:58 $
  * @module schemecommon_v1
  */
 final class PathElementImpl extends PathElement implements Cloneable {
@@ -70,6 +70,13 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	 * @see java.util.JavaUtilIStorableObject#createdImpl()
 	 */
 	public Date createdImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#creatorId()
+	 */
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -154,6 +161,13 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
 	 */
 	public Date modifiedImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#modifierId()
+	 */
+	public Identifier modifierId() {
 		throw new UnsupportedOperationException();
 	}
 

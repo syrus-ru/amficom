@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoElementImpl.java,v 1.7 2004/12/17 11:57:12 bass Exp $
+ * $Id: SchemeProtoElementImpl.java,v 1.8 2004/12/17 15:58:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/12/17 11:57:12 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/17 15:58:58 $
  * @module schemecommon_v1
  */
 final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneable {
@@ -68,6 +68,13 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 	 * @see java.util.JavaUtilIStorableObject#createdImpl()
 	 */
 	public Date createdImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#creatorId()
+	 */
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -185,6 +192,13 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
 	 */
 	public Date modifiedImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#modifierId()
+	 */
+	public Identifier modifierId() {
 		throw new UnsupportedOperationException();
 	}
 

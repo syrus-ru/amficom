@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImpl.java,v 1.7 2004/12/17 11:57:12 bass Exp $
+ * $Id: SchemeImpl.java,v 1.8 2004/12/17 15:58:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,19 +9,18 @@
 package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.CORBA.Map.Map_Transferable;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 import com.syrus.util.logging.ErrorHandler;
-
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/12/17 11:57:12 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/17 15:58:58 $
  * @module schemecommon_v1
  */
 final class SchemeImpl extends Scheme implements Cloneable {
@@ -47,6 +46,13 @@ final class SchemeImpl extends Scheme implements Cloneable {
 	 * @see java.util.JavaUtilIStorableObject#createdImpl()
 	 */
 	public Date createdImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#creatorId()
+	 */
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -156,6 +162,13 @@ final class SchemeImpl extends Scheme implements Cloneable {
 	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
 	 */
 	public Date modifiedImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#modifierId()
+	 */
+	public Identifier modifierId() {
 		throw new UnsupportedOperationException();
 	}
 

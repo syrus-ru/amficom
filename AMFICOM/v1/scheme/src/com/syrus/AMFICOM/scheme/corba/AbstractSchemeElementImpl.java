@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElementImpl.java,v 1.6 2004/12/15 14:56:08 bass Exp $
+ * $Id: AbstractSchemeElementImpl.java,v 1.7 2004/12/17 15:58:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.*;
  * {@link AbstractSchemeElement} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/12/15 14:56:08 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/17 15:58:57 $
  * @module schemecommon_v1
  */
 final class AbstractSchemeElementImpl extends AbstractSchemeElement {
@@ -56,6 +56,13 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 	 * @see JavaUtilIStorableObject#createdImpl()
 	 */
 	public Date createdImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#creatorId()
+	 */
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -99,6 +106,13 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 	 * @see JavaUtilIStorableObject#modifiedImpl()
 	 */
 	public Date modifiedImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#modifierId()
+	 */
+	public Identifier modifierId() {
 		throw new UnsupportedOperationException();
 	}
 
