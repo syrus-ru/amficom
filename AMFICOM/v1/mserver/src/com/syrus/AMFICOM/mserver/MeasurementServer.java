@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.10 2004/08/14 19:29:29 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.11 2004/08/16 10:46:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/14 19:29:29 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/16 10:46:45 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -45,7 +45,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final int TICK_TIME = 5;
 
-	/*	Error codes for method processError()	(abort tests, ...)*/
+	/*	Error codes for method processFall()	(abort tests, ...)*/
 	public static final int FALL_CODE_RECEIVE_TESTS = 1;
 
 	/*	Information about myself*/
@@ -202,7 +202,6 @@ public class MeasurementServer extends SleepButWorkThread {
 								this.mcmIdToAbortTests = mcmId;
 								this.testsToAbort = testQueue;
 								super.sleepCauseOfFall();
-								continue;
 							}
 						}
 					}
