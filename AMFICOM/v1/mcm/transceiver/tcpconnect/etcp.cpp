@@ -124,14 +124,14 @@ SOCKET tcp_client (char * hname,char * sname)
 }
 
 //Receives parts of data with maximum interval of 3 seconds
-int readNBytesFromTCP (SOCKET s, char * buff, int size, int flags)
+int readNBytesFromTCP (SOCKET s, char *buff, int size, int flags)
 {
 	int bytesRead = 0;
-	int rc;
 	while (bytesRead < size)
 	{
+		int rc;
 		timeval tv;
-		tv.tv_sec = 3;
+		tv.tv_sec = TIMEOUT;
 		tv.tv_usec = 0;
 
 		fd_set in;
@@ -139,15 +139,12 @@ int readNBytesFromTCP (SOCKET s, char * buff, int size, int flags)
 		FD_SET (s,&in);
 
 		rc = select (s + 1, &in, NULL, NULL, &tv);
-		if (rc <= 0)
-			break;
-
-		rc = recv(s,buff + bytesRead,size - bytesRead,flags);
-
-		if (rc <= 0)
-			break;
-
-		bytesRead += rc;
+		if (rc){
+			rc = recv(s,buff + bytesRead,size - bytesRead,flags);
+			if (rc > 0)
+				bytesRead += rc;
+			else break;
+		} else break;
 	}
 
 	return bytesRead;

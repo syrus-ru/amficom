@@ -8,6 +8,10 @@
 //#define bzero(b,n) memset((b), 0, (n))
 #endif
 
+#ifndef TIMEOUT
+#define TIMEOUT 5
+#endif
+
 #define MSG_PULSE 0
 #define MSG_ERROR 1
 

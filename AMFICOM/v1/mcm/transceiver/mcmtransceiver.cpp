@@ -24,13 +24,6 @@
 //const int MAXLENPATH = 128;
 //const char* FIFOROOTPATH = "/tmp";
 
-/*
-int main() {
-	printf("************\n");
-	return 1;
-}
-*/
-
 JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEnv *env,
 									jobject obj,
 									jint serv_socket,
@@ -44,6 +37,9 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 	char* buffer;
 	const char* jbuffer;
 
+//	fprintf(stdout, "(native - agent - Transmit)  Enter.\n");
+//	fflush(stdout);
+	
 //measurement_id
 	l = env->GetStringUTFLength(jmeasurement_id);
 	buffer = new char[l];
@@ -102,24 +98,32 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 
 	unsigned int length = measurementSegment->getLength();
 
+//	fprintf(stdout, "(native - agent - Transmit)  #10\n");
+//	fflush(stdout);
+
 	char* arr = new char[length + INTSIZE];
 	memcpy(arr, (char*)&length, INTSIZE);
 	memcpy(arr + INTSIZE, measurementSegment->getData(), length);
 
 	delete measurementSegment;
 
-	cout << "(native - agent - transmit) Transmitting array of length: " << length << "\n";
+	fprintf(stdout, "(native - agent - transmit) Transmitting array of length: %d\n", length);
+	fflush(stdout);
 
 	if (sendNBytesToTCP(serv_socket, arr, length + INTSIZE, 0) != length + INTSIZE)
 	{
-		cout << "(native - agent - transmit) Transfer failed\n";
+//		fprintf(stdout, "(native - agent - Transmit)  Tansfer failed.\n");
+//		fflush(stdout);
 		delete[] arr;
+//		fprintf(stdout, "(native - agent - Transmit)  Tansfer failed, return.\n");
+//		fflush(stdout);
 		return JNI_FALSE;
 	}
 
-	cout << "(native - agent - transmit) Transfer succeeded\n";
-
 	delete[] arr;
+
+//	fprintf(stdout, "(native - agent - Transmit)  Tansfer ok, return.\n");
+//	fflush(stdout);
 
 	return JNI_TRUE;
 }
@@ -127,48 +131,56 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(
 	JNIEnv *env,
 	jobject obj,
-	jint serv_socket){
-	jclass transceiver_class = env->GetObjectClass(obj);
+	jint serv_socket) {
+	//jclass transceiver_class = env->GetObjectClass(obj);
 
-	cout << "(native - agent - receive)  Getting length of array to receive.\n";
+	fprintf(stdout, "(native - agent - receive)  Getting length of array to receive.\n");
+	fflush(stdout);
 	
-	unsigned int length = 0;
+	unsigned int length = 0;	
 	
-	fd_set rfds;
-	struct timeval tv;
-	FD_ZERO(&rfds);
-	FD_SET(serv_socket, &rfds);
-	tv.tv_sec = TIMEOUT;
-	tv.tv_usec = 0;
-	
-	{	
-		int recvlenght = readNBytesFromTCP(serv_socket, (char *)&length, INTSIZE, 0);			
-		if (recvlenght == 0)
-			return NULL;
+	{
+		int recvlenght = readNBytesFromTCP(serv_socket, (char *)&length, INTSIZE, 0);
 		if (recvlenght != INTSIZE)	{
-			cout << "(native - agent - receive)  Failed getting length (" << recvlenght << ").\n";
+			if (recvlenght != 0) {
+				fprintf(stdout, "(native - agent - receive)  Failed getting length (%d bytes read).\n", recvlenght);
+				fflush(stdout);
+			}
 			return NULL;
 		}
-
+// THIS CODE WAS WRITTEN BY PETYA
 		char* buftoread = new char[length];
+//		fprintf(stdout, "(native - agent - receive) #0.1\n");
+//		fflush(stdout);
 		int receiveCode = readNBytesFromTCP(serv_socket, buftoread, length, 0);
+		fprintf(stdout, "(native - agent - receive) #0.2 (rc = %d)\n", receiveCode);
+		fflush(stdout);
 		if (receiveCode != length) {
-			cout << "(native - agent - receive)  Failed getting array of length " << length <<".\n";
-			cout << "(native - agent - receive)  The declared data array length ("
-				 << length
-				 <<") and\n"
-				 << "the length of the received array (" 
-				 << receiveCode
-				 <<") are NOT EQUAL!\n";			
+			fprintf(stdout,
+			        "(native - agent - receive)  Failed getting array of length " "%d" ".\n"
+			        "(native - agent - receive)  The declared data array length ("
+				    "%d"
+				    ") and\n"
+				    "the length of the received array (" 
+				    "%d"
+				    ") are NOT EQUAL!\n",
+				    length,
+				    length,
+				    receiveCode);
+			fflush(stdout);
 			if (receiveCode < 0)
-				cout << "Reason: the socket was gracefully closed.\n";
+				fprintf(stdout,	"Reason: the socket was gracefully closed.\n");
 			else
-				cout << "Reason: connection error.\n";
+				fprintf(stdout,	"Reason: connection error.\n");
+			fflush(stdout);
 			delete[] buftoread;
 			
-			return NULL;	
-		}	
-			
+			return NULL;
+		}
+		
+//		fprintf(stdout,	"(native - agent - receive) #1\n");
+//		fflush(stdout);
+
 		char* data = new char[length];
 		ResultSegment* resultSegment = new ResultSegment(length, buftoread);
 	
@@ -179,24 +191,37 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(
 		Parameter** parameters = resultSegment->getParameters();
 		
 		jobjectArray j_par_codenames = (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("java/lang/String"), NULL);
-		jobjectArray j_par_values =  (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("[B"), NULL);
+		jobjectArray j_par_values    = (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("[B"), NULL);
 		for (jsize s = 0; s < parnumber; s++) {
 			env->SetObjectArrayElement(j_par_codenames, s, env->NewStringUTF(parameters[s]->getName()->getData()));
 			jbyteArray jpar_value = env->NewByteArray(parameters[s]->getValue()->getLength());
 			env->SetByteArrayRegion(jpar_value, 0, parameters[s]->getValue()->getLength(), (jbyte*)parameters[s]->getValue()->getData());
+			//env->ReleaseByteArrayElements(jpar_value, (jbyte*)parameters[s]->getValue()->getData(), JNI_COMMIT);
 			env->SetObjectArrayElement(j_par_values, s, jpar_value);
-			// env->DeleteLocalRef(jpar_value);
+			env->DeleteLocalRef(jpar_value);
 		}
 	
-		
-		delete[] buftoread;
+//		fprintf(stdout,	"(native - agent - receive) #2.1a\n");
+//		fflush(stdout);
 		delete resultSegment;
+
+//		fprintf(stdout,	"(native - agent - receive) #2.1b\n");
+//		fflush(stdout);
+		/* FIXME: delete[] buftoread fail due to double delete	 */
+		// delete[] buftoread;
+
+//		fprintf(stdout,	"(native - agent - receive) #2.2\n");
+//		fflush(stdout);
 		
 		jclass kis_report_class = env->FindClass("com/syrus/AMFICOM/mcm/KISReport");
 		jmethodID constructor_id = env->GetMethodID(kis_report_class, "<init>", "(Ljava/lang/String;[Ljava/lang/String;[[B)V");
 		jobject j_kis_report = env->NewObject(kis_report_class, constructor_id, j_measurement_id,
 											j_par_codenames,
 											j_par_values);
+
+//		fprintf(stdout,	"(native - agent - receive) #3\n");
+//		fflush(stdout);
+
 		return j_kis_report;
 	} 
 }
