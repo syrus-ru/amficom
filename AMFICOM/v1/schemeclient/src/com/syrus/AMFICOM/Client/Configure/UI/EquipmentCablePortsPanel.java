@@ -88,7 +88,7 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 	{
 		element = (SchemeElement)or;
 		cportBox.removeAll();
-		cportBox.addElements(SchemeUtils.getCablePorts(element));
+		cportBox.addElements(element.getSchemeCablePorts());
 		SchemeCablePort cp = (SchemeCablePort)cportBox.getSelectedItem();
 		cpgp.setObject(cp);
 	}

@@ -173,8 +173,8 @@ public class EquipmentGeneralPanel extends GeneralPanel
 		descTextArea.setText(element.getDescription());
 
 		typeBox.setSelectedItem(element.getEquipmentType());
-		portsNumberField.setText(Long.toString(SchemeUtils.getPorts(element).size()));
-		cabelPortsNumberField.setText(Long.toString(SchemeUtils.getCablePorts(element).size()));
+		portsNumberField.setText(Long.toString(element.getSchemePorts().size()));
+		cabelPortsNumberField.setText(Long.toString(element.getSchemeCablePorts().size()));
 
 		if(element.getEquipment() != null)
 		{

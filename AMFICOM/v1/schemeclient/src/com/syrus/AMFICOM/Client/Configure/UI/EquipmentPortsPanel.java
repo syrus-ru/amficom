@@ -86,7 +86,7 @@ public class EquipmentPortsPanel extends GeneralPanel
 	{
 		element = (SchemeElement)or;
 		portBox.removeAll();
-		portBox.addElements(SchemeUtils.getPorts(element));
+		portBox.addElements(element.getSchemePorts());
 
 		SchemePort port = (SchemePort)portBox.getSelectedItem();
 		pgp.setObject(port);

@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -28,6 +27,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -424,7 +424,7 @@ public final class MapSiteBindPanel
 			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
 			{
 				Scheme scheme = (Scheme )it.next();
-				schemeElements.addAll(SchemeUtils.getTopLevelElements(scheme));
+				schemeElements.addAll(scheme.getSchemeElements());
 			}
 			List cableElementsTransit = mapView.getCablePaths(siteNode);
 			List cableElementsDropped = new LinkedList();
@@ -475,9 +475,10 @@ public final class MapSiteBindPanel
 		return this.root;
 	}
 	
-	private boolean startsAt(SchemeCableLink scl, SchemeElement se)
+	private boolean startsAt(final SchemeCableLink schemeCableLink, final SchemeElement schemeElement)
 	{
-		return SchemeUtils.getCablePorts(se).contains(scl.getSourceSchemeCablePort())
-			|| SchemeUtils.getCablePorts(se).contains(scl.getTargetSchemeCablePort());
+		final Set schemeCablePorts = schemeElement.getSchemeCablePorts();
+		return schemeCablePorts.contains(schemeCableLink.getSourceSchemeCablePort())
+			|| schemeCablePorts.contains(schemeCableLink.getTargetSchemeCablePort());
 	}
 }

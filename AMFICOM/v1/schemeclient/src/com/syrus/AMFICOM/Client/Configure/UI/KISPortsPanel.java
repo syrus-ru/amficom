@@ -118,7 +118,7 @@ public class KISPortsPanel extends GeneralPanel
 		element = (SchemeElement)or;
 
 		portBox.removeAll();
-		portBox.addElements(SchemeUtils.getPorts(element));
+		portBox.addElements(element.getSchemePorts());
 	}
 
 	public boolean modify()

@@ -344,7 +344,7 @@ public class PathBuilder
 				return null;
 			}
 
-			for (Iterator it = SchemeUtils.getPorts(se).iterator(); it.hasNext();)
+			for (Iterator it = se.getSchemePorts().iterator(); it.hasNext();)
 			{
 				SchemePort p = (SchemePort)it.next();
 				if (p.getMeasurementPortType() != null)
@@ -389,7 +389,7 @@ public class PathBuilder
 				//если у предыдущего эл-та проставлен endPortId, ищем по нему
 				if (pe.getEndAbstractSchemePort() != null)
 				{
-					for (Iterator it = SchemeUtils.getPorts(se).iterator(); it.hasNext();)
+					for (Iterator it = se.getSchemePorts().iterator(); it.hasNext();)
 					{
 						SchemePort port = (SchemePort)it.next();
 						if (port.equals(pe.getEndAbstractSchemePort()))
@@ -398,7 +398,7 @@ public class PathBuilder
 				}
 				else //в противном случае ищем по общему порту предыдущего эл-та и линка
 				{
-					for (Iterator it = SchemeUtils.getPorts(se).iterator(); it.hasNext();)
+					for (Iterator it = se.getSchemePorts().iterator(); it.hasNext();)
 					{
 						SchemePort port = (SchemePort)it.next();
 						if (port.equals(link.getSourceSchemePort()) ||
@@ -462,7 +462,7 @@ public class PathBuilder
 				//если у предыдущего эл-та проставлен endPortId, ищем по нему
 				if (pe.getEndAbstractSchemePort() != null)
 				{
-					for (Iterator it = SchemeUtils.getCablePorts(se).iterator(); it.hasNext();)
+					for (Iterator it = se.getSchemeCablePorts().iterator(); it.hasNext();)
 					{
 						SchemeCablePort port = (SchemeCablePort)it.next();
 						if (port.equals(pe.getEndAbstractSchemePort()))
@@ -477,7 +477,7 @@ public class PathBuilder
 				}
 				else //в противном случае ищем по общему порту предыдущего эл-та и линка
 				{
-					for (Iterator it = SchemeUtils.getCablePorts(se).iterator(); it.hasNext();)
+					for (Iterator it = se.getSchemeCablePorts().iterator(); it.hasNext();)
 					{
 						SchemeCablePort port = (SchemeCablePort)it.next();
 						if (port.equals(link.getSourceSchemeCablePort()) ||
