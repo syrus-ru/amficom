@@ -1,5 +1,5 @@
 /*
- * $Id: IniFile.java,v 1.5 2004/07/16 13:33:02 bass Exp $
+ * $Id: IniFile.java,v 1.6 2004/07/30 11:29:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Vector;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/07/16 13:33:02 $
+ * @version $Revision: 1.6 $, $Date: 2004/07/30 11:29:21 $
  * @deprecated java.util.prefs will be used instead.
  * @module util
  */
@@ -48,16 +48,16 @@ public class IniFile
 	 */
 	public IniFile(File file) throws IOException
 	{
-		f = file;
-		if (!f.exists())
-			f.createNewFile();
-		fis = new FileInputStream(file);
-		data = new byte[(int)file.length()];
-		fis.read(data);
-		bais = new ByteArrayInputStream(data);
+		this.f = file;
+		if (!this.f.exists())
+			this.f.createNewFile();
+		this.fis = new FileInputStream(file);
+		this.data = new byte[(int)file.length()];
+		this.fis.read(this.data);
+		this.bais = new ByteArrayInputStream(this.data);
 		findKeys();
-		bais.close();
-		fis.close();
+		this.bais.close();
+		this.fis.close();
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class IniFile
 	 */
 	public Vector getKeys()
 	{
-		return keys;
+		return this.keys;
 	}
 
 	/**
@@ -74,11 +74,10 @@ public class IniFile
 	 */
 	public String getValue(String key)
 	{
-		int n = keys.indexOf(key);
+		int n = this.keys.indexOf(key);
 		if (n == -1)
 			return null;
-		else
-			return (String)values.get(n);
+		return (String)this.values.get(n);
 	}
 
 	/**
@@ -97,14 +96,13 @@ public class IniFile
 	 */
 	public String getValue(String key, String defaultValue)
 	{
-		int n = keys.indexOf(key);
+		int n = this.keys.indexOf(key);
 		if (n == -1)
 		{
-			System.out.println("No such key: '" + key + "' defined in ini-file '" + f.getName() + "'; setting default value: " + defaultValue);
+			System.out.println("No such key: '" + key + "' defined in ini-file '" + this.f.getName() + "'; setting default value: " + defaultValue);
 			return defaultValue;
 		}
-		else
-			return (String)values.get(n);
+		return (String)this.values.get(n);
 	}
 
 	/**
@@ -113,14 +111,14 @@ public class IniFile
 	 */
 	public void setValue(String key, Object val)
 	{
-		int n = keys.indexOf(key);
+		int n = this.keys.indexOf(key);
 		if (n == -1)
 		{
-			keys.add(key);
-			values.add(val.toString());
+			this.keys.add(key);
+			this.values.add(val.toString());
 		}
 		else
-			values.set(n, val.toString());
+			this.values.set(n, val.toString());
 	}
 
 	/**
@@ -130,17 +128,17 @@ public class IniFile
 	{
 		try
 		{
-			fos = new FileOutputStream (f);
-			pw = new PrintWriter(fos, true);
-			for (int i = 0; i < keys.size(); i++)
+			this.fos = new FileOutputStream (this.f);
+			this.pw = new PrintWriter(this.fos, true);
+			for (int i = 0; i < this.keys.size(); i++)
 			{
-				if (values.get(i) == "")
-					pw.println((String)keys.get(i));
+				if (this.values.get(i) == "")
+					this.pw.println((String)this.keys.get(i));
 				else
-					pw.println (String.valueOf(keys.get(i) + " = " + values.get(i)));
+					this.pw.println (String.valueOf(this.keys.get(i) + " = " + this.values.get(i)));
 			}
-			pw.close();
-			fos.close();
+			this.pw.close();
+			this.fos.close();
 		}
 		catch (Exception ex)
 		{
@@ -155,55 +153,52 @@ public class IniFile
 	 */
 	int findKeys ()
 	{
-		idis = new IntelDataInputStream(bais);
-		keys = new Vector();
-		values = new Vector();
+		this.idis = new IntelDataInputStream(this.bais);
+		this.keys = new Vector();
+		this.values = new Vector();
 
 		while (true)
 		{
 			try
 			{
-				tmp = idis.readASCIIString();
-				if (tmp == null)
+				this.tmp = this.idis.readASCIIString();
+				if (this.tmp == null)
 				{
-					idis.close();
+					this.idis.close();
 					break;
+				}
+				if (this.tmp.length() < 3 || this.tmp.charAt(0) == ';')
+				{
+					this.keys.add(this.tmp);
+					this.values.add("");
 				}
 				else
 				{
-					if (tmp.length() < 3 || tmp.charAt(0) == ';')
+					this.counter++;
+					int spos = this.tmp.indexOf(" =");
+					if (spos != -1)
 					{
-						keys.add(tmp);
-						values.add("");
+						this.keys.add(this.tmp.substring(0, spos));
+						if (this.tmp.substring(spos, spos + 1).equals(" "))
+							this.values.add(this.tmp.substring(spos + 3, this.tmp.length()));
+						else
+							this.values.add(this.tmp.substring(spos + 2, this.tmp.length()));
 					}
 					else
 					{
-						counter++;
-						int spos = tmp.indexOf(" =");
+						spos = this.tmp.indexOf("=");
 						if (spos != -1)
 						{
-							keys.add(tmp.substring(0, spos));
-							if (tmp.substring(spos, spos + 1).equals(" "))
-								values.add(tmp.substring(spos + 3, tmp.length()));
+							this.keys.add(this.tmp.substring(0, spos));
+							if (this.tmp.substring(spos, spos + 1).equals(" "))
+								this.values.add(this.tmp.substring(spos + 2, this.tmp.length()));
 							else
-								values.add(tmp.substring(spos + 2, tmp.length()));
+								this.values.add(this.tmp.substring(spos + 1, this.tmp.length()));
 						}
 						else
 						{
-							spos = tmp.indexOf("=");
-							if (spos != -1)
-							{
-								keys.add(tmp.substring(0, spos));
-								if (tmp.substring(spos, spos + 1).equals(" "))
-									values.add(tmp.substring(spos + 2, tmp.length()));
-								else
-									values.add(tmp.substring(spos + 1, tmp.length()));
-							}
-							else
-							{
-								keys.add(tmp);
-								values.add("");
-							}
+							this.keys.add(this.tmp);
+							this.values.add("");
 						}
 					}
 				}
@@ -213,6 +208,6 @@ public class IniFile
 				ex.printStackTrace();
 			}
 		}
-		return counter;
+		return this.counter;
 	}
 }

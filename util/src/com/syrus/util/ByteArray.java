@@ -138,7 +138,7 @@ public class ByteArray {
     int len = this.bar.length + bar1.length;
     byte[] barn = new byte[len];
     for(int i = 0; i < this.bar.length; i++)
-      barn[i] = bar[i];
+      barn[i] = this.bar[i];
     for(int i = this.bar.length; i < len; i++)
       barn[i] = bar1[i - this.bar.length];
     this.bar = barn;

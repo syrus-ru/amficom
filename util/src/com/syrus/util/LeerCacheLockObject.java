@@ -8,6 +8,6 @@ public class LeerCacheLockObject implements CacheLockObject {
 	}
 	
 	public Object getResource() {
-		return new Integer(code);
+		return new Integer(this.code);
 	}
 }

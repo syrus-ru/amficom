@@ -1,5 +1,5 @@
 /*
- * $Id: Entry.java,v 1.1 2004/06/01 14:09:14 bass Exp $
+ * $Id: Entry.java,v 1.2 2004/07/30 11:31:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.util;
 import java.nio.channels.FileLock;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/01 14:09:14 $
+ * @version $Revision: 1.2 $, $Date: 2004/07/30 11:31:40 $
  */
 class Entry implements CacheLockObject {
 	public static final int READ_LOCK = 0;
@@ -34,6 +34,6 @@ class Entry implements CacheLockObject {
 	}
 
 	public Object getResource() {
-		return stream;
+		return this.stream;
 	}
 }

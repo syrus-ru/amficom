@@ -133,10 +133,10 @@ public abstract class StolenLogger implements Logger {
 
 	private void checkLogRollover() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		String currd = sdf.format(logDate);
+		String currd = sdf.format(this.logDate);
 		String d = sdf.format(new Date());
 		if(!currd.equals(d)) {
-			logDate = new Date();
+			this.logDate = new Date();
 			this.errorLogFileName = this.createLogFileName(StolenLogger.ERROR);
 			this.debugLogFileName = this.createLogFileName(StolenLogger.DEBUG);
 		}

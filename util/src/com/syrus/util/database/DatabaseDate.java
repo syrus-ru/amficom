@@ -33,7 +33,6 @@ public class DatabaseDate {
 			subString = subString.concat("', 'YYYYMMDD HH24MISS')");
 			return subString;
 		}
-		else
-			return null;
+		return null;
 	}
 }

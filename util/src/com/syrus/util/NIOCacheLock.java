@@ -124,39 +124,39 @@ public class NIOCacheLock implements CacheLock {
 
 	private void put(Entry e) {
 		String key = e.filename;
-		Vector vec = (Vector )locks.get(key);
+		Vector vec = (Vector )this.locks.get(key);
 		if(vec == null) {
 			vec = new Vector();
-			locks.put(key, vec);
+			this.locks.put(key, vec);
 		}
 		vec.add(e);
-		locks2.put(e.lock, e);
+		this.locks2.put(e.lock, e);
 	}
 	
-	private Entry get(FileLock lockkey, int type) {
-		return (Entry )locks2.get(lockkey);
-	}
-	
-	private Entry get(String key, int type) {
-		Vector vec = (Vector )locks.get(key);
-		if(vec == null)
-			return null;
-
-		for(int i = 0; i < vec.size(); i++) {
-			Entry e = (Entry )vec.get(i);
-			if(e.type == type)
-				return e;
-		}
-		return null;
-	}
+//	private Entry get(FileLock lockkey, int type) {
+//		return (Entry )this.locks2.get(lockkey);
+//	}
+//	
+//	private Entry get(String key, int type) {
+//		Vector vec = (Vector )this.locks.get(key);
+//		if(vec == null)
+//			return null;
+//
+//		for(int i = 0; i < vec.size(); i++) {
+//			Entry e = (Entry )vec.get(i);
+//			if(e.type == type)
+//				return e;
+//		}
+//		return null;
+//	}
 	
 	private void remove(Entry e) {
 		String key = e.filename;
-		Vector vec = (Vector )locks.get(key);
+		Vector vec = (Vector )this.locks.get(key);
 		if(vec == null)
 			return;
 
 		vec.remove(e);
-		locks2.remove(e.lock);
+		this.locks2.remove(e.lock);
 	}
 }
