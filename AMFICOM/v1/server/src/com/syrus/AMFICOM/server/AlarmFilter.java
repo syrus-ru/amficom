@@ -17,10 +17,10 @@ public class AlarmFilter implements Filter
 
    	public boolean expression(FilterExpressionInterface expr, Object or)
     {
-     	return expression((FilterExpression_yo )expr, or);
+     	return expression((FilterExpressionBase )expr, or);
     }
 
-	public boolean expression(FilterExpression_yo expr, Object or)
+	public boolean expression(FilterExpressionBase expr, Object or)
     {
     try
     {

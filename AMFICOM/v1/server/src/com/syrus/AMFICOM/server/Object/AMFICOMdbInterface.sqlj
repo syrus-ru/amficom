@@ -1662,7 +1662,7 @@ public class AMFICOMdbInterface
 				}
 			}
 
-			LogicScheme_yo ls = new LogicScheme_yo(new AlarmFilter());
+			LogicSchemeBase ls = new LogicSchemeBase(new AlarmFilter());
 
 			try
 			{
