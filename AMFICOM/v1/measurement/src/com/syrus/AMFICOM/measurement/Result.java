@@ -17,7 +17,7 @@ public class Result extends StorableObject {
 	private Measurement measurement;
 	private Action action;
 	private int sort;
-	private int alarm_level;
+	private int alarmLevel;
 	private SetParameter[] parameters;
 
 	private StorableObject_Database resultDatabase;
@@ -42,7 +42,7 @@ public class Result extends StorableObject {
 					new Identifier(rt.modifier_id));
 		this.measurement = new Measurement(new Identifier(rt.measurement_id));
 		this.sort = rt.sort.value();
-		this.alarm_level = rt.alarm_level.value();
+		this.alarmLevel = rt.alarm_level.value();
 		switch (this.sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
 				this.action = this.measurement;
@@ -69,29 +69,29 @@ public class Result extends StorableObject {
 	}
 
 	private Result(Identifier id,
-								 Identifier creator_id,
+								 Identifier creatorId,
 								 Measurement measurement,
 								 Action action,
 								 ResultSort sort,
-								 AlarmLevel alarm_level,
-								 Identifier[] parameter_ids,
-								 Identifier[] parameter_type_ids,
-								 byte[][] parameter_values) throws CreateObjectException {
+								 AlarmLevel alarmLevel,
+								 Identifier[] parameterIds,
+								 Identifier[] parameterTypeIds,
+								 byte[][] parameterValues) throws CreateObjectException {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
-					creator_id,
-					creator_id);
+					creatorId,
+					creatorId);
 		this.measurement = measurement;
 		this.action = action;
 		this.sort = sort.value();
-		this.alarm_level = alarm_level.value();
+		this.alarmLevel = alarmLevel.value();
 
-		this.parameters = new SetParameter[Math.min(Math.min(parameter_ids.length, parameter_type_ids.length), parameter_values.length)];
+		this.parameters = new SetParameter[Math.min(Math.min(parameterIds.length, parameterTypeIds.length), parameterValues.length)];
 		for (int i = 0; i < this.parameters.length; i++)
-			this.parameters[i] = new SetParameter(parameter_ids[i],
-																						parameter_type_ids[i],
-																						parameter_values[i]);
+			this.parameters[i] = new SetParameter(parameterIds[i],
+																						parameterTypeIds[i],
+																						parameterValues[i]);
 
 		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 		try {
@@ -112,11 +112,11 @@ public class Result extends StorableObject {
 																	 (Identifier_Transferable)super.creator_id.getTransferable(),
 																	 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																	 (Identifier_Transferable)this.measurement.getId().getTransferable(),
-																	 (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():new Identifier_Transferable(0),
-																	 (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():new Identifier_Transferable(0),
+																	 (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():null,
+																	 (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():null,
 																	 ResultSort.from_int(this.sort),
 																	 pts,
-																	 AlarmLevel.from_int(this.alarm_level));
+																	 AlarmLevel.from_int(this.alarmLevel));
 	}
 
 	public Measurement getMeasurement() {
@@ -136,25 +136,25 @@ public class Result extends StorableObject {
 	}
 
 	public AlarmLevel getAlarmLevel() {
-		return AlarmLevel.from_int(this.alarm_level);
+		return AlarmLevel.from_int(this.alarmLevel);
 	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
+																						Identifier creatorId,
+																						Identifier modifierId,
 																						Measurement measurement,
 																						Action action,
 																						int sort,
-																						int alarm_level) {
+																						int alarmLevel) {
 		super.setAttributes(created,
 												modified,
-												creator_id,
-												modifier_id);
+												creatorId,
+												modifierId);
 		this.measurement = measurement;
 		this.action = action;
 		this.sort = sort;
-		this.alarm_level = alarm_level;
+		this.alarmLevel = alarmLevel;
 	}
 
 	protected synchronized void setParameters(SetParameter[] parameters) {
@@ -162,22 +162,22 @@ public class Result extends StorableObject {
 	}
 
 	protected static Result create(Identifier id,
-																 Identifier creator_id,
+																 Identifier creatorId,
 																 Measurement measurement,
 																 Action action,
 																 ResultSort sort,
-																 AlarmLevel alarm_level,
-																 Identifier[] parameter_ids,
-																 Identifier[] parameter_type_ids,
-																 byte[][] parameter_values) throws CreateObjectException {
+																 AlarmLevel alarmLevel,
+																 Identifier[] parameterIds,
+																 Identifier[] parameterTypeIds,
+																 byte[][] parameterValues) throws CreateObjectException {
 		return new Result(id,
-											creator_id,
+											creatorId,
 											measurement,
 											action,
 											sort,
-											alarm_level,
-											parameter_ids,
-											parameter_type_ids,
-											parameter_values);
+											alarmLevel,
+											parameterIds,
+											parameterTypeIds,
+											parameterValues);
 	}
 }

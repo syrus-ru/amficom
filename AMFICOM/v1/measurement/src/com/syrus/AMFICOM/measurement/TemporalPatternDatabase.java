@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
-public class TemporalPattern_Database extends StorableObject_Database {
+public class TemporalPatternDatabase extends StorableObject_Database {
 	public static final String COLUMN_DESCRIPTION 	= "description";
 	public static final String COLUMN_VALUE 		= "value";
 
@@ -22,7 +22,7 @@ public class TemporalPattern_Database extends StorableObject_Database {
 		if (storableObject instanceof TemporalPattern)
 			return (TemporalPattern)storableObject;
 		else
-			throw new Exception("TemporalPattern_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("TemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	public void retrieve(StorableObject storableObject) throws Exception {
@@ -31,7 +31,7 @@ public class TemporalPattern_Database extends StorableObject_Database {
 	}
 
 	private void retrieveTemporalPattern(TemporalPattern temporalPattern) throws Exception {
-		String tp_id_str = temporalPattern.getId().toSQLString();
+		String tpIdStr = temporalPattern.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
 			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
@@ -40,12 +40,12 @@ public class TemporalPattern_Database extends StorableObject_Database {
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_VALUE
 			+ SQL_FROM + ObjectEntities.TEMPORALPATTERN_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + tp_id_str;
+			+ SQL_WHERE + COLUMN_ID + EQUALS + tpIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("TemporalPattern_Database.retrieveTemporalPattern | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("TemporalPatternDatabase.retrieveTemporalPattern | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
@@ -57,10 +57,10 @@ public class TemporalPattern_Database extends StorableObject_Database {
 												cronStrings);
 			}
 			else
-				throw new Exception("No such temporal pattern: " + tp_id_str);
+				throw new Exception("No such temporal pattern: " + tpIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "TemporalPattern_Database.retrieveTemporalPattern | Cannot retrieve temporal pattern " + tp_id_str;
+			String mesg = "TemporalPatternDatabase.retrieveTemporalPattern | Cannot retrieve temporal pattern " + tpIdStr;
 			throw new Exception(mesg, sqle);
 		}
 		finally {
@@ -76,9 +76,9 @@ public class TemporalPattern_Database extends StorableObject_Database {
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+		switch (retrieveKind) {
 			default:
 				return null;
 		}
@@ -109,7 +109,7 @@ public class TemporalPattern_Database extends StorableObject_Database {
 	}
 
 	private void insertTemporalPattern(TemporalPattern temporalPattern) throws Exception {
-		String tp_id_code = temporalPattern.getId().getCode();
+		String tpIdCode = temporalPattern.getId().getCode();
 		String sql = SQL_INSERT_INTO + ObjectEntities.TEMPORALPATTERN_ENTITY + CLOSE_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
@@ -131,18 +131,18 @@ public class TemporalPattern_Database extends StorableObject_Database {
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, tp_id_code);
+			preparedStatement.setString(1, tpIdCode);
 			preparedStatement.setDate(2, new java.sql.Date(temporalPattern.getCreated().getTime()));
 			preparedStatement.setDate(3, new java.sql.Date(temporalPattern.getModified().getTime()));
 			preparedStatement.setString(4, temporalPattern.getCreatorId().getCode());
 			preparedStatement.setString(5, temporalPattern.getModifierId().getCode());
 			preparedStatement.setString(6, temporalPattern.getDescription());
 			((OraclePreparedStatement)preparedStatement).setORAData(7, new CronStringArray(temporalPattern.getCronStrings()));
-			Log.debugMessage("TemporalPattern_Database.insertTemporalPattern | Inserting temporal pattern " + tp_id_code, Log.DEBUGLEVEL05);
+			Log.debugMessage("TemporalPatternDatabase.insertTemporalPattern | Inserting temporal pattern " + tpIdCode, Log.DEBUGLEVEL05);
 			preparedStatement.executeUpdate();
 		}
 		catch (SQLException sqle) {
-			String mesg = "TemporalPattern_Database.insertTemporalPattern | Cannot insert temporal pattern " + tp_id_code;
+			String mesg = "TemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern " + tpIdCode;
 			throw new Exception(mesg, sqle);
 		}
 		finally {
@@ -155,9 +155,9 @@ public class TemporalPattern_Database extends StorableObject_Database {
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind, Object arg) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object arg) throws Exception {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
-		switch (update_kind) {
+		switch (updateKind) {
 			default:
 				break;
 		}

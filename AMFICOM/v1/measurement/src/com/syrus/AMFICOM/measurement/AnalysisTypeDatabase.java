@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
-public class AnalysisType_Database extends StorableObject_Database {
+public class AnalysisTypeDatabase extends StorableObject_Database {
 
 	public static final String	MODE_IN							= "IN";
 	public static final String	MODE_CRITERION					= "CRI";
@@ -22,13 +22,13 @@ public class AnalysisType_Database extends StorableObject_Database {
 	public static final String	COLUMN_CODENAME					= "codename";
 	public static final String	COLUMN_DESCRIPTION				= "description";	
 	
-	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID 	= "analysis_type_id";
+	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID 	= "analysisTypeId";
 
 	private AnalysisType fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof AnalysisType)
 			return (AnalysisType) storableObject;
 		else
-			throw new Exception("AnalysisType_Database.fromStorableObject | Illegal Storable Object: "
+			throw new Exception("AnalysisTypeDatabase.fromStorableObject | Illegal Storable Object: "
 					+ storableObject.getClass().getName());
 	}
 
@@ -39,7 +39,7 @@ public class AnalysisType_Database extends StorableObject_Database {
 	}
 
 	private void retrieveAnalysisType(AnalysisType analysisType) throws Exception {
-		String analysis_type_id_str = analysisType.getId().toSQLString();
+		String analysisTypeIdStr = analysisType.getId().toSQLString();
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer();
@@ -60,14 +60,14 @@ public class AnalysisType_Database extends StorableObject_Database {
 			buffer.append(SQL_WHERE);
 			buffer.append(COLUMN_ID);
 			buffer.append(EQUALS);
-			buffer.append(analysis_type_id_str);
+			buffer.append(analysisTypeIdStr);
 			sql = buffer.toString();
 		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("AnalysisType_Database.retrieveAnalysisType | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("AnalysisTypeDatabase.retrieveAnalysisType | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				/**
@@ -78,10 +78,10 @@ public class AnalysisType_Database extends StorableObject_Database {
 						.getString(COLUMN_CREATOR_ID)), new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 						resultSet.getString(COLUMN_CODENAME), resultSet.getString(COLUMN_DESCRIPTION));
 			else
-				throw new Exception("No such analysis type: " + analysis_type_id_str);
+				throw new Exception("No such analysis type: " + analysisTypeIdStr);
 		} catch (SQLException sqle) {
-			String mesg = "AnalysisType_Database.retrieveAnalysisType | Cannot retrieve analysis type "
-					+ analysis_type_id_str;
+			String mesg = "AnalysisTypeDatabase.retrieveAnalysisType | Cannot retrieve analysis type "
+					+ analysisTypeIdStr;
 			throw new Exception(mesg, sqle);
 		} finally {
 			try {
@@ -95,11 +95,11 @@ public class AnalysisType_Database extends StorableObject_Database {
 	}
 
 	private void retrieveParameterTypes(AnalysisType analysisType) throws Exception {	
-		ArrayList in_par_typs = new ArrayList();
-		ArrayList criteria_par_typs = new ArrayList();
-		ArrayList out_par_typs = new ArrayList();
+		ArrayList inParTyps = new ArrayList();
+		ArrayList criteriaParTyps = new ArrayList();
+		ArrayList outParTyps = new ArrayList();
 		
-		String analysis_type_id_str = analysisType.getId().toSQLString();
+		String analysisTypeIdStr = analysisType.getId().toSQLString();
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_SELECT);
@@ -111,37 +111,37 @@ public class AnalysisType_Database extends StorableObject_Database {
 			buffer.append(SQL_WHERE);
 			buffer.append(LINK_COLUMN_ANALYSIS_TYPE_ID);
 			buffer.append(EQUALS);
-			buffer.append( analysis_type_id_str);
+			buffer.append( analysisTypeIdStr);
 			sql = buffer.toString();
 		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("AnalysisType_Database.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("AnalysisTypeDatabase.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
-			String parameter_mode;
-			String parameter_type_id_code;
+			String parameterMode;
+			String parameterTypeIdCode;
 			while (resultSet.next()) {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				parameter_mode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-				parameter_type_id_code = resultSet.getString(LINK_COLUMN_PARAMETER_TYPE_ID);
-				if (parameter_mode.equals(MODE_IN))
-					in_par_typs.add(new Identifier(parameter_type_id_code));
-				else if (parameter_mode.equals(MODE_CRITERION))
-					criteria_par_typs.add(new Identifier(parameter_type_id_code));
-				else if (parameter_mode.equals(MODE_OUT))
-					out_par_typs.add(new Identifier(parameter_type_id_code));
+				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
+				parameterTypeIdCode = resultSet.getString(LINK_COLUMN_PARAMETER_TYPE_ID);
+				if (parameterMode.equals(MODE_IN))
+					inParTyps.add(new Identifier(parameterTypeIdCode));
+				else if (parameterMode.equals(MODE_CRITERION))
+					criteriaParTyps.add(new Identifier(parameterTypeIdCode));
+				else if (parameterMode.equals(MODE_OUT))
+					outParTyps.add(new Identifier(parameterTypeIdCode));
 				else
 					Log
-							.errorMessage("AnalysisType_Database.retrieveParameterTypes | ERROR: Unknown parameter mode for parameter_type_id "
-									+ parameter_type_id_code);
+							.errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId "
+									+ parameterTypeIdCode);
 			}
 		} catch (SQLException sqle) {
-			String mesg = "AnalysisType_Database.retrieveParameterTypes | Cannot retrieve parameter types for analysis type "
-					+ analysis_type_id_str;
+			String mesg = "AnalysisTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter types for analysis type "
+					+ analysisTypeIdStr;
 			throw new Exception(mesg, sqle);
 		} finally {
 			try {
@@ -152,15 +152,15 @@ public class AnalysisType_Database extends StorableObject_Database {
 			} catch (SQLException sqle1) {
 			}
 		}
-		in_par_typs.trimToSize();
-		criteria_par_typs.trimToSize();
-		out_par_typs.trimToSize();
-		analysisType.setParameterTypes(in_par_typs, criteria_par_typs, out_par_typs);
+		inParTyps.trimToSize();
+		criteriaParTyps.trimToSize();
+		outParTyps.trimToSize();
+		analysisType.setParameterTypes(inParTyps, criteriaParTyps, outParTyps);
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+		switch (retrieveKind) {
 			default:
 				return null;
 		}
@@ -189,7 +189,7 @@ public class AnalysisType_Database extends StorableObject_Database {
 	}
 
 	private void insertAnalysisType(AnalysisType analysisType) throws Exception {
-		String analysis_type_id_str = analysisType.getId().toSQLString();
+		String analysisTypeIdStr = analysisType.getId().toSQLString();
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.ANALYSISTYPE_ENTITY + OPEN_BRACKET 
 			+ COLUMN_ID + COMMA 
@@ -200,7 +200,7 @@ public class AnalysisType_Database extends StorableObject_Database {
 			+ COLUMN_CODENAME + COMMA 
 			+ COLUMN_DESCRIPTION
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET			
-			+ analysis_type_id_str + COMMA
+			+ analysisTypeIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(analysisType.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(analysisType.getModified()) + COMMA
 			+ analysisType.getCreatorId().toString() + COMMA 
@@ -210,11 +210,11 @@ public class AnalysisType_Database extends StorableObject_Database {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("AnalysisType_Database.insertAnalysisType | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("AnalysisTypeDatabase.insertAnalysisType | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
 		} catch (SQLException sqle) {
-			String mesg = "AnalysisType_Database.insertAnalysisType | Cannot insert analysis type "
-					+ analysis_type_id_str;
+			String mesg = "AnalysisTypeDatabase.insertAnalysisType | Cannot insert analysis type "
+					+ analysisTypeIdStr;
 			throw new Exception(mesg, sqle);
 		} finally {
 			try {
@@ -226,66 +226,66 @@ public class AnalysisType_Database extends StorableObject_Database {
 	}
 
 	private void insertParameterTypes(AnalysisType analysisType) throws Exception {
-		ArrayList in_par_typs = analysisType.getInParameterTypes();
-		ArrayList criteria_par_typs = analysisType.getCriteriaParameterTypes();
-		ArrayList out_par_typs = analysisType.getOutParameterTypes();
-		String analysis_type_id_code = analysisType.getId().getCode();
+		ArrayList inParTyps = analysisType.getInParameterTypes();
+		ArrayList criteriaParTyps = analysisType.getCriteriaParameterTypes();
+		ArrayList outParTyps = analysisType.getOutParameterTypes();
+		String analysisTypeIdCode = analysisType.getId().getCode();
 		String sql = "INSERT INTO " + ObjectEntities.ANATYPPARTYPLINK_ENTITY
-				+ " (analysis_type_id, parameter_type_id, parameter_mode)" + " VALUES (?, ?, ?)";
+				+ " (analysisTypeId, parameterTypeId, parameterMode)" + " VALUES (?, ?, ?)";
 		PreparedStatement preparedStatement = null;
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */		
-		String parameter_type_id_code = null;
-		String parameter_mode = null;
+		String parameterTypeIdCode = null;
+		String parameterMode = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			for (Iterator iterator = in_par_typs.iterator(); iterator.hasNext();) {
-				preparedStatement.setString(1, analysis_type_id_code);
-				parameter_type_id_code = ((Identifier) iterator.next()).getCode();
+			for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {
+				preparedStatement.setString(1, analysisTypeIdCode);
+				parameterTypeIdCode = ((Identifier) iterator.next()).getCode();
 				/**
 				 * @todo when change DB Identifier model ,change setString() to setLong()
 				 */
-				preparedStatement.setString(2, parameter_type_id_code);
-				parameter_mode = MODE_IN;
-				preparedStatement.setString(3, parameter_mode);
-				Log.debugMessage("AnalysisType_Database.insertParameterTypes | Inserting parameter type "
-						+ parameter_type_id_code + " of parameter mode '" + parameter_mode + "' for analysis type "
-						+ analysis_type_id_code, Log.DEBUGLEVEL05);
+				preparedStatement.setString(2, parameterTypeIdCode);
+				parameterMode = MODE_IN;
+				preparedStatement.setString(3, parameterMode);
+				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
+						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
+						+ analysisTypeIdCode, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
-			for (Iterator iterator = criteria_par_typs.iterator(); iterator.hasNext();) {
-				preparedStatement.setString(1, analysis_type_id_code);
-				parameter_type_id_code = ((Identifier) iterator.next()).getCode();
+			for (Iterator iterator = criteriaParTyps.iterator(); iterator.hasNext();) {
+				preparedStatement.setString(1, analysisTypeIdCode);
+				parameterTypeIdCode = ((Identifier) iterator.next()).getCode();
 				/**
 				 * @todo when change DB Identifier model ,change setString() to setLong()
 				 */
-				preparedStatement.setString(2, parameter_type_id_code);
-				parameter_mode = MODE_CRITERION;
-				preparedStatement.setString(3, parameter_mode);
-				Log.debugMessage("AnalysisType_Database.insertParameterTypes | Inserting parameter type "
-						+ parameter_type_id_code + " of parameter mode '" + parameter_mode + "' for analysis type "
-						+ analysis_type_id_code, Log.DEBUGLEVEL05);
+				preparedStatement.setString(2, parameterTypeIdCode);
+				parameterMode = MODE_CRITERION;
+				preparedStatement.setString(3, parameterMode);
+				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
+						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
+						+ analysisTypeIdCode, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
-			for (Iterator iterator = out_par_typs.iterator(); iterator.hasNext();) {
-				preparedStatement.setString(1, analysis_type_id_code);
-				parameter_type_id_code = ((Identifier) iterator.next()).getCode();
+			for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
+				preparedStatement.setString(1, analysisTypeIdCode);
+				parameterTypeIdCode = ((Identifier) iterator.next()).getCode();
 				/**
 				 * @todo when change DB Identifier model ,change setString() to setLong()
 				 */
-				preparedStatement.setString(2, parameter_type_id_code);
-				parameter_mode = MODE_OUT;
-				preparedStatement.setString(3, parameter_mode);
-				Log.debugMessage("AnalysisType_Database.insertParameterTypes | Inserting parameter type "
-						+ parameter_type_id_code + " of parameter mode '" + parameter_mode + "' for analysis type "
-						+ analysis_type_id_code, Log.DEBUGLEVEL05);
+				preparedStatement.setString(2, parameterTypeIdCode);
+				parameterMode = MODE_OUT;
+				preparedStatement.setString(3, parameterMode);
+				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
+						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
+						+ analysisTypeIdCode, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
 		} catch (SQLException sqle) {
-			String mesg = "AnalysisType_Database.insertParameterTypes | Cannot insert parameter type "
-					+ parameter_type_id_code + " of parameter mode '" + parameter_mode + "' for analysis type "
-					+ analysis_type_id_code;
+			String mesg = "AnalysisTypeDatabase.insertParameterTypes | Cannot insert parameter type "
+					+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
+					+ analysisTypeIdCode;
 			throw new Exception(mesg, sqle);
 		} finally {
 			try {
@@ -296,23 +296,23 @@ public class AnalysisType_Database extends StorableObject_Database {
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws Exception {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
-		switch (update_kind) {
+		switch (updateKind) {
 			default:
 				return;
 		}
 	}
 
 	public void delete(AnalysisType analysisType) {
-		String analysis_type_id_str = analysisType.getId().toString();
+		String analysisTypeIdStr = analysisType.getId().toString();
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate("DELETE FROM " + ObjectEntities.ANATYPPARTYPLINK_ENTITY
-					+ " WHERE analysis_type_id = " + analysis_type_id_str);
+					+ " WHERE analysisTypeId = " + analysisTypeIdStr);
 			statement.executeUpdate("DELETE FROM " + ObjectEntities.ANALYSISTYPE_ENTITY + " WHERE " + COLUMN_ID + " = "
-					+ analysis_type_id_str);
+					+ analysisTypeIdStr);
 			connection.commit();
 		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
@@ -320,7 +320,7 @@ public class AnalysisType_Database extends StorableObject_Database {
 			try {
 				if (statement != null) statement.close();
 				statement = null;
-			} catch (SQLException _ex) {
+			} catch (SQLException Ex) {
 			}
 		}
 	}
@@ -332,14 +332,14 @@ public class AnalysisType_Database extends StorableObject_Database {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("AnalysisType_Database.retrieveForCodename | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("AnalysisTypeDatabase.retrieveForCodename | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				return new AnalysisType(new Identifier(resultSet.getString(COLUMN_ID)));
 			else
 				throw new Exception("No analysis type with codename: '" + codename + "'");
 		} catch (SQLException sqle) {
-			String mesg = "AnalysisType_Database.retrieveForCodename | Cannot retrieve analysis type with codename: '"
+			String mesg = "AnalysisTypeDatabase.retrieveForCodename | Cannot retrieve analysis type with codename: '"
 					+ codename + "'";
 			throw new Exception(mesg, sqle);
 		} finally {

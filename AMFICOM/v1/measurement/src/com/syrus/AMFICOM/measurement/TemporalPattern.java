@@ -54,12 +54,12 @@ public class TemporalPattern extends StorableObject {
 			if (this.hours == null)
 				this.hours = parseExpression(LangModelMeasurement.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.dayOfMonth == null)
-				this.dayOfMonth = parseExpression(LangModelMeasurement.getString("day_of_month"), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
+				this.dayOfMonth = parseExpression(LangModelMeasurement.getString("dayOfMonth"), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.month == null)
 				this.month = parseExpression(LangModelMeasurement.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
 			this.month.names = MONTH_NAMES;
 			if (this.dayOfWeek == null)
-				this.dayOfWeek = parseExpression(LangModelMeasurement.getString("day_of_week"), //$NON-NLS-1$
+				this.dayOfWeek = parseExpression(LangModelMeasurement.getString("dayOfWeek"), //$NON-NLS-1$
 													"*", 0, 6); //$NON-NLS-1$ //$NON-NLS-2$
 			this.dayOfWeek.names = DAY_OF_WEEK_NAMES;
 		}
@@ -215,7 +215,7 @@ public class TemporalPattern extends StorableObject {
 							case 3:
 								//day of month
 								this.dayOfMonth = parseExpression(
-																	LangModelMeasurement.getString("day_of_month"), subString, //$NON-NLS-1$
+																	LangModelMeasurement.getString("dayOfMonth"), subString, //$NON-NLS-1$
 																	1, 31);
 								break;
 							case 4:
@@ -225,7 +225,7 @@ public class TemporalPattern extends StorableObject {
 								break;
 							case 5:
 								//day of week
-								this.dayOfWeek = parseExpression(LangModelMeasurement.getString("day_of_week"), //$NON-NLS-1$
+								this.dayOfWeek = parseExpression(LangModelMeasurement.getString("dayOfWeek"), //$NON-NLS-1$
 																	subString, 0, 6);
 								break;
 						}
@@ -630,10 +630,10 @@ public class TemporalPattern extends StorableObject {
 		super(new Identifier(tpt.id), new Date(tpt.created), new Date(tpt.modified), new Identifier(tpt.creator_id),
 				new Identifier(tpt.modifier_id));
 		this.description = new String(tpt.description);
-		//this.cronStrings = new String[tpt.cron_strings.length];
+		//this.cronStrings = new String[tpt.cronStrings.length];
 		removeAll();
 		for (int i = 0; i < tpt.cron_strings.length; i++) {
-			//this.cronStrings[i] = new String(tpt.cron_strings[i]);
+			//this.cronStrings[i] = new String(tpt.cronStrings[i]);
 			addTemplate(new String(tpt.cron_strings[i]));
 		}
 
@@ -648,11 +648,11 @@ public class TemporalPattern extends StorableObject {
 	private TemporalPattern(Identifier id,
 			Date created,
 			Date modified,
-			Identifier creator_id,
-			Identifier modifier_id,
+			Identifier creatorId,
+			Identifier modifierId,
 			String description,
 			String[] cronStrings) {
-		super(id, created, modified, creator_id, modifier_id);
+		super(id, created, modified, creatorId, modifierId);
 		this.description = description;
 		this.cronStrings = cronStrings;
 		if (cronStrings != null) {
@@ -665,11 +665,11 @@ public class TemporalPattern extends StorableObject {
 	public static TemporalPattern create(	Identifier id,
 											Date created,
 											Date modified,
-											Identifier creator_id,
-											Identifier modifier_id,
+											Identifier creatorId,
+											Identifier modifierId,
 											String description,
 											String[] cronStrings) {
-		return new TemporalPattern(id, created, modified, creator_id, modifier_id, description, cronStrings);
+		return new TemporalPattern(id, created, modified, creatorId, modifierId, description, cronStrings);
 	}
 
 	public String[] getCronStrings() {
@@ -699,11 +699,11 @@ public class TemporalPattern extends StorableObject {
 
 	protected synchronized void setAttributes(	Date created,
 												Date modified,
-												Identifier creator_id,
-												Identifier modifier_id,
+												Identifier creatorId,
+												Identifier modifierId,
 												String description,
 												String[] cronStrings) {
-		super.setAttributes(created, modified, creator_id, modifier_id);
+		super.setAttributes(created, modified, creatorId, modifierId);
 		this.description = description;
 		this.cronStrings = cronStrings;
 		removeAll();

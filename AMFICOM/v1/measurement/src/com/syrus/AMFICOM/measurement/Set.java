@@ -22,7 +22,7 @@ public class Set extends StorableObject {
 	private int sort;
 	private String description;
 	private SetParameter[] parameters;
-	private ArrayList monitored_element_ids;
+	private ArrayList monitoredElementIds;
 
 	private StorableObject_Database setDatabase;
 
@@ -51,9 +51,9 @@ public class Set extends StorableObject {
 		for (int i = 0; i < this.parameters.length; i++)
 			this.parameters[i] = new SetParameter(st.parameters[i]);
 
-		this.monitored_element_ids = new ArrayList(st.monitored_element_ids.length);
+		this.monitoredElementIds = new ArrayList(st.monitored_element_ids.length);
 		for (int i = 0; i < st.monitored_element_ids.length; i++)
-			this.monitored_element_ids.add(new Identifier(st.monitored_element_ids[i]));
+			this.monitoredElementIds.add(new Identifier(st.monitored_element_ids[i]));
 
 		this.setDatabase = MeasurementDatabaseContext.setDatabase;
 		try {
@@ -64,38 +64,38 @@ public class Set extends StorableObject {
 		}
 	}
 
-	public boolean isAttachedToMonitoredElement(Identifier monitored_element_id) {
-    return this.monitored_element_ids.contains(monitored_element_id);
+	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
+    return this.monitoredElementIds.contains(monitoredElementId);
   }
 
-	public void attachToMonitoredElement(Identifier monitored_element_id,
-																			 Identifier modifier_id) throws UpdateObjectException {
-		if (this.isAttachedToMonitoredElement(monitored_element_id))
+	public void attachToMonitoredElement(Identifier monitoredElementId,
+																			 Identifier modifierId) throws UpdateObjectException {
+		if (this.isAttachedToMonitoredElement(monitoredElementId))
       return;
-		super.modifier_id = (Identifier)modifier_id.clone();
+		super.modifier_id = (Identifier)modifierId.clone();
 		try {
-			this.setDatabase.update(this, UPDATE_ATTACH_ME, monitored_element_id);
+			this.setDatabase.update(this, UPDATE_ATTACH_ME, monitoredElementId);
 		}
 		catch (Exception e) {
-			throw new UpdateObjectException("MeasurementSetup.attachToMonitoredElement | Cannot attach measurement setup '" + this.id + "' to monitored element '" + monitored_element_id + "' -- " + e.getMessage(), e);
+			throw new UpdateObjectException("MeasurementSetup.attachToMonitoredElement | Cannot attach measurement setup '" + this.id + "' to monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
 		}
-		this.monitored_element_ids.add(monitored_element_id);
-		this.monitored_element_ids.trimToSize();
+		this.monitoredElementIds.add(monitoredElementId);
+		this.monitoredElementIds.trimToSize();
 	}
 
-	public void detachFromMonitoredElement(Identifier monitored_element_id,
-																				 Identifier modifier_id) throws UpdateObjectException {
-    if (!this.isAttachedToMonitoredElement(monitored_element_id))
+	public void detachFromMonitoredElement(Identifier monitoredElementId,
+																				 Identifier modifierId) throws UpdateObjectException {
+    if (!this.isAttachedToMonitoredElement(monitoredElementId))
       return;
-		super.modifier_id = (Identifier)modifier_id.clone();
+		super.modifier_id = (Identifier)modifierId.clone();
 		try {
-	    this.setDatabase.update(this, UPDATE_DETACH_ME, monitored_element_id);
+	    this.setDatabase.update(this, UPDATE_DETACH_ME, monitoredElementId);
 		}
 		catch (Exception e) {
-			throw new UpdateObjectException("MeasurementSetup.detachFromMonitoredElement | Cannot dettach measurement setup '" + this.id + "' from monitored element '" + monitored_element_id + "' -- " + e.getMessage(), e);
+			throw new UpdateObjectException("MeasurementSetup.detachFromMonitoredElement | Cannot dettach measurement setup '" + this.id + "' from monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
 		}
-		this.monitored_element_ids.remove(monitored_element_id);
-		this.monitored_element_ids.trimToSize();
+		this.monitoredElementIds.remove(monitoredElementId);
+		this.monitoredElementIds.trimToSize();
   }
 
 	public Object getTransferable() {
@@ -103,10 +103,10 @@ public class Set extends StorableObject {
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable)this.parameters[i].getTransferable();
 
-		Identifier_Transferable[] me_ids = new Identifier_Transferable[this.monitored_element_ids.size()];
+		Identifier_Transferable[] meIds = new Identifier_Transferable[this.monitoredElementIds.size()];
 		int i = 0;
-		for (Iterator iterator = this.monitored_element_ids.iterator(); iterator.hasNext();)
-			me_ids[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		for (Iterator iterator = this.monitoredElementIds.iterator(); iterator.hasNext();)
+			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 	
 		return new Set_Transferable((Identifier_Transferable)super.getId().getTransferable(),
 																super.created.getTime(),
@@ -116,7 +116,7 @@ public class Set extends StorableObject {
 																SetSort.from_int(this.sort),
 																new String(this.description),
 																pts,
-																me_ids);
+																meIds);
 	}
 
 	public SetSort getSort() {
@@ -132,19 +132,19 @@ public class Set extends StorableObject {
 	}
 
 	public ArrayList getMonitoredElementIds() {
-		return this.monitored_element_ids;
+		return this.monitoredElementIds;
 	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
+																						Identifier creatorId,
+																						Identifier modifierId,
 																						int sort,
 																						String description) {
 		super.setAttributes(created,
 												modified,
-												creator_id,
-												modifier_id);
+												creatorId,
+												modifierId);
 		this.sort = sort;
 		this.description = description;
 	}
@@ -153,7 +153,7 @@ public class Set extends StorableObject {
 		this.parameters = parameters;
 	}
 
-	protected synchronized void setMonitoredElementIds(ArrayList monitored_element_ids) {
-		this.monitored_element_ids = monitored_element_ids;
+	protected synchronized void setMonitoredElementIds(ArrayList monitoredElementIds) {
+		this.monitoredElementIds = monitoredElementIds;
 	}
 }

@@ -11,12 +11,12 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
-public class Evaluation_Database extends StorableObject_Database {
+public class EvaluationDatabase extends StorableObject_Database {
 
-	public static final String	COLUMN_TYPE_ID				= "type_id";
-	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
-	public static final String	COLUMN_THRESHOLD_SET_ID		= "threshold_set_id";
-	public static final String	COLUMN_ETHALON_ID			= "etalon_id";
+	public static final String	COLUMN_TYPE_ID				= "typeId";
+	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitoredElementId";
+	public static final String	COLUMN_THRESHOLD_SET_ID		= "thresholdSetId";
+	public static final String	COLUMN_ETHALON_ID			= "etalonId";
 
 	private Evaluation fromStorableObject(StorableObject storableObject)
 			throws Exception {
@@ -24,7 +24,7 @@ public class Evaluation_Database extends StorableObject_Database {
 			return (Evaluation) storableObject;
 		else
 			throw new Exception(
-					"Evaluation_Database.fromStorableObject | Illegal Storable Object: "
+					"EvaluationDatabase.fromStorableObject | Illegal Storable Object: "
 							+ storableObject.getClass().getName());
 	}
 
@@ -34,7 +34,7 @@ public class Evaluation_Database extends StorableObject_Database {
 	}
 
 	private void retrieveEvaluation(Evaluation evaluation) throws Exception {
-		String evaluation_id_str = evaluation.getId().toSQLString();
+		String evaluationIdStr = evaluation.getId().toSQLString();
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_SELECT);
@@ -59,14 +59,14 @@ public class Evaluation_Database extends StorableObject_Database {
 			buffer.append(SQL_WHERE);
 			buffer.append(COLUMN_ID);
 			buffer.append(EQUALS);
-			buffer.append(evaluation_id_str);
+			buffer.append(evaluationIdStr);
 			sql = buffer.toString();
 		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Evaluation_Database.retrieve | Trying: " + sql,
+			Log.debugMessage("EvaluationDatabase.retrieve | Trying: " + sql,
 					Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
@@ -74,7 +74,7 @@ public class Evaluation_Database extends StorableObject_Database {
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()
 				 */
-				Set threshold_set = new Set(new Identifier(resultSet
+				Set thresholdSet = new Set(new Identifier(resultSet
 						.getString(COLUMN_THRESHOLD_SET_ID)));
 				/**
 				 * @todo when change DB Identifier model ,change getString() to
@@ -100,12 +100,12 @@ public class Evaluation_Database extends StorableObject_Database {
 										.getString(COLUMN_TYPE_ID)),
 								new Identifier(resultSet
 										.getString(COLUMN_MONITORED_ELEMENT_ID)),
-								threshold_set, etalon);
+								thresholdSet, etalon);
 			} else
-				throw new Exception("No such evaluation: " + evaluation_id_str);
+				throw new Exception("No such evaluation: " + evaluationIdStr);
 		} catch (SQLException sqle) {
-			String mesg = "Evaluation_Database.retrieve | Cannot retrieve evaluation "
-					+ evaluation_id_str;
+			String mesg = "EvaluationDatabase.retrieve | Cannot retrieve evaluation "
+					+ evaluationIdStr;
 			throw new Exception(mesg, sqle);
 		} finally {
 			try {
@@ -121,9 +121,9 @@ public class Evaluation_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject,
-			int retrieve_kind, Object arg) throws Exception {
+			int retrieveKind, Object arg) throws Exception {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+		switch (retrieveKind) {
 			default:
 				return null;
 		}
@@ -151,7 +151,7 @@ public class Evaluation_Database extends StorableObject_Database {
 	}
 
 	public void insertEvaluation(Evaluation evaluation) throws Exception {
-		String evaluation_id_str = evaluation.getId().toSQLString();
+		String evaluationIdStr = evaluation.getId().toSQLString();
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
@@ -177,7 +177,7 @@ public class Evaluation_Database extends StorableObject_Database {
 			buffer.append(CLOSE_BRACKET);
 			buffer.append(SQL_VALUES);
 			buffer.append(OPEN_BRACKET);
-			buffer.append(evaluation_id_str);
+			buffer.append(evaluationIdStr);
 			buffer.append(COMMA);
 			buffer.append(DatabaseDate.toUpdateSubString(evaluation
 					.getCreated()));
@@ -202,12 +202,12 @@ public class Evaluation_Database extends StorableObject_Database {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Evaluation_Database.insert | Trying: " + sql,
+			Log.debugMessage("EvaluationDatabase.insert | Trying: " + sql,
 					Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
 		} catch (SQLException sqle) {
-			String mesg = "Evaluation_Database.insert | Cannot insert evaluation "
-					+ evaluation_id_str;
+			String mesg = "EvaluationDatabase.insert | Cannot insert evaluation "
+					+ evaluationIdStr;
 			throw new Exception(mesg, sqle);
 		} finally {
 			try {
@@ -219,10 +219,10 @@ public class Evaluation_Database extends StorableObject_Database {
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind,
+	public void update(StorableObject storableObject, int updateKind,
 			Object obj) throws Exception {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
-		switch (update_kind) {
+		switch (updateKind) {
 			default:
 				return;
 		}

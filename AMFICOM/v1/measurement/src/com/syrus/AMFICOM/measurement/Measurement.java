@@ -19,11 +19,11 @@ public class Measurement extends Action {
 	protected static final int UPDATE_STATUS = 1;
 
 	private MeasurementSetup setup;
-	private Date start_time;
+	private Date startTime;
 	private long duration;
 	private int status;
-	private String local_address;
-	private Identifier test_id;
+	private String localAddress;
+	private Identifier testId;
 
 	private StorableObject_Database measurementDatabase;
 
@@ -53,11 +53,11 @@ public class Measurement extends Action {
 		catch (RetrieveObjectException roe) {
 			throw new CreateObjectException(roe.getMessage(), roe);
 		}
-		this.start_time = new Date(mt.start_time);
+		this.startTime = new Date(mt.start_time);
 		this.duration = mt.duration;
 		this.status = mt.status.value();
-		this.local_address = new String(mt.local_address);
-		this.test_id = new Identifier(mt.test_id);
+		this.localAddress = new String(mt.local_address);
+		this.testId = new Identifier(mt.test_id);
 
 		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 		try {
@@ -69,26 +69,26 @@ public class Measurement extends Action {
 	}
 
 	private Measurement(Identifier id,
-											Identifier creator_id,
-											Identifier type_id,
-											Identifier monitored_element_id,
+											Identifier creatorId,
+											Identifier typeId,
+											Identifier monitoredElementId,
 											MeasurementSetup setup,
-											Date start_time,
-											String local_address,
-											Identifier test_id) throws CreateObjectException {
+											Date startTime,
+											String localAddress,
+											Identifier testId) throws CreateObjectException {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
-					creator_id,
-					creator_id,
-					type_id,
-					monitored_element_id);
+					creatorId,
+					creatorId,
+					typeId,
+					monitoredElementId);
 		this.setup = setup;
-		this.start_time = start_time;
+		this.startTime = startTime;
 		this.duration = this.setup.getMeasurementDuration();
 		this.status = MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED;
-		this.local_address = local_address;
-		this.test_id = test_id;
+		this.localAddress = localAddress;
+		this.testId = testId;
 
 		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 		try {
@@ -105,14 +105,14 @@ public class Measurement extends Action {
 																				super.modified.getTime(),
 																				(Identifier_Transferable)super.creator_id.getTransferable(),
 																				(Identifier_Transferable)super.modifier_id.getTransferable(),
-																				(Identifier_Transferable)super.type_id.getTransferable(),
-																				(Identifier_Transferable)super.monitored_element_id.getTransferable(),
+																				(Identifier_Transferable)super.typeId.getTransferable(),
+																				(Identifier_Transferable)super.monitoredElementId.getTransferable(),
 																				(Identifier_Transferable)this.setup.getId().getTransferable(),
-																				this.start_time.getTime(),
+																				this.startTime.getTime(),
 																				this.duration,
 																				MeasurementStatus.from_int(this.status),
-																				new String(this.local_address),
-																				(Identifier_Transferable)this.test_id.getTransferable());
+																				new String(this.localAddress),
+																				(Identifier_Transferable)this.testId.getTransferable());
 	}
 
 	public MeasurementSetup getSetup() {
@@ -120,7 +120,7 @@ public class Measurement extends Action {
 	}
 
 	public Date getStartTime() {
-		return this.start_time;
+		return this.startTime;
 	}
 
 	public long getDuration() {
@@ -132,17 +132,17 @@ public class Measurement extends Action {
 	}
 
 	public String getLocalAddress() {
-		return this.local_address;
+		return this.localAddress;
 	}
 
 	public Identifier getTestId() {
-		return this.test_id;
+		return this.testId;
 	}
 
-	public synchronized void setStatus(MeasurementStatus status, Identifier modifier_id) throws UpdateObjectException {
+	public synchronized void setStatus(MeasurementStatus status, Identifier modifierId) throws UpdateObjectException {
 		this.status = status.value();
 		super.modified = new Date(System.currentTimeMillis());
-		super.modifier_id = (Identifier)modifier_id.clone();
+		super.modifier_id = (Identifier)modifierId.clone();
 		try {
 			this.measurementDatabase.update(this, UPDATE_STATUS, null);
 		}
@@ -153,69 +153,69 @@ public class Measurement extends Action {
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						Identifier type_id,
-																						Identifier monitored_element_id,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						Identifier typeId,
+																						Identifier monitoredElementId,
 																						MeasurementSetup setup,
-																						Date start_time,
+																						Date startTime,
 																						long duration,
 																						int status,
-																						String local_address,
-																						Identifier test_id) {
+																						String localAddress,
+																						Identifier testId) {
 		super.setAttributes(created,
 												modified,
-												creator_id,
-												modifier_id,
-												type_id,
-												monitored_element_id);
+												creatorId,
+												modifierId,
+												typeId,
+												monitoredElementId);
 		this.setup = setup;
-		this.start_time = start_time;
+		this.startTime = startTime;
 		this.duration = duration;
 		this.status = status;
-		this.local_address = local_address;
-		this.test_id = test_id;
+		this.localAddress = localAddress;
+		this.testId = testId;
 	}
 
 	protected static Measurement create(Identifier id,
-																			Identifier creator_id,
-																			Identifier type_id,
-																			Identifier monitored_element_id,
+																			Identifier creatorId,
+																			Identifier typeId,
+																			Identifier monitoredElementId,
 																			MeasurementSetup setup,
-																			Date start_time,
-																			String local_address,
-																			Identifier test_id) throws CreateObjectException {
+																			Date startTime,
+																			String localAddress,
+																			Identifier testId) throws CreateObjectException {
 		return new Measurement(id,
-													 creator_id,
-													 type_id,
-													 monitored_element_id,
+													 creatorId,
+													 typeId,
+													 monitoredElementId,
 													 setup,
-													 start_time,
-													 local_address,
-													 test_id);
+													 startTime,
+													 localAddress,
+													 testId);
 	}
 
 	public Result createResult(Identifier id,
-														 Identifier creator_id,
+														 Identifier creatorId,
 														 Measurement measurement,
-														 AlarmLevel alarm_level,
-														 Identifier[] parameter_ids,
-														 Identifier[] parameter_type_ids,
-														 byte[][] parameter_values) throws CreateObjectException {
+														 AlarmLevel alarmLevel,
+														 Identifier[] parameterIds,
+														 Identifier[] parameterTypeIds,
+														 byte[][] parameterValues) throws CreateObjectException {
 		return Result.create(id,
-												 creator_id,
+												 creatorId,
 												 this,
 												 this,
 												 ResultSort.RESULT_SORT_MEASUREMENT,
-												 alarm_level,
-												 parameter_ids,
-												 parameter_type_ids,
-												 parameter_values);						
+												 alarmLevel,
+												 parameterIds,
+												 parameterTypeIds,
+												 parameterValues);						
 	}
 
-	public Result retrieveResult(ResultSort result_sort) throws RetrieveObjectException {
+	public Result retrieveResult(ResultSort resultSort) throws RetrieveObjectException {
 		try {
-			return (Result)this.measurementDatabase.retrieveObject(this, RETRIEVE_RESULT, result_sort);
+			return (Result)this.measurementDatabase.retrieveObject(this, RETRIEVE_RESULT, resultSort);
 		}
 		catch (Exception e) {
 			throw new RetrieveObjectException(e.getMessage(), e);

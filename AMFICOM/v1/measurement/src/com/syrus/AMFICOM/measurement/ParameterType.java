@@ -74,15 +74,15 @@ public class ParameterType extends StorableObjectType {
 	
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
-											  Identifier creator_id,
-											  Identifier modifier_id,
+											  Identifier creatorId,
+											  Identifier modifierId,
 											  String codename,
 											  String description,
 											  String name) {
 		super.setAttributes(created,
 							modified,
-							creator_id,
-							modifier_id,
+							creatorId,
+							modifierId,
 							codename,
 							description);
 		this.name = name;

@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 public class Analysis extends Action {
-	private Set criteria_set;
+	private Set criteriaSet;
 
 	private StorableObject_Database analysisDatabase;
 
@@ -36,7 +36,7 @@ public class Analysis extends Action {
 					new Identifier(at.modifier_id),
 					new Identifier(at.type_id),
 					new Identifier(at.monitored_element_id));
-		this.criteria_set = new Set(new Identifier(at.criteria_set_id));
+		this.criteriaSet = new Set(new Identifier(at.criteria_set_id));
 
 		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 		try {
@@ -48,18 +48,18 @@ public class Analysis extends Action {
 	}
 
 	private Analysis(Identifier id,
-									 Identifier creator_id,
-									 Identifier type_id,
-									 Set criteria_set,
-									 Identifier monitored_element_id) throws CreateObjectException {
+									 Identifier creatorId,
+									 Identifier typeId,
+									 Set criteriaSet,
+									 Identifier monitoredElementId) throws CreateObjectException {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
-					creator_id,
-					creator_id,
-					type_id,
-					monitored_element_id);
-		this.criteria_set = criteria_set;
+					creatorId,
+					creatorId,
+					typeId,
+					monitoredElementId);
+		this.criteriaSet = criteriaSet;
 
 		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 		try {
@@ -76,58 +76,58 @@ public class Analysis extends Action {
 																			super.modified.getTime(),
 																			(Identifier_Transferable)super.creator_id.getTransferable(),
 																			(Identifier_Transferable)super.modifier_id.getTransferable(),
-																			(Identifier_Transferable)super.type_id.getTransferable(),
-																			(Identifier_Transferable)super.monitored_element_id.getTransferable(),
-																			(Identifier_Transferable)this.criteria_set.getId().getTransferable());
+																			(Identifier_Transferable)super.typeId.getTransferable(),
+																			(Identifier_Transferable)super.monitoredElementId.getTransferable(),
+																			(Identifier_Transferable)this.criteriaSet.getId().getTransferable());
 	}
 
 	public Set getCriteriaSet() {
-		return this.criteria_set;
+		return this.criteriaSet;
 	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						Identifier type_id,
-																						Identifier monitored_element_id,
-																						Set criteria_set) {
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						Identifier typeId,
+																						Identifier monitoredElementId,
+																						Set criteriaSet) {
 		super.setAttributes(created,
 												modified,
-												creator_id,
-												modifier_id,
-												type_id,
-												monitored_element_id);
-		this.criteria_set = criteria_set;
+												creatorId,
+												modifierId,
+												typeId,
+												monitoredElementId);
+		this.criteriaSet = criteriaSet;
 	}
 
 	public Result createResult(Identifier id,
-														 Identifier creator_id,
+														 Identifier creatorId,
 														 Measurement measurement,
-														 AlarmLevel alarm_level,
-														 Identifier[] parameter_ids,
-														 Identifier[] parameter_type_ids,
-														 byte[][] parameter_values) throws CreateObjectException {
+														 AlarmLevel alarmLevel,
+														 Identifier[] parameterIds,
+														 Identifier[] parameterTypeIds,
+														 byte[][] parameterValues) throws CreateObjectException {
 		return Result.create(id,
-												 creator_id,
+												 creatorId,
 												 measurement,
 												 this,
 												 ResultSort.RESULT_SORT_ANALYSIS,
-												 alarm_level,
-												 parameter_ids,
-												 parameter_type_ids,
-												 parameter_values);
+												 alarmLevel,
+												 parameterIds,
+												 parameterTypeIds,
+												 parameterValues);
 	}
 
 	public static Analysis create(Identifier id,
-																Identifier creator_id,
-																Identifier type_id,
-																Set criteria_set,
-																Identifier monitored_element_id) throws CreateObjectException {
+																Identifier creatorId,
+																Identifier typeId,
+																Set criteriaSet,
+																Identifier monitoredElementId) throws CreateObjectException {
 		return new Analysis(id,
-												creator_id,
-												type_id,
-												criteria_set,
-												monitored_element_id);
+												creatorId,
+												typeId,
+												criteriaSet,
+												monitoredElementId);
 	}
 }

@@ -13,29 +13,29 @@ public abstract class ActionType extends StorableObjectType {
 	public ActionType(Identifier id,
 										Date created,
 										Date modified,
-										Identifier creator_id,
-										Identifier modifier_id,
+										Identifier creatorId,
+										Identifier modifierId,
 										String codename,
 										String description) {
 		super(id,
 					created,
 					modified,
-					creator_id,
-					modifier_id,
+					creatorId,
+					modifierId,
 					codename,
 					description);
 	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
+																						Identifier creatorId,
+																						Identifier modifierId,
 																						String codename,
 																						String description) {
 		super.setAttributes(created,
 												modified,
-												creator_id,
-												modifier_id,
+												creatorId,
+												modifierId,
 												codename,
 												description);
 	}

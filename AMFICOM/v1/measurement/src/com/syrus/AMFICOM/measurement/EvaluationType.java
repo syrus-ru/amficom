@@ -12,10 +12,10 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
 public class EvaluationType extends ActionType {
-	private ArrayList in_parameter_types;
-	private ArrayList threshold_parameter_types;
-	private ArrayList etalon_parameter_types;
-	private ArrayList out_parameter_types;
+	private ArrayList inParameterTypes;
+	private ArrayList thresholdParameterTypes;
+	private ArrayList etalonParameterTypes;
+	private ArrayList outParameterTypes;
 
 	private StorableObject_Database evaluationTypeDatabase;
 
@@ -40,21 +40,21 @@ public class EvaluationType extends ActionType {
 					new String(ett.codename),
 					new String(ett.description));
 
-		this.in_parameter_types = new ArrayList(ett.in_parameter_types.length);
+		this.inParameterTypes = new ArrayList(ett.in_parameter_types.length);
 		for (int i = 0; i < ett.in_parameter_types.length; i++)
-			this.in_parameter_types.add(new Identifier(ett.in_parameter_types[i]));
+			this.inParameterTypes.add(new Identifier(ett.in_parameter_types[i]));
 
-		this.threshold_parameter_types = new ArrayList(ett.threshold_parameter_types.length);
+		this.thresholdParameterTypes = new ArrayList(ett.threshold_parameter_types.length);
 		for (int i = 0; i < ett.threshold_parameter_types.length; i++)
-			this.threshold_parameter_types.add(new Identifier(ett.threshold_parameter_types[i]));
+			this.thresholdParameterTypes.add(new Identifier(ett.threshold_parameter_types[i]));
 
-		this.etalon_parameter_types = new ArrayList(ett.etalon_parameter_types.length);
+		this.etalonParameterTypes = new ArrayList(ett.etalon_parameter_types.length);
 		for (int i = 0; i < ett.etalon_parameter_types.length; i++)
-			this.etalon_parameter_types.add(new Identifier(ett.etalon_parameter_types[i]));
+			this.etalonParameterTypes.add(new Identifier(ett.etalon_parameter_types[i]));
 
-		this.out_parameter_types = new ArrayList(ett.out_parameter_types.length);
+		this.outParameterTypes = new ArrayList(ett.out_parameter_types.length);
 		for (int i = 0; i < ett.out_parameter_types.length; i++)
-			this.out_parameter_types.add(new Identifier(ett.out_parameter_types[i]));
+			this.outParameterTypes.add(new Identifier(ett.out_parameter_types[i]));
 
 		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
@@ -66,25 +66,25 @@ public class EvaluationType extends ActionType {
 	}
 
 	public Object getTransferable() {
-		Identifier_Transferable[] in_par_types = new Identifier_Transferable[this.in_parameter_types.size()];
+		Identifier_Transferable[] inParTypes = new Identifier_Transferable[this.inParameterTypes.size()];
 		int i = 0;
-		for (Iterator iterator = this.in_parameter_types.iterator(); iterator.hasNext();)
-			in_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		for (Iterator iterator = this.inParameterTypes.iterator(); iterator.hasNext();)
+			inParTypes[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		Identifier_Transferable[] threshold_par_types = new Identifier_Transferable[this.threshold_parameter_types.size()];
+		Identifier_Transferable[] thresholdParTypes = new Identifier_Transferable[this.thresholdParameterTypes.size()];
 		i = 0;
-		for (Iterator iterator = this.threshold_parameter_types.iterator(); iterator.hasNext();)
-			threshold_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		for (Iterator iterator = this.thresholdParameterTypes.iterator(); iterator.hasNext();)
+			thresholdParTypes[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		Identifier_Transferable[] etalon_par_types = new Identifier_Transferable[this.etalon_parameter_types.size()];
+		Identifier_Transferable[] etalonParTypes = new Identifier_Transferable[this.etalonParameterTypes.size()];
 		i = 0;
-		for (Iterator iterator = this.etalon_parameter_types.iterator(); iterator.hasNext();)
-			etalon_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		for (Iterator iterator = this.etalonParameterTypes.iterator(); iterator.hasNext();)
+			etalonParTypes[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		Identifier_Transferable[] out_par_types = new Identifier_Transferable[this.out_parameter_types.size()];
+		Identifier_Transferable[] outParTypes = new Identifier_Transferable[this.outParameterTypes.size()];
 		i = 0;
-		for (Iterator iterator = this.in_parameter_types.iterator(); iterator.hasNext();)
-			in_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		for (Iterator iterator = this.inParameterTypes.iterator(); iterator.hasNext();)
+			inParTypes[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
 		return new EvaluationType_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																					 super.created.getTime(),
@@ -93,49 +93,49 @@ public class EvaluationType extends ActionType {
 																					 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																					 new String(super.codename),
 																					 new String(super.description),
-																					 in_par_types,
-																					 threshold_par_types,
-																					 etalon_par_types,
-																					 out_par_types);
+																					 inParTypes,
+																					 thresholdParTypes,
+																					 etalonParTypes,
+																					 outParTypes);
 	}
 
 	public ArrayList getInParameterTypes() {
-		return this.in_parameter_types;
+		return this.inParameterTypes;
 	}
 
 	public ArrayList getThresholdParameterTypes() {
-		return this.threshold_parameter_types;
+		return this.thresholdParameterTypes;
 	}
 
 	public ArrayList getEtalonParameterTypes() {
-		return this.etalon_parameter_types;
+		return this.etalonParameterTypes;
 	}
 
 	public ArrayList getOutParameterTypes() {
-		return this.out_parameter_types;
+		return this.outParameterTypes;
 	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
+																						Identifier creatorId,
+																						Identifier modifierId,
 																						String codename,
 																						String description) {
 		super.setAttributes(created,
 												modified,
-												creator_id,
-												modifier_id,
+												creatorId,
+												modifierId,
 												codename,
 												description);
 	}
 
-	protected synchronized void setParameterTypes(ArrayList in_parameter_types,
-																								ArrayList threshold_parameter_types,
-																								ArrayList etalon_parameter_types,
-																	 ArrayList out_parameter_types) {
-		this.in_parameter_types = in_parameter_types;
-		this.threshold_parameter_types = threshold_parameter_types;
-		this.etalon_parameter_types = etalon_parameter_types;
-		this.out_parameter_types = out_parameter_types;
+	protected synchronized void setParameterTypes(ArrayList inParameterTypes,
+																								ArrayList thresholdParameterTypes,
+																								ArrayList etalonParameterTypes,
+																	 ArrayList outParameterTypes) {
+		this.inParameterTypes = inParameterTypes;
+		this.thresholdParameterTypes = thresholdParameterTypes;
+		this.etalonParameterTypes = etalonParameterTypes;
+		this.outParameterTypes = outParameterTypes;
 	}
 }

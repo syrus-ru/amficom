@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 public class Evaluation extends Action {
-	private Set threshold_set;
+	private Set thresholdSet;
 	private Set etalon;
 
 	private StorableObject_Database evaluationDatabase;
@@ -38,7 +38,7 @@ public class Evaluation extends Action {
 					new Identifier(et.type_id),
 					new Identifier(et.monitored_element_id));
 		try {
-			this.threshold_set = new Set(new Identifier(et.threshold_set_id));
+			this.thresholdSet = new Set(new Identifier(et.threshold_set_id));
 			this.etalon = new Set(new Identifier(et.etalon_id));
 		}
 		catch (RetrieveObjectException roe) {
@@ -55,19 +55,19 @@ public class Evaluation extends Action {
 	}
 
 	private Evaluation(Identifier id,
-										 Identifier creator_id,
-										 Identifier type_id,
-										 Set threshold_set,
+										 Identifier creatorId,
+										 Identifier typeId,
+										 Set thresholdSet,
 										 Set etalon,
-										 Identifier monitored_element_id) throws CreateObjectException {
+										 Identifier monitoredElementId) throws CreateObjectException {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
-					creator_id,
-					creator_id,
-					type_id,
-					monitored_element_id);
-		this.threshold_set = threshold_set;
+					creatorId,
+					creatorId,
+					typeId,
+					monitoredElementId);
+		this.thresholdSet = thresholdSet;
 		this.etalon = etalon;
 
 		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
@@ -85,14 +85,14 @@ public class Evaluation extends Action {
 																			 super.modified.getTime(),
 																			 (Identifier_Transferable)super.creator_id.getTransferable(),
 																			 (Identifier_Transferable)super.modifier_id.getTransferable(),
-																			 (Identifier_Transferable)super.type_id.getTransferable(),
-																			 (Identifier_Transferable)super.monitored_element_id.getTransferable(),
-																			 (Identifier_Transferable)this.threshold_set.getId().getTransferable(),
+																			 (Identifier_Transferable)super.typeId.getTransferable(),
+																			 (Identifier_Transferable)super.monitoredElementId.getTransferable(),
+																			 (Identifier_Transferable)this.thresholdSet.getId().getTransferable(),
 																			 (Identifier_Transferable)this.etalon.getId().getTransferable());
 	}
 
 	public Set getThresholdSet() {
-		return this.threshold_set;
+		return this.thresholdSet;
 	}
 
 	public Set getEtalon() {
@@ -101,51 +101,51 @@ public class Evaluation extends Action {
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						Identifier type_id,
-																						Identifier monitored_element_id,
-																						Set threshold_set,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						Identifier typeId,
+																						Identifier monitoredElementId,
+																						Set thresholdSet,
 																						Set etalon) {
 		super.setAttributes(created,
 												modified,
-												creator_id,
-												modifier_id,
-												type_id,
-												monitored_element_id);
-		this.threshold_set = threshold_set;
+												creatorId,
+												modifierId,
+												typeId,
+												monitoredElementId);
+		this.thresholdSet = thresholdSet;
 		this.etalon = etalon;
 	}
 
 	public Result createResult(Identifier id,
-														 Identifier creator_id,
+														 Identifier creatorId,
 														 Measurement measurement,
-														 AlarmLevel alarm_level,
-														 Identifier[] parameter_ids,
-														 Identifier[] parameter_type_ids,
-														 byte[][] parameter_values) throws CreateObjectException {
+														 AlarmLevel alarmLevel,
+														 Identifier[] parameterIds,
+														 Identifier[] parameterTypeIds,
+														 byte[][] parameterValues) throws CreateObjectException {
 		return Result.create(id,
-												 creator_id,
+												 creatorId,
 												 measurement,
 												 this,
 												 ResultSort.RESULT_SORT_EVALUATION,
-												 alarm_level,
-												 parameter_ids,
-												 parameter_type_ids,
-												 parameter_values);
+												 alarmLevel,
+												 parameterIds,
+												 parameterTypeIds,
+												 parameterValues);
 	}
 
 	public static Evaluation create(Identifier id,
-																	Identifier creator_id,
-																	Identifier type_id,
-																	Set threshold_set,
+																	Identifier creatorId,
+																	Identifier typeId,
+																	Set thresholdSet,
 																	Set etalon,
-																	Identifier monitored_element_id) throws CreateObjectException {
+																	Identifier monitoredElementId) throws CreateObjectException {
 		return new Evaluation(id,
-													creator_id,
-													type_id,
-													threshold_set,
+													creatorId,
+													typeId,
+													thresholdSet,
 													etalon,
-													monitored_element_id);
+													monitoredElementId);
 	}
 }

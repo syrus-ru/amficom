@@ -11,11 +11,11 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
-public class Analysis_Database extends StorableObject_Database {
+public class AnalysisDatabase extends StorableObject_Database {
 
-	public static final String	COLUMN_TYPE_ID				= "type_id";
-	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
-	public static final String	COLUMN_CRITERIA_SET_ID		= "criteria_set_id";
+	public static final String	COLUMN_TYPE_ID				= "typeId";
+	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitoredElementId";
+	public static final String	COLUMN_CRITERIA_SET_ID		= "criteriaSetId";
 
 	private Analysis fromStorableObject(StorableObject storableObject)
 			throws Exception {
@@ -23,7 +23,7 @@ public class Analysis_Database extends StorableObject_Database {
 			return (Analysis) storableObject;
 		else
 			throw new Exception(
-					"Analysis_Database.fromStorableObject | Illegal Storable Object: "
+					"AnalysisDatabase.fromStorableObject | Illegal Storable Object: "
 							+ storableObject.getClass().getName());
 	}
 
@@ -33,7 +33,7 @@ public class Analysis_Database extends StorableObject_Database {
 	}
 
 	private void retrieveAnalysis(Analysis analysis) throws Exception {
-		String analysis_id_str = analysis.getId().toSQLString();
+		String analysisIdStr = analysis.getId().toSQLString();
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer();
@@ -57,21 +57,21 @@ public class Analysis_Database extends StorableObject_Database {
 			buffer.append(SQL_WHERE);
 			buffer.append(COLUMN_ID);
 			buffer.append(EQUALS);
-			buffer.append(analysis_id_str);
+			buffer.append(analysisIdStr);
 			sql = buffer.toString();
 		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Analysis_Database.retrieve | Trying: " + sql,
+			Log.debugMessage("AnalysisDatabase.retrieve | Trying: " + sql,
 					Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				Set criteria_set = new Set(new Identifier(resultSet
+				Set criteriaSet = new Set(new Identifier(resultSet
 						.getString(COLUMN_CRITERIA_SET_ID)));
 				analysis.setAttributes(DatabaseDate.fromQuerySubString(
 						resultSet, COLUMN_CREATED), DatabaseDate
@@ -93,12 +93,12 @@ public class Analysis_Database extends StorableObject_Database {
 						 */
 						new Identifier(resultSet
 								.getString(COLUMN_MONITORED_ELEMENT_ID)),
-						criteria_set);
+						criteriaSet);
 			} else
-				throw new Exception("No such analysis: " + analysis_id_str);
+				throw new Exception("No such analysis: " + analysisIdStr);
 		} catch (SQLException sqle) {
-			String mesg = "Analysis_Database.retrieve | Cannot retrieve analysis "
-					+ analysis_id_str;
+			String mesg = "AnalysisDatabase.retrieve | Cannot retrieve analysis "
+					+ analysisIdStr;
 			throw new Exception(mesg, sqle);
 		} finally {
 			try {
@@ -112,9 +112,9 @@ public class Analysis_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject,
-			int retrieve_kind, Object arg) throws Exception {
+			int retrieveKind, Object arg) throws Exception {
 		Analysis analysis = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+		switch (retrieveKind) {
 			default:
 				return null;
 		}
@@ -142,7 +142,7 @@ public class Analysis_Database extends StorableObject_Database {
 	}
 
 	private void insertAnalysis(Analysis analysis) throws Exception {
-		String analysis_id_str = analysis.getId().toSQLString();
+		String analysisIdStr = analysis.getId().toSQLString();
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer();
@@ -167,7 +167,7 @@ public class Analysis_Database extends StorableObject_Database {
 			buffer.append(CLOSE_BRACKET);
 			buffer.append(SQL_VALUES);
 			buffer.append(OPEN_BRACKET);
-			buffer.append(analysis_id_str);
+			buffer.append(analysisIdStr);
 			buffer.append(COMMA);
 			buffer.append(DatabaseDate.toUpdateSubString(analysis.getCreated()));
 			buffer.append(COMMA);
@@ -188,12 +188,12 @@ public class Analysis_Database extends StorableObject_Database {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Analysis_Database.insert | Trying: " + sql,
+			Log.debugMessage("AnalysisDatabase.insert | Trying: " + sql,
 					Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
 		} catch (SQLException sqle) {
-			String mesg = "Analysis_Database.insert | Cannot insert analysis "
-					+ analysis_id_str;
+			String mesg = "AnalysisDatabase.insert | Cannot insert analysis "
+					+ analysisIdStr;
 			throw new Exception(mesg, sqle);
 		} finally {
 			try {
@@ -204,10 +204,10 @@ public class Analysis_Database extends StorableObject_Database {
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind,
+	public void update(StorableObject storableObject, int updateKind,
 			Object obj) throws Exception {
 		Analysis analysis = this.fromStorableObject(storableObject);
-		switch (update_kind) {
+		switch (updateKind) {
 			default:
 				return;
 		}

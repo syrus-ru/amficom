@@ -8,32 +8,32 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 
 public class SetParameter implements TransferableObject, TypedObject {
 	private Identifier id;
-	private Identifier type_id;
+	private Identifier typeId;
 	private byte[] value;
 
 	public SetParameter(Parameter_Transferable pt) {
 		this.id = new Identifier(pt.id);
-		this.type_id = new Identifier(pt.type_id);
+		this.typeId = new Identifier(pt.type_id);
 		this.value = new byte[pt.value.length];
 		for (int i = 0; i < this.value.length; i++)
 			this.value[i] = pt.value[i];
 	}
 
 	protected SetParameter(Identifier id,
-												 Identifier type_id,
+												 Identifier typeId,
 												 byte[] value) {
 		this.id = id;
-		this.type_id = type_id;
+		this.typeId = typeId;
 		this.value = value;
 	}
 
 	public Object getTransferable() {
-		byte[] pt_value = new byte[this.value.length];
-		for (int i = 0; i < pt_value.length; i++)
-			pt_value[i] = this.value[i];
+		byte[] ptValue = new byte[this.value.length];
+		for (int i = 0; i < ptValue.length; i++)
+			ptValue[i] = this.value[i];
 		return new Parameter_Transferable((Identifier_Transferable)this.id.getTransferable(),
-																			(Identifier_Transferable)this.type_id.getTransferable(),
-																			pt_value);
+																			(Identifier_Transferable)this.typeId.getTransferable(),
+																			ptValue);
 	}
 
 	public Identifier getId() {
@@ -41,7 +41,7 @@ public class SetParameter implements TransferableObject, TypedObject {
 	}
 
 	public Identifier getTypeId() {
-		return this.type_id;
+		return this.typeId;
 	}
 
 	public byte[] getValue() {

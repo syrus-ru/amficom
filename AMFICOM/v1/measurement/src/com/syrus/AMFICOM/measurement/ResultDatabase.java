@@ -17,28 +17,28 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 
-public class Result_Database extends StorableObject_Database {
+public class ResultDatabase extends StorableObject_Database {
 	
-//	 measurement_id VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_MEASUREMENT_ID		=	"measurement_id";
-//	 analysis_id VARCHAR2(32),
-	public static final String COLUMN_ANALYSIS_ID			=	"analysis_id";
-//	 evaluation_id VARCHAR2(32),
-	public static final String COLUMN_EVALUATION_ID			=	"evaluation_id";
+//	 measurementId VARCHAR2(32) NOT NULL,
+	public static final String COLUMN_MEASUREMENT_ID		=	"measurementId";
+//	 analysisId VARCHAR2(32),
+	public static final String COLUMN_ANALYSIS_ID			=	"analysisId";
+//	 evaluationId VARCHAR2(32),
+	public static final String COLUMN_EVALUATION_ID			=	"evaluationId";
 //	 sort NUMBER(2, 0) NOT NULL,
 	public static final String COLUMN_SORT					=	"sort";
-//	 alarm_level NUMBER(2, 0) NOT NULL,
-	public static final String COLUMN_ALARM_LEVEL			=	"alarm_level";
+//	 alarmLevel NUMBER(2, 0) NOT NULL,
+	public static final String COLUMN_ALARM_LEVEL			=	"alarmLevel";
 	
-	public static final String LINK_COLUMN_TYPE_ID			=	"type_id";
-	public static final String LINK_COLUMN_RESULT_ID		=	"result_id";
+	public static final String LINK_COLUMN_TYPE_ID			=	"typeId";
+	public static final String LINK_COLUMN_RESULT_ID		=	"resultId";
 	public static final String LINK_COLUMN_VALUE			=	"value";
 
 	private Result fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof Result)
 			return (Result)storableObject;
 		else
-			throw new Exception("Result_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("ResultDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	public void retrieve(StorableObject storableObject) throws Exception {
@@ -48,7 +48,7 @@ public class Result_Database extends StorableObject_Database {
 	}
 
 	private void retrieveResult(Result result) throws Exception {
-		String result_id_str = result.getId().toSQLString();
+		String resultIdStr = result.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
 			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
@@ -62,21 +62,21 @@ public class Result_Database extends StorableObject_Database {
 			+ SQL_FROM + ObjectEntities.RESULT_ENTITY
 			+ SQL_WHERE 
 			+ COLUMN_ID + EQUALS
-			+ result_id_str;
+			+ resultIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Result_Database.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("ResultDatabase.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
 				Measurement measurement = new Measurement(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)));
-				int result_sort = resultSet.getInt(COLUMN_SORT);
+				int resultSort = resultSet.getInt(COLUMN_SORT);
 				Action action = null;
-				switch (result_sort) {
+				switch (resultSort) {
 					case ResultSort._RESULT_SORT_MEASUREMENT:
 						action = measurement;
 						break;
@@ -93,7 +93,7 @@ public class Result_Database extends StorableObject_Database {
 						action = new Evaluation(new Identifier(resultSet.getString(COLUMN_EVALUATION_ID)));
 						break;
 					default:
-						Log.errorMessage("Unkown sort: " + result_sort + " of result " + result_id_str);
+						Log.errorMessage("Unkown sort: " + resultSort + " of result " + resultIdStr);
 				}
 				result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 														 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -107,14 +107,14 @@ public class Result_Database extends StorableObject_Database {
 														 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 														 measurement,
 														 action,
-														 result_sort,
+														 resultSort,
 														 resultSet.getInt(COLUMN_ALARM_LEVEL));
 			}
 			else
-				throw new Exception("No such result: " + result_id_str);
+				throw new Exception("No such result: " + resultIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "Result_Database.retrieveResult | Cannot retrieve result " + result_id_str;
+			String mesg = "ResultDatabase.retrieveResult | Cannot retrieve result " + resultIdStr;
 			throw new Exception(mesg, sqle);
 		}
 		finally {
@@ -131,7 +131,7 @@ public class Result_Database extends StorableObject_Database {
 	}
 
 	private void retrieveResultParameters(Result result) throws Exception {
-		String result_id_str = result.getId().toSQLString();
+		String resultIdStr = result.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ COLUMN_ID + COMMA
 			+ LINK_COLUMN_TYPE_ID + COMMA
@@ -140,13 +140,13 @@ public class Result_Database extends StorableObject_Database {
 			+ ObjectEntities.RESULTPARAMETER_ENTITY
 			+ SQL_WHERE
 			+ LINK_COLUMN_RESULT_ID + EQUALS
-			+ result_id_str;
+			+ resultIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ArrayList arraylist = new ArrayList();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Result_Database.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
 							/**
@@ -160,7 +160,7 @@ public class Result_Database extends StorableObject_Database {
 												ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE))));
 		}
 		catch (SQLException sqle) {
-			String mesg = "Result_Database.retrieveResultParameters | Cannot retrieve parameters for result " + result_id_str;
+			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result " + resultIdStr;
 			throw new Exception(mesg, sqle);
 		}
 		finally {
@@ -177,9 +177,9 @@ public class Result_Database extends StorableObject_Database {
 		result.setParameters((SetParameter[])arraylist.toArray(new SetParameter[arraylist.size()]));
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
 		Result result = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+		switch (retrieveKind) {
 			default:
 				return null;
 		}
@@ -198,7 +198,7 @@ public class Result_Database extends StorableObject_Database {
 	}
 
 	private void insertResult(Result result) throws Exception {
-		String result_id_str = result.getId().toSQLString();
+		String resultIdStr = result.getId().toSQLString();
 		String sql;
 		{			
 			StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
@@ -226,7 +226,7 @@ public class Result_Database extends StorableObject_Database {
 			buffer.append(CLOSE_BRACKET);
 			buffer.append(SQL_VALUES);
 			buffer.append(OPEN_BRACKET);			
-			buffer.append(result_id_str);
+			buffer.append(resultIdStr);
 			buffer.append(COMMA);
 			buffer.append(DatabaseDate.toUpdateSubString(result.getCreated()));
 			buffer.append(COMMA);
@@ -238,8 +238,8 @@ public class Result_Database extends StorableObject_Database {
 			buffer.append(COMMA);
 			buffer.append(result.getMeasurement().getId().toSQLString());
 			buffer.append(COMMA);
-		int result_sort = result.getSort().value();
-		switch (result_sort) {
+		int resultSort = result.getSort().value();
+		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:				
 				buffer.append(Identifier.getNullSQLString());
 				buffer.append(COMMA);				
@@ -259,7 +259,7 @@ public class Result_Database extends StorableObject_Database {
 				buffer.append(COMMA);
 				break;
 		}
-			buffer.append(Integer.toString(result_sort));
+			buffer.append(Integer.toString(resultSort));
 			buffer.append(COMMA);
 			buffer.append(Integer.toString(result.getAlarmLevel().value()));
 			buffer.append(CLOSE_BRACKET);
@@ -268,12 +268,12 @@ public class Result_Database extends StorableObject_Database {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Result_Database.insertResult | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("ResultDatabase.insertResult | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "Result_Database.insertResult | Cannot insert result " + result_id_str;
+			String mesg = "ResultDatabase.insertResult | Cannot insert result " + resultIdStr;
 			throw new Exception(mesg, sqle);
 		}
 		finally {
@@ -290,7 +290,7 @@ public class Result_Database extends StorableObject_Database {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
-		String result_id_code = result.getId().getCode();
+		String resultIdCode = result.getId().getCode();
 		SetParameter[] setParameters = result.getParameters();
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.RESULTPARAMETER_ENTITY
@@ -323,9 +323,9 @@ public class Result_Database extends StorableObject_Database {
 				/**
 				 * @todo when change DB Identifier model ,change setString() to setLong()
 				 */
-				preparedStatement.setString(3, result_id_code);
+				preparedStatement.setString(3, resultIdCode);
 				preparedStatement.setBlob(4, BLOB.empty_lob());
-				Log.debugMessage("Result_Database.insertResultParameters | Inserting parameter " + setParameters[i].getTypeId().toString() + " for result " + result_id_code, Log.DEBUGLEVEL05);
+				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter " + setParameters[i].getTypeId().toString() + " for result " + resultIdCode, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase badb = new ByteArrayDatabase(setParameters[i].getValue());
 				badb.saveAsBlob(connection, 
@@ -335,7 +335,7 @@ public class Result_Database extends StorableObject_Database {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "Result_Database.insertResultParameters | Cannot insert parameter " + setParameters[i].getId().toString() + " of type " + setParameters[i].getTypeId().toString() + " for result " + result_id_code;
+			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter " + setParameters[i].getId().toString() + " of type " + setParameters[i].getTypeId().toString() + " for result " + resultIdCode;
 			throw new Exception(mesg, sqle);
 		}
 		finally {
@@ -348,16 +348,16 @@ public class Result_Database extends StorableObject_Database {
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws Exception {
 		Result result = this.fromStorableObject(storableObject);
-		switch (update_kind) {
+		switch (updateKind) {
 			default:
 				return;
 		}
 	}
 
 	private void delete(Result result) {
-		String result_id_str = result.getId().toSQLString();
+		String resultIdStr = result.getId().toSQLString();
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -366,13 +366,13 @@ public class Result_Database extends StorableObject_Database {
 									+ SQL_WHERE
 									+ LINK_COLUMN_RESULT_ID
 									+ EQUALS
-									+ result_id_str);
+									+ resultIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM 
 									+ ObjectEntities.RESULT_ENTITY
 									+ SQL_WHERE
 									+ COLUMN_ID
 									+ EQUALS
-									+ result_id_str);
+									+ resultIdStr);
 			connection.commit();
 		}
 		catch (SQLException sqle1) {
@@ -384,7 +384,7 @@ public class Result_Database extends StorableObject_Database {
 					statement.close();
 				statement = null;
 			}
-			catch(SQLException _ex) { }
+			catch(SQLException Ex) { }
 		}
 	}
 }
