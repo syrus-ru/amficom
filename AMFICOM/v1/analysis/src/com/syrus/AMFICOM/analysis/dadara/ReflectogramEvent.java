@@ -573,7 +573,10 @@ public class ReflectogramEvent //implements Cloneable
             int len = dis.readInt();
             ReflectogramEvent[] ret = new ReflectogramEvent[len];
             for (int i = 0; i < len; i++)
+            {
+                ret[i] = new ReflectogramEvent();
                 ret[i].readFromDIS(dis);
+            }
             return ret;
         } catch (IOException e)
         {

@@ -96,13 +96,23 @@ public class AnalysisUtil
 			System.err.println("Exception searching ParameterType. Creating new one.");
 			ex.printStackTrace();
 		}
-
-		return CharacteristicType.createInstance(
+		
+		try
+		{
+		    return CharacteristicType.createInstance(
 				userId,
 				codename,
 				"",
 				dataType.value(),
 				sort);
+		}
+		catch(CreateObjectException e)
+		{
+		    // FIXME
+		    System.err.println("AnalysisUtil.getCharacteristicType: Exception in createInstance. Wanna die.");
+		    e.printStackTrace();
+		    return null;
+		}
 	}
 
 
@@ -137,7 +147,9 @@ public class AnalysisUtil
 		ptype = getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS);
 		outParameterTypes.add(ptype);
 
-		return AnalysisType.createInstance(
+		try
+		{
+		    return AnalysisType.createInstance(
 				userId,
 				codename,
 				"",
@@ -145,6 +157,14 @@ public class AnalysisUtil
 				new ArrayList(0),
 				new ArrayList(0),
 				outParameterTypes);
+		}
+		catch(CreateObjectException e)
+		{
+		    // FIXME
+		    System.err.println("AnalysisUtil.getAnalysisType: Exception in createInstance. Wanna die.");
+		    e.printStackTrace();
+		    return null;
+		}
 	}
 
 	/**
@@ -291,61 +311,79 @@ public class AnalysisUtil
 			for (int i = 0; i < 6; i++)
 			{
 				ParameterType ptype = getParameterType(userId, parameterCodenames[i]);
-				params[i] = new SetParameter(
-						IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
-						ptype,
+				params[i] = SetParameter.createInstance(ptype,
 						ByteArray.toByteArray(defaultMinuitParams[i]));
 			}
 			for (int i = 6; i < 8; i++)
 			{
 				ParameterType ptype = getParameterType(userId, parameterCodenames[i]);
-				params[i] = new SetParameter(
-						IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
-						ptype,
+				params[i] = SetParameter.createInstance(ptype,
 						ByteArray.toByteArray((int)defaultMinuitParams[i]));
 			}
-
 		}
 		catch (IOException ex)
 		{
 			ex.printStackTrace();
 		}
+		catch (CreateObjectException e)
+		{
+		    // FIXME
+		    System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException...");
+			e.printStackTrace();
+		}
 
-		Set criteriaSet = Set.createInstance(
+		try
+		{
+		    Set criteriaSet = Set.createInstance(
 				userId,
 				SetSort.SET_SORT_ANALYSIS_CRITERIA,
 				"",
 				params,
 				meIds);
 
-		return criteriaSet;
+			return criteriaSet;
+		}
+		catch (CreateObjectException e)
+		{
+		    // FIXME
+		    System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException -- wanna die.");
+			e.printStackTrace();
+			return null;
+		}
+
 	}
 
 	public static Set createEtalon(Identifier userId, List meIds, ReflectogramEvent[] ep)
 	{
-		SetParameter[] params = new SetParameter[2];
-
-		ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_EVENTS);
-		params[0] = new SetParameter(
-				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
-				ptype,
-				ReflectogramEvent.toByteArray(ep));
-
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-
-		ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
-		params[1] = new SetParameter(
-				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
-				ptype,
-				new BellcoreWriter().write(bs));
-
-		Set etalon = Set.createInstance(
-				userId,
-				SetSort.SET_SORT_ETALON,
-				"",
-				params,
-				meIds);
-		return etalon;
+	    try
+	    {
+			SetParameter[] params = new SetParameter[2];
+	
+			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_EVENTS);
+			params[0] = SetParameter.createInstance(ptype,
+					ReflectogramEvent.toByteArray(ep));
+	
+			BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
+	
+			ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
+			params[1] = SetParameter.createInstance(ptype,
+					new BellcoreWriter().write(bs));
+	
+			Set etalon = Set.createInstance(
+					userId,
+					SetSort.SET_SORT_ETALON,
+					"",
+					params,
+					meIds);
+			return etalon;
+	    }
+	    catch (CreateObjectException e)
+	    {
+		    // FIXME
+		    System.err.println("AnalysisUtil.createEtalon: CreateObjectException -- wanna die.");
+			e.printStackTrace();
+			return null;
+	    }
 	}
 
 	public static Set createThresholdSet(Identifier userId, List meIds, ReflectogramEvent[] ep)
@@ -363,39 +401,45 @@ public class AnalysisUtil
 				ep[i].setThreshold(threshs[i]);
 			}
 		}
-
-		ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_THRESHOLDS);
-		params[0] = new SetParameter(
-				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
-				ptype,
-				Threshold.toByteArray(threshs));
-
-		byte[] minLevel;
+		
 		try
 		{
-			Double level = (Double)Pool.get("min_trace_level", "primarytrace");
-			minLevel = ByteArray.toByteArray(level == null ? 0d : level.doubleValue());
+			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_THRESHOLDS);
+			params[0] = SetParameter.createInstance(ptype,
+					Threshold.toByteArray(threshs));
+	
+			byte[] minLevel;
+			try
+			{
+				Double level = (Double)Pool.get("min_trace_level", "primarytrace");
+				minLevel = ByteArray.toByteArray(level == null ? 0d : level.doubleValue());
+			}
+			catch(Exception ex)
+			{
+				minLevel = new byte[0];
+			}
+	
+			ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL);
+			params[1] = SetParameter.createInstance(ptype,
+					minLevel);
+	
+			Set thresholdSet = Set.createInstance(
+					userId,
+					SetSort.SET_SORT_EVALUATION_THRESHOLDS,
+					"",
+					params,
+					meIds);
+	
+			return thresholdSet;
 		}
-		catch(Exception ex)
-		{
-			minLevel = new byte[0];
-		}
-
-		ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL);
-		params[1] = new SetParameter(
-				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
-				ptype,
-				minLevel);
-
-		Set thresholdSet = Set.createInstance(
-				userId,
-				SetSort.SET_SORT_EVALUATION_THRESHOLDS,
-				"",
-				params,
-				meIds);
-
-		return thresholdSet;
-	}
+	    catch (CreateObjectException e)
+	    {
+		    // FIXME
+		    System.err.println("AnalysisUtil.createThresholdSet: CreateObjectException -- wanna die.");
+			e.printStackTrace();
+			return null;
+	    }
+}
 
 	public static void setParamsFromThresholdsSet(Set thresholdSet, ReflectogramEvent[] ep)
 	{

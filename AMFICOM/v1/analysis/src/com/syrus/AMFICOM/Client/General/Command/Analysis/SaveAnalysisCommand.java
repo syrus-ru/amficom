@@ -100,29 +100,33 @@ public class SaveAnalysisCommand extends VoidCommand
 		}
 
 		SetParameter[] params = new SetParameter[3];
-		ParameterType ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
-		params[0] = new SetParameter(
-				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
-				ptype,
-				new BellcoreWriter().write(bs));
-
-		ByteArrayCollector bac = new ByteArrayCollector();
-		for(int i = 0; i < refanalysis.events.length; i++)
+		try
 		{
-			byte[] b = refanalysis.events[i].toByteArray();
-			bac.add(b);
+			ParameterType ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
+			params[0] = SetParameter.createInstance(ptype,
+					new BellcoreWriter().write(bs));
+	
+			ByteArrayCollector bac = new ByteArrayCollector();
+			for(int i = 0; i < refanalysis.events.length; i++)
+			{
+				byte[] b = refanalysis.events[i].toByteArray();
+				bac.add(b);
+			}
+			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS);
+			params[1] = SetParameter.createInstance(ptype,
+					bac.encode());
+	
+			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_EVENTS);
+			params[2] = SetParameter.createInstance(ptype,
+					ReflectogramEvent.toByteArray(ep));
 		}
-		ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS);
-		params[1] = new SetParameter(
-				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
-				ptype,
-				bac.encode());
-
-		ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_EVENTS);
-		params[2] = new SetParameter(
-				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
-				ptype,
-				ReflectogramEvent.toByteArray(ep));
+	    catch (CreateObjectException e)
+	    {
+		    // FIXME
+		    System.err.println("SaveAnalysisCommand: CreateObjectException.");
+			e.printStackTrace();
+			return;
+	    }
 
 		try
 		{

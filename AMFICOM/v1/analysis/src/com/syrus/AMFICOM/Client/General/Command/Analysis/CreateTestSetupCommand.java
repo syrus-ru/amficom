@@ -71,7 +71,9 @@ public class CreateTestSetupCommand extends VoidCommand
 		if (name == null || name.equals(""))
 			return;
 
-		measurementSetup = MeasurementSetup.createInstance(
+		try
+		{
+		    measurementSetup = MeasurementSetup.createInstance(
 				((RISDSessionInfo)aContext.getSessionInterface()).getUserIdentifier(),
 				ms.getParameterSet(),
 				ms.getThresholdSet(),
@@ -80,6 +82,14 @@ public class CreateTestSetupCommand extends VoidCommand
 				name,
 				ms.getMeasurementDuration(),
 				ms.getMonitoredElementIds());
+		}
+	    catch (CreateObjectException e)
+	    {
+		    // FIXME
+		    System.err.println("CreateTestSetupCommand: CreateObjectException.");
+			e.printStackTrace();
+			return;
+	    }
 
 		try
 		{
