@@ -1,5 +1,5 @@
 /**
- * $Id: BindToSiteCommandBundle.java,v 1.3 2004/09/18 14:12:04 krupenn Exp $
+ * $Id: BindToSiteCommandBundle.java,v 1.4 2004/09/29 16:13:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
@@ -29,7 +30,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/18 14:12:04 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/29 16:13:07 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -65,6 +66,15 @@ public class BindToSiteCommandBundle extends MapActionCommandBundle
 		java.util.List nodeLinks = unbound.getNodeLinks();
 		Iterator e = nodeLinks.iterator();
 
+		for(Iterator it = logicalNetLayer.getMapView().getCablePaths(unbound).iterator(); it.hasNext();)
+		{
+			MapCablePathElement cp = (MapCablePathElement )it.next();
+			if(cp.getEndNode() == unbound)
+				cp.setEndNode(site);
+			if(cp.getStartNode() == unbound)
+				cp.setStartNode(site);
+		}
+
 		// бежим по списку удаляемых фрагментов
 		while(e.hasNext())
 		{
@@ -89,6 +99,7 @@ public class BindToSiteCommandBundle extends MapActionCommandBundle
 				physicalLink.setStartNode(site);
 
 			registerStateChange(physicalLink, pls2, physicalLink.getState());
+			
 		}//while(e.hasNext())
 
 		removeNode(unbound);
