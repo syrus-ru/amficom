@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.25 2005/02/14 14:51:25 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.26 2005/02/14 15:06:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/02/14 14:51:25 $
+ * @version $Revision: 1.26 $, $Date: 2005/02/14 15:06:57 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -240,8 +240,9 @@ public abstract class StorableObjectPool {
 				CommunicationException {
 		if (objectId != null) {
 			/* do not load deleted objects */
-			if (this.deletedIds.contains(objectId))
+			if (this.deletedIds != null && this.deletedIds.contains(objectId)) {
 				return null;
+			}
 			
 			short objectEntityCode = objectId.getMajor();
 			LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(objectEntityCode));
@@ -297,7 +298,7 @@ public abstract class StorableObjectPool {
 			for (Iterator it = objectPool.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
 				Identifier id = storableObject.getId();
-				if (!ids.contains(id) && !this.deletedIds.contains(id)
+				if (!ids.contains(id) && (this.deletedIds == null || !this.deletedIds.contains(id))
 						&& condition.isConditionTrue(storableObject))
 					collection.add(storableObject);
 			}
@@ -375,7 +376,7 @@ public abstract class StorableObjectPool {
 				Identifier objectId = (Identifier) it.next();
 				
 				/* do not operate with deleted objects */
-				if (this.deletedIds.contains(objectId))
+				if (this.deletedIds != null && this.deletedIds.contains(objectId))
 					continue;
 				
 				Short entityCode = new Short(objectId.getMajor());
@@ -485,6 +486,8 @@ public abstract class StorableObjectPool {
 			return null;
 //*/
 		Identifier objectId = storableObject.getId();
+		if (this.deletedIds != null && this.deletedIds.contains(objectId))
+			return null;
 		Short entityCode = new Short(objectId.getMajor());
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (objectPool != null) {
@@ -515,6 +518,7 @@ public abstract class StorableObjectPool {
 				for (final Iterator it2 = lruMap.iterator(); it2.hasNext();) {
 					final StorableObject storableObject = (StorableObject) it2.next();
 					if (!storableObject.isChanged())
+						if (this.deletedIds == null || !this.deletedIds.contains(storableObject.getId()))
 						storableObjects.add(storableObject);
 				}
 				if (storableObjects.isEmpty()) {
