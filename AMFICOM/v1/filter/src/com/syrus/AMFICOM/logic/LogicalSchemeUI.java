@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.9 2005/03/14 10:23:57 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.10 2005/03/14 14:19:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/14 10:23:57 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/14 14:19:50 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -722,26 +722,14 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			this.selectItemsInRect(this.x, this.y, this.dx, this.dy);
 		}
 		//
+
 		if (this.linkItem != null) {
-			if ((this.linkItem.getMaxChildrenCount() != 0)
-					&& (this.linkItem.children == null || this.linkItem.getMaxChildrenCount() > this.linkItem.children
-							.size())) {
-				this.selectedItem = this.getItem(mouseX, mouseY);
-				if (this.selectedItem != null) {
-					/* calculate output link for selectedItem */
-					int outputCount = this.selectedItem.getParents() == null ? 0 : this.selectedItem.getParents()
-							.size();
-					/*
-					 * add selected item to linkItem if total output count less
-					 * than its limit
-					 */
-					if (outputCount < this.selectedItem.getMaxParentCount()) {
-						try {
-							this.linkItem.addChild(this.selectedItem);
-						} catch (UnsupportedOperationException uoe) {
-							JOptionPane.showMessageDialog(this, uoe.getMessage(), "Error", JOptionPane.OK_OPTION);
-						}
-					}
+			this.selectedItem = this.getItem(mouseX, mouseY);
+			if (this.selectedItem != null) {
+				try {
+					this.linkItem.addChild(this.selectedItem);
+				} catch (UnsupportedOperationException uoe) {
+					JOptionPane.showMessageDialog(this, uoe.getMessage(), "Error", JOptionPane.OK_OPTION);
 				}
 			}
 			this.linkItem = null;
