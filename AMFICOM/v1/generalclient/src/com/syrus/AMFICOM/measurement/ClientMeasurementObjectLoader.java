@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.4 2004/11/23 15:04:49 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.5 2004/12/08 17:29:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
-import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/23 15:04:49 $
- * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2004/12/08 17:29:11 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 

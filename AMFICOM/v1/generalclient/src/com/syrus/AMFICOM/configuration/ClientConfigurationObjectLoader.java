@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.6 2004/11/25 12:55:38 stas Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.7 2004/12/08 17:29:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
-import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.configuration.corba.User_Transferable;
@@ -58,8 +58,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/25 12:55:38 $
- * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2004/12/08 17:29:10 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 
