@@ -1230,6 +1230,18 @@ getObject();
 			APOReportModel rm =
 				(APOReportModel) node.getObject();
 
+      if (rm instanceof ObserveReportModel)
+      {
+				AlarmReportModel observeModel = new AlarmReportModel();
+				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
+					observeModel,
+					observeModel.getObjectsName(),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
+      }
+
 			Vector fields = rm.getAvailableReports();
 
 			for (int i = 0; i < fields.size(); i++)
