@@ -19,9 +19,9 @@ public class SetParameter implements TransferableObject, TypedObject {
 			this.value[i] = pt.value[i];
 	}
 
-	protected SetParameter(Identifier id,
-												 Identifier typeId,
-												 byte[] value) {
+	public SetParameter(Identifier id,
+											Identifier typeId,
+											byte[] value) {
 		this.id = id;
 		this.typeId = typeId;
 		this.value = value;
