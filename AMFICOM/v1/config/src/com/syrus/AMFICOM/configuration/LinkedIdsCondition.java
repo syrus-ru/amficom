@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.3 2004/10/20 11:17:10 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.4 2004/10/20 13:09:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,20 +24,20 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/20 11:17:10 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/20 13:09:38 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
 
-	private Domain				domain;
+	protected Domain				domain;
 
-	private static final Short		CHARACTERISTIC_SHORT		= new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+	protected static final Short		CHARACTERISTIC_SHORT		= new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 
-	private Short				entityCode;
+	protected Short				entityCode;
 
-	private List				linkedIds;
-	private Identifier			identifier;	
+	protected List				linkedIds;
+	protected Identifier			identifier;	
 
 	public LinkedIdsCondition(LinkedIdsCondition_Transferable transferable) throws DatabaseException,
 			CommunicationException {
