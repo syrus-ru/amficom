@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.5 2004/09/16 09:20:57 bob Exp $
+ * $Id: CMServerImpl.java,v 1.6 2004/09/16 12:54:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/09/16 09:20:57 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/16 12:54:17 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -485,7 +485,9 @@ public class CMServerImpl implements CMServerOperations {
 
 		try {
 			List list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
-
+			/**
+			 * FIXME method is not complete
+			 */
 			Test_Transferable[] transferables = new Test_Transferable[list.size()];
 			int i = 0;
 			for (Iterator it = list.iterator(); it.hasNext(); i++) {
