@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.6 2005/01/28 10:27:28 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.7 2005/01/31 13:48:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,26 +8,26 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/28 10:27:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/31 13:48:53 $
  * @author $Author: arseniy $
  * @module general_v1
  */

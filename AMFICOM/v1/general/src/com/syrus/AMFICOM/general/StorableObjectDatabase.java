@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.72 2005/01/28 10:08:05 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.73 2005/01/31 13:48:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/01/28 10:08:05 $
+ * @version $Revision: 1.73 $, $Date: 2005/01/31 13:48:53 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -906,7 +906,7 @@ public abstract class StorableObjectDatabase {
 			Log.debugMessage(this.getEnityName() + "Database.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				StorableObject storableObject = updateEntityFromResultSet(null, resultSet);
+				StorableObject storableObject = this.updateEntityFromResultSet(null, resultSet);
 				result.add(storableObject);
 			}
 		}
