@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.12 2004/08/10 19:01:09 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.13 2004/08/11 13:39:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,13 +20,13 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/10 19:01:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2004/08/11 13:39:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class MonitoredElement extends DomainMember {
-	private Identifier kisId;
+	private Identifier measurementPortId;
 	private int sort;
 	private String localAddress;
 
@@ -51,7 +51,7 @@ public class MonitoredElement extends DomainMember {
 					new Identifier(met.creator_id),
 					new Identifier(met.modifier_id),
 					new Identifier(met.domain_id));
-		this.kisId = new Identifier(met.kis_id);
+		this.measurementPortId = new Identifier(met.meport_id);
 		this.sort = met.sort.value();
 		this.localAddress = new String(met.local_address);
 
@@ -71,13 +71,13 @@ public class MonitoredElement extends DomainMember {
 																						 (Identifier_Transferable)super.creatorId.getTransferable(),
 																						 (Identifier_Transferable)super.modifierId.getTransferable(),
 																						 (Identifier_Transferable)super.domainId.getTransferable(),
-																						 (Identifier_Transferable)this.kisId.getTransferable(),
+																						 (Identifier_Transferable)this.measurementPortId.getTransferable(),
 																						 MonitoredElementSort.from_int(this.sort),
 																						 new String(this.localAddress));
 	}
 
-	public Identifier getKISId() {
-		return this.kisId;
+	public Identifier getMeasurementPortId() {
+		return this.measurementPortId;
 	}
 
 	public MonitoredElementSort getSort() {
@@ -93,7 +93,7 @@ public class MonitoredElement extends DomainMember {
 																						Identifier creator_id,
 																						Identifier modifier_id,
 																						Identifier domainId,
-																						Identifier kisId,
+																						Identifier measurementPortId,
 																						int sort,
 																						String localAddress) {
 		super.setAttributes(created,
@@ -101,7 +101,7 @@ public class MonitoredElement extends DomainMember {
 												creator_id,
 												modifier_id,
 												domainId);
-		this.kisId = kisId;
+		this.measurementPortId = measurementPortId;
 		this.sort = sort;
 		this.localAddress = localAddress;
 	}

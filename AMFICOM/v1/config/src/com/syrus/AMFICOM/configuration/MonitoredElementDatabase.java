@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.7 2004/08/09 11:55:47 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.8 2004/08/11 13:39:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,13 +24,13 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/09 11:55:47 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/11 13:39:51 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class MonitoredElementDatabase extends StorableObjectDatabase {
-    public static final String COLUMN_KIS_ID = "kis_id";
+    public static final String COLUMN_MEASUREMENT_PORT_ID = "meport_id";
     // sort NUMBER(2) NOT NULL,
     public static final String COLUMN_SORT = "sort";
     public static final String COLUMN_LOCAL_ADDRESS = "local_address";
@@ -54,7 +54,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA		
-			+ COLUMN_KIS_ID + COMMA
+			+ COLUMN_MEASUREMENT_PORT_ID + COMMA
 			+ COLUMN_SORT + COMMA
 			+ COLUMN_LOCAL_ADDRESS
 			+ SQL_FROM + ObjectEntities.ME_ENTITY
@@ -87,7 +87,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 												 * @todo when change DB Identifier model ,change getString() to
 												 *       getLong()
 												 */
-											   new Identifier(resultSet.getString(COLUMN_KIS_ID)),
+											   new Identifier(resultSet.getString(COLUMN_MEASUREMENT_PORT_ID)),
 											   resultSet.getInt(COLUMN_SORT),
 											   resultSet.getString(COLUMN_LOCAL_ADDRESS));
 			else
@@ -154,7 +154,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_KIS_ID + COMMA
+			+ COLUMN_MEASUREMENT_PORT_ID + COMMA
 			+ COLUMN_SORT + COMMA
 			+ COLUMN_LOCAL_ADDRESS
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET			
@@ -164,7 +164,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			+ monitoredElement.getCreatorId().toSQLString() + COMMA
 			+ monitoredElement.getModifierId().toSQLString() + COMMA
 			+ monitoredElement.getDomainId().toSQLString() + COMMA
-			+ monitoredElement.getKISId().toSQLString() + COMMA
+			+ monitoredElement.getMeasurementPortId().toSQLString() + COMMA
 			+ monitoredElement.getSort().value() + COMMA
 			+ APOSTOPHE + monitoredElement.getLocalAddress() + APOSTOPHE
 			+ CLOSE_BRACKET;
