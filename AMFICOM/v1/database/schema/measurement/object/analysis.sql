@@ -7,6 +7,7 @@ CREATE TABLE Analysis (
 --
  type_id VARCHAR2(32) NOT NULL,
  monitored_element_id VARCHAR2(32) NOT NULL,
+ measurement_id VARCHAR2(32),
 --
  criteria_set_id VARCHAR2(32) NOT NULL,
 --
@@ -20,6 +21,8 @@ CREATE TABLE Analysis (
   REFERENCES AnalysisType (id) ON DELETE CASCADE,
  CONSTRAINT ana_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE,
+ CONSTRAINT ana_mnt_fk FOREIGN KEY (measurement_id)
+  REFERENCES Measurement (id) ON DELETE CASCEDE,
 --
  CONSTRAINT ana_criset_fk FOREIGN KEY (criteria_set_id)
   REFERENCES Sett (id) ON DELETE CASCADE

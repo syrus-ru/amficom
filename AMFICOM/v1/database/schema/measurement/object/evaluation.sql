@@ -7,6 +7,7 @@ CREATE TABLE Evaluation (
 --
  type_id VARCHAR2(32) NOT NULL,
  monitored_element_id VARCHAR2(32) NOT NULL,
+ measurement_id VARCHAR2(32),
 --
  threshold_set_id VARCHAR2(32) NOT NULL,
  etalon_id VARCHAR2(32) NOT NULL,
@@ -16,10 +17,13 @@ CREATE TABLE Evaluation (
   REFERENCES Users (id) ON DELETE CASCADE,
  CONSTRAINT eva_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE,
+--
  CONSTRAINT eva_evatype_fk FOREIGN KEY (type_id)
   REFERENCES EvaluationType (id) ON DELETE CASCADE,
  CONSTRAINT eva_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE,
+ CONSTRAINT eva_mnt_fk FOREIGN KEY (measurement_id)
+  REFERENCES Measurement (id) ON DELETE CASCEDE,
 --
  CONSTRAINT eva_thrset_fk FOREIGN KEY (threshold_set_id)
   REFERENCES Sett (id) ON DELETE CASCADE,
