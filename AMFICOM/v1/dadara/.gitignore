@@ -1,4 +1,6 @@
 classes
+.mach
+.head
 clean.cmd
 *.obj
 *.exp
