@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import javax.swing.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:32:35 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/18 09:04:50 $
  * @author $Author: bass $
  */
 public final class AlarmToAlert extends JInternalFrame {
@@ -18,7 +18,6 @@ public final class AlarmToAlert extends JInternalFrame {
 	}
 	
 	private void initComponents() {//GEN-BEGIN:initComponents
-
 		jAlertingConfigPanel1 = new JAlertingConfigPanel();
 		
 		setClosable(true);
@@ -29,7 +28,6 @@ public final class AlarmToAlert extends JInternalFrame {
 		getContentPane().add(jAlertingConfigPanel1, java.awt.BorderLayout.CENTER);
 		
 		setSize(new java.awt.Dimension(258, 536));
-
 	}//GEN-END:initComponents
 	
 	// Variables declaration - do not modify//GEN-BEGIN:variables
