@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-configuration.idl,v 1.1 2004/11/29 19:21:58 bass Exp $
+ * $Id: scheme-configuration.idl,v 1.2 2004/12/15 12:20:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ module com {
 					 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink#abstractLinkTypeId
 					 */
 					attribute configuration::corba::CableLinkType cableLinkType;
-					attribute LinkType cableLinkTypeImpl;
+					attribute CableLinkType cableLinkTypeImpl;
 				};
 
 				abstract valuetype ComSyrusAmficomConfigurationSchemePath {

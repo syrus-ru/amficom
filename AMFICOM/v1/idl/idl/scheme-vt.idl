@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.6 2004/12/10 16:51:11 bass Exp $
+ * $Id: scheme-vt.idl,v 1.7 2004/12/15 12:20:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -168,7 +168,7 @@ module com {
 						 */
 						private general::corba::Identifier targetAbstractSchemePortId;
 						/**
-						 * Depending on implementation, may reference either {@link com.syrus.AMFICOM.configuration.LinkType link type} or {@link com.syrus.AMFICOM.configuration.LinkType cable link type}.
+						 * Depending on implementation, may reference either {@link com.syrus.AMFICOM.configuration.LinkType} or {@link com.syrus.AMFICOM.configuration.CableLinkType}.
 						 */
 						private general::corba::Identifier abstractLinkTypeId;
 						/**
