@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.14 2004/10/25 10:04:25 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.15 2004/10/25 14:13:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
@@ -46,8 +47,8 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/10/25 10:04:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/10/25 14:13:21 $
+ * @author $Author: max $
  * @module mserver_v1
  */
 
@@ -61,8 +62,8 @@ public abstract class DatabaseContextSetup {
 																			new EquipmentTypeDatabase(),
 																			new PortTypeDatabase(),
 																			new MeasurementPortTypeDatabase(),
-																			new LinkTypeDatabase(),
-																			new KISTypeDatabase(),
+                                                                            new LinkTypeDatabase(),
+                                                                            new KISTypeDatabase(),																			
 																			new CharacteristicDatabase(),
 																			new UserDatabase(),
 																			new DomainDatabase(),
@@ -74,7 +75,8 @@ public abstract class DatabaseContextSetup {
 																			new TransmissionPathDatabase(),
 																			new KISDatabase(),
 																			new MonitoredElementDatabase(),
-																			new LinkDatabase());
+                                                                            new LinkDatabase());
+
 		MeasurementDatabaseContext.init(new ParameterTypeDatabase(),
 																		new MeasurementTypeDatabase(),
 																		new AnalysisTypeDatabase(),
