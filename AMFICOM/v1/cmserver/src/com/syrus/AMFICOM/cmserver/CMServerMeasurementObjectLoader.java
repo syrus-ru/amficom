@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.33 2005/03/30 11:42:28 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.34 2005/03/30 12:49:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/03/30 11:42:28 $
+ * @version $Revision: 1.34 $, $Date: 2005/03/30 12:49:44 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -263,7 +263,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 
 
-	public Collection loadAnalyses(Collection ids) throws RetrieveObjectException, CommunicationException {
+	public Collection loadAnalyses(Collection ids) throws ApplicationException {
 		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
 		Collection objects;
 		try {
@@ -286,15 +286,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			return objects;
 
 		Collection loadedObjects = new HashSet();
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 		Identifier mcmId;
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		Collection mcmLoadedObjects;
@@ -319,13 +311,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					}
 
 					if (!loadIds.isEmpty())
-						try {
-							loadIdsT = Identifier.createTransferables(loadIds);
-						}
-						catch (IllegalDataException ide) {
-							//Never
-							Log.errorException(ide);
-						}
+						loadIdsT = Identifier.createTransferables(loadIds);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -365,7 +351,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return objects;
 	}
 
-	public Collection loadEvaluations(Collection ids) throws RetrieveObjectException, CommunicationException {
+	public Collection loadEvaluations(Collection ids) throws ApplicationException {
 		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
 		Collection objects;
 		try {
@@ -388,15 +374,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			return objects;
 
 		Collection loadedObjects = new HashSet();
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 		Identifier mcmId;
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		Collection mcmLoadedObjects;
@@ -421,13 +399,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					}
 
 					if (!loadIds.isEmpty())
-						try {
-							loadIdsT = Identifier.createTransferables(loadIds);
-						}
-					catch (IllegalDataException ide) {
-						//Never
-						Log.errorException(ide);
-					}
+						loadIdsT = Identifier.createTransferables(loadIds);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -467,7 +439,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return objects;
 	}
 
-	public Collection loadMeasurements(Collection ids) throws RetrieveObjectException, CommunicationException {
+	public Collection loadMeasurements(Collection ids) throws ApplicationException {
 		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
 		Collection objects;
 		try {
@@ -490,15 +462,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			return objects;
 
 		Collection loadedObjects = new HashSet();
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 		Identifier mcmId;
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		Collection mcmLoadedObjects;
@@ -523,13 +487,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					}
 
 					if (!loadIds.isEmpty())
-						try {
-							loadIdsT = Identifier.createTransferables(loadIds);
-						}
-						catch (IllegalDataException ide) {
-							//Never
-							Log.errorException(ide);
-						}
+						loadIdsT = Identifier.createTransferables(loadIds);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -573,7 +531,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 
 
-	public Collection loadAnalysesButIds(StorableObjectCondition condition, Collection ids) throws RetrieveObjectException, CommunicationException {
+	public Collection loadAnalysesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
 		Collection objects;
 		try {
@@ -592,15 +550,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			loadButIds.add(id);
 		}
 
-		Identifier_Transferable[] loadButIdsT = null;
-		try {
-			loadButIdsT = Identifier.createTransferables(loadButIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
 		Collection loadedObjects = new HashSet();
@@ -665,7 +615,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return objects;
 	}
 
-	public Collection loadEvaluationsButIds(StorableObjectCondition condition, Collection ids) throws RetrieveObjectException, CommunicationException {
+	public Collection loadEvaluationsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
 		Collection objects;
 		try {
@@ -684,15 +634,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			loadButIds.add(id);
 		}
 
-		Identifier_Transferable[] loadButIdsT = null;
-		try {
-			loadButIdsT = Identifier.createTransferables(loadButIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
 		Collection loadedObjects = new HashSet();
@@ -757,7 +699,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return objects;
 	}
 
-	public Collection loadMeasurementsButIds(StorableObjectCondition condition, Collection ids) throws RetrieveObjectException, CommunicationException {
+	public Collection loadMeasurementsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
 		Collection objects;
 		try {
@@ -776,15 +718,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			loadButIds.add(id);
 		}
 
-		Identifier_Transferable[] loadButIdsT = null;
-		try {
-			loadButIdsT = Identifier.createTransferables(loadButIds);
-		}
-		catch (IllegalDataException ide) {
-			//Never
-			Log.errorException(ide);
-		}
-
+		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
 		Collection loadedObjects = new HashSet();
