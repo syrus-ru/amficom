@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.33 2005/02/11 16:21:04 arseniy Exp $
+# $Id: Makefile,v 1.34 2005/02/24 15:13:07 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -17,7 +17,6 @@ JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
 
 APPCLASSPATH := $(LIBDIR)/util.jar
 
@@ -32,9 +31,21 @@ $(LIBNAME): .mach
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
 	touch $@
 
-.corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general.idl
+.PHONY: idl
+idl: .idl
+
+# Just idl-to-java compilation
+.idl: $(SRCDIR)
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general-vt.idl
+	touch $@
+
+
+.PHONY: corba
+corba: .corba
+
+# Compilation of stubs & skeletons
+.corba:	$(CLASSDIR) .idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general.idl
 	$(JAVAC) \
 		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
@@ -42,25 +53,35 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/general/corba/*.java
 	touch $@
 
+$(SRCDIR):
 $(CLASSDIR):
+$(LIBDIR):
 	mkdir -p $@
 
+
+.PHONY: idlclean
+idlclean:
+	cd $(SRCDIR)/com/syrus/AMFICOM/general && $(RM) -r $(shell cat $(SRCDIR)/com/syrus/AMFICOM/general/.cvsignore)
+	cd $(SRCDIR)/com/syrus/AMFICOM/general/corba && $(RM) -r $(shell cat $(SRCDIR)/com/syrus/AMFICOM/general/corba/.cvsignore)
+	$(RM) .idl
+
 .PHONY:	clean
-clean:	cleanmach cleancorba
+clean:	cleanmach
 	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
-cleanmach:
+cleanmach: cleancorba
 	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/general/*.class))
 	$(RM) .mach
 
-.PHONY:	cleancorba
-cleancorba:
-	cd $(SRCDIR)/com/syrus/AMFICOM/general && $(RM) -r $(shell cat $(SRCDIR)/com/syrus/AMFICOM/general/.cvsignore)
-	cd $(SRCDIR)/com/syrus/AMFICOM/general/corba && $(RM) -r $(shell cat $(SRCDIR)/com/syrus/AMFICOM/general/corba/.cvsignore)
-	$(RM) -r $(SCRDIR)/com/syrus/AMFICOM/CORBA/General
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general/corba
+.PHONY: cleandeprecatedcorba
+cleandeprecatedcorba:
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/CORBA/General
+	$(RM) -r $(SCRDIR)/com/syrus/AMFICOM/CORBA/General
+
+.PHONY:	cleancorba
+cleancorba: idlclean cleandeprecatedcorba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general/corba
 	$(RM) .corba
 
 #### Install ####
@@ -93,4 +114,3 @@ arch:
 		Makefile \
 		$(IDLDIR)/general.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/general/*.java
-
