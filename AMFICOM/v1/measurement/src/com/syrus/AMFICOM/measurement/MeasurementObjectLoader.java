@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.12 2004/11/17 09:25:30 max Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.13 2004/11/19 11:40:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/17 09:25:30 $
- * @author $Author: max $
+ * @version $Revision: 1.13 $, $Date: 2004/11/19 11:40:23 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -157,5 +157,9 @@ public interface MeasurementObjectLoader {
 	void saveTemporalPatterns(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
     
     java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException;
+    
+    void delete(Identifier id) throws CommunicationException, DatabaseException;
+    
+    void delete(List ids) throws CommunicationException, DatabaseException;
 
 }

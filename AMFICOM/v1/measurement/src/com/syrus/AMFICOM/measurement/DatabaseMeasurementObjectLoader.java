@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.26 2004/11/19 09:01:07 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.27 2004/11/19 11:40:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/19 09:01:07 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/19 11:40:23 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -423,9 +424,6 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
     	if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
 		
-		if (storableObjects.isEmpty())
-			return Collections.EMPTY_SET;
-		
         short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
         
         StorableObjectDatabase database = null;
@@ -483,8 +481,87 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
             throw new DatabaseException("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage());
         }
     }
-
+    
+	public void delete(Identifier id) throws CommunicationException, DatabaseException {
+		delete(id, null);		
+	}
 	
+	public void delete(List ids) throws CommunicationException, DatabaseException {
+		delete(null, ids);
+	}
+
+	private void delete(Identifier id, List ids) throws DatabaseException {
+			short entityCode = (id != null) ? id.getMajor() : 0;
+			if (id == null){
+				if (ids.isEmpty())
+					return;
+				Object obj = ids.iterator().next();
+				if (obj instanceof Identifier)
+					entityCode = ((Identifier)obj).getMajor();
+				else if (obj instanceof Identified)
+					entityCode = ((Identified)obj).getId().getMajor();
+			}
+			try{
+			StorableObjectDatabase database = null;
+	        	switch (entityCode) {
+	                case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+	                    database = MeasurementDatabaseContext.getParameterTypeDatabase();
+	                    break;
+	                case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
+	                    break;
+	                case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
+	                    break;
+	                case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
+	                    break;
+	                case ObjectEntities.SET_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getSetDatabase();
+	                    break;
+	                case ObjectEntities.MODELING_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getModelingDatabase();
+	                    break;
+	                case ObjectEntities.MS_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
+	                    break;
+	                case ObjectEntities.ANALYSIS_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getAnalysisDatabase();
+	                    break;
+	                case ObjectEntities.EVALUATION_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getEvaluationDatabase();
+	                    break;
+	                case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getMeasurementDatabase();
+	                    break;
+	                case ObjectEntities.TEST_ENTITY_CODE:
+	                	// database = MeasurementDatabaseContext.getTestDatabase();
+	                	// Test(s) cannot be deleted !
+	                	throw new DatabaseException("Tests cannot be deleted due to its model");
+	                case ObjectEntities.RESULT_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getResultDatabase();
+	                    break;
+	                case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
+	                	database = MeasurementDatabaseContext.getTemporalPatternDatabase();
+	                    break;
+	                default:
+	                    Log.errorMessage("DatabaseMeasumentObjectLoader.delete | Unknown entity: "
+	                            + entityCode);                
+	            }
+	        	
+	        	if (database != null){
+	        		if (id != null)
+	        			database.delete(id);
+	        		else if (ids != null && !ids.isEmpty()){
+	        			database.delete(ids);
+	        		}
+	        	}
+		}  catch (IllegalDataException e) {
+	    	Log.errorMessage("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
+	        throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
+		}
+	}
+    
 	public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, CommunicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
 		try {
