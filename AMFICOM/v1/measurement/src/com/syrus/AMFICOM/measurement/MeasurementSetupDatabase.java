@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.54 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.55 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.55 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -258,7 +258,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {		
-		MeasurementSetup measurementSetup = fromStorableObject(storableObject);
+		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
 		Set etalon = measurementSetup.getEtalon();
@@ -275,7 +275,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	
 	protected int  setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		MeasurementSetup measurementSetup = fromStorableObject(storableObject);
+		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
 		Set etalon = measurementSetup.getEtalon();
@@ -344,7 +344,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		MeasurementSetup measurementSetup = (storableObject == null) ? 
 				new MeasurementSetup(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, 
 									   null, null, null, 0, null) : 
-					fromStorableObject(storableObject);	
+					this.fromStorableObject(storableObject);	
 		Set parameterSet;
 		Set criteriaSet;
 		Set thresholdSet;
@@ -539,8 +539,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	
 	public List retrieveAll() throws RetrieveObjectException {
 		try{
-			return retrieveByIds(null, null);
-		}catch(IllegalDataException ide){
+			return this.retrieveByIds(null, null);
+		}
+		catch(IllegalDataException ide){
 			throw new RetrieveObjectException(ide);
 		}
 	}
@@ -548,8 +549,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
-		else list = retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
+		else
+			list = this.retrieveByIdsOneQuery(ids, condition);
 		
 		retrieveMeasurementSetupMELinksByOneQuery(list);
 		

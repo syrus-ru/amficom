@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.2 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.3 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -94,7 +94,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		ModelingType modelingType = fromStorableObject(storableObject);
+		ModelingType modelingType = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseString.setString(preparedStatement, ++i, modelingType.getCodename(), SIZE_CODENAME_COLUMN); 
@@ -107,7 +107,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
-		ModelingType modelingType = fromStorableObject(storableObject);
+		ModelingType modelingType = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(modelingType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(modelingType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;		
@@ -115,7 +115,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ModelingType modelingType = fromStorableObject(storableObject);
+		ModelingType modelingType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(modelingType);
 		this.retrieveParameterTypes(modelingType);
 	}
@@ -129,7 +129,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 												 null,
 												 null,
 												 null) : 
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		modelingType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -334,7 +334,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for(Iterator it=storableObjects.iterator();it.hasNext();){
-			ModelingType modelingType = fromStorableObject((StorableObject)it.next());
+			ModelingType modelingType = this.fromStorableObject((StorableObject)it.next());
 			insertParameterTypes(modelingType);
 		}
 	}
@@ -439,7 +439,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(StorableObject storableObject) throws IllegalDataException {
-		ModelingType modelingType = fromStorableObject(storableObject);
+		ModelingType modelingType = this.fromStorableObject(storableObject);
 		String modelingTypeIdStr = DatabaseIdentifier.toSQLString(modelingType.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -474,7 +474,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	public ModelingType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
 		List list = null;
 		try {
-			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
@@ -488,7 +488,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 
 	public List retrieveAll() throws RetrieveObjectException {
 		try {
-			return retrieveByIds(null, null);
+			return this.retrieveByIds(null, null);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide);
@@ -498,9 +498,9 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(ids, condition);
 
 		retrieveParameterTypesByOneQuery(list);
 

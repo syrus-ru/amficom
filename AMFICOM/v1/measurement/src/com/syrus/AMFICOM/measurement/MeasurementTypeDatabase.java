@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.50 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.51 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.51 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -96,7 +96,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
-		MeasurementType measurementType = fromStorableObject(storableObject);
+		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
@@ -115,7 +115,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		MeasurementType measurementType = (storableObject == null) ? 
 				new MeasurementType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, 
 									   null, null, null) : 
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		measurementType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -478,7 +478,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for(Iterator it=storableObjects.iterator();it.hasNext();){
-			MeasurementType measurementType = fromStorableObject((StorableObject)it.next());
+			MeasurementType measurementType = this.fromStorableObject((StorableObject)it.next());
 			this.insertParameterTypes(measurementType);
 			this.insertMeasurementPortTypes(measurementType);
 		}
@@ -639,7 +639,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	public void delete(StorableObject storableObject) throws IllegalDataException {		
-		MeasurementType measurementType = fromStorableObject(storableObject);
+		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		String measurementTypeIdStr = DatabaseIdentifier.toSQLString(measurementType.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -678,7 +678,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public MeasurementType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
 		List list = null;
 		try {
-			list = retrieveByIds(null, COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds(null, COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
@@ -692,7 +692,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	
 	public List retrieveAll() throws RetrieveObjectException {
 		try {
-			return retrieveByIds(null, null);
+			return this.retrieveByIds(null, null);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide);
@@ -702,9 +702,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(ids, condition);
 
 		retrieveParameterTypesByOneQuery(list);
 		retrieveMeasurementPortTypesByOneQuery(list);
@@ -714,7 +714,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 		throws IllegalDataException, UpdateObjectException {
-		MeasurementType measurementType = fromStorableObject(storableObject);
+		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			try {				
 				DatabaseString.setString(preparedStatement, ++i, measurementType.getCodename(), SIZE_CODENAME_COLUMN);

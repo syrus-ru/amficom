@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.49 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.50 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.50 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -110,7 +110,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
-		Measurement measurement = fromStorableObject(storableObject);
+		Measurement measurement = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getType().getId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
@@ -126,7 +126,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		Measurement measurement = fromStorableObject(storableObject);
+		Measurement measurement = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getType().getId()); 
@@ -154,7 +154,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		Measurement measurement = (storableObject == null) ?
 				new Measurement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, 
 								   null, null, null, null) : 
-					fromStorableObject(storableObject);		
+					this.fromStorableObject(storableObject);		
 		MeasurementType measurementType;
 		String name;
 		MeasurementSetup measurementSetup;
@@ -332,8 +332,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retrieveByIdsOneQuery(null, condition);
-		return retrieveByIdsOneQuery(ids, condition);	
+			return this.retrieveByIdsOneQuery(null, condition);
+		return this.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids, condition);
 	}
     

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.27 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.28 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.28 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -82,7 +82,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
-		Evaluation evaluation = fromStorableObject(storableObject);
+		Evaluation evaluation = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(evaluation.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(evaluation.getMonitoredElementId()) + COMMA
@@ -92,7 +92,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		Evaluation evaluation = fromStorableObject(storableObject);
+		Evaluation evaluation = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, evaluation.getType().getId()); 
@@ -108,7 +108,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Evaluation evaluation = (storableObject == null) ? 
 				new Evaluation(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null) : 
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		EvaluationType evaluationType;
 		Set thresholdSet;
 		try {
@@ -179,8 +179,8 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retrieveByIdsOneQuery(null, condition);
-		return retrieveByIdsOneQuery(ids, condition);	
+			return this.retrieveByIdsOneQuery(null, condition);
+		return this.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids, condition);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.16 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.17 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module module_name
  */
@@ -87,7 +87,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		Modeling modeling = fromStorableObject(storableObject);
+		Modeling modeling = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getType().getId());
@@ -103,7 +103,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 
   protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-    Modeling modeling = fromStorableObject(storableObject);
+    Modeling modeling = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ DatabaseIdentifier.toSQLString(modeling.getType().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(modeling.getMonitoredElementId()) + COMMA
@@ -116,7 +116,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Modeling modeling = (storableObject == null) ? 
                 new Modeling(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null) : 
-                    fromStorableObject(storableObject);
+                    this.fromStorableObject(storableObject);
 		ModelingType modelingType;
 		Set argumentSet;
 		try {
@@ -183,8 +183,8 @@ public class ModelingDatabase extends StorableObjectDatabase {
 
   public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retrieveByIdsOneQuery(null, conditions);
-		return retrieveByIdsOneQuery(ids, conditions);  
+			return this.retrieveByIdsOneQuery(null, conditions);
+		return this.retrieveByIdsOneQuery(ids, conditions);  
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}
 

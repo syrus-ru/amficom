@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.44 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.45 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.45 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -97,7 +97,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		EvaluationType evaluationType = fromStorableObject(storableObject);
+		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseString.setString(preparedStatement, ++i, evaluationType.getCodename(), SIZE_CODENAME_COLUMN); 
@@ -110,7 +110,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
-		EvaluationType evaluationType = fromStorableObject(storableObject);
+		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(evaluationType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(evaluationType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;		
@@ -127,7 +127,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		EvaluationType evaluationType = (storableObject == null) ?
 				new EvaluationType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null,null,null,null,null,null,null) : 
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		evaluationType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -368,7 +368,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for(Iterator it=storableObjects.iterator();it.hasNext();){
-			EvaluationType evaluationType = fromStorableObject((StorableObject)it.next());
+			EvaluationType evaluationType = this.fromStorableObject((StorableObject)it.next());
 			insertParameterTypes(evaluationType);
 		}
 	}
@@ -500,7 +500,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(StorableObject storableObject) throws IllegalDataException {
-		EvaluationType evaluationType = fromStorableObject(storableObject);
+		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		String evaluationTypeIdStr = DatabaseIdentifier.toSQLString(evaluationType.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -535,7 +535,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	public EvaluationType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
 		List list = null;
 		try {
-			list = retrieveByIds(null, COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds(null, COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
@@ -549,7 +549,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
 	public List retrieveAll() throws RetrieveObjectException {
 		try {
-			return retrieveByIds(null, null);
+			return this.retrieveByIds(null, null);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide);
@@ -559,9 +559,9 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(ids, condition);
 
 		retrieveParameterTypesByOneQuery(list);
 

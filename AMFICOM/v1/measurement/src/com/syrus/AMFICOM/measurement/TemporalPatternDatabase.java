@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.29 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.30 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.30 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -92,7 +92,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TemporalPattern temporalPattern = (storableObject == null) ?
 				new TemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null):
-				fromStorableObject(storableObject);
+				this.fromStorableObject(storableObject);
 		String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
 		temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -141,7 +141,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		TemporalPattern temporalPattern = fromStorableObject(storableObject);
+		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			preparedStatement.setString(++i, temporalPattern.getDescription());
@@ -215,21 +215,22 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	
 	public List retrieveAll() throws RetrieveObjectException {
 		try{
-			return retrieveByIds(null, null);
-		}catch(IllegalDataException ide){
+			return this.retrieveByIds(null, null);
+		}
+		catch(IllegalDataException ide){
 			throw new RetrieveObjectException(ide);
 		}
 	}
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retrieveByIdsOneQuery(null, condition);
-		
-		return retrieveByIdsOneQuery(ids, condition);
+			return this.retrieveByIdsOneQuery(null, condition);
+
+		return this.retrieveByIdsOneQuery(ids, condition);
 	}
 	
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
+	public List retrieveByCondition(List ids, StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
 		List list = this.retrieveButIds(ids, null);
 		return list;
 	}

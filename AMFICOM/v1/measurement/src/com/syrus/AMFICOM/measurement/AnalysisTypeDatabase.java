@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.48 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.49 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.49 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -55,13 +55,13 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 	public static final String	COLUMN_CODENAME = "codename";
 	public static final String	COLUMN_DESCRIPTION = "description";	
-	
+
 	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
-    public static final String  PARAMETER_TYPE_ID = "parameter_type_id";
-    public static final String  PARAMETER_MODE = "parameter_mode";
-	
+	public static final String  PARAMETER_TYPE_ID = "parameter_type_id";
+	public static final String  PARAMETER_MODE = "parameter_mode";
+
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
-	
+
 	private static String columns;
 	private static String updateMultiplySQLValues;
 
@@ -70,20 +70,19 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			return (AnalysisType) storableObject;
 		throw new IllegalDataException("AnalysisTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
-	
-	
+
 	protected String getEnityName() {
 		return ObjectEntities.ANALYSISTYPE_ENTITY;
 	}	
-	
+
 	protected String getColumns(int mode) {
-		if (columns == null){
+		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA 
 				+ COLUMN_DESCRIPTION;
 		}
 		return columns;
-	}	
+	}
 
 	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null) {
@@ -94,26 +93,25 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}	
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
-		AnalysisType analysisType = fromStorableObject(storableObject);		
+	protected String getUpdateSingleSQLValues(StorableObject storableObject)
+			throws IllegalDataException, UpdateObjectException {
+		AnalysisType analysisType = this.fromStorableObject(storableObject);		
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
 			+ APOSTOPHE + DatabaseString.toQuerySubString(analysisType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 
 			+ APOSTOPHE + DatabaseString.toQuerySubString(analysisType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return sql;
 	}
-	
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		super.retrieveEntity(analysisType);
 		this.retrieveParameterTypes(analysisType);
 	}
-	
+
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws IllegalDataException, RetrieveObjectException, SQLException{
 		AnalysisType analysisType = storableObject == null ? 
 				new AnalysisType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null,null,null,null,null,null,null) : 
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 								   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 								   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -128,7 +126,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		List criteriaParTyps = new ArrayList();
 		List etalonParTyps = new ArrayList();
 		List outParTyps = new ArrayList();
-		
+
 		String analysisTypeIdStr = DatabaseIdentifier.toSQLString(analysisType.getId());
 		String sql = SQL_SELECT
 			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
@@ -344,7 +342,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
+	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		this.insertEntity(analysisType);
 		this.insertParameterTypes(analysisType);
@@ -352,8 +350,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
-		for(Iterator it=storableObjects.iterator();it.hasNext();){
-			AnalysisType analysisType = fromStorableObject((StorableObject)it.next());
+		for(Iterator it = storableObjects.iterator(); it.hasNext();) {
+			AnalysisType analysisType = this.fromStorableObject((StorableObject)it.next());
 			insertParameterTypes(analysisType);
 		}
 	}
@@ -458,10 +456,9 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				return;
 		}
 	}
-	
-	
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
-		VersionCollisionException, UpdateObjectException {		
+
+	public void update(List storableObjects, int updateKind, Object arg)
+			throws IllegalDataException, VersionCollisionException, UpdateObjectException {		
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, false);
@@ -472,9 +469,9 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				return;
 		}
 	}
-	
+
 	public void delete(StorableObject storableObject) throws IllegalDataException {
-		AnalysisType analysisType = fromStorableObject(storableObject);
+		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		String analysisTypeIdStr = DatabaseIdentifier.toSQLString(analysisType.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -505,15 +502,15 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
-	
+
 	public void delete (List storableObjects) {
 		//TODO implement this method
 	}
 
-	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
+	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
 		List list = null;
 		try {
-			list = retrieveByIds(null, COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds(null, COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
@@ -524,10 +521,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 		return (AnalysisType) list.get(0);
 	}
-	
+
 	public List retrieveAll() throws RetrieveObjectException {
-		try{
-			return retrieveByIds(null, null);
+		try {
+			return this.retrieveByIds(null, null);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide);
@@ -537,9 +534,9 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(ids, condition);
 
 		retrieveParameterTypesByOneQuery(list);
 
@@ -548,7 +545,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		AnalysisType analysisType = fromStorableObject(storableObject);
+		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseString.setString(preparedStatement, ++i, analysisType.getCodename(), SIZE_CODENAME_COLUMN);
@@ -588,7 +585,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 					+ CLOSE_BRACKET
 					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + MODE_CRITERION + APOSTOPHE;
 
-			return retrieveByIds(ids, condition);
+			return this.retrieveByIds(ids, condition);
 		}
 		return Collections.EMPTY_LIST;
 	}

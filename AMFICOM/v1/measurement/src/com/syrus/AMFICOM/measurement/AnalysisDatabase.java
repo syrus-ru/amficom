@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.31 2004/12/29 14:14:27 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.32 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/29 14:14:27 $
+ * @version $Revision: 1.32 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -83,7 +83,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		Analysis analysis = fromStorableObject(storableObject);
+		Analysis analysis = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getType().getId()); 
@@ -98,7 +98,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		Analysis analysis = fromStorableObject(storableObject);
+		Analysis analysis = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getMonitoredElementId()) + COMMA
@@ -110,7 +110,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Analysis analysis = (storableObject == null) ? 
 				new Analysis(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null) : 
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		AnalysisType analysisType;
 		Set criteriaSet;
 		try {
@@ -175,8 +175,8 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 
 	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retrieveByIdsOneQuery(null, conditions);
-		return retrieveByIdsOneQuery(ids, conditions);	
+			return this.retrieveByIdsOneQuery(null, conditions);
+		return this.retrieveByIdsOneQuery(ids, conditions);	
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}
 

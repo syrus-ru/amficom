@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.55 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.56 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.56 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -118,9 +118,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}	
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
-		Test test = fromStorableObject(storableObject);
+	protected String getUpdateSingleSQLValues(StorableObject storableObject)
+			throws IllegalDataException, UpdateObjectException {
+		Test test = this.fromStorableObject(storableObject);
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
 		TemporalPattern temporalPattern = test.getTemporalPattern();		
@@ -152,7 +152,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		
-		Test test = fromStorableObject(storableObject);
+		Test test = this.fromStorableObject(storableObject);
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
 		TemporalPattern temporalPattern = test.getTemporalPattern();		
@@ -194,7 +194,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		Test test = (storableObject == null)?
 				new Test(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
 						 null, null, null, null, 0, null, null) :
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		TemporalPattern temporalPattern;
 		MeasurementType measurementType;
 		AnalysisType analysisType;
@@ -748,9 +748,10 @@ public class TestDatabase extends StorableObjectDatabase {
 	public List retrieveTests(TestStatus status) throws RetrieveObjectException {
 		List list = null;
 		try{
-		list = retrieveByIds(null, COLUMN_STATUS + EQUALS + Integer.toString(status.value())
+			list = this.retrieveByIds(null, COLUMN_STATUS + EQUALS + Integer.toString(status.value())
 									+ SQL_ORDER_BY + COLUMN_START_TIME + SQL_ASC);
-		}catch(IllegalDataException ide){
+		}
+		catch(IllegalDataException ide) {
 			Log.debugMessage("TestDatabase.retrieveTests | Trying: " + ide, Log.DEBUGLEVEL09);
 		}
 		return list;
@@ -781,8 +782,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		List list = null;
 		
 		try {
-			list = retrieveByIds(null, condition);
-		}  catch (IllegalDataException ide) {			
+			list = this.retrieveByIds(null, condition);
+		}
+		catch (IllegalDataException ide) {			
 			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 		
@@ -793,8 +795,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		List list = null;
 		
 		try {
-			list = retrieveByIds(null, null);
-		}  catch (IllegalDataException ide) {			
+			list = this.retrieveByIds(null, null);
+		}
+		catch (IllegalDataException ide) {			
 			Log.debugMessage("TestDatabase.retrieveAll | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 		
@@ -824,8 +827,9 @@ public class TestDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
-		else list = retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
+		else
+			list = this.retrieveByIdsOneQuery(ids, condition);
 		
 		retrieveMeasurementSetupTestLinksByOneQuery(list);	
 		

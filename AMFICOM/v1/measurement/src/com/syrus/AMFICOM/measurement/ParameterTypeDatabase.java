@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.39 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.40 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.40 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -77,7 +77,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
-		ParameterType parameterType = fromStorableObject(storableObject);
+		ParameterType parameterType = this.fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
@@ -100,7 +100,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		ParameterType parameterType = (storableObject == null) ? 
 					new ParameterType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, DataType._DATA_TYPE_DATA) : 
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		parameterType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -162,8 +162,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		List list = null;
 		
 		try {
-			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-		}  catch (IllegalDataException ide) {				
+			list = this.retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+		}
+		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}
 		
@@ -175,22 +176,23 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	
 	public List retrieveAll() throws RetrieveObjectException {
 		try{
-			return retrieveByIds(null, null);
-		}catch(IllegalDataException ide){
+			return this.retrieveByIds(null, null);
+		}
+		catch(IllegalDataException ide){
 			throw new RetrieveObjectException(ide);
 		}
 	}
 
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retrieveByIdsOneQuery(null, condition);
-		return retrieveByIdsOneQuery(ids, condition);
+			return this.retrieveByIdsOneQuery(null, condition);
+		return this.retrieveByIdsOneQuery(ids, condition);
 	}
 	
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		ParameterType parameterType = fromStorableObject(storableObject);
+		ParameterType parameterType = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
 			DatabaseString.setString(preparedStatement, ++i, parameterType.getCodename(), SIZE_CODENAME_COLUMN);

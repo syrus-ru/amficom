@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.50 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.51 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.51 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -118,7 +118,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
-		Result result = fromStorableObject(storableObject);
+		Result result = this.fromStorableObject(storableObject);
 		StringBuffer buffer = new StringBuffer(super.getUpdateSingleSQLValues(storableObject));
 		buffer.append(COMMA);
 		int resultSort = result.getSort().value();
@@ -174,7 +174,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		Result result = fromStorableObject(storableObject);
+		Result result = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			int resultSort = result.getSort().value();
@@ -234,7 +234,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Result result = (storableObject == null) ? new Result(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 									null, null, null, 0, 0, null)
-				: fromStorableObject(storableObject);
+				: this.fromStorableObject(storableObject);
 		Measurement measurement = null;		
 		int resultSort = resultSet.getInt(COLUMN_SORT);
 		Action action = null;
@@ -608,7 +608,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(StorableObject storableObject) throws IllegalDataException {
-		Result result = fromStorableObject(storableObject);
+		Result result = this.fromStorableObject(storableObject);
 		String resultIdStr = DatabaseIdentifier.toSQLString(result.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -637,9 +637,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(ids, condition);
 
 		retrieveResultParametersByOneQuery(list);
 		// retrieveResultParameters(list);

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.45 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.46 2004/12/29 15:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.46 $, $Date: 2004/12/29 15:19:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -86,9 +86,9 @@ public class SetDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}	
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
-		Set set = fromStorableObject(storableObject);
+	protected String getUpdateSingleSQLValues(StorableObject storableObject)
+			throws IllegalDataException, UpdateObjectException {
+		Set set = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ Integer.toString(set.getSort().value()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(set.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
@@ -97,7 +97,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		Set set = fromStorableObject(storableObject);
+		Set set = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			preparedStatement.setInt(++i, set.getSort().value());
@@ -125,7 +125,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Set set = (storableObject == null) ?
 				new Set(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, 0, null, null, null) :			
-				fromStorableObject(storableObject);
+				this.fromStorableObject(storableObject);
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -679,7 +679,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(StorableObject storableObject) throws IllegalDataException {
-		Set set = fromStorableObject(storableObject);
+		Set set = this.fromStorableObject(storableObject);
 		String setIdStr = DatabaseIdentifier.toSQLString(set.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -721,7 +721,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	
 	public List retrieveAll() throws RetrieveObjectException {
 		try{
-			return retrieveByIds(null, null);
+			return this.retrieveByIds(null, null);
 		}catch(IllegalDataException ide){
 			throw new RetrieveObjectException(ide);
 		}
@@ -730,8 +730,9 @@ public class SetDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
-		else list = retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
+		else
+			list = this.retrieveByIdsOneQuery(ids, condition);
 		
 		retrieveSetParametersByOneQuery(list);
 		retrieveSetMELinksByOneQuery(list);
