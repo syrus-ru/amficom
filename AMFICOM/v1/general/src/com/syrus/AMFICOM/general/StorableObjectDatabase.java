@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.106 2005/02/22 11:10:16 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.107 2005/02/22 17:01:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/02/22 11:10:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.107 $, $Date: 2005/02/22 17:01:25 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -1033,7 +1033,7 @@ public abstract class StorableObjectDatabase {
 
 		Connection connection = DatabaseConnection.getConnection();
 		PreparedStatement preparedStatement = null;
-		Collection updatedStorableObjects = new HashSet();
+		Collection setUpdatedStorableObjects = new HashSet();
 		StorableObject storableObject;
 		String storableObjectIdCode = null;
 		try {
@@ -1044,13 +1044,14 @@ public abstract class StorableObjectDatabase {
 				storableObjectIdCode = storableObject.getId().getIdentifierString();
 
 				storableObject.setUpdated(modifierId);
+				setUpdatedStorableObjects.add(storableObject);
 
 				try {
 					int i = this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_UPDATE);
 					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
 				}
 				catch (IllegalDataException ide) {
-					for (Iterator it1 = updatedStorableObjects.iterator(); it1.hasNext();)
+					for (Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();)
 						((StorableObject) it1.next()).rollbackUpdate();
 					try {
 						connection.rollback();
@@ -1064,15 +1065,14 @@ public abstract class StorableObjectDatabase {
 				Log.debugMessage(this.getEnityName() + "Database.updateEntities | Updating " + this.getEnityName() + " " + storableObjectIdCode,
 						Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
-				updatedStorableObjects.add(storableObject);
 			}
 
 			connection.commit();
-			for (Iterator it1 = updatedStorableObjects.iterator(); it1.hasNext();)
+			for (Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();)
 				((StorableObject) it1.next()).cleanupUpdate();
 		}
 		catch (SQLException sqle) {
-			for (Iterator it1 = updatedStorableObjects.iterator(); it1.hasNext();)
+			for (Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();)
 				((StorableObject) it1.next()).rollbackUpdate();
 			try {
 				connection.rollback();
