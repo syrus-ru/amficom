@@ -337,6 +337,18 @@ module corba {
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
 						
 ///////////////////////////////////////// Configuration Transmit ///////////////////////////////////////////////
+		
+		// Reftresh Storable objects in Pool
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable transmitRefreshedConfigurationObjects(
+			in com::syrus::AMFICOM::general::corba::StorableObjectSeq_Transferable StorableObjects_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable transmitRefreshedMeasurementObjects(
+			in com::syrus::AMFICOM::general::corba::StorableObjectSeq_Transferable StorableObjects_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException); 
+		
 		com::syrus::AMFICOM::configuration::corba::Characteristic_Transferable transmitCharacteristic(
 			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
