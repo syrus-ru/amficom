@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.server.measurement;
 import java.util.LinkedList;
 import java.sql.Timestamp;
 import java.sql.SQLException;
-import oracle.sql.BLOB; 
 import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.CORBA.KIS.Analysis_Transferable;
 import com.syrus.AMFICOM.CORBA.Survey.ClientAnalysis_Transferable;

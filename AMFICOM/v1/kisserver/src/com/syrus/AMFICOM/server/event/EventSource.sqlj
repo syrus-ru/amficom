@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.util.Hashtable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.AMFICOM.CORBA.Alarm.EventSource_Transferable;
-import com.syrus.util.Log;
 
 public class EventSource {
   private String id;

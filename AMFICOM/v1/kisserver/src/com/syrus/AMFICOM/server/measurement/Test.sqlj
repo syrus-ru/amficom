@@ -10,12 +10,9 @@ import com.syrus.AMFICOM.CORBA.General.TestTimeStampsPackage.PeriodicalTestParam
 import com.syrus.AMFICOM.CORBA.General.TestReturnType;
 import com.syrus.AMFICOM.CORBA.General.TestRequestStatus;
 import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.CORBA.KIS.Analysis_Transferable;
 import com.syrus.AMFICOM.CORBA.KIS.Evaluation_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.CORBA.Survey.ClientTest_Transferable;
-import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
 import com.syrus.AMFICOM.CORBA.Survey.ElementaryTestAlarm;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.util.Log;
