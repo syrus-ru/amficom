@@ -349,9 +349,14 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		group4.add(paramsRadioButton);
 
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.gridy = 6;
+		/**
+		 * @TODO when ok
+		 */
+		if (false){
+		gbc.gridy++;
 		add(patternRadioButton, gbc);
-		gbc.gridy = 7;
+		}
+		gbc.gridy++;
 		add(paramsRadioButton, gbc);
 
 		JSeparator jsep2 = new JSeparator();
@@ -427,15 +432,20 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			gbc.gridheight = 1;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			pOptPanel.add(oneRadioButton, gbc);
-			pOptPanel.add(continuosRadioButton, gbc);
+			//pOptPanel.add(continuosRadioButton, gbc);
 			pOptPanel.add(periodicalRadioButton, gbc);
 
 			gbc.insets = new Insets(0, 10, 0, 10);
 			pOptPanel.add(minuteRadioButton, gbc);
 			pOptPanel.add(hourRadioButton, gbc);
+			/**
+			 * @TODO fix when day, week and month will be ok
+			 */
+			if (false){
 			pOptPanel.add(dayRadioButton, gbc);
 			pOptPanel.add(weekRadioButton, gbc);
 			pOptPanel.add(monthRadioButton, gbc);
+			}
 			gbc.insets = gbcInsetsDefault;
 
 			timeStamps = new JList();
@@ -472,10 +482,14 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		ButtonGroup group3 = new ButtonGroup();
 		group3.add(synchroRadioButton);
 		group3.add(alternateRadioButton);
+		/**
+		 * @TODO when ok
+		 */
+		if (false){
 		gbc.gridy++;
 		add(synchroRadioButton, gbc);
 		gbc.gridy++;
-		add(alternateRadioButton, gbc);
+		add(alternateRadioButton, gbc);		
 
 		JSeparator jsep4 = new JSeparator();
 		gbc.insets = UIStorage.INSETS1010;
@@ -484,6 +498,11 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		gbc.gridy++;
 		add(jsep4, gbc);
 		gbc.insets = gbcInsetsDefault;
+		} else{
+			gbc.gridy++;
+			gbc.gridheight = GridBagConstraints.RELATIVE;
+			add(new JLabel(), gbc);			
+		}
 
 		{
 			applyButton = new JButton(LangModelSchedule.getString("Apply"));
@@ -878,12 +897,12 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					HourSpinner hs = new HourSpinner();
 					hs.getModel().setValue(new Date(0));
 					p.add(hs);
-					p.add(new JLabel(" (mm:ss)"));
+					p.add(new JLabel(" (hh:mm)"));
 					int res = JOptionPane
 							.showConfirmDialog(HourPanel.this, p, "Добавить", JOptionPane.OK_CANCEL_OPTION);
 					if (res == JOptionPane.OK_OPTION) {
 						Date date = (Date) hs.getModel().getValue();
-						time.add(new SimpleDateFormat("mm:ss").format(date));
+						time.add(new SimpleDateFormat("HH:mm").format(date));
 						list.setListData(time.toArray());
 					}
 				}
@@ -935,7 +954,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				gbc.gridy++;
 				gbc.ipadx = 0;
 				gbc.weightx = 1.0;
-				panel.add(new JLabel("мм:сс"), gbc);
+				panel.add(new JLabel("чч:мм"), gbc);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gbc.gridx += 2;
 				gbc.weightx = 0.0;
@@ -961,9 +980,10 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					Calendar cal = Calendar.getInstance();
 					for (Iterator it = list.iterator(); it.hasNext();) {
 						DayTime dayTime = (DayTime) it.next();
+						cal.set(Calendar.HOUR_OF_DAY, dayTime.getHour());
 						cal.set(Calendar.MINUTE, dayTime.getMinute());
-						cal.set(Calendar.SECOND, dayTime.getSecond());
-						this.time.add(new SimpleDateFormat("mm:ss").format(cal.getTime()));
+						//cal.set(Calendar.SECOND, dayTime.getSecond());
+						this.time.add(new SimpleDateFormat("hh:mm").format(cal.getTime()));
 					}
 					this.list.setListData(time.toArray());
 					break;
@@ -982,9 +1002,13 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			ts.addTestDate(Calendar.HOUR_OF_DAY, 0);
 			for (Iterator it = time.iterator(); it.hasNext();) {
 				String str = (String) it.next();
-				int m = Integer.parseInt(str.substring(0, 2));
-				int s = Integer.parseInt(str.substring(3, 5));
-				ts.addTestTime(0, m, s);
+//				int m = Integer.parseInt(str.substring(0, 2));
+//				int s = Integer.parseInt(str.substring(3, 5));
+//				ts.addTestTime(0, m, s);
+				int h = Integer.parseInt(str.substring(0, 2));
+				int m = Integer.parseInt(str.substring(3, 5));
+				ts.addTestTime(h, m, 0);
+
 			}
 			if (time.size() == 0)
 				ts.addTestTime(0, 0, 0);

@@ -608,13 +608,13 @@ public class PlanPanel extends JPanel implements OperationListener {
 				tests.addAll(unsavedTests);
 		}
 
-		System.out.println("tests:" + (tests == null ? " is null" : "" + tests.size()));
+		//System.out.println("tests:" + (tests == null ? " is null" : "" + tests.size()));
 
 		if (tests != null) {
 			for (Iterator it = tests.iterator(); it.hasNext();) {
 				TestLine testLine;
 				Test test = (Test) it.next();
-				System.out.println(">>test:" + test.getId());
+				//System.out.println(">>test:" + test.getId());
 				if (this.testLines.containsKey(test.getMonitoredElementId()))
 					testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
 				else {
@@ -622,7 +622,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 					testLine = new TestLine(this.aContext,
 					//parent.getViewport(),
 											meName, this.scaleStart.getTime(), this.scaleEnd.getTime(), this.margin / 2);
-					testLine.setPreferredSize(new Dimension(0, 20));
+					testLine.setPreferredSize(new Dimension(0, 25));
 					this.testLines.put(test.getMonitoredElementId(), testLine);
 				}
 				testLine.addTest(test);

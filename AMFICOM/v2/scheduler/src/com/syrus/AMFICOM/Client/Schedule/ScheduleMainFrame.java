@@ -519,7 +519,7 @@ class ScheduleWindowArranger extends WindowArranger {
 
 		f.treeFrame.setSize(minWidth, h / 2);
 		f.propsFrame.setSize(minWidth, h / 4);
-		f.timeFrame.setSize(minWidth, Math.max(330, h / 2));
+		f.timeFrame.setSize(minWidth, Math.max(230, 2 * h / 5));
 		f.saveFrame.setSize(minWidth, 3 * h / 4 - f.timeFrame.getHeight());
 		f.paramsFrame.setSize(minWidth, h / 2);
 		f.planFrame.setSize(w - 2 * minWidth, h / 4 + f.timeFrame.getHeight());
