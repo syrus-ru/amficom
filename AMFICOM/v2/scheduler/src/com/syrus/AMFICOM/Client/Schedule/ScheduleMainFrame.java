@@ -33,7 +33,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	public static final String	CONTEXT_CHANGE		= "contextchange";
 
-	public static final String	SCHEDULER_INI_FILE	= "schedule.ini";
+//	public static final String	SCHEDULER_INI_FILE	= "schedule.ini";
 
 	ApplicationContext			aContext;
 	JDesktopPane				desktopPane			= new JDesktopPane();
@@ -144,14 +144,6 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		setSize(frameSize);
 		setLocation(0, 0);
-
-		try {
-			Properties properties = new Properties();
-			properties.load(new FileInputStream(SCHEDULER_INI_FILE));
-			Pool.put("inifile", "schedule", properties);
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
 
 		Environment.addWindow(this);
 		initModule();
@@ -428,14 +420,6 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			Environment.setActiveWindow(this);
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			try {
-				((Properties) Pool.get("inifile", "schedule")).store(new FileOutputStream(SCHEDULER_INI_FILE), null);
-			} catch (FileNotFoundException fnfe) {
-				Log.errorMessage("FileNotFoundException while closing main frame:" + fnfe.getMessage());
-			} catch (IOException ioe) {
-				Log.errorMessage("IOException while closing main frame:" + ioe.getMessage());
-			}
-
 			//cManager.saveIni();
 			this.dispatcher.unregister(this, CONTEXT_CHANGE);
 			Environment.the_dispatcher.unregister(this, CONTEXT_CHANGE);
