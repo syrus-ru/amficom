@@ -23,7 +23,8 @@ module corba {
 		wstring description;
 
 		wstring name;
-	};
+	};	
+	typedef sequence <ParameterType_Transferable> ParameterTypeSeq_Transferable;
 
 	struct MeasurementType_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
