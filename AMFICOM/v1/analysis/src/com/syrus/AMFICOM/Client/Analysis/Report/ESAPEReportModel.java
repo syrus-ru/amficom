@@ -132,7 +132,7 @@ abstract public class ESAPEReportModel extends APOReportModel
 		JComponent returnValue = null;
 		if (rp.getReserve() instanceof TableModel)
 		{
-			EvaluationTableReport er = new EvaluationTableReport(rp, divisionsNumber);
+			TableModelDividerReport er = new TableModelDividerReport(rp, divisionsNumber);
 			returnValue = new ReportResultsTablePanel(
 				er.columnModel,
 				er.tableModel,
