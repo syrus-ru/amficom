@@ -49,9 +49,9 @@ public class ReflectoEventStatistics
 	public MonitoredElement me;
 
 	public ReflectoEventStatistics(ReflectoEventContainer []statData,
-																 ReflectoEventContainer reference,
-																 long lowerTime, long upperTime,
-																 MonitoredElement me)
+			ReflectoEventContainer reference,
+			long lowerTime, long upperTime,
+			MonitoredElement me)
 	{
 		this.lowerTime = lowerTime;
 		this.upperTime = upperTime;
@@ -64,9 +64,9 @@ public class ReflectoEventStatistics
 	}
 
 	public ReflectoEventStatistics(ReflectoEventContainer []statData,
-															 ReflectoEventContainer reference,
-															 long lowerTime, long upperTime, MonitoredElement me,
-															 int waveLength)
+			ReflectoEventContainer reference,
+			long lowerTime, long upperTime, MonitoredElement me,
+			int waveLength)
 	{
 		this(statData, reference, lowerTime, upperTime, me);
 		this.waveLength = waveLength;
@@ -656,8 +656,7 @@ public class ReflectoEventStatistics
 		}
 		else
 		{
-			coord = (re.begin+
-							 re.end)/2;
+			coord = (re.begin+re.end)/2;
 		}
 		return coord;
 	}

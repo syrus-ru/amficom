@@ -87,12 +87,12 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements 
 				TimeDependencePanel panel = (TimeDependencePanel)p;
 
 				double factor_x = ((double)(panel.max_x - panel.min_x))/((double)(maxX)/scale_x);
-				double factor_y = ((double)(panel.max_y - panel.min_y))/((double)(maxY)/scale_y);
+				double factor_y = ((double)(panel.maxY - panel.minY))/((double)(maxY)/scale_y);
 
 				panel.left = (long)((double)((panel.max_x - panel.min_x) * hposition) / (hsize * factor_x));
 				panel.right = (long)((double)((panel.max_x - panel.min_x) * (hsize - hposition - hwidth)) / (hsize * factor_x));
-				panel.top = ((double)((panel.max_y - panel.min_y) * vposition) / (vsize * factor_y));
-				panel.bottom = ((double)((panel.max_y - panel.min_y) * (vsize - vposition - vheight)) / (vsize * factor_y));
+				panel.top = ((double)((panel.maxY - panel.minY) * vposition) / (vsize * factor_y));
+				panel.bottom = ((double)((panel.maxY - panel.minY) * (vsize - vposition - vheight)) / (vsize * factor_y));
 			}
 		}
 		jLayeredPane.repaint();
@@ -118,9 +118,9 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements 
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			TimeDependencePanel panel = (TimeDependencePanel)jLayeredPane.getComponent(i);
-			if((panel.max_y - panel.min_y) > max_trace_amplitude)
+			if((panel.maxY - panel.minY) > max_trace_amplitude)
 			{
-				max_trace_amplitude = panel.max_y - panel.min_y;
+				max_trace_amplitude = panel.maxY - panel.minY;
 				scale_y = (double)(jLayeredPane.getHeight()) / max_trace_amplitude;
 			}
 			if((panel.max_x - panel.min_x) > max_trace_width)
@@ -146,10 +146,10 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements 
 	void updScale2fit_panel(TimeDependencePanel panel)
 	{
 		double factor_x = (panel.max_x - panel.min_x)/(maxX/scale_x);
-		double factor_y = (panel.max_y - panel.min_y)/(maxY/scale_y);
+		double factor_y = (panel.maxY - panel.minY)/(maxY/scale_y);
 
-		panel.scale_x = factor_x*((double)(jLayeredPane.getWidth()) / (panel.max_x - panel.min_x));
-		panel.scale_y = factor_y*((double)(jLayeredPane.getHeight()) / (panel.max_y - panel.min_y));
+		panel.scaleX = factor_x*((double)(jLayeredPane.getWidth()) / (panel.max_x - panel.min_x));
+		panel.scaleY = factor_y*((double)(jLayeredPane.getHeight()) / (panel.maxY - panel.minY));
 		panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 	}
 

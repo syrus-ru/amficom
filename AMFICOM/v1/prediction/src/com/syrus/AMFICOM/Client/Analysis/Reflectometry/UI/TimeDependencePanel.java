@@ -47,8 +47,8 @@ public class TimeDependencePanel extends TraceEventsPanel
 
 		min_x = data[0].date;
 		max_x = data[0].date;
-		min_y = data[0].value;
-		max_y = data[0].value;
+		minY = data[0].value;
+		maxY = data[0].value;
 		for (int i = 1; i < data.length; i++)
 		{
 			if (data[i].date < min_x)
@@ -56,10 +56,10 @@ public class TimeDependencePanel extends TraceEventsPanel
 			else if (data[i].date > max_x)
 				max_x = data[i].date;
 
-			if (data[i].value < min_y)
-				min_y = data[i].value;
-			else if (data[i].value > max_y)
-				max_y = data[i].value;
+			if (data[i].value < minY)
+				minY = data[i].value;
+			else if (data[i].value > maxY)
+				maxY = data[i].value;
 		}
 
 		start = 0;
@@ -68,8 +68,8 @@ public class TimeDependencePanel extends TraceEventsPanel
 		right = 0;
 
 		// default values of scales - fitted to panel size
-		scale_x = (double)getWidth() / (max_x - min_x);
-		scale_y = (double)getHeight() / (max_y - min_y);
+		scaleX = (double)getWidth() / (max_x - min_x);
+		scaleY = (double)getHeight() / (maxY - minY);
 
 		//Kx = 1/3600000d; // время в часах
 		Kx = 1/60000d; // время в минутах
@@ -98,25 +98,25 @@ public class TimeDependencePanel extends TraceEventsPanel
 
 		g.setColor(scaleColor);
 
-		double m = calcTimeDistance (cell_w / scale_x * Kx); // единиц на одно деление
-		double delta =	m * scale_x / Kx; // число экранных точек на одно деление
-		int x = (int)(((int)(left * Kx / m) ) * delta - left * scale_x);
+		double m = calcTimeDistance (cell_w / scaleX * Kx); // единиц на одно деление
+		double delta =	m * scaleX / Kx; // число экранных точек на одно деление
+		int x = (int)(((int)(left * Kx / m) ) * delta - left * scaleX);
 
 		for (int i = 0; i < jw / delta + 1; i++)
 			g.drawLine((int)(i * delta + x), 0, (int)(i * delta + x), jh);
 
-		m = calcNodeDistance (cell_h / scale_y * Ky);
-		delta =m * scale_y / Ky;
+		m = calcNodeDistance (cell_h / scaleY * Ky);
+		delta =m * scaleY / Ky;
 
 		if (inversed_y)
 		{
-			x = (int)(((int)(top * Ky / m) ) * delta - top * scale_y);
+			x = (int)(((int)(top * Ky / m) ) * delta - top * scaleY);
 			for (int i=0; i < jh / delta + 1; i++)
 				g.drawLine(0, (int)(i * delta + x - 1), jw,	(int)(i * delta + x - 1));
 		}
 		else
 		{
-			x = (int)(((int)(bottom * Ky / m) ) * delta - bottom * scale_y);
+			x = (int)(((int)(bottom * Ky / m) ) * delta - bottom * scaleY);
 			for (int i=0; i < jh / delta + 2; i++)
 				g.drawLine(0, (int)(jh - (i * delta + x) - 1), jw,	(int)(jh - (i * delta + x) - 1));
 		}
@@ -129,9 +129,9 @@ public class TimeDependencePanel extends TraceEventsPanel
 
 		g.setColor(scaleDigitColor);
 
-		double m = calcTimeDistance (cell_w / scale_x * Kx); // единиц на одно деление
-		double delta =	m * scale_x / Kx; // число экранных точек на одно деление
-		int x = (int)(((int)(left * Kx / m) ) * delta - left * scale_x); // сдвиг относительно начала
+		double m = calcTimeDistance (cell_w / scaleX * Kx); // единиц на одно деление
+		double delta =	m * scaleX / Kx; // число экранных точек на одно деление
+		int x = (int)(((int)(left * Kx / m) ) * delta - left * scaleX); // сдвиг относительно начала
 
 		for (int i = 0; i < jw / delta + 1; i++)
 		{
@@ -142,24 +142,24 @@ public class TimeDependencePanel extends TraceEventsPanel
 			g.drawString(s, (int)(i * delta + x - 12), jh - 5);
 		}
 
-		m = calcNodeDistance (cell_h / scale_y * Ky);
-		delta =	m * scale_y / Ky;
+		m = calcNodeDistance (cell_h / scaleY * Ky);
+		delta =	m * scaleY / Ky;
 
 		if (inversed_y)
 		{
-			x = (int) (((int)(top * Ky / m) ) * delta - top * scale_y);
+			x = (int) (((int)(top * Ky / m) ) * delta - top * scaleY);
 			for (int i=0; i < jh / delta + 1; i++)
 			{
-				double d = (int)(((min_y * Ky) + (top * Ky)) / m + i) * m;
+				double d = (int)(((minY * Ky) + (top * Ky)) / m + i) * m;
 				g.drawString(String.valueOf(MathRef.round_4 (d)), 1, (int)(i * delta + x + 10));
 			}
 		}
 		else
 		{
-			x = (int) (((int)(bottom * Ky / m) ) * delta - bottom * scale_y);
+			x = (int) (((int)(bottom * Ky / m) ) * delta - bottom * scaleY);
 			for (int i=0; i < jh / delta + 2; i++)
 			{
-				double d = ((int)((min_y * Ky) / m) * m) + (i + (int)(bottom * Ky / m) ) * m;
+				double d = ((int)((minY * Ky) / m) * m) + (i + (int)(bottom * Ky / m) ) * m;
 				g.drawString(String.valueOf(MathRef.round_4 (d)), 1, (int)(jh - (i * delta + x) + 10));
 			}
 		}
@@ -175,8 +175,8 @@ public class TimeDependencePanel extends TraceEventsPanel
 
 		for (int i = Math.max(0, -start); i < Math.min(end, data.length) - start; i++)
 		{
-			int x1 = (int)((data[i+start].date - min_x - left) * scale_x + 1);
-			int y1 = (int)((max_y - data[i+start].value - top) * scale_y - 1);
+			int x1 = (int)((data[i+start].date - min_x - left) * scaleX + 1);
+			int y1 = (int)((maxY - data[i+start].value - top) * scaleY - 1);
 			g.fillOval(x1 - 4, y1 - 3, 8, 8);
 		}
 	}
@@ -190,10 +190,10 @@ public class TimeDependencePanel extends TraceEventsPanel
 
 		for (int i = Math.max(0, -start); i < Math.min(end, data.length) - start - 1; i++)
 		{
-			int x1 = (int)((data[i+start].date - min_x - left) * scale_x + 1);
-			int y1 = (int)((max_y - data[i+start].value - top) * scale_y - 1);
-			int x2 = (int)((data[i+start+1].date - min_x - left) * scale_x + 1);
-			int y2 = (int)((max_y - data[i+start+1].value - top) * scale_y - 1);
+			int x1 = (int)((data[i+start].date - min_x - left) * scaleX + 1);
+			int y1 = (int)((maxY - data[i+start].value - top) * scaleY - 1);
+			int x2 = (int)((data[i+start+1].date - min_x - left) * scaleX + 1);
+			int y2 = (int)((maxY - data[i+start+1].value - top) * scaleY - 1);
 			g.drawLine(x1, y1, x2, y2);
 		}
 	}
@@ -202,10 +202,10 @@ public class TimeDependencePanel extends TraceEventsPanel
 	{
 		if(linearCoeffs != null && data.length > 0)
 		{
-			int x1 = (int)((data[0].date - min_x - left) * scale_x + 1);
-			int x2 = (int)((data[data.length - 1].date - min_x - left) * scale_x + 1);
-			int y1 = (int)((max_y - linearCoeffs.f((double)data[0].date)-top)*scale_y - 1);
-			int y2 = (int)((max_y - linearCoeffs.f((double)data[data.length - 1].date)-top)*scale_y - 1);
+			int x1 = (int)((data[0].date - min_x - left) * scaleX + 1);
+			int x2 = (int)((data[data.length - 1].date - min_x - left) * scaleX + 1);
+			int y1 = (int)((maxY - linearCoeffs.f((double)data[0].date)-top)*scaleY - 1);
+			int y2 = (int)((maxY - linearCoeffs.f((double)data[data.length - 1].date)-top)*scaleY - 1);
 
 			g.setColor(Color.GREEN);
 			g.drawLine(x1, y1, x2, y2);
