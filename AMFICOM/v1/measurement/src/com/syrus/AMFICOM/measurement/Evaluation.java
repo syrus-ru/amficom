@@ -14,6 +14,9 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 public class Evaluation extends Action {
 	private Set thresholdSet;
+	/**
+	 * @deprecated This field will be removed. Method {@link #getEtalon()} will be removed also
+	 */
 	private Set etalon;
 
 	private StorableObjectDatabase evaluationDatabase;
@@ -40,6 +43,9 @@ public class Evaluation extends Action {
 					new Identifier(et.monitored_element_id));
 		try {
 			this.thresholdSet = new Set(new Identifier(et.threshold_set_id));
+			/**
+			 * @deprecated This field will be removed.
+			 */
 			this.etalon = new Set(new Identifier(et.etalon_id));
 		}
 		catch (RetrieveObjectException roe) {
@@ -63,6 +69,9 @@ public class Evaluation extends Action {
 										 Identifier typeId,
 										 Identifier monitoredElementId,
 										 Set thresholdSet,
+										 /**
+											* @deprecated This field will be removed.
+											*/
 										 Set etalon) throws CreateObjectException {
 		super(id,
 					new Date(System.currentTimeMillis()),
@@ -72,6 +81,9 @@ public class Evaluation extends Action {
 					typeId,
 					monitoredElementId);
 		this.thresholdSet = thresholdSet;
+		/**
+		 * @deprecated This field will be removed.
+		 */
 		this.etalon = etalon;
 
 		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
@@ -92,6 +104,9 @@ public class Evaluation extends Action {
 																			 (Identifier_Transferable)super.typeId.getTransferable(),
 																			 (Identifier_Transferable)super.monitoredElementId.getTransferable(),
 																			 (Identifier_Transferable)this.thresholdSet.getId().getTransferable(),
+																			 /**
+																				* @deprecated This field will be removed.
+																				*/
 																			 (Identifier_Transferable)this.etalon.getId().getTransferable());
 	}
 
@@ -99,6 +114,9 @@ public class Evaluation extends Action {
 		return this.thresholdSet;
 	}
 
+	/**
+	 * @deprecated This method will be removed.
+	 * */
 	public Set getEtalon() {
 		return this.etalon;
 	}
@@ -110,6 +128,9 @@ public class Evaluation extends Action {
 																						Identifier typeId,
 																						Identifier monitoredElementId,
 																						Set thresholdSet,
+																						/**
+																						 * @deprecated This field will be removed.
+																						 * */
 																						Set etalon) {
 		super.setAttributes(created,
 												modified,
@@ -118,6 +139,9 @@ public class Evaluation extends Action {
 												typeId,
 												monitoredElementId);
 		this.thresholdSet = thresholdSet;
+		/**
+		 * @deprecated This field will be removed.
+		 */
 		this.etalon = etalon;
 	}
 
@@ -140,12 +164,18 @@ public class Evaluation extends Action {
 																	Identifier typeId,
 																	Identifier monitoredElementId,
 																	Set thresholdSet,
+																	/**
+																	 * @deprecated This field will be removed.
+																	 */
 																	Set etalon) throws CreateObjectException {
 		return new Evaluation(id,
 													creatorId,
 													typeId,
 													monitoredElementId,
 													thresholdSet,
+													/**
+													 * @deprecated This field will be removed.
+													 */
 													etalon);
 	}
 }
