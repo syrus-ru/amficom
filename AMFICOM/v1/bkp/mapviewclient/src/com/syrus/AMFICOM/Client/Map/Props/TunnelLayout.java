@@ -55,6 +55,19 @@ public class TunnelLayout implements OperationListener
 		return panel;
 	}
 
+	protected void removeSelection()
+	{
+		panel.getGraph().removeSelectionCells();
+
+		for (int i = 0; i < m; i++) 
+		{
+			for (int j = 0; j < n; j++) 
+			{
+				GraphActions.setObjectBackColor(panel.getGraph(), cells[i][j], Color.WHITE);
+			}
+		}
+	}
+
 	public void operationPerformed(OperationEvent oe)
 	{
 		if (oe.getActionCommand().equals(SchemeNavigateEvent.type))
@@ -63,15 +76,7 @@ public class TunnelLayout implements OperationListener
 			if (ev.OTHER_OBJECT_SELECTED)
 			{
 				Object[] objs = (Object[])ev.getSource();
-				panel.getGraph().removeSelectionCells();
-
-				for (int i = 0; i < m; i++) 
-				{
-					for (int j = 0; j < n; j++) 
-					{
-						GraphActions.setObjectBackColor(panel.getGraph(), cells[i][j], Color.WHITE);
-					}
-				}
+				removeSelection();
 
 				for (int k = 0; k < objs.length; k++)
 				{
@@ -138,18 +143,15 @@ public class TunnelLayout implements OperationListener
 
 	public void setActiveElement(ObjectResource or)
 	{
+		removeSelection();
 		activeCoordinates = binding.getBinding(or);
 		if(activeCoordinates != null)
 			panel.getGraph().setSelectionCell(cells[activeCoordinates.x][activeCoordinates.y]);
 	}
 	
-//	public ObjectResource getActiveElement()
-//	{
-//		return binding.getBound(activeCoordinates.x, activeCoordinates.y);
-//	}
-
 	public void setActiveCoordinates(Point activeCoordinates)
 	{
+		removeSelection();
 		this.activeCoordinates = activeCoordinates;
 		panel.getGraph().setSelectionCell(cells[activeCoordinates.x][activeCoordinates.y]);
 	}
@@ -161,12 +163,45 @@ public class TunnelLayout implements OperationListener
 
 	public void updateElements()
 	{
-		for (int i = 0; i < m; i++) 
+		int counter = 1;
+		int limit = n * m;
+
+		int istart = binding.isLeftToRight() ? 0 : m - 1;
+		int jstart = binding.isTopToBottom() ? 0 : n - 1;
+
+		int iend = m - 1 - istart;
+		int jend = n - 1 - jstart;
+
+		int iincrement = binding.isLeftToRight() ? 1 : -1;
+		int jincrement = binding.isTopToBottom() ? 1 : -1;
+
+		int i = istart;
+		int j = jstart;
+
+		while(true)
 		{
-			for (int j = 0; j < n; j++) 
+			GraphActions.setText(panel.getGraph(),cells[i][j], String.valueOf(counter++));
+			if(counter > limit)
+				break;
+			if(binding.isHorizontalVertical())
 			{
-				List list = binding.getBound(i, j);
-				cells[i][j].setUserObject(String.valueOf(list.size()));
+				if(i == iend)
+				{
+					i = istart;
+					j += jincrement;
+				}
+				else
+					i += iincrement;
+			}
+			else
+			{
+				if(j == jend)
+				{
+					j = jstart;
+					i += iincrement;
+				}
+				else
+					j += jincrement;
 			}
 		}
 	}

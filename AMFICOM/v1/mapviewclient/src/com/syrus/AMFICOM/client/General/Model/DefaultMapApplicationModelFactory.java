@@ -7,6 +7,9 @@ public class DefaultMapApplicationModelFactory
 	{
 		ApplicationModel aModel = super.create();
 
+		// need to check how distance is measured in equirectangular projection
+		aModel.setVisible(MapApplicationModel.OPERATION_MOVE_FIXED, false);
+
 		return aModel;
 	}
 }

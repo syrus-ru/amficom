@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.28 2004/11/10 15:58:30 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.29 2004/11/18 14:13:43 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -46,7 +46,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.28 $, $Date: 2004/11/10 15:58:30 $
+ * @version $Revision: 1.29 $, $Date: 2004/11/18 14:13:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -85,16 +85,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	protected boolean nodeLinksSorted = false;
 
 	protected MapPhysicalLinkBinding binding;
-
-	/**
-	 * пор€док нумерации труб сверху вниз
-	 */	
-	protected boolean topToBottom = true;
-
-	/**
-	 * пор€док нумерации слева направо
-	 */	
-	protected boolean leftToRight = true;
 
 	public static String[][] exportColumns = null;
 
@@ -898,5 +888,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	{
 		return proto.getAlarmedLineSize();
 	}
+
+
 	
 }

@@ -4,6 +4,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
@@ -11,6 +12,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
+import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
@@ -23,12 +25,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.Box;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public final class MapLinkBindPanel extends JPanel implements ObjectResourcePropertiesPane
 {
@@ -42,13 +48,34 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 	private TunnelLayout tunnelLayout = null;
 
 	private JPanel jPanel1 = new JPanel();
-	private JButton bindButton = new JButton();
+	private JToggleButton bindButton = new JToggleButton();
 	private JButton unbindButton = new JButton();
 
+	private JLabel horvertLabel = new JLabel();
 	private JLabel topDownLabel = new JLabel();
 	private JLabel leftRightLabel = new JLabel();
 	
 	private List unboundElements = new LinkedList();
+
+	private boolean processSelection = true;
+
+	private static Icon horverticon;
+	private static Icon verthoricon;
+
+	private static Icon topdownicon;
+	private static Icon downtopicon;
+	private static Icon leftrighticon;
+	private static Icon rightlefticon;
+
+	static
+	{
+		horverticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/horvert.gif"));
+		verthoricon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/verthor.gif"));
+		topdownicon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/topdown.gif"));
+		downtopicon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/downtop.gif"));
+		leftrighticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/leftright.gif"));
+		rightlefticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/rightleft.gif"));
+	}
 
 	public MapLinkBindPanel()
 	{
@@ -73,8 +100,15 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 			{
 				public void valueChanged(ListSelectionEvent e)
 				{
-					ObjectResource or = cableList.getSelectedObjectResource();
-					cableSelected(or);
+					if(processSelection)
+					{
+						processSelection = false;
+						ObjectResource or = cableList.getSelectedObjectResource();
+						cableSelected(or);
+						bindButton.setEnabled(or != null);
+						unbindButton.setEnabled(or != null);
+						processSelection = true;
+					}
 				}
 			});
 		bindButton.setText("Привязать");
@@ -82,8 +116,9 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					ObjectResource or = cableList.getSelectedObjectResource();
-					bind(or);
+					setBindMode(bindButton.isSelected());
+//					ObjectResource or = cableList.getSelectedObjectResource();
+//					bind(or);
 				}
 			});
 		unbindButton.setText("Отвязать");
@@ -98,17 +133,67 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 		jPanel1.add(bindButton, null);
 		jPanel1.add(unbindButton, null);
 
-		topDownLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/topdown.gif")));
-		leftRightLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/leftright.gif")));
+		horvertLabel.addMouseListener(new MouseListener()
+			{
+				public void mouseClicked(MouseEvent e)
+				{
+					link.getBinding().flipHorizontalVertical();
+					horvertLabel.setIcon(link.getBinding().isHorizontalVertical() ?
+						horverticon : verthoricon);
+					tunnelLayout.updateElements();
+				}
+				public void mouseEntered(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+				public void mousePressed(MouseEvent e) {}
+				public void mouseReleased(MouseEvent e) {}
+			});
+
+		topDownLabel.addMouseListener(new MouseListener()
+			{
+				public void mouseClicked(MouseEvent e)
+				{
+					link.getBinding().flipTopToBottom();
+					topDownLabel.setIcon(link.getBinding().isTopToBottom() ?
+						topdownicon : downtopicon);
+					tunnelLayout.updateElements();
+				}
+				public void mouseEntered(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+				public void mousePressed(MouseEvent e) {}
+				public void mouseReleased(MouseEvent e) {}
+			});
+
+		leftRightLabel.addMouseListener(new MouseListener()
+			{
+				public void mouseClicked(MouseEvent e) 
+				{
+					link.getBinding().flipLeftToRight();
+					leftRightLabel.setIcon(link.getBinding().isLeftToRight() ?
+						leftrighticon : rightlefticon);
+					tunnelLayout.updateElements();
+				}
+				public void mouseEntered(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+				public void mousePressed(MouseEvent e) {}
+				public void mouseReleased(MouseEvent e) {}
+			});
+
+		horvertLabel.setIcon(horverticon);
+		topDownLabel.setIcon(topdownicon);
+		leftRightLabel.setIcon(leftrighticon);
 		
-		this.add(titleLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(cableList, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));
-		this.add(Box.createVerticalGlue(), com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
+		this.add(titleLabel, ReusedGridBagConstraints.get(0, 0, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(cableList, ReusedGridBagConstraints.get(0, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));
+		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
 //		this.add(Box.createGlue(), ReusedGridBagConstraints.get(2, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(leftRightLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(topDownLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
-		this.add(tunnelLayout.getPanel(), com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(3, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(jPanel1, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(horvertLabel, ReusedGridBagConstraints.get(2, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(leftRightLabel, ReusedGridBagConstraints.get(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(topDownLabel, ReusedGridBagConstraints.get(2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
+		this.add(tunnelLayout.getPanel(), ReusedGridBagConstraints.get(3, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(jPanel1, ReusedGridBagConstraints.get(0, 3, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+
+		bindButton.setEnabled(false);
+		unbindButton.setEnabled(false);
 	}
 
 	public ObjectResource getObjectResource()
@@ -155,22 +240,36 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 
 	public void cableBindingSelected(int col, int row)
 	{
-//		tunnelLayout.setActiveCoordinates(new Point(col, row));
-		MapPhysicalLinkBinding binding = link.getBinding();
-		List list = binding.getBindObjects();
-		if(list != null)
+		if(processSelection)
 		{
-			cableList.getSelectionModel().clearSelection();
-			for(Iterator it = list.iterator(); it.hasNext();)
+			processSelection = false;
+			if(bindButton.isSelected())
 			{
-				MapCablePathElement cp = (MapCablePathElement )it.next();
-				Point position = cp.getBindingPosition(link);
-				if(position.x == col
-					&& position.y == row)
+				ObjectResource or = cableList.getSelectedObjectResource();
+				bind(or);
+				bindButton.setSelected(false);
+				setBindMode(false);
+			}
+			else
+			{
+				MapPhysicalLinkBinding binding = link.getBinding();
+				List list = binding.getBindObjects();
+				if(list != null)
 				{
-					cableList.setSelected(cp);
+					cableList.getSelectionModel().clearSelection();
+					for(Iterator it = list.iterator(); it.hasNext();)
+					{
+						MapCablePathElement cp = (MapCablePathElement )it.next();
+						Point position = cp.getBindingPosition(link);
+						if(position.x == col
+							&& position.y == row)
+						{
+							cableList.setSelected(cp);
+						}
+					}
 				}
 			}
+			processSelection = true;
 		}
 	}
 
@@ -181,7 +280,25 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 		if(pt != null)
 		{
 			binding.bind(or, pt.x, pt.y);
+			MapCablePathElement cp = (MapCablePathElement )or;
+			CableChannelingItem cci = (CableChannelingItem )(cp.getBinding().get(link));
+			cci.row_x = pt.x;
+			cci.place_y = pt.y;
 			tunnelLayout.updateElements();
+		}
+	}
+	
+	private void setBindMode(boolean bindModeEnabled)
+	{
+		if(bindModeEnabled)
+		{
+			cableList.setEnabled(false);
+			unbindButton.setEnabled(false);
+		}
+		else
+		{
+			cableList.setEnabled(true);
+			unbindButton.setEnabled(true);
 		}
 	}
 

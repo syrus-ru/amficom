@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.3 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.4 2004/11/18 14:14:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import java.util.LinkedList;
  * данная команда
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/18 14:14:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -163,7 +163,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 				nodeLink.setPhysicalLinkId(physicalLink.getId());
 
 				// Коррекция начального и конечного узлов линии
-				if(physicalLink.getEndNode() == startNode)
+				if(physicalLink.getEndNode() == mpne)
 					physicalLink.setEndNode(physicalLink.getStartNode());
 				physicalLink.setStartNode(startNode);
 

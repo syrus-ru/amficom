@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkBinding.java,v 1.4 2004/10/18 12:43:13 krupenn Exp $
+ * $Id: MapPhysicalLinkBinding.java,v 1.5 2004/11/18 14:13:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/18 12:43:13 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/18 14:13:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -42,7 +42,23 @@ public final class MapPhysicalLinkBinding
 	
 	/** размерность тоннеля (матрица труб) */
 	private Dimension dimension = null;
-	
+
+	/**
+	 * порядок нумерации труб сверху вниз
+	 */	
+	protected boolean topToBottom = true;
+
+	/**
+	 * порядок нумерации слева направо
+	 */	
+	protected boolean leftToRight = true;
+
+	/**
+	 * порядок нумерации сначала по горизонтали, затем по вертикали
+	 */	
+	protected boolean horizontalVertical = true;
+
+
 	public MapPhysicalLinkBinding(Dimension bindingDimension)
 	{
 		setDimension(bindingDimension);
@@ -201,5 +217,40 @@ public final class MapPhysicalLinkBinding
 			}
 		}
 		return null;
+	}
+
+	public void flipTopToBottom()
+	{
+		topToBottom = !topToBottom;
+	}
+
+
+	public boolean isTopToBottom()
+	{
+		return topToBottom;
+	}
+
+
+	public void flipLeftToRight()
+	{
+		leftToRight = !leftToRight;
+	}
+
+
+	public boolean isLeftToRight()
+	{
+		return leftToRight;
+	}
+
+
+	public void flipHorizontalVertical()
+	{
+		horizontalVertical = !horizontalVertical;
+	}
+
+
+	public boolean isHorizontalVertical()
+	{
+		return horizontalVertical;
 	}
 }
