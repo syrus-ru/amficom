@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.5 2004/12/08 08:48:42 bass Exp $
+ * $Id: scheme-vt.idl,v 1.6 2004/12/10 16:51:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -294,8 +294,8 @@ module com {
 					valuetype SchemeCableLink:
 							AbstractSchemeLink,
 							configuration::ComSyrusAmficomConfigurationSchemeCableLink {
-						private general::corba::IdentifierSeq SchemeCableThreadIds;
-						private general::corba::IdentifierSeq CableChannelingItemIds;
+						private general::corba::IdentifierSeq schemeCableThreadIds;
+						private general::corba::IdentifierSeq cableChannelingItemIds;
 
 						/**
 						 * @see AbstractSchemeLink#sourceAbstractSchemePortId
