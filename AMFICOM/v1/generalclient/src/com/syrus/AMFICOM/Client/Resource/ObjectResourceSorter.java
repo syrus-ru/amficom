@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceSorter.java,v 1.5 2004/08/19 06:47:31 bob Exp $
+ * $Id: ObjectResourceSorter.java,v 1.6 2004/08/19 06:49:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.Client.Resource;
 import java.util.*;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/19 06:47:31 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/19 06:49:36 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -32,6 +32,10 @@ public abstract class ObjectResourceSorter {
 	public static final int		SORT_DESCENDING			= 1;
 
 	List						list;
+	
+	public ObjectResourceSorter(){
+		// empty constuctor
+	}
 
 	public ObjectResourceSorter(Collection collection) {
 		setDataSet(collection);
