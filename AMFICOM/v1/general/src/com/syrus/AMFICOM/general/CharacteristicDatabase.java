@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.12 2005/02/11 10:22:30 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.13 2005/02/11 10:24:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/11 10:22:30 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/11 10:24:22 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -367,7 +367,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids);
 	}	
 
-	public void updateCharacteristics(StorableObject storableObject, Identifier modifierId) throws UpdateObjectException {
+	public void updateCharacteristics(StorableObject storableObject) throws UpdateObjectException {
 		if (!(storableObject instanceof Characterized)) {
 			String mesg = "CharacteristicDatabase.updateCharacteristics | Storable object " +
 				storableObject.getClass().getName() + " is not a type of Characterized";
@@ -411,7 +411,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			}
 
 			//  insert or update
-			super.checkAndUpdateEntities(characteristics, modifierId, true);
+			super.checkAndUpdateEntities(characteristics, storableObject.modifierId, true);
 		}
 		catch (SQLException sqle) {
 			String mesg = "CharacteristicDatabase.updateCharacteristics | SQLException: " + sqle.getMessage();
