@@ -3,12 +3,6 @@ package com.syrus.AMFICOM.server.event;
 import java.util.Vector;
 import java.util.Hashtable;
 
-class LogicParam {
-	int nr;
-	Vector pos = new Vector();
-	String val;
-}
-
 public class RuleParser {
 	String logic;
 	Hashtable logicParams = new Hashtable();
@@ -139,5 +133,11 @@ public class RuleParser {
 
 	public String getDescriptor() {
 		return this.descriptor;
+	}
+
+	private class LogicParam {
+		int nr;
+		Vector pos = new Vector();
+		String val;
 	}
 }
