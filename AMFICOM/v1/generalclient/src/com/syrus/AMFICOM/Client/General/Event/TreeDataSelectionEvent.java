@@ -2,68 +2,31 @@ package com.syrus.AMFICOM.Client.General.Event;
 
 import java.util.Collection;
 
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import java.util.LinkedList;
 import java.util.List;
 
 public class TreeDataSelectionEvent extends OperationEvent
 {
-	List dataSet;
-	Class dataClass;
-	int selected;
+	private Class dataClass;
+	private int selected;
 	
-	Collection collection;
+	private List list;
 
-	public Object param = null;
-	/**
-	 * @deprecated use use getter accessor for this field
-	 */
-	public Object selectedObject = null;
+//	private Object param = null;
+	private Object selectedObject = null;
 
 	public static final String type = "treedataselectionevent";
-
-	/**
-	 * @deprecated use  TreeDataSelectionEvent(Object source, Collection collection, Class dataClass, int selected, Object selectedObject)
-	 * DataSet usage is deprecated
-	 * @param source
-	 * @param dataSet
-	 * @param dataClass
-	 * @param selected
-	 * @param selectedObject
-	 */
-	public TreeDataSelectionEvent(Object source, List dataSet, Class dataClass, int selected, Object selectedObject)
+	
+	public TreeDataSelectionEvent(Object source, List list, Class dataClass, int selected, Object selectedObject)
 	{
 		super(source, 0, type);
-		this.dataSet = dataSet;
+		this.list = list;
 		this.dataClass = dataClass;
 		this.selected = selected;
 		this.selectedObject = selectedObject;
 	}
 	
-	public TreeDataSelectionEvent(Object source, Collection collection, Class dataClass, int selected, Object selectedObject)
-	{
-		super(source, 0, type);
-		this.collection = collection;
-		this.dataClass = dataClass;
-		this.selected = selected;
-		this.selectedObject = selectedObject;
-	}
-
-	/**
-	 * @deprecated DataSet usage is deprecated, use Collection
-	 * @return
-	 */
-	public List getDataSet()
-	{
-		if (this.dataSet == null){
-			this.dataSet = new LinkedList();
-			this.dataSet.addAll(this.collection);
-		}
-		return this.dataSet;
-	}
-	
-	public Collection getCollection(){
-		return this.collection;
+	public Collection getList(){
+		return this.list;
 	}
 
 	public Class getDataClass()
