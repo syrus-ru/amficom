@@ -14,19 +14,13 @@ public class ContinuousTestProcessor extends TestProcessor {
 	private int status;
 
 	public ContinuousTestProcessor(Test test) {
-		super(test);
-		Date[] dti = super.test.getTTTimestamps();
-		this.ti = new long[dti.length];
-		for (int i = 0; i < this.ti.length; i++)
-			this.ti[i] = dti[i].getTime();
-		this.status = STATUS_NEW_MEASUREMENT;
 	}
 
 	public void run() {
 		Measurement measurement = null;
 		while (super.running) {
 			try {
-				sleep(super.tick_time);
+				sleep(super.tickTime);
 			}
 			catch (InterruptedException ie) {
 				Log.errorException(ie);
@@ -34,33 +28,14 @@ public class ContinuousTestProcessor extends TestProcessor {
 
 			switch (this.status) {
 				case STATUS_NEW_MEASUREMENT:
-					if (super.n_measurements < this.ti.length) {
-						measurement = null;
-						try {
-							measurement = super.test.createMeasurement(MeasurementControlModule.createIdentifier("measurement"),
-																												 new Date(ti[super.n_measurements]));
-							if (measurement != null)
-								this.status = STATUS_MEASUREMENT_IS_WAITING;
-						}
-						catch (Exception e) {
-							Log.errorException(e);
-						}
-					}
-					else
-						this.status = STATUS_LAST_MEASUREMENT_GONE;
 					break;
 				case STATUS_MEASUREMENT_IS_WAITING:
-					if (measurement != null && ti[super.n_measurements] <= System.currentTimeMillis()) {
-						super.transceiver.addMeasurement(measurement, this);
-						super.n_measurements ++;
-						this.status = STATUS_NEW_MEASUREMENT;
-					}
 					break;
 				case STATUS_LAST_MEASUREMENT_GONE:
 					break;
 			}//switch
 
-			if (this.status != STATUS_LAST_MEASUREMENT_GONE || super.n_measurements < super.n_reports)
+			if (this.status != STATUS_LAST_MEASUREMENT_GONE || super.nMeasurements < super.nReports)
 				super.checkMeasurementResults();
 			else
 				break;

@@ -20,28 +20,28 @@ import com.syrus.util.Log;
 public abstract class TestProcessor extends Thread {
 	Test test;
 	/*	Number of measurements, passed to transceiver */
-	int n_measurements;
+	int nMeasurements;
 	/*	Number of reports, received from transceiver */
-	int n_reports;
+	int nReports;
 	Transceiver transceiver;
 	/*	Measurement results, stored before analysis and/or evaluation */
 	private List measurementResultQueue;
-	long tick_time;
+	long tickTime;
 	boolean running;
 
 	public TestProcessor(Test test) {
 		this.test = test;
 
-		Identifier kis_id = test.getKIS().getId();
-		this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kis_id);
+		Identifier kisId = test.getKIS().getId();
+		this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);
 		this.measurementResultQueue = Collections.synchronizedList(new ArrayList());
-		this.tick_time = ApplicationProperties.getInt("TickTime", MeasurementControlModule.TICK_TIME)*1000;
+		this.tickTime = ApplicationProperties.getInt("TickTime", MeasurementControlModule.TICK_TIME)*1000;
 		this.running = true;
 
 		switch (this.test.getStatus().value()) {
 			case TestStatus._TEST_STATUS_SCHEDULED:
-				this.n_measurements = 0;
-				this.n_reports = 0;
+				this.nMeasurements = 0;
+				this.nReports = 0;
 				try {
 					this.test.setStatus(TestStatus.TEST_STATUS_PROCESSING);
 				}
@@ -53,8 +53,8 @@ public abstract class TestProcessor extends Thread {
 				List measurments;
 				try {
 					measurments = this.test.retrieveMeasurementsOrderByStartTime(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
-					this.n_measurements = measurments.size();
-					this.n_reports = this.n_measurements;
+					this.nMeasurements = measurments.size();
+					this.nReports = this.nMeasurements;
 				}
 				catch (Exception e) {
 					Log.errorException(e);
@@ -64,7 +64,7 @@ public abstract class TestProcessor extends Thread {
 					measurments = this.test.retrieveMeasurementsOrderByStartTime(MeasurementStatus.MEASUREMENT_STATUS_SCHEDULED);
 					for (Iterator iterator = measurments.iterator(); iterator.hasNext();)
 						this.transceiver.addMeasurement((Measurement)iterator.next(), this);
-					this.n_measurements += measurments.size();
+					this.nMeasurements += measurments.size();
 				}
 				catch (Exception e) {
 					Log.errorException(e);
@@ -74,7 +74,7 @@ public abstract class TestProcessor extends Thread {
 					measurments = this.test.retrieveMeasurementsOrderByStartTime(MeasurementStatus.MEASUREMENT_STATUS_PROCESSING);
 					for (Iterator iterator = measurments.iterator(); iterator.hasNext();)
 						this.transceiver.addProcessingMeasurement((Measurement)iterator.next(), this);
-					this.n_measurements += measurments.size();
+					this.nMeasurements += measurments.size();
 				}
 				catch (Exception e) {
 					Log.errorException(e);
@@ -84,7 +84,7 @@ public abstract class TestProcessor extends Thread {
 					measurments = this.test.retrieveMeasurementsOrderByStartTime(MeasurementStatus.MEASUREMENT_STATUS_MEASURED);
 					for (Iterator iterator = measurments.iterator(); iterator.hasNext();)
 						this.measurementResultQueue.add(((Measurement)iterator.next()).retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT));
-					this.n_measurements += measurments.size();
+					this.nMeasurements += measurments.size();
 				}
 				catch (Exception e) {
 					Log.errorException(e);
@@ -94,7 +94,7 @@ public abstract class TestProcessor extends Thread {
 					measurments = this.test.retrieveMeasurementsOrderByStartTime(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED);
 					for (Iterator iterator = measurments.iterator(); iterator.hasNext();)
 						this.measurementResultQueue.add(((Measurement)iterator.next()).retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT));
-					this.n_measurements += measurments.size();
+					this.nMeasurements += measurments.size();
 				}
 				catch (Exception e) {
 					Log.errorException(e);
@@ -155,7 +155,7 @@ public abstract class TestProcessor extends Thread {
 					catch (Exception e) {
 						Log.errorException(e);
 					}
-					this.n_reports ++;
+					this.nReports ++;
 					break;
 				case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED:
 					try {
@@ -175,7 +175,7 @@ public abstract class TestProcessor extends Thread {
 					catch (Exception e) {
 						Log.errorException(e);
 					}
-					this.n_reports ++;
+					this.nReports ++;
 					break;
 				default:
 					Log.errorMessage("TestProcessor.checkMeasurementResults | Inappropriate status " + measurement.getStatus() + " of measurement '" + measurement.getId() + "'");
@@ -184,8 +184,8 @@ public abstract class TestProcessor extends Thread {
 	}
 
 	private Result analyse(Result measurementResult) {
-		Identifier analysis_type_id = this.test.getAnalysisTypeId();
-		if (!analysis_type_id.equals("")) {
+		Identifier analysisTypeId = this.test.getAnalysisTypeId();
+		if (!analysisTypeId.equals("")) {
 			Analysis analysis = null;
 			Measurement measurement = measurementResult.getMeasurement();
 			try {
@@ -195,7 +195,8 @@ public abstract class TestProcessor extends Thread {
 				 *       if necessary.
 				 *    */
 				analysis = Analysis.create(MeasurementControlModule.createIdentifier("analysis"),
-																	 analysis_type_id,
+																	 MeasurementControlModule.iAm.getUserId(),
+																	 analysisTypeId,
 																	 measurement.getSetup().getCriteriaSet(),
 																	 this.test.getMonitoredElement().getId());
 			}
@@ -214,8 +215,8 @@ public abstract class TestProcessor extends Thread {
 	}
 
 	private Result evaluate(Result analysisResult, Result measurementResult) {
-		Identifier evaluation_type_id = this.test.getEvaluationTypeId();
-		if (!evaluation_type_id.equals("")) {
+		Identifier evaluationTypeId = this.test.getEvaluationTypeId();
+		if (!evaluationTypeId.equals("")) {
 			Evaluation evaluation = null;
 			Measurement measurement = measurementResult.getMeasurement();
 			try {
@@ -224,7 +225,8 @@ public abstract class TestProcessor extends Thread {
 				 *    2. appropriate MeasurementSetup, i. e. criteria, thresholds and etalon are present.
 				 *    */
 				 evaluation = Evaluation.create(MeasurementControlModule.createIdentifier("evaluation"),
-																				evaluation_type_id,
+																				MeasurementControlModule.iAm.getUserId(),
+																				evaluationTypeId,
 																				measurement.getSetup().getThresholdSet(),
 																				measurement.getSetup().getEtalon(),
 																				this.test.getMonitoredElement().getId());

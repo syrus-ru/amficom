@@ -21,38 +21,40 @@ public class KISReport {
 		this.parameterValues = parameterValues;
 	}
 
-//	public Result createResult(Measurement measurement) throws Exception {
-//		if (!measurement.getId().equals(this.measurement_id))
-//			throw new Exception("KISReport | Alien measurement: identifier '" + measurement.getId().toString() + "' != my '" + this.measurement_id.toString() + "'");
-//
-//		Identifier[] parameter_ids = new Identifier[this.parameter_type_ids.length];
-//		for (int i = 0; i < parameter_ids.length; i++)
-//			parameter_ids[i] = MeasurementControlModule.createIdentifier("parameter");
-//
-//		Result result = measurement.createResult(MeasurementControlModule.createIdentifier("result"),
-//																						 null,
-//																						 AlarmLevel.ALARM_LEVEL_NONE,
-//																						 parameter_ids,
-//																						 this.parameter_type_ids,
-//																						 this.parameter_values);
-//		return result;
-//	}
-//
-//	public Result createResult() throws Exception {
-//		Measurement measurement = new Measurement(this.measurement_id);
-//
-//		Identifier[] parameter_ids = new Identifier[this.parameter_type_ids.length];
-//		for (int i = 0; i < parameter_ids.length; i++)
-//			parameter_ids[i] = MeasurementControlModule.createIdentifier("parameter");
-//
-//		Result result = measurement.createResult(MeasurementControlModule.createIdentifier("result"),
-//																						 null,
-//																						 AlarmLevel.ALARM_LEVEL_NONE,
-//																						 parameter_ids,
-//																						 this.parameter_type_ids,
-//																						 this.parameter_values);
-//		return result;
-//	}
+	public Result createResult(Measurement measurement) throws Exception {
+		if (!measurement.getId().equals(this.measurementId))
+			throw new Exception("KISReport | Alien measurement: identifier '" + measurement.getId().toString() + "' != my '" + this.measurementId.toString() + "'");
+
+		Identifier[] parameterIds = new Identifier[this.parameterTypeIds.length];
+		for (int i = 0; i < parameterIds.length; i++)
+			parameterIds[i] = MeasurementControlModule.createIdentifier("parameter");
+
+		Result result = measurement.createResult(MeasurementControlModule.createIdentifier("result"),
+																						 MeasurementControlModule.iAm.getUserId(),
+																						 null,
+																						 AlarmLevel.ALARM_LEVEL_NONE,
+																						 parameterIds,
+																						 this.parameterTypeIds,
+																						 this.parameterValues);
+		return result;
+	}
+
+	public Result createResult() throws Exception {
+		Measurement measurement = new Measurement(this.measurementId);
+
+		Identifier[] parameterIds = new Identifier[this.parameterTypeIds.length];
+		for (int i = 0; i < parameterIds.length; i++)
+			parameterIds[i] = MeasurementControlModule.createIdentifier("parameter");
+
+		Result result = measurement.createResult(MeasurementControlModule.createIdentifier("result"),
+																						 MeasurementControlModule.iAm.getUserId(),
+																						 null,
+																						 AlarmLevel.ALARM_LEVEL_NONE,
+																						 parameterIds,
+																						 this.parameterTypeIds,
+																						 this.parameterValues);
+		return result;
+	}
 
 	public Identifier getMeasurementId() {
 		return this.measurementId;

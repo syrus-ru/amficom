@@ -4,7 +4,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.util.Log;
 
-import com.syrus.AMFICOM.util.Identifier;
+import com.syrus.AMFICOM.general.Identifier;
 
 public class OnetimeTestProcessor extends TestProcessor {
 

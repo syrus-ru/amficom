@@ -32,15 +32,23 @@ public class MeasurementControlModule extends Thread {
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final int TICK_TIME = 5;
 	public static final int FORWARD_PROCESSING = 2;
+	public static final int RESULT_TRANSFER_DELAY_MULTIPLIER = 2;
+
+	/*	Information about myself*/
+	protected static MCM iAm;
 
 	/*	Scheduled tests transferred from server	*/
 	protected static List testList;
+
 	/*	Results for transfer to server	*/
 	protected static List resultList;
+
 	/*	key - kis_id, value - corresponding transmitter-receiver	*/
 	protected static Map transceivers;
+
 	/*	key - test_id, value - corresponding test processor	*/
 	protected static Map testProcessors;
+
 	/*	CORBA server	*/
 	private static CORBAServer corbaServer;
 //	/*	object reference to server	*/
@@ -48,11 +56,13 @@ public class MeasurementControlModule extends Thread {
 
 	private long tickTime;
 	private long forwardProcessing;
+	private int resultTransferDelayMultiplier;
 	private boolean running;
 
 	public MeasurementControlModule() {
 		this.tickTime = ApplicationProperties.getInt("TickTime", TICK_TIME)*1000;
 		this.forwardProcessing = ApplicationProperties.getInt("ForwardProcessing", FORWARD_PROCESSING)*1000;
+		this.resultTransferDelayMultiplier = ApplicationProperties.getInt("ResultTransferDelayMultiplier", RESULT_TRANSFER_DELAY_MULTIPLIER);
 		this.running = true;
 	}
 
@@ -70,7 +80,6 @@ public class MeasurementControlModule extends Thread {
 		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
 
 		/*	Retrieve information abot myself*/
-		MCM iAm = null;
 		try {
 			iAm = new MCM(new Identifier(ApplicationProperties.getString("ID", ID)));
 		}
@@ -80,14 +89,14 @@ public class MeasurementControlModule extends Thread {
 		}
 
 		/*	Create and start transceiver for every KIS*/
-		activateKISTransceivers(iAm);
+		activateKISTransceivers();
 
 		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
-		prepareTestList(iAm);
-		prepareResultList(iAm);
+		prepareTestList();
+		prepareResultList();
 
 		/*	Create CORBA server with servant(s)	*/
-		activateCORBAServer(iAm);
+		activateCORBAServer();
 
 		/*	Start main loop	*/
 		MeasurementControlModule measurementControlModule = new MeasurementControlModule();
@@ -98,93 +107,93 @@ public class MeasurementControlModule extends Thread {
 	}
 
 	public void run() {
-//		Test test;
-//		Result_Transferable[] rts;
-//		while (this.running) {
-//			if (!testList.isEmpty())
-//				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forward_processing)
-//					startTestProcessor((Test)testList.remove(0));
-//
-//			if (!resultList.isEmpty()) {
-//				/*!!	transmit results onto server										!!
-//				 *!!	according to return type of corresponding tests	!!*/
-//				rts = new Result_Transferable[resultList.size()];
-//				int i = 0;
-//				for (Iterator it = resultList.iterator(); it.hasNext(); i++)
-//					rts[i] = (Result_Transferable)((Result)it.next()).getTransferable();
-//				try {
-//					measurementServer.transmitResults(rts);
-//					resultList.clear();
-//				}
-//				catch (Exception e) {
-//					Log.errorException(e);
-//				}
-//			}//if (!resultList.isEmpty())
-//
-//			try {
-//				sleep(this.tick_time);
-//			}
-//			catch (InterruptedException ie) {
-//				Log.errorException(ie);
-//			}
-//		}//while (this.running)
+		Result_Transferable[] rts;
+		int numberOfIdleRounds = 1;
+		int counterOfIdleRounds = 0;
+		while (this.running) {
+			if (!testList.isEmpty())
+				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing)
+					startTestProcessor((Test)testList.remove(0));
+
+			if (!resultList.isEmpty()) {
+				if (counterOfIdleRounds == 0) {
+					rts = new Result_Transferable[resultList.size()];
+					int i = 0;
+					for (Iterator it = resultList.iterator(); it.hasNext(); i++)
+						rts[i++] = (Result_Transferable)((Result)it.next()).getTransferable();
+					try {
+//						measurementServer.transmitResults(rts);
+						resultList.clear();
+						numberOfIdleRounds = 1;
+						counterOfIdleRounds = 0;
+					}
+					catch (Exception e) {
+						Log.errorException(e);
+						numberOfIdleRounds *= this.resultTransferDelayMultiplier;
+						counterOfIdleRounds = numberOfIdleRounds;
+					}
+				}
+				else
+					counterOfIdleRounds --;
+			}
+
+			try {
+				sleep(this.tickTime);
+			}
+			catch (InterruptedException ie) {
+				Log.errorException(ie);
+			}
+		}//while
 	}
 
-//	private static void startTestProcessor(Test test) {
-//		TestProcessor testProcessor = null;
-//		switch (test.getTemporalType().value()) {
-//			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-//				testProcessor = new OnetimeTestProcessor(test);
-//				break;
-//			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-//				testProcessor = new PeriodicalTestProcessor(test);
-//				break;
-//			case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-//				testProcessor = new ContinuousTestProcessor(test);
-//				break;
-//			default:
-//				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
-//		}
-//		testProcessors.put(test.getId(), testProcessor);
-//		testProcessor.start();
-//	}
-//
-//	protected static Identifier createIdentifier(String object_sort) {
-//		String id_str = null;
-//		try {
-//			id_str = measurementServer.createIdentifier(object_sort);
-//		}
-//		catch (AMFICOMRemoteException are) {
-//			Log.errorException(are);
-//			id_str = ResourcedbInterface.getUId(object_sort);
-//		}
-//		return new Identifier(id_str);
-//	}
-//
-//	public void shutdown() {/*!!	Need synchronization	*/
-//		this.running = false;
-//
-//		Enumeration enumeration = testProcessors.elements();
-//		while (enumeration.hasMoreElements())
-//			((TestProcessor)enumeration.nextElement()).abort();
-//
-//		testList.clear();
-//		resultList.clear();
-//		testProcessors.clear();
-//
-//		enumeration = transceivers.elements();
-//		while (enumeration.hasMoreElements())
-//			((Transceiver)enumeration.nextElement()).shutdown();
-//		transceivers.clear();
-//
-//		try {
-//			corbaServer.shutdown();
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//		}
-//		DatabaseConnection.closeConnection();
-//	}
+	private static void startTestProcessor(Test test) {
+		TestProcessor testProcessor = null;
+		switch (test.getTemporalType().value()) {
+			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+				testProcessor = new OnetimeTestProcessor(test);
+				break;
+			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+				testProcessor = new PeriodicalTestProcessor(test);
+				break;
+			case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+				testProcessor = new ContinuousTestProcessor(test);
+				break;
+			default:
+				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
+		}
+		testProcessors.put(test.getId(), testProcessor);
+		testProcessor.start();
+	}
+
+	protected static Identifier createIdentifier(String entity) {
+		/*	!!!*/
+		return new Identifier(entity);
+	}
+
+	public void shutdown() {/*!!	Need synchronization	*/
+		this.running = false;
+
+		Enumeration enumeration = testProcessors.elements();
+		while (enumeration.hasMoreElements())
+			((TestProcessor)enumeration.nextElement()).abort();
+
+		testList.clear();
+		resultList.clear();
+		testProcessors.clear();
+
+		enumeration = transceivers.elements();
+		while (enumeration.hasMoreElements())
+			((Transceiver)enumeration.nextElement()).shutdown();
+		transceivers.clear();
+
+		try {
+			corbaServer.shutdown();
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+		}
+		DatabaseConnection.closeConnection();
+	}
 
 	private static void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString("DBHostName", Application.getInternetAddress());
@@ -199,7 +208,7 @@ public class MeasurementControlModule extends Thread {
 		}
 	}
 
-	private static void activateKISTransceivers(MCM iAm) {
+	private static void activateKISTransceivers() {
 		List kiss = iAm.getKISs();
 		transceivers = new Hashtable(kiss.size());
 		Identifier kisId;
@@ -213,7 +222,7 @@ public class MeasurementControlModule extends Thread {
 		}
 	}
 
-	private static void prepareTestList(MCM iAm) {
+	private static void prepareTestList() {
 		testList = Collections.synchronizedList(new ArrayList());
 
 //		try {
@@ -234,12 +243,12 @@ public class MeasurementControlModule extends Thread {
 //		}
 	}
 
-	private static void prepareResultList(MCM iAm) {
+	private static void prepareResultList() {
 		/*!!	resultList - results (return later...)	!!*/
 		resultList = Collections.synchronizedList(new ArrayList());
 	}
 
-	private static void activateCORBAServer(MCM iAm) {
+	private static void activateCORBAServer() {
 //		/*	Create local CORBA server end activate servant*/
 //		try {
 //			corbaServer = new CORBAServer();
