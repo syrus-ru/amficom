@@ -1,3 +1,0 @@
-@@nodeproto.sql
-@@linkproto.sql
-

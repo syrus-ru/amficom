@@ -1,2 +1,0 @@
-*
-						 * Depending on {@link #type}, may reference either {@link SchemeLink} or {@link SchemeCableLink} or {@link SchemeElement}.
