@@ -1,7 +1,8 @@
+bak
 classes
 *.deploy
 *.jpr
-*.jpx
+*.jpx*
 *.swp
 *.tar
 *.gz

@@ -15,6 +15,7 @@ src/com/syrus/AMFICOM/Client/General/Command/Session/SessionOptionsCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/ViewCatalogCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/ViewNavigatorCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/VoidCommand.java
+src/com/syrus/AMFICOM/Client/General/Command/OpenTypedTemplateCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Window/WindowArrangeCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Window/WindowArrangeIconsCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Window/WindowCascadeCommand.java
@@ -45,6 +46,9 @@ src/com/syrus/AMFICOM/Client/General/Event/TreeDataSelectionEvent.java
 src/com/syrus/AMFICOM/Client/General/Event/TreeListSelectionEvent.java
 src/com/syrus/AMFICOM/Client/General/Lang/LangModel.java
 src/com/syrus/AMFICOM/Client/General/Lang/LangModel_ru.java
+src/com/syrus/AMFICOM/Client/General/Lang/LangModelReport.java
+src/com/syrus/AMFICOM/Client/General/Lang/LangModelReport_ru.java
+src/com/syrus/AMFICOM/Client/General/Lang/LangModelReport_en.java
 src/com/syrus/AMFICOM/Client/General/Log/LogInterface.java
 src/com/syrus/AMFICOM/Client/General/Model/ApplicationContext.java
 src/com/syrus/AMFICOM/Client/General/Model/ApplicationModel.java
@@ -98,6 +102,7 @@ src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceTableRenderer.java
 src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceTreeModel.java
 src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceTreeNode.java
 src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceTreeRenderer.java
+src/com/syrus/AMFICOM/Client/General/UI/ProgressBar.java
 src/com/syrus/AMFICOM/Client/General/UI/PropertiesPanel.java
 src/com/syrus/AMFICOM/Client/General/UI/PropertyEditor.java
 src/com/syrus/AMFICOM/Client/General/UI/PropertyRenderer.java
@@ -199,3 +204,5 @@ src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageDialog.java
 src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageTableCellRenderer.java
 src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageTableHeaderRenderer.java
 src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageTableModel.java
+
+src/com/syrus/AMFICOM/Client/General/Report/
