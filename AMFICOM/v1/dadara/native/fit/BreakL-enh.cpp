@@ -101,7 +101,7 @@ void BreakL_Enh (ModelF &mf, int x0, int x1, int width, int isUpper)
 	//prf_b("BreakL_Enh: #3");
 
 	// преобразуем к ломаной
-	BreakL_Fit (mf, tmp, width, x0, len - width, 1);
+	BreakL_FitI (mf, tmp, width, x0, len - width, 0, 0, 1);
 
 	//prf_b("BreakL_Enh: #4");
 

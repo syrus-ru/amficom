@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.4 $, $Date: 2004/12/20 15:48:49 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/28 09:07:15 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -54,13 +54,6 @@ public class ModelFunction {
 	 *  и в качестве начального приближения - текущее состояние объекта.
 	 *  Для режимов FITMODE_SET_* предыдущее состояние не используется,
 	 *  т.е. фактически создается новая модельная функция.
-	 * @param errorMode Режим управления точностью приближения.
-	 *  Используется только при фитировке ломаной или др. м.ф. с
-	 *  переменным числом парамеров. На данный момент не документировано.
-	 * @param error1 Первый параметр точности для данной errorMode.
-	 * @param error2 Второй параметр точности для данной errorMode.
-	 * @param maxpoints Максимальное число точек (третий параметр
-	 *  для errorMode)
 	 * @param linkFlags флаги сшивки со смежными событиями.
 	 *  На данный момент поддерживается только флаг LINK_FIXLEFT,
 	 *  и только для фитировки ломаной.
@@ -68,9 +61,26 @@ public class ModelFunction {
 	 *  (поскольку это всего одно число, оно пока реализовано
 	 *  в виде одного числа double).
 	 */
-	private native void nFit(double y[], int begin, int end, int fitMode,
-			int errorMode, double error1, double error2, int maxpoints,
+	private native void nFit1(double y[], int begin, int end, int fitMode,
 			int linkFlags, double linkData0);
+
+	/**
+	 * Процедура фитировки. Описание остальных параметров см. в nFit1)
+	 * @param errorR начальная отн. ошибка (+- дБ)
+	 * @param errorA начальная абс. ошибка (дБ, ~ уровню шума по 3 сигма)
+	 * @param maxPoints макс. число точек
+	 */
+	private native void nFit2(double y[], int begin, int end, int fitMode,
+			int linkFlags, double linkData0,
+			double errorR, double errorA, int maxPoints);
+
+	/**
+	 * Процедура фитировки. Описание остальных параметров см. в nFit1)
+	 * @param error желаемая точность фитировки вдоль кривой
+	 */
+	private native void nFit3(double y[], int begin, int end, int fitMode,
+			int linkFlags, double linkData0,
+			double[] error);
 
 	/**
 	 * Получить значение заданного параметра (по его имени)
@@ -268,19 +278,13 @@ public class ModelFunction {
 	 * @param y      real r/g data array
 	 * @param begin  starting fitting array index
 	 * @param end    ending fitting array index (length is end - begin + 1)
-	 * @param errorMode [test] precision mode (use '0' as default and for fixed-dimesion fitting)
-	 * @param error1 [test] undocumented; does not matter if errorMode == 0
-	 * @param error2 [test] undocumented; does not matter if errorMode == 0
 	 * @param linkFlags флажки для связывания с соседними событиями (пока только LINK_FIXLEFT)
 	 * @param linkData0 данные для флажка LINK_FIXLEFT
 	 */
-	public void fit(double y[], int begin, int end, int errorMode,
-			double error1, double error2, int maxpoints,
-			int linkFlags, double linkData0)
+	public void fit(double y[], int begin, int end, int linkFlags, double linkData0)
 	{
-	    //System.out.println("fit-2: linkFlags " + linkFlags);
-		nFit(y, begin, end, FITMODE_VARY_ALL, errorMode, error1, error2, maxpoints,
-		    linkFlags, linkData0);
+	    //System.out.println("fit-3: linkFlags " + linkFlags);
+		nFit1(y, begin, end, FITMODE_VARY_ALL, linkFlags, linkData0);
 	}
 
 	/**
@@ -291,11 +295,36 @@ public class ModelFunction {
 	 * @param end    ending fitting array index (length is end - begin + 1)
 	 * @param linkFlags флажки для связывания с соседними событиями (пока только LINK_FIXLEFT)
 	 * @param linkData0 данные для флажка LINK_FIXLEFT
+	 * @param errorR [test] undocumented
+	 * @param errorA [test] undocumented
+	 * @param maxPoints [test] undocumented
 	 */
-	public void fit(double y[], int begin, int end, int linkFlags, double linkData0)
+	public void fit(double y[], int begin, int end,
+			int linkFlags, double linkData0,
+			double errorR, double errorA, int maxPoints)
+	{
+	    //System.out.println("fit-2: linkFlags " + linkFlags);
+		nFit2(y, begin, end, FITMODE_VARY_ALL,
+			linkFlags, linkData0,
+			errorR, errorA, maxPoints);
+	}
+
+	/**
+	 * Performs fitting
+	 *
+	 * @param y      real r/g data array
+	 * @param begin  starting fitting array index
+	 * @param end    ending fitting array index (length is end - begin + 1)
+	 * @param linkFlags флажки для связывания с соседними событиями (пока только LINK_FIXLEFT)
+	 * @param linkData0 данные для флажка LINK_FIXLEFT
+	 * @param noise рекомендуемый уровень ошибки
+	 */
+	public void fit(double y[], int begin, int end, int linkFlags, double linkData0,
+			double[] noise)
 	{
 	    //System.out.println("fit-3: linkFlags " + linkFlags);
-		nFit(y, begin, end, FITMODE_VARY_ALL, 0, 0.0, 0.0, 0, linkFlags, linkData0);
+		nFit3(y, begin, end, FITMODE_VARY_ALL, linkFlags, linkData0,
+			noise);
 	}
 
 	/**
@@ -310,7 +339,7 @@ public class ModelFunction {
 	public void fitLinearOnly(double y[], int begin, int end, int linkFlags, double linkData0)
 	{
 	    //System.out.println("fit-1(Lin): linkFlags " + linkFlags);
-		nFit(y, begin, end, FITMODE_VARY_LIN, 0, 0.0, 0.0, 0, linkFlags, linkData0);
+		nFit1(y, begin, end, FITMODE_VARY_LIN, linkFlags, linkData0);
 	}
 
 	/**

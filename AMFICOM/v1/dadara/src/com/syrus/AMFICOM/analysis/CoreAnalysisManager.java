@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.4 2004/12/20 15:47:45 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.5 2004/12/28 09:07:15 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,13 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2004/12/20 15:47:45 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/28 09:07:15 $
  * @module
  */
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 import com.syrus.io.BellcoreStructure;
@@ -78,6 +81,27 @@ public class CoreAnalysisManager
 	 * в единицах рефлектометрических децибелл
 	 */
 	private static native double nCalcNoise3s(double[] y);
+
+	private static native double[] nCalcNoiseArray(double[] y);
+
+	/**
+	 * Оценка уровня шума по кривой рефлектограммы.
+	 * Алгоритм может пользоваться или не пользоваться данными
+	 * предварительного IA анализа (ev). Не исключено, что после
+	 * определения шума будет сделан уточненный IA.
+	 * @param y  Входная кривая рефлектограммы в дБ.
+	 * @param ev (Опционально) предварительные данные IA. Если не null,
+	 *   то могут использоваться, а могут не использоваться.
+	 *   Если null, то не используются.
+	 * @return относительная величина шума (дБ) по уровню 3 сигма  
+	 */
+	private static double[] CalcNoiseArray(double[] y, ReflectogramEvent[] ev)
+	{
+		double[] ret = nCalcNoiseArray(y);
+		for (int i = 0; i < ret.length; i++)
+			ret[i] *= 3.0;
+		return ret;
+	}
 
 	static {
 		try {
@@ -167,11 +191,12 @@ public class CoreAnalysisManager
 				reflSize, nReflSize);
 
 		// определяем уровень шума для фитировки
-		double noiseLevel = calcNoise3s(y);
+		//double noiseLevel = calcNoise3s(y);
+		double[] noiseArray = CalcNoiseArray(y, null);
 
 		// установка параметров фитировки и фитировка
 		// (с определением параметров нужных для расчета потерь и отражения)
-		fitTrace(y, deltaX, ep, strategy, meanAttenuation[0], noiseLevel);
+		fitTrace(y, deltaX, ep, strategy, meanAttenuation[0], noiseArray);
 
 		// определение параметров потерь и отражения (по смежным событиям)
 		ReflectogramEvent.calcMutualParameters(ep, y);
@@ -186,18 +211,31 @@ public class CoreAnalysisManager
 	}
 
 	private static ReflectogramEvent[] fitTrace(double[] y, double delta_x,
-			ReflectogramEvent[] events, int strategy, double meanAttenuation, double noiseLevel) {
+			ReflectogramEvent[] events, int strategy, double meanAttenuation, double[] noiseArray) {
 		long t0 = System.currentTimeMillis();
 
 		System.out.println("fitTrace: strategy = " + strategy);
 
 		ReflectogramEvent.FittingParameters fPars =
-		    new ReflectogramEvent.FittingParameters(
-				y,
-				2, // error mode = 2: XXX
-				0.01 + 0.001, // XXX: 0.01: user-set; 0.001: rg precision 
-				noiseLevel);
+//		    new ReflectogramEvent.FittingParameters(
+//				y,
+//				0.01 + 0.001, // XXX: 0.01: user-set; 0.001: rg precision
+//				-99);
+			new ReflectogramEvent.FittingParameters(
+				y, noiseArray);
 
+		try
+		{
+			FileOutputStream fos = new FileOutputStream(new File("tr_er.dat"));
+			for (int i = 0; i < y.length; i++)
+			{
+				fos.write(("" + i + " " + y[i] + " " + noiseArray[i] + "\n").getBytes());
+			}
+		}
+		catch(IOException e)
+		{
+			System.err.println("CoreAnalysismanager: debug output failed");
+		}
 		for (int i = 0; i < events.length; i++)
 		    events[i].setFittingParameters(fPars);
 

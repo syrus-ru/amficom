@@ -11,7 +11,7 @@ static __int64 clock_cur_64;
 static int cur_id = -1;
 
 const int debug_to_console = 0;
-const int dump_regularly = 0;
+const int dump_regularly = 1;
 
 #if USE_clock
 const int clock_loop_print = CLK_TCK * 5;

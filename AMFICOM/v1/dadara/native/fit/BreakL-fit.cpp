@@ -1,9 +1,19 @@
 #include <assert.h>
 #include <math.h>
+#include <stdlib.h> // qsort
 #include "sweep.h"
 #include "BreakL-fit.h"
 
 #include "../Common/prf.h"
+
+#define USE_CHI2BREAKL 1
+
+static int dfcmp(const void *a, const void *b)
+{
+	const double *x = (const double *)a;
+	const double *y = (const double *)b;
+	return *x <= *y ? *x < *y ? -1 : 0 : 1;
+}
 
 void prepare_acc_stats( // подготавливает данные для быстрого вычисления моментов (x,y)
 	double *y,
@@ -99,6 +109,21 @@ static double FindTwoLinApproxRMS(double *acc_y, double *acc_xy, double *acc_yy,
 		+ (y1 - y2_fixed) / (i1 - i2) * (-(y1 - y2_fixed) * vx2 - 2 * vy2);
 }
 
+static double FindFixedLineSumS(double *acc_y, double *acc_xy, double *acc_yy, int i0, int i1, double y0, double y1)
+{
+	double ret = 0;
+	int N = i1 - i0;
+	if (N == 0)
+		return 0;
+	double mx, my, mxx, mxy, myy;
+	calc_yarr_stat3(acc_y, acc_xy, acc_yy, i0, i1 - i0, mx, my, mxx, mxy, myy);
+	ret = N * ( dpow2(y0) + myy - 2 * y0 * my )
+		+ N * dpow2((y1 - y0) / N) * (mxx - 2 * i0 * mx + i0 * i0)
+		+ 2 * (y1 - y0) * y0 * (mx - i0)
+		- 2 * (y1 - y0) * (mxy - i0 * my);
+	return ret;
+}
+
 static void improveBySweep(double *acc_y, double *acc_xy, double *acc_yy,
 						   double *xarr, double *yarr, int nPts,
 						   int linkFlags, const double *linkData)
@@ -177,16 +202,17 @@ static void improveBySweep(double *acc_y, double *acc_xy, double *acc_yy,
  * x_begin - x-координата начала ломаной и массива
  * length - число фитируемых точек
  * quick - "быстрый" режим - немного жертвуем точностью
- * error1 - постоянная компонента погрешности
- * error2 - компонента погрешности, растущая с уменьшением уровня сигнала (rgdB)
+ * error1 - постоянная компонента погрешности (используется тольео если noise == 0)
+ * error2 - компонента погрешности, растущая с уменьшением уровня сигнала (rgdB) (используется тольео если noise == 0)
  * maxpoints - уменьшает точность до заданного макс. числа узлов
  * linearOnly - только лин. режим. quick, error1, error2, maxpoints не используются
  * linkFlags - флаги связывания с соседними участками
  * linkData - данные для связывания с соседними участками
+ * noise - величина погрешности (дБ) - если не null, то вместо нее используются error1, error2
  */
 void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 	int length, int quick, double error1, double error2, int maxpoints,
-	int linearOnly, int linkFlags, double *linkData)
+	int linearOnly, int linkFlags, double *linkData, double *noise)
 {
 	//fprintf(stdout, "BreakL_Fit: i0 %d x0 %d len %d q %d  e1 %g e2 %g mp %d lin %d; mf.nPars %d\n",
 	//	i_begin, x_begin, length, quick, error1, error2, maxpoints, linearOnly, mf.getNPars());
@@ -204,7 +230,7 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 
 	int size = length;
 
-	double *acc_y = new double[size + 1];
+	double *acc_y  = new double[size + 1];
 	double *acc_xy = new double[size + 1];
 	double *acc_yy = new double[size + 1];
 	assert(acc_y);
@@ -228,9 +254,16 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 	{
 		for (i = 0; i < size; i++)
 		{
-			double v = (error2 - data[i]) / 5.0;
-			v = 1 + pow(10.0, v);
-			thresh[i] = log10(v) * 5.0 + error1;
+			if (noise)
+			{
+				thresh[i] = noise[i];
+			}
+			else
+			{
+				double v = (error2 - data[i]) / 5.0;
+				v = 1.0 + pow(10.0, v);
+				thresh[i] = log10(v) * 5.0 + error1;
+			}
 		}
 
 		// пробуем изменять пороги
@@ -258,17 +291,54 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 					a = div(
 						((mx - x0) * (my - y0) + mxy - mx * my),
 						(dpow2(mx - x0) + mxx - mx * mx));
+					// проверяем, удовлетворяет ли нас такая точность
 					int j;
+					int fail = 0;
+#if USE_CHI2BREAKL
+					double acc = 0;
+					int count = 0;
+#endif
 					for (j = i_prev; j <= i; j++)
 					{
-						if (fabs(a * (j - x0) + y0 - data[j])
-							>	thresh[j] * th_mult // заданный порог
-								+ (fabs(a * (j - x0)) + fabs(y0)) * 1e-14 // добавляем машинную погрешность
-								+ 1e-15 // про запас - XXX: нужен ли?
-							)
-							break;
+						double dif = fabs(a * (j - x0) + y0 - data[j]);
+						double th = 
+							thresh[j] * th_mult // заданный порог
+							+ (fabs(a * (j - x0)) + fabs(y0)) * 1e-14 // добавляем машинную погрешность
+							+ 1e-15; // про запас - XXX: нужен ли?
+#if USE_CHI2BREAKL
+						// усложненный критерий - на основе хи-квадрат
+						acc += dif * dif / ( 2.0 * th * th / 9.0);
+						count++;
+#else
+						// простой критерий - выход за предел
+						if (dif > th)	fail = 1;
+#endif
 					}
-					if (j > i) // уточненное значение наклона старой кривой
+#if USE_CHI2BREAKL
+					count -= 2;
+					if (count > 0)
+					{
+						double xi_av = acc / count;
+						count = count / 8 + 1; // XXX: nettest specific
+						if (count <= 1)
+							fail = xi_av > 5.4;
+						else if (count == 2)
+							fail = xi_av > 3.5;
+						else if (count == 3)
+							fail = xi_av > 2.7;
+						else if (count <= 5)
+							fail = xi_av > 2.0;
+						else if (count <= 10)
+							fail = xi_av > 1.5;
+						else if (count <= 30)
+							fail = xi_av > 1.0;
+						else
+							fail = xi_av > 0.75; // xi_av <= 100
+					}
+						else
+							fail = 0; // прямая проведена по двум точкам
+#endif
+					if (!fail) // уточненное значение наклона старой кривой
 					{
 						a_prev = a;
 						continue;
@@ -306,13 +376,70 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 				break;
 			}
 		}
-		//fprintf(stderr, "BreakL_Fit: final th_mult %g, points %d maxpoints %d\n",
-		//	th_mult, nPts, maxpoints);
-		//fflush(stderr);
+		fprintf(stderr, "BreakL_Fit: final th_mult %g, points %d maxpoints %d\n",
+			th_mult, nPts, maxpoints);
+		fflush(stderr);
 
-		// двигаем i_k для улучшения RMS
+		// убираем пост-всплески:
+		// просматриваем все смежные тройки звеньев.
+		// если продолжение первого и третьего до взаимного пересечения
+		// с выкидываением второго дают лучшую RMS аппроксимацию,
+		// то так и делаем.
 		int it;
 		for (it = 0; it < 1 && !quick; it++)
+		{
+			for (k = 0; k < nPts - 3; k++)
+			{
+				//fprintf(stderr, "(%d)\n", k);
+				int i0 = (int )ax[k];
+				int i1 = (int )ax[k + 1];
+				int i2 = (int )ax[k + 2];
+				int i3 = (int )ax[k + 3];
+				double y0 = ay[k];
+				double y1 = ay[k + 1];
+				double y2 = ay[k + 2];
+				double y3 = ay[k + 3];
+				// определяем координаты новой точки iN, yN
+				double a1 = (y1 - y0) / (i1 - i0);
+				double a2 = (y3 - y2) / (i3 - i2);
+				if (fabs(a1 - a2) < fabs(a1 + a2) * 0.01) // XXX: constant
+					continue;
+				double t = y2 - y0 + a1 * i0 - a2 * i2;
+				t = t / (a1 - a2);
+				int iN = (int )(t + 0.5);
+				if (iN <= i0 || iN >= i3)
+					continue;
+				// ^^^ быть может, стоить отбрасывать также и случаи (iN == i0 + 1 || iN == i3 - 1)
+				double yN = fabs(a1) < fabs(a2) // берем наименее наклонную кривую
+					? a1 * (iN - i0) + y0
+					: a2 * (iN - i2) + y2;
+
+				// сравниваем сумму квадратов
+				double sOld = FindFixedLineSumS(acc_y, acc_xy, acc_yy, i0, i1, y0, y1)
+					        + FindFixedLineSumS(acc_y, acc_xy, acc_yy, i1, i2, y1, y2)
+					        + FindFixedLineSumS(acc_y, acc_xy, acc_yy, i2, i3, y2, y3);
+				double sNew = FindFixedLineSumS(acc_y, acc_xy, acc_yy, i0, iN, y0, yN)
+					        + FindFixedLineSumS(acc_y, acc_xy, acc_yy, iN, i3, yN, y3);
+				if (sNew < sOld)
+				{
+					//fprintf(stderr, "rem: # %d-%d x(%d:%d:%d:%d -> %d): RMS %g -> %g\n",
+					//	k, k + 3, i0, i1, i2, i3, iN, sOld, sNew);
+					// укорачиваем массив звеньев сдвигом
+					ax[k + 1] = iN;
+					ay[k + 1] = yN;
+					int p;
+					for (p = k + 2; p < nPts - 1; p++)
+					{
+						ax[p] = ax[p + 1];
+						ay[p] = ay[p + 1];
+					}
+					nPts--;
+				}
+			}
+		}
+
+		// двигаем i_k для улучшения RMS
+		for (it = 0; it < 1 && !quick; it++) // XXX: it < 2? it < 1?
 		{
 			int itSuccess = 0;
 			for (k = 1; k < nPts - 1; k++)
@@ -321,9 +448,8 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 				int i1 = (int )ax[k];
 				int i2 = (int )ax[k + 1];
 				double y0 = ay[k - 1];
-				double y1;
 				double y2 = ay[k + 1];
-				int kSuccess = 0;
+				int kSuccess = 0; // XXX: optimization variables are not used
 				int step;
 				const int maxstep = 2; // XXX
 				// try step left
@@ -333,16 +459,18 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 						step = maxstep;
 					if (i1 - step <= i0)
 						continue;
-					if (FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1 - step, i2, y0, y1, y2)
-							< FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, y1, y2))
+					double y1o, y1n;
+					if (FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1 - step, i2, y0, y1n, y2)
+							< FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, y1o, y2))
 					{
+						double temp1, temp2;
 						//fprintf(stderr, "step: ev %d i %d -= %d RMS %g -> %g\n", k, i1, step,
-						//	FindTwoLinApproxRMS(data, i0, i1, i2, y0, y1, y2),
-						//	FindTwoLinApproxRMS(data, i0, i1 - step, i2, y0, y1, y2));
+						//	FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, temp1, y2),
+						//	FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1 - step, i2, y0, temp2, y2));
 						i1 -= step;
 						ax[k] = i1;
-						FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, ay[k], y2);
-					}				
+						ay[k] = y1n;
+					}
 				}
 				// try step right
 				for (step = i2 - i1; step > 0; step /= 2)
@@ -351,15 +479,17 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 						step = maxstep;
 					if (i1 - step >= i2)
 						continue;
-					if (FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1 + step, i2, y0, y1, y2)
-							< FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, y1, y2))
+					double y1o, y1n;
+					if (FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1 + step, i2, y0, y1n, y2)
+							< FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, y1o, y2))
 					{
+						double temp1, temp2;
 						//fprintf(stderr, "step: ev %d i %d += %d RMS %g -> %g\n", k, i1, step,
-						//	FindTwoLinApproxRMS(data, i0, i1, i2, y0, y1, y2),
-						//	FindTwoLinApproxRMS(data, i0, i1 + step, i2, y0, y1, y2));
+						//	FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, temp1, y2),
+						//	FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1 + step, i2, y0, temp2, y2));
 						i1 += step;
 						ax[k] = i1;
-						FindTwoLinApproxRMS(acc_y, acc_xy, acc_yy, i0, i1, i2, y0, ay[k], y2);
+						ay[k] = y1n;
 					}
 				}
 			}
@@ -404,12 +534,25 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 	delete[] acc_yy;
 }
 
-void BreakL_FitLinear (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData)
+void BreakL_FitL (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData)
 {
-	BreakL_Fit_int(mf, data0 + i0, x0, length, 0, 0, 0, 0, 1, linkFlags, linkData);
-}
-void BreakL_Fit (ModelF &mf, double *data0, int i0, int x0, int length, int quick, double error1, double error2, int maxpoints, int linkFlags, double *linkData)
-{
-	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, error1, error2, maxpoints, 0, linkFlags, linkData);
+	BreakL_Fit_int(mf, data0 + i0, x0, length, 0, 0.0, 0.0, 0, 1, linkFlags, linkData, 0);
 }
 
+void BreakL_FitI (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData,
+	int quick)
+{
+	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, 0.0, 0.0, 0, 0, linkFlags, linkData, 0);
+}
+
+void BreakL_Fit  (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData,
+	int quick, double error1, double error2, int maxpoints)
+{
+	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, error1, error2, maxpoints, 0, linkFlags, linkData, 0);
+}
+
+void BreakL_Fit2 (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData,
+	int quick, double* error)
+{
+	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, 0.0, 0.0, 0, 0, linkFlags, linkData, error + i0);
+}

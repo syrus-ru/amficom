@@ -305,16 +305,14 @@ JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunct
 	return arr;
 }
 
+const int ERROR_MODE_DEFAULT = 0;
+const int ERROR_MODE_UNINOISE = 2;
+const int ERROR_MODE_VARNOISE = 3;
 
-/*
- * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
- * Method:    nFit
- * Signature: ([DIIIIDDI)V
- */
-JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFit
-  (JNIEnv *env, jobject obj, jdoubleArray y, jint begin, jint end,
-  jint fitMode, jint errorMode, jdouble error1, jdouble error2, jint maxpoints,
-  jint linkFlagsJ, jdouble linkData0)
+static void nFit
+  (JNIEnv *env, jobject obj, jdoubleArray y, jint begin, jint end, jint fitMode,
+  jint linkFlagsJ, jdouble linkData0,
+  jint errorMode, jdouble error1, jdouble error2, jint maxpoints, jdoubleArray noise)
 {
 	prf_b("nFit - enter");
 	ModelF mf;
@@ -323,9 +321,6 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFit
 
 	double *yy;
 	get_arr_region(env, y, &yy, begin, end - begin + 1);
-
-	// FIXIT: debug
-	//fprintf(stderr, "native Fit in progress...\n"); fflush(stderr);
 
 	fit_stat_res stat;
 
@@ -358,6 +353,7 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFit
 
 	if (mf.hasFixedNumberOfPars())
 	{
+		// фиксированное число параметров - данные о погрешности не нужны
 		prf_b("nFit: fixed npars");
 		//fprintf(stderr, "nfit: fixed npars: fitMode %d ID %d\n", fitMode, mf.getID()); // FIXIT
 		if (linear)
@@ -373,22 +369,35 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFit
 			if (linear)
 			{
 				// линейная фитировка - данные о погрешности не нужны
-				BreakL_FitLinear(mf, yy, 0, begin, end - begin + 1,
-					linkFlags, linkData);
+				BreakL_FitL(mf, yy, 0, begin, end - begin + 1, linkFlags, linkData);
 			}
 			else
 			{
 				// полная фитировка, проводим ломаную заново
 				// используем данные о требуемой точности
-				if (errorMode != 2) // XXX
+				switch(errorMode)
 				{
+				case ERROR_MODE_DEFAULT:
 					error1 = 0;
-					error2 = -999; // XXX
+					error2 = -999;
 					maxpoints = 0;
+					// fall through
+				case ERROR_MODE_UNINOISE:
+					BreakL_Fit(mf, yy, 0, begin, end - begin + 1, linkFlags, linkData,
+						0, error1, error2, maxpoints);
+					break;
+				case ERROR_MODE_VARNOISE:
+					{
+						double *noiseData;
+						get_arr_region(env, noise, &noiseData, begin, end - begin + 1);
+						BreakL_Fit2(mf, yy, 0, begin, end - begin + 1, linkFlags, linkData,
+							0, noiseData);
+						release_arr_region(env, noise, noiseData);
+					}
+					break;
+				default:
+					assert(0);
 				}
-					BreakL_Fit(mf, yy, 0, begin, end - begin + 1,
-						0, error1, error2, maxpoints,
-						linkFlags, linkData);
 			}
 		}
 		else
@@ -401,6 +410,45 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFit
 	ModelF_C2J_update(env, mf, obj);
 	prf_e();
 }
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
+ * Method:    nFit1
+ * Signature: ([DIIIID)V
+ */
+JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFit1
+  (JNIEnv *env, jobject obj, jdoubleArray y, jint begin, jint end, jint fitMode, jint linkFlagsJ, jdouble linkData0)
+{
+  nFit(env, obj, y, begin, end, fitMode, linkFlagsJ, linkData0,
+	  ERROR_MODE_DEFAULT, 0.0, 0.0, 0, 0);
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
+ * Method:    nFit2
+ * Signature: ([DIIIIDDDI)V
+ */
+JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFit2
+  (JNIEnv *env, jobject obj, jdoubleArray y, jint begin, jint end, jint fitMode, jint linkFlagsJ, jdouble linkData0,
+  jdouble errorR, jdouble errorA, jint maxPoints)
+{
+  nFit(env, obj, y, begin, end, fitMode, linkFlagsJ, linkData0,
+	  ERROR_MODE_UNINOISE, errorR, errorA, maxPoints, 0);
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
+ * Method:    nFit3
+ * Signature: ([DIIIID[D)V
+ */
+JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFit3
+  (JNIEnv *env, jobject obj, jdoubleArray y, jint begin, jint end, jint fitMode, jint linkFlagsJ, jdouble linkData0,
+  jdoubleArray noiseArray)
+{
+  nFit(env, obj, y, begin, end, fitMode, linkFlagsJ, linkData0,
+	  ERROR_MODE_VARNOISE, 0.0, 0.0, 0, noiseArray);
+}
+
 
 /*
  *
@@ -524,3 +572,28 @@ JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nC
 	return ret;
 }
 
+JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcNoiseArray
+  (JNIEnv *env, jclass cls, jdoubleArray inArr)
+{
+	// get input J array, create output J array, get output J array
+	double *yy;
+	double *noise;
+	int size = get_arr(env, inArr, &yy);
+	if (size == 0)
+	{
+		release_arr(env, inArr, yy);
+		return 0;
+	}
+	jdoubleArray outArr = env->NewDoubleArray((jsize )size);
+	assert(outArr);
+	get_arr(env, outArr, &noise);
+
+	// process
+	findNoiseArray(yy, noise, size);
+
+	// release arrays
+	release_arr(env, inArr, yy);
+	release_arr(env, outArr, noise);
+
+	return outArr;
+}

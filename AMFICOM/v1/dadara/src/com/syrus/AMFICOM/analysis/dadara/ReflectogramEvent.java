@@ -1,7 +1,7 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/20 13:54:50 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/28 09:07:15 $
  * @author $Author: saa $
  * @module general_v1
  */
@@ -363,16 +363,23 @@ public class ReflectogramEvent
 
 	public static class FittingParameters
 	{
-		public double[] y;
-		public int errorMode;
-		public double error1;
-		public double error2;
-		public FittingParameters(double[] y, int errorMode, double error1, double error2)
+		protected double[] y;
+		protected double[] noise;
+		protected double error1;
+		protected double error2;
+		public FittingParameters(double[] y, double error1, double error2)
 		{
 			this.y = y;
-			this.errorMode = errorMode;
+			this.noise = null;
 			this.error1 = error1;
 			this.error2 = error2;
+		}
+		public FittingParameters(double[] y, double noise[])
+		{
+			this.y = y;
+			this.noise = noise;
+			this.error1 = 0;
+			this.error2 = 0;
 		}
 	}
 
@@ -390,9 +397,14 @@ public class ReflectogramEvent
 							? 25 // FIXIT
 							: 5; // FIXIT
 		FittingParameters fP = fittingParameters;
-		mf.fit(fP.y, begin, end,
-			fP.errorMode, fP.error1, fP.error2, maxpoints,
-			activeLinkFlags(), activeLinkData0());
+		if (fP.noise == null)
+			mf.fit(fP.y, begin, end,
+				activeLinkFlags(), activeLinkData0(),
+				fP.error1, fP.error2, maxpoints);
+		else
+			mf.fit(fP.y, begin, end,
+				activeLinkFlags(), activeLinkData0(),
+				fP.noise);
 		
 		updated();
 
