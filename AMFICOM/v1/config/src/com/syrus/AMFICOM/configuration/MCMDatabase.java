@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.13 2004/08/29 10:54:23 bob Exp $
+ * $Id: MCMDatabase.java,v 1.14 2004/08/30 09:53:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/29 10:54:23 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/30 09:53:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -129,8 +129,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("MCMDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-			}
+			if (resultSet.next()) 
+				updateMCMFromResultSet(mcm, resultSet);
 			else
 				throw new ObjectNotFoundException("No such mcm: " + mcmIdStr);
 		}

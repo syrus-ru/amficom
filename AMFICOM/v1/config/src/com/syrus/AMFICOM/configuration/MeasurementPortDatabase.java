@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.9 2004/08/30 07:37:29 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.10 2004/08/30 09:53:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/30 07:37:29 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/30 09:53:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -155,8 +155,8 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementPortDatabase.retrieveMeasurementPort | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-			}
+			if (resultSet.next()) 
+				updateMeasurementPortFromResultSet(measurementPort, resultSet);
 			else
 				throw new ObjectNotFoundException("No such measurement port: " + mpIdStr);
 		}
