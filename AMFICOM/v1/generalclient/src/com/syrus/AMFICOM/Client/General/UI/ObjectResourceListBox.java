@@ -36,22 +36,22 @@ public class ObjectResourceListBox extends JList
 	boolean doRestrict = false;
 	String domain_id = "";
 
-    class MyListBoxRenderer extends DefaultListCellRenderer
-    {
+		class MyListBoxRenderer extends DefaultListCellRenderer
+		{
 		ObjectResourceListBox parent;
 
-        public MyListBoxRenderer(ObjectResourceListBox parent)
-        {
+				public MyListBoxRenderer(ObjectResourceListBox parent)
+				{
 			this.parent = parent;
-        }
+				}
 
-	    public Component getListCellRendererComponent(
+			public Component getListCellRendererComponent(
 				JList list,
 				Object value,
 				int index,
 				boolean isSelected,
 				boolean cellHasFocus)
-        {
+				{
 			if(value instanceof ObjectResource)
 			{
 				ObjectResource or = (ObjectResource)value;
@@ -63,19 +63,19 @@ public class ObjectResourceListBox extends JList
 					text = or.getId();
 				else
 				{
-					ObjectResourceModel mod = or.getModel();
-					text = mod.getColumnValue(parent.col_id);
+//					ObjectResourceModel mod = or.getModel();
+//					text = mod.getColumnValue(parent.col_id);
 //					text = or.getColumnValue(parent.col_id);
 				}
 				return super.getListCellRendererComponent(
-                        list, text, index, isSelected, cellHasFocus);
+												list, text, index, isSelected, cellHasFocus);
 			}
 			else
 				return super.getListCellRendererComponent(
-                        list, value, index, isSelected, cellHasFocus);
-        }
+												list, value, index, isSelected, cellHasFocus);
+				}
 
-    }
+		}
 
 	public ObjectResourceListBox()
 	{
@@ -85,10 +85,10 @@ public class ObjectResourceListBox extends JList
 
 		this.setBounds(new Rectangle(0, 0, 20, 20));
 
-        ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
-        renderer.setSize(this.getWidth(), this.getHeight());
-        renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-        this.setCellRenderer(renderer);
+				ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
+				renderer.setSize(this.getWidth(), this.getHeight());
+				renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
+				this.setCellRenderer(renderer);
 //        this.setMaximumRowCount(5);
 	}
 
@@ -99,23 +99,23 @@ public class ObjectResourceListBox extends JList
 		this.col_id = col_id;
 
 		if(objs != null)
-    {
-      Iterator it = objs.values().iterator();
+		{
+			Iterator it = objs.values().iterator();
 			for(;it.hasNext();)
 			{
 				ObjectResource or = (ObjectResource )it.next();
 				vec.add(or);
 			}
-    }
+		}
 //        setModel(new DefaultComboBoxModel(vec));
 		setListData(vec);
 
 		this.setBounds(new Rectangle(0, 0, 20, 20));
 
-        ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
-        renderer.setSize(this.getWidth(), this.getHeight());
-        renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-        this.setCellRenderer(renderer);
+				ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
+				renderer.setSize(this.getWidth(), this.getHeight());
+				renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
+				this.setCellRenderer(renderer);
 //        this.setMaximumRowCount(5);
 	}
 
@@ -124,7 +124,7 @@ public class ObjectResourceListBox extends JList
 		this(objs, col_id);
 		setSelected(obj);
 	}
-	
+
 	public ObjectResourceListBox(String type, String col_id)
 	{
 		this.type = type;
@@ -132,37 +132,37 @@ public class ObjectResourceListBox extends JList
 
 		objs = Pool.getMap(type);
 		if(objs != null)
-    {
-      Iterator it = objs.values().iterator();
+		{
+			Iterator it = objs.values().iterator();
 			for(;it.hasNext();)
 			{
 				ObjectResource or = (ObjectResource )it.next();
 				vec.add(or);
 			}
-    }
+		}
 //        setModel(new DefaultComboBoxModel(vec));
 		setListData(vec);
 
 		this.setBounds(new Rectangle(0, 0, 20, 20));
 
-        ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
-        renderer.setSize(this.getWidth(), this.getHeight());
-        renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-        this.setCellRenderer(renderer);
+				ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
+				renderer.setSize(this.getWidth(), this.getHeight());
+				renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
+				this.setCellRenderer(renderer);
 //        this.setMaximumRowCount(5);
 	}
-	
+
 	public ObjectResourceListBox(String type, String col_id, Object obj)
 	{
 		this(type, col_id);
 		setSelected(obj);
 	}
-	
+
 	public ObjectResourceListBox(Map objs, Object obj)
 	{
 		this(objs, _DEFAULT_COL_ID, obj);
 	}
-	
+
 	public ObjectResourceListBox(Map objs)
 	{
 		this(objs, _DEFAULT_COL_ID);
@@ -172,7 +172,7 @@ public class ObjectResourceListBox extends JList
 	{
 		this(type, _DEFAULT_COL_ID, obj);
 	}
-	
+
 	public ObjectResourceListBox(String type)
 	{
 		this(type, _DEFAULT_COL_ID);
@@ -182,14 +182,14 @@ public class ObjectResourceListBox extends JList
 	{
 		vec = new ArrayList();
 		if(enum != null)
-    {
-      Iterator it = enum.iterator();
+		{
+			Iterator it = enum.iterator();
 			for(;it.hasNext();)
 			{
 				ObjectResource or = (ObjectResource )it.next();
 				vec.add(or);
 			}
-    }
+		}
 //        setModel(new DefaultComboBoxModel(vec));
 		if(doRestrict)
 			restrictContents();
@@ -200,14 +200,14 @@ public class ObjectResourceListBox extends JList
 	{
 		vec = new ArrayList();
 		if(objs != null)
-    {
-      Iterator it = objs.values().iterator();
+		{
+			Iterator it = objs.values().iterator();
 			for(;it.hasNext();)
 			{
 				ObjectResource or = (ObjectResource )it.next();
 				vec.add(or);
 			}
-    }
+		}
 //        setModel(new DefaultListModel(vec));
 		if(doRestrict)
 			restrictContents();
@@ -226,7 +226,7 @@ public class ObjectResourceListBox extends JList
 		vec.clear();
 		setListData(vec);
 	}
-	
+
 	public void remove(ObjectResource or)
 	{
 		vec.remove(or);
@@ -258,7 +258,7 @@ public class ObjectResourceListBox extends JList
 			restrictContents();
 		setListData(vec);
 	}
-	
+
 	public void add(Map h)
 	{
 		add(h);
@@ -272,14 +272,14 @@ public class ObjectResourceListBox extends JList
 	public void add(Collection e)
 	{
 		if(e != null)
-    {
-      Iterator it = e.iterator();
+		{
+			Iterator it = e.iterator();
 			for(; it.hasNext();)
 			{
 				ObjectResource or = (ObjectResource )it.next();
 				vec.add(or);
 			}
-    }
+		}
 		if(doRestrict)
 			restrictContents();
 		setListData(vec);
@@ -293,13 +293,13 @@ public class ObjectResourceListBox extends JList
 		obj_id = or.getId();
 		return obj_id;
 	}
-	
+
 	public ObjectResource getSelectedObjectResource()
 	{
 		ObjectResource or = (ObjectResource )super.getSelectedValue();
 		return or;
 	}
-	
+
 	public void setSelected(Object obj)
 	{
 		if(obj == null)
@@ -315,7 +315,7 @@ public class ObjectResourceListBox extends JList
 		if(obj instanceof String)
 		{
 			obj_id = (String)obj;
-      Iterator it = vec.listIterator();
+			Iterator it = vec.listIterator();
 			for(;it.hasNext();)
 			{
 				ObjectResource or = (ObjectResource )it.next();
@@ -338,8 +338,8 @@ public class ObjectResourceListBox extends JList
 		if(obj instanceof String)
 		{
 			obj_id = (String )obj;
-      
-      Iterator it = vec.listIterator();
+
+			Iterator it = vec.listIterator();
 			for(;it.hasNext();)
 			{
 				ObjectResource or1 = (ObjectResource )it.next();
@@ -357,7 +357,7 @@ public class ObjectResourceListBox extends JList
 		if(or != null)
 		{
 			int index = 0;
-      Iterator it = vec.listIterator();
+			Iterator it = vec.listIterator();
 			for(;it.hasNext();)
 			{
 				ObjectResource or2 = (ObjectResource )it.next();
@@ -383,10 +383,10 @@ public class ObjectResourceListBox extends JList
 	{
 		List vec_to_remove = new ArrayList();
 
-    Iterator it = vec.listIterator();
-    for(;it.hasNext();)
-    {
-      ObjectResource or = (ObjectResource )it.next();
+		Iterator it = vec.listIterator();
+		for(;it.hasNext();)
+		{
+			ObjectResource or = (ObjectResource )it.next();
 			if(!or.getDomainId().equals(domain_id))
 				vec_to_remove.add(or);
 		}
@@ -403,9 +403,9 @@ public class ObjectResourceListBox extends JList
 	{
 		return domain_id;
 	}
-  
-  public void setListData(List data)
-  {
-    super.setListData(data.toArray());
-  }
+
+	public void setListData(List data)
+	{
+		super.setListData(data.toArray());
+	}
 }

@@ -64,8 +64,8 @@ public class ImageResource extends StubResource
 	static final public String typ = "imageresource";	// тип ресурса объекта, представляет собой
 
 //	MediaTracker m_tracker;
-    protected final static Component component = new Component() {};
-    protected final static MediaTracker m_tracker = new MediaTracker(component);
+		protected final static Component component = new Component() {};
+		protected final static MediaTracker m_tracker = new MediaTracker(component);
 
 	public ImageResource()
 	{
@@ -84,7 +84,7 @@ public class ImageResource extends StubResource
 		this.source_string = "file";
 		this.source = filename;
 
-	    ImageIcon myImageIcon = new ImageIcon(filename);
+			ImageIcon myImageIcon = new ImageIcon(filename);
 		image = myImageIcon.getImage();
 
 //		image = Toolkit.getDefaultToolkit().getImage(filename);
@@ -137,12 +137,17 @@ public class ImageResource extends StubResource
 	public void updateLocalFromTransferable()
 	{
 	}
-	
+
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public String getTyp()
 	{
 		return typ;
 	}
-	
+
 	public String getName()
 	{
 		return name;
@@ -167,7 +172,7 @@ public class ImageResource extends StubResource
 	{
 		return 100;
 	}
-	
+
 	public String getValue(String col_id)
 	{
 		return "leer";
