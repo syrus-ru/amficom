@@ -19,10 +19,10 @@ public class Schedule {
 			this.aContext = new ApplicationContext();
 			this.aContext.setApplicationModel(factory.create());
 			aContext.setDispatcher(new Dispatcher());			
-			new SchedulerModel(this.aContext);
+			
 			ScheduleMainFrame frame = new ScheduleMainFrame(this.aContext);
 //			SchedulerModel model =	
-			
+			new SchedulerModel(this.aContext);
 
 			frame.setIconImage(UIStorage.SCHEDULING_ICON_MINI);
 			frame.setVisible(true);

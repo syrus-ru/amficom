@@ -28,7 +28,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	ApplicationContext	aContext;
 
-	Dispatcher			dispatcher			= new Dispatcher();
+	Dispatcher			dispatcher;
 
 	public static final String	SCHEDULER_INI_FILE	= "schedule.ini";
 
@@ -54,6 +54,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	public ScheduleMainFrame(ApplicationContext aContext) {
 		this.aContext = aContext;		
+		this.dispatcher = aContext.getDispatcher();
 		this.addComponentListener(new ComponentAdapter(){
 			
 			public void componentShown(ComponentEvent e) {
