@@ -91,6 +91,44 @@ public class PathDecompositor
 		return (PathElement)sp.links.listIterator(sp.links.size()).previous();
 	}
 
+	public double getPhysicalDistanceByOptical(double opticalDistance)
+	{
+		double optd = 0;
+		double physd = 0;
+		for (Iterator it = sp.links.iterator(); it.hasNext(); ) {
+			PathElement pe = (PathElement)it.next();
+			optd += pe.getOpticalLength();
+			if (optd >= opticalDistance) {
+				double d = opticalDistance - (optd - pe.getOpticalLength());
+				physd += d / pe.getKu();
+				break;
+			}
+			else
+				physd += pe.getPhysicalLength();
+		}
+		return physd;
+	}
+
+	public double getOpticalDistanceByPhysical(double physicalDistance)
+	{
+		double optd = 0;
+		double physd = 0;
+		for(Iterator it = sp.links.iterator(); it.hasNext();)
+		{
+			PathElement pe = (PathElement)it.next();
+			physd += pe.getPhysicalLength();
+			if(physd >= physicalDistance)
+			{
+				double d = physicalDistance - (physd - pe.getPhysicalLength());
+				optd += d * pe.getKu();
+				break;
+			}
+			else
+				optd += pe.getOpticalLength();
+		}
+		return optd;
+	}
+
 	public double[] getOpticalDistanceFromStart(PathElement pathElement)
 	{
 		if (sp.links.size() == 0)
