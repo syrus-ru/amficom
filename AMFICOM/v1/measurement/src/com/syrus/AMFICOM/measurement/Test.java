@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.29 2004/08/16 16:09:09 bob Exp $
+ * $Id: Test.java,v 1.30 2004/08/16 16:18:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/08/16 16:09:09 $
+ * @version $Revision: 1.30 $, $Date: 2004/08/16 16:18:09 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -96,7 +96,7 @@ public class Test extends StorableObject {
 					this.endTime = new Date(ctts.end_time);
 					break;
 				default:
-					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + discriminator);
+					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
 			}
 		}
 
@@ -116,7 +116,7 @@ public class Test extends StorableObject {
 																								 this.endTime.getTime()));
 					break;
 				default:
-					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + discriminator);
+					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
 			}
 			return ttst;
 		}
