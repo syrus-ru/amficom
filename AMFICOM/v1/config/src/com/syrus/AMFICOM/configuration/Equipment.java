@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.13 2004/08/06 13:08:21 bob Exp $
+ * $Id: Equipment.java,v 1.14 2004/08/06 14:56:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/06 13:08:21 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/06 14:56:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -181,10 +181,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		return this.sort;
 	}
 
-	public Identifier getKISId() throws IllegalDataException {
-		if (this.sort == EquipmentSort._EQUIPMENT_SORT_KIS)
-			return this.kisId;
-		throw new IllegalDataException("Equipment sort: " + this.sort + " not KIS");
+	public Identifier getKISId() {
+		return this.kisId;
 	}
 
 	public void setCharacteristicIds(List characteristicIds) {
