@@ -7,6 +7,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.io.BellcoreStructure;
 
@@ -101,8 +102,8 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 	private void jbInit() throws Exception
 	{
 		//setFocusCycleRoot(false);
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		String markerInfoKey = LangModelAnalyse.getString("markerInfoKey");
 		String markerInfoValue = LangModelAnalyse.getString("markerInfoValue");
 		tModel = new FixedSizeEditableTableModel(

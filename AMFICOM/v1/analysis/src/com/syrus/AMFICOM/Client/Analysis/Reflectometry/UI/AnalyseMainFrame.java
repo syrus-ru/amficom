@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
@@ -29,8 +30,6 @@ public class AnalyseMainFrame extends JFrame
 		implements OperationListener
 {
 	public ApplicationContext aContext;
-	static SimpleDateFormat sdf =
-			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 	private Dispatcher internal_dispatcher = new Dispatcher();
 
 	ClientAnalysisManager aManager = new ClientAnalysisManager();
@@ -130,7 +129,7 @@ public class AnalyseMainFrame extends JFrame
 		tables.add(statsFrame);
 
 		noiseFrame = new ScalableFrame(new ScalableLayeredPanel());
-		noiseFrame.setTitle(LangModelAnalyse.getString("noiseTitle"));
+		noiseFrame.setTitle(LangModelAnalyse.getString("Noise level"));
 		desktopPane.add(noiseFrame);
 		graphs.add(noiseFrame);
 
@@ -360,6 +359,7 @@ public class AnalyseMainFrame extends JFrame
 					setSessionOpened();
 
 					statusBar.setText("status", LangModel.getString("statusReady"));
+					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
 					statusBar.setText("user", aContext.getSessionInterface().getUser());
 				}

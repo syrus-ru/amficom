@@ -6,6 +6,7 @@ import java.util.List;
 
 import java.awt.*;
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.configuration.*;
@@ -17,6 +18,7 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 /*
 |- Архив
@@ -52,7 +54,6 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 public class ArchiveTreeModel extends ObjectResourceTreeModel
 {
 	Domain domain;
-	static SimpleDateFormat sdf = new SimpleDateFormat("MMMMMMMM.yyyy");
 	static Calendar calendar;
 	static Date initialDate;
 	static Date currentDate;
@@ -219,6 +220,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				calendar.setTime(initialDate);
 				while (calendar.getTime().before(currentDate))
 				{
+					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 					vec.add(new ObjectResourceTreeNode(calendar.getTime(), sdf.format(calendar.getTime()), true));
 					calendar.add(Calendar.MONTH, 1);
 				}
@@ -228,6 +230,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				calendar.setTime(initialDate);
 				while (calendar.getTime().before(currentDate))
 				{
+					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 					vec.add(new ObjectResourceTreeNode(calendar.getTime(), sdf.format(calendar.getTime()), true));
 					calendar.add(Calendar.MONTH, 1);
 				}

@@ -8,6 +8,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 
@@ -176,7 +177,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				btn_size,
 				null,
 				LangModelAnalyse.getString("lossanalyse"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/loss.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_LOSS),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -192,7 +193,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				btn_size,
 				null,
 				LangModelAnalyse.getString("reflectionanalyse"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reflect.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_REFLECT),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -208,7 +209,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				btn_size,
 				null,
 				LangModelAnalyse.getString("noanalyse"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/noanalyse.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_NOANALYSIS),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -224,7 +225,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				btn_size,
 				null,
 				LangModelAnalyse.getString("centerA"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/centera.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_CENTER_A),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -240,7 +241,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				btn_size,
 				null,
 				LangModelAnalyse.getString("centerB"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/centerb.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_CENTER_B),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)

@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class TraceSelectorFrame extends JInternalFrame
@@ -110,8 +111,8 @@ public class TraceSelectorFrame extends JInternalFrame
 
 	private void jbInit() throws Exception
 	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		tModel = new FixedSizeEditableTableModel(
 					new String[] {LangModelAnalyse.getString("selectorKey"),
 												LangModelAnalyse.getString("selectorValue")},

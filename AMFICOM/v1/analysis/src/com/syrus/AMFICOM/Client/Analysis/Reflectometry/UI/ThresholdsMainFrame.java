@@ -1,35 +1,85 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.ConnectionInterface;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Command.Session.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateTestSetupCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileAddCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsBellcoreCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsWavetekCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTestSetupCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveAnalysisCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ArrangeWindowCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ShowFrameCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
+import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
+import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsMainFrame extends JFrame
 		implements OperationListener
 {
 	public ApplicationContext aContext;
-	static SimpleDateFormat sdf =
-			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 	private Dispatcher internal_dispatcher = new Dispatcher();
 
 	ClientAnalysisManager aManager = new ClientAnalysisManager();
@@ -336,6 +386,7 @@ public class ThresholdsMainFrame extends JFrame
 				{
 					setSessionOpened();
 					statusBar.setText("status", LangModel.getString("statusReady"));
+					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
 					statusBar.setText("user", aContext.getSessionInterface().getUser());
 				}

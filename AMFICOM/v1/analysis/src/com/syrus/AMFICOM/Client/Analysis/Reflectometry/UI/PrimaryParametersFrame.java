@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class PrimaryParametersFrame extends ATableFrame
@@ -25,7 +26,6 @@ public class PrimaryParametersFrame extends ATableFrame
 	private FixedSizeEditableTableModel tModel;
 	private ATable jTable;
 
-	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
 	JScrollPane scrollPane = new JScrollPane();
@@ -100,8 +100,8 @@ public class PrimaryParametersFrame extends ATableFrame
 
 	private void jbInit() throws Exception
 	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		tModel = new FixedSizeEditableTableModel(
 					new String[] {LangModelAnalyse.getString("parametersKey"),
 												LangModelAnalyse.getString("parametersValue")},
@@ -162,6 +162,7 @@ public class PrimaryParametersFrame extends ATableFrame
 //		double res2 = (bs.fxdParams.AR - bs.fxdParams.AO) * 3d / ((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI/1000d);
 		double res = bs.getResolution();
 		double range = bs.getRange();
+		SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 		String date = sdf.format(bs.getDate());
 
 		tModel.updateColumn(new Object[] {

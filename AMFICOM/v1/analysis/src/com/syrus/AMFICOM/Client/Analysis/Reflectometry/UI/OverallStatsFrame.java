@@ -9,16 +9,13 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
 public class OverallStatsFrame extends ATableFrame
 implements OperationListener
 {
-	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
-	private static StringBuffer db = new StringBuffer(" ").append(LangModelAnalyse.getString("dB"));
-	private static StringBuffer dbkm = new StringBuffer(" ").append(LangModelAnalyse.getString("dB")).
-			append('/').append(LangModelAnalyse.getString("km"));
 
 	private Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
@@ -161,8 +158,8 @@ implements OperationListener
 
 	private void jbInit() throws Exception
 	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		tModel = new FixedSizeEditableTableModel(
 					new String[] {LangModelAnalyse.getString("overallKey"),
 												LangModelAnalyse.getString("overallValue")},
@@ -193,7 +190,7 @@ implements OperationListener
 		scrollPane.setViewport(viewport);
 		scrollPane.setAutoscrolls(true);
 
-		tabbedPane.add("Основная", mainPanel);
+		tabbedPane.add(LangModelAnalyse.getString("Title.main"), mainPanel);
 
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
@@ -204,7 +201,7 @@ implements OperationListener
 		tabbedPane.setEnabledAt(0, true);
 
 
-		tabbedPane.add("Сравнительная", mainPanelWholeComp);
+		tabbedPane.add(LangModelAnalyse.getString("Title.comparative"), mainPanelWholeComp);
 		wctModel = new WholeCompareTableModel();
 		jTableWholeComp = new ATable (wctModel);
 		jTableWholeComp.getColumnModel().getColumn(0).setPreferredWidth(150);
@@ -284,12 +281,12 @@ implements OperationListener
 		int evNum = (int)ev.data[4];
 
 		tModel.updateColumn(new Object[] {
-			new StringBuffer().append(MathRef.round_3(range_km)).append(km).toString(),
-			new StringBuffer().append(MathRef.round_2(loss)).append(db).toString(),
-			new StringBuffer().append(MathRef.round_4(attenuation)).append(dbkm).toString(),
-			new StringBuffer().append(MathRef.round_2(orl)).append(db).toString(),
-			new StringBuffer().append(MathRef.round_2(noise)).append(db).toString(),
-			new StringBuffer().append(MathRef.round_2(DD)).append(db).toString(),
+			MathRef.round_3(range_km) + " " + LangModelAnalyse.getString("km"),
+			MathRef.round_2(loss) + " " + LangModelAnalyse.getString("dB"),
+			MathRef.round_4(attenuation) + " " + LangModelAnalyse.getString("dB") + '/' + LangModelAnalyse.getString("km"),
+			MathRef.round_2(orl) + " " + LangModelAnalyse.getString("dB"),
+			MathRef.round_2(noise) + " " + LangModelAnalyse.getString("dB"),
+			MathRef.round_2(DD) + " " + LangModelAnalyse.getString("dB"),
 			String.valueOf(evNum)
 		}, 1);
 		jTable.updateUI();

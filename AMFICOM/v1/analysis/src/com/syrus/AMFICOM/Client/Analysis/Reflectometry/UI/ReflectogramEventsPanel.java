@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
 
@@ -176,7 +177,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		int h = (int)((noise_level - top) * scaleY - 1);
 		g.drawLine(0, h, jw, h);
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
-		g.drawString("Уровень шумов", jw - 87, h - 1);
+		g.drawString(LangModelAnalyse.getString("Noise level"), jw - 87, h - 1);
 	}
 
 	protected void paint_min_trace_level(Graphics g)

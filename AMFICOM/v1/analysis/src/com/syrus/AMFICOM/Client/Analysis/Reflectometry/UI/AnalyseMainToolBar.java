@@ -7,6 +7,7 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 public class AnalyseMainToolBar extends JToolBar implements ApplicationModelListener
 {
@@ -48,8 +49,7 @@ public class AnalyseMainToolBar extends JToolBar implements ApplicationModelList
 
 		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
 
-		sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif")
-																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
 		sessionOpen.setMaximumSize(buttonSize);
 		sessionOpen.setPreferredSize(buttonSize);
 		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
@@ -75,19 +75,19 @@ public class AnalyseMainToolBar extends JToolBar implements ApplicationModelList
 		traceRemoveCompare.addActionListener(actionAdapter);
 
 
-		buttonFileOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openfile.gif")));
+		buttonFileOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_FILE));
 		buttonFileOpen.setMaximumSize(buttonSize);
 		buttonFileOpen.setPreferredSize(buttonSize);
 		buttonFileOpen.setToolTipText(LangModelAnalyse.getString("menuFileOpen"));
 		buttonFileOpen.setName("menuFileOpen");
 		buttonFileOpen.addActionListener(actionAdapter);
-		fileAdd.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addfile.gif")));
+		fileAdd.setIcon(UIManager.getIcon(ResourceKeys.ICON_ADD_FILE));
 		fileAdd.setMaximumSize(buttonSize);
 		fileAdd.setPreferredSize(buttonSize);
 		fileAdd.setToolTipText(LangModelAnalyse.getString("menuFileAddCompare"));
 		fileAdd.setName("menuFileAddCompare");
 		fileAdd.addActionListener(actionAdapter);
-		fileRemove.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefile.gif")));
+		fileRemove.setIcon(UIManager.getIcon(ResourceKeys.ICON_REMOVE_FILE));
 		fileRemove.setMaximumSize(buttonSize);
 		fileRemove.setPreferredSize(buttonSize);
 		fileRemove.setToolTipText(LangModelAnalyse.getString("menuFileRemoveCompare"));

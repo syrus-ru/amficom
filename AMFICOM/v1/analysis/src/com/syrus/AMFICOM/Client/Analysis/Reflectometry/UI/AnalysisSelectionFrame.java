@@ -2,16 +2,20 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.swing.table.*;
 
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MinuitAnalyseCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 import oracle.jdeveloper.layout.*;
@@ -195,8 +199,8 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 	private void jbInit() throws Exception
 	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
@@ -225,8 +229,8 @@ public class AnalysisSelectionFrame extends ATableFrame
 		jButton1.setMinimumSize(btn_size);
 		jButton1.setPreferredSize(btn_size);
 		jButton1.setToolTipText(LangModelAnalyse.getString("analysisStart"));
-		jButton1.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/perform_analysis.gif")));
-		jButton1.addActionListener(new java.awt.event.ActionListener()
+		jButton1.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
+		jButton1.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -238,8 +242,8 @@ public class AnalysisSelectionFrame extends ATableFrame
 		jButton2.setMinimumSize(btn_size);
 		jButton2.setPreferredSize(btn_size);
 		jButton2.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
-		jButton2.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cs_initial.gif")));
-		jButton2.addActionListener(new java.awt.event.ActionListener()
+		jButton2.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
+		jButton2.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -252,8 +256,8 @@ public class AnalysisSelectionFrame extends ATableFrame
 		jButton3.setMinimumSize(btn_size);
 		jButton3.setPreferredSize(btn_size);
 		jButton3.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
-		jButton3.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cs_default.gif")));
-		jButton3.addActionListener(new java.awt.event.ActionListener()
+		jButton3.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
+		jButton3.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{

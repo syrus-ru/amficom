@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
@@ -205,8 +206,8 @@ public class DetailedEventsFrame extends JInternalFrame
 
 	private void jbInit() throws Exception
 	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
 		FixedSizeEditableTableModel linearModel = new FixedSizeEditableTableModel(
 				new String[] {LangModelAnalyse.getString("eventDetailedParam"),
@@ -307,7 +308,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		//this.setMaximizable(true);
 		this.setTitle(LangModelAnalyse.getString("eventDetailedTableTitle"));
 
-		tabbedPane.add("ќсновные", mainPanel);
+		tabbedPane.add(LangModelAnalyse.getString("Title.mains"), mainPanel);
 
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -322,7 +323,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		tabbedPane.setEnabledAt(0, true);
 
 
-		tabbedPane.add("—равнительные", mainPanelComp);
+		tabbedPane.add(LangModelAnalyse.getString("Title.comparatives"), mainPanelComp);
 
 		ctModel = new CompareTableModel();
 		jTableComp = new ATable (ctModel);
@@ -426,8 +427,8 @@ public class DetailedEventsFrame extends JInternalFrame
 		difference           = ((int)(difference*1000.))/1000.; // точность 0.001 дЅ
 		meanDeviation        = ((int)(meanDeviation*1000.))/1000.;
 
-		ctModel.setValueAt(String.valueOf(difference)+" дЅ", 2, 1);
-		ctModel.setValueAt(String.valueOf(meanDeviation)+" дЅ", 3, 1);
+		ctModel.setValueAt(difference+" " + LangModelAnalyse.getString("dB"), 2, 1);
+		ctModel.setValueAt(meanDeviation+" " + LangModelAnalyse.getString("dB"), 3, 1);
 
 		// сравнение с эталонным событием
 		if(etalonEvent != null) // из равенства следует, что эталонное событие найдено
@@ -440,9 +441,9 @@ public class DetailedEventsFrame extends JInternalFrame
 			widthDiff       = ((int)(widthDiff*1.))/1.;	// точность 1 м
 			locationDiff    = ((int)(locationDiff*1.))/1.;
 
-			ctModel.setValueAt(String.valueOf(lossDiff)+" дЅ", 4, 1);
-			ctModel.setValueAt(String.valueOf(widthDiff)+" м", 5, 1);
-			ctModel.setValueAt(String.valueOf(locationDiff)+" м", 6, 1);
+			ctModel.setValueAt(lossDiff+" " + LangModelAnalyse.getString("dB"), 4, 1);
+			ctModel.setValueAt(String.valueOf(widthDiff)+" " + LangModelAnalyse.getString("m"), 5, 1);
+			ctModel.setValueAt(String.valueOf(locationDiff)+" " + LangModelAnalyse.getString("m"), 6, 1);
 		}
 		else
 		{

@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+
 public class SimpleResizableFrame extends JInternalFrame
 {
 	public ResizableLayeredPanel panel;
@@ -30,8 +32,8 @@ public class SimpleResizableFrame extends JInternalFrame
 
 	private void jbInit() throws Exception
 	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setMaximizable(true);
