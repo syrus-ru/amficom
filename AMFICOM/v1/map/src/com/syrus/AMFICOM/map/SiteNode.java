@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.17 2005/02/07 10:33:10 bob Exp $
+ * $Id: SiteNode.java,v 1.18 2005/02/08 12:01:47 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
  * @author $Author: bob $
- * @version $Revision: 1.17 $, $Date: 2005/02/07 10:33:10 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/08 12:01:47 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -439,7 +439,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 				TypicalCondition condition = new TypicalCondition(
 						typeCodeName,
 						OperationSort.OPERATION_EQUALS,
-						new Short(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE),
+						ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME);
 				
 				List list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -462,7 +462,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 				condition = new TypicalCondition(
 					imageCodeName,
 					OperationSort.OPERATION_EQUALS,
-					new Short(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
+					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 				
 				list = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);

@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.24 2005/02/07 10:33:10 bob Exp $
+ * $Id: PhysicalLink.java,v 1.25 2005/02/08 12:01:47 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
  * @author $Author: bob $
- * @version $Revision: 1.24 $, $Date: 2005/02/07 10:33:10 $
+ * @version $Revision: 1.25 $, $Date: 2005/02/08 12:01:47 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -968,7 +968,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			TypicalCondition condition = new TypicalCondition(
 				typeCodeName,
 				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE),
+				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 			
 			List list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
