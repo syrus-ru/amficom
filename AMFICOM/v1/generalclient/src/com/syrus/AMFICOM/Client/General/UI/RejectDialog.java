@@ -29,57 +29,57 @@ public class RejectDialog extends JDialog {
 
   public RejectDialog(Frame frame, String title, boolean modal)
   {
-    super(frame, title, modal);
-    try {
-      jbInit();
-      pack();
-    }
-    catch(Exception ex) {
-      ex.printStackTrace();
-    }
+	 super(frame, title, modal);
+	 try {
+		jbInit();
+		pack();
+	 }
+	 catch(Exception ex) {
+		ex.printStackTrace();
+	 }
   }
 
 
   public RejectDialog(String m)
   {
-    this(null, m, true);
+	 this(null, m, true);
 
-    if(m != null)
-       this.message = m;
-    this.ErrorMessage.setText(m);
-    this.ErrorMessage.show(true);
-    this.setLocation(400,300);
-    this.setSize(400, 145);
-    this.setModal(true);
-    this.show(true);
-    ErrorMessage.show(true);
+	 if(m != null)
+		 this.message = m;
+	 this.ErrorMessage.setText(m);
+	 this.ErrorMessage.setVisible(true);
+	 this.setLocation(400,300);
+	 this.setSize(400, 145);
+	 this.setModal(true);
+	 this.setVisible(true);
+	 ErrorMessage.setVisible(true);
   }
-  private void jbInit() throws Exception 
+  private void jbInit() throws Exception
   {
 		this.setResizable(false);
-    panel1.setLayout(verticalFlowLayout1);
-    jButtonOk.setText("Ok");
-    jButtonOk.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        jButtonOk_actionPerformed(e);
-      }
-    });
-    ErrorMessage.setText("jTextArea1");
-    jPanel2.setLayout(borderLayout1);
-    jPanel2.setBorder(BorderFactory.createEtchedBorder());
-    jPanel2.setPreferredSize(new Dimension(400, 70));
-       this.ErrorMessage.enable(false);
-       this.ErrorMessage.setEditable(false);
-       ErrorMessage.setBackground(new Color(212, 208, 200));
-    this.ErrorMessage.setBorder(BorderFactory.createEtchedBorder());
+	 panel1.setLayout(verticalFlowLayout1);
+	 jButtonOk.setText("Ok");
+	 jButtonOk.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		  jButtonOk_actionPerformed(e);
+		}
+	 });
+	 ErrorMessage.setText("jTextArea1");
+	 jPanel2.setLayout(borderLayout1);
+	 jPanel2.setBorder(BorderFactory.createEtchedBorder());
+	 jPanel2.setPreferredSize(new Dimension(400, 70));
+		 this.ErrorMessage.setEnabled(false);
+		 this.ErrorMessage.setEditable(false);
+		 ErrorMessage.setBackground(new Color(212, 208, 200));
+	 this.ErrorMessage.setBorder(BorderFactory.createEtchedBorder());
 
-    jScrollPane1.setBorder(null);
-    panel1.add(jPanel2, null);
-    jPanel2.add(jScrollPane1, BorderLayout.CENTER);
-    jScrollPane1.getViewport().add(ErrorMessage, null);
-    panel1.add(jPanel1, null);
-    jPanel1.add(jButtonOk, null);
-    this.getContentPane().add(panel1, BorderLayout.CENTER);
+	 jScrollPane1.setBorder(null);
+	 panel1.add(jPanel2, null);
+	 jPanel2.add(jScrollPane1, BorderLayout.CENTER);
+	 jScrollPane1.getViewport().add(ErrorMessage, null);
+	 panel1.add(jPanel1, null);
+	 jPanel1.add(jButtonOk, null);
+	 this.getContentPane().add(panel1, BorderLayout.CENTER);
   }
 
 
@@ -87,7 +87,7 @@ public class RejectDialog extends JDialog {
 
   void jButtonOk_actionPerformed(ActionEvent e)
   {
-    this.dispose();
+	 this.dispose();
   }
 
 }

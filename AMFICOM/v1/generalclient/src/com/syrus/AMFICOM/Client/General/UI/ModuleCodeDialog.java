@@ -65,7 +65,7 @@ public class ModuleCodeDialog extends JDialog
 
 	void buttonOk_actionPerformed(ActionEvent e)
 	{
-		String sta = fieldPassword.getText();
+		String sta = new String(fieldPassword.getPassword());
 
 		if(sta.equals(stb))
 		{

@@ -148,9 +148,9 @@ public class ChangePasswordDialog extends JDialog
 	void buttonOk_actionPerformed(ActionEvent e)
 	{
 		String puser = fieldUser.getText();
-		String pold = fieldOldPassword.getText();
-		String pnew = fieldNewPassword.getText();
-		String pnew2 = fieldNewPassword2.getText();
+		String pold = new String(fieldOldPassword.getPassword());
+		String pnew = new String (fieldNewPassword.getPassword());
+		String pnew2 = new String(fieldNewPassword2.getPassword());
 
 		SessionInterface si = aContext.getSessionInterface();
 

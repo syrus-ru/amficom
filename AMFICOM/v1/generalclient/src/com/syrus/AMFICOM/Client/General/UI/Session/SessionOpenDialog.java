@@ -157,7 +157,7 @@ public class SessionOpenDialog extends JDialog
 	void buttonOk_actionPerformed(ActionEvent e)
 	{
 		si.setUser(fieldUser.getText());
-		si.setPassword(fieldPassword.getText());
+		si.setPassword(new String (fieldPassword.getPassword()));
 		SessionInterface ssi = si.OpenSession();
 
 		if(ssi == null)

@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.Client.Resource.ImageResource;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import javax.swing.JScrollPane;
 
-public class ImagesPanel extends JPanel 
+public class ImagesPanel extends JPanel
 		implements OperationListener
 {
 	private FlowLayout flowLayout1 = new FlowLayout();
@@ -71,7 +71,7 @@ public class ImagesPanel extends JPanel
 		imagesPanel.setMaximumSize(new Dimension(0, 1300));
 		imagesPanel.setMinimumSize(new Dimension(0, 100));
 		imagesPanel.setPreferredSize(new Dimension(0, 100));
-		
+
 		jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 //		jScrollPane1.getViewport().setLayout();
@@ -80,7 +80,7 @@ public class ImagesPanel extends JPanel
 		this.add(jScrollPane1, BorderLayout.CENTER);
 
 		chooseButton.setText("Выбрать");
-		chooseButton.disable();
+		chooseButton.setEnabled(false);
 		addButton.setText("Добавить");
 		cancelButton.setText("Отменить");
 		buttonsPanel.add(chooseButton, null);
@@ -116,13 +116,13 @@ public class ImagesPanel extends JPanel
 		{
 			ImagesPanelLabel ipl = (ImagesPanelLabel )oe.getSource();
 			ir = (ImageResource )ipl.ir;
-			chooseButton.enable();
+			chooseButton.setEnabled(true);
 		}
 		else
 		if(oe.getActionCommand().equals("selectir"))
 		{
 			ir = (ImageResource )oe.getSource();
-			chooseButton.enable();
+			chooseButton.setEnabled(true);
 		}
 	}
 
@@ -139,13 +139,13 @@ public class ImagesPanel extends JPanel
 	private void addButton_actionPerformed(ActionEvent e)
 	{
 		JFileChooser chooser = new JFileChooser();
-        chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", "Picture"));
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION)
-        {
+		  chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", "Picture"));
+		  int returnVal = chooser.showOpenDialog(null);
+		  if(returnVal == JFileChooser.APPROVE_OPTION)
+		  {
 			ImageResource ir = new ImageResource(
-					dsi.GetUId(ImageResource.typ), 
-					chooser.getSelectedFile().getName(), 
+					dsi.GetUId(ImageResource.typ),
+					chooser.getSelectedFile().getName(),
 					chooser.getSelectedFile().getAbsolutePath());
 			ImageCatalogue.add(ir.getId(), ir);
 			ImageIcon icon = new ImageIcon(ir.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
@@ -154,7 +154,7 @@ public class ImagesPanel extends JPanel
 			if(disp != null)
 				disp.notify(new OperationEvent(ir, 0, "selectir"));
 			imagesPanel.revalidate();
-        }	
+		  }
 	}
 
 }
