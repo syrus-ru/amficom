@@ -1,12 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
 import java.awt.event.KeyEvent;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
+
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 public class SchemePanelNoEdition extends SchemePanel
@@ -61,6 +60,11 @@ public class SchemePanelNoEdition extends SchemePanel
 			}
 		}
 		super.operationPerformed(ae);
+	}
+
+	public String getReportTitle()
+	{
+		return LangModelSchematics.getString("scheme");
 	}
 
 	public void keyPressed(KeyEvent e)

@@ -1,36 +1,18 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.Component;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.Dimension;
+import java.awt.*;
 import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JToolBar;
-
-import javax.swing.JOptionPane;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import javax.swing.*;
 
 import com.jgraph.graph.DefaultGraphModel;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class SchemePanel extends ElementsPanel
 {
@@ -105,6 +87,11 @@ public class SchemePanel extends ElementsPanel
 	public void init_module()
 	{
 		super.init_module();
+	}
+
+	public String getReportTitle()
+	{
+		return LangModelSchematics.getString("schemeMainTitle");
 	}
 /*
 	public void operationPerformed(OperationEvent ae)

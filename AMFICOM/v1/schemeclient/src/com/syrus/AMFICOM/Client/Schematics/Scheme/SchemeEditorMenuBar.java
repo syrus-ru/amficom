@@ -49,6 +49,9 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 	JMenuItem menuPathRemoveLink = new JMenuItem();
 	JMenuItem menuPathUpdateLink = new JMenuItem();
 
+	JMenu menuReport = new JMenu();
+	JMenuItem menuReportCreate = new JMenuItem();
+
 	JMenu menuWindow = new JMenu();
 	JMenuItem menuWindowArrange = new JMenuItem();
 	JMenuItem menuWindowTree = new JMenuItem();
@@ -191,7 +194,6 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 		menuPathEdit.setName("menuPathEdit");
 		menuPathEdit.setText(LangModelSchematics.getString("menuPathEdit"));
 		menuPathEdit.addActionListener(actionAdapter);
-
 		menuPath.add(menuPathNew);
 		menuPath.add(menuPathEdit);
 		menuPath.add(menuPathSave);
@@ -204,6 +206,13 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 		menuPath.add(menuPathAddLink);
 		menuPath.add(menuPathRemoveLink);
 		menuPath.add(menuPathUpdateLink);
+
+		menuReport.setName("menuReport");
+		menuReport.setText(LangModelSchematics.getString("menuReport"));
+		menuReportCreate.setName("menuReportCreate");
+		menuReportCreate.setText(LangModelSchematics.getString("menuReportCreate"));
+		menuReportCreate.addActionListener(actionAdapter);
+		menuReport.add(menuReportCreate);
 
 		menuWindow.setText(LangModelSchematics.getString("menuWindow"));
 		menuWindow.setName("menuWindow");
@@ -241,6 +250,7 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 		add(menuSession);
 		add(menuScheme);
 		add(menuPath);
+		add(menuReport);
 		add(menuWindow);
 	}
 
@@ -304,6 +314,11 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 		menuPathDelete.setEnabled(aModel.isEnabled("menuPathDelete"));
 		menuPathEdit.setVisible(aModel.isVisible("menuPathEdit"));
 		menuPathEdit.setEnabled(aModel.isEnabled("menuPathEdit"));
+
+		menuReport.setVisible(aModel.isVisible("menuReport"));
+		menuReport.setEnabled(aModel.isEnabled("menuReport"));
+		menuReportCreate.setVisible(aModel.isVisible("menuReportCreate"));
+		menuReportCreate.setEnabled(aModel.isEnabled("menuReportCreate"));
 
 		menuWindow.setVisible(aModel.isVisible("menuWindow"));
 		menuWindow.setEnabled(aModel.isEnabled("menuWindow"));

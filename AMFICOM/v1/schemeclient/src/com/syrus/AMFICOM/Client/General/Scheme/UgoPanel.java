@@ -1,57 +1,22 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.print.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.AbstractButton;
-import javax.swing.Action;
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
+import com.jgraph.graph.*;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
-import com.jgraph.graph.CellView;
-import com.jgraph.graph.DefaultEdge;
-import com.jgraph.graph.DefaultGraphModel;
-import com.jgraph.graph.GraphConstants;
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import oracle.jdeveloper.layout.*;
 
 public class UgoPanel extends JPanel
 		implements Printable, OperationListener
@@ -126,6 +91,11 @@ public class UgoPanel extends JPanel
 		//graph.setEditable(false);
 		//graph.setEnabled(false);
 		graph.setBendable(true);
+	}
+
+	public String getReportTitle()
+	{
+		return LangModelSchematics.getString("elementsUGOTitle");
 	}
 
 	public void setUgoInsertable (boolean b)

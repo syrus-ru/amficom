@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.Report.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.*;
@@ -47,6 +48,7 @@ public class SchemeEditorMainFrame extends JFrame
 	PropsFrame propsFrame;
 	ElementsListFrame elementsListFrame;
 	JInternalFrame treeFrame;
+	ArrayList graphs = new ArrayList();
 
 	public SchemeEditorMainFrame(ApplicationContext aContext)
 	{
@@ -118,6 +120,7 @@ public class SchemeEditorMainFrame extends JFrame
 		editorFrame = new PrimarySchemeEditorFrame(aContext, epanel);
 		editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
 		desktopPane.add(editorFrame);
+		graphs.add(epanel);
 
 		upanel = new UgoPanel(aContext);
 		upanel.setUgoInsertable(false);
@@ -131,6 +134,7 @@ public class SchemeEditorMainFrame extends JFrame
 		};
 		ugoFrame.setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 		desktopPane.add(ugoFrame);
+		graphs.add(upanel);
 
 		scheme_graph = epanel.getGraph();
 
@@ -219,6 +223,12 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setCommand("menuPathCancel", new PathCancelCommand(aContext, scheme_graph));
 		aModel.setCommand("menuPathDelete", new PathDeleteCommand(aContext, epanel));
 
+		CreateSchemeReportCommand rc = new CreateSchemeReportCommand(aContext);
+		for (Iterator it = graphs.iterator(); it.hasNext();)
+			rc.setParameter(CreateSchemeReportCommand.PANEL, it.next());
+		rc.setParameter(CreateSchemeReportCommand.TYPE, ReportTemplate.rtt_Scheme);
+		aModel.setCommand("menuReportCreate", rc);
+
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(new SchemeEditorWindowArranger(this)));
 		aModel.setCommand("menuWindowTree", new ShowFrameCommand(desktopPane, treeFrame));
 		aModel.setCommand("menuWindowScheme", new ShowFrameCommand(desktopPane, editorFrame));
@@ -293,6 +303,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setEnabled("menuSessionConnection", true);
 		aModel.setEnabled("menuScheme", true);
 		aModel.setEnabled("menuPath", true);
+		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
 
 		aModel.setVisible("menuSchemeExport", false);
@@ -614,6 +625,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.enable("menuSchemeSaveAs");
 		aModel.enable("menuInsertToCatalog");
 		aModel.enable("menuPathNew");
+		aModel.enable("menuReportCreate");
 
 		aModel.fireModelChanged("");
 
@@ -642,6 +654,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setEnabled("menuSchemeExport", false);
 		aModel.setEnabled("menuSchemeImport", false);
 		aModel.setEnabled("menuPathNew", false);
+		aModel.setEnabled("menuReportCreate", false);
 
 		aModel.setEnabled("menuWindowArrange", false);
 		aModel.setEnabled("menuWindowTree", false);

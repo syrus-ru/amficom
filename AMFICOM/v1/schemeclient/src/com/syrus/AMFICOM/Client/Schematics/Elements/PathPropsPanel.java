@@ -1,34 +1,16 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-
-import java.awt.*;
-import java.util.*;
-
-import javax.swing.ImageIcon;
-
-import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.MapProtoGroup;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
+import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
@@ -661,7 +643,11 @@ class PathTreeModel extends ObjectResourceTreeModel
 		{
 			HashSet hs = new HashSet();
 			for (Enumeration enum = path.links.elements(); enum.hasMoreElements();)
-				hs.add(((PathElement)enum.nextElement()).scheme_id);
+			{
+				PathElement pe = (PathElement)enum.nextElement();
+				if (pe.scheme_id != null && pe.scheme_id.length() != 0)
+					hs.add(pe.scheme_id);
+			}
 
 			for (Iterator it = hs.iterator(); it.hasNext();)
 			{

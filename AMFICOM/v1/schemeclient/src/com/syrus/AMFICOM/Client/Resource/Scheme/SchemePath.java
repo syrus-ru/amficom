@@ -38,6 +38,7 @@ public class SchemePath extends ObjectResource
 	public Hashtable attributes = new Hashtable();
 
 	public Vector links = new Vector();
+	//public Hashtable links = new Hashtable();
 
 	public MapTransmissionPathProtoElement mtppe = null;
 
@@ -62,8 +63,8 @@ public class SchemePath extends ObjectResource
 		type_id = path.type_id;
 		path_id = path.path_id;
 
-		for(int i = 0; i < path.links.size(); i++)
-			links.add(path.links.get(i));
+		for(Enumeration en = path.links.elements(); en.hasMoreElements();)
+			links.add(en.nextElement());
 
 		for(Enumeration e = path.attributes.keys(); e.hasMoreElements();)
 		{
@@ -101,8 +102,8 @@ public class SchemePath extends ObjectResource
 		path.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 
 		path.links = new Vector(links.size());
-		for (int i = 0; i < links.size(); i++)
-			path.links.add(((PathElement)links.get(i)).clone(dataSource));
+		for (Enumeration en = links.elements(); en.hasMoreElements();)
+			path.links.add(((PathElement)en.nextElement()).clone(dataSource));
 
 		path.mtppe = mtppe;
 
