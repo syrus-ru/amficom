@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.9 2005/02/08 14:52:21 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/02/09 13:25:42 bob Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -7,7 +7,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/08 14:52:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/09 13:25:42 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -116,9 +116,12 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool
 								.getStorableObject(id, true);
 						SetParameter[] setParameters = measurementSetup.getParameterSet().getParameters();
+						List setParameterTypes = new ArrayList(setParameters.length);
+						for (int i = 0; i < setParameters.length; i++) 
+							setParameterTypes.add(setParameters[i].getType());						
 						params.addAll(measurementType.getInParameterTypes());
 						params.addAll(measurementType.getOutParameterTypes());						
-						condition = super.conditionTest(Arrays.asList(setParameters), params);
+						condition = super.conditionTest(setParameterTypes, params);
 					}
 				}
 
