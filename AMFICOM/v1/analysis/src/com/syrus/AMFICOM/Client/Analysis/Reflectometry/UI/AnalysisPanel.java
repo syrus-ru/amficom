@@ -47,8 +47,8 @@ public class AnalysisPanel extends MapMarkersPanel
 		lines[0].point[1] = markerA.pos-8-(int)ana_line_w;
 		lines[1].point[0] = markerA.pos+8+(int)ana_line_w;
 		lines[1].point[1] = markerA.pos + (int)(y.length*.05);
-		lines[0].factor = MathRef.LSA(y, lines[0].point[0], lines[0].point[1]);
-		lines[1].factor = MathRef.LSA(y, lines[1].point[0], lines[1].point[1]);
+		lines[0].factor = MathRef.calcLSA(y, lines[0].point[0], lines[0].point[1]);
+		lines[1].factor = MathRef.calcLSA(y, lines[1].point[0], lines[1].point[1]);
 
 		markerB = new Marker ("B", (int)(y.length * .8));
 		markerB.id = "B";
@@ -439,10 +439,10 @@ public class AnalysisPanel extends MapMarkersPanel
 		{
 			lines[0].move(moved);
 			lines[0].checkBounds(0, m.pos - 1, 1);
-			lines[0].factor = MathRef.LSA(y, lines[0].point[0], lines[0].point[1]);
+			lines[0].factor = MathRef.calcLSA(y, lines[0].point[0], lines[0].point[1]);
 			lines[1].move(moved);
 			lines[1].checkBounds(m.pos + 1, y.length-1, 1);
-			lines[1].factor = MathRef.LSA(y, lines[1].point[0], lines[1].point[1]);
+			lines[1].factor = MathRef.calcLSA(y, lines[1].point[0], lines[1].point[1]);
 		}
 
 		updMarker(m);
@@ -473,7 +473,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		lines[i].move(j, new_pos);
 		lines[0].checkBounds(0, markerA.pos - 1, 1);
 		lines[1].checkBounds(markerA.pos + 1, y.length-1, 1);
-		lines[i].factor = MathRef.LSA(y, lines[i].point[0], lines[i].point[1]);
+		lines[i].factor = MathRef.calcLSA(y, lines[i].point[0], lines[i].point[1]);
 
 		updMarker(markerA);
 		updAnalysisMarkerInfo();
@@ -487,9 +487,9 @@ public class AnalysisPanel extends MapMarkersPanel
 		mInfo.a_b_distance_m = mInfo.a_b_distance * delta_x;
 		mInfo.a_b_loss = y[l] - y[r];
 		mInfo.a_b_attenuation = 1000d * (mInfo.a_b_loss) / mInfo.a_b_distance_m;
-		double lsa[] = MathRef.LSA(y, l, r);
+		double lsa[] = MathRef.calcLSA(y, l, r);
 		mInfo.lsa_attenuation = -1000d * lsa[0] / delta_x;
-		mInfo.a_b_orl = MathRef.ORL(y, l, r);
+		mInfo.a_b_orl = MathRef.calcORL(y, l, r);
 		moved_here = true;
 		dispatcher.notify(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_MOVED_EVENT));
 		moved_here = false;

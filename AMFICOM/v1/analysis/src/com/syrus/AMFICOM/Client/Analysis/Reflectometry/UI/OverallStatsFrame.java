@@ -291,7 +291,7 @@ public class OverallStatsFrame extends ATableFrame
 		double range_km = ev.last_point * bs.getResolution() / 1000.0;
 		double loss = Math.abs(ev.data[0] -  ev.data[1]);
 		double attenuation = loss / range_km;
-		double orl = MathRef.ORL(ev.data[0], ev.data[1]);
+		double orl = MathRef.calcORL(ev.data[0], ev.data[1]);
 		double noise = ev.data[2];
 		double DD = ev.data[2] - ev.data[3];
 		int evNum = (int)ev.data[4];
