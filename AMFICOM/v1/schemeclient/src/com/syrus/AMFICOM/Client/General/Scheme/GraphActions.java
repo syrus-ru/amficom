@@ -983,7 +983,7 @@ public class GraphActions
 			if (!group.getSchemeElementId().equals(""))
 			{
 				List v = se.getUgoCell().getData();
-				if (se.schemeElements().length != 0 ||
+				if (se.getSchemeElementsAsArray().length != 0 ||
 						(v != null && v.size() != 0 && ((Object[])v.get(0)).length != 0))
 						{
 							JMenuItem menu1 = new JMenuItem(new AbstractAction()

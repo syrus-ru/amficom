@@ -145,7 +145,7 @@ class DeleteAction extends AbstractAction
 					if (panel.getGraph().getScheme() != null)
 						Arrays.asList(panel.getGraph().getScheme().getSchemeLinksAsArray()).remove(link);
 					if(panel.getGraph().getSchemeElement() != null)
-						Arrays.asList(panel.getGraph().getSchemeElement().schemeLinks()).remove(link);
+						Arrays.asList(panel.getGraph().getSchemeElement().getSchemeLinksAsArray()).remove(link);
 					if (link.getLink() != null)
 					{
 						link.setLink(null);
@@ -392,7 +392,7 @@ class GroupSEAction extends AbstractAction
 				scheme_el = SchemeElement.createInstance();
 
 			group.setSchemeElementId(scheme_el.getId());
-			group.setSchemeId(scheme_el.internalScheme().getId());
+			group.setSchemeId(scheme_el.getInnerScheme().getId());
 
 			if (graph.getScheme() != null)
 			{
@@ -414,7 +414,7 @@ class GroupSEAction extends AbstractAction
 					SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
 					if (se != null)
 					{
-						java.util.List schemeElements = Arrays.asList(scheme_el.schemeElements());
+						java.util.List schemeElements = Arrays.asList(scheme_el.getSchemeElementsAsArray());
 						if (!schemeElements.contains(se))
 							schemeElements.add(se);
 					}
@@ -425,20 +425,20 @@ class GroupSEAction extends AbstractAction
 							sel = SchemeElement.createInstance(((DeviceGroup)cells[i]).getProtoElement());
 						else
 							sel = SchemeElement.createInstance();
-						java.util.List schemeElements = Arrays.asList(scheme_el.schemeElements());
+						java.util.List schemeElements = Arrays.asList(scheme_el.getSchemeElementsAsArray());
 						if (!schemeElements.contains(sel))
 							schemeElements.add(sel);
 					}
 				}
 				else if (cells[i] instanceof DeviceCell)
 				{
-					java.util.List schemeDevices = Arrays.asList(scheme_el.schemeDevices());
+					java.util.List schemeDevices = Arrays.asList(scheme_el.getSchemeDevicesAsArray());
 					if (!schemeDevices.contains(((DeviceCell)cells[i]).getSchemeDevice()))
 						schemeDevices.add(((DeviceCell)cells[i]).getSchemeDevice());
 				}
 				else if (cells[i] instanceof DefaultLink)
 				{
-					java.util.List schemeLinks = Arrays.asList(scheme_el.schemeLinks());
+					java.util.List schemeLinks = Arrays.asList(scheme_el.getSchemeLinksAsArray());
 					if (!schemeLinks.contains(((DefaultLink)cells[i]).getSchemeLink()))
 						schemeLinks.add(((DefaultLink)cells[i]).getSchemeLink());
 				}

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.7 2005/03/22 17:33:47 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.8 2005/03/23 14:56:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/22 17:33:47 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/23 14:56:39 $
  * @module schemeclient_v1
  */
 
@@ -369,8 +369,8 @@ public class SchemeTreeModel implements SOTreeDataModel {
 				List ds = new LinkedList();
 				for (int i = 0; i < parent.getSchemeElementsAsArray().length; i++) {
 					SchemeElement el = parent.getSchemeElementsAsArray()[i];
-					if (el.internalScheme() != null)
-						ds.add(el.internalScheme());
+					if (el.getInnerScheme() != null)
+						ds.add(el.getInnerScheme());
 				}
 				if (ds.size() > 0) {
 					for (Iterator it = ds.iterator(); it.hasNext();) {
@@ -387,18 +387,18 @@ public class SchemeTreeModel implements SOTreeDataModel {
 					Scheme scheme = (Scheme) parent;
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
 						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
-						if (element.internalScheme() == null)
+						if (element.getInnerScheme() == null)
 							ds.add(element);
 					}
 				} 
 				else if (parent instanceof SchemeElement) {
 					SchemeElement el = (SchemeElement) parent;
-					ds.addAll(Arrays.asList(el.schemeElements()));
+					ds.addAll(Arrays.asList(el.getSchemeElementsAsArray()));
 				}
 				if (ds.size() > 0) {
 					for (Iterator it = ds.iterator(); it.hasNext();) {
 						SchemeElement element = (SchemeElement) it.next();
-						if (element.schemeLinks().length != 0	|| element.schemeElements().length != 0) {
+						if (element.getSchemeLinksAsArray().length != 0	|| element.getSchemeElementsAsArray().length != 0) {
 							if (!contents.contains(element))
 								node.add(new SOMutableNode(this, element, true));
 						}
@@ -421,8 +421,8 @@ public class SchemeTreeModel implements SOTreeDataModel {
 				} 
 				else if (parent instanceof SchemeElement) {
 					SchemeElement el = (SchemeElement) parent;
-					for (int i = 0; i < el.schemeLinks().length; i++) {
-						SchemeLink link = el.schemeLinks()[i];
+					for (int i = 0; i < el.getSchemeLinksAsArray().length; i++) {
+						SchemeLink link = el.getSchemeLinksAsArray()[i];
 						if (!contents.contains(link))
 							node.add(new SOMutableNode(this, link, false));
 					}
@@ -498,14 +498,14 @@ public class SchemeTreeModel implements SOTreeDataModel {
 					boolean has_elements = false;
 					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++) {
 						SchemeElement el = s.getSchemeElementsAsArray()[i];
-						if (el.internalScheme() == null) {
+						if (el.getInnerScheme() == null) {
 							has_elements = true;
 							break;
 						}
 					}
 					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++) {
 						SchemeElement el = s.getSchemeElementsAsArray()[i];
-						if (el.internalScheme() != null) {
+						if (el.getInnerScheme() != null) {
 							has_schemes = true;
 							break;
 						}
@@ -534,13 +534,13 @@ public class SchemeTreeModel implements SOTreeDataModel {
 			} 
 			else if (node.getUserObject() instanceof SchemeElement) {
 				SchemeElement schel = (SchemeElement) node.getUserObject();
-				if (schel.internalScheme() != null) {
-					Scheme scheme = schel.internalScheme();
+				if (schel.getInnerScheme() != null) {
+					Scheme scheme = schel.getInnerScheme();
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
 						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
-						if (element.internalScheme() == null) {
+						if (element.getInnerScheme() == null) {
 							if (!contents.contains(element))
-								node.add(new SOMutableNode(this, element, (element.schemeLinks().length != 0 || element.schemeElements().length != 0)));
+								node.add(new SOMutableNode(this, element, (element.getSchemeLinksAsArray().length != 0 || element.getSchemeElementsAsArray().length != 0)));
 						} 
 						else {
 							if (!contents.contains(element))
@@ -549,11 +549,11 @@ public class SchemeTreeModel implements SOTreeDataModel {
 					}
 				} 
 				else {
-					if (schel.schemeElements().length != 0) {
+					if (schel.getSchemeElementsAsArray().length != 0) {
 						if (!contents.contains(Constants.SCHEME_ELEMENT))
 							node.add(new SOMutableNode(this, Constants.SCHEME_ELEMENT));
 					}
-					if (schel.schemeLinks().length != 0) {
+					if (schel.getSchemeLinksAsArray().length != 0) {
 						if (!contents.contains(Constants.SCHEME_LINK))
 							node.add(new SOMutableNode(this, Constants.SCHEME_LINK));
 					}

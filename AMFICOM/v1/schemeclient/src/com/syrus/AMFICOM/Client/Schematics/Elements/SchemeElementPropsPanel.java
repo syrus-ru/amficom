@@ -195,8 +195,8 @@ public class SchemeElementPropsPanel extends JPanel
 
 		titleTextField.setText(element.getName());
 		titleTextField.setCaretPosition(0);
-		if (element.internalScheme() != null)
-			nameTextField.setText(element.internalScheme().getName());
+		if (element.getInnerScheme() != null)
+			nameTextField.setText(element.getInnerScheme().getName());
 		nameTextField.setText(element.getName());
 		nameTextField.setCaretPosition(0);
 

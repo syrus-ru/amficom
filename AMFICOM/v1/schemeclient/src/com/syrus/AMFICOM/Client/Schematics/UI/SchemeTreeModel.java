@@ -358,8 +358,8 @@ public class SchemeTreeModel implements TreeDataModel
 				for (int i = 0; i < parent.getSchemeElementsAsArray().length; i++)
 				{
 					SchemeElement el = parent.getSchemeElementsAsArray()[i];
-					if (el.internalScheme() != null)
-						ds.add(el.internalScheme());
+					if (el.getInnerScheme() != null)
+						ds.add(el.getInnerScheme());
 				}
 				if (ds.size() > 0)
 				{
@@ -381,21 +381,21 @@ public class SchemeTreeModel implements TreeDataModel
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
-						if (element.internalScheme() == null)
+						if (element.getInnerScheme() == null)
 							ds.add(element);
 					}
 				}
 				else if (parent instanceof SchemeElement)
 				{
 					SchemeElement el = (SchemeElement)parent;
-					ds.addAll(Arrays.asList(el.schemeElements()));
+					ds.addAll(Arrays.asList(el.getSchemeElementsAsArray()));
 				}
 				if (ds.size() > 0)
 				{
 					for(Iterator it = ds.iterator(); it.hasNext();)
 					{
 						SchemeElement element = (SchemeElement)it.next();
-						if (element.schemeLinks().length != 0 || element.schemeElements().length != 0)
+						if (element.getSchemeLinksAsArray().length != 0 || element.getSchemeElementsAsArray().length != 0)
 							vec.add(new StorableObjectTreeNode(element, element.getName(), false));
 						else
 							vec.add(new StorableObjectTreeNode(element, element.getName(), true));
@@ -417,9 +417,9 @@ public class SchemeTreeModel implements TreeDataModel
 				else if (parent instanceof SchemeElement)
 				{
 					SchemeElement el = (SchemeElement)parent;
-					for(int i = 0; i < el.schemeLinks().length; i++)
+					for(int i = 0; i < el.getSchemeLinksAsArray().length; i++)
 					{
-						SchemeLink link = el.schemeLinks()[i];
+						SchemeLink link = el.getSchemeLinksAsArray()[i];
 						vec.add(new StorableObjectTreeNode(link, link.getName(), true));
 					}
 				}
@@ -505,7 +505,7 @@ public class SchemeTreeModel implements TreeDataModel
 					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement el = s.getSchemeElementsAsArray()[i];
-						if (el.internalScheme() == null)
+						if (el.getInnerScheme() == null)
 						{
 							has_elements = true;
 							break;
@@ -514,7 +514,7 @@ public class SchemeTreeModel implements TreeDataModel
 					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement el = s.getSchemeElementsAsArray()[i];
-						if (el.internalScheme() != null)
+						if (el.getInnerScheme() != null)
 						{
 							has_schemes = true;
 							break;
@@ -535,29 +535,29 @@ public class SchemeTreeModel implements TreeDataModel
 			else if(node.getUserObject() instanceof SchemeElement)
 			{
 				SchemeElement schel = (SchemeElement)node.getUserObject();
-				if (schel.internalScheme() != null)
+				if (schel.getInnerScheme() != null)
 				{
-					Scheme scheme = schel.internalScheme();
+					Scheme scheme = schel.getInnerScheme();
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
-						if (element.internalScheme() == null)
+						if (element.getInnerScheme() == null)
 						{
-							if (element.schemeLinks().length != 0 || element.schemeElements().length != 0)
+							if (element.getSchemeLinksAsArray().length != 0 || element.getSchemeElementsAsArray().length != 0)
 								vec.add(new StorableObjectTreeNode(element, element.getName(), false));
 							else
 								vec.add(new StorableObjectTreeNode(element, element.getName(), true));
 						}
 						else
-							vec.add(new StorableObjectTreeNode(element, element.internalScheme().getName(), 
+							vec.add(new StorableObjectTreeNode(element, element.getInnerScheme().getName(), 
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), false));
 					}
 				}
 				else
 				{
-					if (schel.schemeElements().length != 0)
+					if (schel.getSchemeElementsAsArray().length != 0)
 						vec.add(new StorableObjectTreeNode("SchemeElement", "Вложенные элементы", true));
-				 if (schel.schemeLinks().length != 0)
+				 if (schel.getSchemeLinksAsArray().length != 0)
 						vec.add(new StorableObjectTreeNode("SchemeLink", "Линии", true));
 				}
 			}

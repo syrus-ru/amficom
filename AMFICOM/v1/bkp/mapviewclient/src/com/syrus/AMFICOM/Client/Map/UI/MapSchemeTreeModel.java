@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.11 2005/03/22 17:35:16 bass Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.12 2005/03/23 14:57:52 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -76,7 +76,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeKind;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.11 $, $Date: 2005/03/22 17:35:16 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/23 14:57:52 $
  * @author $Author: bass $
  * @module mapviewclient_v1
  */
@@ -162,7 +162,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				for (final Iterator schemeElementIterator = parentScheme.getSchemeElements().iterator(); schemeElementIterator.hasNext();)
 				{
 					final SchemeElement schemeElement = (SchemeElement) schemeElementIterator.next();
-					if (schemeElement.internalScheme() != null)
+					if (schemeElement.getInnerScheme() != null)
 						compoundElements.add(schemeElement);
 				}
 				
@@ -171,7 +171,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					for(Iterator it = compoundElements.iterator(); it.hasNext();)
 					{
 						SchemeElement schemeElement = (SchemeElement )it.next();
-						Scheme internalScheme = schemeElement.internalScheme();
+						Scheme internalScheme = schemeElement.getInnerScheme();
 
 						if(	internalScheme.getSchemeKind().value() != SchemeKind._CABLE_SUBNETWORK)
 						{
@@ -233,7 +233,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				List compoundElements = new LinkedList();
 				if (parentObject instanceof Scheme
 					|| (parentObject instanceof SchemeElement
-						&& ((SchemeElement )parentObject).internalScheme() != null)
+						&& ((SchemeElement )parentObject).getInnerScheme() != null)
 					)
 				{
 					Scheme scheme;
@@ -242,22 +242,22 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					else
 					{
 						SchemeElement schemeElement = (SchemeElement )parentObject;
-						scheme = schemeElement.internalScheme();
+						scheme = schemeElement.getInnerScheme();
 					}
 					
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
-						if (element.internalScheme() == null)
+						if (element.getInnerScheme() == null)
 							compoundElements.add(element);
 					}
 				}
 				else if (parentObject instanceof SchemeElement)
 				{
 					SchemeElement schemeElement = (SchemeElement )parentObject;
-					for (int i = 0; i < schemeElement.schemeElements().length; i++)
+					for (int i = 0; i < schemeElement.getSchemeElementsAsArray().length; i++)
 					{
-						SchemeElement element = schemeElement.schemeElements()[i];
+						SchemeElement element = schemeElement.getSchemeElementsAsArray()[i];
 						if (element != null)
 							compoundElements.add(element);
 					}
@@ -268,9 +268,9 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					for(Iterator it = compoundElements.iterator(); it.hasNext();)
 					{
 						SchemeElement element = (SchemeElement)it.next();
-						boolean isFinal = (element.schemeLinks().length == 0 || element.schemeElements().length == 0);
+						boolean isFinal = (element.getSchemeLinksAsArray().length == 0 || element.getSchemeElementsAsArray().length == 0);
 
-						if (element.internalScheme() == null
+						if (element.getInnerScheme() == null
 							&& parentNode.isTopological())
 						{
 							treeNode = new MapSchemeTreeNode(
@@ -297,7 +297,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				Object parentObject = parentNode.getObject();
 				if (parentObject instanceof Scheme
 					|| (parentObject instanceof SchemeElement
-						&& ((SchemeElement )parentObject).internalScheme() != null)
+						&& ((SchemeElement )parentObject).getInnerScheme() != null)
 					)
 				{
 					Scheme scheme;
@@ -306,7 +306,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					else
 					{
 						SchemeElement schemeElement = (SchemeElement )parentObject;
-						scheme = schemeElement.internalScheme();
+						scheme = schemeElement.getInnerScheme();
 					}
 					
 					for(int i = 0 ; i < scheme.getSchemeLinksAsArray().length; i++)
@@ -318,9 +318,9 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				else if (parentObject instanceof SchemeElement)
 				{
 					SchemeElement schemeElement = (SchemeElement )parentObject;
-					for(int i = 0; i < schemeElement.schemeLinks().length; i++)
+					for(int i = 0; i < schemeElement.getSchemeLinksAsArray().length; i++)
 					{
-						SchemeLink schemeLink = schemeElement.schemeLinks()[i];
+						SchemeLink schemeLink = schemeElement.getSchemeLinksAsArray()[i];
 						childNodes.add(new MapSchemeTreeNode(schemeLink, schemeLink.getName(), true, true));
 					}
 				}
@@ -334,7 +334,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				else
 				{
 					SchemeElement schemeElement = (SchemeElement )parentNode.getObject();
-					parentScheme = schemeElement.internalScheme();
+					parentScheme = schemeElement.getInnerScheme();
 				}
 					
 				for (final Iterator schemeCableLinkIterator = parentScheme.getSchemeCableLinks().iterator(); schemeCableLinkIterator.hasNext();)
@@ -370,7 +370,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				else
 				{
 					SchemeElement schemeElement = (SchemeElement )parentNode.getObject();
-					parentScheme = schemeElement.internalScheme();
+					parentScheme = schemeElement.getInnerScheme();
 				}
 					
 				for(Iterator it = SchemeUtils.getTopologicalPaths(parentScheme).iterator(); it.hasNext();)
@@ -432,7 +432,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 			else
 			if(objectResourceTreeNode.getObject() instanceof Scheme
 				|| (objectResourceTreeNode.getObject() instanceof SchemeElement
-					&& ((SchemeElement )(objectResourceTreeNode.getObject())).internalScheme() != null)
+					&& ((SchemeElement )(objectResourceTreeNode.getObject())).getInnerScheme() != null)
 				)
 			{
 				Scheme scheme;
@@ -441,7 +441,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				else
 				{
 					SchemeElement schemeElement = (SchemeElement )objectResourceTreeNode.getObject();
-					scheme = schemeElement.internalScheme();
+					scheme = schemeElement.getInnerScheme();
 				}
 
 				if (scheme.getSchemeElementsAsArray().length != 0)
@@ -451,7 +451,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement schemeElement = scheme.getSchemeElementsAsArray()[i];
-						if (schemeElement.internalScheme() == null)
+						if (schemeElement.getInnerScheme() == null)
 						{
 							hasElements = true;
 							break;
@@ -461,7 +461,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement schemeElement = scheme.getSchemeElementsAsArray()[i];
-						if (schemeElement.internalScheme() != null)
+						if (schemeElement.getInnerScheme() != null)
 						{
 							hasSchemes = true;
 							break;
@@ -483,13 +483,13 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 			else if(objectResourceTreeNode.getObject() instanceof SchemeElement)
 			{
 				SchemeElement schemeElement = (SchemeElement )objectResourceTreeNode.getObject();
-				if (schemeElement.internalScheme() != null)
+				if (schemeElement.getInnerScheme() != null)
 				{
-					Scheme scheme = schemeElement.internalScheme();
+					Scheme scheme = schemeElement.getInnerScheme();
 					for (int i = 0 ; i < scheme.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement internalElement = scheme.getSchemeElementsAsArray()[i];
-						if (internalElement.internalScheme() == null)
+						if (internalElement.getInnerScheme() == null)
 						{
 							childNodes.add(new MapSchemeTreeNode(
 									internalElement, 
@@ -511,9 +511,9 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 				}
 				else
 				{
-					if (schemeElement.schemeElements().length != 0)
+					if (schemeElement.getSchemeElementsAsArray().length != 0)
 						childNodes.add(new MapSchemeTreeNode(ELEMENT_BRANCH, "Вложенные элементы", true));
-				 if (schemeElement.schemeLinks().length != 0)
+				 if (schemeElement.getSchemeLinksAsArray().length != 0)
 						childNodes.add(new MapSchemeTreeNode(LINK_BRANCH, "Линии", true));
 				}
 			}

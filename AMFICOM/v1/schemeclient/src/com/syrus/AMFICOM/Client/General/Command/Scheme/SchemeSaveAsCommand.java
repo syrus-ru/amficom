@@ -99,7 +99,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 		{
 			SchemeElement se = scheme.getSchemeElementsAsArray()[i];
-			if (se.schemeElements().length != 0)
+			if (se.getSchemeElementsAsArray().length != 0)
 			{
 				SchemePanel.copySchemeElementFromArchivedState_virtual(se.getSchemeCell().getData());
 			}

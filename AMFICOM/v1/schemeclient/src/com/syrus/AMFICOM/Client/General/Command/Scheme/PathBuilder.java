@@ -217,13 +217,13 @@ public class PathBuilder
 		ListIterator lit = pes.listIterator(pes.size());
 		if (lit.hasPrevious())
 		{
-			if (se.internalScheme() != null)
+			if (se.getInnerScheme() != null)
 			{
-				Scheme scheme = se.internalScheme();
+				Scheme scheme = se.getInnerScheme();
 				exploreScheme(pes, scheme);
 				return (PathElement)pes.get(pes.size() - 1);
 			}
-			else if (se.schemeElements().length != 0)
+			else if (se.getSchemeElementsAsArray().length != 0)
 			{
 				exploreSchemeElement(pes, se);
 				return (PathElement)pes.get(pes.size() - 1);
@@ -321,7 +321,7 @@ public class PathBuilder
 			int accessPorts = 0;
 			SchemePort port = null;
 			// must be at least one access port
-			if (se.internalScheme() != null)
+			if (se.getInnerScheme() != null)
 			{
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Начальным устройством не может быть схема", "Ошибка", JOptionPane.OK_OPTION);
 				return null;
