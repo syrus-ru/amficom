@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.74 2004/12/27 21:04:42 arseniy Exp $
+ * $Id: configuration.idl,v 1.75 2004/12/28 13:51:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,11 +58,11 @@ module corba {
 	struct EquipmentType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-		wstring codename;
-		wstring description;
-		wstring name;
-		wstring manufacturer;
-		wstring manufacturerCode;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString128 manufacturer;
+		com::syrus::AMFICOM::general::corba::WString32 manufacturerCode;
 		
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
@@ -75,9 +75,9 @@ module corba {
 	struct TransmissionPathType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-		wstring codename;
-		wstring description;
-		wstring name;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
 		
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
@@ -97,9 +97,9 @@ module corba {
 	struct PortType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-		wstring codename;
-		wstring description;
-		wstring name;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
 		PortTypeSort sort;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
@@ -111,9 +111,9 @@ module corba {
 	struct MeasurementPortType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-		wstring codename;
-		wstring description;
-		wstring name;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
 		
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
@@ -137,12 +137,12 @@ module corba {
 	struct LinkType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 	  
-		wstring codename;
-		wstring description;
-		wstring name;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
 		LinkTypeSort sort;
-		wstring manufacturer;
-		wstring manufacturerCode;
+		com::syrus::AMFICOM::general::corba::WString128 manufacturer;
+		com::syrus::AMFICOM::general::corba::WString32 manufacturerCode;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
@@ -154,12 +154,12 @@ module corba {
 	struct CableLinkType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 		
-		wstring codename;
-		wstring description;
-		wstring name;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
 		LinkTypeSort sort;
-		wstring manufacturer;
-		wstring manufacturerCode;
+		com::syrus::AMFICOM::general::corba::WString128 manufacturer;
+		com::syrus::AMFICOM::general::corba::WString32 manufacturerCode;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 		
@@ -172,9 +172,9 @@ module corba {
 	struct CableThreadType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 		
-		wstring codename;
-		wstring description;
-		wstring name;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
 		
 		long color;
 		
@@ -206,10 +206,10 @@ module corba {
 	struct User_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 	
-		wstring login;
+		com::syrus::AMFICOM::general::corba::WString32 login;
 		UserSort sort;
-		wstring name;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 	};
 	
 	typedef sequence <User_Transferable> UserSeq_Transferable;
@@ -222,8 +222,8 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
-		wstring name;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
@@ -238,8 +238,8 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
-		wstring name;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
@@ -253,8 +253,8 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
-		wstring name;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable server_id;
 		short tcp_port;
@@ -307,10 +307,10 @@ module corba {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
-		wstring name;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		CharacteristicSort sort;
-		wstring value;
+		com::syrus::AMFICOM::general::corba::WString256 value;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable characterized_id;
 		boolean is_editable;
 		boolean is_visible;
@@ -331,19 +331,19 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 
-		wstring name;
-		wstring description;
-		wstring supplier;
-		wstring supplierCode;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString128 supplier;
+		com::syrus::AMFICOM::general::corba::WString32 supplierCode;
 		
 		float longitude;
 		float latitude;
 		
 		wstring hwSerial;
-	    wstring hwVersion;
-    	wstring swSerial;
-    	wstring swVersion;
-    	wstring inventoryNumber;	
+		wstring hwVersion;
+		wstring swSerial;
+		wstring swVersion;
+		wstring inventoryNumber;	
 		
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
 
@@ -364,8 +364,8 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable monitored_element_ids;
 
-		wstring name;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable start_port_id;
@@ -406,9 +406,9 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
-		wstring name;
-		wstring description;
-		wstring hostname;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString64 hostname;
 		short tcp_port;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable equipment_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id;
@@ -425,8 +425,8 @@ module corba {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
-		wstring name;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable port_id;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
@@ -450,10 +450,10 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 		
-		wstring name;
+		com::syrus::AMFICOM::general::corba::WString128 name;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable measurement_port_id;
 		MonitoredElementSort sort;
-		wstring local_address;
+		com::syrus::AMFICOM::general::corba::WString64 local_address;
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable monitored_domain_member_ids;
 	};
@@ -471,18 +471,18 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 		
-		wstring name;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;		
 		
 		LinkSort sort;		
 		
 		wstring inventoryNo;
-		wstring supplier;
-		wstring supplierCode;
+		com::syrus::AMFICOM::general::corba::WString128 supplier;
+		com::syrus::AMFICOM::general::corba::WString32 supplierCode;
 		
 		long color;
-		wstring mark;
+		com::syrus::AMFICOM::general::corba::WString32 mark;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;		
 	};
 
@@ -495,8 +495,8 @@ module corba {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 		
-		wstring name;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString128 name;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;		
 	};
 

@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.44 2004/12/28 10:35:52 bob Exp $
+ * $Id: measurement.idl,v 1.45 2004/12/28 13:51:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::WString32 codename;
 		com::syrus::AMFICOM::general::corba::WString32 description;
 
-		com::syrus::AMFICOM::general::corba::WString64 name;
+		com::syrus::AMFICOM::general::corba::WString128 name;
 		com::syrus::AMFICOM::general::corba::DataType data_type;
 	};
 
@@ -122,7 +122,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		
-		com::syrus::AMFICOM::general::corba::WString64 name;
+		com::syrus::AMFICOM::general::corba::WString128 name;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable argument_set_id;
 	};
@@ -160,7 +160,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		
-		com::syrus::AMFICOM::general::corba::WString64 name;
+		com::syrus::AMFICOM::general::corba::WString128 name;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable setup_id;
 		long long start_time;

@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.43 2004/12/24 12:51:45 arseniy Exp $
+ * $Id: general.idl,v 1.44 2004/12/28 13:51:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,8 @@ module corba {
 	typedef wstring<32> WString32;
 
 	typedef wstring<64> WString64;
+
+	typedef wstring<128> WString128;
 
 	typedef wstring<256> WString256;
 
