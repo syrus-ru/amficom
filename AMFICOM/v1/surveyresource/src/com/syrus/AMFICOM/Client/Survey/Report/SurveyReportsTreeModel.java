@@ -28,8 +28,9 @@ import com.syrus.AMFICOM.Client.Survey.Report.AlarmReportModel;
 
 public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 {
-	public SurveyReportsTreeModel()
-	{}
+	public SurveyReportsTreeModel(){
+//	  empty constuctor	
+	}
 
 	public ObjectResourceTreeNode getRoot()
 	{
@@ -96,7 +97,7 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 						((ObjectResourceTreeNode) node.getParent()).getObject();
 
 					String curName =
-						(String) ((ObjectResourceTreeNode) node).getObject();
+						(String) node.getObject();
 
 					Vector views = (Vector) curModel.getAvailableViewTypesforField(
 						curName);
@@ -162,8 +163,9 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 			{
 				or.setReserve(new Vector());
 			}
-			catch (CreateReportException cre)
-			{}
+			catch (CreateReportException cre){
+				cre.printStackTrace();
+			}
 
 			ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 				or,

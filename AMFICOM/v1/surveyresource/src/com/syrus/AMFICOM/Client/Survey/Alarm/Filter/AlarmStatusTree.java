@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Survey.Alarm.Filter;
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import javax.swing.*;
 
 public class AlarmStatusTree extends FilterTree
@@ -13,8 +12,8 @@ public class AlarmStatusTree extends FilterTree
 	FilterTreeNode a2 = new FilterTreeNode(LangModelSurvey.getString("Assigned"), "ASSIGNED");
 	FilterTreeNode a3 = new FilterTreeNode(LangModelSurvey.getString("Fixed"), "FIXED");
 
-	public AlarmStatusTree()
-	{
+	public AlarmStatusTree(){
+		// empty constuctor
 	}
 
 	public void setTree(ApplicationContext aContext)

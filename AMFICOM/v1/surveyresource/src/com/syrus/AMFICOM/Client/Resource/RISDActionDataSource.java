@@ -1,18 +1,9 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.*;
-
-import org.omg.CORBA.*;
-
 import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.General.*;
 
 public class RISDActionDataSource 
@@ -21,6 +12,7 @@ public class RISDActionDataSource
 {
 	protected RISDActionDataSource()
 	{
+		//
 	}
 
 	public RISDActionDataSource(SessionInterface si)
@@ -37,13 +29,13 @@ public class RISDActionDataSource
 
 		int ecode = 0;
 
-		TestRequest request = (TestRequest )Pool.get(TestRequest.typ, request_id);
-		Test test = (Test )Pool.get(Test.typ, test_id);
+		TestRequest request = (TestRequest )Pool.get(TestRequest.TYPE, request_id);
+		Test test = (Test )Pool.get(Test.TYPE, test_id);
 
 		request.setTransferableFromLocal();
 		ClientTestRequest_Transferable request_t = (ClientTestRequest_Transferable )request.getTransferable();
 		test.setTransferableFromLocal();
-		ClientTest_Transferable test_t = (ClientTest_Transferable )test.getTransferable();
+//		ClientTest_Transferable test_t = (ClientTest_Transferable )test.getTransferable();
 		ClientTest_Transferable test_ts[] = new ClientTest_Transferable[1];
 		test_ts[0] = (ClientTest_Transferable )test.getTransferable();
 
@@ -78,14 +70,14 @@ public class RISDActionDataSource
 
 		int ecode = 0;
 
-		TestRequest request = (TestRequest )Pool.get(TestRequest.typ, request_id);
+		TestRequest request = (TestRequest )Pool.get(TestRequest.TYPE, request_id);
 		request.setTransferableFromLocal();
 		ClientTestRequest_Transferable request_t = (ClientTestRequest_Transferable )request.getTransferable();
 
 		ClientTest_Transferable test_ts[] = new ClientTest_Transferable[test_ids.length];
 		for(int i = 0; i < test_ids.length; i++)
 		{
-			Test test = (Test )Pool.get(Test.typ, test_ids[i]);
+			Test test = (Test )Pool.get(Test.TYPE, test_ids[i]);
 			test.setTransferableFromLocal();
 			test_ts[i] = (ClientTest_Transferable )test.getTransferable();
 		}
@@ -121,8 +113,8 @@ public class RISDActionDataSource
 
 		int ecode = 0;
 
-		Analysis analysis = (Analysis )Pool.get(Analysis.typ, analysis_id);
-		Result result = (Result )Pool.get(Result.typ, result_id);
+		Analysis analysis = (Analysis )Pool.get(Analysis.TYPE, analysis_id);
+		Result result = (Result )Pool.get(Result.TYPE, result_id);
 
 		analysis.setTransferableFromLocal();
 		ClientAnalysis_Transferable analysis_t = (ClientAnalysis_Transferable )analysis.getTransferable();
@@ -159,8 +151,8 @@ public class RISDActionDataSource
 
 		int ecode = 0;
 
-		Modeling modeling = (Modeling )Pool.get(Modeling.typ, modeling_id);
-		Result result = (Result )Pool.get(Result.typ, result_id);
+		Modeling modeling = (Modeling )Pool.get(Modeling.TYPE, modeling_id);
+		Result result = (Result )Pool.get(Result.TYPE, result_id);
 
 		modeling.setTransferableFromLocal();
 		ClientModeling_Transferable modeling_t = (ClientModeling_Transferable )modeling.getTransferable();
@@ -197,8 +189,8 @@ public class RISDActionDataSource
 
 		int ecode = 0;
 
-		Evaluation evaluation = (Evaluation )Pool.get(Evaluation.typ, evaluation_id);
-		Result result = (Result )Pool.get(Result.typ, result_id);
+		Evaluation evaluation = (Evaluation )Pool.get(Evaluation.TYPE, evaluation_id);
+		Result result = (Result )Pool.get(Result.TYPE, result_id);
 
 		evaluation.setTransferableFromLocal();
 		ClientEvaluation_Transferable evaluation_t = (ClientEvaluation_Transferable )evaluation.getTransferable();
@@ -233,16 +225,16 @@ public class RISDActionDataSource
 		if(!si.isOpened())
 			return;
 
-		String a_id = "";
+		String analysisId;
 
-		Analysis analysis = (Analysis )Pool.get(Analysis.typ, analysis_id);
+		Analysis analysis = (Analysis )Pool.get(Analysis.TYPE, analysis_id);
 
 		analysis.setTransferableFromLocal();
 		ClientAnalysis_Transferable analysis_t = (ClientAnalysis_Transferable )analysis.getTransferable();
 
 		try
 		{
-			a_id = si.ci.server.createAnalysis(
+			analysisId = si.ci.server.createAnalysis(
 					si.accessIdentity,
 					analysis_t);
 		}
@@ -262,16 +254,16 @@ public class RISDActionDataSource
 		if(!si.isOpened())
 			return;
 
-		String e_id = "";
+		String evaluationId = "";
 
-		Evaluation evaluation = (Evaluation )Pool.get(Evaluation.typ, evaluation_id);
+		Evaluation evaluation = (Evaluation )Pool.get(Evaluation.TYPE, evaluation_id);
 
 		evaluation.setTransferableFromLocal();
 		ClientEvaluation_Transferable evaluation_t = (ClientEvaluation_Transferable )evaluation.getTransferable();
 
 		try
 		{
-			e_id = si.ci.server.createEvaluation(
+			evaluationId = si.ci.server.createEvaluation(
 					si.accessIdentity,
 					evaluation_t);
 		}
@@ -322,7 +314,7 @@ public class RISDActionDataSource
 		ClientTest_Transferable test_ts[] = new ClientTest_Transferable[test_ids.length];
 		for(int i = 0; i < test_ids.length; i++)
 		{
-			Test test = (Test )Pool.get(Test.typ, test_ids[i]);
+			Test test = (Test )Pool.get(Test.TYPE, test_ids[i]);
 			test.setTransferableFromLocal();
 			test_ts[i] = (ClientTest_Transferable )test.getTransferable();
 		}
@@ -438,9 +430,9 @@ public class RISDActionDataSource
 		if(!si.isOpened())
 			return null;
 
-		int i;
+//		int i;
 		int ecode = 0;
-		int count;
+//		int count;
 		ResourceDescriptorSeq_TransferableHolder tih = new ResourceDescriptorSeq_TransferableHolder();
 
 		try

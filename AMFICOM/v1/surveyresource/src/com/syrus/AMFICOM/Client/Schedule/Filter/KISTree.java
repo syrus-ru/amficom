@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Schedule.Filter;
 
 import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
@@ -15,10 +14,6 @@ public class KISTree extends FilterTree
 {
 	ApplicationContext aContext;
 	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.getString("Root"), "");
-
-	public KISTree()
-	{
-	}
 
 	public void setTree(ApplicationContext aContext)
 	{

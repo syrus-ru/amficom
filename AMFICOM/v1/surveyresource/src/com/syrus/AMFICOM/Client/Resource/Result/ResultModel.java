@@ -43,11 +43,11 @@ public class ResultModel extends ObjectResourceModel {
 			else if (colId.equals(ConstStorage.COLUMN_NAME_RESULT_TYPE)) {
 
 				Hashtable actions = new Hashtable();
-				actions.put(Analysis.typ, LangModelSurvey.getString("Analysis")); //$NON-NLS-1$
-				actions.put(Modeling.typ, LangModelSurvey.getString("Modeling")); //$NON-NLS-1$
-				actions.put(Evaluation.typ, LangModelSurvey.getString("Evaluation")); //$NON-NLS-1$
-				actions.put(Test.typ, LangModelSurvey.getString("Testing")); //$NON-NLS-1$
-				actions.put(TestRequest.typ, LangModelSurvey.getString("TestRequest")); //$NON-NLS-1$
+				actions.put(Analysis.TYPE, LangModelSurvey.getString("Analysis")); //$NON-NLS-1$
+				actions.put(Modeling.TYPE, LangModelSurvey.getString("Modeling")); //$NON-NLS-1$
+				actions.put(Evaluation.TYPE, LangModelSurvey.getString("Evaluation")); //$NON-NLS-1$
+				actions.put(Test.TYPE, LangModelSurvey.getString("Testing")); //$NON-NLS-1$
+				actions.put(TestRequest.TYPE, LangModelSurvey.getString("TestRequest")); //$NON-NLS-1$
 				s = (String) actions.get(this.result.getResultType());
 				if (s == null) s = ""; //$NON-NLS-1$
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_CREATED))

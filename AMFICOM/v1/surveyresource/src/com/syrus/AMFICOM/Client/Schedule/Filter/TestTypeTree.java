@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Schedule.Filter;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
@@ -13,10 +12,6 @@ public class TestTypeTree extends FilterTree
 {
 	ApplicationContext aContext;
 	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.getString("Root"), "");
-
-	public TestTypeTree()
-	{
-	}
 
 	public void setTree(ApplicationContext aContext)
 	{

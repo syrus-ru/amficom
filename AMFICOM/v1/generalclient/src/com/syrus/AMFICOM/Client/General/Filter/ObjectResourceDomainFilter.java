@@ -11,8 +11,9 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 public class ObjectResourceDomainFilter extends ObjectResourceFilter
 {
-	String domain_id = "";
-
+	private String domain_id = "";
+	private ArrayList filterColumns;
+	
 	public ObjectResourceDomainFilter(String domain_id)
 	{
 		super();
@@ -25,11 +26,14 @@ public class ObjectResourceDomainFilter extends ObjectResourceFilter
 		this.logicScheme.organizeStandartScheme();
 	}
 
-	public Vector getFilterColumns()
-	{
-		Vector vec = new Vector();
-		vec.add("domain_id");
-		return vec;
+	public List getFilterColumns()
+	{	
+		if (this.filterColumns==null){
+			this.filterColumns = new ArrayList();
+			this.filterColumns.add("domain_id");
+			this.filterColumns.trimToSize();
+		}
+		return this.filterColumns;
 	}
 
 	public String getFilterColumnName(String col_id)

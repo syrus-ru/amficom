@@ -1,22 +1,14 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm.Filter;
 
 import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Alarm.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.Schedule.Filter.*;
-import com.syrus.AMFICOM.CORBA.General.*;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
+
 import java.util.*;
-import java.text.SimpleDateFormat;
 
 public class DefaultAlarmFilter extends AlarmFilter
 {
-	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
+	
 
 	// Фильтр по умолчанию производит фильтрацию по времени (сигналы тревоги
 	// за последние сутки) и по статусу (новые сигналы тревоги)
@@ -46,9 +38,9 @@ public class DefaultAlarmFilter extends AlarmFilter
 		fe.setName(LangModel.getString("labelFiltration") +
 				" \'" + col_name +
 				"\' " + LangModel.getString("labelTimeOt") +
-				" " + sdf.format(new Date(loval)) +
+				" " + ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(loval)) +
 				" " + LangModel.getString("labelTimeDo") +
-				" " + sdf.format(new Date(hival)));
+				" " + ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(hival)));
 		fe.setVec(vec);
 		fe.setId("time");
 		addCriterium(fe);

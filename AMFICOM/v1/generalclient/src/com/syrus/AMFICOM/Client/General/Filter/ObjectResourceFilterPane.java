@@ -527,20 +527,20 @@ repaint();
 
 		if (filter != null)
 		{
-			criteriaList.setContents(filter.getCriteria().elements());
+			criteriaList.setContents(filter.getCriteria());
 
 			columnComboBox.setRenderer(new MyCriteriaListRenderer(filter));
-			Vector vec = filter.getFilterColumns();
-			columnComboBox.setModel(new DefaultComboBoxModel(vec));
+			List list = filter.getFilterColumns();
+			columnComboBox.setModel(new DefaultComboBoxModel(list.toArray()));
 			String col_id = (String) columnComboBox.getSelectedItem();
 			String types[] = filter.getColumnFilterTypes(col_id);
-			vec = new Vector();
-			MiscUtil.addToCollection(vec, types);
-			eqRadioButton.setEnabled(vec.contains("numeric"));
-			timeRadioButton.setEnabled(vec.contains("time"));
-			subRadioButton.setEnabled(vec.contains("string"));
-			rangeRadioButton.setEnabled(vec.contains("range"));
-			listRadioButton.setEnabled(vec.contains("list"));
+			list = new Vector();
+			MiscUtil.addToCollection(list, types);
+			eqRadioButton.setEnabled(list.contains("numeric"));
+			timeRadioButton.setEnabled(list.contains("time"));
+			subRadioButton.setEnabled(list.contains("string"));
+			rangeRadioButton.setEnabled(list.contains("range"));
+			listRadioButton.setEnabled(list.contains("list"));
 			emptyRadioButton.setSelected(true);
 			setFilterPanel();
 			generalExpressionTextField.setText(filter.logicScheme.getTextValue());

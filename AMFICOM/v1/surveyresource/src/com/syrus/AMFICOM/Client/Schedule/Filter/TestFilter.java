@@ -21,13 +21,13 @@ public class TestFilter extends ObjectResourceFilter {
 	public static final String	COLUMN_TIME				= "time";
 	public static final String	COLUMN_ALARM			= "alarm";
 
-	private Vector				filterColumns;
+	private List				filterColumns;
 
 	private Map					columnFilterTypes;
 	private Map					columnFilterPanel;
 
 	public TestFilter() {
-		this.filterColumns = new Vector();
+		this.filterColumns = new ArrayList();
 		this.filterColumns.add(COLUMN_KIS);
 		this.filterColumns.add(COLUMN_ME);
 		this.filterColumns.add(COLUMN_TEST_TYPE);
@@ -63,7 +63,7 @@ public class TestFilter extends ObjectResourceFilter {
 
 	}
 
-	public Vector getFilterColumns() {
+	public List getFilterColumns() {
 		return this.filterColumns;
 	}
 

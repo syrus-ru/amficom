@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Alarm;
 
 import com.syrus.AMFICOM.CORBA.Alarm.EventSource_Transferable;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.io.IOException;
@@ -67,6 +66,7 @@ public class EventSource extends StubResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
+		// nothing yet?
 	}
 
 	public String getId()

@@ -1,63 +1,42 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm.Sorter;
 
-import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
 import java.util.*;
 
-public class AlarmSorter extends ObjectResourceSorter
-{
-	String[][] sorted_columns = new String[][]{
-		{"monitored_element_id", "string"},
-		{"generated", "long"},
-		{"status", "string"},
-		{"alarm_type_name", "string"},
-		{"source_name", "string"}
-		};
+public class AlarmSorter extends ObjectResourceSorter {
 
-	public AlarmSorter()
-	{
+	String[][]	sortedColumns	= new String[][] { { COLUMN_ME_ID, COLUMN_TYPE_STRING},
+			{ COLUMN_GENERATED, COLUMN_TYPE_LONG}, { COLUMN_STATUS, COLUMN_TYPE_STRING},
+			{ COLUMN_ALARM_TYPE_NAME, COLUMN_TYPE_STRING}, { COLUMN_SOURCE_NAME, COLUMN_TYPE_STRING}};
+
+	public AlarmSorter() {
 		super();
 	}
 
-	public AlarmSorter(List dataSet)
-	{
-		super(dataSet);
+	public AlarmSorter(List list) {
+		super(list);
 	}
 
-	public String[][] getSortedColumns()
-	{
-		return sorted_columns;
+	public String[][] getSortedColumns() {
+		return this.sortedColumns;
 	}
 
-	public String getString(ObjectResource or, String column)
-	{
-		Alarm alarm = (Alarm )or;
-		if (column.equals("monitored_element_id"))
-		{
-			return alarm.getModel().getColumnValue("monitored_element_id");
-		}
-		if (column.equals("alarm_type_name"))
-		{
-			return alarm.getModel().getColumnValue("alarm_type_name");
-		}
-		if (column.equals("source_name"))
-		{
-			return alarm.getModel().getColumnValue("source_name");
-		}
-		if (column.equals("status"))
-		{
-			return alarm.getModel().getColumnValue("status");
-		}
-		return "";
+	public String getString(ObjectResource or, String column) {
+		Alarm alarm = (Alarm) or;
+		if (column.equals(COLUMN_ME_ID)) {
+			return alarm.getModel().getColumnValue(COLUMN_ME_ID);
+		} else if (column.equals(COLUMN_ALARM_TYPE_NAME)) {
+			return alarm.getModel().getColumnValue(COLUMN_ALARM_TYPE_NAME);
+		} else if (column.equals(COLUMN_SOURCE_NAME)) {
+			return alarm.getModel().getColumnValue(COLUMN_SOURCE_NAME);
+		} else if (column.equals(COLUMN_STATUS)) { return alarm.getModel().getColumnValue(COLUMN_STATUS); }
+		return null;
 	}
 
-	public long getLong(ObjectResource or, String column)
-	{
-		if (column.equals("generated"))
-			return ((Alarm )or).generated;
+	public long getLong(ObjectResource or, String column) {
+		if (column.equals(COLUMN_GENERATED))
+			return ((Alarm) or).generated;
 		return 0;
 	}
 

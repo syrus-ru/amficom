@@ -1,18 +1,11 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.*;
 import java.io.*;
 
-import org.omg.CORBA.*;
 
 import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Alarm.*;
-import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Filter.*;
@@ -23,6 +16,7 @@ public class RISDSurveyDataSource
 {
 	protected RISDSurveyDataSource()
 	{
+		//
 	}
 
 	public RISDSurveyDataSource(SessionInterface si)

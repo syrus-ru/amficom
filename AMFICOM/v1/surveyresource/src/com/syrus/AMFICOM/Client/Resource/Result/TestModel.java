@@ -83,7 +83,7 @@ public class TestModel extends ObjectResourceModel {
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_TEST_TYPE_ID))
 				s = Pool.getName(TestType.typ, test.getTestTypeId());
 			else if (colId.equals(ConstStorage.COLUMN_NAME_REQUEST_ID))
-					s = Pool.getName(TestRequest.typ, test.getRequestId());
+					s = Pool.getName(TestRequest.TYPE, test.getRequestId());
 			else if (colId.equals(ConstStorage.COLUMN_NAME_DOMAIN_ID)){
 				KIS kis = (KIS)Pool.get(KIS.typ, test.getKisId());
 				if (kis!=null)
@@ -112,7 +112,7 @@ public class TestModel extends ObjectResourceModel {
 				return new ObjectResourceComboBox(TestType.typ,
 						test.getTestTypeId());
 		if (colId.equals(ConstStorage.COLUMN_NAME_REQUEST_ID))
-				return new ObjectResourceComboBox(TestRequest.typ,
+				return new ObjectResourceComboBox(TestRequest.TYPE,
 						test.getRequestId());
 		return null;
 	}

@@ -1,16 +1,12 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm.UI;
 
+import java.awt.Color;
 import java.util.*;
-import java.text.*;
-import java.awt.*;
 
-import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import java.util.List;
 
 public class AlarmDisplayModel extends StubDisplayModel
 {
@@ -19,7 +15,7 @@ public class AlarmDisplayModel extends StubDisplayModel
 		super();
 	}
 
-	List cols = new LinkedList();
+	private List cols = new LinkedList();
 	{
 //		cols.add("id");
 		cols.add("source_name");

@@ -2,17 +2,10 @@ package com.syrus.AMFICOM.Client.Resource;
 
 import java.util.*;
 
-import org.omg.CORBA.*;
-
 import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.General.*;
 
 public class RISDResultDataSource 
@@ -21,6 +14,7 @@ public class RISDResultDataSource
 {
 	protected RISDResultDataSource()
 	{
+		//
 	}
 
 	public RISDResultDataSource(SessionInterface si)
@@ -167,7 +161,7 @@ public class RISDResultDataSource
 		int i;
 		int ecode = 0;
 		int count;
-		ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
+		//ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
 		ClientResultSeq_TransferableHolder reh = new ClientResultSeq_TransferableHolder();
 		ClientResult_Transferable results[];
 		Result result;
@@ -208,12 +202,12 @@ public class RISDResultDataSource
 		if(!si.isOpened())
 			return "";
 
-		int i;
+//		int i;
 		int ecode = 0;
-		int count;
-		ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
+//		int count;
+//		ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
 		ClientResult_TransferableHolder reh = new ClientResult_TransferableHolder();
-		ClientResult_Transferable results[];
+//		ClientResult_Transferable results[];
 		Result result;
 
 		try
@@ -251,7 +245,7 @@ public class RISDResultDataSource
 		int i;
 		int ecode = 0;
 		int count;
-		ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
+//		ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
 		ClientResultSeq_TransferableHolder reh = new ClientResultSeq_TransferableHolder();
 		ClientResult_Transferable results[];
 		Result result;
@@ -300,7 +294,7 @@ public class RISDResultDataSource
 		int ecode = 0;
 		int count;
 		ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
-		ClientResult_TransferableHolder reh = new ClientResult_TransferableHolder();
+//		ClientResult_TransferableHolder reh = new ClientResult_TransferableHolder();
 		ClientResult_Transferable results[];
 		Result result;
 
@@ -439,12 +433,12 @@ public class RISDResultDataSource
 		if(!si.isOpened())
 			return "";
 
-		int i;
+		//int i;
 		int ecode = 0;
-		int count;
-		ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
+		//int count;
+		//ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
 		ClientResult_TransferableHolder reh = new ClientResult_TransferableHolder();
-		ClientResult_Transferable results[];
+		//ClientResult_Transferable results[];
 		Result result;
 
 		try
@@ -483,7 +477,7 @@ public class RISDResultDataSource
 		int ecode = 0;
 		int count;
 		ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
-		ClientResult_TransferableHolder reh = new ClientResult_TransferableHolder();
+//		ClientResult_TransferableHolder reh = new ClientResult_TransferableHolder();
 		ClientResult_Transferable results[];
 		Result result;
 
@@ -535,12 +529,12 @@ public class RISDResultDataSource
 		if(!si.isOpened())
 			return;
 
-		int i;
+//		int i;
 		int ecode = 0;
-		int count;
-		ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
+//		int count;
+//		ClientResultSeq_TransferableHolder rh = new ClientResultSeq_TransferableHolder();
 		ClientResult_TransferableHolder reh = new ClientResult_TransferableHolder();
-		ClientResult_Transferable results[];
+//		ClientResult_Transferable results[];
 		Result result;
 
 		try

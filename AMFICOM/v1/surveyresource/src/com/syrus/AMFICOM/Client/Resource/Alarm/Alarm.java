@@ -59,17 +59,17 @@ public class Alarm extends StubResource implements Serializable
 		setLocalFromTransferable();
 	}
 
-	public static Alarm getAlarmByTestResult(String result_id)
+	public static Alarm getAlarmByTestResult(String resultId)
 	{
-		Result res = (Result )Pool.get(Result.typ, result_id);
+		Result res = (Result )Pool.get(Result.TYPE, resultId);
 		if(res == null)
 			return null;
-		Test test = (Test )Pool.get(Test.typ, res.getActionId());
+		Test test = (Test )Pool.get(Test.TYPE, res.getActionId());
 		if(test == null)
 			return null;
 		int res_index;
 		for(res_index = 0; res_index < test.getResultIds().length; res_index++)
-			if(test.getResultIds()[res_index].equals(result_id))
+			if(test.getResultIds()[res_index].equals(resultId))
 				break;
 		if(res_index == test.getResultIds().length)
 			return null;
@@ -78,16 +78,16 @@ public class Alarm extends StubResource implements Serializable
 		if(ht == null)
 			return null;
 
-		for(Enumeration e = ht.elements(); e.hasMoreElements();)
+		for(Iterator it=ht.keySet().iterator();it.hasNext();)
 		{
-			Alarm a = (Alarm )e.nextElement();
+			Alarm a = (Alarm )ht.get(it.next());
 			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, a.event_id);
 			if(event == null)
 				continue;
-			Result rrr = (Result )Pool.get(Result.typ, event.descriptor);
+			Result rrr = (Result )Pool.get(Result.TYPE, event.descriptor);
 			if(rrr == null)
 				continue;
-			Evaluation eval = (Evaluation )Pool.get(Evaluation.typ, rrr
+			Evaluation eval = (Evaluation )Pool.get(Evaluation.TYPE, rrr
 					.getActionId());
 			if(eval == null)
 				continue;
@@ -133,14 +133,14 @@ public class Alarm extends StubResource implements Serializable
 			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, this.event_id);
 			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
 			{
-				Evaluation ev = (Evaluation )Pool.get(Evaluation.typ,
+				Evaluation ev = (Evaluation )Pool.get(Evaluation.TYPE,
 						event.descriptor);
 				return ev;
 			}
 			else if(event.type_id.equals(TEST_ALARM_EVENT)
 					  || event.type_id.equals(TEST_WARNING_EVENT))
 				{
-					Test t = (Test )Pool.get(Test.typ, event.descriptor);
+					Test t = (Test )Pool.get(Test.TYPE, event.descriptor);
 					return t;
 				}
 
@@ -176,7 +176,7 @@ public class Alarm extends StubResource implements Serializable
 			else if(event.type_id.equals(TEST_ALARM_EVENT)
 					  || event.type_id.equals(TEST_WARNING_EVENT))
 				{
-					Test t = (Test )Pool.get(Test.typ, event.descriptor);
+					Test t = (Test )Pool.get(Test.TYPE, event.descriptor);
 					return t;
 				}
 
@@ -192,9 +192,9 @@ public class Alarm extends StubResource implements Serializable
 	public Evaluation getEvaluation()
 	{
 		SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
-		Result rrr = (Result )Pool.get(Result.typ, event.descriptor);
+		Result rrr = (Result )Pool.get(Result.TYPE, event.descriptor);
 		Evaluation eval = (Evaluation )Pool
-				.get(Evaluation.typ, rrr.getActionId());
+				.get(Evaluation.TYPE, rrr.getActionId());
 		return eval;
 	}
 
@@ -231,21 +231,21 @@ public class Alarm extends StubResource implements Serializable
 					  || event.type_id.equals(TEST_WARNING_EVENT))
 				{
 					Result res = (Result )Pool
-							.get(Result.typ, event.descriptor);
+							.get(Result.TYPE, event.descriptor);
 					if(res == null)
 						return "";
-					if(res.getResultType().equals(Test.typ))
+					if(res.getResultType().equals(Test.TYPE))
 					{
 						Test test = (Test )Pool
-								.get(Test.typ, res.getActionId());
+								.get(Test.TYPE, res.getActionId());
 						if(test == null)
 							return "";
 						return test.getMonitoredElementId();
 					}
-					if(res.getResultType().equals(Evaluation.typ))
+					if(res.getResultType().equals(Evaluation.TYPE))
 					{
 						Evaluation evaluation = (Evaluation )Pool.get(
-								Evaluation.typ, res.getActionId());
+								Evaluation.TYPE, res.getActionId());
 						if(evaluation == null)
 							return "";
 						return evaluation.getMonitoredElementId();
@@ -277,7 +277,7 @@ public class Alarm extends StubResource implements Serializable
 			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
 			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
 			{
-				for(Enumeration enum = Pool.getHash(Result.typ).elements(); enum
+				for(Enumeration enum = Pool.getHash(Result.TYPE).elements(); enum
 						.hasMoreElements();)
 				{
 					Result r = (Result )enum.nextElement();
@@ -290,7 +290,7 @@ public class Alarm extends StubResource implements Serializable
 			else if(event.type_id.equals(TEST_ALARM_EVENT)
 					  || event.type_id.equals(TEST_WARNING_EVENT))
 				{
-					for(Enumeration enum = Pool.getHash(Result.typ).elements(); enum
+					for(Enumeration enum = Pool.getHash(Result.TYPE).elements(); enum
 							.hasMoreElements();)
 					{
 						Result r = (Result )enum.nextElement();
@@ -344,7 +344,7 @@ public class Alarm extends StubResource implements Serializable
 			else if(event.type_id.equals(TEST_ALARM_EVENT)
 					  || event.type_id.equals(TEST_WARNING_EVENT))
 				{
-					Test t = (Test )Pool.get(Test.typ, event.descriptor);
+					Test t = (Test )Pool.get(Test.TYPE, event.descriptor);
 					return t;
 				}
 

@@ -61,14 +61,15 @@ import com.syrus.AMFICOM.Client.Resource.Test.EvaluationType;
 import com.syrus.AMFICOM.Client.Resource.Test.ModelingType;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
 
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
 
 public class SurveyDataSourceImage extends DataSourceImage
 {
-	protected SurveyDataSourceImage()
-	{
+	protected SurveyDataSourceImage(){
+		//
 	}
 
 	public SurveyDataSourceImage(DataSourceInterface di)
@@ -78,18 +79,18 @@ public class SurveyDataSourceImage extends DataSourceImage
 
 	public void LoadParameterTypes()
 	{
-		ResourceDescriptor_Transferable[] desc = GetDescriptors(GlobalParameterType.typ);
+		ResourceDescriptor_Transferable[] desc = GetDescriptors(GlobalParameterType.TYPE);
 
 //		Pool.removeHash(GlobalParameterType.typ);
 
-		load(GlobalParameterType.typ);
-		Vector ids = filter(GlobalParameterType.typ, desc, true);
+		load(GlobalParameterType.TYPE);
+		Vector ids = filter(GlobalParameterType.TYPE, desc, true);
 		if(ids.size() > 0)
 		{
 			String [] id_s = new String[ids.size()];
 			ids.copyInto(id_s);
 			this.di.LoadParameterTypes(id_s);
-			save(GlobalParameterType.typ);
+			save(GlobalParameterType.TYPE);
 		}
 	}
 
@@ -129,18 +130,18 @@ public class SurveyDataSourceImage extends DataSourceImage
 
 	public void LoadEvaluationTypes()
 	{
-		ResourceDescriptor_Transferable[] desc = GetDescriptors(EvaluationType.typ);
+		ResourceDescriptor_Transferable[] desc = GetDescriptors(EvaluationType.TYPE);
 
 //		Pool.removeHash(EvaluationType.typ);
 
-		load(EvaluationType.typ);
-		Vector ids = filter(EvaluationType.typ, desc, true);
+		load(EvaluationType.TYPE);
+		Vector ids = filter(EvaluationType.TYPE, desc, true);
 		if(ids.size() > 0)
 		{
 			String [] id_s = new String[ids.size()];
 			ids.copyInto(id_s);
 			di.LoadEvaluationTypes(id_s);
-			save(EvaluationType.typ);
+			save(EvaluationType.TYPE);
 		}
 	}
 
@@ -416,7 +417,7 @@ public class SurveyDataSourceImage extends DataSourceImage
 			for(int i = 0; i < ids.size(); i++)
 			{
 				Test test = (Test )Pool.get(Test.TYPE, (String )ids.get(i));
-				TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
+				TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.TYPE, test.getTestArgumentSetId());
 				if(tas == null)
 					di.LoadTestArgumentSets(new String[] {test.getTestArgumentSetId()});
 			}
@@ -425,16 +426,16 @@ public class SurveyDataSourceImage extends DataSourceImage
 
 	public void LoadResultSets()
 	{
-		ResourceDescriptor_Transferable[] desc = GetDomainDescriptors(ResultSet.typ);
+		ResourceDescriptor_Transferable[] desc = GetDomainDescriptors(ResultSet.TYPE);
 
-		load(ResultSet.typ);
-		Vector ids = filter(ResultSet.typ, desc, true);
+		load(ResultSet.TYPE);
+		Vector ids = filter(ResultSet.TYPE, desc, true);
 		if(ids.size() > 0)
 		{
 			String [] id_s = new String[ids.size()];
 			ids.copyInto(id_s);
 			di.LoadResultSets(id_s);
-			save(ResultSet.typ);
+			save(ResultSet.TYPE);
 		}
 	}
 
@@ -486,14 +487,14 @@ public class SurveyDataSourceImage extends DataSourceImage
 	{
 		String[] id_s = di.getTestSetupIdsByME(me_id);
 
-		ResourceDescriptor_Transferable[] desc = GetDescriptorsByIds(TestSetup.typ, id_s);
+		ResourceDescriptor_Transferable[] desc = GetDescriptorsByIds(TestSetup.TYPE, id_s);
 /*
 		ResourceDescriptor_Transferable[] desc = new ResourceDescriptor_Transferable[id_s.length];
 		for(int i = 0; i < id_s.length; i++)
 			desc[i] = GetDescriptor(TestSetup.typ, id_s[i]);
 */
-		load(TestSetup.typ);
-		Vector ids = filter(TestSetup.typ, desc, false);
+		load(TestSetup.TYPE);
+		Vector ids = filter(TestSetup.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
@@ -501,7 +502,7 @@ public class SurveyDataSourceImage extends DataSourceImage
 			ids.copyInto(id_s2);
 			for(int i = 0; i < id_s2.length; i++)
 				di.loadTestSetup(id_s2[i]);
-			save(TestSetup.typ);
+			save(TestSetup.TYPE);
 		}
 
 		return id_s;
@@ -510,14 +511,14 @@ public class SurveyDataSourceImage extends DataSourceImage
 	public String[] getTestSetupByTestType(String tt_id)
 	{
 		String[] id_s = di.getTestSetupIdsByTestType(tt_id);
-		ResourceDescriptor_Transferable[] desc = GetDescriptorsByIds(TestSetup.typ, id_s);
+		ResourceDescriptor_Transferable[] desc = GetDescriptorsByIds(TestSetup.TYPE, id_s);
 /*
 		ResourceDescriptor_Transferable[] desc = new ResourceDescriptor_Transferable[id_s.length];
 		for(int i = 0; i < id_s.length; i++)
 			desc[i] = GetDescriptor(TestSetup.typ, id_s[i]);
 */
-		load(TestSetup.typ);
-		Vector ids = filter(TestSetup.typ, desc, false);
+		load(TestSetup.TYPE);
+		Vector ids = filter(TestSetup.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
@@ -525,7 +526,7 @@ public class SurveyDataSourceImage extends DataSourceImage
 			ids.copyInto(id_s2);
 			for(int i = 0; i < id_s2.length; i++)
 				di.loadTestSetup(id_s2[i]);
-			save(TestSetup.typ);
+			save(TestSetup.TYPE);
 		}
 
 		return id_s;
@@ -550,32 +551,32 @@ public class SurveyDataSourceImage extends DataSourceImage
 	public void GetModeling(String modeling_id)
 	{
 		ResourceDescriptor_Transferable[] desc = new ResourceDescriptor_Transferable[1];
-		desc[0] = GetDescriptor(Modeling.typ, modeling_id);
+		desc[0] = GetDescriptor(Modeling.TYPE, modeling_id);
 
-		load(Modeling.typ);
+		load(Modeling.TYPE);
 //		loadFromPool(Modeling.typ);
-		Vector ids = filter(Modeling.typ, desc, false);
+		Vector ids = filter(Modeling.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
 			di.GetModeling((String )ids.get(0));
-			save(Modeling.typ);
+			save(Modeling.TYPE);
 		}
 	}
 
 	public void GetEvaluation(String evaluation_id)
 	{
 		ResourceDescriptor_Transferable[] desc = new ResourceDescriptor_Transferable[1];
-		desc[0] = GetDescriptor(Evaluation.typ, evaluation_id);
+		desc[0] = GetDescriptor(Evaluation.TYPE, evaluation_id);
 
-		load(Evaluation.typ);
+		load(Evaluation.TYPE);
 //		loadFromPool(Evaluation.typ);
-		Vector ids = filter(Evaluation.typ, desc, false);
+		Vector ids = filter(Evaluation.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
 			di.GetEvaluation((String )ids.get(0));
-			save(Evaluation.typ);
+			save(Evaluation.TYPE);
 		}
 	}
 
@@ -634,33 +635,33 @@ public class SurveyDataSourceImage extends DataSourceImage
 
 	public void GetModelings(String[] modeling_ids)
 	{
-		ResourceDescriptor_Transferable[] desc = GetDescriptorsByIds(Modeling.typ, modeling_ids);
-		load(Modeling.typ);
+		ResourceDescriptor_Transferable[] desc = GetDescriptorsByIds(Modeling.TYPE, modeling_ids);
+		load(Modeling.TYPE);
 //		loadFromPool(Modeling.typ);
-		Vector ids = filter(Modeling.typ, desc, false);
+		Vector ids = filter(Modeling.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
 			String [] id_s2 = new String[ids.size()];
 			ids.copyInto(id_s2);
 			di.GetModelings(id_s2);
-			save(Modeling.typ);
+			save(Modeling.TYPE);
 		}
 	}
 
 	public void GetEvaluations(String[] evaluation_ids)
 	{
-		ResourceDescriptor_Transferable[] desc = GetDescriptorsByIds(Evaluation.typ, evaluation_ids);
-		load(Evaluation.typ);
+		ResourceDescriptor_Transferable[] desc = GetDescriptorsByIds(Evaluation.TYPE, evaluation_ids);
+		load(Evaluation.TYPE);
 //		loadFromPool(Evaluation.typ);
-		Vector ids = filter(Evaluation.typ, desc, false);
+		Vector ids = filter(Evaluation.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
 			String [] id_s2 = new String[ids.size()];
 			ids.copyInto(id_s2);
 			di.GetEvaluations(id_s2);
-			save(Evaluation.typ);
+			save(Evaluation.TYPE);
 		}
 	}
 
@@ -727,47 +728,47 @@ public class SurveyDataSourceImage extends DataSourceImage
 	public void GetResult(String result_id)
 	{
 		ResourceDescriptor_Transferable[] desc = new ResourceDescriptor_Transferable[1];
-		desc[0] = GetDescriptor(Result.typ, result_id);
+		desc[0] = GetDescriptor(Result.TYPE, result_id);
 
-		load(Result.typ);
+		load(Result.TYPE);
 //		loadFromPool(Result.typ);
-		Vector ids = filter(Result.typ, desc, false);
+		Vector ids = filter(Result.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
 			di.GetResult((String )ids.get(0));
-			save(Result.typ);
+			save(Result.TYPE);
 		}
 	}
 
 	public void GetResults(String[] result_ids)
 	{
 		ResourceDescriptor_Transferable[] desc = GetResultDescriptorsByIds(result_ids);
-		load(Result.typ);
+		load(Result.TYPE);
 //		loadFromPool(Result.typ);
-		Vector ids = filter(Result.typ, desc, false);
+		Vector ids = filter(Result.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
 			String [] id_s2 = new String[ids.size()];
 			ids.copyInto(id_s2);
 			di.GetResults(id_s2);
-			save(Result.typ);
+			save(Result.TYPE);
 		}
 	}
 
 	void LoadResultsByDescriptors(ResourceDescriptor_Transferable[] desc)
 	{
-		load(Result.typ);
+		load(Result.TYPE);
 //		loadFromPool(Result.typ);
-		Vector ids = filter(Result.typ, desc, false);
+		Vector ids = filter(Result.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
 			String [] id_s2 = new String[ids.size()];
 			ids.copyInto(id_s2);
 			di.GetResults(id_s2);
-			save(Result.typ);
+			save(Result.TYPE);
 		}
 	}
 
@@ -824,19 +825,16 @@ public class SurveyDataSourceImage extends DataSourceImage
 		for(int i = 0; i < desc.length; i++)
 			is[i] = desc[i].resource_id;
 
-		load(Modeling.typ);
+		load(Modeling.TYPE);
 //		loadFromPool(Test.TYPE);
-		Vector ids = filter(Modeling.typ, desc, false);
+		Vector ids = filter(Modeling.TYPE, desc, false);
 
-		if(ids.size() > 0)
+		for(Iterator it=ids.iterator();it.hasNext();)
 		{
-			for(int i = 0; i < ids.size(); i++)
-			{
-				String id_s2 = (String )ids.get(i);
-				di.GetModeling(id_s2);
-			}
-			save(Modeling.typ);
+			String id_s2 = (String )it.next();
+			di.GetModeling(id_s2);
 		}
+		save(Modeling.TYPE);
 
 		return is;
 	}
@@ -848,9 +846,9 @@ public class SurveyDataSourceImage extends DataSourceImage
 		for(int i = 0; i < desc.length; i++)
 			is[i] = desc[i].resource_id;
 
-		load(Evaluation.typ);
+		load(Evaluation.TYPE);
 //		loadFromPool(Test.TYPE);
-		Vector ids = filter(Evaluation.typ, desc, false);
+		Vector ids = filter(Evaluation.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
@@ -859,7 +857,7 @@ public class SurveyDataSourceImage extends DataSourceImage
 				String id_s2 = (String )ids.get(i);
 				di.GetEvaluation(id_s2);
 			}
-			save(Evaluation.typ);
+			save(Evaluation.TYPE);
 		}
 
 		return is;
@@ -996,16 +994,16 @@ public class SurveyDataSourceImage extends DataSourceImage
 	{
 		ResourceDescriptor_Transferable[] desc = new ResourceDescriptor_Transferable[1];
 
-		load(Evaluation.typ);
+		load(Evaluation.TYPE);
 
 		boolean found = false;
 		Test te = (Test )Pool.get(Test.TYPE, id);
 		if(te != null)
 		{
-			Evaluation ev = (Evaluation )Pool.get(Evaluation.typ, te.getEvaluationId());
+			Evaluation ev = (Evaluation )Pool.get(Evaluation.TYPE, te.getEvaluationId());
 			if(ev != null)
 			{
-				desc[0] = GetDescriptor(Evaluation.typ, ev.getId());
+				desc[0] = GetDescriptor(Evaluation.TYPE, ev.getId());
 				found = true;
 			}
 		}
@@ -1013,14 +1011,14 @@ public class SurveyDataSourceImage extends DataSourceImage
 			desc[0] = di.GetEvaluationIdForTest(id);
 
 //		loadFromPool(Test.TYPE);
-		Vector ids = filter(Evaluation.typ, desc, false);
+		Vector ids = filter(Evaluation.TYPE, desc, false);
 
 		if(ids.size() > 0)
 		{
 			String [] id_s2 = new String[ids.size()];
 			ids.copyInto(id_s2);
 			di.GetEvaluations(id_s2);
-			save(Evaluation.typ);
+			save(Evaluation.TYPE);
 		}
 
 		return desc[0].resource_id;

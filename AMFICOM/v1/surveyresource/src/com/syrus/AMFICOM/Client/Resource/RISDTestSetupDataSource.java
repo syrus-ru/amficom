@@ -1,17 +1,7 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.*;
-
-import org.omg.CORBA.*;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.General.*;
 
 public class RISDTestSetupDataSource 
@@ -51,7 +41,7 @@ public class RISDTestSetupDataSource
 			{
 				cs_t = si.ci.server.getCriteriaSet(si.accessIdentity, ids[i]);
 				cs = new CriteriaSet(cs_t);
-				Pool.put(CriteriaSet.typ, cs.getId(), cs);
+				Pool.put(CriteriaSet.TYPE, cs.getId(), cs);
 			}
 			catch (Exception ex)
 			{
@@ -69,7 +59,7 @@ public class RISDTestSetupDataSource
 		if(!si.isOpened())
 			return;
 
-		CriteriaSet cs = (CriteriaSet )Pool.get(CriteriaSet.typ, cs_id);
+		CriteriaSet cs = (CriteriaSet )Pool.get(CriteriaSet.TYPE, cs_id);
 		cs.setTransferableFromLocal();
 		ClientCriteriaSet_Transferable cs_t = (ClientCriteriaSet_Transferable )cs.getTransferable();
 		try
@@ -134,7 +124,7 @@ public class RISDTestSetupDataSource
 	    for (i = 0; i < count; i++)
 		{
 			cs = new CriteriaSet(css[i]);
-			Pool.put(CriteriaSet.typ, cs.getId(), cs);
+			Pool.put(CriteriaSet.TYPE, cs.getId(), cs);
 			cs.updateLocalFromTransferable();
 			ids[i] = cs.getId();
 	    }
@@ -165,7 +155,7 @@ public class RISDTestSetupDataSource
 			{
 				ths_t = si.ci.server.getThresholdSet(si.accessIdentity, ids[i]);
 				ths = new ThresholdSet(ths_t);
-				Pool.put(ThresholdSet.typ, ths.getId(), ths);
+				Pool.put(ThresholdSet.TYPE, ths.getId(), ths);
 			}
 			catch (Exception ex)
 			{
@@ -183,7 +173,7 @@ public class RISDTestSetupDataSource
 		if(!si.isOpened())
 			return;
 
-		ThresholdSet ts = (ThresholdSet )Pool.get(ThresholdSet.typ, ts_id);
+		ThresholdSet ts = (ThresholdSet )Pool.get(ThresholdSet.TYPE, ts_id);
 		ts.setTransferableFromLocal();
 		ClientThresholdSet_Transferable ts_t = (ClientThresholdSet_Transferable )ts.getTransferable();
 		try
@@ -247,7 +237,7 @@ public class RISDTestSetupDataSource
 	    for (i = 0; i < count; i++)
 		{
 			ts = new ThresholdSet(tss[i]);
-			Pool.put(ThresholdSet.typ, ts.getId(), ts);
+			Pool.put(ThresholdSet.TYPE, ts.getId(), ts);
 			ts.updateLocalFromTransferable();
 			ids[i] = ts.getId();
 	    }
@@ -278,7 +268,7 @@ public class RISDTestSetupDataSource
 			{
 				e_t = si.ci.server.getEtalon(si.accessIdentity, ids[i]);
 				e = new Etalon(e_t);
-				Pool.put(Etalon.typ, e.getId(), e);
+				Pool.put(Etalon.TYPE, e.getId(), e);
 			}
 			catch (Exception ex)
 			{
@@ -303,7 +293,7 @@ public class RISDTestSetupDataSource
 		{
 			e_t = si.ci.server.getEtalonByMEandTime(si.accessIdentity, me_id, time);
 			e = new Etalon(e_t);
-			Pool.put(Etalon.typ, e.getId(), e);
+			Pool.put(Etalon.TYPE, e.getId(), e);
 			return e.getId();
 		}
 		catch (Exception ex)
@@ -321,7 +311,7 @@ public class RISDTestSetupDataSource
 		if(!si.isOpened())
 			return;
 
-		Etalon ts = (Etalon )Pool.get(Etalon.typ, e_id);
+		Etalon ts = (Etalon )Pool.get(Etalon.TYPE, e_id);
 		ts.setTransferableFromLocal();
 		ClientEtalon_Transferable ts_t = (ClientEtalon_Transferable )ts.getTransferable();
 		try
@@ -385,7 +375,7 @@ public class RISDTestSetupDataSource
 	    for (i = 0; i < count; i++)
 		{
 			ts = new Etalon(tss[i]);
-			Pool.put(Etalon.typ, ts.getId(), ts);
+			Pool.put(Etalon.TYPE, ts.getId(), ts);
 			ts.updateLocalFromTransferable();
 			ids[i] = ts.getId();
 	    }
@@ -408,7 +398,7 @@ public class RISDTestSetupDataSource
 			{
 				tas_t = si.ci.server.getTestArgumentSet(si.accessIdentity, ids[i]);
 				tas = new TestArgumentSet(tas_t);
-				Pool.put(TestArgumentSet.typ, tas.getId(), tas);
+				Pool.put(TestArgumentSet.TYPE, tas.getId(), tas);
 			}
 			catch (Exception ex)
 			{
@@ -426,7 +416,7 @@ public class RISDTestSetupDataSource
 		if(!si.isOpened())
 			return;
 
-		TestArgumentSet as = (TestArgumentSet )Pool.get(TestArgumentSet.typ, as_id);
+		TestArgumentSet as = (TestArgumentSet )Pool.get(TestArgumentSet.TYPE, as_id);
 		as.setTransferableFromLocal();
 		ClientTestArgumentSet_Transferable as_t = (ClientTestArgumentSet_Transferable )as.getTransferable();
 		try
@@ -490,7 +480,7 @@ public class RISDTestSetupDataSource
 	    for (i = 0; i < count; i++)
 		{
 			as = new TestArgumentSet(ass[i]);
-			Pool.put(TestArgumentSet.typ, as.getId(), as);
+			Pool.put(TestArgumentSet.TYPE, as.getId(), as);
 			as.updateLocalFromTransferable();
 			ids[i] = as.getId();
 	    }
@@ -499,12 +489,10 @@ public class RISDTestSetupDataSource
 
 	public void saveTestSetup(String ts_id)
 	{
-		if(si == null)
-			return;
-		if(!si.isOpened())
+		if((si == null)||(!si.isOpened()))
 			return;
 
-		TestSetup ts = (TestSetup )Pool.get(TestSetup.typ, ts_id);
+		TestSetup ts = (TestSetup )Pool.get(TestSetup.TYPE, ts_id);
 		ts.setTransferableFromLocal();
 		TestSetup_Transferable ts_t = (TestSetup_Transferable )ts.getTransferable();
 		try
@@ -515,7 +503,6 @@ public class RISDTestSetupDataSource
 		{
 			System.err.print("Error saveTestSetup: " + ex.getMessage());
 			ex.printStackTrace();
-			return;
 		}
 	}
 
@@ -549,7 +536,7 @@ public class RISDTestSetupDataSource
 	    for (i = 0; i < count; i++)
 		{
 			ts = new TestSetup(tss[i]);
-			Pool.put(TestSetup.typ, ts.getId(), ts);
+			Pool.put(TestSetup.TYPE, ts.getId(), ts);
 			ts.updateLocalFromTransferable();
 			ids[i] = ts.getId();
 	    }
@@ -586,7 +573,7 @@ public class RISDTestSetupDataSource
 	    for (i = 0; i < count; i++)
 		{
 			ts = new TestSetup(tss[i]);
-			Pool.put(TestSetup.typ, ts.getId(), ts);
+			Pool.put(TestSetup.TYPE, ts.getId(), ts);
 			ts.updateLocalFromTransferable();
 			ids[i] = ts.getId();
 	    }
@@ -696,7 +683,7 @@ public class RISDTestSetupDataSource
 		}
 
 		ts = new TestSetup(ts_t);
-		Pool.put(TestSetup.typ, ts.getId(), ts);
+		Pool.put(TestSetup.TYPE, ts.getId(), ts);
 		ts.updateLocalFromTransferable();
 	}
 

@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Survey.Result.UI;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import com.syrus.AMFICOM.Client.General.UI.*;
 
 public class ResultSetDisplayModel extends StubDisplayModel

@@ -1,25 +1,17 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.*;
-
-import org.omg.CORBA.*;
-
 import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.General.*;
 
 public class RISDSurveyTypeDataSource
 		extends RISDMapDataSource
 		implements DataSourceInterface
 {
-	protected RISDSurveyTypeDataSource()
-	{
+	protected RISDSurveyTypeDataSource(){
+		// 
 	}
 
 	public RISDSurveyTypeDataSource(SessionInterface si)
@@ -64,7 +56,7 @@ public class RISDSurveyTypeDataSource
 		 for (i = 0; i < count; i++)
 		{
 			paramtype = new GlobalParameterType(paramtypes[i]);
-			Pool.put(GlobalParameterType.typ, paramtype.getId(), paramtype);
+			Pool.put(GlobalParameterType.TYPE, paramtype.getId(), paramtype);
 		 }
 	}
 
@@ -105,7 +97,7 @@ public class RISDSurveyTypeDataSource
 		 for (i = 0; i < count; i++)
 		{
 			paramtype = new GlobalParameterType(paramtypes[i]);
-			Pool.put(GlobalParameterType.typ, paramtype.getId(), paramtype);
+			Pool.put(GlobalParameterType.TYPE, paramtype.getId(), paramtype);
 		 }
 	}
 
@@ -271,7 +263,7 @@ public class RISDSurveyTypeDataSource
 		 for (i = 0; i < count; i++)
 		{
 			etype = new EvaluationType(etypes[i]);
-			Pool.put(EvaluationType.typ, etype.getId(), etype);
+			Pool.put(EvaluationType.TYPE, etype.getId(), etype);
 		 }
 	}
 
@@ -353,7 +345,7 @@ public class RISDSurveyTypeDataSource
 		 for (i = 0; i < count; i++)
 		{
 			etype = new EvaluationType(etypes[i]);
-			Pool.put(EvaluationType.typ, etype.getId(), etype);
+			Pool.put(EvaluationType.TYPE, etype.getId(), etype);
 		 }
 	}
 

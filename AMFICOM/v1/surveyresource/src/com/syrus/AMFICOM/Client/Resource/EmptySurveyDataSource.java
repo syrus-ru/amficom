@@ -2,8 +2,6 @@ package com.syrus.AMFICOM.Client.Resource;
 
 import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.Result.Analysis;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
 
 public class EmptySurveyDataSource
@@ -12,6 +10,7 @@ public class EmptySurveyDataSource
 {
 	protected EmptySurveyDataSource()
 	{
+		//
 	}
 
 	public EmptySurveyDataSource(SessionInterface si)
@@ -40,6 +39,7 @@ public class EmptySurveyDataSource
 
 	public void GetTests()
 	{
+		// nothing
 	}
 
 	public String GetUId(String str)
@@ -138,10 +138,12 @@ public class EmptySurveyDataSource
 
 	public void SetAlarm(String alarm_id)
 	{
+		//nothing
 	}
 
 	public void GetMessages()
 	{
+		//		nothing
 	}
 
 	public void LoadTestTypes()

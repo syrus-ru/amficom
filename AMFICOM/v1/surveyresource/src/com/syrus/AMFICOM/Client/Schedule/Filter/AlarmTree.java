@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Schedule.Filter;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import javax.swing.*;
 
@@ -13,8 +12,8 @@ public class AlarmTree extends FilterTree
 	FilterTreeNode a1 = new FilterTreeNode(LangModelSchedule.getString("AlarmTest"), "alarm");
 	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.getString("NoAlarmTest"), "noalarm");
 
-	public AlarmTree()
-	{
+	public AlarmTree(){
+		// empty constuctor
 	}
 
 	public void setTree(ApplicationContext aContext)

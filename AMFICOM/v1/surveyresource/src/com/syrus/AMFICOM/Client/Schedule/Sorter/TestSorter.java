@@ -1,29 +1,25 @@
 package com.syrus.AMFICOM.Client.Schedule.Sorter;
 
-import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import java.util.*;
 
 public class TestSorter extends ObjectResourceSorter
 {
 	String[][] sorted_columns = new String[][]{
-		{"kis_id", "string"},
-		{"local_id", "string"},
-		{"start_time", "long"},
-		{"status", "string"},
-		{"temporal_type", "string"},
-		{"test_type_id", "string"},
-		{"port_id", "string"}
+		{COLUMN_KIS_ID, COLUMN_TYPE_STRING},
+		{COLUMN_LOCAL_ID, COLUMN_TYPE_STRING},
+		{COLUMN_START_TIME, COLUMN_TYPE_LONG},
+		{COLUMN_STATUS, COLUMN_TYPE_STRING},
+		{COLUMN_TEMPORAL_TYPE, COLUMN_TYPE_STRING},
+		{COLUMN_TEST_TYPE_ID, COLUMN_TYPE_STRING},
+		{COLUMN_PORT_ID, COLUMN_TYPE_STRING}
 		};
 
-	public TestSorter()
-	{
-		super();
+	public TestSorter(){
+		// empty constructor
 	}
-
+	
 	public TestSorter(List dataSet)
 	{
 		super(dataSet);

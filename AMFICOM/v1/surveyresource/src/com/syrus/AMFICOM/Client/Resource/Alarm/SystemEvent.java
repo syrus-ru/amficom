@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Resource.Alarm;
 
 import com.syrus.AMFICOM.CORBA.Alarm.Event_Transferable;
 import com.syrus.AMFICOM.CORBA.General.EventStatus;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
@@ -49,7 +48,6 @@ public class SystemEvent extends StubResource implements Serializable
 		this.source_id = source_id;
 		this.type_id = type_id;
 		this.descriptor = descriptor;
-		this.status = status;
 		this.created = created;
 
 		transferable = new Event_Transferable();
@@ -79,6 +77,7 @@ public class SystemEvent extends StubResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
+		// nothing yet?
 	}
 
 	public String getId()

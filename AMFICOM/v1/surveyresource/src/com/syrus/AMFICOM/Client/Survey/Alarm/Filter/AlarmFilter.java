@@ -10,20 +10,18 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.Alarm.EventSource;
 
-import com.syrus.AMFICOM.Client.Survey.Report.AlarmReportModel;
-
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
 import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
 
 import com.syrus.AMFICOM.filter.FilterExpressionInterface;
-import com.syrus.AMFICOM.filter.FilterExpressionBase;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Enumeration;
 
 public class AlarmFilter extends ObjectResourceFilter
 {
-	private Vector filterColumns;
+	private List filterColumns;
 
 	public AlarmFilter()
 	{
@@ -38,11 +36,11 @@ public class AlarmFilter extends ObjectResourceFilter
 	}
 
 
-	public Vector getFilterColumns()
+	public List getFilterColumns()
 	{
 		if (this.filterColumns==null)
 		{
-			this.filterColumns = new Vector();
+			this.filterColumns = new ArrayList();
 			this.filterColumns.add("Event_source");
 			this.filterColumns.add("Monitored_element");
 			this.filterColumns.add("Event_type");
@@ -140,25 +138,25 @@ public class AlarmFilter extends ObjectResourceFilter
 	{
 		boolean result = false;
 		Alarm a = (Alarm )or;
-		Vector vec = expr.getVec();
-		String type = (String) vec.elementAt(0);
+		List vec = expr.getVec();
+		String type = (String) vec.get(0);
 		if (type.equals("numeric"))
 		{
 			if (expr.getId().equals("time"))
 			{
-				if (((String)vec.elementAt(1)).equals("="))
+				if (((String)vec.get(1)).equals("="))
 				{
-					if (a.generated == Long.parseLong((String)vec.elementAt(2)))
+					if (a.generated == Long.parseLong((String)vec.get(2)))
 						result = true;
 				}
-				else if (((String)vec.elementAt(1)).equals(">"))
+				else if (((String)vec.get(1)).equals(">"))
 				{
-					if (a.generated > Long.parseLong((String)vec.elementAt(2)))
+					if (a.generated > Long.parseLong((String)vec.get(2)))
 						result = true;
 				}
-				else if (((String)vec.elementAt(1)).equals("<"))
+				else if (((String)vec.get(1)).equals("<"))
 				{
-					if (a.generated < Long.parseLong((String)vec.elementAt(2)))
+					if (a.generated < Long.parseLong((String)vec.get(2)))
 						result = true;
 				}
 			}
@@ -167,7 +165,7 @@ public class AlarmFilter extends ObjectResourceFilter
 		{
 			if (expr.getId().equals("time"))
 			{
-				if ( a.generated > Long.parseLong((String)vec.elementAt(1)) &&  a.generated < Long.parseLong((String)vec.elementAt(2)))
+				if ( a.generated > Long.parseLong((String)vec.get(1)) &&  a.generated < Long.parseLong((String)vec.get(2)))
 				{
 					result = true;
 				}
@@ -177,13 +175,13 @@ public class AlarmFilter extends ObjectResourceFilter
 		{
 			if (expr.getId().equals("time"))
 			{
-				if ( a.generated > Long.parseLong((String)vec.elementAt(1)) &&  a.generated < Long.parseLong((String)vec.elementAt(2)))
+				if ( a.generated > Long.parseLong((String)vec.get(1)) &&  a.generated < Long.parseLong((String)vec.get(2)))
 					result = true;
 			}
 		}
 		else if (type.equals("string"))
 		{
-			String substring = (String)vec.elementAt(1);
+			String substring = (String)vec.get(1);
 			if (expr.getId().equals("Event_source"))
 			{
 				String name = Pool.getName(EventSource.typ, a.getSourceId());
@@ -205,7 +203,7 @@ public class AlarmFilter extends ObjectResourceFilter
 		}
 		else if (type.equals("list"))
 		{
-			TreeModelClone tree = (TreeModelClone)vec.elementAt(1);
+			TreeModelClone tree = (TreeModelClone)vec.get(1);
 			if (expr.getId().equals("Monitored_element"))
 			{
 				FilterTreeNode mmtn = (FilterTreeNode )tree.getRoot();

@@ -11,9 +11,6 @@ import java.util.List;
 
 public class ModelingDisplayModel extends StubDisplayModel
 {
-	public ModelingDisplayModel()
-	{
-	}
 
 	public PropertyEditor getColumnEditor(ObjectResource o, String col_id)
 	{
