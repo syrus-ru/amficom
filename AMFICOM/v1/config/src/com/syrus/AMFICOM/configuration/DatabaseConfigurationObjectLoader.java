@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.25 2004/12/02 09:30:13 bob Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.26 2004/12/02 12:09:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,13 +26,80 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/02 09:30:13 $
+ * @version $Revision: 1.26 $, $Date: 2004/12/02 12:09:47 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoader {
 
+	private StorableObjectDatabase getDatabase(short entityCode){
+		StorableObjectDatabase database = null;
+		switch (entityCode) {
+			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
+				break;
+			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
+				break;
+			case ObjectEntities.PORTTYPE_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getPortTypeDatabase();
+				break;
+			case ObjectEntities.LINKTYPE_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getLinkTypeDatabase();
+				break;
+			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
+				break;
+			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getCharacteristicDatabase();
+				break;
+			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
+				break;
+			//          case ObjectEntities.PERMATTR_ENTITY_CODE:
+			//              storableObject =
+			// loadPermissionAttributes(soIds);
+			//              break;
+			case ObjectEntities.USER_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getUserDatabase();
+				break;
+			case ObjectEntities.DOMAIN_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getDomainDatabase();
+				break;
+			case ObjectEntities.SERVER_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getServerDatabase();
+				break;
+			case ObjectEntities.MCM_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getDomainDatabase();
+				break;
+			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getEquipmentDatabase();
+				break;
+			case ObjectEntities.PORT_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getPortDatabase();
+				break;
+			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
+				break;
+			case ObjectEntities.KIS_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getKISDatabase();
+				break;
+			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
+				break;
+			case ObjectEntities.ME_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
+				break;
+			case ObjectEntities.LINK_ENTITY_CODE:
+				database = ConfigurationDatabaseContext.getLinkDatabase();
+				break;
+			default:
+				Log.errorMessage("DatabaseConfigurationObjectLoader.getDatabase | Unknown entity: " + ObjectEntities.codeToString(entityCode));                
+		}
+		return database;
+	}
+	
 	private void delete(Identifier id, List ids) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
@@ -46,69 +113,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 					entityCode = ((Identified)obj).getId().getMajor();
 		}
 		try {
-			StorableObjectDatabase database = null;
-			switch (entityCode) {
-				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
-					break;
-				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
-					break;
-				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-					break;
-				case ObjectEntities.PORTTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getPortTypeDatabase();
-					break;
-				case ObjectEntities.LINKTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getLinkTypeDatabase();
-					break;
-				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-					break;
-				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getCharacteristicDatabase();
-					break;
-//          case ObjectEntities.PERMATTR_ENTITY_CODE:
-//              loadedList =
-// cObjectLoader.loadPermissionAttributes(ids);
-//              break;
-				case ObjectEntities.USER_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getUserDatabase();
-					break;
-				case ObjectEntities.DOMAIN_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getDomainDatabase();
-					break;
-				case ObjectEntities.SERVER_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getServerDatabase();
-					break;
-				case ObjectEntities.MCM_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getMCMDatabase();
-					break;
-				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getEquipmentDatabase();
-					break;
-				case ObjectEntities.PORT_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getPortDatabase();
-					break;
-				case ObjectEntities.TRANSPATH_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
-					break;
-				case ObjectEntities.KIS_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getKISDatabase();
-					break;
-				case ObjectEntities.LINK_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getLinkDatabase();
-					break;
-				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
-					break;
-				case ObjectEntities.ME_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
-					break;
-				default:
-					Log.errorMessage("DatabaseConfigurationObjectLoader.delete | Unknown entity: " + entityCode);                
-			}
+			StorableObjectDatabase database = this.getDatabase(entityCode); 
 			if (database != null) {
 				if (id != null)
 					database.delete(id);
@@ -1448,73 +1453,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
 
-    short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
+		short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
 
-    StorableObjectDatabase database = null;
 		try {
-			switch (entityCode) {
-				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
-					break;
-				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-					break;
-				case ObjectEntities.PORTTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getPortTypeDatabase();
-					break;
-				case ObjectEntities.LINKTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getLinkTypeDatabase();
-					break;
-				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-					break;
-				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getCharacteristicDatabase();
-					break;
-				case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
-					break;
-				//          case ObjectEntities.PERMATTR_ENTITY_CODE:
-				//              storableObject =
-				// loadPermissionAttributes(soIds);
-				//              break;
-				case ObjectEntities.USER_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getUserDatabase();
-					break;
-				case ObjectEntities.DOMAIN_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getDomainDatabase();
-					break;
-				case ObjectEntities.SERVER_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getServerDatabase();
-					break;
-				case ObjectEntities.MCM_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getDomainDatabase();
-					break;
-				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getEquipmentDatabase();
-					break;
-				case ObjectEntities.PORT_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getPortDatabase();
-					break;
-				case ObjectEntities.TRANSPATH_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
-					break;
-				case ObjectEntities.KIS_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getKISDatabase();
-					break;
-				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
-					break;
-				case ObjectEntities.ME_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
-					break;
-				case ObjectEntities.LINK_ENTITY_CODE:
-					database = ConfigurationDatabaseContext.getLinkDatabase();
-					break;
-				default:
-					Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | Unknown entity: " + ObjectEntities.codeToString(entityCode));                
-			}
-
+		    StorableObjectDatabase database = this.getDatabase(entityCode);
+			
 			if (database != null)
 				return database.refresh(storableObjects);
 
