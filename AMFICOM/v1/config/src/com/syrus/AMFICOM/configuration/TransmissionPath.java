@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.4 2004/08/09 08:38:48 bob Exp $
+ * $Id: TransmissionPath.java,v 1.5 2004/08/10 19:01:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/09 08:38:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2004/08/10 19:01:09 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -85,7 +85,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();		
 		
 
-		return new TransmissionPath_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+		return new TransmissionPath_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																			super.created.getTime(),
 																			super.modified.getTime(),
 																			(Identifier_Transferable)super.creatorId.getTransferable(),

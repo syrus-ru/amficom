@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.11 2004/08/03 17:15:58 arseniy Exp $
+ * $Id: KIS.java,v 1.12 2004/08/10 19:01:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/03 17:15:58 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/10 19:01:09 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -77,7 +77,7 @@ public class KIS extends DomainMember {
 		for (Iterator iterator = this.measurementPortIds.iterator(); iterator.hasNext();)
 			mportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		return new KIS_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+		return new KIS_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																super.created.getTime(),
 																super.modified.getTime(),
 																(Identifier_Transferable)super.creatorId.getTransferable(),

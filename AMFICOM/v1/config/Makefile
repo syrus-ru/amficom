@@ -46,6 +46,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/User.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/UserDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/Domain.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characteristic.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Server.java \

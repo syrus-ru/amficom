@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.8 2004/08/10 10:15:41 bob Exp $
+ * $Id: MCMDatabase.java,v 1.9 2004/08/10 19:01:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,13 +22,12 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/10 10:15:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/08/10 19:01:09 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -51,24 +50,25 @@ public class MCMDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MCM mcm = this.fromStorableObject(storableObject);
 		this.retrieveMCM(mcm);
-		this.retrieveMCMKis(mcm);
+		this.retrieveKISIds(mcm);
 	}
 
 	private void retrieveMCM(MCM mcm) throws ObjectNotFoundException, RetrieveObjectException {
-		String mIdStr = mcm.getId().toSQLString();
+		String mcmIdStr = mcm.getId().toSQLString();
 		String sql = SQL_SELECT
-				+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-				+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-				+ COLUMN_CREATOR_ID + COMMA
-				+ COLUMN_MODIFIER_ID + COMMA 
-				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-				+ COLUMN_NAME + COMMA 
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_USER_ID + COMMA
-				+ COLUMN_SERVER_ID 
-				+ SQL_FROM + ObjectEntities.MCM_ENTITY
-				+ SQL_WHERE + COLUMN_ID + EQUALS + mIdStr;
+			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
+			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			+ COLUMN_TYPE_ID + COMMA
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_USER_ID + COMMA
+			+ COLUMN_SERVER_ID
+			+ SQL_FROM + ObjectEntities.MCM_ENTITY
+			+ SQL_WHERE + COLUMN_ID + EQUALS + mcmIdStr;
+
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -107,10 +107,10 @@ public class MCMDatabase extends StorableObjectDatabase {
 													 new Identifier(resultSet.getString(COLUMN_SERVER_ID)));
 			}
 			else
-				throw new ObjectNotFoundException("No such mcm: " + mIdStr);
+				throw new ObjectNotFoundException("No such mcm: " + mcmIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MCMDatabase.retrieve | Cannot retrieve mcm " + mIdStr;
+			String mesg = "MCMDatabase.retrieve | Cannot retrieve mcm " + mcmIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -128,28 +128,25 @@ public class MCMDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	private void retrieveMCMKis(MCM mcm) throws ObjectNotFoundException, RetrieveObjectException {
-		String mIdStr = mcm.getId().toSQLString();
+	private void retrieveKISIds(MCM mcm) throws ObjectNotFoundException, RetrieveObjectException {
+		List kisIds = new ArrayList();
+
+		String mcmIdStr = mcm.getId().toSQLString();
 		String sql = SQL_SELECT 
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.EQUIPMENT_ENTITY
-				+ SQL_WHERE + EquipmentDatabase.COLUMN_SORT + EQUALS + Integer.toString(EquipmentSort._EQUIPMENT_SORT_KIS)
-				+ SQL_AND + KISDatabase.COLUMN_MCM_ID + EQUALS + mIdStr;
+			+ COLUMN_ID
+			+ SQL_FROM + ObjectEntities.KIS_ENTITY
+			+ SQL_WHERE + KISDatabase.COLUMN_MCM_ID + EQUALS + mcmIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MCMDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
-			List characteristicIds = new ArrayList();
-			if (resultSet.next()) {				
-				characteristicIds.add(resultSet.getString(COLUMN_ID));
-			}
-			else
-				throw new ObjectNotFoundException("No such mcm: " + mIdStr);
+			while (resultSet.next())				
+				kisIds.add(new Identifier(resultSet.getString(COLUMN_ID)));
 		}
 		catch (SQLException sqle) {
-			String mesg = "MCMDatabase.retrieve | Cannot retrieve mcm " + mIdStr;
+			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -201,22 +198,21 @@ public class MCMDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertMCM(MCM mcm) throws CreateObjectException {
-		String cIdStr = mcm.getId().toSQLString();		
+		String mcmIdStr = mcm.getId().toSQLString();		
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.CHARACTERISTIC_ENTITY + OPEN_BRACKET
+			+ ObjectEntities.MCM_ENTITY + OPEN_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
 			+ COLUMN_MODIFIED + COMMA
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_TYPE_ID + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_USER_ID + COMMA
 			+ COLUMN_SERVER_ID 
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ cIdStr + COMMA
+			+ mcmIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(mcm.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(mcm.getModified()) + COMMA
 			+ mcm.getCreatorId().toSQLString() + COMMA
@@ -227,6 +223,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			+ mcm.getUserId().toSQLString() + COMMA
 			+ mcm.getServerId().toSQLString() 
 			+ CLOSE_BRACKET;
+
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -234,7 +231,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MCMDatabase.insert | Cannot insert mcm " + cIdStr;
+			String mesg = "MCMDatabase.insert | Cannot insert mcm " + mcmIdStr;
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {

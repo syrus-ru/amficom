@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.10 2004/08/10 10:15:41 bob Exp $
+ * $Id: MCM.java,v 1.11 2004/08/10 19:01:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/10 10:15:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/08/10 19:01:09 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -32,9 +32,10 @@ public class MCM extends DomainMember implements Characterized {
 	private String description;
 	private Identifier userId;
 	private Identifier serverId;
+
 	private List characteristicIds;
 
-	private List kiss;
+	private List kisIds;
 
 	private StorableObjectDatabase mcmDatabase;
 
@@ -83,11 +84,11 @@ public class MCM extends DomainMember implements Characterized {
 			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 		
 		i = 0;
-		Identifier_Transferable[] kisIds = new Identifier_Transferable[this.kiss.size()];
-		for (Iterator iterator = this.kiss.iterator(); iterator.hasNext();)
-			kisIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		Identifier_Transferable[] kisIdsT = new Identifier_Transferable[this.kisIds.size()];
+		for (Iterator iterator = this.kisIds.iterator(); iterator.hasNext();)
+			kisIdsT[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		return new MCM_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+		return new MCM_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																super.created.getTime(),
 																super.modified.getTime(),
 																(Identifier_Transferable)super.creatorId.getTransferable(),
@@ -98,7 +99,7 @@ public class MCM extends DomainMember implements Characterized {
 																(Identifier_Transferable)this.userId.getTransferable(),
 																(Identifier_Transferable)this.serverId.getTransferable(),																
 																charIds,
-																kisIds);
+																kisIdsT);
 	}
 
 	public String getName() {
@@ -126,8 +127,8 @@ public class MCM extends DomainMember implements Characterized {
 		this.characteristicIds = characteristicIds;
 	}
 
-	public List getKISs() {
-		return this.kiss;
+	public List getKISIds() {
+		return this.kisIds;
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -150,7 +151,7 @@ public class MCM extends DomainMember implements Characterized {
 		this.serverId = serverId;		
 	}
 
-	protected synchronized void setKISs(List kiss) {
-		this.kiss = kiss;
+	protected synchronized void setKISIds(List kisIds) {
+		this.kisIds = kisIds;
 	}
 }

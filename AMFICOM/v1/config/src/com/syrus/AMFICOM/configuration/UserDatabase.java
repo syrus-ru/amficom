@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.7 2004/08/10 13:14:42 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.8 2004/08/10 19:01:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/10 13:14:42 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/10 19:01:09 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -55,33 +54,18 @@ public class UserDatabase extends StorableObjectDatabase {
 
 	private void retrieveUser(User user) throws ObjectNotFoundException, RetrieveObjectException {
 		String userIdStr = user.getId().toSQLString();
-		String sql;		
-		{
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(StorableObjectDatabase.SQL_SELECT);
-		buffer.append(DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_CREATED));
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_MODIFIED));
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(StorableObjectDatabase.COLUMN_CREATOR_ID);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(StorableObjectDatabase.COLUMN_MODIFIER_ID);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(COLUMN_LOGIN);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(COLUMN_SORT);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(COLUMN_NAME);
-		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(COLUMN_DESCRIPTION);
-		buffer.append(StorableObjectDatabase.SQL_FROM);
-		buffer.append(ObjectEntities.USER_ENTITY);
-		buffer.append(StorableObjectDatabase.SQL_WHERE);
-		buffer.append(StorableObjectDatabase.COLUMN_ID);
-		buffer.append(StorableObjectDatabase.EQUALS);
-		buffer.append(userIdStr);
-		sql = buffer.toString();
-		}
+		String sql = SQL_SELECT
+			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
+			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_LOGIN + COMMA
+			+ COLUMN_SORT + COMMA
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_DESCRIPTION
+			+ SQL_FROM + ObjectEntities.USER_ENTITY
+			+ SQL_WHERE + COLUMN_ID + EQUALS + userIdStr;
+
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -164,10 +148,7 @@ public class UserDatabase extends StorableObjectDatabase {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
-		String userIdCode = user.getId().getCode();
-
-
-		
+		String userIdStr = user.getId().toSQLString();
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.USER_ENTITY
 			+ OPEN_BRACKET
@@ -180,62 +161,33 @@ public class UserDatabase extends StorableObjectDatabase {
 			+ COLUMN_SORT + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION 
-			+ CLOSE_BRACKET
-			+ SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ userIdStr + COMMA
+			+ DatabaseDate.toUpdateSubString(user.getCreated()) + COMMA
+			+ DatabaseDate.toUpdateSubString(user.getModified()) + COMMA
+			+ user.getCreatorId().toSQLString() + COMMA
+			+ user.getModifierId().toSQLString() + COMMA
+			+ APOSTOPHE + user.getLogin() + APOSTOPHE + COMMA
+			+ Integer.toString(user.getSort().value()) + COMMA
+			+ APOSTOPHE + user.getName() + APOSTOPHE + COMMA
+			+ APOSTOPHE + user.getDescription() + APOSTOPHE
 			+ CLOSE_BRACKET;
-		
-		PreparedStatement preparedStatement = null;
+			
+		Statement statement = null;
 		try {
-			preparedStatement = connection.prepareStatement(sql);
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(1, userIdCode);
-			preparedStatement.setDate(2, new java.sql.Date(user.getCreated().getTime()));
-			preparedStatement.setDate(3, new java.sql.Date(user.getModified().getTime()));
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(4, user.getCreatorId().getCode());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(5, user.getModifierId().getCode());
-			
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(6, user.getLogin());
-
-			preparedStatement.setInt(7, user.getSort().value());
-			
-			preparedStatement.setString(8, user.getName());
-			
-			preparedStatement.setString(9, user.getDescription());			
-			
-										
-			Log.debugMessage("UserDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
-			preparedStatement.executeUpdate();
-			connection.commit();
+			statement = connection.createStatement();
+			Log.debugMessage("UserDatabase.insertUser | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "UserDatabase.insert | Cannot insert user " + userIdCode;
+			String mesg = "UserDatabase.insertUser | Cannot insert user '" + userIdStr + "'";
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				if (statement != null)
+					statement.close();
+				statement = null;
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
