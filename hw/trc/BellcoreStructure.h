@@ -344,7 +344,7 @@ class BellcoreStructure {
 		unsigned int get_size() const;
 
 //	private:
-		static void copy_string(char* copy_str, const char* str);
+		static void copy_string(char*& copy_str, const char* str);
 };
 
 #endif

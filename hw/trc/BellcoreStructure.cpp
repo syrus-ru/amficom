@@ -744,7 +744,7 @@ unsigned int BellcoreStructure::Special::get_size() const {
 	return this->size;
 }
 
-void BellcoreStructure::copy_string(char* copy_str, const char* str) {
+void BellcoreStructure::copy_string(char*& copy_str, const char* str) {
 	size_t length = strlen(str);
 	copy_str = new char[length + 1];
 	memcpy(copy_str, str, (length + 1) * sizeof(char));
