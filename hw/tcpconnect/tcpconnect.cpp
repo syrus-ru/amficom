@@ -101,7 +101,7 @@ SOCKET create_connected_socket(const char* host_name, const short port) {
 
 void close_socket(const SOCKET sockfd) {
 #ifdef DEBUG
-	printf("(tcpconnect) Closing socket: %d\n", (int)sockfd);
+	printf("(tcpconnect) Closing socket: %d\n", (int) sockfd);
 #endif
 	close_socket_platf(sockfd);
 
