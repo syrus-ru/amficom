@@ -1,7 +1,7 @@
 OUT=tracedata.a
 OUTSO=libtracedata.so
 CPP=g++#-3.4.1
-CFLAGS=-W -Wall -Wno-unused-parameter -g -ggdb -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+CFLAGS=-W -Wall -g -ggdb -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
 AR=ar
 ARFLAGS=rcsv
 OBJS=TraceReader.o \

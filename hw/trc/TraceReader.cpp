@@ -159,7 +159,7 @@ void bellcore_from_nttrace(const NTTraceData* nttrace_data, BellcoreStructure* b
 			"Software revision",
 			"Other");
 
-	int tpw = 1;
+	short tpw = 1;
 	short* pwu = new short[tpw];
 	pwu[0] = nttrace_data->_00020[2];
 	int* ds = new int[tpw];

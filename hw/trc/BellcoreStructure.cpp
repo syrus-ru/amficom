@@ -455,6 +455,8 @@ BellcoreStructure::FxdParams::FxdParams(const unsigned int DTS,
 	}
 
 	this->GI = GI;
+	this->NAV = NAV;
+	this->AR = AR;
 	this->BC = 800;
 	this->FPO = 0;
 	this->NF = 40000;
@@ -694,6 +696,10 @@ BellcoreStructure::DataPts::DataPts(const int TNDP,
 //		for (int k = 0; k < this->TPS[i]; k++)
 //			this->DSF[i][k] = DSF[i][k];
 //	}
+	for (int i = 0; i < this->TSF; i++) {
+		this->TPS[i] = TPS[i];
+		this->SF[i] = SF[i];
+	}
 	this->DSF = DSF;
 }
 
