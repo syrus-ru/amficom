@@ -39,8 +39,9 @@ public class TCPServer implements Runnable
 		}
 	
 	      String gotString =  new String(kisIDChars);
+	      gotString = gotString.substring(0,gotString.indexOf(0));
 	      System.out.println ("Java got the string: " + gotString + ", length = " + Integer.toString(gotString.length()));
-	      Identifier kisID = new Identifier(new String(kisIDChars));
+	      Identifier kisID = new Identifier(gotString);
 	      
 	      TCPServer.kissockets.put(kisID,new Integer(connectedSocket));
 	        

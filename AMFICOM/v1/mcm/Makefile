@@ -12,6 +12,8 @@ SERVICE_NAME=mongol
 TRANSCEIVER_DIR=./transceiver
 DADARA_DIR=./dadara
 
+include ../tools/Makefile.inc
+
 APPCLASSPATH = $(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
 
 JAVAH=javah
@@ -19,7 +21,7 @@ JAVAH_FLAGS = \
 	-classpath $(APPCLASSPATH):$(CLASSDIR) \
 	-force
 
-include ../tools/Makefile.inc
+
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 

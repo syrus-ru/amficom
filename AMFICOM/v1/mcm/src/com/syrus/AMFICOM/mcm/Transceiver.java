@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.22 2004/09/23 08:38:35 peskovsky Exp $
+ * $Id: Transceiver.java,v 1.23 2004/10/13 14:35:49 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Hashtable;
 import java.util.Collections;
@@ -27,7 +28,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/09/23 08:38:35 $
+ * @version $Revision: 1.23 $, $Date: 2004/10/13 14:35:49 $
  * @author $Author: peskovsky $
  * @module mcm_v1
  */
@@ -52,10 +53,14 @@ public class Transceiver extends SleepButWorkThread {
 
 	private List measurementQueue;//List <Measurement measurement>
 	private Map testProcessors;//Map <Identifier measurementId, TestProcessor testProcessor>
-	private KISReport kisReport;
+  
+	private KISReport kisReport;//MCMTransciver library writes result into this variable
+  private List reportsList = new ArrayList();
 
 	/*	Variables for method processFall()	*/
 	private Measurement measurementToRemove;
+  
+  private Thread receivingThread = null;
 	
 	public Transceiver(Identifier kisId) {
 		super(ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME) * 1000, ApplicationProperties.getInt("KISMaxFalls", KIS_MAX_FALLS));
@@ -70,6 +75,8 @@ public class Transceiver extends SleepButWorkThread {
 		this.kisReport = null;
 
 		this.measurementToRemove = null;
+    
+    receivingThread = new Thread(new KISReportReceivingThread(this));
 	}
 
 	protected void addMeasurement(Measurement measurement, TestProcessor testProcessor) {
@@ -146,11 +153,13 @@ public class Transceiver extends SleepButWorkThread {
 				}
 			}	//if (! this.measurementQueue.isEmpty())
 
-			if (this.kisReport == null) {
-				this.kisReport = this.receive(this.socket);
-			}
-			else {
-				measurementId = this.kisReport.getMeasurementId();
+      ListIterator lIt = this.reportsList.listIterator();
+			if (lIt.hasNext())
+      {
+        KISReport report = (KISReport)lIt.next();
+        this.reportsList.remove(report);
+        
+				measurementId = report.getMeasurementId();
 				Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 				measurement = null;
 				try {
@@ -244,6 +253,7 @@ public class Transceiver extends SleepButWorkThread {
 
 	protected void shutdown() {
 		this.running = false;
+    this.receivingThread.interrupt();
 		/*What to do with measurements ?!*/
 		this.cleanup();
 	}
@@ -290,13 +300,49 @@ public class Transceiver extends SleepButWorkThread {
 
 	//private native boolean transmit(Measurement measurement);
  
-	private native boolean transmit(int server_socket,
+	public native boolean transmit(int server_socket,
                                   String measurementId,
 																	String measurementTypeCodename,
 																	String rtuCardIndex,
 																	String[] parameterTypeCodenames,
 																	byte[][] parameterValues);
 
-	private native KISReport receive(int server_socket);
+	public native KISReport receive(int server_socket);
   
+  private class KISReportReceivingThread implements Runnable
+  {
+    private KISReportReceivingThread createdThread = null;
+    
+    private Transceiver transceiver = null;
+    
+    private KISReportReceivingThread(Transceiver tr)
+    {
+      this.transceiver = tr;
+    }
+    
+    public KISReportReceivingThread getInstance(Transceiver tr)
+    {
+      if (this.createdThread == null)
+        this.createdThread = new KISReportReceivingThread(tr);
+
+      return this.createdThread;
+    }
+    
+    public void run()
+    {
+      while (true)
+      {
+        transceiver.kisReport = transceiver.receive(transceiver.socket);
+        transceiver.reportsList.add(transceiver.kisReport);
+        try
+        {
+          this.wait(1000);
+        }
+        catch (InterruptedException exc)
+        {
+          exc.printStackTrace();
+        }
+      }
+    }
+  }
 }
