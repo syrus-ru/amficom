@@ -53,17 +53,12 @@ impl:
 
 loc:
 	copy /y \
-		src\com\syrus\AMFICOM\Client\General\Lang\generalclient_ru.properties \
-		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
+		src\com\syrus\AMFICOM\Client\General\Lang\*.properties \
+		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang\
 
 	copy /y \
-		src\com\syrus\AMFICOM\Client\General\Lang\report.properties \
-		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
-
-	copy /y \
-		src\com\syrus\AMFICOM\Client\General\Lang\report_ru.properties \
-		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
-
+		src\com\syrus\AMFICOM\Client\Resource\Alarm\util\*.properties \
+		$(CLASSES)\com\syrus\AMFICOM\Client\Resource\Alarm\util\
 
 clean:
 	rm -rf $(CLASSES)\com
