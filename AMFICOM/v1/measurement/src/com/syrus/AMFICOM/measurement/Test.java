@@ -1,6 +1,3 @@
-/*
- * $Id: Test.java,v 1.48 2004/09/01 15:08:11 bob Exp $
- *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -40,8 +37,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/09/01 15:08:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.49 $, $Date: 2004/09/01 15:20:22 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
