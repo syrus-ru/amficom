@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.1 2005/02/16 21:25:52 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.2 2005/02/18 18:18:16 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
@@ -17,11 +18,13 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SessionContext;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/16 21:25:52 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/18 18:18:16 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -75,4 +78,15 @@ public class TestMonitoredElement extends CommonConfigurationTest {
 		ConfigurationStorableObjectPool.flush(true);
 	}
 
+//	public void testDelete() throws ApplicationException {
+//		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ME_ENTITY_CODE);
+//		Collection monitoredElements = ConfigurationStorableObjectPool.getStorableObjectsByCondition(ec, true);
+//		MonitoredElement monitoredElement;
+//		for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
+//			monitoredElement = (MonitoredElement) it.next();
+//			System.out.println("MonitoredElement: " + monitoredElement.getId());
+//		}
+//		ConfigurationStorableObjectPool.delete(((StorableObject) monitoredElements.iterator().next()).getId());
+//		ConfigurationStorableObjectPool.flush(true);
+//	}
 }

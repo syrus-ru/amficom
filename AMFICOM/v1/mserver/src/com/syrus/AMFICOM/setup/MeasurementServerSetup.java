@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.27 2005/02/15 12:36:13 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.28 2005/02/18 18:16:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/02/15 12:36:13 $
+ * @version $Revision: 1.28 $, $Date: 2005/02/18 18:16:00 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -350,13 +350,13 @@ public final class MeasurementServerSetup {
 			Identifier mPortId,
 			Identifier transmissionPathId) {
 		try {
-			List mdmIds = new ArrayList(1);
+			Collection mdmIds = new ArrayList(1);
 			mdmIds.add(transmissionPathId);
 			MonitoredElement monitoredElement = MonitoredElement.createInstance(creatorId,
 					domainId,
 					"ME",
 					mPortId,
-					MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
+					MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
 					"ME",
 					mdmIds);
 			ConfigurationDatabaseContext.getMonitoredElementDatabase().insert(monitoredElement);
