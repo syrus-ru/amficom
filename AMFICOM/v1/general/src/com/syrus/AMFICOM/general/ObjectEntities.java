@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.24 2004/10/27 08:22:04 max Exp $
+ * $Id: ObjectEntities.java,v 1.25 2004/11/19 08:49:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/10/27 08:22:04 $
- * @author $Author: max $
+ * @version $Revision: 1.25 $, $Date: 2004/11/19 08:49:31 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -21,6 +21,7 @@ public abstract class ObjectEntities {
 	public static final String PORTTYPE_ENTITY = "PortType";
 	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType";
 	public static final String LINKTYPE_ENTITY = "LinkType";
+	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";
 
 	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
@@ -84,6 +85,7 @@ public abstract class ObjectEntities {
 	public static final short LINKTYPE_ENTITY_CODE = 0x0009;
     public static final short KISTYPE_ENTITY_CODE = 0x000A;
     public static final short TRANSPATHTYPE_ENTITY_CODE = 0x000B;
+    public static final short CABLETHREAD_ENTITY_CODE = 0x000C;
 
 	/*	Administration 129 -- 256	*/
 
@@ -116,11 +118,15 @@ public abstract class ObjectEntities {
 	public static final short MODELING_ENTITY_CODE = 0x018B;
 
 	public static short stringToCode(String entity) {
+		/**
+		 * TODO recast using Trove Collections
+		 */
 		if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
 		else if (entity.equals(EQUIPMENTTYPE_ENTITY)) return EQUIPMENTTYPE_ENTITY_CODE;
 		else if (entity.equals(PORTTYPE_ENTITY)) return PORTTYPE_ENTITY_CODE;
 		else if (entity.equals(MEASUREMENTPORTTYPE_ENTITY)) return MEASUREMENTPORTTYPE_ENTITY_CODE;
 		else if (entity.equals(LINKTYPE_ENTITY)) return LINKTYPE_ENTITY_CODE;
+		else if (entity.equals(CABLETHREADTYPE_ENTITY)) return CABLETHREAD_ENTITY_CODE;
 
 		else if (entity.equals(PARAMETERTYPE_ENTITY)) return PARAMETERTYPE_ENTITY_CODE;
 		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
@@ -159,6 +165,9 @@ public abstract class ObjectEntities {
 	}
 
 	public static String codeToString(short code) {
+		/**
+		 * TODO recast using Trove Collections
+		 */
 		switch (code) {
 			case CHARACTERISTICTYPE_ENTITY_CODE:
 				return CHARACTERISTICTYPE_ENTITY;
@@ -170,6 +179,8 @@ public abstract class ObjectEntities {
 				return MEASUREMENTPORTTYPE_ENTITY;
 			case LINKTYPE_ENTITY_CODE:
 				return LINKTYPE_ENTITY;
+			case CABLETHREAD_ENTITY_CODE:
+				return CABLETHREADTYPE_ENTITY;
 
 			case PARAMETERTYPE_ENTITY_CODE:
 				return PARAMETERTYPE_ENTITY;
