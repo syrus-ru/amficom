@@ -188,10 +188,14 @@ public class Pool extends Object {
 	 *            тип объектов
 	 */
 	public static List getList(String objTypeId) {
-		ArrayList result = new ArrayList();
+		ArrayList result = null;
 		if (objTypeId != null) {
 			Hashtable ht = (Hashtable) objHash.get(objTypeId);
-			result.addAll(ht.values());
+			if (ht != null){
+				result = new ArrayList();
+				result.addAll(ht.values());
+				result.trimToSize();
+			}
 		}		
 		return result;
 	}
