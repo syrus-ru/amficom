@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2004/06/21 11:58:54 arseniy Exp $
+# $Id: Makefile,v 1.4 2004/06/21 12:49:19 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -53,6 +53,7 @@ JIKESFLAGS = \
 	+Predundant-modifiers \
 	+Pno-switchcheck \
 	+Pnaming-convention \
+	-nowarn \
 	+T=8
 IDL2JAVAFLAGS = \
 	-C \
@@ -196,7 +197,6 @@ $(LIBNAME_ALARM): .all
 
 $(LIBNAME_GENERAL): .all
 	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/general/corba \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Constant \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/General \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Resource \
