@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.32 2004/12/10 10:32:15 bob Exp $
+ * $Id: PortDatabase.java,v 1.33 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/10 10:32:15 $
+ * @version $Revision: 1.33 $, $Date: 2004/12/10 15:39:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -95,7 +95,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		Identifier equipmentId = port.getEquipmentId();
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(typeId) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription()) + APOSTOPHE	+ COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription(), 256) + APOSTOPHE	+ COMMA
 			+ DatabaseIdentifier.toSQLString(equipmentId) + COMMA 
 			+ port.getSort();
 	}
@@ -234,7 +234,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, typeId);
-			preparedStatement.setString(++i, port.getDescription());
+			DatabaseString.setString(preparedStatement, ++i, port.getDescription(), 256);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipmentId);
 			preparedStatement.setInt(++i, port.getSort());
 		} catch (SQLException sqle) {

@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.24 2004/12/10 10:32:15 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.25 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/12/10 10:32:15 $
+ * @version $Revision: 1.25 $, $Date: 2004/12/10 15:39:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -85,11 +85,10 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		PortType portType = fromStorableObject(storableObject);
-		String name = DatabaseString.toQuerySubString(portType.getName());
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getCodename()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getDescription()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE
+			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getCodename(), 32) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getDescription(), 256) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getName(), 64) + APOSTOPHE
             + portType.getSort().value() + COMMA;
 	}
 	
@@ -116,9 +115,9 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		return portType;
 	}	
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 //		PortType portType = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+		switch (retrieveKind) {
 			default:
 				return null;
 		}
@@ -211,9 +210,9 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		PortType portType = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
-			preparedStatement.setString(++i, portType.getCodename());
-			preparedStatement.setString(++i, portType.getDescription());
-			preparedStatement.setString(++i, portType.getName());
+			DatabaseString.setString(preparedStatement, ++i, portType.getCodename(), 32);
+			DatabaseString.setString(preparedStatement, ++i, portType.getDescription(), 256);
+			DatabaseString.setString(preparedStatement, ++i, portType.getName(), 64);
             preparedStatement.setInt( ++i, portType.getSort().value());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);

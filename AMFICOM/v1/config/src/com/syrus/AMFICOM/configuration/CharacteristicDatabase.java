@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.49 2004/12/07 15:32:33 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.50 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.50 $, $Date: 2004/12/10 15:39:32 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -105,9 +105,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		int sort = characteristic.getSort().value();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(characteristic.getType().getId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getDescription()) + APOSTOPHE  + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getValue()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getName(), 64) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getDescription(), 256) + APOSTOPHE  + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getValue(), 256) + APOSTOPHE + COMMA
 			+ (characteristic.isEditable()?"1":"0") + COMMA
 			+ (characteristic.isVisible()?"1":"0") + COMMA
 			+ sort + COMMA
@@ -126,9 +126,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getType().getId());
-			preparedStatement.setString( ++i, characteristic.getName());
-			preparedStatement.setString( ++i, characteristic.getDescription());
-			preparedStatement.setString( ++i, characteristic.getValue());
+			DatabaseString.setString(preparedStatement, ++i, characteristic.getName(), 64);
+			DatabaseString.setString(preparedStatement, ++i, characteristic.getDescription(), 256);
+			DatabaseString.setString(preparedStatement, ++i, characteristic.getValue(), 256);
 			preparedStatement.setInt( ++i, characteristic.isEditable()? 1:0);
 			preparedStatement.setInt( ++i, characteristic.isVisible()? 1:0);
 			preparedStatement.setInt( ++i, sort);

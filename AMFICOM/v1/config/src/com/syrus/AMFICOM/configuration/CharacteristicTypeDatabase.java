@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.26 2004/12/07 15:32:33 max Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.27 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.27 $, $Date: 2004/12/10 15:39:32 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -75,8 +75,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, UpdateObjectException {
 		CharacteristicType characteristicType = fromStorableObject(storableObject); 
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getCodename()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getCodename(), 32) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getDescription(), 256) + APOSTOPHE + COMMA
 			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
 			+ Integer.toString(characteristicType.getSort().value());
 		return sql;
@@ -89,8 +89,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			preparedStatement.setString( ++i, characteristicType.getCodename());
-			preparedStatement.setString( ++i, characteristicType.getDescription());
+			DatabaseString.setString(preparedStatement, ++i, characteristicType.getCodename(), 32);
+			DatabaseString.setString(preparedStatement, ++i, characteristicType.getDescription(), 256);
 			preparedStatement.setInt( ++i, characteristicType.getDataType().value());
 			preparedStatement.setInt( ++i, characteristicType.getSort().value());
 		} catch (SQLException sqle) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.31 2004/12/07 15:32:33 max Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.32 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.32 $, $Date: 2004/12/10 15:39:32 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -99,10 +99,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		MonitoredElement monitoredElement = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName()) + APOSTOPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), 64) + APOSTOPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getMeasurementPortId()) + COMMA
 				+ monitoredElement.getSort().value() + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress()) + APOSTOPHE;
+				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress(), 64) + APOSTOPHE;
 		return sql;
 	}
 	
@@ -114,10 +114,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getDomainId());
-			preparedStatement.setString( ++i, monitoredElement.getName());
+			DatabaseString.setString(preparedStatement, ++i, monitoredElement.getName(), 64);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getMeasurementPortId());
 			preparedStatement.setInt( ++i, monitoredElement.getSort().value());
-			preparedStatement.setString( ++i, monitoredElement.getLocalAddress());
+			DatabaseString.setString(preparedStatement, ++i, monitoredElement.getLocalAddress(), 64);
 		}catch (SQLException sqle) {
 			throw new UpdateObjectException("MeasurmentPortTypeDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -416,7 +416,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
     }
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException{
-		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
+//		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;

@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.24 2004/12/10 12:13:50 bob Exp $
+ * $Id: DomainDatabase.java,v 1.25 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/12/10 12:13:50 $
+ * @version $Revision: 1.25 $, $Date: 2004/12/10 15:39:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -82,8 +82,8 @@ public class DomainDatabase extends StorableObjectDatabase {
 		Identifier domainId = domain.getDomainId();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(domainId) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(domain.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(domain.getDescription()) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(domain.getName(), 64) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(domain.getDescription(), 256) + APOSTOPHE;
 		return sql;
 	}
 	
@@ -122,8 +122,8 @@ public class DomainDatabase extends StorableObjectDatabase {
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, domainId);
-			preparedStatement.setString( ++i, domain.getName());
-			preparedStatement.setString( ++i, domain.getDescription());
+			DatabaseString.setString(preparedStatement, ++i, domain.getName(), 64);
+			DatabaseString.setString(preparedStatement, ++i, domain.getDescription(), 256);
 		}catch (SQLException sqle) {
 			throw new UpdateObjectException("DomainDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -232,7 +232,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByName(List ids, String name) throws RetrieveObjectException {
         List list = null;
         
-        String condition = COLUMN_NAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(name) + APOSTOPHE;
+        String condition = COLUMN_NAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(name, 64) + APOSTOPHE;
         
         try {
             list = retrieveButIds(ids, condition);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.20 2004/12/10 10:32:15 bob Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.21 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/12/10 10:32:15 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/10 15:39:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -80,11 +80,10 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		MeasurementPortType measurementPortType = fromStorableObject(storableObject);
-		String name = DatabaseString.toQuerySubString(measurementPortType.getName());
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getCodename()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getDescription()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getCodename(), 32) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getDescription(), 256) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getName(), 64) + APOSTOPHE;
 		return sql;
 	}
 	
@@ -95,9 +94,9 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			preparedStatement.setString( ++i, measurementPortType.getCodename() );
-			preparedStatement.setString( ++i, measurementPortType.getDescription());
-			preparedStatement.setString( ++i, measurementPortType.getName());
+			DatabaseString.setString(preparedStatement, ++i, measurementPortType.getCodename(), 32);
+			DatabaseString.setString(preparedStatement, ++i, measurementPortType.getDescription(), 256);
+			DatabaseString.setString(preparedStatement, ++i, measurementPortType.getName(), 64);
 		}catch (SQLException sqle) {
 			throw new UpdateObjectException("MeasurmentPortTypeDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);

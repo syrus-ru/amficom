@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.25 2004/12/07 15:32:33 max Exp $
+ * $Id: UserDatabase.java,v 1.26 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.26 $, $Date: 2004/12/10 15:39:32 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -85,10 +85,10 @@ public class UserDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		User user = fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin(), 32) + APOSTOPHE + COMMA
 			+ Integer.toString(user.getSort().value()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getDescription()) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getName(), 64) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getDescription(), 256) + APOSTOPHE;
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -114,7 +114,7 @@ public class UserDatabase extends StorableObjectDatabase {
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		User user = this.fromStorableObject(storableObject);
+//		User user = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -127,10 +127,10 @@ public class UserDatabase extends StorableObjectDatabase {
 		User user = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
-			preparedStatement.setString(++i, user.getLogin());
+			DatabaseString.setString(preparedStatement, ++i, user.getLogin(), 32);
 			preparedStatement.setInt(++i, user.getSort().value());
-			preparedStatement.setString(++i, user.getName());
-			preparedStatement.setString(++i, user.getDescription());
+			DatabaseString.setString(preparedStatement, ++i, user.getName(), 64);
+			DatabaseString.setString(preparedStatement, ++i, user.getDescription(), 256);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -151,11 +151,11 @@ public class UserDatabase extends StorableObjectDatabase {
 		User user = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(user, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(storableObject, true);		
+				super.checkAndUpdateEntity(user, true);		
 				return;
 		}
 	}

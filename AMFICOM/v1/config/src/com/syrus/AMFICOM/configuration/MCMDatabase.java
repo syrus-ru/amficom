@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.37 2004/12/10 12:13:50 bob Exp $
+ * $Id: MCMDatabase.java,v 1.38 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/10 12:13:50 $
+ * @version $Revision: 1.38 $, $Date: 2004/12/10 15:39:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -100,8 +100,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 		MCM mcm = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getDomainId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getName(), 64) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getDescription(), 256) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getUserId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getServerId()); 
 		return sql;
@@ -114,13 +114,13 @@ public class MCMDatabase extends StorableObjectDatabase {
 		try {
 			i  = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getDomainId());
-			preparedStatement.setString( ++i, mcm.getName());
-			preparedStatement.setString( ++i, mcm.getDescription());
+			DatabaseString.setString(preparedStatement, ++i, mcm.getName(), 64);
+			DatabaseString.setString(preparedStatement, ++i, mcm.getDescription(), 256);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getUserId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getServerId());
 		}
 		catch (SQLException sqle) {
-			throw new UpdateObjectException("MCMDatabase." + "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+			throw new UpdateObjectException("MCMDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
 		return i;
 	}	

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.23 2004/12/10 12:13:50 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.24 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/12/10 12:13:50 $
+ * @version $Revision: 1.24 $, $Date: 2004/12/10 15:39:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -74,11 +74,10 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		EquipmentType equipmentType = fromStorableObject(storableObject);
-		String name = DatabaseString.toQuerySubString(equipmentType.getName());
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getCodename()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getDescription()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getCodename(), 32) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getDescription(), 256) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getName(), 64) + APOSTOPHE;
 		return sql;
 	}
 	
@@ -102,9 +101,9 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			preparedStatement.setString( ++i, equipmentType.getCodename());
-			preparedStatement.setString( ++i, equipmentType.getDescription());
-			preparedStatement.setString( ++i, equipmentType.getName());
+			DatabaseString.setString(preparedStatement, ++i, equipmentType.getCodename(), 32);
+			DatabaseString.setString(preparedStatement, ++i, equipmentType.getDescription(), 256);
+			DatabaseString.setString(preparedStatement, ++i, equipmentType.getName(), 64);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("EquipmentDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -131,9 +130,9 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		return equipmentType;
 	}
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		EquipmentType equipmentType = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+//		EquipmentType equipmentType = this.fromStorableObject(storableObject);
+		switch (retrieveKind) {
 			default:
 				return null;
 		}

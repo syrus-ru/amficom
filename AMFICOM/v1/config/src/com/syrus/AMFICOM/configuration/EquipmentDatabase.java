@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.51 2004/12/10 12:13:50 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.52 2004/12/10 15:39:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/12/10 12:13:50 $
+ * @version $Revision: 1.52 $, $Date: 2004/12/10 15:39:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -108,8 +108,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(equipment.getDomainId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(equipment.getType().getId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getName(), 64) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getDescription(), 256) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(equipment.getImageId());
 		return sql;
 	}
@@ -123,8 +123,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getDomainId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getType().getId());
-			preparedStatement.setString( ++i, equipment.getName());
-			preparedStatement.setString( ++i, equipment.getDescription());
+			DatabaseString.setString(preparedStatement, ++i, equipment.getName(), 64);
+			DatabaseString.setString(preparedStatement, ++i, equipment.getDescription(), 256);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getImageId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("EquipmentDatabase." +
