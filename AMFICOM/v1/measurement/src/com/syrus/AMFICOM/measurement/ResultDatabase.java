@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.59 2005/02/08 11:44:26 max Exp $
+ * $Id: ResultDatabase.java,v 1.60 2005/02/08 19:41:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,16 +45,12 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/02/08 11:44:26 $
- * @author $Author: max $
+ * @version $Revision: 1.60 $, $Date: 2005/02/08 19:41:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class ResultDatabase extends StorableObjectDatabase {
-
-	public static final String	LINK_COLUMN_TYPE_ID	= "type_id";
-	public static final String	LINK_COLUMN_RESULT_ID	= "result_id";
-	public static final String	LINK_COLUMN_VALUE	= "value";
 
 	private static String			columns;
 	private static String			updateMultiplySQLValues;
@@ -108,7 +104,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
-				buffer.append(COMMA);				
+				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
@@ -118,7 +114,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
-				buffer.append(COMMA);				
+				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
@@ -128,7 +124,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
-				buffer.append(COMMA);				
+				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
@@ -144,7 +140,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
-				buffer.append(COMMA);				
+				buffer.append(COMMA);
 			default:
 				Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
 						+ " of result '" + result.getId().getIdentifierString() + "'");
@@ -329,29 +325,19 @@ public class ResultDatabase extends StorableObjectDatabase {
 		if ((results == null) || (results.isEmpty()))
 			return;		
 		
-		StringBuffer sql = new StringBuffer(SQL_SELECT + StorableObjectWrapper.COLUMN_ID + COMMA 
-											+ LINK_COLUMN_TYPE_ID + COMMA 
-											+ LINK_COLUMN_VALUE + COMMA
-											+ LINK_COLUMN_RESULT_ID 
-				+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY + SQL_WHERE + LINK_COLUMN_RESULT_ID
-				+ SQL_IN + OPEN_BRACKET);
-		int i = 1;
-		for (Iterator it = results.iterator(); it.hasNext();i++) {
-			Result result = (Result)it.next();
-			sql.append(DatabaseIdentifier.toSQLString(result.getId()));
-			if (it.hasNext()) {
-				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(LINK_COLUMN_RESULT_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}					
-			}
+		StringBuffer sql = new StringBuffer(SQL_SELECT
+				+ StorableObjectWrapper.COLUMN_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+				+ ResultWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
+				+ ResultWrapper.LINK_COLUMN_RESULT_ID 
+				+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY
+				+ SQL_WHERE);
+		try {
+			sql.append(this.idsInListString(results, ResultWrapper.LINK_COLUMN_RESULT_ID));
 		}
-		sql.append(CLOSE_BRACKET);
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
+		}
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -368,15 +354,15 @@ public class ResultDatabase extends StorableObjectDatabase {
 			List resultParameters;
 			while (resultSet.next()) {
 				try {
-					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
+					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 														parameterType,
-														ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
-				resultId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_RESULT_ID);
+														ByteArrayDatabase.toByteArray(resultSet.getBlob(ResultWrapper.LINK_COLUMN_PARAMETER_VALUE)));
+				resultId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.LINK_COLUMN_RESULT_ID);
 				resultParameters = (List) resultParametersMap.get(resultId);
 				if (resultParameters == null) {
 					resultParameters = new ArrayList();
@@ -418,66 +404,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}		
 	}
 
-//	//private void retrieveResultParameters(Result result) throws RetrieveObjectException {
-//	private void retrieveResultParameters(List results) throws RetrieveObjectException {
-//		List parameters = new LinkedList();
-//
-//		String sql = SQL_SELECT + COLUMN_ID + COMMA
-//							+ LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_VALUE
-//							+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY + SQL_WHERE 
-//							+ LINK_COLUMN_RESULT_ID + EQUALS + QUESTION;
-//    if ((results != null) && (!results.isEmpty())) {		
-//			PreparedStatement preparedStatement = null;
-//			Connection connection = DatabaseConnection.getConnection();
-//			try {
-//				preparedStatement = connection.prepareStatement(sql);
-//				Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL09);
-//				SetParameter parameter;
-//				ParameterType parameterType;
-//				for (Iterator it = results.iterator(); it.hasNext();) {
-//					Result result = (Result) it.next();
-//					Identifier id = result.getId();
-//					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
-//					ResultSet resultSet = preparedStatement.executeQuery();
-//					while (resultSet.next()) {
-//						try {
-//							parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
-//						}
-//						catch (ApplicationException ae) {
-//							throw new RetrieveObjectException(ae);
-//						}
-//						parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
-//													 parameterType, ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
-//						parameters.add(parameter);						
-//					} 
-//					
-//					result.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
-//				}
-//
-//			}
-//			catch (SQLException sqle) {
-//				String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for results -- " + sqle.getMessage();
-//				throw new RetrieveObjectException(mesg, sqle);
-//			}
-//			finally {
-//				try {
-//					if (preparedStatement != null)
-//						preparedStatement.close();
-//					preparedStatement = null;
-//				}
-//				catch (SQLException sqle1) {
-//					Log.errorException(sqle1);
-//				}
-//				finally {
-//					DatabaseConnection.releaseConnection(connection);
-//				}
-//			}			
-//		}
-//	}
-
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		Result result = this.fromStorableObject(storableObject);
+		Result result = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -509,10 +438,18 @@ public class ResultDatabase extends StorableObjectDatabase {
 	private void insertResultParameters(Result result) throws CreateObjectException {
 		Identifier resultId = result.getId();
 		SetParameter[] setParameters = result.getParameters();
-		String sql = SQL_INSERT_INTO + ObjectEntities.RESULTPARAMETER_ENTITY + OPEN_BRACKET + StorableObjectWrapper.COLUMN_ID + COMMA
-				+ LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_RESULT_ID + COMMA + LINK_COLUMN_VALUE
-				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + QUESTION + COMMA + QUESTION + COMMA
-				+ QUESTION + COMMA + APOSTOPHE + SQL_EMPTY_BLOB + APOSTOPHE + CLOSE_BRACKET;
+		String sql = SQL_INSERT_INTO
+				+ ObjectEntities.RESULTPARAMETER_ENTITY + OPEN_BRACKET
+				+ StorableObjectWrapper.COLUMN_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+				+ ResultWrapper.LINK_COLUMN_RESULT_ID + COMMA
+				+ ResultWrapper.LINK_COLUMN_PARAMETER_VALUE
+				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION+ COMMA
+				+ APOSTOPHE + SQL_EMPTY_BLOB + APOSTOPHE
+				+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		int i = 0;
 		Identifier parameterId = null;
@@ -526,22 +463,29 @@ public class ResultDatabase extends StorableObjectDatabase {
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, resultId);
-				
+
 				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter "
-						+ parameterTypeId.toString() + " for result " + resultId,
-							Log.DEBUGLEVEL09);
+						+ parameterTypeId.toString()
+						+ " for result "
+						+ resultId, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
-				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(), connection,
-								ObjectEntities.RESULTPARAMETER_ENTITY,
-								LINK_COLUMN_VALUE, StorableObjectWrapper.COLUMN_ID + EQUALS
-										+ DatabaseIdentifier.toSQLString(parameterId));
+				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
+						connection,
+						ObjectEntities.RESULTPARAMETER_ENTITY,
+						ResultWrapper.LINK_COLUMN_PARAMETER_VALUE,
+						StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
 			}
 			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter '"
-					+ parameterId.toString() + "' of type '" + parameterTypeId.toString()
-					+ "' for result '" + resultId + "' -- " + sqle.getMessage();
+					+ parameterId.toString()
+					+ "' of type '"
+					+ parameterTypeId.toString()
+					+ "' for result '"
+					+ resultId
+					+ "' -- "
+					+ sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -561,7 +505,6 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
-//		Result result = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);
@@ -594,7 +537,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULTPARAMETER_ENTITY + SQL_WHERE
-					+ LINK_COLUMN_RESULT_ID + EQUALS + resultIdStr);
+					+ ResultWrapper.LINK_COLUMN_RESULT_ID + EQUALS + resultIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULT_ENTITY + SQL_WHERE + StorableObjectWrapper.COLUMN_ID
 					+ EQUALS + resultIdStr);
 			connection.commit();
@@ -625,7 +568,6 @@ public class ResultDatabase extends StorableObjectDatabase {
 			list = this.retrieveByIdsOneQuery(ids, condition);
 
 		this.retrieveResultParametersByOneQuery(list);
-		// retrieveResultParameters(list);
 		return list;
 	}
 
