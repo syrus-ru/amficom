@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.25 2004/09/16 06:59:50 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.26 2004/09/16 07:57:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/09/16 06:59:50 $
+ * @version $Revision: 1.26 $, $Date: 2004/09/16 07:57:30 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -476,8 +476,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
-	protected List retriveButIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		List result = new LinkedList();
+	protected List retrieveButIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer("1=1");
@@ -503,36 +502,11 @@ public abstract class StorableObjectDatabase {
 				buffer.append(condition);
 			}
 
-			sql = retrieveQuery(buffer.toString());
+			sql = buffer.toString();
 		}
+		
+		List result = this.retrieveByIds(null, sql);
 
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retriveButIds | Trying: " + sql,
-						Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				StorableObject storableObject = updateEntityFromResultSet(null, resultSet);
-				result.add(storableObject);
-			}
-		} catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.retriveButIds | Cannot execute query "
-					+ sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
 		return result;
 	}
 
@@ -545,7 +519,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
-	protected List retriveByIdsOneQuery(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	protected List retrieveByIdsOneQuery(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List result = new LinkedList();
 		String sql;
 		{
@@ -617,7 +591,7 @@ public abstract class StorableObjectDatabase {
 
 			int idsLength = ids.size();
 			if (idsLength == 1)
-				return retriveByIdsOneQuery(ids, null);
+				return retrieveByIdsOneQuery(ids, null);
 			StringBuffer buffer = new StringBuffer(COLUMN_ID);
 			buffer.append(EQUALS);
 			buffer.append(QUESTION);
