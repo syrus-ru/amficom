@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.57 2005/04/01 13:20:04 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.58 2005/04/01 13:28:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,12 +11,10 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,7 +23,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/04/01 13:20:04 $
+ * @version $Revision: 1.58 $, $Date: 2005/04/01 13:28:05 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -43,10 +41,10 @@ public abstract class StorableObjectPool {
 	private short selfGroupCode;
 	private String selfGroupName;
 
-	private Map savingObjectsMap; // Map <Integer dependencyLevel, Map <Short entityCode, Collection <StorableObject> levelEntitySavingObjects > >
+	private Map savingObjectsMap; // Map <Integer dependencyLevel, Map <Short entityCode, Set <StorableObject> levelEntitySavingObjects > >
 	private HashSet savingObjectIds; // HashSet <Identifier>
 
-	private Set deletedIds; // Collection <Identifier>
+	private Set deletedIds; // Set <Identifier>
 
 	public StorableObjectPool(short selfGroupCode) {
 		this(selfGroupCode, LRUMap.class);
@@ -661,7 +659,7 @@ public abstract class StorableObjectPool {
 	 * @return <code>true</code> if all entities within this list are of the
 	 *         same type, <code>false</code> otherwise.
 	 */
-	private boolean hasSingleTypeEntities(final Set storableObjects) {
+	protected boolean hasSingleTypeEntities(final Set storableObjects) {
 		/*
 		 * Nested assertions are ok.
 		 */
@@ -680,7 +678,7 @@ public abstract class StorableObjectPool {
 
 	/**
 	 * Code that invokes this method, should preliminarily call
-	 * {@link #hasSingleTypeEntities(Collection)} with the same parameter and
+	 * {@link #hasSingleTypeEntities(Set)} with the same parameter and
 	 * ensure that return value is <code>true</code>, e.g.:
 	 * 
 	 * <pre>
@@ -708,7 +706,7 @@ public abstract class StorableObjectPool {
 	 * @throws IllegalDataException
 	 * @todo Change signature of this method to the one without
 	 *       <code>entityCode</code>, rewrite overriding classes in order for
-	 *       them to use {@link #getEntityCodeOfStorableObjects(List)}.
+	 *       them to use {@link #getEntityCodeOfStorableObjects(Set)}.
 	 */
 	protected abstract void saveStorableObjects(final short entityCode,
 												final Set storableObjects,
