@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.46 2005/03/21 16:16:49 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.47 2005/03/23 20:26:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/03/21 16:16:49 $
+ * @version $Revision: 1.47 $, $Date: 2005/03/23 20:26:00 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -404,58 +404,61 @@ public abstract class StorableObjectPool {
 		assert condition != null : "Supply EquivalentCondition instead";
 
 		Collection collection = null;
-		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(condition.getEntityCode());
-		if (objectPool != null) {
-			collection = new LinkedList();
-			for (Iterator it = objectPool.iterator(); it.hasNext();) {
+		Short entityCode = condition.getEntityCode();
+		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
+
+		assert objectPool != null : "Cannot find object pool for entity code " + condition.getEntityCode()
+				+ ", entity: '" + ObjectEntities.codeToString(entityCode);
+
+		collection = new LinkedList();
+		for (Iterator it = objectPool.iterator(); it.hasNext();) {
+			StorableObject storableObject = (StorableObject) it.next();
+			Identifier id = storableObject.getId();
+			if (!ids.contains(id)
+					&& (this.deletedIds == null || !this.deletedIds.contains(id))
+					&& condition.isConditionTrue(storableObject))
+				collection.add(storableObject);
+		}
+
+		Collection loadedList = null;
+
+		if (useLoader && condition.isNeedMore(collection)) {
+			List idsList = new ArrayList(collection.size());
+			for (Iterator iter = collection.iterator(); iter.hasNext();) {
+				StorableObject storableObject = (StorableObject) iter.next();
+				idsList.add(storableObject.getId());
+			}
+
+			idsList.addAll(ids);
+
+			/* do not load delete object too */
+			if (this.deletedIds != null) {
+				/* do not load deleted object with entityCode */
+				short code = condition.getEntityCode().shortValue();
+				for (Iterator iter = this.deletedIds.iterator(); iter.hasNext();) {
+					Identifier id = (Identifier) iter.next();
+					if (id.getMajor() == code)
+						idsList.add(id);
+				}
+			}
+
+			loadedList = this.loadStorableObjectsButIds(condition, idsList);
+		}
+
+//		/*
+//		 * This block is only needed in order for LRUMap to rehash itself.
+//		 */
+//		for (Iterator it = collection.iterator(); it.hasNext();) {
+//			StorableObject storableObject = (StorableObject) it.next();
+//			objectPool.get(storableObject);
+//		}
+
+		if (loadedList != null) {
+			for (Iterator it = loadedList.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
-				Identifier id = storableObject.getId();
-				if (!ids.contains(id) && (this.deletedIds == null || !this.deletedIds.contains(id))
-						&& condition.isConditionTrue(storableObject))
-					collection.add(storableObject);
+				objectPool.put(storableObject.getId(), storableObject);
 			}
-
-			Collection loadedList = null;
-
-			if (useLoader && condition.isNeedMore(collection)) {
-				List idsList = new ArrayList(collection.size());
-				for (Iterator iter = collection.iterator(); iter.hasNext();) {
-					StorableObject storableObject = (StorableObject) iter.next();
-					idsList.add(storableObject.getId());
-				}
-
-				idsList.addAll(ids);
-
-				/* do not load delete object too */
-				if (this.deletedIds != null) {
-					/* do not load deleted object with entityCode */
-					short code = condition.getEntityCode().shortValue();
-					for (Iterator iter = this.deletedIds.iterator(); iter.hasNext();) {
-						Identifier id = (Identifier) iter.next();
-						if (id.getMajor() == code)
-							idsList.add(id);
-					}
-				}
-
-				loadedList = this.loadStorableObjectsButIds(condition, idsList);
-			}
-
-			// /*
-			// * This block is only needed in order for LRUMap to rehash itself.
-			// */
-			// for (Iterator it = collection.iterator(); it.hasNext();) {
-			// StorableObject storableObject = (StorableObject) it.next();
-			// objectPool.get(storableObject);
-			// }
-
-			if (loadedList != null) {
-				for (Iterator it = loadedList.iterator(); it.hasNext();) {
-					StorableObject storableObject = (StorableObject) it.next();
-					objectPool.put(storableObject.getId(), storableObject);
-				}
-				collection.addAll(loadedList);
-			}
-
+			collection.addAll(loadedList);
 		}
 
 		if (collection == null)
