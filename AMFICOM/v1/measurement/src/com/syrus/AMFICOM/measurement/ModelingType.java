@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.11 2005/02/14 12:02:39 arseniy Exp $
+ * $Id: ModelingType.java,v 1.12 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Date;
 
@@ -33,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/14 12:02:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -46,16 +43,16 @@ public class ModelingType extends ActionType {
 
 	public static final String CODENAME_DADARA = "dadara";
 
-	private Collection inParameterTypes;
-	private Collection outParameterTypes;
+	private java.util.Set inParameterTypes;
+	private java.util.Set outParameterTypes;
 
 	private StorableObjectDatabase modelingTypeDatabase;
 
 	public ModelingType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new ArrayList();
-		this.outParameterTypes = new ArrayList();
+		this.inParameterTypes = new HashSet();
+		this.outParameterTypes = new HashSet();
 
 		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;
 		try {
@@ -82,9 +79,9 @@ public class ModelingType extends ActionType {
 			  new String(mtt.description));
 
 		try {
-			List parTypeIds;
+			java.util.Set parTypeIds;
 
-			parTypeIds = new ArrayList(mtt.in_parameter_type_ids.length);
+			parTypeIds = new HashSet(mtt.in_parameter_type_ids.length);
 			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
 				parTypeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
 			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
@@ -106,8 +103,8 @@ public class ModelingType extends ActionType {
 							 long version,
 							 String codename,
 							 String description,
-							 List inParameterTypes,
-							 List outParameterTypes) {
+							 java.util.Set inParameterTypes,
+							 java.util.Set outParameterTypes) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -117,10 +114,10 @@ public class ModelingType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypes = new ArrayList();
+		this.inParameterTypes = new HashSet();
 		this.setInParameterTypes0(inParameterTypes);
 
-		this.outParameterTypes = new ArrayList();
+		this.outParameterTypes = new HashSet();
 		this.setOutParameterTypes0(outParameterTypes);
 
 		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;
@@ -138,8 +135,8 @@ public class ModelingType extends ActionType {
 	public static ModelingType createInstance(Identifier creatorId,
 												String codename,
 												String description,
-												List inParameterTypes,
-												List outParameterTypes) throws CreateObjectException {
+												java.util.Set inParameterTypes,
+												java.util.Set outParameterTypes) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -179,12 +176,12 @@ public class ModelingType extends ActionType {
 											outParTypeIds);
 	}
 
-  public Collection getInParameterTypes() {
-		return Collections.unmodifiableCollection(this.inParameterTypes);
+  public java.util.Set getInParameterTypes() {
+		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
-	public Collection getOutParameterTypes() {
-		return Collections.unmodifiableCollection(this.outParameterTypes);
+	public java.util.Set getOutParameterTypes() {
+		return Collections.unmodifiableSet(this.outParameterTypes);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -203,13 +200,13 @@ public class ModelingType extends ActionType {
 			description);
 	}
 
-	protected synchronized void setParameterTypes(Collection inParameterTypes,
-			Collection outParameterTypes) {
+	protected synchronized void setParameterTypes(java.util.Set inParameterTypes,
+			java.util.Set outParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
 	}
 
-	protected void setInParameterTypes0(Collection inParameterTypes) {
+	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
 			this.inParameterTypes.addAll(inParameterTypes);
@@ -221,12 +218,12 @@ public class ModelingType extends ActionType {
 	 * @param inParameterTypes
 	 *            The inParameterTypes to set.
 	 */
-	public void setInParameterTypes(Collection inParameterTypes) {
+	public void setInParameterTypes(java.util.Set inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		super.changed = true;		
 	}
 
-	protected void setOutParameterTypes0(Collection outParameterTypes) {
+	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
 			this.outParameterTypes.addAll(outParameterTypes);
@@ -238,13 +235,13 @@ public class ModelingType extends ActionType {
 	 * @param outParameterTypes
 	 *            The outParameterTypes to set.
 	 */
-	public void setOutParameterTypes(Collection outParameterTypes) {
+	public void setOutParameterTypes(java.util.Set outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.changed = true;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public java.util.Set getDependencies() {
+		java.util.Set dependencies = new HashSet();
 		if (this.inParameterTypes != null)
 			dependencies.addAll(this.inParameterTypes);
 				

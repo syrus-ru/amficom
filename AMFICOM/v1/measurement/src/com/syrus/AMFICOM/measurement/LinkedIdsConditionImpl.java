@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.28 2005/03/30 10:37:21 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.29 2005/04/01 08:43:32 bob Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -7,7 +7,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.HashSet;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -16,8 +15,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/03/30 10:37:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -31,7 +30,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	protected static final Short	MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 	protected static final Short	MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
 
-	private LinkedIdsConditionImpl(Collection linkedIds, Short linkedEntityCode, Short entityCode) {
+	private LinkedIdsConditionImpl(java.util.Set linkedIds, Short linkedEntityCode, Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
@@ -71,7 +70,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				AnalysisType analysisType = (AnalysisType) object;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-						Collection params = new HashSet();
+						java.util.Set params = new HashSet();
 						params.addAll(analysisType.getCriteriaParameterTypes());
 						params.addAll(analysisType.getInParameterTypes());
 						params.addAll(analysisType.getOutParameterTypes());
@@ -91,7 +90,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				EvaluationType evaluationType = (EvaluationType) object;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-						Collection params = new HashSet();
+						java.util.Set params = new HashSet();
 						params.addAll(evaluationType.getThresholdParameterTypes());
 						params.addAll(evaluationType.getInParameterTypes());
 						params.addAll(evaluationType.getOutParameterTypes());
@@ -111,7 +110,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				ModelingType modelingType = (ModelingType)object;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-						Collection params = new HashSet();
+						java.util.Set params = new HashSet();
 						params.addAll(modelingType.getInParameterTypes());
 						params.addAll(modelingType.getOutParameterTypes());
 						condition = super.conditionTest(params);
@@ -166,7 +165,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				MeasurementSetup measurementSetup = (MeasurementSetup) object;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.ME_ENTITY_CODE:
-						Collection params = new HashSet();
+						java.util.Set params = new HashSet();
 						params.addAll(measurementSetup.getMonitoredElementIds());
 						condition = super.conditionTest(params);
 						break;
@@ -240,7 +239,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	}
 
-	public boolean isNeedMore(Collection collection) {
+	public boolean isNeedMore(java.util.Set collection) {
 		return true;
 	}
 }

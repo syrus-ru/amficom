@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.3 2005/02/03 08:36:47 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.4 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/03 08:36:47 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/01 08:43:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -39,7 +38,7 @@ public class MeasurementSetupWrapper implements StorableObjectWrapper {
 		String[] keysArray = new String[] { COLUMN_PARAMETER_SET_ID, COLUMN_CRITERIA_SET_ID, COLUMN_THRESHOLD_SET_ID,
 				COLUMN_ETALON_ID, COLUMN_DESCRIPTION, COLUMN_MEASUREMENT_DURAION, LINK_COLUMN_ME_ID};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static MeasurementSetupWrapper getInstance() {
@@ -100,7 +99,7 @@ public class MeasurementSetupWrapper implements StorableObjectWrapper {
 			if (key.equals(COLUMN_MEASUREMENT_DURAION))
 				measurementSetup.setMeasurementDuration(((Long) value).longValue());
 			if (key.equals(LINK_COLUMN_ME_ID))
-				measurementSetup.setMonitoredElementIds((List) value);
+				measurementSetup.setMonitoredElementIds((java.util.Set) value);
 		}
 	}
 
@@ -119,7 +118,7 @@ public class MeasurementSetupWrapper implements StorableObjectWrapper {
 
 	public Class getPropertyClass(String key) {
 		if (key.equals(LINK_COLUMN_ME_ID))
-			return List.class;
+			return java.util.Set.class;
 		return String.class;
 	}
 }

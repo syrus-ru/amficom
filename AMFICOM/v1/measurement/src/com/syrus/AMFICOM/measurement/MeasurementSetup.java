@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.49 2005/03/11 13:12:31 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.50 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,10 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -33,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/03/11 13:12:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.50 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -59,7 +56,7 @@ public class MeasurementSetup extends StorableObject {
 	private Set etalon;
 	private String description;
 	private long measurementDuration;
-	private Collection monitoredElementIds;
+	private java.util.Set monitoredElementIds;
 
 	private StorableObjectDatabase measurementSetupDatabase;
 
@@ -120,7 +117,7 @@ public class MeasurementSetup extends StorableObject {
 							   Set etalon,
 							   String description,
 							   long measurementDuration,
-							   Collection monitoredElementIds) {
+							   java.util.Set monitoredElementIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -133,7 +130,7 @@ public class MeasurementSetup extends StorableObject {
 		this.etalon = etalon;
 		this.description = description;
 		this.measurementDuration = measurementDuration;
-		this.monitoredElementIds = new LinkedList();
+		this.monitoredElementIds = new HashSet();
 		this.setMonitoredElementIds0(monitoredElementIds);
 		
 		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
@@ -158,7 +155,7 @@ public class MeasurementSetup extends StorableObject {
 												  Set etalon,
 												  String description,
 												  long measurementDuration,
-												  Collection monitoredElementIds) throws CreateObjectException {
+												  java.util.Set monitoredElementIds) throws CreateObjectException {
 		
 		if (creatorId == null || description == null || parameterSet == null || monitoredElementIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -261,8 +258,8 @@ public class MeasurementSetup extends StorableObject {
 		return this.measurementDuration;
 	}
 
-	public Collection getMonitoredElementIds() {
-		return Collections.unmodifiableCollection(this.monitoredElementIds);
+	public java.util.Set getMonitoredElementIds() {
+		return Collections.unmodifiableSet(this.monitoredElementIds);
 	}
 
 	public String[] getParameterTypeCodenames() {
@@ -305,13 +302,13 @@ public class MeasurementSetup extends StorableObject {
 		this.measurementDuration = measurementDuration;
 	}
 
-	protected synchronized void setMonitoredElementIds0(Collection monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds0(java.util.Set monitoredElementIds) {
 		this.monitoredElementIds.clear();
 		if (monitoredElementIds != null)
 			this.monitoredElementIds.addAll(monitoredElementIds);
 	}
 
-	public void setMonitoredElementIds(Collection monitoredElementIds) {
+	public void setMonitoredElementIds(java.util.Set monitoredElementIds) {
 		this.setMonitoredElementIds0(monitoredElementIds);
 		super.changed = true;
 	}
@@ -382,8 +379,8 @@ public class MeasurementSetup extends StorableObject {
 		this.thresholdSet = thresholdSet;
 	}
 	
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public java.util.Set getDependencies() {
+		java.util.Set dependencies = new HashSet();
 		if (this.parameterSet != null)
 			dependencies.add(this.parameterSet);
         

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.49 2005/03/24 15:42:36 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.50 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,10 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/03/24 15:42:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -46,24 +43,24 @@ public class EvaluationType extends ActionType {
 
 	public static final String CODENAME_DADARA = "dadara";
 
-	private Collection inParameterTypes;
-	private Collection thresholdParameterTypes;
-	private Collection etalonParameterTypes;
-	private Collection outParameterTypes;
+	private java.util.Set inParameterTypes;
+	private java.util.Set thresholdParameterTypes;
+	private java.util.Set etalonParameterTypes;
+	private java.util.Set outParameterTypes;
 
-	private Collection measurementTypeIds;
+	private java.util.Set measurementTypeIds;
 
 	private StorableObjectDatabase evaluationTypeDatabase;
 
 	public EvaluationType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new ArrayList();
-		this.thresholdParameterTypes = new ArrayList();
-		this.etalonParameterTypes = new ArrayList();
-		this.outParameterTypes = new ArrayList();
+		this.inParameterTypes = new HashSet();
+		this.thresholdParameterTypes = new HashSet();
+		this.etalonParameterTypes = new HashSet();
+		this.outParameterTypes = new HashSet();
 
-		this.measurementTypeIds = new ArrayList();
+		this.measurementTypeIds = new HashSet();
 
 		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
@@ -92,9 +89,9 @@ public class EvaluationType extends ActionType {
 		super(ett.header, new String(ett.codename), new String(ett.description));
 
 		try {
-			List parTypIds;
+			java.util.Set parTypIds;
 
-			parTypIds = new ArrayList(ett.in_parameter_type_ids.length);
+			parTypIds = new HashSet(ett.in_parameter_type_ids.length);
 			for (int i = 0; i < ett.in_parameter_type_ids.length; i++)
 				parTypIds.add(new Identifier(ett.in_parameter_type_ids[i]));
 			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
@@ -115,7 +112,7 @@ public class EvaluationType extends ActionType {
 			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
 
 
-			this.measurementTypeIds = new ArrayList(ett.measurement_type_ids.length);
+			this.measurementTypeIds = new HashSet(ett.measurement_type_ids.length);
 			for (int i = 0; i < ett.measurement_type_ids.length; i++)
 				this.measurementTypeIds.add(new Identifier(ett.measurement_type_ids[i]));
 		}
@@ -131,11 +128,11 @@ public class EvaluationType extends ActionType {
 							 long version,
 							 String codename,
 							 String description,
-							 Collection inParameterTypes,
-							 Collection thresholdParameterTypes,
-							 Collection etalonParameterTypes,
-							 Collection outParameterTypes,
-						   Collection measurementTypeIds) {
+							 java.util.Set inParameterTypes,
+							 java.util.Set thresholdParameterTypes,
+							 java.util.Set etalonParameterTypes,
+							 java.util.Set outParameterTypes,
+						   java.util.Set measurementTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -145,20 +142,20 @@ public class EvaluationType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypes = new ArrayList();
+		this.inParameterTypes = new HashSet();
 		this.setInParameterTypes0(inParameterTypes);
 
-		this.thresholdParameterTypes = new ArrayList();
+		this.thresholdParameterTypes = new HashSet();
 		this.setThresholdParameterTypes0(thresholdParameterTypes);
 
-		this.etalonParameterTypes = new ArrayList();
+		this.etalonParameterTypes = new HashSet();
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 
-		this.outParameterTypes = new ArrayList();
+		this.outParameterTypes = new HashSet();
 		this.setOutParameterTypes0(outParameterTypes);
 
 
-		this.measurementTypeIds = new ArrayList();
+		this.measurementTypeIds = new HashSet();
 		this.setMeasurementTypeIds0(measurementTypeIds);
 
 		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
@@ -180,11 +177,11 @@ public class EvaluationType extends ActionType {
 	public static EvaluationType createInstance(Identifier creatorId,
 			String codename,
 			String description,
-			Collection inParameterTypes,
-			Collection thresholdParameterTypes,
-			Collection etalonParameterTypes,
-			Collection outParameterTypes,
-			Collection measurementTypeIds) throws CreateObjectException {
+			java.util.Set inParameterTypes,
+			java.util.Set thresholdParameterTypes,
+			java.util.Set etalonParameterTypes,
+			java.util.Set outParameterTypes,
+			java.util.Set measurementTypeIds) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -246,24 +243,24 @@ public class EvaluationType extends ActionType {
 											   measTypIds);
 	}
 
-  public Collection getInParameterTypes() {
-		return Collections.unmodifiableCollection(this.inParameterTypes);
+  public java.util.Set getInParameterTypes() {
+		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
-	public Collection getThresholdParameterTypes() {
-		return Collections.unmodifiableCollection(this.thresholdParameterTypes);
+	public java.util.Set getThresholdParameterTypes() {
+		return Collections.unmodifiableSet(this.thresholdParameterTypes);
 	}
 
-	public Collection getEtalonParameterTypes() {
-		return Collections.unmodifiableCollection(this.etalonParameterTypes);
+	public java.util.Set getEtalonParameterTypes() {
+		return Collections.unmodifiableSet(this.etalonParameterTypes);
 	}
 
-	public Collection getOutParameterTypes() {
-		return Collections.unmodifiableCollection(this.outParameterTypes);
+	public java.util.Set getOutParameterTypes() {
+		return Collections.unmodifiableSet(this.outParameterTypes);
 	}
 
-	public Collection getMeasurementTypeIds() {
-		return Collections.unmodifiableCollection(this.measurementTypeIds);
+	public java.util.Set getMeasurementTypeIds() {
+		return Collections.unmodifiableSet(this.measurementTypeIds);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -282,17 +279,17 @@ public class EvaluationType extends ActionType {
 			description);
 	}
 
-	protected synchronized void setParameterTypes(Collection inParameterTypes,
-			Collection thresholdParameterTypes,
-			Collection etalonParameterTypes,
-			Collection outParameterTypes) {
+	protected synchronized void setParameterTypes(java.util.Set inParameterTypes,
+			java.util.Set thresholdParameterTypes,
+			java.util.Set etalonParameterTypes,
+			java.util.Set outParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		this.setThresholdParameterTypes0(thresholdParameterTypes);
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
 	}
 
-	protected void setInParameterTypes0(Collection inParameterTypes) {
+	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
 			this.inParameterTypes.addAll(inParameterTypes);
@@ -304,12 +301,12 @@ public class EvaluationType extends ActionType {
 	 * @param inParameterTypes
 	 *            The inParameterTypes to set.
 	 */
-	public void setInParameterTypes(Collection inParameterTypes) {
+	public void setInParameterTypes(java.util.Set inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		super.changed = true;		
 	}
 
-	protected void setThresholdParameterTypes0(Collection thresholdParameterTypes) {
+	protected void setThresholdParameterTypes0(java.util.Set thresholdParameterTypes) {
 		this.thresholdParameterTypes.clear();
 		if (thresholdParameterTypes != null)
 			this.thresholdParameterTypes.addAll(thresholdParameterTypes);
@@ -321,12 +318,12 @@ public class EvaluationType extends ActionType {
 	 * @param thresholdParameterTypes
 	 *            The thresholdParameterTypes to set.
 	 */
-	public void setThresholdParameterTypes(Collection thresholdParameterTypes) {
+	public void setThresholdParameterTypes(java.util.Set thresholdParameterTypes) {
 		this.setThresholdParameterTypes0(thresholdParameterTypes);
 		super.changed = true;
 	}
 
-	protected void setEtalonParameterTypes0(Collection etalonParameterTypes) {
+	protected void setEtalonParameterTypes0(java.util.Set etalonParameterTypes) {
 		this.etalonParameterTypes.clear();
 		if (etalonParameterTypes != null)
 			this.etalonParameterTypes.addAll(etalonParameterTypes);
@@ -338,12 +335,12 @@ public class EvaluationType extends ActionType {
 	 * @param etalonParameterTypes
 	 *            The etalonParameterTypes to set.
 	 */
-	public void setEtalonParameterTypes(Collection etalonParameterTypes) {
+	public void setEtalonParameterTypes(java.util.Set etalonParameterTypes) {
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 		super.changed = true;
 	}
 
-	protected void setOutParameterTypes0(Collection outParameterTypes) {
+	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
 			this.outParameterTypes.addAll(outParameterTypes);
@@ -355,12 +352,12 @@ public class EvaluationType extends ActionType {
 	 * @param outParameterTypes
 	 *            The outParameterTypes to set.
 	 */
-	public void setOutParameterTypes(Collection outParameterTypes) {
+	public void setOutParameterTypes(java.util.Set outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.changed = true;
 	}
 
-	protected void setMeasurementTypeIds0(Collection measurementTypeIds) {
+	protected void setMeasurementTypeIds0(java.util.Set measurementTypeIds) {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
 			this.measurementTypeIds.addAll(measurementTypeIds);
@@ -370,13 +367,13 @@ public class EvaluationType extends ActionType {
 	 * client setter for outParameterTypes
 	 * @param measurementTypeIds
 	 */
-	public void setMeasurementTypeIds(Collection measurementTypeIds) {
+	public void setMeasurementTypeIds(java.util.Set measurementTypeIds) {
 		this.setMeasurementTypeIds0(measurementTypeIds);
 		super.changed = true;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public java.util.Set getDependencies() {
+		java.util.Set dependencies = new HashSet();
 		if (this.inParameterTypes != null)
 			dependencies.addAll(this.inParameterTypes);
 

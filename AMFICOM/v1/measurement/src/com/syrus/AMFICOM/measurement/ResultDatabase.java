@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.83 2005/03/31 09:04:27 bob Exp $
+ * $Id: ResultDatabase.java,v 1.84 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,7 +39,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/03/31 09:04:27 $
+ * @version $Revision: 1.84 $, $Date: 2005/04/01 08:43:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -181,7 +180,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		this.retrieveEntity(result);
-		this.retrieveResultParametersByOneQuery(Collections.singletonList(result));
+		this.retrieveResultParametersByOneQuery(Collections.singleton(result));
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -300,7 +299,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	 * @param results
 	 * @throws RetrieveObjectException
 	 */
-	private void retrieveResultParametersByOneQuery(Collection results) throws RetrieveObjectException {
+	private void retrieveResultParametersByOneQuery(java.util.Set results) throws RetrieveObjectException {
 		if ((results == null) || (results.isEmpty()))
 			return;		
 		
@@ -320,7 +319,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 		Map resultParametersMap = new HashMap();
 		Identifier resultId;
-		Collection resultParameters;
+		java.util.Set resultParameters;
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -343,7 +342,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 														parameterType,
 														ByteArrayDatabase.toByteArray(resultSet.getBlob(ResultWrapper.LINK_COLUMN_PARAMETER_VALUE)));
 				resultId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.LINK_COLUMN_RESULT_ID);
-				resultParameters = (Collection) resultParametersMap.get(resultId);
+				resultParameters = (java.util.Set) resultParametersMap.get(resultId);
 				if (resultParameters == null) {
 					resultParameters = new HashSet();
 					resultParametersMap.put(resultId, resultParameters);
@@ -376,7 +375,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		for (Iterator it = results.iterator(); it.hasNext();) {
 			result = (Result) it.next();
 			resultId = result.getId();
-			resultParameters = (Collection) resultParametersMap.get(resultId);
+			resultParameters = (java.util.Set) resultParametersMap.get(resultId);
 
 			if (resultParameters != null)
 				result.setParameters0((SetParameter[]) resultParameters.toArray(new SetParameter[resultParameters.size()]));
@@ -408,7 +407,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
@@ -510,9 +509,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 //		Log.debugMessage("ResultDatabase.retrieveByCondition | conditionQuery : " + conditionQuery , Log.FINEST);
-		Collection collection = super.retrieveByCondition(conditionQuery);
+		java.util.Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveResultParametersByOneQuery(collection);
 		return collection;
 	}

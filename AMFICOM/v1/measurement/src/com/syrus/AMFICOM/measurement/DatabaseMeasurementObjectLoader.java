@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.45 2005/03/10 15:21:11 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.46 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,10 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,8 +26,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/03/10 15:21:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -92,9 +91,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	// for multiple objects
 
-	public Collection loadAnalyses(Collection ids) throws ApplicationException {
+	public java.util.Set loadAnalyses(java.util.Set ids) throws ApplicationException {
 		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -105,9 +104,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadAnalysisTypes(Collection ids) throws ApplicationException {
+	public java.util.Set loadAnalysisTypes(java.util.Set ids) throws ApplicationException {
 		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -119,9 +118,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadEvaluations(Collection ids) throws ApplicationException {
+	public java.util.Set loadEvaluations(java.util.Set ids) throws ApplicationException {
 		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -133,9 +132,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadEvaluationTypes(Collection ids) throws ApplicationException {
+	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws ApplicationException {
 		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -147,9 +146,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadModelings(Collection ids) throws ApplicationException {
+	public java.util.Set loadModelings(java.util.Set ids) throws ApplicationException {
 		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -162,9 +161,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadModelingTypes(Collection ids) throws ApplicationException {
+	public java.util.Set loadModelingTypes(java.util.Set ids) throws ApplicationException {
 		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -176,9 +175,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadMeasurements(Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurements(java.util.Set ids) throws ApplicationException {
 		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -190,9 +189,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadMeasurementSetups(Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws ApplicationException {
 		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -205,9 +204,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadMeasurementTypes(Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws ApplicationException {
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -220,9 +219,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadResults(Collection ids) throws ApplicationException {
+	public java.util.Set loadResults(java.util.Set ids) throws ApplicationException {
 		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -233,9 +232,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadSets(Collection ids) throws ApplicationException {
+	public java.util.Set loadSets(java.util.Set ids) throws ApplicationException {
 		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -246,9 +245,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadTemporalPatterns(Collection ids) throws ApplicationException {
+	public java.util.Set loadTemporalPatterns(java.util.Set ids) throws ApplicationException {
 		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -261,9 +260,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadTests(Collection ids) throws ApplicationException {
+	public java.util.Set loadTests(java.util.Set ids) throws ApplicationException {
 		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
@@ -278,9 +277,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 
 
-	public Collection loadAnalysesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadAnalysesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -292,9 +291,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadAnalysisTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadAnalysisTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
-		Collection list;
+		java.util.Set list;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -307,9 +306,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadEvaluationsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadEvaluationsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -322,9 +321,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadEvaluationTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadEvaluationTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -337,9 +336,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadModelingsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadModelingsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -351,9 +350,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadModelingTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadModelingTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -366,9 +365,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadMeasurementsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurementsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -381,9 +380,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadMeasurementSetupsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurementSetupsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -396,9 +395,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadMeasurementTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurementTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -411,9 +410,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadResultsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadResultsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -425,9 +424,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadSetsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -439,9 +438,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadTemporalPatternsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -454,9 +453,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public Collection loadTestsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadTestsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
-		Collection list = null;
+		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (IllegalDataException e) {
@@ -551,67 +550,67 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 
 
-	public void saveMeasurementTypes(Collection list, boolean force) throws ApplicationException {
+	public void saveMeasurementTypes(java.util.Set list, boolean force) throws ApplicationException {
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveAnalysisTypes(Collection list, boolean force) throws ApplicationException {
+	public void saveAnalysisTypes(java.util.Set list, boolean force) throws ApplicationException {
 		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveEvaluationTypes(Collection list, boolean force) throws ApplicationException {
+	public void saveEvaluationTypes(java.util.Set list, boolean force) throws ApplicationException {
 		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveSets(Collection list, boolean force) throws ApplicationException {
+	public void saveSets(java.util.Set list, boolean force) throws ApplicationException {
 		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveModelings(Collection list, boolean force) throws ApplicationException {
+	public void saveModelings(java.util.Set list, boolean force) throws ApplicationException {
 		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 	
-	public void saveModelingTypes(Collection list, boolean force) throws ApplicationException {
+	public void saveModelingTypes(java.util.Set list, boolean force) throws ApplicationException {
 		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveMeasurementSetups(Collection list, boolean force) throws ApplicationException {
+	public void saveMeasurementSetups(java.util.Set list, boolean force) throws ApplicationException {
 		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveMeasurements(Collection list, boolean force) throws ApplicationException {
+	public void saveMeasurements(java.util.Set list, boolean force) throws ApplicationException {
 		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveAnalyses(Collection list, boolean force) throws ApplicationException {
+	public void saveAnalyses(java.util.Set list, boolean force) throws ApplicationException {
 		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveEvaluations(Collection list, boolean force) throws ApplicationException {
+	public void saveEvaluations(java.util.Set list, boolean force) throws ApplicationException {
 		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveTests(Collection list, boolean force) throws ApplicationException {
+	public void saveTests(java.util.Set list, boolean force) throws ApplicationException {
 		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveResults(Collection list, boolean force) throws ApplicationException {
+	public void saveResults(java.util.Set list, boolean force) throws ApplicationException {
 		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveTemporalPatterns(Collection list, boolean force) throws ApplicationException {
+	public void saveTemporalPatterns(java.util.Set list, boolean force) throws ApplicationException {
 		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
@@ -642,7 +641,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 			storableObjectDatabase.delete(id);
 	}
 
-	public void delete(Collection objects) throws IllegalDataException {
+	public void delete(java.util.Set objects) throws IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -653,7 +652,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		/**
 		 * separate objects by kind of entity
 		 */
-		Collection entityObjects;
+		java.util.Set entityObjects;
 		Short entityCode;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
@@ -668,9 +667,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 							+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			entityCode = new Short(identifier.getMajor());
-			entityObjects = (Collection) map.get(entityCode);
+			entityObjects = (java.util.Set) map.get(entityCode);
 			if (entityObjects == null) {
-				entityObjects = new LinkedList();
+				entityObjects = new HashSet();
 				map.put(entityCode, entityObjects);
 			}
 			entityObjects.add(object);
@@ -679,7 +678,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		StorableObjectDatabase storableObjectDatabase;
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			entityCode = (Short) it.next();
-			entityObjects = (Collection) map.get(entityCode);
+			entityObjects = (java.util.Set) map.get(entityCode);
 			storableObjectDatabase = MeasurementDatabaseContext.getDatabase(entityCode);
 			if (storableObjectDatabase != null)
 				storableObjectDatabase.delete(entityObjects);

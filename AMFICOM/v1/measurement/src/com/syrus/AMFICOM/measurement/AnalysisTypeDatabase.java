@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.78 2005/03/24 15:43:09 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.79 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,12 +13,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -40,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/03/24 15:43:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.79 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -107,10 +105,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveParameterTypes(AnalysisType analysisType) throws RetrieveObjectException {	
-		List inParTyps = new ArrayList();
-		List criteriaParTyps = new ArrayList();
-		List etalonParTyps = new ArrayList();
-		List outParTyps = new ArrayList();
+		java.util.Set inParTyps = new HashSet();
+		java.util.Set criteriaParTyps = new HashSet();
+		java.util.Set etalonParTyps = new HashSet();
+		java.util.Set outParTyps = new HashSet();
 
 		String analysisTypeIdStr = DatabaseIdentifier.toSQLString(analysisType.getId());
 		String sql = SQL_SELECT
@@ -169,14 +167,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		((ArrayList) inParTyps).trimToSize();
-		((ArrayList) criteriaParTyps).trimToSize();
-		((ArrayList) etalonParTyps).trimToSize();
-		((ArrayList) outParTyps).trimToSize();
 		analysisType.setParameterTypes(inParTyps, criteriaParTyps, etalonParTyps, outParTyps);
 	}
 
-	private void retrieveParameterTypesByOneQuery(Collection analysisTypes) throws RetrieveObjectException {
+	private void retrieveParameterTypesByOneQuery(java.util.Set analysisTypes) throws RetrieveObjectException {
 		if ((analysisTypes == null) || (analysisTypes.isEmpty()))
 			return;
 
@@ -208,46 +202,46 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			String parameterMode;
 			Identifier parameterTypeId;
 			Identifier analysisTypeId;
-			List inParameterTypes;
-			List criteriaParameterTypes;
-			List etalonParameterTypes;
-			List outParameterTypes;
+			java.util.Set inParameterTypes;
+			java.util.Set criteriaParameterTypes;
+			java.util.Set etalonParameterTypes;
+			java.util.Set outParameterTypes;
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 				analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID);
 
 				if (parameterMode.equals(AnalysisTypeWrapper.MODE_IN)) {
-					inParameterTypes = (List) inParameterTypesMap.get(analysisTypeId);
+					inParameterTypes = (java.util.Set) inParameterTypesMap.get(analysisTypeId);
 					if (inParameterTypes == null) {
-						inParameterTypes = new ArrayList();
+						inParameterTypes = new HashSet();
 						inParameterTypesMap.put(analysisTypeId, inParameterTypes);
 					}
 					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
 					if (parameterMode.equals(AnalysisTypeWrapper.MODE_CRITERION)) {
-						criteriaParameterTypes = (List) criteriaParameterTypesMap.get(analysisTypeId);
+						criteriaParameterTypes = (java.util.Set) criteriaParameterTypesMap.get(analysisTypeId);
 						if (criteriaParameterTypes == null) {
-							criteriaParameterTypes = new ArrayList();
+							criteriaParameterTypes = new HashSet();
 							criteriaParameterTypesMap.put(analysisTypeId, criteriaParameterTypes);
 						}
 						criteriaParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					}
 					else
 						if (parameterMode.equals(AnalysisTypeWrapper.MODE_ETALON)) {
-							etalonParameterTypes = (List) etalonParameterTypesMap.get(analysisTypeId);
+							etalonParameterTypes = (java.util.Set) etalonParameterTypesMap.get(analysisTypeId);
 							if (etalonParameterTypes == null) {
-								etalonParameterTypes = new ArrayList();
+								etalonParameterTypes = new HashSet();
 								etalonParameterTypesMap.put(analysisTypeId, etalonParameterTypes);
 							}
 							etalonParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 						}
 						else
 							if (parameterMode.equals(AnalysisTypeWrapper.MODE_OUT)) {
-								outParameterTypes = (List) outParameterTypesMap.get(analysisTypeId);
+								outParameterTypes = (java.util.Set) outParameterTypesMap.get(analysisTypeId);
 								if (outParameterTypes == null) {
-									outParameterTypes = new ArrayList();
+									outParameterTypes = new HashSet();
 									outParameterTypesMap.put(analysisTypeId, outParameterTypes);
 								}
 								outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
@@ -261,10 +255,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
 				analysisType = (AnalysisType) it.next();
 				analysisTypeId = analysisType.getId();
-				inParameterTypes = (List) inParameterTypesMap.get(analysisTypeId);
-				criteriaParameterTypes = (List) criteriaParameterTypesMap.get(analysisTypeId);
-				etalonParameterTypes = (List) etalonParameterTypesMap.get(analysisTypeId);
-				outParameterTypes = (List) outParameterTypesMap.get(analysisTypeId);
+				inParameterTypes = (java.util.Set) inParameterTypesMap.get(analysisTypeId);
+				criteriaParameterTypes = (java.util.Set) criteriaParameterTypesMap.get(analysisTypeId);
+				etalonParameterTypes = (java.util.Set) etalonParameterTypesMap.get(analysisTypeId);
+				outParameterTypes = (java.util.Set) outParameterTypesMap.get(analysisTypeId);
 
 				analysisType.setParameterTypes(inParameterTypes, criteriaParameterTypes, etalonParameterTypes, outParameterTypes);
 			}
@@ -295,7 +289,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void retrieveMeasurementTypeIdsByOneQuery(Collection analysisTypes) throws RetrieveObjectException {
+	private void retrieveMeasurementTypeIdsByOneQuery(java.util.Set analysisTypes) throws RetrieveObjectException {
 		if ((analysisTypes == null) || (analysisTypes.isEmpty()))
 			return;
 
@@ -322,14 +316,14 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			Map measurementTypeIdsMap = new HashMap();
 			Identifier analysisTypeId;
 			Identifier measurementTypeId;
-			Collection measurementTypeIds;
+			java.util.Set measurementTypeIds;
 			while (resultSet.next()) {
 				analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID);
 				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
-				measurementTypeIds = (Collection) measurementTypeIdsMap.get(analysisTypeId);
+				measurementTypeIds = (java.util.Set) measurementTypeIdsMap.get(analysisTypeId);
 				if (measurementTypeIds == null) {
-					measurementTypeIds = new ArrayList();
+					measurementTypeIds = new HashSet();
 					measurementTypeIdsMap.put(analysisTypeId, measurementTypeIds);
 				}
 				measurementTypeIds.add(measurementTypeId);
@@ -339,7 +333,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
 				analysisType = (AnalysisType) it.next();
 				analysisTypeId = analysisType.getId();
-				measurementTypeIds = (Collection) measurementTypeIdsMap.get(analysisTypeId);
+				measurementTypeIds = (java.util.Set) measurementTypeIdsMap.get(analysisTypeId);
 
 				analysisType.setMeasurementTypeIds0(measurementTypeIds);
 			}
@@ -381,7 +375,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		this.insertParameterTypes(analysisType);
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for(Iterator it = storableObjects.iterator(); it.hasNext();) {
 			AnalysisType analysisType = this.fromStorableObject((StorableObject)it.next());
@@ -412,10 +406,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void updatePrepareStatementValues(PreparedStatement preparedStatement, AnalysisType analysisType) throws SQLException {
-		Collection inParTyps = analysisType.getInParameterTypes();
-		Collection criteriaParTyps = analysisType.getCriteriaParameterTypes();
-		Collection etalonParTyps = analysisType.getEtalonParameterTypes();
-		Collection outParTyps = analysisType.getOutParameterTypes();
+		java.util.Set inParTyps = analysisType.getInParameterTypes();
+		java.util.Set criteriaParTyps = analysisType.getCriteriaParameterTypes();
+		java.util.Set etalonParTyps = analysisType.getEtalonParameterTypes();
+		java.util.Set outParTyps = analysisType.getOutParameterTypes();
 		Identifier analysisTypeId = analysisType.getId();
 		Identifier parameterTypeId = null;
 		String parameterMode = null;
@@ -517,8 +511,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		java.util.Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypesByOneQuery(collection);
 		this.retrieveMeasurementTypeIdsByOneQuery(collection);
 		return collection;

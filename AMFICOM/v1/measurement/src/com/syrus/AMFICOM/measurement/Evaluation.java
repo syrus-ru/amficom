@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.44 2005/02/14 10:58:51 arseniy Exp $
+ * $Id: Evaluation.java,v 1.45 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -27,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/02/14 10:58:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -186,8 +185,8 @@ public class Evaluation extends Action {
 				resultParameters);
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public java.util.Set getDependencies() {
+		java.util.Set dependencies = new HashSet();
 		//	Measurement if exists
 		if (super.parentAction != null)
 			dependencies.add(super.parentAction);

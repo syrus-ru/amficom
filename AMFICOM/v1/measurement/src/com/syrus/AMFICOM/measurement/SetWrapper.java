@@ -1,5 +1,5 @@
 /*
- * $Id: SetWrapper.java,v 1.6 2005/02/03 15:31:50 arseniy Exp $
+ * $Id: SetWrapper.java,v 1.7 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/03 15:31:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class SetWrapper implements StorableObjectWrapper {
@@ -44,7 +43,7 @@ public class SetWrapper implements StorableObjectWrapper {
 		String[] keysArray = new String[] { COLUMN_SORT, COLUMN_DESCRIPTION, LINK_COLUMN_ME_ID,
 				LINK_FIELD_SET_PARAMETERS};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static SetWrapper getInstance() {
@@ -99,7 +98,7 @@ public class SetWrapper implements StorableObjectWrapper {
 					set.setDescription((String) value);
 				else
 					if (key.equals(LINK_COLUMN_ME_ID)) {
-						set.setMonitoredElementIds((List) value);
+						set.setMonitoredElementIds((java.util.Set) value);
 					}
 					else
 						if (key.equals(LINK_FIELD_SET_PARAMETERS)) {
@@ -136,7 +135,7 @@ public class SetWrapper implements StorableObjectWrapper {
 		if (key.equals(COLUMN_SORT))
 			return Integer.class;
 		if (key.equals(LINK_COLUMN_ME_ID))
-			return List.class;
+			return java.util.Set.class;
 		if (key.equals(LINK_FIELD_SET_PARAMETERS))
 			return Map.class;
 		return String.class;

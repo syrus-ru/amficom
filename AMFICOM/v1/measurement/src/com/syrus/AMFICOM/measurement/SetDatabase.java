@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.79 2005/03/11 09:08:23 bob Exp $
+ * $Id: SetDatabase.java,v 1.80 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/03/11 09:08:23 $
+ * @version $Revision: 1.80 $, $Date: 2005/04/01 08:43:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -97,7 +96,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		Set set = this.fromStorableObject(storableObject);
 		this.retrieveEntity(set);
 		this.retrieveSetParameters(set);
-		this.retrieveSetMELinksByOneQuery(Collections.singletonList(set));
+		this.retrieveSetMELinksByOneQuery(Collections.singleton(set));
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -117,7 +116,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveSetParameters(Set set) throws RetrieveObjectException {
-		Collection parameters = new HashSet();
+		java.util.Set parameters = new HashSet();
 
 		String setIdStr = DatabaseIdentifier.toSQLString(set.getId());
 		String sql = SQL_SELECT
@@ -174,7 +173,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		set.setParameters0((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
 	}
 
-	private void retrieveSetParametersByOneQuery(Collection sets) throws RetrieveObjectException {
+	private void retrieveSetParametersByOneQuery(java.util.Set sets) throws RetrieveObjectException {
         if ((sets == null) || (sets.isEmpty()))
 			return;
 
@@ -194,7 +193,7 @@ public class SetDatabase extends StorableObjectDatabase {
 
 		Map setParametersMap = new HashMap();
 		Identifier setId;
-		Collection setParameters;
+		java.util.Set setParameters;
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -217,7 +216,7 @@ public class SetDatabase extends StorableObjectDatabase {
 														parameterType,
 														ByteArrayDatabase.toByteArray(resultSet.getBlob(SetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
 				setId = DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_SET_ID);
-				setParameters = (Collection) setParametersMap.get(setId);
+				setParameters = (java.util.Set) setParametersMap.get(setId);
 				if (setParameters == null) {
 					setParameters = new HashSet();
 					setParametersMap.put(setId, setParameters);
@@ -251,7 +250,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		for (Iterator it = sets.iterator(); it.hasNext();) {
 			set = (Set) it.next();
 			setId = set.getId();
-			setParameters = (Collection) setParametersMap.get(setId);
+			setParameters = (java.util.Set) setParametersMap.get(setId);
 
 			if (setParameters != null)
 				set.setParameters0((SetParameter[]) setParameters.toArray(new SetParameter[setParameters.size()]));
@@ -261,7 +260,7 @@ public class SetDatabase extends StorableObjectDatabase {
 
 	}
 
-	private void retrieveSetMELinksByOneQuery(Collection sets) throws RetrieveObjectException {
+	private void retrieveSetMELinksByOneQuery(java.util.Set sets) throws RetrieveObjectException {
 		if ((sets == null) || (sets.isEmpty()))
 			return;
 
@@ -278,11 +277,11 @@ public class SetDatabase extends StorableObjectDatabase {
 
 		Set set;
 		Identifier setId;
-		Collection meIds;
+		java.util.Set meIds;
 		for (Iterator it = sets.iterator(); it.hasNext();) {
 			set = (Set) it.next();
 			setId = set.getId();
-			meIds = (Collection) meIdsMap.get(setId);
+			meIds = (java.util.Set) meIdsMap.get(setId);
 
 			set.setMonitoredElementIds0(meIds);
 		}
@@ -310,7 +309,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			Set set = this.fromStorableObject((StorableObject) it.next());
@@ -382,7 +381,7 @@ public class SetDatabase extends StorableObjectDatabase {
 
 	private void insertSetMELinks(Set set) throws CreateObjectException {
 		Identifier setId = set.getId();
-		Collection meIds = set.getMonitoredElementIds();
+		java.util.Set meIds = set.getMonitoredElementIds();
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.SETMELINK_ENTITY
 			+ OPEN_BRACKET
@@ -578,8 +577,8 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		java.util.Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveSetParametersByOneQuery(collection);
 		this.retrieveSetMELinksByOneQuery(collection);
 		return collection;

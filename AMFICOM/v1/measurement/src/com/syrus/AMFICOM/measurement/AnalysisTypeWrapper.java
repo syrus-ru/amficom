@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.7 2005/02/28 15:30:07 arseniy Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.8 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,15 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/28 15:30:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class AnalysisTypeWrapper implements StorableObjectWrapper {
@@ -37,7 +35,7 @@ public class AnalysisTypeWrapper implements StorableObjectWrapper {
 		// empty private constructor
 		String[] keysArray = new String[] {COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT, MODE_CRITERION, MODE_ETALON};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static AnalysisTypeWrapper getInstance() {
@@ -87,13 +85,13 @@ public class AnalysisTypeWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				analysisType.setDescription((String) value);
 			else if (key.equals(MODE_IN))
-				analysisType.setInParameterTypes((Collection) value);
+				analysisType.setInParameterTypes((java.util.Set) value);
 			else if (key.equals(MODE_OUT))
-				analysisType.setOutParameterTypes((Collection) value);
+				analysisType.setOutParameterTypes((java.util.Set) value);
 			else if (key.equals(MODE_CRITERION))
-				analysisType.setCriteriaParameterTypes((Collection) value);
+				analysisType.setCriteriaParameterTypes((java.util.Set) value);
 			else if (key.equals(MODE_ETALON))
-				analysisType.setEtalonParameterTypes((Collection) value);
+				analysisType.setEtalonParameterTypes((java.util.Set) value);
 		}
 	}
 
@@ -112,7 +110,7 @@ public class AnalysisTypeWrapper implements StorableObjectWrapper {
 
 	public Class getPropertyClass(String key) {
 		if (key.equals(MODE_IN) || key.equals(MODE_OUT) || key.equals(MODE_CRITERION) || key.equals(MODE_ETALON))
-			return List.class;
+			return java.util.Set.class;
 		return String.class;
 	}
 

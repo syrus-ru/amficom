@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.62 2005/03/15 12:18:32 bob Exp $
+ * $Id: TemporalPattern.java,v 1.63 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/03/15 12:18:32 $
+ * @version $Revision: 1.63 $, $Date: 2005/04/01 08:43:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -62,7 +62,7 @@ public class TemporalPattern extends StorableObject {
 		private static final long	DAY_LONG	= 24 * HOUR_LONG;
 		private static final long	MONTH_LONG	= 31 * DAY_LONG;
 
-		protected List			dateList;
+		protected java.util.Set			dateList;
 		private TimeValue		dayOfMonth;
 		private TimeValue		dayOfWeek;
 
@@ -102,7 +102,7 @@ public class TemporalPattern extends StorableObject {
 		/**
 		 * @return Returns the dateList.
 		 */
-		public List getDateList() {
+		public java.util.Set getDateList() {
 			return this.dateList;
 		}
 
@@ -397,7 +397,7 @@ public class TemporalPattern extends StorableObject {
 												if ((this.startPeriod <= mTime)
 														&& (mTime <= this.endPeriod)) {
 													if (this.dateList == null)
-														this.dateList = new LinkedList();
+														this.dateList = new HashSet();
 													this.dateList
 															.add(c
 																	.getTime());
@@ -783,8 +783,8 @@ public class TemporalPattern extends StorableObject {
 	/**
 	 * Map of <{@link TimeLine},{@link TimeLine}>
 	 */
-	private List			templates;
-	private List			times;
+	private java.util.Set			templates;
+	private java.util.Set			times;
 
 	private long			startTime		= 0;
 	private long			endTime			= 0;
@@ -833,7 +833,7 @@ public class TemporalPattern extends StorableObject {
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 	}
 
-	private TemporalPattern(Identifier id, Identifier creatorId, long version, String description, List cronString) {
+	private TemporalPattern(Identifier id, Identifier creatorId, long version, String description, java.util.Set cronString) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -860,7 +860,7 @@ public class TemporalPattern extends StorableObject {
 	 */
 	public static TemporalPattern createInstance(Identifier creatorId,
 							String description,
-							List cronString) throws CreateObjectException {
+							java.util.Set cronString) throws CreateObjectException {
 		if (creatorId == null || description == null || cronString == null )
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -947,8 +947,8 @@ public class TemporalPattern extends StorableObject {
 		return size;
 	}
 
-	public Collection getTimeLines() {
-		Collection collection = null;
+	public java.util.Set getTimeLines() {
+		java.util.Set collection = null;
 		synchronized (this.templates) {
 			if (this.templates != null) {
 				collection = this.templates;
@@ -969,7 +969,7 @@ public class TemporalPattern extends StorableObject {
 	 *                Date
 	 * @return List of java.util.Data
 	 */
-	public List getTimes(Date start, Date end) {
+	public java.util.Set getTimes(Date start, Date end) {
 		return this.getTimes(start.getTime(), end.getTime());	
 	}
 
@@ -981,11 +981,11 @@ public class TemporalPattern extends StorableObject {
 	 *                long
 	 * @param end
 	 *                long
-	 * @return List of java.util.Data
+	 * @return java.util.Set of java.util.Data
 	 */
-	public List getTimes(long start, long end) {
+	public java.util.Set getTimes(long start, long end) {
 		if (this.times == null)
-			this.times = new LinkedList();
+			this.times = new HashSet();
 		if (this.startTime != start)
 			this.times.clear();
 		this.startTime = start;
@@ -995,7 +995,7 @@ public class TemporalPattern extends StorableObject {
 
 		if (this.times.isEmpty()) {
 			//int count = 0;
-			Collection list = this.templates;
+			java.util.Set list = this.templates;
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				TimeLine timeLine = (TimeLine) it.next();
 				timeLine.setStartPeriod(start);
@@ -1027,11 +1027,11 @@ public class TemporalPattern extends StorableObject {
 	public void addTemplate(String template) {
 		super.changed = true;		
 		if (this.times == null)
-			this.times = new LinkedList();
+			this.times = new HashSet();
 		else
 			this.times.clear();
 		if (this.templates == null)
-			this.templates = new LinkedList();
+			this.templates = new HashSet();
 		synchronized (this.templates) {
 			TimeLine timeLine = new TimeLine();
 			timeLine.setTemplate(template);
@@ -1106,7 +1106,7 @@ public class TemporalPattern extends StorableObject {
 		return buffer.toString();
 	}
 	
-	public List getDependencies() {		
-		return Collections.EMPTY_LIST;
+	public java.util.Set getDependencies() {		
+		return Collections.EMPTY_SET;
 	}
 }

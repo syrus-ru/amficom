@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementWrapper.java,v 1.3 2005/02/03 08:36:47 bob Exp $
+ * $Id: MeasurementWrapper.java,v 1.4 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -19,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/03 08:36:47 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/01 08:43:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -42,7 +41,7 @@ public class MeasurementWrapper implements StorableObjectWrapper {
 		String[] keysArray = new String[] { COLUMN_TYPE_ID, COLUMN_MONITORED_ELEMENT_ID, COLUMN_NAME, COLUMN_SETUP_ID,
 				COLUMN_START_TIME, COLUMN_DURATION, COLUMN_STATUS, COLUMN_LOCAL_ADDRESS, COLUMN_TEST_ID};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static MeasurementWrapper getInstance() {

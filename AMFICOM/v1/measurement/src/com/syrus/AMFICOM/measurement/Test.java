@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.96 2005/03/30 15:44:42 bob Exp $
+ * $Id: Test.java,v 1.97 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,9 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -47,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/03/30 15:44:42 $
+ * @version $Revision: 1.97 $, $Date: 2005/04/01 08:43:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -77,7 +74,7 @@ public class Test extends StorableObject {
 	private MonitoredElement monitoredElement;
 	private int	returnType;
 	private String description;
-	private Collection measurementSetupIds;
+	private java.util.Set measurementSetupIds;
 
 	private MeasurementSetup mainMeasurementSetup;
 
@@ -139,7 +136,7 @@ public class Test extends StorableObject {
 					 MonitoredElement monitoredElement,
 					 int returnType,
 					 String description,
-					 Collection measurementSetupIds) {
+					 java.util.Set measurementSetupIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -193,7 +190,7 @@ public class Test extends StorableObject {
 			MonitoredElement monitoredElement,
 			TestReturnType returnType,
 			String description,
-			Collection measurementSetupIds) throws CreateObjectException {
+			java.util.Set measurementSetupIds) throws CreateObjectException {
 		if (creatorId == null
 				|| startTime == null
 				|| temporalType == null
@@ -302,8 +299,8 @@ public class Test extends StorableObject {
 		return this.evaluationTypeId;
 	}
 
-	public Collection getMeasurementSetupIds() {
-		return Collections.unmodifiableCollection(this.measurementSetupIds);
+	public java.util.Set getMeasurementSetupIds() {
+		return Collections.unmodifiableSet(this.measurementSetupIds);
 	}
 
 	public Identifier getMeasurementTypeId() {
@@ -363,9 +360,9 @@ public class Test extends StorableObject {
 				msIdsT);
 	}
 
-	public Collection retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)	throws RetrieveObjectException, ObjectNotFoundException {
+	public java.util.Set retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)	throws RetrieveObjectException, ObjectNotFoundException {
 		try {
-			return (Collection) this.testDatabase.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
+			return (java.util.Set) this.testDatabase.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -531,7 +528,7 @@ public class Test extends StorableObject {
 		this.description = description;
 	}
 
-	protected synchronized void setMeasurementSetupIds0(Collection measurementSetupIds) {
+	protected synchronized void setMeasurementSetupIds0(java.util.Set measurementSetupIds) {
 		this.measurementSetupIds.clear();
 		if (measurementSetupIds != null)
 			this.measurementSetupIds.addAll(measurementSetupIds);
@@ -546,7 +543,7 @@ public class Test extends StorableObject {
 			}
 	}
 
-	public void setMeasurementSetupIds(Collection measurementSetupIds) {
+	public void setMeasurementSetupIds(java.util.Set measurementSetupIds) {
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		super.changed = true;
 	}
@@ -577,8 +574,8 @@ public class Test extends StorableObject {
 		return this.mcmId;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public java.util.Set getDependencies() {
+		java.util.Set dependencies = new HashSet();
 		if (this.timeStamps.temporalPatternId != null)
 			dependencies.add(this.timeStamps.temporalPatternId);
 

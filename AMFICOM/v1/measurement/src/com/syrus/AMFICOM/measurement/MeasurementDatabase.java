@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.72 2005/03/11 09:08:23 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.73 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.Collection;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -33,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/03/11 09:08:23 $
+ * @version $Revision: 1.73 $, $Date: 2005/04/01 08:43:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -233,7 +232,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		this.insertEntity(measurement);
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}
 

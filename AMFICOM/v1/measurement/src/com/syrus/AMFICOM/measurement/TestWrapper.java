@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.7 2005/03/31 09:52:54 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.8 2005/04/01 08:43:33 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -22,8 +21,8 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/31 09:52:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 08:43:33 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class TestWrapper implements StorableObjectWrapper {
@@ -60,7 +59,7 @@ public class TestWrapper implements StorableObjectWrapper {
 				COLUMN_DESCRIPTION,
 				LINK_COLUMN_MEASUREMENT_SETUP_ID};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static TestWrapper getInstance() {
@@ -141,7 +140,7 @@ public class TestWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				test.setDescription((String) value);
 			else if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID))
-				test.setMeasurementSetupIds((List) value);
+				test.setMeasurementSetupIds((java.util.Set) value);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.54 2005/03/15 16:15:10 arseniy Exp $
+ * $Id: Measurement.java,v 1.55 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -31,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/03/15 16:15:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -264,9 +262,9 @@ public class Measurement extends Action {
 		super.changed = true;
 	}
 
-	public Collection getResults() {
+	public java.util.Set getResults() {
 		LinkedIdsCondition condition = new LinkedIdsCondition(this.id, ObjectEntities.RESULT_ENTITY_CODE);
-		Collection results = null;
+		java.util.Set results = null;
 		try {
 			results = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
@@ -276,8 +274,8 @@ public class Measurement extends Action {
 		return results;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public java.util.Set getDependencies() {
+		java.util.Set dependencies = new HashSet();
 		dependencies.add(this.testId);
 		dependencies.add(this.setup);
 		return dependencies;

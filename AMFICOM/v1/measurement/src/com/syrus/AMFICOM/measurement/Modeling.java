@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.27 2005/02/14 10:58:51 arseniy Exp $
+ * $Id: Modeling.java,v 1.28 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Collections;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,16 +26,10 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/02/14 10:58:51 $
- * @author $Author: arseniy $
- * @module measurement_v1
- */
-
-/**
+ * @version $Revision: 1.28 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @author arseniy
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * @module measurement_v1
  */
 public class Modeling extends Action {
 	
@@ -188,8 +181,8 @@ public class Modeling extends Action {
 				resultParameters);
 	}
 
-	public List getDependencies() {
-		return Collections.singletonList(this.argumentSet);
+	public java.util.Set getDependencies() {
+		return Collections.singleton(this.argumentSet);
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.28 2005/03/11 09:08:23 bob Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.29 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,11 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -39,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/03/11 09:08:23 $
+ * @version $Revision: 1.29 $, $Date: 2005/04/01 08:43:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -119,8 +117,8 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveParameterTypes(ModelingType modelingType) throws RetrieveObjectException {	
-		List inParTyps = new ArrayList();
-		List outParTyps = new ArrayList();
+		java.util.Set inParTyps = new HashSet();
+		java.util.Set outParTyps = new HashSet();
 
 		String modelingTypeIdStr = DatabaseIdentifier.toSQLString(modelingType.getId());
 		String sql = SQL_SELECT
@@ -173,13 +171,11 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		((ArrayList)inParTyps).trimToSize();
-		((ArrayList)outParTyps).trimToSize();
 		modelingType.setParameterTypes(inParTyps,
 																	 outParTyps);
 	}
 
-	private void retrieveParameterTypesByOneQuery(Collection modelingTypes) throws RetrieveObjectException {
+	private void retrieveParameterTypesByOneQuery(java.util.Set modelingTypes) throws RetrieveObjectException {
 		if ((modelingTypes == null) || (modelingTypes.isEmpty()))
 			return;
 
@@ -210,26 +206,26 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			String parameterMode;
 			Identifier parameterTypeId;
 			Identifier modelingTypeId;
-			List inParameterTypes;
-			List outParameterTypes;
+			java.util.Set inParameterTypes;
+			java.util.Set outParameterTypes;
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 				modelingTypeId = DatabaseIdentifier.getIdentifier(resultSet, ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID);
 
 				if (parameterMode.equals(ModelingTypeWrapper.MODE_IN)) {
-					inParameterTypes = (List)inParameterTypesMap.get(modelingTypeId);
+					inParameterTypes = (java.util.Set)inParameterTypesMap.get(modelingTypeId);
 					if (inParameterTypes == null) {
-						inParameterTypes = new ArrayList();
+						inParameterTypes = new HashSet();
 						inParameterTypesMap.put(modelingTypeId, inParameterTypes);
 					}
 					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
 					if (parameterMode.equals(ModelingTypeWrapper.MODE_OUT)) {
-						outParameterTypes = (List)outParameterTypesMap.get(modelingTypeId);
+						outParameterTypes = (java.util.Set)outParameterTypesMap.get(modelingTypeId);
 						if (outParameterTypes == null) {
-							outParameterTypes = new ArrayList();
+							outParameterTypes = new HashSet();
 							outParameterTypesMap.put(modelingTypeId, outParameterTypes);
 						}
 						outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
@@ -242,8 +238,8 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			for (Iterator it = modelingTypes.iterator(); it.hasNext();) {
 				modelingType = (ModelingType)it.next();
 				modelingTypeId = modelingType.getId();
-				inParameterTypes = (List)inParameterTypesMap.get(modelingTypeId);
-				outParameterTypes = (List)outParameterTypesMap.get(modelingTypeId);
+				inParameterTypes = (java.util.Set)inParameterTypesMap.get(modelingTypeId);
+				outParameterTypes = (java.util.Set)outParameterTypesMap.get(modelingTypeId);
 
 				modelingType.setParameterTypes(inParameterTypes, outParameterTypes);
 			}
@@ -289,7 +285,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		this.insertParameterTypes(modelingType);
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for(Iterator it=storableObjects.iterator();it.hasNext();){
 			ModelingType modelingType = this.fromStorableObject((StorableObject)it.next());
@@ -320,8 +316,8 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void updatePrepareStatementValues(PreparedStatement preparedStatement, ModelingType modelingType) throws SQLException {
-		Collection inParTyps = modelingType.getInParameterTypes();
-		Collection outParTyps = modelingType.getOutParameterTypes();
+		java.util.Set inParTyps = modelingType.getInParameterTypes();
+		java.util.Set outParTyps = modelingType.getOutParameterTypes();
 		Identifier modelingTypeId = modelingType.getId();
 		Identifier parameterTypeId = null;
 		String parameterMode = null;
@@ -405,8 +401,8 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		java.util.Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypesByOneQuery(collection);
 		return collection;
 	}

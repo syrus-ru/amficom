@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.84 2005/03/25 13:08:53 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.85 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,11 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -41,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/03/25 13:08:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.85 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -115,8 +113,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	private void retrieveParameterTypes(MeasurementType measurementType) throws RetrieveObjectException {
-		List inParTyps = new ArrayList();
-		List outParTyps = new ArrayList();
+		java.util.Set inParTyps = new HashSet();
+		java.util.Set outParTyps = new HashSet();
 
 		String measurementTypeIdStr = DatabaseIdentifier.toSQLString(measurementType.getId());
 		String sql = SQL_SELECT
@@ -169,12 +167,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			}
 		}
 
-		((ArrayList)inParTyps).trimToSize();
-		((ArrayList)outParTyps).trimToSize();
 		measurementType.setParameterTypes(inParTyps, outParTyps);
 	}
 
-  private void retrieveParameterTypesByOneQuery(Collection measurementTypes) throws RetrieveObjectException {
+  private void retrieveParameterTypesByOneQuery(java.util.Set measurementTypes) throws RetrieveObjectException {
 		if ((measurementTypes == null) || (measurementTypes.isEmpty()))
 			return;
 
@@ -204,26 +200,26 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			String parameterMode;
 			Identifier parameterTypeId;
 			Identifier measurementTypeId;
-			List inParameterTypes;
-			List outParameterTypes;
+			java.util.Set inParameterTypes;
+			java.util.Set outParameterTypes;
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
 				if (parameterMode.equals(MeasurementTypeWrapper.MODE_IN)) {
-					inParameterTypes = (List)inParameterTypesMap.get(measurementTypeId);
+					inParameterTypes = (java.util.Set)inParameterTypesMap.get(measurementTypeId);
 					if (inParameterTypes == null) {
-						inParameterTypes = new ArrayList();
+						inParameterTypes = new HashSet();
 						inParameterTypesMap.put(measurementTypeId, inParameterTypes);
 					}
 					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
 					if (parameterMode.equals(MeasurementTypeWrapper.MODE_OUT)) {
-						outParameterTypes = (List)outParameterTypesMap.get(measurementTypeId);
+						outParameterTypes = (java.util.Set)outParameterTypesMap.get(measurementTypeId);
 						if (outParameterTypes == null) {
-							outParameterTypes = new ArrayList();
+							outParameterTypes = new HashSet();
 							outParameterTypesMap.put(measurementTypeId, outParameterTypes);
 						}
 						outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
@@ -237,8 +233,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
 				measurementType = (MeasurementType)it.next();
 				measurementTypeId = measurementType.getId();
-				inParameterTypes = (List)inParameterTypesMap.get(measurementTypeId);
-				outParameterTypes = (List)outParameterTypesMap.get(measurementTypeId);
+				inParameterTypes = (java.util.Set)inParameterTypesMap.get(measurementTypeId);
+				outParameterTypes = (java.util.Set)outParameterTypesMap.get(measurementTypeId);
 
 				measurementType.setParameterTypes(inParameterTypes, outParameterTypes);
 			}
@@ -270,7 +266,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	private void retrieveMeasurementPortTypes(MeasurementType measurementType) throws RetrieveObjectException {
-		List measurementPortTypes = new ArrayList();
+		java.util.Set measurementPortTypes = new HashSet();
 
 		String measurementTypeIdStr = DatabaseIdentifier.toSQLString(measurementType.getId());
 		String sql = SQL_SELECT
@@ -312,11 +308,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
-		((ArrayList)measurementPortTypes).trimToSize();
 		measurementType.setMeasurementPortTypes0(measurementPortTypes);
 	}
 
-  private void retrieveMeasurementPortTypesByOneQuery(Collection measurementTypes) throws RetrieveObjectException {
+  private void retrieveMeasurementPortTypesByOneQuery(java.util.Set measurementTypes) throws RetrieveObjectException {
 		if ((measurementTypes == null) || (measurementTypes.isEmpty()))
 			return;
 
@@ -343,14 +338,14 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			Map measurementPortTypesMap = new HashMap();
 			Identifier measurementPortTypeId;
 			Identifier measurementTypeId;
-			List measurementPortTypes;
+			java.util.Set measurementPortTypes;
 			while (resultSet.next()) {
 				measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
 				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
-				measurementPortTypes = (List) measurementPortTypesMap.get(measurementTypeId);
+				measurementPortTypes = (java.util.Set) measurementPortTypesMap.get(measurementTypeId);
 				if (measurementPortTypes == null) {
-					measurementPortTypes = new ArrayList();
+					measurementPortTypes = new HashSet();
 					measurementPortTypesMap.put(measurementTypeId, measurementPortTypes);
 				}
 				measurementPortTypes.add(ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true));
@@ -360,7 +355,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
 				measurementType = (MeasurementType) it.next();
 				measurementTypeId = measurementType.getId();
-				measurementPortTypes = (List) measurementPortTypesMap.get(measurementTypeId);
+				measurementPortTypes = (java.util.Set) measurementPortTypesMap.get(measurementTypeId);
 
 				measurementType.setMeasurementPortTypes0(measurementPortTypes);
 			}
@@ -408,7 +403,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			MeasurementType measurementType = this.fromStorableObject((StorableObject)it.next());
@@ -460,8 +455,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	private void updatePrepareStatementValues(PreparedStatement preparedStatement, MeasurementType measurementType) throws SQLException {
-		Collection inParTyps = measurementType.getInParameterTypes();
-		Collection outParTyps = measurementType.getOutParameterTypes();
+		java.util.Set inParTyps = measurementType.getInParameterTypes();
+		java.util.Set outParTyps = measurementType.getOutParameterTypes();
 		Identifier measurementTypeId = measurementType.getId();
 		Identifier parameterTypeId = null;
 		String parameterMode = null;
@@ -487,7 +482,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	private void updateMeasurementPortTypePrepareStatementValues(PreparedStatement preparedStatement,MeasurementType measurementType) throws SQLException{
-		Collection measurementPortTypes = measurementType.getMeasurementPortTypes();
+		java.util.Set measurementPortTypes = measurementType.getMeasurementPortTypes();
 		Identifier measurementTypeId = measurementType.getId();
 		Identifier measurementPortTypeId = null;
 		
@@ -586,8 +581,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		java.util.Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypesByOneQuery(collection);
 		this.retrieveMeasurementPortTypesByOneQuery(collection);
 		return collection;

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.53 2005/03/24 15:42:36 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.54 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,33 +8,30 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/03/24 15:42:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -46,24 +43,24 @@ public class AnalysisType extends ActionType {
 
 	public static final String CODENAME_DADARA = "dadara";
 
-	private Collection inParameterTypes;
-	private Collection criteriaParameterTypes;
-	private Collection etalonParameterTypes;
-	private Collection outParameterTypes;
+	private java.util.Set inParameterTypes;
+	private java.util.Set criteriaParameterTypes;
+	private java.util.Set etalonParameterTypes;
+	private java.util.Set outParameterTypes;
 
-	private Collection measurementTypeIds;
+	private java.util.Set measurementTypeIds;
 
 	private StorableObjectDatabase	analysisTypeDatabase;	
 
 	public AnalysisType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new ArrayList();
-		this.criteriaParameterTypes = new ArrayList();
-		this.etalonParameterTypes = new ArrayList();
-		this.outParameterTypes = new ArrayList();
+		this.inParameterTypes = new HashSet();
+		this.criteriaParameterTypes = new HashSet();
+		this.etalonParameterTypes = new HashSet();
+		this.outParameterTypes = new HashSet();
 
-		this.measurementTypeIds = new ArrayList();
+		this.measurementTypeIds = new HashSet();
 
 		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
@@ -92,9 +89,9 @@ public class AnalysisType extends ActionType {
 		super(att.header, new String(att.codename), new String(att.description));
 
 		try {
-			List parTypIds;
+			java.util.Set parTypIds;
 
-			parTypIds = new ArrayList(att.in_parameter_type_ids.length);
+			parTypIds = new HashSet(att.in_parameter_type_ids.length);
 			for (int i = 0; i < att.in_parameter_type_ids.length; i++)
 				parTypIds.add(new Identifier(att.in_parameter_type_ids[i]));
 			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
@@ -115,7 +112,7 @@ public class AnalysisType extends ActionType {
 			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
 
 
-			this.measurementTypeIds = new ArrayList(att.measurement_type_ids.length);
+			this.measurementTypeIds = new HashSet(att.measurement_type_ids.length);
 			for (int i = 0; i < att.measurement_type_ids.length; i++)
 				this.measurementTypeIds.add(new Identifier(att.measurement_type_ids[i]));
 		}
@@ -131,11 +128,11 @@ public class AnalysisType extends ActionType {
 						   long version,
 						   String codename,
 						   String description,
-						   Collection inParameterTypes,
-						   Collection criteriaParameterTypes,
-						   Collection etalonParameterTypes,
-						   Collection outParameterTypes,
-						   Collection measurementTypeIds) {
+						   java.util.Set inParameterTypes,
+						   java.util.Set criteriaParameterTypes,
+						   java.util.Set etalonParameterTypes,
+						   java.util.Set outParameterTypes,
+						   java.util.Set measurementTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -145,20 +142,20 @@ public class AnalysisType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypes = new ArrayList();
+		this.inParameterTypes = new HashSet();
 		this.setInParameterTypes0(inParameterTypes);
 
-		this.criteriaParameterTypes = new ArrayList();
+		this.criteriaParameterTypes = new HashSet();
 		this.setCriteriaParameterTypes0(criteriaParameterTypes);
 
-		this.etalonParameterTypes = new ArrayList();
+		this.etalonParameterTypes = new HashSet();
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 
-		this.outParameterTypes = new ArrayList();
+		this.outParameterTypes = new HashSet();
 		this.setOutParameterTypes0(outParameterTypes);
 
 
-		this.measurementTypeIds = new ArrayList();
+		this.measurementTypeIds = new HashSet();
 		this.setMeasurementTypeIds0(measurementTypeIds);
 
 		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
@@ -179,11 +176,11 @@ public class AnalysisType extends ActionType {
 	public static AnalysisType createInstance(Identifier creatorId,
 			String codename,
 			String description,
-			Collection inParameterTypes,
-			Collection criteriaParameterTypes,
-			Collection etalonParameterTypes,
-			Collection outParameterTypes,
-			Collection measurementTypeIds) throws CreateObjectException {
+			java.util.Set inParameterTypes,
+			java.util.Set criteriaParameterTypes,
+			java.util.Set etalonParameterTypes,
+			java.util.Set outParameterTypes,
+			java.util.Set measurementTypeIds) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -245,24 +242,24 @@ public class AnalysisType extends ActionType {
 											 measTypIds);
 	}
 
-	public Collection getInParameterTypes() {
-		return Collections.unmodifiableCollection(this.inParameterTypes);
+	public java.util.Set getInParameterTypes() {
+		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
-	public Collection getCriteriaParameterTypes() {
-		return Collections.unmodifiableCollection(this.criteriaParameterTypes);
+	public java.util.Set getCriteriaParameterTypes() {
+		return Collections.unmodifiableSet(this.criteriaParameterTypes);
 	}
 
-	public Collection getEtalonParameterTypes() {
-		return Collections.unmodifiableCollection(this.etalonParameterTypes);
+	public java.util.Set getEtalonParameterTypes() {
+		return Collections.unmodifiableSet(this.etalonParameterTypes);
 	}
 
-	public Collection getOutParameterTypes() {
-		return Collections.unmodifiableCollection(this.outParameterTypes);
+	public java.util.Set getOutParameterTypes() {
+		return Collections.unmodifiableSet(this.outParameterTypes);
 	}
 
-	public Collection getMeasurementTypeIds() {
-		return Collections.unmodifiableCollection(this.measurementTypeIds);
+	public java.util.Set getMeasurementTypeIds() {
+		return Collections.unmodifiableSet(this.measurementTypeIds);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -281,17 +278,17 @@ public class AnalysisType extends ActionType {
 			description);
 	}
 
-	protected synchronized void setParameterTypes(Collection inParameterTypes,
-			Collection criteriaParameterTypes,
-			Collection etalonParameterTypes,
-			Collection outParameterTypes) {
+	protected synchronized void setParameterTypes(java.util.Set inParameterTypes,
+			java.util.Set criteriaParameterTypes,
+			java.util.Set etalonParameterTypes,
+			java.util.Set outParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		this.setCriteriaParameterTypes0(criteriaParameterTypes);
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
 	}
 
-	protected void setInParameterTypes0(Collection inParameterTypes) {
+	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
 			this.inParameterTypes.addAll(inParameterTypes);
@@ -303,12 +300,12 @@ public class AnalysisType extends ActionType {
 	 * @param inParameterTypes
 	 *            The inParameterTypes to set.
 	 */
-	public void setInParameterTypes(Collection inParameterTypes) {
+	public void setInParameterTypes(java.util.Set inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		super.changed = true;		
 	}
 
-	protected void setCriteriaParameterTypes0(Collection criteriaParameterTypes) {
+	protected void setCriteriaParameterTypes0(java.util.Set criteriaParameterTypes) {
 		this.criteriaParameterTypes.clear();
 		if (criteriaParameterTypes != null)
 			this.criteriaParameterTypes.addAll(criteriaParameterTypes);
@@ -319,12 +316,12 @@ public class AnalysisType extends ActionType {
 	 * @param thresholdParameterTypes
 	 *            The thresholdParameterTypes to set.
 	 */
-	public void setCriteriaParameterTypes(Collection thresholdParameterTypes) {
+	public void setCriteriaParameterTypes(java.util.Set thresholdParameterTypes) {
 		this.setCriteriaParameterTypes0(thresholdParameterTypes);
 		super.changed = true;
 	}
 
-	protected void setEtalonParameterTypes0(Collection etalonParameterTypes) {
+	protected void setEtalonParameterTypes0(java.util.Set etalonParameterTypes) {
 		this.etalonParameterTypes.clear();
 		if (etalonParameterTypes != null)
 			this.etalonParameterTypes.addAll(etalonParameterTypes);
@@ -335,12 +332,12 @@ public class AnalysisType extends ActionType {
 	 * @param etalonParameterTypes
 	 *            The etalonParameterTypes to set.
 	 */
-	public void setEtalonParameterTypes(Collection etalonParameterTypes) {
+	public void setEtalonParameterTypes(java.util.Set etalonParameterTypes) {
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 		super.changed = true;
 	}
 
-	protected void setOutParameterTypes0(Collection outParameterTypes) {
+	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
 			this.outParameterTypes.addAll(outParameterTypes);
@@ -352,12 +349,12 @@ public class AnalysisType extends ActionType {
 	 * @param outParameterTypes
 	 *            The outParameterTypes to set.
 	 */
-	public void setOutParameterTypes(Collection outParameterTypes) {
+	public void setOutParameterTypes(java.util.Set outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.changed = true;
 	}	
 
-	protected void setMeasurementTypeIds0(Collection measurementTypeIds) {
+	protected void setMeasurementTypeIds0(java.util.Set measurementTypeIds) {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
 			this.measurementTypeIds.addAll(measurementTypeIds);
@@ -367,13 +364,13 @@ public class AnalysisType extends ActionType {
 	 * client setter for outParameterTypes
 	 * @param measurementTypeIds
 	 */
-	public void setMeasurementTypeIds(Collection measurementTypeIds) {
+	public void setMeasurementTypeIds(java.util.Set measurementTypeIds) {
 		this.setMeasurementTypeIds0(measurementTypeIds);
 		super.changed = true;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public java.util.Set getDependencies() {
+		java.util.Set dependencies = new HashSet();
 		if (this.inParameterTypes != null)
 			dependencies.addAll(this.inParameterTypes);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.36 2005/03/11 09:08:23 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.37 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/03/11 09:08:23 $
+ * @version $Revision: 1.37 $, $Date: 2005/04/01 08:43:32 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -134,7 +133,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 		this.insertEntity(modeling);
 	}
 
-  public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+  public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}
 

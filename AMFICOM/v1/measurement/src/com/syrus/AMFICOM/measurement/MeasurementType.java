@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.54 2005/03/24 16:57:57 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.55 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,35 +8,32 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/03/24 16:57:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -48,18 +45,18 @@ public class MeasurementType extends ActionType {
 
 	public static final String CODENAME_REFLECTOMETRY = "reflectometry";
 
-	private Collection inParameterTypes;
-	private Collection outParameterTypes;
-	private Collection measurementPortTypes;
+	private java.util.Set inParameterTypes;
+	private java.util.Set outParameterTypes;
+	private java.util.Set measurementPortTypes;
 
 	private StorableObjectDatabase	measurementTypeDatabase;
 
 	public MeasurementType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new ArrayList();
-		this.outParameterTypes = new ArrayList();
-		this.measurementPortTypes = new ArrayList();
+		this.inParameterTypes = new HashSet();
+		this.outParameterTypes = new HashSet();
+		this.measurementPortTypes = new HashSet();
 
 		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
@@ -88,9 +85,9 @@ public class MeasurementType extends ActionType {
 			  new String(mtt.description));
 
 		try {
-			List typeIds;
+			java.util.Set typeIds;
 			
-			typeIds = new ArrayList(mtt.in_parameter_type_ids.length);
+			typeIds = new HashSet(mtt.in_parameter_type_ids.length);
 			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
 				typeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
 			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
@@ -117,9 +114,9 @@ public class MeasurementType extends ActionType {
 							  long version,
 							  String codename,
 							  String description,
-							  Collection inParameterTypes,
-							  Collection outParameterTypes,
-							  Collection measurementPortTypes) {
+							  java.util.Set inParameterTypes,
+							  java.util.Set outParameterTypes,
+							  java.util.Set measurementPortTypes) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -129,13 +126,13 @@ public class MeasurementType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypes = new ArrayList(); 
+		this.inParameterTypes = new HashSet(); 
 		this.setInParameterTypes0(inParameterTypes);
 
-		this.outParameterTypes = new ArrayList();
+		this.outParameterTypes = new HashSet();
 		this.setOutParameterTypes0(outParameterTypes);
 
-		this.measurementPortTypes = new ArrayList();
+		this.measurementPortTypes = new HashSet();
 		this.setMeasurementPortTypes0(measurementPortTypes);
 
 		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
@@ -153,9 +150,9 @@ public class MeasurementType extends ActionType {
 	public static MeasurementType createInstance(Identifier creatorId,
 												 String codename,
 												 String description,
-												 Collection inParameterTypes,
-												 Collection outParameterTypes,
-												 Collection measurementPortTypes) throws CreateObjectException {
+												 java.util.Set inParameterTypes,
+												 java.util.Set outParameterTypes,
+												 java.util.Set measurementPortTypes) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0  || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 
@@ -205,12 +202,12 @@ public class MeasurementType extends ActionType {
 												measurementPortTypeIds);
 	}
 
-  public Collection getInParameterTypes() {
-		return Collections.unmodifiableCollection(this.inParameterTypes);
+  public java.util.Set getInParameterTypes() {
+		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
-	public Collection getOutParameterTypes() {
-		return Collections.unmodifiableCollection(this.outParameterTypes);
+	public java.util.Set getOutParameterTypes() {
+		return Collections.unmodifiableSet(this.outParameterTypes);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -229,12 +226,12 @@ public class MeasurementType extends ActionType {
 			description);
 	}
 
-	protected synchronized void setParameterTypes(Collection inParameterTypes, Collection outParameterTypes) {
+	protected synchronized void setParameterTypes(java.util.Set inParameterTypes, java.util.Set outParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
 	}
 
-	protected void setInParameterTypes0(Collection inParameterTypes) {
+	protected void setInParameterTypes0(java.util.Set inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
 			this.inParameterTypes.addAll(inParameterTypes);
@@ -246,12 +243,12 @@ public class MeasurementType extends ActionType {
 	 * @param inParameterTypes
 	 *            The inParameterTypes to set.
 	 */
-	public void setInParameterTypes(Collection inParameterTypes) {
+	public void setInParameterTypes(java.util.Set inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		super.changed = true;		
 	}
 
-	protected void setOutParameterTypes0(Collection outParameterTypes) {
+	protected void setOutParameterTypes0(java.util.Set outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
 			this.outParameterTypes.addAll(outParameterTypes);
@@ -263,12 +260,12 @@ public class MeasurementType extends ActionType {
 	 * @param outParameterTypes
 	 *            The outParameterTypes to set.
 	 */
-	public void setOutParameterTypes(Collection outParameterTypes) {
+	public void setOutParameterTypes(java.util.Set outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.changed = true;		
 	}
 
-	protected void setMeasurementPortTypes0(Collection measurementPortTypes) {
+	protected void setMeasurementPortTypes0(java.util.Set measurementPortTypes) {
 		this.measurementPortTypes.clear();
 		if (measurementPortTypes != null)
 	     	this.measurementPortTypes.addAll(measurementPortTypes);
@@ -279,17 +276,17 @@ public class MeasurementType extends ActionType {
 	 * @param measurementPortTypes
 	 * 		The measurementPortTypes to set
 	 */
-	public void setMeasurementPortTypes(Collection measurementPortTypes) {
+	public void setMeasurementPortTypes(java.util.Set measurementPortTypes) {
 		this.setMeasurementPortTypes0(measurementPortTypes);
 		super.changed = true;		
 	}
 
-	public Collection getMeasurementPortTypes() {
-		return Collections.unmodifiableCollection(this.measurementPortTypes);
+	public java.util.Set getMeasurementPortTypes() {
+		return Collections.unmodifiableSet(this.measurementPortTypes);
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public java.util.Set getDependencies() {
+		java.util.Set dependencies = new HashSet();
 
 		if (this.inParameterTypes != null)
 			dependencies.addAll(this.inParameterTypes);

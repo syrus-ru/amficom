@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.79 2005/03/14 14:54:58 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.80 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,10 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -37,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/03/14 14:54:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.80 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -83,7 +81,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	
 	
 	
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for(Iterator it=storableObjects.iterator();it.hasNext();){
 			MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
@@ -220,7 +218,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	private void insertMeasurementSetupMELinks(MeasurementSetup measurementSetup) throws CreateObjectException {
 		Identifier msId = measurementSetup.getId();
-		Collection meIds = measurementSetup.getMonitoredElementIds();
+		java.util.Set meIds = measurementSetup.getMonitoredElementIds();
 		String sql = SQL_INSERT_INTO 
 				+ ObjectEntities.MSMELINK_ENTITY + OPEN_BRACKET
 				+ MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + COMMA 
@@ -303,7 +301,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveMeasurementSetupMELinks(MeasurementSetup measurementSetup) throws RetrieveObjectException {
-		List meIds = new ArrayList();
+		java.util.Set meIds = new HashSet();
 
 		String msIdStr = DatabaseIdentifier.toSQLString(measurementSetup.getId());
 		String sql = SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_ME_ID
@@ -344,7 +342,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		measurementSetup.setMonitoredElementIds0(meIds);
 	}
 	
-	private void retrieveMeasurementSetupMELinksByOneQuery(Collection measurementSetups) throws RetrieveObjectException {
+	private void retrieveMeasurementSetupMELinksByOneQuery(java.util.Set measurementSetups) throws RetrieveObjectException {
 		if ((measurementSetups == null) || (measurementSetups.isEmpty()))
 			return;
 
@@ -361,18 +359,18 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 		MeasurementSetup measurementSetup;
 		Identifier msId;
-		Collection monitoredElementIds;
+		java.util.Set monitoredElementIds;
 		for (Iterator it = measurementSetups.iterator(); it.hasNext();) {
 			measurementSetup = (MeasurementSetup) it.next();
 			msId = measurementSetup.getId();
-			monitoredElementIds = (Collection) meIdsMap.get(msId);
+			monitoredElementIds = (java.util.Set) meIdsMap.get(msId);
 
 			measurementSetup.setMonitoredElementIds0(monitoredElementIds);
 		}
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		java.util.Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveMeasurementSetupMELinksByOneQuery(collection);
 		return collection;
 	}

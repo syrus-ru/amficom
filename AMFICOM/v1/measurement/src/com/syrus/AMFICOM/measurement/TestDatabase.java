@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.85 2005/03/31 09:52:16 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.86 2005/04/01 08:43:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,14 +14,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -48,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/03/31 09:52:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.86 $, $Date: 2005/04/01 08:43:33 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -207,7 +204,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ SQL_WHERE + LINK_COLMN_TEST_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		List msList = new LinkedList();
+		java.util.Set msList = new HashSet();
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
@@ -242,7 +239,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException("TestDatabase.retrieveMeasurementSetupTestLinks | Measurement setup ids for test '" + testIdStr + "' not found.");
 	}
 	
-	private void retrieveMeasurementSetupTestLinksByOneQuery(Collection tests) throws RetrieveObjectException {
+	private void retrieveMeasurementSetupTestLinksByOneQuery(java.util.Set tests) throws RetrieveObjectException {
 		if ((tests == null) || (tests.isEmpty()))
 			return;
 		
@@ -259,11 +256,11 @@ public class TestDatabase extends StorableObjectDatabase {
 		
 		Test test;
 		Identifier testId;
-		Collection msIds;
+		java.util.Set msIds;
 		for (Iterator it = tests.iterator(); it.hasNext();) {
 			test = (Test) it.next();
 			testId = test.getId();
-			msIds = (Collection) msIdsMap.get(testId);
+			msIds = (java.util.Set) msIdsMap.get(testId);
 			
 			test.setMeasurementSetupIds0(msIds);
 		}
@@ -286,8 +283,8 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private List retrieveMeasurementsOrderByStartTime(Test test, MeasurementStatus measurementStatus) throws RetrieveObjectException {
-		List measurements = new ArrayList();
+	private java.util.Set retrieveMeasurementsOrderByStartTime(Test test, MeasurementStatus measurementStatus) throws RetrieveObjectException {
+		java.util.Set measurements = new HashSet();
 
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_SELECT
@@ -331,7 +328,6 @@ public class TestDatabase extends StorableObjectDatabase {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
-		((ArrayList)measurements).trimToSize();
 		return measurements;
 	}
 	
@@ -481,7 +477,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 
@@ -510,7 +506,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
@@ -521,13 +517,13 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateMeasurementSetupIds(Collection tests) throws IllegalDataException, UpdateObjectException {
+	private void updateMeasurementSetupIds(java.util.Set tests) throws IllegalDataException, UpdateObjectException {
 		if (tests == null || tests.isEmpty())
 			return;
 
 		Map measurementSetupIdsMap = new HashMap();
 		Test test;
-		Collection measurementSetupIds;
+		java.util.Set measurementSetupIds;
 		for (Iterator it = tests.iterator(); it.hasNext();) {
 			test = this.fromStorableObject((StorableObject) it.next());
 			measurementSetupIds = test.getMeasurementSetupIds();
@@ -607,8 +603,8 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 */
-//	public Collection retrieveTests(TestStatus status) throws RetrieveObjectException {
-//		Collection objects = null;
+//	public java.util.Set retrieveTests(TestStatus status) throws RetrieveObjectException {
+//		java.util.Set objects = null;
 //		try{
 //			objects = this.retrieveByIdsByCondition(null, TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
 //									+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC);
@@ -619,7 +615,7 @@ public class TestDatabase extends StorableObjectDatabase {
 //		return objects;
 //	}
 
-//	public Collection retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
+//	public java.util.Set retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
 //		
 //		String mcmIdStr = DatabaseIdentifier.toSQLString(mcmId);
 //		String condition = TestWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
@@ -641,7 +637,7 @@ public class TestDatabase extends StorableObjectDatabase {
 //				+ SQL_AND + TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
 //			+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC;		
 //
-//		Collection objects = null;
+//		java.util.Set objects = null;
 //		
 //		try {
 //			objects = this.retrieveByIdsByCondition(null, condition);
@@ -653,8 +649,8 @@ public class TestDatabase extends StorableObjectDatabase {
 //		return objects;
 //	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		java.util.Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveMeasurementSetupTestLinksByOneQuery(collection);
 		return collection;
 	}
@@ -663,7 +659,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		throw new UnsupportedOperationException("Deleting tests is incorrect -- test '" + id + "'");
 	}
 	
-	public void delete(Collection ids) {
+	public void delete(java.util.Set ids) {
 		throw new UnsupportedOperationException("Deleting tests is incorrect -- collection of " + ids.size() + "' tests");
 	}
 }

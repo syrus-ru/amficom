@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.49 2005/03/01 07:34:12 arseniy Exp $
+ * $Id: Set.java,v 1.50 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,10 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -36,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/03/01 07:34:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -58,7 +55,7 @@ public class Set extends StorableObject {
 	private int sort;
 	private String description;
 	private SetParameter[] parameters;
-	private Collection monitoredElementIds;
+	private java.util.Set monitoredElementIds;
 
 	private StorableObjectDatabase setDatabase;
 	
@@ -106,7 +103,7 @@ public class Set extends StorableObject {
 				  int sort,
 				  String description,
 				  SetParameter[] parameters,
-				  Collection monitoredElementIds) {
+				  java.util.Set monitoredElementIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -135,7 +132,7 @@ public class Set extends StorableObject {
 									 SetSort sort,
 									 String description,
 									 SetParameter[] parameters,
-									 Collection monitoredElementIds) throws CreateObjectException {
+									 java.util.Set monitoredElementIds) throws CreateObjectException {
 		if (creatorId == null || sort == null || description == null || parameters == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
@@ -221,8 +218,8 @@ public class Set extends StorableObject {
 		return this.parameters;
 	}
 
-	public Collection getMonitoredElementIds() {
-		return Collections.unmodifiableCollection(this.monitoredElementIds);
+	public java.util.Set getMonitoredElementIds() {
+		return Collections.unmodifiableSet(this.monitoredElementIds);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -250,13 +247,13 @@ public class Set extends StorableObject {
 		super.changed = true;
 	}
 
-	protected synchronized void setMonitoredElementIds0(Collection monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds0(java.util.Set monitoredElementIds) {
 		this.monitoredElementIds.clear();
 		if (monitoredElementIds != null)
 	     	this.monitoredElementIds.addAll(monitoredElementIds);
 	}
 	
-	protected synchronized void setMonitoredElementIds(Collection monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds(java.util.Set monitoredElementIds) {
 		this.setMonitoredElementIds0(monitoredElementIds);
 	}
 	
@@ -352,8 +349,8 @@ public class Set extends StorableObject {
 		return buffer.toString();
 	}	
 	
-	public List getDependencies() {		
-		List dependencies = new LinkedList();
+	public java.util.Set getDependencies() {		
+		java.util.Set dependencies = new HashSet();
 
 		if (this.monitoredElementIds != null)
 			dependencies.addAll(this.monitoredElementIds);

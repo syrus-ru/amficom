@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.73 2005/03/24 15:43:09 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.74 2005/04/01 08:43:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,12 +13,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -40,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/03/24 15:43:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/04/01 08:43:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -116,10 +114,10 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveParameterTypes(EvaluationType evaluationType) throws RetrieveObjectException {	
-		List inParTyps = new ArrayList();
-		List thresholdParTyps = new ArrayList();
-		List etalonParTyps = new ArrayList();
-		List outParTyps = new ArrayList();
+		java.util.Set inParTyps = new HashSet();
+		java.util.Set thresholdParTyps = new HashSet();
+		java.util.Set etalonParTyps = new HashSet();
+		java.util.Set outParTyps = new HashSet();
 
 		String evaluationTypeIdStr = DatabaseIdentifier.toSQLString(evaluationType.getId());
 		String sql = SQL_SELECT
@@ -178,17 +176,13 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		((ArrayList)inParTyps).trimToSize();
-		((ArrayList)thresholdParTyps).trimToSize();
-		((ArrayList)etalonParTyps).trimToSize();
-		((ArrayList)outParTyps).trimToSize();
 		evaluationType.setParameterTypes(inParTyps,
 																		 thresholdParTyps,
 																		 etalonParTyps,
 																		 outParTyps);
 	}
 
-  private void retrieveParameterTypesByOneQuery(Collection evaluationTypes) throws RetrieveObjectException {
+  private void retrieveParameterTypesByOneQuery(java.util.Set evaluationTypes) throws RetrieveObjectException {
 		if ((evaluationTypes == null) || (evaluationTypes.isEmpty()))
 			return;
 
@@ -221,46 +215,46 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			String parameterMode;
 			Identifier parameterTypeId;
 			Identifier evaluationTypeId;
-			List inParameterTypes;
-			List thresholdParameterTypes;
-			List etalonParameterTypes;
-			List outParameterTypes;
+			java.util.Set inParameterTypes;
+			java.util.Set thresholdParameterTypes;
+			java.util.Set etalonParameterTypes;
+			java.util.Set outParameterTypes;
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 				evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID);
 
 				if (parameterMode.equals(EvaluationTypeWrapper.MODE_IN)) {
-					inParameterTypes = (List)inParameterTypesMap.get(evaluationTypeId);
+					inParameterTypes = (java.util.Set)inParameterTypesMap.get(evaluationTypeId);
 					if (inParameterTypes == null) {
-						inParameterTypes = new ArrayList();
+						inParameterTypes = new HashSet();
 						inParameterTypesMap.put(evaluationTypeId, inParameterTypes);
 					}
 					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
 					if (parameterMode.equals(EvaluationTypeWrapper.MODE_THRESHOLD)) {
-						thresholdParameterTypes = (List)thresholdParameterTypesMap.get(evaluationTypeId);
+						thresholdParameterTypes = (java.util.Set)thresholdParameterTypesMap.get(evaluationTypeId);
 						if (thresholdParameterTypes == null) {
-							thresholdParameterTypes = new ArrayList();
+							thresholdParameterTypes = new HashSet();
 							thresholdParameterTypesMap.put(evaluationTypeId, thresholdParameterTypes);
 						}
 						thresholdParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					}
 					else
 						if (parameterMode.equals(EvaluationTypeWrapper.MODE_ETALON)) {
-							etalonParameterTypes = (List)etalonParameterTypesMap.get(evaluationTypeId);
+							etalonParameterTypes = (java.util.Set)etalonParameterTypesMap.get(evaluationTypeId);
 							if (etalonParameterTypes == null) {
-								etalonParameterTypes = new ArrayList();
+								etalonParameterTypes = new HashSet();
 								etalonParameterTypesMap.put(evaluationTypeId, etalonParameterTypes);
 							}
 							etalonParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 						}
 						else
 							if (parameterMode.equals(EvaluationTypeWrapper.MODE_OUT)) {
-								outParameterTypes = (List)outParameterTypesMap.get(evaluationTypeId);
+								outParameterTypes = (java.util.Set)outParameterTypesMap.get(evaluationTypeId);
 								if (outParameterTypes == null) {
-									outParameterTypes = new ArrayList();
+									outParameterTypes = new HashSet();
 									outParameterTypesMap.put(evaluationTypeId, outParameterTypes);
 								}
 								outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
@@ -273,10 +267,10 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
 				evaluationType = (EvaluationType)it.next();
 				evaluationTypeId = evaluationType.getId();
-				inParameterTypes = (List)inParameterTypesMap.get(evaluationTypeId);
-				thresholdParameterTypes = (List)thresholdParameterTypesMap.get(evaluationTypeId);
-				etalonParameterTypes = (List)etalonParameterTypesMap.get(evaluationTypeId);
-				outParameterTypes = (List)outParameterTypesMap.get(evaluationTypeId);
+				inParameterTypes = (java.util.Set)inParameterTypesMap.get(evaluationTypeId);
+				thresholdParameterTypes = (java.util.Set)thresholdParameterTypesMap.get(evaluationTypeId);
+				etalonParameterTypes = (java.util.Set)etalonParameterTypesMap.get(evaluationTypeId);
+				outParameterTypes = (java.util.Set)outParameterTypesMap.get(evaluationTypeId);
 
 				evaluationType.setParameterTypes(inParameterTypes, thresholdParameterTypes, etalonParameterTypes, outParameterTypes);
 			}
@@ -307,7 +301,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		} 
 	}
 
-	private void retrieveMeasurementTypeIdsByOneQuery(Collection evaluationTypes) throws RetrieveObjectException {
+	private void retrieveMeasurementTypeIdsByOneQuery(java.util.Set evaluationTypes) throws RetrieveObjectException {
 		if ((evaluationTypes == null) || (evaluationTypes.isEmpty()))
 			return;
 
@@ -334,14 +328,14 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			Map measurementTypeIdsMap = new HashMap();
 			Identifier evaluationTypeId;
 			Identifier measurementTypeId;
-			Collection measurementTypeIds;
+			java.util.Set measurementTypeIds;
 			while (resultSet.next()) {
 				evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID);
 				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
-				measurementTypeIds = (Collection) measurementTypeIdsMap.get(evaluationTypeId);
+				measurementTypeIds = (java.util.Set) measurementTypeIdsMap.get(evaluationTypeId);
 				if (measurementTypeIds == null) {
-					measurementTypeIds = new ArrayList();
+					measurementTypeIds = new HashSet();
 					measurementTypeIdsMap.put(evaluationTypeId, measurementTypeIds);
 				}
 				measurementTypeIds.add(measurementTypeId);
@@ -351,7 +345,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
 				evaluationType = (EvaluationType) it.next();
 				evaluationTypeId = evaluationType.getId();
-				measurementTypeIds = (Collection) measurementTypeIdsMap.get(evaluationTypeId);
+				measurementTypeIds = (java.util.Set) measurementTypeIdsMap.get(evaluationTypeId);
 
 				evaluationType.setMeasurementTypeIds0(measurementTypeIds);
 			}
@@ -393,7 +387,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		this.insertParameterTypes(evaluationType);
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for(Iterator it=storableObjects.iterator();it.hasNext();){
 			EvaluationType evaluationType = this.fromStorableObject((StorableObject)it.next());
@@ -424,10 +418,10 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	private void updatePrepareStatementValues(PreparedStatement preparedStatement, EvaluationType evaluationType) throws SQLException {
-		Collection inParTyps = evaluationType.getInParameterTypes();
-		Collection thresholdParTyps = evaluationType.getThresholdParameterTypes();
-		Collection etalonParTyps = evaluationType.getEtalonParameterTypes();
-		Collection outParTyps = evaluationType.getOutParameterTypes();
+		java.util.Set inParTyps = evaluationType.getInParameterTypes();
+		java.util.Set thresholdParTyps = evaluationType.getThresholdParameterTypes();
+		java.util.Set etalonParTyps = evaluationType.getEtalonParameterTypes();
+		java.util.Set outParTyps = evaluationType.getOutParameterTypes();
 		Identifier evaluationTypeId = evaluationType.getId();
 		Identifier parameterTypeId = null;
 		String parameterMode = null;
@@ -529,8 +523,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		java.util.Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypesByOneQuery(collection);
 		this.retrieveMeasurementTypeIdsByOneQuery(collection);
 		return collection;
