@@ -67,7 +67,7 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_shutdown_1server
 	{
 		for (int i = 0; i < l; i++)
 		{
-			close((int)lcSocketsToClose[i]);
+			closeExt((int)lcSocketsToClose[i]);
 			cout << "Socket " << lcSocketsToClose[i] << " shutdowned.\n";
 		}
 		exitConnection(0);
