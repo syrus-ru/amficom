@@ -1,1 +1,0 @@
-nmake /f makemapview %1
