@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertiesDialog.java,v 1.7 2004/09/27 05:58:40 bass Exp $
+ * $Id: ObjectResourcePropertiesDialog.java,v 1.8 2004/10/18 11:01:56 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/09/27 05:58:40 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2004/10/18 11:01:56 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertiesDialog extends JDialog
@@ -117,6 +117,10 @@ public class ObjectResourcePropertiesDialog extends JDialog
 
 	void cancel()
 	{
+		if(mainPane != null)
+		{
+			mainPane.cancel();
+		}
 		accept = false;
 		this.dispose();
 	}
