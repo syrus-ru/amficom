@@ -17,6 +17,9 @@ import com.syrus.AMFICOM.CORBA.Survey.ElementaryTestAlarm;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableCellRenderer;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableRow;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
@@ -29,58 +32,7 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
  * @author Vladimir Dolzhenko
  */
 public class TableFrame extends JInternalFrame implements OperationListener {
-
-	private class ColumnSorter implements Comparator {
-
-		boolean	ascending;
-
-		int		colIndex;
-
-		ColumnSorter(int colIndex, boolean ascending) {
-			this.colIndex = colIndex;
-			this.ascending = ascending;
-		}
-
-		public int compare(Object a, Object b) {
-			int result = 0;
-			TestTableRow v1 = (TestTableRow) a;
-			TestTableRow v2 = (TestTableRow) b;
-			Object o1 = v1.get(this.colIndex);
-			Object o2 = v2.get(this.colIndex);
-
-			// Treat empty strains like nulls
-			if (o1 instanceof String && ((String) o1).length() == 0) {
-				o1 = null;
-			}
-			if (o2 instanceof String && ((String) o2).length() == 0) {
-				o2 = null;
-			}
-
-			// Sort nulls so they appear last, regardless
-			// of sort order
-			if (o1 == null && o2 == null) {
-				result = 0;
-			} else if (o1 == null) {
-				result = 1;
-			} else if (o2 == null) {
-				result = -1;
-			} else if (o1 instanceof Comparable) {
-				if (this.ascending) {
-					result = ((Comparable) o1).compareTo(o2);
-				} else
-					result = ((Comparable) o2).compareTo(o1);
-
-			} else {
-				if (this.ascending) {
-					result = o1.toString().compareTo(o2.toString());
-				} else
-					result = o2.toString().compareTo(o1.toString());
-
-			}
-			return result;
-		}
-	}
-
+	
 	private class TestTableCellRenderer extends JLabel implements TableCellRenderer {
 
 		//protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
@@ -117,7 +69,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			TestTableRow line = (TestTableRow) model.getRow(rowIndex);
 
 			Color color = table.getBackground();
-			Test test = line.getTest();
+			Test test = (Test)line.getObjectResource();
 			ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
 			if (testAlarms.length != 0) {
 				for (int i = 0; i < testAlarms.length; i++) {
@@ -218,18 +170,71 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	}
 
-	private class TestTableModel extends AbstractTableModel {
 
-		private int				columnCount	= 7;
+//	private class TestTableCellRenderer extends ObjectResourceTableCellRenderer {
+//
+//		protected void doCustomRendering(	JTable table,
+//											ObjectResource objectResource,
+//											boolean isSelected,
+//											boolean hasFocus,
+//											int rowIndex,
+//											int vColIndex) {
+//			if (objectResource instanceof Test) {
+//				Test test = (Test) objectResource;
+//				Color color = table.getBackground();
+//				TestTableModel model = (TestTableModel) table.getModel();
+//
+//				ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
+//				if (testAlarms.length != 0) {
+//					for (int i = 0; i < testAlarms.length; i++) {
+//						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);
+//						if (alarm != null) {
+//							System.out.println("alarm.type_id:" + alarm.type_id);
+//							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
+//								color = Color.RED;
+//							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING))
+//								color = Color.YELLOW;
+//						}
+//					}
+//					super.setBackground(color);
+//				}
+//				int statusIndex = -1;
+//				{
+//					int columnCount = model.getColumnCount();
+//					String statusString = LangModelSchedule.getString("Status");
+//					for (int i = 0; i < columnCount; i++)
+//						if (model.getColumnName(i).equals(statusString)) {
+//							statusIndex = i;
+//							break;
+//						}
+//				}
+//
+//				if (vColIndex == table.convertColumnIndexToView(statusIndex)) {
+//					//System.out.println("statusIndex:"+statusIndex);
+//					if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
+//						color = TestLine.COLOR_COMPLETED;
+//					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
+//						color = TestLine.COLOR_SCHEDULED;
+//					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
+//						color = TestLine.COLOR_PROCCESSING;
+//					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
+//						color = TestLine.COLOR_ABORDED;
+//					} else {
+//						color = TestLine.COLOR_UNRECOGNIZED;
+//					}
+//					
+//					super.setBackground(color);
+//				}
+//				
+//			}
+//		}
+//
+//	}
 
-		private boolean[]		sortOrders	= new boolean[this.columnCount];
+	private class TestTableModel extends ObjectResourceTableModel {
 
-		private java.util.List	testLines;
-
-		public void addRow(TestTableRow value) {
-			if (this.testLines == null)
-				this.testLines = new ArrayList();
-			this.testLines.add(value);
+		public TestTableModel() {
+			super(7);
 		}
 
 		public Class getColumnClass(int columnIndex) {
@@ -240,10 +245,6 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					break;
 			}
 			return clazz;
-		}
-
-		public int getColumnCount() {
-			return this.columnCount;
 		}
 
 		public String getColumnName(int columnIndex) {
@@ -277,134 +278,38 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			return name;
 		}
 
-		public Vector getDataVector() {
-			Vector vec = new Vector();
-			for (int i = 0; i < getRowCount(); i++)
-				vec.add(getRowData(i));
-			return vec;
-		}
-
-		public Object getRow(int rowIndex) {
-			Object result = null;
-			if (this.testLines == null)
-				result = null;
-			else if (!this.testLines.isEmpty())
-				result = this.testLines.get(rowIndex);
-			return result;
-		}
-
-		public int getRowCount() {
-			int count = 0;
-			if (this.testLines != null)
-				count = this.testLines.size();
-			return count;
-		}
-
-		public java.util.List getRowData(int rowIndex) {
-			TestTableRow line = (TestTableRow) getRow(rowIndex);
-			return (line == null) ? null : line.getData();
-		}
-
-		public boolean getSortOrder(int columnIndex) {
-			return this.sortOrders[columnIndex];
-		}
-
-		public int getTestRowIndex(Test test) {
-			int rowIndex = -1;
-			if (this.testLines != null) {
-				for (int i = 0; i < this.testLines.size(); i++) {
-					TestTableRow row = (TestTableRow) this.testLines.get(i);
-					if (row.getTest().equals(test)) {
-						rowIndex = i;
-						break;
-					}
-				}
-			}
-			return rowIndex;
-		}
-
-		public Object getValueAt(int rowIndex, int columnIndex) {
-			Object obj = null;
-			if (this.testLines != null) {
-				TestTableRow line = (TestTableRow) this.testLines.get(rowIndex);
-				java.util.List data = line.getData();
-				if (columnIndex < data.size())
-					obj = data.get(columnIndex);
-			}
-			return obj;
-		}
+		//		public Vector getDataVector() {
+		//			Vector vec = new Vector();
+		//			for (int i = 0; i < getRowCount(); i++)
+		//				vec.add(getRowData(i));
+		//			return vec;
+		//		}
 
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
 			return false;
 		}
-
-		public void remove(int rowIndex) {
-			this.testLines.remove(rowIndex);
-		}
-
-		public void removeAll() {
-			if (this.testLines != null)
-				this.testLines.clear();
-
-		}
-
-		public void setValueAt(Object value, int rowIndex, int columnIndex) {
-			if (this.testLines == null)
-				this.testLines = new ArrayList();
-			TestTableRow line;
-			if (this.testLines.size() < rowIndex) {
-				line = new TestTableRow();
-				this.testLines.add(rowIndex, line);
-			} else
-				line = (TestTableRow) this.testLines.get(rowIndex);
-			/**
-			 * @todo setValue
-			 */
-			//			switch (columnIndex) {
-			//
-			//			}
-		}
-
-		public void sortRows(int columnIndex) {
-			sortRows(columnIndex, this.sortOrders[columnIndex]);
-			this.sortOrders[columnIndex] = !this.sortOrders[columnIndex];
-		}
-
-		public void sortRows(int columnIndex, boolean ascending) {
-			if (this.testLines != null)
-				Collections.sort(this.testLines, new ColumnSorter(columnIndex, ascending));
-		}
-
 	}
 
-	private class TestTableRow {
+	private class TestTableRow extends ObjectResourceTableRow {
 
-		private ArrayList	data;
-		private String		me;
-		private String		port;
-		private String		rtu;
-		private String		statusName;
+		private java.util.List	data;
+		private String			me;
+		private String			port;
+		private String			rtu;
+		private String			statusName;
 
-		private String		temporalType;
+		private String			temporalType;
 
-		private Test		test;
-		private String		testType;
-		private String		time;
+		//private Test test;
+		private String			testType;
+		private String			time;
 
-		public TestTableRow() {
-			// nothing to do
-		}
-
-		public TestTableRow(Test test) {
-			this.setTest(test);
-		}
-
-		public Object get(int index) {
-			return getData().get(index);
+		public TestTableRow(ObjectResource test) {
+			super(test);
 		}
 
 		public java.util.List getData() {
-			if (this.data == null) {
+			if ((this.data == null) || (this.data.isEmpty())) {
 				this.data = new ArrayList();
 				this.data.add(this.temporalType);
 				this.data.add(this.rtu);
@@ -417,61 +322,91 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			return this.data;
 		}
 
-		public Test getTest() {
-			return this.test;
+		public void setValue(Object value, int columnIndex) {
+			if (value instanceof String) {
+				String s = (String) value;
+				switch (columnIndex) {
+					case 1:
+						this.temporalType = s;
+						break;
+					case 2:
+						this.rtu = s;
+						break;
+					case 3:
+						this.port = s;
+						break;
+					case 4:
+						this.me = s;
+						break;
+					case 5:
+						this.testType = s;
+						break;
+					case 6:
+						this.time = s;
+						break;
+					case 7:
+						this.statusName = s;
+						break;
+				}
+				this.data.clear();
+			}
+
 		}
 
-		public void setTest(Test test) {
+		public void setObjectResource(ObjectResource objectResource) {
 			//DataSourceInterface dsi =
 			// TableFrame.this.aContext.getDataSourceInterface();
 			//dsi.LoadKISDescriptors();
-			this.data = null;
-			this.test = test;
-			switch (test.getTimeStamp().getType()) {
-				case TimeStamp.TIMESTAMPTYPE_ONETIME:
-					this.temporalType = LangModelSchedule.getString("Onetime"); //$NON-NLS-1$
-					break;
-				case TimeStamp.TIMESTAMPTYPE_CONTINUOS:
-					this.temporalType = LangModelSchedule.getString("Continual"); //$NON-NLS-1$
-					break;
-				case TimeStamp.TIMESTAMPTYPE_PERIODIC:
-					this.temporalType = LangModelSchedule.getString("Periodical"); //$NON-NLS-1$
-					break;
-			}
-
-			KIS kis = (KIS) Pool.get(KIS.typ, test.getKisId());
-			this.rtu = kis.name;
-			Vector accessPorts = kis.access_ports;
-			MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test.getMonitoredElementId());
-			AccessPort port = null;
-			for (int i = 0; i < accessPorts.size(); i++) {
-				AccessPort aport = (AccessPort) accessPorts.get(i);
-				if (me.access_port_id.equals(aport.getId())) {
-					port = aport;
-					break;
+			if (objectResource instanceof Test) {
+				Test test = (Test) objectResource;
+				this.data = null;
+				super.setObjectResource(test);
+				switch (test.getTimeStamp().getType()) {
+					case TimeStamp.TIMESTAMPTYPE_ONETIME:
+						this.temporalType = LangModelSchedule.getString("Onetime"); //$NON-NLS-1$
+						break;
+					case TimeStamp.TIMESTAMPTYPE_CONTINUOS:
+						this.temporalType = LangModelSchedule.getString("Continual"); //$NON-NLS-1$
+						break;
+					case TimeStamp.TIMESTAMPTYPE_PERIODIC:
+						this.temporalType = LangModelSchedule.getString("Periodical"); //$NON-NLS-1$
+						break;
 				}
-			}
-			if (port != null)
-				this.port = port.name;
-			this.me = me.getName();
-			TestType testType = (TestType) Pool.get(TestType.typ, test.getTestTypeId());
-			this.testType = testType.getName();
-			this.time = UIStorage.SDF.format(new Date(test.getTimeStamp().getPeriodStart()));
 
-			//this.id = test.id;
-			//this.kis = test.kis;
-			if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
-				this.statusName = LangModelSchedule.getString("Done"); //$NON-NLS-1$
-			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
-				this.statusName = LangModelSchedule.getString("Scheduled"); //$NON-NLS-1$
-			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
-				this.statusName = LangModelSchedule.getString("Running"); //$NON-NLS-1$
-			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
-				this.statusName = LangModelSchedule.getString("Aborted"); //$NON-NLS-1$
-			} else {
-				this.statusName = LangModelSchedule.getString("Unrecognized"); //$NON-NLS-1$
-			}
+				KIS kis = (KIS) Pool.get(KIS.typ, test.getKisId());
+				this.rtu = kis.name;
+				Vector accessPorts = kis.access_ports;
+				MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test.getMonitoredElementId());
+				AccessPort port = null;
+				for (int i = 0; i < accessPorts.size(); i++) {
+					AccessPort aport = (AccessPort) accessPorts.get(i);
+					if (me.access_port_id.equals(aport.getId())) {
+						port = aport;
+						break;
+					}
+				}
+				if (port != null)
+					this.port = port.name;
+				this.me = me.getName();
+				TestType testType = (TestType) Pool.get(TestType.typ, test.getTestTypeId());
+				this.testType = testType.getName();
+				this.time = UIStorage.SDF.format(new Date(test.getTimeStamp().getPeriodStart()));
 
+				//this.id = test.id;
+				//this.kis = test.kis;
+				if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
+					this.statusName = LangModelSchedule.getString("Done"); //$NON-NLS-1$
+				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
+					this.statusName = LangModelSchedule.getString("Scheduled"); //$NON-NLS-1$
+				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
+					this.statusName = LangModelSchedule.getString("Running"); //$NON-NLS-1$
+				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
+					this.statusName = LangModelSchedule.getString("Aborted"); //$NON-NLS-1$
+				} else {
+					this.statusName = LangModelSchedule.getString("Unrecognized"); //$NON-NLS-1$
+				}
+
+			}
 		}
 
 	}
@@ -499,10 +434,11 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	JTable				listTable;
 	ApplicationContext	aContext;
 	private JPanel		panel;
-	private Test test;
-	java.util.List rowToRemove;
+	private Test		test;
+	java.util.List		rowToRemove;
+
 	//ArrayList savedTests;
-	//boolean				skipTestUpdate	= false;
+	//boolean skipTestUpdate = false;
 
 	//private ArrayList unsavedTests;
 
@@ -521,7 +457,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			Test test = tue.test;
 			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
 				java.util.List savedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
-				//java.util.List unsavedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getUnsavedTests();				
+				//java.util.List unsavedTests = ((SchedulerModel)
+				// this.aContext.getApplicationModel()).getUnsavedTests();
 				this.test = test;
 				//boolean found = false;
 				//				if (savedTests != null) {
@@ -535,7 +472,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				//					}
 				//				}
 
-				int rowIndex = ((TestTableModel) this.listTable.getModel()).getTestRowIndex(test);
+				int rowIndex = ((TestTableModel) this.listTable.getModel()).getObjectResourceIndex(test);
 
 				if (rowIndex < 0) {
 					if (test.isChanged()) {
@@ -548,10 +485,9 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					} else
 						savedTests.add(test);
 				}
-				rowIndex = ((TestTableModel) this.listTable.getModel()).getTestRowIndex(test);
+				rowIndex = ((TestTableModel) this.listTable.getModel()).getObjectResourceIndex(test);
 				this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
 
-			
 			}
 
 		} else if (commandName.equals(SchedulerModel.COMMAND_NAME_ALL_TESTS)) {
@@ -606,7 +542,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 						TestTableRow line = (TestTableRow) model.getRow(rowIndex);
 						if (model != null) {
 							//System.out.println("test:" + line.getTest());
-							Test test = line.getTest();
+							Test test = (Test) line.getObjectResource();
 							//TableFrame.this.skipTestUpdate = true;
 							TableFrame.this.dispatcher
 									.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
@@ -616,26 +552,28 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					} else if (SwingUtilities.isRightMouseButton(evt)) {
 						final int[] rowIndices = table.getSelectedRows();
 						if ((rowIndices != null) && (rowIndices.length > 0)) {
-							final TestTableModel model = (TestTableModel) table.getModel();							
+							final TestTableModel model = (TestTableModel) table.getModel();
 							JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString("delete_tests")); //$NON-NLS-1$
 							deleteTestMenuItem.addActionListener(new ActionListener() {
 
-								public void actionPerformed(ActionEvent e) {	
-									if (TableFrame.this.rowToRemove==null)
+								public void actionPerformed(ActionEvent e) {
+									if (TableFrame.this.rowToRemove == null)
 										TableFrame.this.rowToRemove = new ArrayList();
-									else TableFrame.this.rowToRemove.clear();
+									else
+										TableFrame.this.rowToRemove.clear();
 									for (int i = 0; i < rowIndices.length; i++) {
 										TestTableRow line = (TestTableRow) model.getRow(rowIndices[i]);
-										Test test = line.getTest();
+										Test test = (Test) line.getObjectResource();
 										TableFrame.this.rowToRemove.add(test);
 									}
-									for(Iterator it=TableFrame.this.rowToRemove.iterator();it.hasNext();){
-										Test test = (Test)it.next();
-										int index = model.getTestRowIndex(test); 
+									for (Iterator it = TableFrame.this.rowToRemove.iterator(); it.hasNext();) {
+										Test test = (Test) it.next();
+										int index = model.getObjectResourceIndex(test);
 										test.setDeleted(System.currentTimeMillis());
 										TableFrame.this.dispatcher
 												.notify(new OperationEvent(test, 0, SchedulerModel.COMMAND_REMOVE_TEST));
-										//System.out.println("remove index:"+index+"\ttest:"+test.getId());
+										//System.out.println("remove
+										// index:"+index+"\ttest:"+test.getId());
 										model.remove(index);
 									}
 									table.revalidate();
@@ -717,7 +655,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 			this.panel.add(header, BorderLayout.NORTH);
 			this.panel.add(new JScrollPane(this.listTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-										ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+											ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
 			//panel.add(listPane, BorderLayout.CENTER);
 
 		}
