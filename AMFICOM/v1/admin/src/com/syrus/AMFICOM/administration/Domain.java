@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.5 2005/02/10 07:26:37 bob Exp $
+ * $Id: Domain.java,v 1.6 2005/02/10 13:55:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/10 07:26:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/10 13:55:47 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -76,22 +76,22 @@ public class Domain extends DomainMember implements Characterized {
 	}
 
 	protected Domain(Identifier id,
-								 Identifier creatorId,
-								 Identifier domainId,
-								 String name,
-								 String description) {
+					 Identifier creatorId,
+					 long version,
+					 Identifier domainId,
+					 String name,
+					 String description) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					domainId);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				domainId);
 		this.name = name;
 		this.description = description;
 
 		this.characteristics = new ArrayList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.domainDatabase = AdministrationDatabaseContext.domainDatabase;
 	}
@@ -121,25 +121,25 @@ public class Domain extends DomainMember implements Characterized {
 	
 	public void setDescription(String description){
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public void setName(String name){
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 	
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null){
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -155,7 +155,7 @@ public class Domain extends DomainMember implements Characterized {
 	
 	public void setCharacteristics(List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	/**
@@ -175,11 +175,14 @@ public class Domain extends DomainMember implements Characterized {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE),
+			Domain domain = new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE),
 						creatorId,
+						0L,
 						domainId,
 						name,
 						description);
+			domain.changed = true;
+			return domain;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
 		}
@@ -195,18 +198,15 @@ public class Domain extends DomainMember implements Characterized {
 		}
 	}
 
-	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						Identifier domainId,
-																						String name,
-																						String description) {
-		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												domainId);
+	protected synchronized void setAttributes(	Date created,
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												long version,
+												Identifier domainId,
+												String name,
+												String description) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
 		this.description = description;
 	}

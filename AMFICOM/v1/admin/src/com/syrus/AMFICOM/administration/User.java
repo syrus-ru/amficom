@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.2 2005/02/01 11:36:51 bob Exp $
+ * $Id: User.java,v 1.3 2005/02/10 13:55:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.administration.corba.UserSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/01 11:36:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/10 13:55:47 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -65,22 +65,22 @@ public class User extends StorableObject {
 	}
 
 	protected User(Identifier id,
-							 Identifier creatorId,
-							 String login,
-							 int sort,
-							 String name,
-							 String description) {
+					 Identifier creatorId,
+					 long version,
+					 String login,
+					 int sort,
+					 String name,
+					 String description) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version);
 		this.login = login;
 		this.sort = sort;
 		this.name = name;
 		this.description = description;
-
-		super.currentVersion = super.getNextVersion();
 
 		this.userDatabase = AdministrationDatabaseContext.userDatabase;
 	}
@@ -136,7 +136,7 @@ public class User extends StorableObject {
 	
 	public void setDescription(String description){
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	/**
@@ -158,29 +158,34 @@ public class User extends StorableObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new User(IdentifierPool.getGeneratedIdentifier(ObjectEntities.USER_ENTITY_CODE),
-								creatorId,
-								login,
-								sort.value(),
-								name,
-								description);
+			User user = new User(IdentifierPool.getGeneratedIdentifier(ObjectEntities.USER_ENTITY_CODE),
+							creatorId,
+							0L,
+							login,
+							sort.value(),
+							name,
+							description);
+			user.changed = true;
+			return user;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("User.createInstance | cannot generate identifier ", e);
 		}
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						String login,
-																						int sort,
-																						String name,
-																						String description) {
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												long version,
+												String login,
+												int sort,
+												String name,
+												String description) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+							modified,
+							creatorId,
+							modifierId,
+							version);
 		this.login = login;
 		this.sort = sort;
 		this.name = name;
@@ -192,14 +197,14 @@ public class User extends StorableObject {
 	}
 	public void setLogin(String login) {
 		this.login = login;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	public void setSort(UserSort sort) {
 		this.sort = sort.value();
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

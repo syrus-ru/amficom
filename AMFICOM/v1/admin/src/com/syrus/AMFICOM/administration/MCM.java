@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.4 2005/02/09 12:49:27 bob Exp $
+ * $Id: MCM.java,v 1.5 2005/02/10 13:55:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/09 12:49:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/10 13:55:47 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -91,19 +91,21 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	protected MCM(Identifier id,
-								Identifier creatorId,
-								Identifier domainId,
-								String name,
-								String description,
-								String hostname,
-								Identifier userId,
-								Identifier serverId) {
+					Identifier creatorId,
+					long version,
+					Identifier domainId,
+					String name,
+					String description,
+					String hostname,
+					Identifier userId,
+					Identifier serverId) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					domainId);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				domainId);
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
@@ -113,8 +115,6 @@ public class MCM extends DomainMember implements Characterized {
 		this.characteristics = new ArrayList();
 
 		this.kisIds = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
 	}
@@ -166,7 +166,7 @@ public class MCM extends DomainMember implements Characterized {
 
 	public void setDescription(String description){
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public Identifier getUserId() {
@@ -180,14 +180,14 @@ public class MCM extends DomainMember implements Characterized {
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -203,7 +203,7 @@ public class MCM extends DomainMember implements Characterized {
 
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public List getKISIds() {
@@ -222,14 +222,17 @@ public class MCM extends DomainMember implements Characterized {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_ENTITY_CODE),
+			MCM mcm = new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_ENTITY_CODE),
 								creatorId,
+								0L,
 								domainId,
 								name,
 								description,
 								hostname,
 								userId,
 								serverId);
+			mcm.changed = true;
+			return mcm;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MCM.createInstance | cannot generate identifier ", e);
@@ -240,16 +243,18 @@ public class MCM extends DomainMember implements Characterized {
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  Identifier domainId,
 											  String name,
 											  String description,
-												String hostname,
+											  String hostname,
 											  Identifier userId,
 											  Identifier serverId) {
 		super.setAttributes(created,												
 				modified,
 				creatorId,
 				modifierId,
+				version,
 				domainId);
 		this.name = name;
 		this.description = description;
@@ -266,7 +271,7 @@ public class MCM extends DomainMember implements Characterized {
 
 	public void setKISIds(List kisIds) {
 		this.setKISIds0(kisIds);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public List getDependencies() {
@@ -279,21 +284,21 @@ public class MCM extends DomainMember implements Characterized {
 	
 	public void setHostName(String hostname) {
 		this.hostname = hostname;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public void setServerId(Identifier serverId) {
 		this.serverId = serverId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public void setUserId(Identifier userId) {
 		this.userId = userId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

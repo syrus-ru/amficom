@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.7 2005/02/08 12:26:20 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.8 2005/02/10 13:55:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/08 12:26:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/02/10 13:55:47 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -107,6 +107,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 		Server server = (storableObject==null)?
 				new Server(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
+								0L,
 								null,
 								null,
 								null,
@@ -117,6 +118,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 								DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+								resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 								DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),													
 								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),

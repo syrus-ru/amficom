@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.5 2005/02/10 07:26:37 bob Exp $
+ * $Id: Server.java,v 1.6 2005/02/10 13:55:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/10 07:26:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/10 13:55:47 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -84,25 +84,25 @@ public class Server extends DomainMember implements Characterized {
 
 	protected Server(Identifier id,
 								 Identifier creatorId,
+								 long version,
 								 Identifier domainId,
 								 String name,
 								 String description,
 								 String hostname,
 								 Identifier userId) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					domainId);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				domainId);
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
 		this.userId = userId;
 
 		this.characteristics = new ArrayList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.serverDatabase = AdministrationDatabaseContext.serverDatabase;
 	}
@@ -156,7 +156,7 @@ public class Server extends DomainMember implements Characterized {
 
 	public void setDescription(String description) {
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public Identifier getUserId() {
@@ -166,14 +166,14 @@ public class Server extends DomainMember implements Characterized {
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -189,7 +189,7 @@ public class Server extends DomainMember implements Characterized {
 
 	public void setCharacteristics(List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public static Server createInstance(Identifier creatorId,
@@ -203,13 +203,16 @@ public class Server extends DomainMember implements Characterized {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_ENTITY_CODE),
+			Server server = new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_ENTITY_CODE),
 						creatorId,
+						0L,
 						domainId,
 						name,
 						description,
 						hostname,
 						userId);
+			server.changed = true;
+			return server;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Server.createInstance | cannot generate identifier ", e);
@@ -220,15 +223,17 @@ public class Server extends DomainMember implements Characterized {
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  Identifier domainId,
 											  String name,
 											  String description,
-												String hostname,
+											  String hostname,
 											  Identifier userId) {
 		super.setAttributes(created,
 					modified,
 					creatorId,
 					modifierId,
+					version,
 					domainId);
 		this.name = name;
 		this.description = description;
@@ -242,16 +247,16 @@ public class Server extends DomainMember implements Characterized {
 	
 	public void setHostName(String hostname) {
 		this.hostname = hostname;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public void setUserId(Identifier userId) {
 		this.userId = userId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.3 2005/02/01 11:36:51 bob Exp $
+ * $Id: DomainMember.java,v 1.4 2005/02/10 13:55:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/01 11:36:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/10 13:55:47 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -39,14 +39,16 @@ public abstract class DomainMember extends StorableObject {
 	protected DomainMember(Identifier id,
 				 Date created,
 				 Date modified,
-				 Identifier creator_id,
-				 Identifier modifier_id,
+				 Identifier creatorId,
+				 Identifier modifierId,
+				 long version,
 				 Identifier domainId) {
 		super(id,
 			  created,
 			  modified,
-			  creator_id,
-			  modifier_id);
+			  creatorId,
+			  modifierId,
+			  version);
 		this.domainId = domainId;
 	}
 
@@ -60,18 +62,16 @@ public abstract class DomainMember extends StorableObject {
 	
 	public void setDomainId(Identifier domainId) {
 		this.setDomainId0(domainId);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
-	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						Identifier domainId) {
-		super.setAttributes(created,
-												modified,
-												creator_id,
-												modifier_id);
+	protected synchronized void setAttributes(	Date created,
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												long version,
+												Identifier domainId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.domainId = domainId;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.8 2005/02/08 15:13:00 bob Exp $
+ * $Id: MCMDatabase.java,v 1.9 2005/02/10 13:55:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/08 15:13:00 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/10 13:55:47 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -134,6 +134,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		if (mcm == null){
 			mcm = new MCM(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 																	 null,
+																	 0L,
 																	 null,
 																	 null,
 																	 null,
@@ -145,10 +146,11 @@ public class MCMDatabase extends StorableObjectDatabase {
 						  DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 						  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+						  resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 						  DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 						  DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 						  DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-							DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_HOSTNAME)),
+						  DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_HOSTNAME)),
 						  DatabaseIdentifier.getIdentifier(resultSet, MCMWrapper.COLUMN_USER_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, MCMWrapper.COLUMN_SERVER_ID)
 						  );
