@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.10 2004/12/14 12:58:27 max Exp $
+ * $Id: CableThreadType.java,v 1.11 2004/12/15 12:36:51 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/12/14 12:58:27 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/15 12:36:51 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -39,7 +39,7 @@ public class CableThreadType extends StorableObjectType {
 	 */
 	private static final long  serialVersionUID	= 3689355429075628086L;
 	private String             name;
-	private String             color;
+	private int                color;
 	private LinkType           type;
 
 	private StorableObjectDatabase	cableThreadTypeDatabase;
@@ -71,8 +71,8 @@ public class CableThreadType extends StorableObjectType {
 			Identifier creatorId,
 			String codename,
 			String description,
-			String color,
-            String name,
+			String name,
+            int color,
             LinkType linkType) {
 		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId,
 				codename, description);
@@ -93,11 +93,11 @@ public class CableThreadType extends StorableObjectType {
 													String description,
 
 													String name,
-                                                    String color,                                                    
+                                                    int color,                                                    
                                                     LinkType linkType) throws CreateObjectException {
 
 		if (creatorId == null || codename == null || description == null || 
-				name == null || color == null || linkType == null)
+				name == null || linkType == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
 			return new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), creatorId, codename, description, name, color, linkType);
@@ -136,7 +136,7 @@ public class CableThreadType extends StorableObjectType {
 										 super.codename,
 										 (super.description != null) ? super.description : "",
                                          (this.name != null) ? this.name : "",
-                                         (this.color != null) ? this.color : "",                                         
+                                         this.color,                                         
 										 (Identifier_Transferable) this.type.getId().getTransferable());
 	}
 
@@ -147,7 +147,7 @@ public class CableThreadType extends StorableObjectType {
 												String codename,
 												String description,
                                                 String name,
-												String color,			
+												int color,			
 												LinkType linkType) {
 		super.setAttributes(created, modified, creatorId, modifierId, codename, description);
 		this.name = name;
@@ -159,7 +159,7 @@ public class CableThreadType extends StorableObjectType {
 		return this.type;
 	}
 	
-	public String getColor() {
+	public int getColor() {
 		return this.color;
 	}
     
