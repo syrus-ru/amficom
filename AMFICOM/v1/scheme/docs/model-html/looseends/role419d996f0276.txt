@@ -1,2 +1,0 @@
-*
-						 * Depending on implementation, may reference either {@link Link link} or {@link Link cable link}.

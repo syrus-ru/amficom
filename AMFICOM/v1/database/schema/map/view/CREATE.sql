@@ -1,3 +1,0 @@
-@@mapview.sql
-@@mapviewschemelist.sql
-
