@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.1 2004/11/23 09:55:16 bass Exp $
+ * $Id: scheme-vt.idl,v 1.2 2004/11/24 13:02:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,11 +58,11 @@ module com {
 						 */
 						private general::corba::Identifier abstractSchemeLinkId;
 						/**
-						 * Depending on implementation, may reference either {@link PortType port type} or {@link PortType cable port type}.
+						 * Depending on implementation, may reference either {@link com.syrus.AMFICOM.configuration.PortType port type} or {@link com.syrus.AMFICOM.configuration.PortType cable port type}.
 						 */
 						private general::corba::Identifier portTypeId;
 						/**
-						 * Depending on implementation, may reference either {@link Port port} or {@link Port cable port}.
+						 * Depending on implementation, may reference either {@link com.syrus.AMFICOM.configuration.Port port} or {@link com.syrus.AMFICOM.configuration.Port cable port}.
 						 */
 						private general::corba::Identifier portId;
 						private general::corba::Identifier measurementPortTypeId;
@@ -184,11 +184,11 @@ module com {
 						 */
 						private general::corba::Identifier targetAbstractSchemePortId;
 						/**
-						 * Depending on implementation, may reference either {@link LinkType link type} or {@link LinkType cable link type}.
+						 * Depending on implementation, may reference either {@link com.syrus.AMFICOM.configuration.LinkType link type} or {@link com.syrus.AMFICOM.configuration.LinkType cable link type}.
 						 */
 						private general::corba::Identifier abstractLinkTypeId;
 						/**
-						 * Depending on implementation, may reference either {@link Link link} or {@link Link cable link}.
+						 * Depending on implementation, may reference either {@link com.syrus.AMFICOM.configuration.Link link} or {@link com.syrus.AMFICOM.configuration.Link cable link}.
 						 */
 						private general::corba::Identifier linkId;
 						/**
@@ -210,12 +210,12 @@ module com {
 						readonly attribute configuration::corba::Link link;
 						/**
 						 * Getter returns physical length of this scheme link or scheme cable link.
-						 * @see #physicalLength
+						 * @see #thisPhysicalLength
 						 */
 						attribute double physicalLength;
 						/**
 						 * Getter returns optical length of this scheme link or scheme cable link.
-						 * @see #opticalLength
+						 * @see #thisOpticalLength
 						 */
 						attribute double opticalLength;
 					};
@@ -346,7 +346,7 @@ module com {
 					typedef sequence<SchemeCableLink> SchemeCableLinkSeq;
 
 					/**
-					 * PathElement has no associated <code>name</code> (or <code>thisName</code>) field: its {@link #name()} method actually returns {@link #abstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#name()}.
+					 * PathElement has no associated <code>name</code> (or <code>thisName</code>) field: its {@link PathElement#name() name()} method actually returns {@link PathElement#abstractSchemeElement() abstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#name() name()}.
 					 */
 					valuetype PathElement:
 							general::corba::StorableObject,
