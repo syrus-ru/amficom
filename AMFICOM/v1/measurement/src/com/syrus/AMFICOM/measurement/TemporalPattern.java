@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.51 2004/12/06 10:59:15 bob Exp $
+ * $Id: TemporalPattern.java,v 1.52 2004/12/06 13:21:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/12/06 10:59:15 $
+ * @version $Revision: 1.52 $, $Date: 2004/12/06 13:21:08 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -872,6 +872,9 @@ public class TemporalPattern extends StorableObject {
 	public static TemporalPattern createInstance(Identifier creatorId,
 							String description,
 							List cronString) {
+		if (creatorId == null || description == null || cronString == null )
+			throw new IllegalArgumentException("Argument is 'null'");
+
 		return new TemporalPattern(IdentifierPool.generateId(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE),
 			creatorId, description, cronString);
 	}
@@ -879,6 +882,9 @@ public class TemporalPattern extends StorableObject {
 	public static TemporalPattern createInstance(Identifier creatorId,
 							String description,
 							String[] cronStrings) {
+		if (creatorId == null || description == null || cronStrings == null )
+			throw new IllegalArgumentException("Argument is 'null'");
+
 		return new TemporalPattern(IdentifierPool.generateId(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), creatorId, description, cronStrings);
 	}
 

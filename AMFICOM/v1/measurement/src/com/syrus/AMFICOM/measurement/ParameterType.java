@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.27 2004/12/06 10:59:15 bob Exp $
+ * $Id: ParameterType.java,v 1.28 2004/12/06 13:21:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/12/06 10:59:15 $
+ * @version $Revision: 1.28 $, $Date: 2004/12/06 13:21:08 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -99,6 +99,9 @@ public class ParameterType extends StorableObjectType {
 											   String codename,
 											   String description,
 											   String name) {
+		if (creatorId == null || codename == null || description == null || name == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new ParameterType(IdentifierPool.generateId(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 			creatorId,
 			codename,
@@ -122,6 +125,9 @@ public class ParameterType extends StorableObjectType {
 											   String description,
 											   String name,
 											   DataType sort) {
+		if (creatorId == null || codename == null || description == null || name == null || sort == null)
+			throw new IllegalArgumentException("Argument is 'null'");		
+
 		return new ParameterType(IdentifierPool.generateId(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 						 creatorId,
 						 codename,

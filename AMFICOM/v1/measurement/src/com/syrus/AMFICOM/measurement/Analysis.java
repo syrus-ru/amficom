@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.32 2004/12/06 10:59:15 bob Exp $
+ * $Id: Analysis.java,v 1.33 2004/12/06 13:21:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/06 10:59:15 $
+ * @version $Revision: 1.33 $, $Date: 2004/12/06 13:21:03 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -146,6 +146,9 @@ public class Analysis extends Action {
 										  AnalysisType type,
 										  Identifier monitoredElementId,
 										  Set criteriaSet) throws CreateObjectException {
+		if (creatorId == null || type == null || monitoredElementId == null || criteriaSet == null)
+			throw new IllegalArgumentException("Argument is 'null'");		
+
 		return new Analysis(IdentifierPool.generateId(ObjectEntities.ANALYSIS_ENTITY_CODE),
 			creatorId,
 			type,

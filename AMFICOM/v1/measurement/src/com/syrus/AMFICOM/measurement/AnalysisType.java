@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.36 2004/12/06 10:59:15 bob Exp $
+ * $Id: AnalysisType.java,v 1.37 2004/12/06 13:21:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/06 10:59:15 $
+ * @version $Revision: 1.37 $, $Date: 2004/12/06 13:21:03 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -161,6 +161,9 @@ public class AnalysisType extends ActionType {
 											  List criteriaParameterTypes,
 											  List etalonParameterTypes,
 											  List outParameterTypes){
+		if (creatorId == null || codename == null || description == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new AnalysisType(IdentifierPool.generateId(ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
 			creatorId,
 			codename,

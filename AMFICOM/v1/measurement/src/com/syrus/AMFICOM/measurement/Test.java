@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.66 2004/12/06 10:59:15 bob Exp $
+ * $Id: Test.java,v 1.67 2004/12/06 13:21:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2004/12/06 10:59:15 $
+ * @version $Revision: 1.67 $, $Date: 2004/12/06 13:21:08 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -184,6 +184,11 @@ public class Test extends StorableObject {
 									  TestReturnType returnType,
 									  String description,
 									  List measurementSetupIds){
+		if (creatorId == null || startTime == null || endTime == null || 
+				temporalPattern == null || temporalType == null || measurementType == null ||
+				monitoredElement == null || returnType == null || description == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new Test(IdentifierPool.generateId(ObjectEntities.TEST_ENTITY_CODE),
 			creatorId,
 			startTime,

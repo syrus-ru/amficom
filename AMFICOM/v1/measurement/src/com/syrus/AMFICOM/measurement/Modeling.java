@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.16 2004/12/06 10:59:15 bob Exp $
+ * $Id: Modeling.java,v 1.17 2004/12/06 13:21:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/12/06 10:59:15 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/06 13:21:04 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -95,6 +95,10 @@ public class Modeling extends Action {
 										  String name,
 										  Set argumentSet,
 										  ModelingSort sort){
+		if (creatorId == null || schemePathId == null || monitoredElementId == null || 
+				name == null || argumentSet == null || sort == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new Modeling(IdentifierPool.generateId(ObjectEntities.MODELING_ENTITY_CODE),
 			creatorId,
 			schemePathId,

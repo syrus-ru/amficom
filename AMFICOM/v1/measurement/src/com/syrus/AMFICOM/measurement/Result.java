@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.25 2004/12/06 10:59:15 bob Exp $
+ * $Id: Result.java,v 1.26 2004/12/06 13:21:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/06 10:59:15 $
+ * @version $Revision: 1.26 $, $Date: 2004/12/06 13:21:08 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -222,6 +222,10 @@ public class Result extends StorableObject {
 										   ResultSort sort,
 										   AlarmLevel alarmLevel,
 										   SetParameter[] parameters) {
+		if (creatorId == null || measurement == null || action == null || sort == null ||
+				alarmLevel == null || parameters == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new Result(IdentifierPool.generateId(ObjectEntities.RESULT_ENTITY_CODE),
 			creatorId,
 			measurement,
@@ -235,7 +239,10 @@ public class Result extends StorableObject {
 										   Modeling modeling,
 										   ResultSort sort,					
 										   SetParameter[] parameters) {
-
+		if (creatorId == null || modeling == null || sort == null ||
+				parameters == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new Result(IdentifierPool.generateId(ObjectEntities.RESULT_ENTITY_CODE),
 				creatorId,
 				null,
