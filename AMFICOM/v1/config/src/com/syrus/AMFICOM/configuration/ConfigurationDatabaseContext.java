@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.36 2005/01/18 15:19:13 bass Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.37 2005/02/03 14:38:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/01/18 15:19:13 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/02/03 14:38:45 $
+ * @author $Author: arseniy $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
  *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
@@ -40,36 +40,36 @@ public final class ConfigurationDatabaseContext {
 		// private constructor 
 	}
 
-	public static void init(final StorableObjectDatabase equipmentTypeDatabase,
-			final StorableObjectDatabase portTypeDatabase,
-			final StorableObjectDatabase measurementPortTypeDatabase,
-			final StorableObjectDatabase linkTypeDatabase,
-			final StorableObjectDatabase cableLinkTypeDatabase,
-			final StorableObjectDatabase cableThreadTypeDatabase,
-			final StorableObjectDatabase equipmentDatabase,
-			final StorableObjectDatabase portDatabase,
-			final StorableObjectDatabase measurementPortDatabase,
-			final StorableObjectDatabase transmissionPathDatabase,
-			final StorableObjectDatabase transmissionPathTypeDatabase,
-			final StorableObjectDatabase kisDatabase,
-			final StorableObjectDatabase monitoredElementDatabase,
-			final StorableObjectDatabase linkDatabase,
-			final StorableObjectDatabase cableThreadDatabase) {
-		ConfigurationDatabaseContext.equipmentTypeDatabase = equipmentTypeDatabase;
-		ConfigurationDatabaseContext.portTypeDatabase = portTypeDatabase;
-		ConfigurationDatabaseContext.measurementPortTypeDatabase = measurementPortTypeDatabase;
-		ConfigurationDatabaseContext.linkTypeDatabase = linkTypeDatabase;
-		ConfigurationDatabaseContext.cableLinkTypeDatabase = cableLinkTypeDatabase;
-		ConfigurationDatabaseContext.cableThreadTypeDatabase = cableThreadTypeDatabase;
-		ConfigurationDatabaseContext.equipmentDatabase = equipmentDatabase;
-		ConfigurationDatabaseContext.portDatabase = portDatabase;
-		ConfigurationDatabaseContext.measurementPortDatabase = measurementPortDatabase;
-		ConfigurationDatabaseContext.transmissionPathDatabase = transmissionPathDatabase;
-		ConfigurationDatabaseContext.transmissionPathTypeDatabase = transmissionPathTypeDatabase;
-		ConfigurationDatabaseContext.kisDatabase = kisDatabase;
-		ConfigurationDatabaseContext.monitoredElementDatabase = monitoredElementDatabase;
-		ConfigurationDatabaseContext.linkDatabase = linkDatabase;
-		ConfigurationDatabaseContext.cableThreadDatabase = cableThreadDatabase;
+	public static void init(final StorableObjectDatabase equipmentTypeDatabase1,
+			final StorableObjectDatabase portTypeDatabase1,
+			final StorableObjectDatabase measurementPortTypeDatabase1,
+			final StorableObjectDatabase linkTypeDatabase1,
+			final StorableObjectDatabase cableLinkTypeDatabase1,
+			final StorableObjectDatabase cableThreadTypeDatabase1,
+			final StorableObjectDatabase equipmentDatabase1,
+			final StorableObjectDatabase portDatabase1,
+			final StorableObjectDatabase measurementPortDatabase1,
+			final StorableObjectDatabase transmissionPathDatabase1,
+			final StorableObjectDatabase transmissionPathTypeDatabase1,
+			final StorableObjectDatabase kisDatabase1,
+			final StorableObjectDatabase monitoredElementDatabase1,
+			final StorableObjectDatabase linkDatabase1,
+			final StorableObjectDatabase cableThreadDatabase1) {
+		equipmentTypeDatabase = equipmentTypeDatabase1;
+		portTypeDatabase = portTypeDatabase1;
+		measurementPortTypeDatabase = measurementPortTypeDatabase1;
+		linkTypeDatabase = linkTypeDatabase1;
+		cableLinkTypeDatabase = cableLinkTypeDatabase1;
+		cableThreadTypeDatabase = cableThreadTypeDatabase1;
+		equipmentDatabase = equipmentDatabase1;
+		portDatabase = portDatabase1;
+		measurementPortDatabase = measurementPortDatabase1;
+		transmissionPathDatabase = transmissionPathDatabase1;
+		transmissionPathTypeDatabase = transmissionPathTypeDatabase1;
+		kisDatabase = kisDatabase1;
+		monitoredElementDatabase = monitoredElementDatabase1;
+		linkDatabase = linkDatabase1;
+		cableThreadDatabase = cableThreadDatabase1;
 	}
 
 	public static StorableObjectDatabase getEquipmentDatabase() {
