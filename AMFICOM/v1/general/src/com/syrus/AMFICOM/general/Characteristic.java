@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.9 2005/01/25 08:44:29 bob Exp $
+ * $Id: Characteristic.java,v 1.10 2005/01/31 14:07:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/25 08:44:29 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/31 14:07:13 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -177,6 +177,16 @@ public class Characteristic extends StorableObject implements TypedObject {
 	protected void setVisible0(boolean visible) {
 		this.visible = visible;
 	}
+	
+	public void setEditable(boolean editable) {
+		this.setEditable0(editable);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	public void setVisible(boolean visible) {
+		this.setVisible0(visible);
+		super.currentVersion = super.getNextVersion();
+	}
 
 	public StorableObjectType getType() {
 		return this.type;
@@ -186,6 +196,11 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.type = type;
 	}
 
+	public void setType(CharacteristicType type) {
+		this.setType0(type);
+		super.currentVersion = super.getNextVersion();
+	}
+
 	public String getName() {
 		return this.name;
 	}
@@ -193,6 +208,12 @@ public class Characteristic extends StorableObject implements TypedObject {
 	protected void setName0(String name) {
 		this.name = name;
 	}
+	
+	protected void setName(String name) {
+		this.setName0(name);
+		super.currentVersion = super.getNextVersion();
+	}
+
 
 	public String getDescription() {
 		return this.description;
@@ -201,7 +222,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	protected void setDescription0(String description){
 		this.description = description;
 	}
-	
+
 	public void setDescription(String description){
 		this.setDescription0(description);
 		super.currentVersion = super.getNextVersion();
@@ -214,6 +235,13 @@ public class Characteristic extends StorableObject implements TypedObject {
 	protected void setSort0(CharacteristicSort sort) {
 		this.sort = sort.value(); 
 	}
+	
+	
+	public void setSort(CharacteristicSort sort){
+		this.setSort0(sort);
+		super.currentVersion = super.getNextVersion();
+	}
+	
 
 	public String getValue() {
 		return this.value;
@@ -226,7 +254,12 @@ public class Characteristic extends StorableObject implements TypedObject {
 	protected void setCharacterizedId0(Identifier characterizedId) {
 		this.characterizedId = characterizedId;
 	}
-
+	
+	public void setCharacterizedId(Identifier characterizedId){
+		this.setCharacterizedId0(characterizedId);
+		super.currentVersion = super.getNextVersion();
+	}
+	
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
 																						Identifier creatorId,
