@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.26 2005/02/14 15:06:57 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.27 2005/02/15 09:52:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/02/14 15:06:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2005/02/15 09:52:32 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -519,7 +519,7 @@ public abstract class StorableObjectPool {
 					final StorableObject storableObject = (StorableObject) it2.next();
 					if (!storableObject.isChanged())
 						if (this.deletedIds == null || !this.deletedIds.contains(storableObject.getId()))
-						storableObjects.add(storableObject);
+							storableObjects.add(storableObject);
 				}
 				if (storableObjects.isEmpty()) {
 					Log.debugMessage("StorableObjectPool.refreshImpl | LRUMap for '"
@@ -532,7 +532,16 @@ public abstract class StorableObjectPool {
 						+ "' entity", Log.DEBUGLEVEL08);
 
 				final Set returnedStorableObjectsIds = this.refreshStorableObjects(storableObjects);
-				this.getStorableObjectsImpl(new ArrayList(returnedStorableObjectsIds), true);
+				Collection loadedRefreshedObjects = this.loadStorableObjects(entityCode, returnedStorableObjectsIds);
+				for (Iterator iter = loadedRefreshedObjects.iterator(); iter.hasNext();) {
+					try {
+						this.putStorableObjectImpl((StorableObject) iter.next());
+					}
+					catch (IllegalObjectEntityException e) {
+						Log.errorException(e);
+					}
+				}
+
 			}
 		}
 		catch (DatabaseException de) {
