@@ -6,16 +6,20 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
 public class EvaluationType extends ActionType {
 
-	private List					inParameterTypes;
-	private List					thresholdParameterTypes;
-	private List					etalonParameterTypes;
-	private List					outParameterTypes;
+	private List inParameterTypes;
+	private List thresholdParameterTypes;
+	private List etalonParameterTypes;
+	private List outParameterTypes;
 
 	private StorableObjectDatabase	evaluationTypeDatabase;
 
@@ -25,14 +29,20 @@ public class EvaluationType extends ActionType {
 		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
 			this.evaluationTypeDatabase.retrieve(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
 
 	public EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
-		super(new Identifier(ett.id), new Date(ett.created), new Date(ett.modified), new Identifier(ett.creator_id),
-				new Identifier(ett.modifier_id), new String(ett.codename), new String(ett.description));
+		super(new Identifier(ett.id),
+					new Date(ett.created),
+					new Date(ett.modified),
+					new Identifier(ett.creator_id),
+					new Identifier(ett.modifier_id),
+					new String(ett.codename),
+					new String(ett.description));
 
 		this.inParameterTypes = new ArrayList(ett.in_parameter_types.length);
 		for (int i = 0; i < ett.in_parameter_types.length; i++)
@@ -53,43 +63,44 @@ public class EvaluationType extends ActionType {
 		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
 			this.evaluationTypeDatabase.insert(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}	
 	
 	private EvaluationType(Identifier id,
-						  List etalonParameterTypes,
-						  List inParameterTypes,
-						  List outParameterTypes,
-						  List thresholdParameterTypes) {
+												 List inParameterTypes,
+												 List thresholdParameterTypes,
+												 List etalonParameterTypes,
+												 List outParameterTypes) {
 		super(id);
-		//super(PoolId.getId(ObjectEntities.EVALUATIONTYPE_ENTITY));
-		setInParameterTypes(inParameterTypes);
+		this.inParameterTypes = inParameterTypes;
 		this.thresholdParameterTypes = thresholdParameterTypes;
 		this.etalonParameterTypes = etalonParameterTypes;
 		this.outParameterTypes = outParameterTypes;
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	/**
 	 * create new instance for client
 	 * @param id
-	 * @param etalonParameterTypes
 	 * @param inParameterTypes
-	 * @param outParameterTypes
 	 * @param thresholdParameterTypes
+	 * @param etalonParameterTypes
+	 * @param outParameterTypes
 	 * @return
 	 */
 	public static EvaluationType createInstance(Identifier id,
-						  List etalonParameterTypes,
-						  List inParameterTypes,
-						  List outParameterTypes,
-						  List thresholdParameterTypes){
+																							List etalonParameterTypes,
+																							List inParameterTypes,
+																							List outParameterTypes,
+																							List thresholdParameterTypes) {
 		return new EvaluationType(id,
-								  etalonParameterTypes,
-								  inParameterTypes,
-								  outParameterTypes,
-								  thresholdParameterTypes);
+															etalonParameterTypes,
+															inParameterTypes,
+															outParameterTypes,
+															thresholdParameterTypes);
 	}
 
 	public Object getTransferable() {
@@ -113,11 +124,17 @@ public class EvaluationType extends ActionType {
 		for (Iterator iterator = this.inParameterTypes.iterator(); iterator.hasNext();)
 			inParTypes[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
-		return new EvaluationType_Transferable((Identifier_Transferable) super.id.getTransferable(), super.created
-				.getTime(), super.modified.getTime(), (Identifier_Transferable) super.creatorId.getTransferable(),
-												(Identifier_Transferable) super.modifierId.getTransferable(),
-												new String(super.codename), new String(super.description), inParTypes,
-												thresholdParTypes, etalonParTypes, outParTypes);
+		return new EvaluationType_Transferable((Identifier_Transferable)super.id.getTransferable(),
+																					 super.created.getTime(),
+																					 super.modified.getTime(),
+																					 (Identifier_Transferable)super.creatorId.getTransferable(),
+																					 (Identifier_Transferable)super.modifierId.getTransferable(),
+																					 new String(super.codename),
+																					 new String(super.description),
+																					 inParTypes,
+																					 thresholdParTypes,
+																					 etalonParTypes,
+																					 outParTypes);
 	}
 
 	public List getInParameterTypes() {
@@ -136,34 +153,28 @@ public class EvaluationType extends ActionType {
 		return this.outParameterTypes;
 	}
 
-	protected synchronized void setAttributes(	Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												String codename,
-												String description) {
-		super.setAttributes(created, modified, creatorId, modifierId, codename, description);
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						String codename,
+																						String description) {
+		super.setAttributes(created,
+												modified,
+												creatorId,
+												modifierId,
+												codename,
+												description);
 	}
 
-	protected synchronized void setParameterTypes(	List inParameterTypes,
-													List thresholdParameterTypes,
-													List etalonParameterTypes,
-													List outParameterTypes) {
+	protected synchronized void setParameterTypes(List inParameterTypes,
+																								List thresholdParameterTypes,
+																								List etalonParameterTypes,
+																								List outParameterTypes) {
 		this.inParameterTypes = inParameterTypes;
 		this.thresholdParameterTypes = thresholdParameterTypes;
 		this.etalonParameterTypes = etalonParameterTypes;
 		this.outParameterTypes = outParameterTypes;
-	}
-
-	/**
-	 * client setter for etalonParameterTypes
-	 * 
-	 * @param etalonParameterTypes
-	 *            The etalonParameterTypes to set.
-	 */
-	public void setEtalonParameterTypes(List etalonParameterTypes) {
-		this.currentVersion = super.getNextVersion();
-		this.etalonParameterTypes = etalonParameterTypes;
 	}
 
 	/**
@@ -173,19 +184,8 @@ public class EvaluationType extends ActionType {
 	 *            The inParameterTypes to set.
 	 */
 	public void setInParameterTypes(List inParameterTypes) {
-		this.currentVersion = super.getNextVersion();
+		super.currentVersion = super.getNextVersion();
 		this.inParameterTypes = inParameterTypes;
-	}
-
-	/**
-	 * client setter for outParameterTypes
-	 * 
-	 * @param outParameterTypes
-	 *            The outParameterTypes to set.
-	 */
-	public void setOutParameterTypes(List outParameterTypes) {
-		this.currentVersion = super.getNextVersion();
-		this.outParameterTypes = outParameterTypes;
 	}
 
 	/**
@@ -195,7 +195,29 @@ public class EvaluationType extends ActionType {
 	 *            The thresholdParameterTypes to set.
 	 */
 	public void setThresholdParameterTypes(List thresholdParameterTypes) {
-		this.currentVersion = super.getNextVersion();
+		super.currentVersion = super.getNextVersion();
 		this.thresholdParameterTypes = thresholdParameterTypes;
+	}
+
+	/**
+	 * client setter for etalonParameterTypes
+	 * 
+	 * @param etalonParameterTypes
+	 *            The etalonParameterTypes to set.
+	 */
+	public void setEtalonParameterTypes(List etalonParameterTypes) {
+		super.currentVersion = super.getNextVersion();
+		this.etalonParameterTypes = etalonParameterTypes;
+	}
+
+	/**
+	 * client setter for outParameterTypes
+	 * 
+	 * @param outParameterTypes
+	 *            The outParameterTypes to set.
+	 */
+	public void setOutParameterTypes(List outParameterTypes) {
+		super.currentVersion = super.getNextVersion();
+		this.outParameterTypes = outParameterTypes;
 	}
 }

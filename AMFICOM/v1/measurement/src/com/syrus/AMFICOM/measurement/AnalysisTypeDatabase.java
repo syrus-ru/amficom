@@ -21,14 +21,15 @@ import com.syrus.util.database.DatabaseDate;
 
 public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
-	public static final String	MODE_IN							= "IN";
-	public static final String	MODE_CRITERION					= "CRI";
-	public static final String	MODE_OUT						= "OUT";
+	public static final String	MODE_IN = "IN";
+	public static final String	MODE_CRITERION = "CRI";
+	public static final String	MODE_ETALON = "ETA";
+	public static final String	MODE_OUT = "OUT";
 
-	public static final String	COLUMN_CODENAME					= "codename";
-	public static final String	COLUMN_DESCRIPTION				= "description";	
+	public static final String	COLUMN_CODENAME = "codename";
+	public static final String	COLUMN_DESCRIPTION = "description";	
 	
-	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID 	= "analysis_type_id";
+	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
 
 	private AnalysisType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof AnalysisType)
@@ -44,29 +45,15 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 	private void retrieveAnalysisType(AnalysisType analysisType) throws ObjectNotFoundException, RetrieveObjectException {
 		String analysisTypeIdStr = analysisType.getId().toSQLString();
-		String sql;
-		{
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(SQL_SELECT );
-			buffer.append(DatabaseDate.toQuerySubString(COLUMN_CREATED));
-			buffer.append(COMMA);
-			buffer.append(DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
-			buffer.append(COMMA);
-			buffer.append(COLUMN_CREATOR_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_MODIFIER_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_CODENAME);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_DESCRIPTION);
-			buffer.append(SQL_FROM);
-			buffer.append(ObjectEntities.ANALYSISTYPE_ENTITY);
-			buffer.append(SQL_WHERE);
-			buffer.append(COLUMN_ID);
-			buffer.append(EQUALS);
-			buffer.append(analysisTypeIdStr);
-			sql = buffer.toString();
-		}
+		String sql = SQL_SELECT
+			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
+			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_CODENAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY
+			+ SQL_WHERE + COLUMN_ID + EQUALS + analysisTypeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -77,22 +64,33 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED), DatabaseDate
-						.fromQuerySubString(resultSet, COLUMN_MODIFIED), new Identifier(resultSet
-						.getString(COLUMN_CREATOR_ID)), new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-						resultSet.getString(COLUMN_CODENAME), resultSet.getString(COLUMN_DESCRIPTION));
+				analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+																	 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				/**
+				 * @todo when change DB Identifier model ,change getString() to
+				 *       getLong()
+				 */
+																	 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+				/**
+				 * @todo when change DB Identifier model ,change getString() to
+				 *       getLong()
+				 */
+																	 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+																	 resultSet.getString(COLUMN_CODENAME),
+																	 resultSet.getString(COLUMN_DESCRIPTION));
 			else
 				throw new ObjectNotFoundException("No such analysis type: " + analysisTypeIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveAnalysisType | Cannot retrieve analysis type "
-					+ analysisTypeIdStr;
+			String mesg = "AnalysisTypeDatabase.retrieveAnalysisType | Cannot retrieve analysis type " + analysisTypeIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
-				if (statement != null) statement.close();
-				if (resultSet != null) resultSet.close();
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
 				statement = null;
 				resultSet = null;
 			}
@@ -104,23 +102,15 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	private void retrieveParameterTypes(AnalysisType analysisType) throws RetrieveObjectException {	
 		ArrayList inParTyps = new ArrayList();
 		ArrayList criteriaParTyps = new ArrayList();
+		ArrayList etalonParTyps = new ArrayList();
 		ArrayList outParTyps = new ArrayList();
 		
 		String analysisTypeIdStr = analysisType.getId().toSQLString();
-		String sql;
-		{
-			StringBuffer buffer = new StringBuffer(SQL_SELECT);
-			buffer.append(LINK_COLUMN_PARAMETER_TYPE_ID);
-			buffer.append(COMMA);
-			buffer.append(LINK_COLUMN_PARAMETER_MODE);
-			buffer.append(SQL_FROM);
-			buffer.append(ObjectEntities.ANATYPPARTYPLINK_ENTITY);
-			buffer.append(SQL_WHERE);
-			buffer.append(LINK_COLUMN_ANALYSIS_TYPE_ID);
-			buffer.append(EQUALS);
-			buffer.append(analysisTypeIdStr);
-			sql = buffer.toString();
-		}
+		String sql = SQL_SELECT
+			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
+			+ LINK_COLUMN_PARAMETER_MODE + COMMA
+			+ SQL_FROM + ObjectEntities.ANATYPPARTYPLINK_ENTITY
+			+ SQL_WHERE + LINK_COLUMN_ANALYSIS_TYPE_ID + EQUALS + analysisTypeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -137,25 +127,29 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				parameterTypeIdCode = resultSet.getString(LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(MODE_IN))
 					inParTyps.add(new Identifier(parameterTypeIdCode));
-				else if (parameterMode.equals(MODE_CRITERION))
-					criteriaParTyps.add(new Identifier(parameterTypeIdCode));
-				else if (parameterMode.equals(MODE_OUT))
-					outParTyps.add(new Identifier(parameterTypeIdCode));
-				else
-					Log
-							.errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId "
-									+ parameterTypeIdCode);
+					else
+						if (parameterMode.equals(MODE_CRITERION))
+							criteriaParTyps.add(new Identifier(parameterTypeIdCode));
+						else
+							if (parameterMode.equals(MODE_ETALON))
+								etalonParTyps.add(new Identifier(parameterTypeIdCode));
+							else
+								if (parameterMode.equals(MODE_OUT))
+									outParTyps.add(new Identifier(parameterTypeIdCode));
+								else
+									Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeIdCode);
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter types for analysis type "
-					+ analysisTypeIdStr;
+			String mesg = "AnalysisTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter types for analysis type " + analysisTypeIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
-				if (statement != null) statement.close();
-				if (resultSet != null) resultSet.close();
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
 				statement = null;
 				resultSet = null;
 			}
@@ -165,8 +159,12 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 		inParTyps.trimToSize();
 		criteriaParTyps.trimToSize();
+		etalonParTyps.trimToSize();
 		outParTyps.trimToSize();
-		analysisType.setParameterTypes(inParTyps, criteriaParTyps, outParTyps);
+		analysisType.setParameterTypes(inParTyps,
+																	 criteriaParTyps,
+																	 etalonParTyps,
+																	 outParTyps);
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -220,7 +218,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			+ analysisType.getCreatorId().toString() + COMMA 
 			+ analysisType.getModifierId().toString() + COMMA + APOSTOPHE
 			+ analysisType.getCodename() + APOSTOPHE + COMMA + APOSTOPHE 
-			+ analysisType.getDescription() + APOSTOPHE + CLOSE_BRACKET;
+			+ analysisType.getDescription() + APOSTOPHE
+			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -228,8 +227,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.insertAnalysisType | Cannot insert analysis type "
-					+ analysisTypeIdStr;
+			String mesg = "AnalysisTypeDatabase.insertAnalysisType | Cannot insert analysis type " + analysisTypeIdStr;
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -245,10 +243,22 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	private void insertParameterTypes(AnalysisType analysisType) throws CreateObjectException {
 		List inParTyps = analysisType.getInParameterTypes();
 		List criteriaParTyps = analysisType.getCriteriaParameterTypes();
+		List etalonParTyps = analysisType.getEtalonParameterTypes();
 		List outParTyps = analysisType.getOutParameterTypes();
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
 		String analysisTypeIdCode = analysisType.getId().getCode();
-		String sql = "INSERT INTO " + ObjectEntities.ANATYPPARTYPLINK_ENTITY
-				+ " (analysisTypeId, parameterTypeId, parameterMode)" + " VALUES (?, ?, ?)";
+		String sql = SQL_INSERT_INTO
+			+ ObjectEntities.ANATYPPARTYPLINK_ENTITY + OPEN_BRACKET
+			+ LINK_COLUMN_ANALYSIS_TYPE_ID + COMMA
+			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
+			+ LINK_COLUMN_PARAMETER_MODE
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION
+			+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		/**
 		 * @todo when change DB Identifier model ,change String to long
@@ -285,6 +295,20 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 						+ analysisTypeIdCode, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
+			for (Iterator iterator = etalonParTyps.iterator(); iterator.hasNext();) {
+				preparedStatement.setString(1, analysisTypeIdCode);
+				parameterTypeIdCode = ((Identifier) iterator.next()).getCode();
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				preparedStatement.setString(2, parameterTypeIdCode);
+				parameterMode = MODE_ETALON;
+				preparedStatement.setString(3, parameterMode);
+				Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type "
+						+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
+						+ analysisTypeIdCode, Log.DEBUGLEVEL05);
+				preparedStatement.executeUpdate();
+			}
 			for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
 				preparedStatement.setString(1, analysisTypeIdCode);
 				parameterTypeIdCode = ((Identifier) iterator.next()).getCode();
@@ -308,7 +332,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 		finally {
 			try {
-				if (preparedStatement != null) preparedStatement.close();
+				if (preparedStatement != null)
+					preparedStatement.close();
 				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {
@@ -330,10 +355,12 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.ANATYPPARTYPLINK_ENTITY
+			statement.executeUpdate(SQL_DELETE_FROM
+					+ ObjectEntities.ANATYPPARTYPLINK_ENTITY
 					+ SQL_WHERE + LINK_COLUMN_ANALYSIS_TYPE_ID + EQUALS + analysisTypeIdStr);
-			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.ANALYSISTYPE_ENTITY + SQL_WHERE + COLUMN_ID + EQUALS
-					+ analysisTypeIdStr);
+			statement.executeUpdate(SQL_DELETE_FROM
+					+ ObjectEntities.ANALYSISTYPE_ENTITY
+					+ SQL_WHERE + COLUMN_ID + EQUALS + analysisTypeIdStr);
 			connection.commit();
 		}
 		catch (SQLException sqle1) {
@@ -341,7 +368,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 		finally {
 			try {
-				if (statement != null) statement.close();
+				if (statement != null)
+					statement.close();
 				statement = null;
 			}
 			catch (SQLException Ex) {
@@ -350,8 +378,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public static AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
-		String sql = SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY + SQL_WHERE
-				+ COLUMN_CODENAME + " = '" + codename + "'";
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY
+				+ SQL_WHERE + COLUMN_CODENAME + EQUALS + APOSTOPHE + codename + APOSTOPHE;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -363,14 +393,15 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveForCodename | Cannot retrieve analysis type with codename: '"
-					+ codename + "'";
+			String mesg = "AnalysisTypeDatabase.retrieveForCodename | Cannot retrieve analysis type with codename: '" + codename + "'";
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
-				if (statement != null) statement.close();
-				if (resultSet != null) resultSet.close();
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
 				statement = null;
 				resultSet = null;
 			}

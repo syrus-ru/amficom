@@ -226,14 +226,15 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ COLUMN_SORT  + COMMA
 			+ COLUMN_DESCRIPTION
 			+ CLOSE_BRACKET
-			+ SQL_VALUES + OPEN_BRACKET			
+			+ SQL_VALUES + OPEN_BRACKET
 			+ setIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(set.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(set.getModified()) + COMMA
 			+ set.getCreatorId().toSQLString() + COMMA
 			+ set.getModifierId().toSQLString() + COMMA
-			+ Integer.toString(set.getSort().value()) + COMMA + APOSTOPHE
-			+ set.getDescription() + APOSTOPHE + COMMA;
+			+ Integer.toString(set.getSort().value()) + COMMA
+			+ APOSTOPHE + set.getDescription() + APOSTOPHE
+			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
