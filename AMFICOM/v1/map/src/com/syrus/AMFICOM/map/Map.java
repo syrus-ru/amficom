@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.9 2005/01/13 15:13:59 krupenn Exp $
+ * $Id: Map.java,v 1.10 2005/01/18 06:22:21 bob Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/13 15:13:59 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/01/18 06:22:21 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class Map extends StorableObject {
@@ -416,28 +416,24 @@ public class Map extends StorableObject {
 			this.domainId = domainId;
 	}
 
-	public List getNodes()
-	{
-		nodeElements.clear();
-		nodeElements.addAll(this.siteNodes);
-		nodeElements.addAll(this.topologicalNodes);
-		nodeElements.addAll(this.marks);
-		return nodeElements;
+	public List getNodes() {
+		this.nodeElements.clear();
+		this.nodeElements.addAll(this.siteNodes);
+		this.nodeElements.addAll(this.topologicalNodes);
+		this.nodeElements.addAll(this.marks);
+		return this.nodeElements;
 	}
 
 	/**
 	 * Добавить новый MapNodeElement
 	 */
-	public void addNode(AbstractNode ob)
-	{
-		if(ob instanceof SiteNode)
-			siteNodes.add(ob);
-		else
-		if(ob instanceof TopologicalNode)
-			topologicalNodes.add(ob);
-		else
-		if(ob instanceof Mark)
-			marks.add(ob);
+	public void addNode(AbstractNode ob) {
+		if (ob instanceof SiteNode)
+			this.siteNodes.add(ob);
+		else if (ob instanceof TopologicalNode)
+			this.topologicalNodes.add(ob);
+		else if (ob instanceof Mark)
+			this.marks.add(ob);
 		ob.setMap(this);
 		ob.setRemoved(false);
 		super.currentVersion = super.getNextVersion();
@@ -446,32 +442,27 @@ public class Map extends StorableObject {
 	/**
 	 * Удалить MapNodeElement
 	 */
-	public void removeNode(AbstractNode ob)
-	{
-		ob.setSelected(false);
-		if(ob instanceof SiteNode)
-			siteNodes.remove(ob);
-		else
-		if(ob instanceof TopologicalNode)
-			topologicalNodes.remove(ob);
-		else
-		if(ob instanceof Mark)
-			marks.remove(ob);
-		ob.setRemoved(true);
+	public void removeNode(AbstractNode node) {
+		node.setSelected(false);
+		if (node instanceof SiteNode)
+			this.siteNodes.remove(node);
+		else if (node instanceof TopologicalNode)
+			this.topologicalNodes.remove(node);
+		else if (node instanceof Mark)
+			this.marks.remove(node);
+		node.setRemoved(true);
 		super.currentVersion = super.getNextVersion();
 	}
 
 	/**
 	 * Получить элемент сетевого узла по ID
 	 */
-	public SiteNode getSiteNode(Identifier siteId)
-	{
+	public SiteNode getSiteNode(Identifier siteId) {
 		Iterator e = this.getSiteNodes().iterator();
-		while (e.hasNext())
-		{
-			SiteNode msne = (SiteNode )e.next();
+		while (e.hasNext()) {
+			SiteNode msne = (SiteNode) e.next();
 
-			if ( msne.getId().equals(siteId))
+			if (msne.getId().equals(siteId))
 				return msne;
 		}
 		return null;
@@ -480,14 +471,12 @@ public class Map extends StorableObject {
 	/**
 	 * Получить элемент сетевого узла по ID
 	 */
-	public TopologicalNode getTopologicalNode(Identifier topoId)
-	{
+	public TopologicalNode getTopologicalNode(Identifier topologicalNodeId) {
 		Iterator e = this.getTopologicalNodes().iterator();
-		while (e.hasNext())
-		{
-			TopologicalNode msne = (TopologicalNode )e.next();
+		while (e.hasNext()) {
+			TopologicalNode msne = (TopologicalNode) e.next();
 
-			if ( msne.getId().equals(topoId))
+			if (msne.getId().equals(topologicalNodeId))
 				return msne;
 		}
 		return null;
@@ -496,14 +485,12 @@ public class Map extends StorableObject {
 	/**
 	 * Получить элемент сетевого узла по ID
 	 */
-	public Mark getMark(Identifier markId)
-	{
+	public Mark getMark(Identifier markId) {
 		Iterator e = this.getMarks().iterator();
-		while (e.hasNext())
-		{
-			Mark msne = (Mark )e.next();
+		while (e.hasNext()) {
+			Mark msne = (Mark) e.next();
 
-			if ( msne.getId().equals(markId))
+			if (msne.getId().equals(markId))
 				return msne;
 		}
 		return null;
@@ -512,61 +499,52 @@ public class Map extends StorableObject {
 	/**
 	 * Получить точечный объект по ID
 	 */
-	public AbstractNode getNode(Identifier nodeId)
-	{
+	public AbstractNode getNode(Identifier nodeId) {
 		AbstractNode node = getSiteNode(nodeId);
-		if(node == null)
+		if (node == null)
 			node = getTopologicalNode(nodeId);
-		if(node == null)
+		if (node == null)
 			node = getMark(nodeId);
 		return null;
 	}
 
-	public void addCollector(Collector ob)
-	{
-		collectors.add(ob);
-		ob.setMap(this);
-		ob.setRemoved(false);
+	public void addCollector(Collector collector) {
+		this.collectors.add(collector);
+		collector.setMap(this);
+		collector.setRemoved(false);
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public void removeCollector(Collector ob)
-	{
-		ob.setSelected(false);
-		collectors.remove(ob);
-		ob.setRemoved(true);
+	public void removeCollector(Collector collector) {
+		collector.setSelected(false);
+		this.collectors.remove(collector);
+		collector.setRemoved(true);
 		super.currentVersion = super.getNextVersion();
 	}
 
 	/**
 	 * получить коллектор, в составе которого есть тоннель mple
 	 */
-	public Collector getCollector(PhysicalLink mple)
-	{
-		for(Iterator it = this.getCollectors().iterator(); it.hasNext();)
-		{
-			Collector cp = (Collector )it.next();
-			if(cp.getPhysicalLinks().contains(mple))
+	public Collector getCollector(PhysicalLink physicalLink) {
+		for (Iterator it = this.getCollectors().iterator(); it.hasNext();) {
+			Collector cp = (Collector) it.next();
+			if (cp.getPhysicalLinks().contains(physicalLink))
 				return cp;
 		}
 		return null;
 	}
 
-
 	/**
-	 * Получить список физических линий, начинающихся или заканчивающихся
-	 * в узле node
+	 * Получить список физических линий, начинающихся или заканчивающихся в узле
+	 * node
 	 */
-	public List getPhysicalLinksAt(AbstractNode node)
-	{
+	public List getPhysicalLinksAt(AbstractNode node) {
 		LinkedList returnNodeLink = new LinkedList();
 		Iterator e = this.getPhysicalLinks().iterator();
 
-		while (e.hasNext())
-		{
-			PhysicalLink link = (PhysicalLink )e.next();
-			if ( (link.getEndNode().equals(node)) 
-					|| (link.getStartNode().equals(node)))
+		while (e.hasNext()) {
+			PhysicalLink link = (PhysicalLink) e.next();
+			if ((link.getEndNode().equals(node)) || (link.getStartNode().equals(node)))
 				returnNodeLink.add(link);
 		}
 		return returnNodeLink;
@@ -575,42 +553,38 @@ public class Map extends StorableObject {
 	/**
 	 * Добавить новую физическую линию
 	 */
-	public void addPhysicalLink(PhysicalLink ob)
-	{
-		
-		physicalLinks.add(ob);
-		ob.setMap(this);
-		ob.setRemoved(false);
+	public void addPhysicalLink(PhysicalLink physicalLink) {
+
+		this.physicalLinks.add(physicalLink);
+		physicalLink.setMap(this);
+		physicalLink.setRemoved(false);
 		super.currentVersion = super.getNextVersion();
 	}
 
 	/**
 	 * Удалить физическую линию
 	 */
-	public void removePhysicalLink(PhysicalLink ob)
-	{
-		
-		ob.setSelected(false);
-		physicalLinks.remove(ob);
-		ob.setRemoved(true);
-		
-		Collector coll = getCollector(ob);
-		if(coll != null)
-			coll.removePhysicalLink(ob);
+	public void removePhysicalLink(PhysicalLink physicalLink) {
+
+		physicalLink.setSelected(false);
+		this.physicalLinks.remove(physicalLink);
+		physicalLink.setRemoved(true);
+
+		Collector coll = getCollector(physicalLink);
+		if (coll != null)
+			coll.removePhysicalLink(physicalLink);
 		super.currentVersion = super.getNextVersion();
 	}
 
 	/**
 	 * Получение MapPhysicalLinkElement по его ID
 	 */
-	public PhysicalLink getPhysicalLink(Identifier plId)
-	{
+	public PhysicalLink getPhysicalLink(Identifier phisicalLinkId) {
 		Iterator e = this.getPhysicalLinks().iterator();
 
-		while (e.hasNext())
-		{
-			PhysicalLink physicalLink = (PhysicalLink )e.next();
-			if ( physicalLink.getId().equals( plId) )
+		while (e.hasNext()) {
+			PhysicalLink physicalLink = (PhysicalLink) e.next();
+			if (physicalLink.getId().equals(phisicalLinkId))
 				return physicalLink;
 		}
 		return null;
@@ -619,16 +593,11 @@ public class Map extends StorableObject {
 	/**
 	 * Получить MapPhysicalLinkElement по начальному и конечному узлам
 	 */
-	public PhysicalLink getPhysicalLink(AbstractNode start_node, AbstractNode end_node)
-	{
-		for(Iterator it = this.getPhysicalLinks().iterator(); it.hasNext();)
-		{
-			PhysicalLink link = (PhysicalLink )it.next();
-			if (((link.getStartNode().equals(start_node)) && (link.getEndNode().equals(end_node))) ||
-				((link.getStartNode().equals(end_node)) && (link.getEndNode().equals(start_node))) )
-			{
-				return link;
-			}
+	public PhysicalLink getPhysicalLink(AbstractNode startNode, AbstractNode endNode) {
+		for (Iterator it = this.getPhysicalLinks().iterator(); it.hasNext();) {
+			PhysicalLink link = (PhysicalLink) it.next();
+			if (((link.getStartNode().equals(startNode)) && (link.getEndNode().equals(endNode)))
+					|| ((link.getStartNode().equals(endNode)) && (link.getEndNode().equals(startNode)))) { return link; }
 		}
 		return null;
 	}
@@ -636,9 +605,8 @@ public class Map extends StorableObject {
 	/**
 	 * добавить новый MapNodeLinkElement
 	 */
-	public void addNodeLink(NodeLink ob)
-	{
-		nodeLinks.add(ob);
+	public void addNodeLink(NodeLink ob) {
+		this.nodeLinks.add(ob);
 		ob.setMap(this);
 		ob.setRemoved(false);
 		super.currentVersion = super.getNextVersion();
@@ -647,10 +615,9 @@ public class Map extends StorableObject {
 	/**
 	 * Удалить MapNodeLinkElement
 	 */
-	public void removeNodeLink(NodeLink ob)
-	{
+	public void removeNodeLink(NodeLink ob) {
 		ob.setSelected(false);
-		nodeLinks.remove(ob);
+		this.nodeLinks.remove(ob);
 		ob.setRemoved(true);
 		super.currentVersion = super.getNextVersion();
 	}
@@ -658,17 +625,12 @@ public class Map extends StorableObject {
 	/**
 	 * Получение MapNodeLinkElement по его ID
 	 */
-	public NodeLink getNodeLink(Identifier nlId)
-	{
+	public NodeLink getNodeLink(Identifier nodeLinkId) {
 		Iterator e = this.getNodeLinks().iterator();
 
-		while (e.hasNext())
-		{
-			NodeLink nodeLink = (NodeLink )e.next();
-			if ( nodeLink.getId().equals( nlId) )
-			{
-				return nodeLink;
-			}
+		while (e.hasNext()) {
+			NodeLink nodeLink = (NodeLink) e.next();
+			if (nodeLink.getId().equals(nodeLinkId)) { return nodeLink; }
 		}
 		return null;
 	}
@@ -676,16 +638,11 @@ public class Map extends StorableObject {
 	/**
 	 * Получить NodeLink по начальному и конечному узлам
 	 */
-	public NodeLink getNodeLink(AbstractNode start_node, AbstractNode end_node)
-	{
-		for(Iterator it = this.getNodeLinks().iterator(); it.hasNext();)
-		{
-			NodeLink link = (NodeLink )it.next();
-			if (((link.getStartNode().equals(start_node)) && (link.getEndNode().equals(end_node))) ||
-				((link.getStartNode().equals(end_node)) && (link.getEndNode().equals(start_node))) )
-			{
-				return link;
-			}
+	public NodeLink getNodeLink(AbstractNode startNode, AbstractNode endNode) {
+		for (Iterator it = this.getNodeLinks().iterator(); it.hasNext();) {
+			NodeLink link = (NodeLink) it.next();
+			if (((link.getStartNode().equals(startNode)) && (link.getEndNode().equals(endNode)))
+					|| ((link.getStartNode().equals(endNode)) && (link.getEndNode().equals(startNode)))) { return link; }
 		}
 		return null;
 	}
@@ -693,44 +650,37 @@ public class Map extends StorableObject {
 	/**
 	 * Получить список всех топологических элементов карты
 	 */
-	public List getAllElements()
-	{
-		allElements.clear();
+	public List getAllElements() {
+		this.allElements.clear();
 
-		allElements.addAll(this.marks);
-		allElements.addAll(this.topologicalNodes);
-		allElements.addAll(this.siteNodes);
+		this.allElements.addAll(this.marks);
+		this.allElements.addAll(this.topologicalNodes);
+		this.allElements.addAll(this.siteNodes);
 
-		allElements.addAll(this.nodeLinks);
-		allElements.addAll(this.physicalLinks);
-		allElements.addAll(this.collectors);
+		this.allElements.addAll(this.nodeLinks);
+		this.allElements.addAll(this.physicalLinks);
+		this.allElements.addAll(this.collectors);
 
-		return Collections.unmodifiableList(allElements);
+		return Collections.unmodifiableList(this.allElements);
 	}
 
+	public Set getSelectedElements() {
+		return this.selectedElements;
+	}
 
-	public Set getSelectedElements()
-	{
-		return selectedElements;
+	public void clearSelection() {
+		this.selectedElements.clear();
 	}
-	
-	public void clearSelection()
-	{
-		selectedElements.clear();
-	}
-	
-	public void setSelected(MapElement me, boolean selected)
-	{
-		if(selected)
-			selectedElements.add(me);
+
+	public void setSelected(MapElement me, boolean selected) {
+		if (selected)
+			this.selectedElements.add(me);
 		else
-			selectedElements.remove(me);
+			this.selectedElements.remove(me);
 	}
 
-	public Object[][] exportColumns()
-	{
-		if(exportColumns == null)
-		{
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
 			exportColumns = new Object[3][2];
 			exportColumns[0][0] = COLUMN_ID;
 			exportColumns[1][0] = COLUMN_NAME;
@@ -739,7 +689,7 @@ public class Map extends StorableObject {
 		exportColumns[0][1] = getId();
 		exportColumns[1][1] = getName();
 		exportColumns[2][1] = getDescription();
-		
+
 		return exportColumns;
 	}
 

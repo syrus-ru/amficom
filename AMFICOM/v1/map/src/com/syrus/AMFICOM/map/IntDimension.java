@@ -1,5 +1,5 @@
 /*
-* $Id: IntDimension.java,v 1.4 2005/01/17 15:05:24 bob Exp $
+* $Id: IntDimension.java,v 1.5 2005/01/18 06:22:21 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.map;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/17 15:05:24 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/18 06:22:21 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -21,14 +21,9 @@ public class IntDimension implements java.io.Serializable {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3256440309234872368L;
-	/**
-	 * @deprecated use correspond accessors
-	 */
-	public int	width;
-	/**
-	 * @deprecated use correspond accessors
-	 */
-	public int	height;
+
+	private int	width;
+	private int	height;
 
 	public IntDimension() {
 		this(0, 0);

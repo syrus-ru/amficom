@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkBinding.java,v 1.2 2004/12/20 18:39:18 krupenn Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.3 2005/01/18 06:22:21 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,9 +22,9 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/20 18:39:18 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/18 06:22:21 $
  * @module
- * @author $Author: krupenn $
+ * @author $Author: bob $
  * @see
  */
 public final class PhysicalLinkBinding 
@@ -62,22 +62,22 @@ public final class PhysicalLinkBinding
 	/**
 	 * добавить кабель в тоннель
 	 */
-	public void add(Object or)
+	public void add(Object object)
 	{
-		int index = bindObjects.indexOf(or);
+		int index = this.bindObjects.indexOf(object);
 		if(index == -1)
-			bindObjects.add(or);
+			this.bindObjects.add(object);
 	}
 	
 	/**
 	 * удалить кабель из тоннеля
 	 */
-	public void remove(Object or)
+	public void remove(Object object)
 	{
-		if(or != null)
+		if(object != null)
 		{
-			unbind(or);
-			bindObjects.remove(or);
+			unbind(object);
+			this.bindObjects.remove(object);
 		}
 	}
 	
@@ -86,13 +86,13 @@ public final class PhysicalLinkBinding
 	 */
 	public void clear()
 	{
-		bindObjects.clear();
+		this.bindObjects.clear();
 
-		for (int i = 0; i < bindingMap.length; i++) 
+		for (int i = 0; i < this.bindingMap.length; i++) 
 		{
-			for (int j = 0; j < bindingMap[i].length; j++) 
+			for (int j = 0; j < this.bindingMap[i].length; j++) 
 			{
-				bindingMap[i][j] = new LinkedList();
+				this.bindingMap[i][j] = new LinkedList();
 			}
 		}
 	}
@@ -102,7 +102,7 @@ public final class PhysicalLinkBinding
 	 */
 	public List getBindObjects()
 	{
-		return (List )bindObjects.clone();
+		return (List )this.bindObjects.clone();
 	}
 	
 	/**
@@ -110,7 +110,7 @@ public final class PhysicalLinkBinding
 	 */
 	public IntDimension getDimension()
 	{
-		return dimension;
+		return this.dimension;
 	}
 	
 	/**
@@ -132,20 +132,20 @@ public final class PhysicalLinkBinding
 		}
 		
 		// копируется привязки из старой матрицы
-		if(bindingMap != null)
+		if(this.bindingMap != null)
 		{
-			int mini = Math.min(bindingMap.length, bindingMap2.length);
+			int mini = Math.min(this.bindingMap.length, bindingMap2.length);
 
 			for (int i = 0; i < mini; i++) 
 			{
-				int minj = Math.min(bindingMap[i].length, bindingMap2[i].length);
+				int minj = Math.min(this.bindingMap[i].length, bindingMap2[i].length);
 				for (int j = 0; j < minj; j++) 
 				{
-					bindingMap2[i][j].addAll(bindingMap[i][j]);
+					bindingMap2[i][j].addAll(this.bindingMap[i][j]);
 				}
 			}
 		}
-		bindingMap = bindingMap2;
+		this.bindingMap = bindingMap2;
 	}
 	
 	public int getSequenceNumber(int ii, int jj)
@@ -203,20 +203,20 @@ public final class PhysicalLinkBinding
 	/**
 	 * указать прокладку кабеля по трубе
 	 */
-	public void bind(Object or, int i, int j)
+	public void bind(Object object, int i, int j)
 	{
-		unbind(or);
-		bindingMap[i][j].add(or);
+		unbind(object);
+		this.bindingMap[i][j].add(object);
 	}
 	
 	/**
 	 * убрать привязку кабеля к конкретной трубе в тоннеле
 	 */
-	public void unbind(Object or)
+	public void unbind(Object object)
 	{
-		IntPoint binding = getBinding(or);
+		IntPoint binding = getBinding(object);
 		if(binding != null)
-			bindingMap[binding.x][binding.y].remove(or);
+			this.bindingMap[binding.x][binding.y].remove(object);
 	}
 	
 	/**
@@ -224,22 +224,22 @@ public final class PhysicalLinkBinding
 	 */
 	public List getBound(int i, int j)
 	{
-		return bindingMap[i][j];
+		return this.bindingMap[i][j];
 	}
 	
 	/**
 	 * проверить, определено ли место прохождения кабеля в тоннеле
 	 */
-	public boolean isBound(Object or)
+	public boolean isBound(Object object)
 	{
-		int index = bindObjects.indexOf(or);
+		int index = this.bindObjects.indexOf(object);
 		if(index == -1)
 			return false;
-		for (int i = 0; i < bindingMap.length; i++) 
+		for (int i = 0; i < this.bindingMap.length; i++) 
 		{
-			for (int j = 0; j < bindingMap[i].length; j++) 
+			for (int j = 0; j < this.bindingMap[i].length; j++) 
 			{
-				if(bindingMap[i][j].contains(or))
+				if(this.bindingMap[i][j].contains(object))
 					return true;
 			}
 		}
@@ -250,16 +250,16 @@ public final class PhysicalLinkBinding
 	 * получить координаты трубы, по которой проходит кабель
 	 * @return null если место кабеля не задано
 	 */
-	public IntPoint getBinding(Object or)
+	public IntPoint getBinding(Object object)
 	{
-		int index = bindObjects.indexOf(or);
+		int index = this.bindObjects.indexOf(object);
 		if(index == -1)
 			return null;
-		for (int i = 0; i < bindingMap.length; i++) 
+		for (int i = 0; i < this.bindingMap.length; i++) 
 		{
-			for (int j = 0; j < bindingMap[i].length; j++) 
+			for (int j = 0; j < this.bindingMap[i].length; j++) 
 			{
-				if(bindingMap[i][j].contains(or))
+				if(this.bindingMap[i][j].contains(object))
 					return new IntPoint(i, j);
 			}
 		}
@@ -268,36 +268,36 @@ public final class PhysicalLinkBinding
 
 	public void flipTopToBottom()
 	{
-		topToBottom = !topToBottom;
+		this.topToBottom = !this.topToBottom;
 	}
 
 
 	public boolean isTopToBottom()
 	{
-		return topToBottom;
+		return this.topToBottom;
 	}
 
 
 	public void flipLeftToRight()
 	{
-		leftToRight = !leftToRight;
+		this.leftToRight = !this.leftToRight;
 	}
 
 
 	public boolean isLeftToRight()
 	{
-		return leftToRight;
+		return this.leftToRight;
 	}
 
 
 	public void flipHorizontalVertical()
 	{
-		horizontalVertical = !horizontalVertical;
+		this.horizontalVertical = !this.horizontalVertical;
 	}
 
 
 	public boolean isHorizontalVertical()
 	{
-		return horizontalVertical;
+		return this.horizontalVertical;
 	}
 }
