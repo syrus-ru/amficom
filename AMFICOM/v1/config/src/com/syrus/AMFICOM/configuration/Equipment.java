@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.35 2004/11/24 12:32:45 bob Exp $
+ * $Id: Equipment.java,v 1.36 2004/11/25 15:26:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/11/24 12:32:45 $
+ * @version $Revision: 1.36 $, $Date: 2004/11/25 15:26:44 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -52,6 +52,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	public Equipment(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
+		this.portIds = new LinkedList();
+		this.characteristics = new LinkedList();
 		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 		try {
 			this.equipmentDatabase.retrieve(this);
@@ -108,16 +110,16 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 							creatorId,
 							domainId);
 
-				super.monitoredElementIds = new ArrayList();
+				super.monitoredElementIds = new LinkedList();
 
 				this.type = type;
 				this.name = name;
 				this.description = description;
 				this.imageId = imageId;
 
-				this.portIds = new ArrayList();
+				this.portIds = new LinkedList();
 
-				this.characteristics = new ArrayList();
+				this.characteristics = new LinkedList();
 				
 				this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 	}
@@ -250,8 +252,11 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		this.imageId = imageId;
 	}
 
-	protected synchronized void setPortIds(List portIds) {
-		this.portIds = portIds;
+	protected synchronized void setPortIds(final List portIds) {
+		this.portIds.clear();
+		if (portIds != null)
+				this.portIds.addAll(portIds);
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	public List getDependencies() {
