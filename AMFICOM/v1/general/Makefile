@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.19 2004/11/15 13:19:49 bob Exp $
+# $Id: Makefile,v 1.20 2004/11/22 12:51:55 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -13,9 +13,9 @@ IDLDIR=../idl_v1/idl
 
 APPCLASSPATH = $(LIBDIR)/util.jar
 
-JAVACFLAGS = -source 1.3
-SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = -target 1.2
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -35,6 +35,7 @@ $(LIBNAME): .mach
 
 .corba:	$(CLASSDIR)
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general.idl
+	$(IDLJ) $(IDLJFLAGS) -DGENERAL_COMMON $(IDLDIR)/general.idl
 	$(JAVAC) \
 		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-sourcepath $(SRCDIR) \
@@ -55,8 +56,10 @@ cleanmach:
 
 .PHONY:	cleancorba
 cleancorba:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/general/corba
+	cd $(SRCDIR)/com/syrus/AMFICOM/general/corba && $(RM) $(shell cat $(SRCDIR)/com/syrus/AMFICOM/general/corba/.cvsignore)
+	$(RM) -r $(SCRDIR)/com/syrus/AMFICOM/CORBA/General
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/CORBA/General
 	$(RM) .corba
 
 #### Archive ####
