@@ -1,4 +1,5 @@
 classes
 src
+load_corba.bat
 *.deploy
 *.jpr

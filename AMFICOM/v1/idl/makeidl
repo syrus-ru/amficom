@@ -25,9 +25,9 @@ LIBNAME_NETWORK=$(LIB)\ServerInterface_Network.jar
 LIBNAME_REPORT=$(LIB)\ServerInterface_Report.jar
 LIBNAME_SCHEME=$(LIB)\ServerInterface_Scheme.jar
 LIBNAME_SURVEY=$(LIB)\ServerInterface_Survey.jar
-ALL_LIBS=$(LIBNAME_ADMIN) \
+ALL_LIBS=$(LIBNAME_GENERAL) \
+	$(LIBNAME_ADMIN) \
 	$(LIBNAME_ALARM) \
-	$(LIBNAME_GENERAL) \
 	$(LIBNAME_ISM) \
 	$(LIBNAME_MAP) \
 	$(LIBNAME_NETWORK) \
