@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.46 2004/12/17 15:59:47 max Exp $
+ * $Id: ResultDatabase.java,v 1.47 2004/12/23 12:27:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,44 +8,43 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import oracle.sql.BLOB;
-import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
-import com.syrus.util.database.DatabaseDate;
-import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.util.Log;
+import com.syrus.util.database.ByteArrayDatabase;
+import com.syrus.util.database.DatabaseConnection;
+import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/12/17 15:59:47 $
- * @author $Author: max $
+ * @version $Revision: 1.47 $, $Date: 2004/12/23 12:27:13 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -321,7 +320,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 											 parameterType,
-											 ByteArrayDatabase.toByteArray((BLOB) resultSet.getBlob(LINK_COLUMN_VALUE)));
+											 ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
 				parameters.add(parameter);
 			}
 		} catch (SQLException sqle) {
@@ -412,7 +411,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 					throw new RetrieveObjectException(ae);
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
-											 parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet.getBlob(LINK_COLUMN_VALUE)));
+											 parameterType, ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
 				List parameters = (List)resultParametersMap.get(result);
 				if (parameters == null){
 					parameters = new LinkedList();
@@ -475,7 +474,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 							throw new RetrieveObjectException(ae);
 						}
 						parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
-													 parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet.getBlob(LINK_COLUMN_VALUE)));
+													 parameterType, ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
 						parameters.add(parameter);						
 					} 
 					
@@ -501,7 +500,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Result result = this.fromStorableObject(storableObject);
+//		Result result = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -582,7 +581,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
-		Result result = this.fromStorableObject(storableObject);
+//		Result result = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);
@@ -743,7 +742,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		List list;
 		if (condition instanceof LinkedIdsCondition){
 			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-			List measurementIds = linkedIdsCondition.getMeasurementIds();
+			List measurementIds = linkedIdsCondition.getLinkedIds();
 			if (measurementIds == null)
 				measurementIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
 			list = this.retrieveButIdsByMeasurement(ids, measurementIds);

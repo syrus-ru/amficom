@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.40 2004/12/10 16:24:51 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.41 2004/12/23 12:27:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/12/10 16:24:51 $
+ * @version $Revision: 1.41 $, $Date: 2004/12/23 12:27:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -596,7 +596,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		List list;
 		if (condition instanceof LinkedIdsCondition){
             LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-            list = this.retrieveButIdByThresholdSet(ids, linkedIdsCondition.getThresholdSetIds());
+            list = this.retrieveButIdByThresholdSet(ids, linkedIdsCondition.getLinkedIds());
         } else {
             Log.errorMessage("EvaluationTypeDatabase.retrieveByCondition | Unknown condition class: " + condition);
             list = this.retrieveButIds(ids);

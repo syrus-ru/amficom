@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.20 2004/12/23 10:17:43 bob Exp $
+ * $Id: MCMImplementation.java,v 1.21 2004/12/23 12:31:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,22 +12,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.mcm.corba.MCMPOA;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/12/23 10:17:43 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/23 12:31:04 $
  * @author $Author: bob $
  * @module mcm_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.43 2004/12/10 16:24:51 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.44 2004/12/23 12:27:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/10 16:24:51 $
+ * @version $Revision: 1.44 $, $Date: 2004/12/23 12:27:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -586,7 +586,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		List list = null;
         if (condition instanceof LinkedIdsCondition){
             LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-            list = this.retrieveButIdsByCriteriaSet(ids, linkedIdsCondition.getCriteriaSetIds());
+            list = this.retrieveButIdsByCriteriaSet(ids, linkedIdsCondition.getLinkedIds());
         } else {
             Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
             list = this.retrieveButIds(ids);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.46 2004/12/20 14:02:02 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.47 2004/12/23 12:27:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/12/20 14:02:02 $
+ * @version $Revision: 1.47 $, $Date: 2004/12/23 12:27:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -764,7 +764,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			List list = null;
 			if (condition instanceof LinkedIdsCondition){
 				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-				list = this.retrieveButIdsByMeasurementPortType(ids, linkedIdsCondition.getMeasurementPortTypeIds());
+				list = this.retrieveButIdsByMeasurementPortType(ids, linkedIdsCondition.getLinkedIds());
 			} else if (condition instanceof StringFieldCondition){
 				StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
 				try {
