@@ -122,6 +122,13 @@ public class SchemeEditorMainFrame extends JFrame
 		upanel = new UgoPanel(aContext);
 		upanel.setUgoInsertable(false);
 		ugoFrame = new SchemeViewerFrame(aContext, upanel);
+		ugoFrame = new SchemeViewerFrame(aContext, upanel)
+		{
+			protected void closeFrame()
+			{
+				panel.scheme = new Scheme();
+			}
+		};
 		ugoFrame.setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 		desktopPane.add(ugoFrame);
 
