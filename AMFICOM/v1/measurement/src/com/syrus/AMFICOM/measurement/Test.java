@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.89 2005/03/18 14:36:46 arseniy Exp $
+ * $Id: Test.java,v 1.90 2005/03/25 12:14:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/03/18 14:36:46 $
+ * @version $Revision: 1.90 $, $Date: 2005/03/25 12:14:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -183,26 +183,31 @@ public class Test extends StorableObject {
 	 * @param measurementSetupIds
 	 * @throws CreateObjectException
 	 */
-
 	public static Test createInstance(Identifier creatorId,
-									  Date startTime,
-									  Date endTime,
-									  Identifier temporalPatternId,
-									  TestTemporalType temporalType,
-									  Identifier measurementTypeId,
-									  Identifier analysisTypeId,
-									  Identifier evaluationTypeId,
-									  MonitoredElement monitoredElement,
-									  TestReturnType returnType,
-									  String description,
-									  Collection measurementSetupIds) throws CreateObjectException {
+			Date startTime,
+			Date endTime,
+			Identifier temporalPatternId,
+			TestTemporalType temporalType,
+			Identifier measurementTypeId,
+			Identifier analysisTypeId,
+			Identifier evaluationTypeId,
+			MonitoredElement monitoredElement,
+			TestReturnType returnType,
+			String description,
+			Collection measurementSetupIds) throws CreateObjectException {
 		if (creatorId == null
 				|| startTime == null
 				|| temporalType == null
 				|| (temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL) && (temporalPatternId == null || endTime == null))
 				|| (temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS) && endTime == null)
-				|| measurementTypeId == null || monitoredElement == null || returnType == null || description == null)
+				|| measurementTypeId == null
+				|| monitoredElement == null
+				|| returnType == null
+				|| description == null
+				|| measurementSetupIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
+		if (measurementSetupIds.isEmpty())
+			throw new IllegalArgumentException("No measurement setups");
 
 		try {
 			Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_ENTITY_CODE),
@@ -255,17 +260,21 @@ public class Test extends StorableObject {
 
 		this.returnType = tt.return_type.value();
 		this.description = new String(tt.description);
+
 		this.measurementSetupIds = new HashSet(tt.measurement_setup_ids.length);
 		for (int i = 0; i < tt.measurement_setup_ids.length; i++)
 			this.measurementSetupIds.add(new Identifier(tt.measurement_setup_ids[i]));
-
-		try {
-			this.mainMeasurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject((Identifier) this.measurementSetupIds.iterator().next(),
-					true);
+		if (!this.measurementSetupIds.isEmpty()) {
+			Identifier msId = (Identifier) this.measurementSetupIds.iterator().next();
+			try {
+				this.mainMeasurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(msId, true);
+			}
+			catch (ApplicationException ae) {
+				throw new CreateObjectException(ae);
+			}
 		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		else
+			throw new CreateObjectException("Cannot find measurement setup for test '" + this.id);
 
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 	}
