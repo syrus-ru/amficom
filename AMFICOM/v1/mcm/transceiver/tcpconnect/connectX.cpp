@@ -9,7 +9,7 @@ void init ()
 void closeExt (SOCKET connected_socket)
 {
   if ( close ( connected_socket ) )
-    error(1, errno, "Ошибка вызова close");
+    cout << errno << "Ошибка вызова close";
 }
 
 void exitConnection(int code)
