@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkType.java,v 1.6 2004/12/03 17:54:58 bob Exp $
+ * $Id: PhysicalLinkType.java,v 1.7 2004/12/08 09:51:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,9 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/03 17:54:58 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/08 09:51:22 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -113,6 +115,23 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 		}
 
 		return physicalLinkType;
+	}
+	
+	public static PhysicalLinkType createInstance(final Identifier creatorId,
+		   final String codename,
+		   final String name,
+		   final String description,
+		   final Identifier domainId) {
+		
+		if (creatorId == null || codename == null || name == null || description == null || domainId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		return new PhysicalLinkType(IdentifierPool.generateId(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE),
+			creatorId,
+			codename,
+			name,
+			description,
+			domainId);
 	}
 
 	public List getCharacteristics() {
