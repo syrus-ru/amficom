@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.16 2005/02/24 09:23:03 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.17 2005/02/24 10:26:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/24 09:23:03 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/24 10:26:07 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -303,50 +303,5 @@ public class MCMDatabase extends StorableObjectDatabase {
 		return objects;	
 		//return retriveByIdsPreparedStatement(ids);
 	}
-
-//	private List retrieveButIdsByDomain(Collection ids, Domain domain) throws RetrieveObjectException {
-//		List list = null;
-//
-//		String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
-//
-//		try {
-//				list = this.retrieveButIds(ids, condition);
-//		}
-//		catch (IllegalDataException ide) {           
-//				Log.debugMessage(this.getEnityName() + "Database.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-//		}
-//
-//		return list;
-//	}
-
-//	private List retrieveByKISs(List kisIds) throws RetrieveObjectException, IllegalDataException{
-//		if (kisIds == null || kisIds.isEmpty())
-//			return Collections.EMPTY_LIST;
-//
-//		StringBuffer sql = new StringBuffer(
-//			StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET + 
-//				SQL_SELECT + LINK_COLUMN_MCM_ID + SQL_FROM
-//				+ ObjectEntities.KIS_ENTITY + SQL_WHERE	+ StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET);
-//		int i = 1;
-//		for (Iterator it = kisIds.iterator(); it.hasNext(); i++) {
-//			Identifier kidId = (Identifier) it.next();
-//			sql.append(DatabaseIdentifier.toSQLString(kidId));
-//			if (it.hasNext()) {
-//				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-//					sql.append(COMMA);
-//				else {
-//					sql.append(CLOSE_BRACKET);
-//					sql.append(SQL_OR);
-//					sql.append(StorableObjectWrapper.COLUMN_ID);
-//					sql.append(SQL_IN);
-//					sql.append(OPEN_BRACKET);
-//				}
-//			}
-//		}
-//		sql.append(CLOSE_BRACKET);
-//		sql.append(CLOSE_BRACKET);
-//
-//		return this.retrieveByIds(null, sql.toString());
-//	}
 
 }
