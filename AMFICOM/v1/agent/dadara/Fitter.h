@@ -42,3 +42,4 @@ void fcnLinear(int &, double *, double &f, double *x, int iflag);
 void fcnConnector(int &, double *, double &f, double *x, int iflag);
 
 #endif // !defined(AFX_FITTER_H__6E4C53E6_B7A8_4441_90F7_09EB98555528__INCLUDED_)
+

@@ -30,3 +30,4 @@ private:
 };
 
 #endif // !defined(AFX_HISTOGRAMM_H__4289F80F_4B49_4101_814D_A9A4783F083D__INCLUDED_)
+

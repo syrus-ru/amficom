@@ -59,3 +59,4 @@ public:
 };
 
 #endif // !defined(AFX_NEURONET_H__2EDBB0C4_956E_4331_92BB_85652BA83C3C__INCLUDED_)
+

@@ -18,18 +18,18 @@
 //////////////////////////////////////////////////////////////////////
 
 InitialAnalysis::InitialAnalysis(
-	double *data,				//РНВЙХ ПЕТКЕЙРНЦПЮЛЛШ
-	int data_length,			//ВХЯКН РНВЕЙ
-	double delta_x,				//ПЮЯЯРНЪМХЕ ЛЕФДС РНВЙЮЛХ (Л)
-	double minimalThreshold,	//ЛХМХЛЮКЭМШИ СПНБЕМЭ ЯНАШРХЪ
-	double minimalWeld,			//ЛХМХЛЮКЭМШИ СПНБЕМЭ МЕНРПЮФЮРЕКЭМНЦН ЯНАШРХЪ
-	double minimalConnector,	//ЛХМХЛЮКЭМШИ СПНБЕМЭ НРПЮФЮРЕКЭМНЦН ЯНАШРХЪ
-	double minimalEndingSplash,	//ЛХМХЛЮКЭМШИ СПНБЕМЭ ОНЯКЕДМЕЦН НРПЮФЕМХЪ
-	double maximalNoise,		//ЛЮЙЯХЛЮКЭМШИ СПНБЕМЭ ЬСЛЮ
-	int waveletType,			//МНЛЕП ХЯОНКЭГСЕЛНЦН БЕИБКЕРЮ
-	double formFactor,			//ТНПЛТЮЙРНП НРПЮФЮРЕКЭМНЦН ЯНАШРХЪ
-	int reflectiveSize,			//УЮПЮЙРЕПМЮЪ ДКХМЮ НРПЮФЮРЕКЭМНЦН ЯНАШРХЪ
-	int nonReflectiveSize)		//УЮПЮЙРЕПМЮЪ ДКХМЮ МЕНРПЮФЮРЕКЭМНЦН ЯНАШРХЪ
+	double *data,				//точки рефлектограммы
+	int data_length,			//число точек
+	double delta_x,				//расстояние между точками (м)
+	double minimalThreshold,	//минимальный уровень события
+	double minimalWeld,			//минимальный уровень неотражательного события
+	double minimalConnector,	//минимальный уровень отражательного события
+	double minimalEndingSplash,	//минимальный уровень последнего отражения
+	double maximalNoise,		//максимальный уровень шума
+	int waveletType,			//номер используемого вейвлета
+	double formFactor,			//формфактор отражательного события
+	int reflectiveSize,			//характерная длина отражательного события
+	int nonReflectiveSize)		//характерная длина неотражательного события
 {
 #ifdef DEBUG_INITIAL_ANALYSIS
 	/*timeval tv;
@@ -107,25 +107,25 @@ void InitialAnalysis::performAnalysis()
 
 //	FILE * f = fopen("c:\\io.log", "w");
 
-	// БШВХЯКЪЕЛ СПНБЕМЭ ЬСЛЮ
+	// вычисляем уровень шума
 	getNoise(noise, evSizeC);
 
-	// БШОНКМЪЕЛ БЕИБКЕР-ОПЕНАПЮГНБЮМХЕ
+	// выполняем вейвлет-преобразование
 	performTransformation(data, 0, lastNonZeroPoint, transC, evSizeC, wn_c);
 	performTransformation(data, 0, lastNonZeroPoint, transW, evSizeW, wn_w);
 
-	// БШВХРЮЕЛ ХГ ЙНЩТТХЖХЕМРНБ ОПЕНАПЮГНБЮМХЪ(йо) ОНЯРНЪММСЧ ЯНЯРЮБКЪЧЫСЧ (ЯПЕДМЕЕ ГЮРСУЮМХЕ)
+	// вычитаем из коэффициентов преобразования(КП) постоянную составляющую (среднее затухание)
 	meanAttenuation = shiftToZeroAttenuation(transC);
 	shiftToZeroAttenuation(transW);
 
-	// СЯРЮМЮБКХБЮЕЛ Б 0 йо, ЙНРНПШЕ ЛЕМЭЬЕ СПНБМЪ ЬСЛЮ ХКХ ЛХМХЛЮКЭМНЦН СПНБМЪ ЯНАШРХЪ
+	// устанавливаем в 0 КП, которые меньше уровня шума или минимального уровня события
 	setNonZeroTransformation(transC, minimalThreshold, 0, lastNonZeroPoint);
 	setNonZeroTransformation(transW, minimalThreshold, 0, lastNonZeroPoint);
 
 #ifdef DEBUG_INITIAL_ANALYSIS
 		fprintf(this->str, "First transformation performed\nSearching for connectors...");
 #endif
-	// НОПЕДЕКЪЕЛ ЙННПДХМЮРШ Х РХОШ ЯНАШРХИ ОН йо
+	// определяем координаты и типы событий по КП
 	findConnectors(
 		transC,
 		transW,
@@ -162,14 +162,14 @@ void InitialAnalysis::performAnalysis()
 	EPLIST::iterator it;
 #endif
 
-	// ХЯЙКЧВЮЕЛ МЕХДЕМРХТХЖХПНБЮММШЕ ЯНАШРХЪ
+	// исключаем неидентифицированные события
 	//excludeNonRecognizedEvents();
 
 #ifdef DEBUG_INITIAL_ANALYSIS
 		fprintf(this->str, "Excluding short events (linear = %d, weld = %d, connector = %d)...", 
 			max(evSizeW/2, 10), max(evSizeW/2, 3), max(evSizeC/2, 4));
 #endif
-	// ХЯЙКЧВЮЕЛ ЯНАШРХЪ Я ДКХМНИ, ЛЕМЭЬЕИ ОНКНБХМШ УЮПЮЙРЕПМНЦН ПЮГЛЕПЮ
+	// исключаем события с длиной, меньшей половины характерного размера
 	excludeShortEvents(max(evSizeW/2, 10), max(evSizeW/2, 3), max(evSizeC/2, 4));
 	siewLinearParts();
 #ifdef DEBUG_INITIAL_ANALYSIS
@@ -184,7 +184,7 @@ void InitialAnalysis::performAnalysis()
 #ifdef DEBUG_INITIAL_ANALYSIS
 		fprintf(this->str, "done\n%d events set\nCorrecting end...", epVector.size());
 #endif
-	// ЙНППЕЙРХПСЕЛ ЙНМЕЖ БНКНЙМЮ ЯНЦКЮЯМН ЛХМХЛЮКЭМНЦН НРПЮФЕМХЪ
+	// корректируем конец волокна согласно минимального отражения
 	correctEnd();
 #ifdef DEBUG_INITIAL_ANALYSIS
 		fprintf(this->str, "done\nTotal number of events = %d\n", epVector.size());
@@ -356,7 +356,7 @@ void InitialAnalysis::getNoise(double *noise, int freq)
 double InitialAnalysis::shiftToZeroAttenuation(double *trans)
 {
 	Histogramm* histo = new Histogramm(-0.5, 0, 100);
-	//БНГЛНФМНЕ ГЮРСУЮМХЕ МЮУНДХРЯЪ Б ОПЕДЕКЮУ [0; -0.5] Да
+	//возможное затухание находится в пределах [0; -0.5] дБ
 
 	histo->init(trans, lastNonZeroPoint, 0, lastNonZeroPoint-1);
 	double meanAtt = histo->getMaximumValue();
@@ -401,18 +401,18 @@ void InitialAnalysis::findConnectors(double *trans, double *correct, int start, 
 
 	int type;
 
-    int x1; // МЮВЮКН ЯНАШРХЪ
-    int x2; // ЙНМЕЖ ЯНАШРХЪ
+    int x1; // начало события
+    int x2; // конец события
 
-	int k1; // ЯЕПЕДХМЮ ОЕПБНЦН СВЮЯРЙЮ
-	int k2; // ЯЕПЕДХМЮ БРНПНЦН СВЮЯРЙЮ
-	int k3; // ЯЕПЕДХМЮ РПЕРЭЕЦН СВЮЯРЙЮ
-	int c1; // РНВЙЮ ЛЮЙЯХЛСЛЮ ОЕПБНЦН СВЮЯРЙЮ
-	int c2; // РНВЙЮ ЛЮЙЯХЛСЛЮ БРНПНЦН СВЮЯРЙЮ
-	int c3; // РНВЙЮ ЛЮЙЯХЛСЛЮ РПЕРЭЕЦН СВЮЯРЙЮ
-	int j; // ЙНМЕЖ ОЕПБНЦН СВЮЯРЙЮ
-	int k; // ЙНМЕЖ БРНПНЦН СВЮЯРЙЮ
-	int s; // ЙНМЕЖ РПЕРЭЕЦН СВЮЯРЙЮ
+	int k1; // середина первого участка
+	int k2; // середина второго участка
+	int k3; // середина третьего участка
+	int c1; // точка максимума первого участка
+	int c2; // точка максимума второго участка
+	int c3; // точка максимума третьего участка
+	int j; // конец первого участка
+	int k; // конец второго участка
+	int s; // конец третьего участка
 
 	int counter = 0;
 
@@ -556,7 +556,7 @@ void InitialAnalysis::correctWeldCoords()
 		EventParams* ep = &(*it);
 		if (ep->type == EventParams::SPLICE)
 		{
-			// ОЕПЕДМХИ ТПНМР
+			// передний фронт
 			if (it != epVector.begin())
 			{
 				it--;
@@ -583,7 +583,7 @@ void InitialAnalysis::correctWeldCoords()
 				it++;
 			}
 
-			// ГЮДМХИ ТПНМР 
+			// задний фронт 
 			it++;
 			if (it != epVector.end()
 				&& it->type == EventParams::LINEAR 
@@ -624,18 +624,18 @@ void InitialAnalysis::findWelds(double *trans, EPLIST &vector)
 
 	int type;
 
-    int x1; // МЮВЮКН ЯНАШРХЪ
-    int x2; // ЙНМЕЖ ЯНАШРХЪ
+    int x1; // начало события
+    int x2; // конец события
 
-	int k1; // ЯЕПЕДХМЮ ОЕПБНЦН СВЮЯРЙЮ
-	int k2; // ЯЕПЕДХМЮ БРНПНЦН СВЮЯРЙЮ
-	int k3; // ЯЕПЕДХМЮ РПЕРЭЕЦН СВЮЯРЙЮ
-	int c1; // РНВЙЮ ЛЮЙЯХЛСЛЮ ОЕПБНЦН СВЮЯРЙЮ
-	int c2; // РНВЙЮ ЛЮЙЯХЛСЛЮ БРНПНЦН СВЮЯРЙЮ
-	int c3; // РНВЙЮ ЛЮЙЯХЛСЛЮ РПЕРЭЕЦН СВЮЯРЙЮ
-	int j; // ЙНМЕЖ ОЕПБНЦН СВЮЯРЙЮ
-	int k; // ЙНМЕЖ БРНПНЦН СВЮЯРЙЮ
-	int s; // ЙНМЕЖ РПЕРЭЕЦН СВЮЯРЙЮ
+	int k1; // середина первого участка
+	int k2; // середина второго участка
+	int k3; // середина третьего участка
+	int c1; // точка максимума первого участка
+	int c2; // точка максимума второго участка
+	int c3; // точка максимума третьего участка
+	int j; // конец первого участка
+	int k; // конец второго участка
+	int s; // конец третьего участка
 
 	EPLIST::iterator it;
 	EPLIST clone;

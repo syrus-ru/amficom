@@ -1,13 +1,13 @@
 #include "dadara.h"
-//#include "com_syrus_AMFICOM_analysis_dadara_DadaraAnalysisManager.h"
-#include "com_syrus_AMFICOM_analysis_AnalysisManager.h"
+#include "com_syrus_AMFICOM_analysis_dadara_DadaraAnalysisManager.h"
+//#include "com_syrus_AMFICOM_analysis_AnalysisManager.h"
 #include "InitialAnalysis.h"
 #include "Fitter.h"
 #include <math.h>
 
 #ifdef DEBUG_DADARA
-//#include <sys/time.h>
-//#include <time.h>
+#include <sys/time.h>
+#include <time.h>
 FILE* dbg_stream;
 double dbg_delta_x; // globally saved delta_x
 int dbg_suppress_cf_messages=0;
@@ -31,7 +31,7 @@ Java_com_syrus_AMFICOM_analysis_AnalysisManager_analyse(JNIEnv* env, jclass obj,
 {
 
 #ifdef DEBUG_DADARA
-	/*timeval tv;
+	timeval tv;
 	gettimeofday(&tv, NULL);
 	tm* t = localtime(&tv.tv_sec);
 	const int size = 9 + 6 + 1 + 14 + 1 + 3 + 1;
@@ -39,8 +39,8 @@ Java_com_syrus_AMFICOM_analysis_AnalysisManager_analyse(JNIEnv* env, jclass obj,
 	sprintf(filename, ".//logs//%04d%02d%02d%02d%02d%02d-dadara.log", 1900 + t->tm_year, 1 + t->tm_mon, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
 	filename[size - 1] = 0;
 	dbg_stream = fopen(filename, "a");
-	delete[] filename;*/
-	dbg_stream = fopen("c:\\dadara.log", "a");
+	delete[] filename;
+
 	fprintf (dbg_stream, "# logfile opened in AnalysisManager_analyse\n");
 	dbg_delta_x = delta_x;
 
@@ -57,7 +57,7 @@ Java_com_syrus_AMFICOM_analysis_AnalysisManager_analyse(JNIEnv* env, jclass obj,
 #endif
 
 
-//Ðàáîòà ñ Java Native Interface
+//òÁÂÏÔÁ Ó Java Native Interface
 	double* data    = (double*)env->GetDoubleArrayElements(y, NULL);
 	jsize sz = env->GetArrayLength(y);	
 	int data_l = sz;
@@ -122,7 +122,7 @@ Java_com_syrus_AMFICOM_analysis_AnalysisManager_analyse(JNIEnv* env, jclass obj,
 	fprintf( dbg_stream, "return to java: %d (38*%d) doubles \n", Ret_Length, Ret_Length/38);
 #endif
 
-//Îñâîáîæäåíèå ìàññèâîâ â Java Native Interface
+//ïÓ×ÏÂÏÖÄÅÎÉÅ ÍÁÓÓÉ×Ï× × Java Native Interface
 	(env)->ReleaseDoubleArrayElements(y,data,JNI_ABORT);
 	(env)->SetDoubleArrayRegion(ret,0,Ret_Length,RET);
 //(env)->ReleaseDoubleArrayElements(ret,final_ret_struct,JNI_ABORT);
@@ -193,7 +193,7 @@ Java_com_syrus_AMFICOM_analysis_AnalysisManager_fit(
 	double *RET = setParRet(nEvents, ep, Ret_Length);
 	ret = (env)->NewDoubleArray(Ret_Length);
 
-	//Îñâîáîæäåíèå ìàññèâîâ â Java Native Interface
+	//ïÓ×ÏÂÏÖÄÅÎÉÅ ÍÁÓÓÉ×Ï× × Java Native Interface
 	(env)->ReleaseDoubleArrayElements(y,data,JNI_ABORT);
 	(env)->SetDoubleArrayRegion(ret,0,Ret_Length,RET);
 
@@ -334,3 +334,4 @@ void getEventParams(double *ep_data, int ep_data_length, EventParams **ep)
 	}
 
 }
+

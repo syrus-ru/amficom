@@ -35,3 +35,4 @@ void Dispatcher::notify(int commandName)
 		((Neuron *)(listeners->get(i)))->operationPerformed(commandName);
 	}
 }
+

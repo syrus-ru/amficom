@@ -512,3 +512,4 @@ void fcnConnector(int &, double *, double &chi2, double *par, int iflag)
 
 	chi2 = chisq;
 }
+

@@ -64,10 +64,10 @@ private:
 	double formFactor;
 
 //Internal parameters;
-	int evSizeC; // характерная ширина отражательного события
-	int evSizeW; // характерная ширина неотражательного события
+	int evSizeC; // ИБТБЛФЕТОБС ЫЙТЙОБ ПФТБЦБФЕМШОПЗП УПВЩФЙС
+	int evSizeW; // ИБТБЛФЕТОБС ЫЙТЙОБ ОЕПФТБЦБФЕМШОПЗП УПВЩФЙС
 	int lastNonZeroPoint;
-	double meanAttenuation; // среднее затухание рефлектограммы
+	double meanAttenuation; // УТЕДОЕЕ ЪБФХИБОЙЕ ТЕЖМЕЛФПЗТБННЩ
 	EPLIST epVector;
 
 //Analysis functions;
@@ -116,3 +116,4 @@ private:
 };
 
 #endif // !defined(AFX_INITIALANALYSIS_H__017F9246_0344_404F_8231_CC3B33AB54DA__INCLUDED_)
+
