@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.9 2005/03/15 14:32:06 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/03/23 18:03:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/15 14:32:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/23 18:03:28 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -97,7 +97,17 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				MeasurementPort measurementPort = (MeasurementPort) object;
-				domainMember = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.KIS_ENTITY_CODE:
+						super.conditionTest(measurementPort.getKISId());
+						break;
+					case ObjectEntities.MCM_ENTITY_CODE:
+						KIS kis1 = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+						super.conditionTest(kis1.getMCMId());
+						break;
+					default:
+						domainMember = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+				}
 				break;
 			default:
 				throw new UnsupportedOperationException("LinkedIdsConditionImpl.isConditionTrue | entityCode "
