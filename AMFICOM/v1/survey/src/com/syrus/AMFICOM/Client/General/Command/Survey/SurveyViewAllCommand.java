@@ -1,19 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-
-import com.syrus.io.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.Schedule.*;
-import com.syrus.AMFICOM.Client.Test.*;
 
 public class SurveyViewAllCommand extends VoidCommand
 {
@@ -23,6 +13,7 @@ public class SurveyViewAllCommand extends VoidCommand
 
 	public SurveyViewAllCommand()
 	{
+		// nothing
 	}
 
 	public SurveyViewAllCommand(Dispatcher dispatcher, JDesktopPane desktop, ApplicationContext aContext)

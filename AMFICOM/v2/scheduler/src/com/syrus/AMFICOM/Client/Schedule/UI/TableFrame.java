@@ -13,13 +13,13 @@ import javax.swing.table.*;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 
@@ -229,25 +229,25 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			String name;
 			switch (columnIndex) {
 				case 0:
-					name = I18N.getString("TemporalType"); //$NON-NLS-1$
+					name = LangModelScheduler.getString("TemporalType"); //$NON-NLS-1$
 					break;
 				case 1:
-					name = I18N.getString("RTU"); //$NON-NLS-1$
+					name = LangModelScheduler.getString("RTU"); //$NON-NLS-1$
 					break;
 				case 2:
-					name = I18N.getString("Port"); //$NON-NLS-1$
+					name = LangModelScheduler.getString("Port"); //$NON-NLS-1$
 					break;
 				case 3:
-					name = I18N.getString("TestObject"); //$NON-NLS-1$
+					name = LangModelScheduler.getString("TestObject"); //$NON-NLS-1$
 					break;
 				case 4:
-					name = I18N.getString("MeasurementType"); //$NON-NLS-1$
+					name = LangModelScheduler.getString("MeasurementType"); //$NON-NLS-1$
 					break;
 				case 5:
-					name = I18N.getString("TestStartTime"); //$NON-NLS-1$
+					name = LangModelScheduler.getString("TestStartTime"); //$NON-NLS-1$
 					break;
 				case 6:
-					name = I18N.getString("Status"); //$NON-NLS-1$
+					name = LangModelScheduler.getString("Status"); //$NON-NLS-1$
 					break;
 				default:
 					name = null;
@@ -395,14 +395,14 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			this.test = test;
 			switch (test.getTemporalPattern().getType()) {
 				case TemporalPattern.TIMESTAMPTYPE_ONETIME:
-					this.temporalType = I18N.getString("Onetime"); //$NON-NLS-1$
+					this.temporalType = LangModelScheduler.getString("Onetime"); //$NON-NLS-1$
 					break;
 				case TemporalPattern.TIMESTAMPTYPE_CONTINUOS:
-					this.temporalType = I18N
+					this.temporalType = LangModelScheduler
 							.getString("Continual"); //$NON-NLS-1$
 					break;
 				case TemporalPattern.TIMESTAMPTYPE_PERIODIC:
-					this.temporalType = I18N
+					this.temporalType = LangModelScheduler
 							.getString("Periodical"); //$NON-NLS-1$
 					break;
 			}
@@ -430,17 +430,17 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			//this.id = test.id;
 			//this.kis = test.kis;
 			if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
-				this.statusName = I18N.getString("Done"); //$NON-NLS-1$
+				this.statusName = LangModelScheduler.getString("Done"); //$NON-NLS-1$
 			} else if (test.getStatus()
 					.equals(TestStatus.TEST_STATUS_SCHEDULED)) {
-				this.statusName = I18N.getString("Scheduled"); //$NON-NLS-1$
+				this.statusName = LangModelScheduler.getString("Scheduled"); //$NON-NLS-1$
 			} else if (test.getStatus().equals(
 					TestStatus.TEST_STATUS_PROCESSING)) {
-				this.statusName = I18N.getString("Running"); //$NON-NLS-1$
+				this.statusName = LangModelScheduler.getString("Running"); //$NON-NLS-1$
 			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
-				this.statusName = I18N.getString("Aborted"); //$NON-NLS-1$
+				this.statusName = LangModelScheduler.getString("Aborted"); //$NON-NLS-1$
 			} else {
-				this.statusName = I18N.getString("Unrecognized"); //$NON-NLS-1$
+				this.statusName = LangModelScheduler.getString("Unrecognized"); //$NON-NLS-1$
 			}
 
 		}
@@ -453,7 +453,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	public static void main(String[] args) {
 
 		TableFrame frame = new TableFrame(null);
-		JFrame mainFrame = new JFrame(I18N
+		JFrame mainFrame = new JFrame(LangModelScheduler
 				.getString("Tests_status_and_characters")); //$NON-NLS-1$
 		mainFrame.addWindowListener(new WindowAdapter() {
 
@@ -576,7 +576,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 									.getModel();
 							JPopupMenu popup = new JPopupMenu();
 							JMenuItem delete_test = new JMenuItem(
-									I18N.getString("delete_tests")); //$NON-NLS-1$
+									LangModelScheduler.getString("delete_tests")); //$NON-NLS-1$
 							delete_test.addActionListener(new ActionListener() {
 
 								public void actionPerformed(ActionEvent e) {
@@ -674,7 +674,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	}
 
 	private void init() {
-		setTitle(I18N.getString("Tests_status_and_characters")); //$NON-NLS-1$
+		setTitle(LangModelScheduler.getString("Tests_status_and_characters")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);

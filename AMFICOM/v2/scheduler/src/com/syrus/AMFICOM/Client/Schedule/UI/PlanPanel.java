@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
@@ -16,7 +17,6 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.Filter.*;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 import oracle.jdeveloper.layout.*;
@@ -616,7 +616,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
 		aContext.getDispatcher()
 				.notify(
-						new StatusMessageEvent(I18N
+						new StatusMessageEvent(LangModelScheduler
 								.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
 		DataSourceInterface dsi = aContext.getDataSourceInterface();
 		if (dsi == null) return;
@@ -730,7 +730,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 				30 + 25 * testLines.values().size()));
 		parent.repaint();
 		//		this.setCursor(UIStorage.DEFAULT_CURSOR);
-		dispatcher.notify(new StatusMessageEvent(I18N
+		dispatcher.notify(new StatusMessageEvent(LangModelScheduler
 				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
 		dispatcher.notify(new OperationEvent(tests, 0, COMMAND_NAME_ALL_TESTS));
 	}

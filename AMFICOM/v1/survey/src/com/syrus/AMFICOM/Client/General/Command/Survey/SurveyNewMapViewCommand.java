@@ -2,24 +2,20 @@ package com.syrus.AMFICOM.Client.General.Command.Survey;
 
 import java.awt.*;
 import javax.swing.*;
-import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
-//import com.syrus.AMFICOM.Client.Test.*;
-import com.syrus.AMFICOM.Client.Configure.*;
 import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Command.Map.*;
 import com.syrus.AMFICOM.Client.General.Command.Config.*;
+import com.syrus.AMFICOM.Client.General.Command.Map.*;
 
 public class SurveyNewMapViewCommand extends MapViewOpenCommand
 {
 	public SurveyNewMapViewCommand()
 	{
+		// nothing
 	}
 
 	public SurveyNewMapViewCommand(Dispatcher dispatcher, JDesktopPane desktop, ApplicationContext aContext, ApplicationModelFactory factory)

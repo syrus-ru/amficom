@@ -9,6 +9,7 @@ import javax.swing.border.*;
 import javax.swing.tree.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 
@@ -18,7 +19,6 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class ElementsTreePanel extends JPanel implements OperationListener {
@@ -47,7 +47,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			this.dispatcher = aContext.getDispatcher();
 
 			root = new ObjectResourceTreeNode(
-					"root", I18N.getString("TestType"), true, //$NON-NLS-1$ //$NON-NLS-2$
+					"root", LangModelScheduler.getString("TestType"), true, //$NON-NLS-1$ //$NON-NLS-2$
 					(ImageIcon) UIStorage.FOLDER_ICON);
 
 			Hashtable kisTable = Pool.getHash(KIS.typ);
@@ -263,7 +263,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			JOptionPane
 					.showMessageDialog(
 							this,
-							I18N.getString("Do_not_choose_Measurement_element"), I18N.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelScheduler.getString("Do_not_choose_Measurement_element"), LangModelScheduler.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.OK_OPTION);
 			parameters = null;
 		}
@@ -431,7 +431,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		//Toolbar
 		loadButton = new JButton();
 		loadButton.setIcon(UIStorage.OPEN_FILE_ICON);
-		loadButton.setToolTipText(I18N.getString("Open")); //$NON-NLS-1$
+		loadButton.setToolTipText(LangModelScheduler.getString("Open")); //$NON-NLS-1$
 		loadButton.setMargin(UIStorage.INSET_NULL);
 		loadButton.setBorder(BorderFactory
 				.createEtchedBorder(EtchedBorder.LOWERED));
@@ -450,7 +450,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		delMapGroupButton = new JButton();
 		delMapGroupButton.setMargin(UIStorage.INSET_NULL);
 		delMapGroupButton.setIcon(UIStorage.DELETE_ICON);
-		delMapGroupButton.setToolTipText(I18N.getString("Delete")); //$NON-NLS-1$
+		delMapGroupButton.setToolTipText(LangModelScheduler.getString("Delete")); //$NON-NLS-1$
 		delMapGroupButton.setBorder(BorderFactory
 				.createEtchedBorder(EtchedBorder.LOWERED));
 		delMapGroupButton.setFocusPainted(false);

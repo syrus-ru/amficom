@@ -8,6 +8,7 @@ import java.util.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
@@ -19,7 +20,6 @@ import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
 import com.syrus.AMFICOM.Client.Resource.Result.TestRequest;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 class PlanToolBar extends JPanel {
@@ -134,12 +134,12 @@ class PlanToolBar extends JPanel {
 		String[] suportedScales = PlanPanel.getSupportedScales();
 		String[] scales = new String[suportedScales.length];
 		for (int i = 0; i < scales.length; i++)
-			scales[i] = new String(I18N.getString(suportedScales[i]));
+			scales[i] = new String(LangModelScheduler.getString(suportedScales[i]));
 		scaleComboBox = new AComboBox(scales);
 		scaleComboBox.setSelectedIndex(3);
 		dateButton.setMargin(UIStorage.INSET_NULL);
 		dateButton.setFocusable(false);
-		dateButton.setToolTipText(I18N.getString("Calendar")); //$NON-NLS-1$
+		dateButton.setToolTipText(LangModelScheduler.getString("Calendar")); //$NON-NLS-1$
 		dateButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -164,7 +164,7 @@ class PlanToolBar extends JPanel {
 		UIStorage.setRigidSize(zoomInButton, btn_size);
 		zoomInButton.setFocusable(false);
 		zoomInButton.setIcon(UIStorage.ZOOMIN_ICON);
-		zoomInButton.setToolTipText(I18N.getString("ZoomIn")); //$NON-NLS-1$
+		zoomInButton.setToolTipText(LangModelScheduler.getString("ZoomIn")); //$NON-NLS-1$
 		zoomInButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -174,7 +174,7 @@ class PlanToolBar extends JPanel {
 		UIStorage.setRigidSize(zoomOutButton, btn_size);
 		zoomOutButton.setFocusable(false);
 		zoomOutButton.setIcon(UIStorage.ZOOMOUT_ICON);
-		zoomOutButton.setToolTipText(I18N.getString("ZoomOut")); //$NON-NLS-1$
+		zoomOutButton.setToolTipText(LangModelScheduler.getString("ZoomOut")); //$NON-NLS-1$
 		zoomOutButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -184,7 +184,7 @@ class PlanToolBar extends JPanel {
 		UIStorage.setRigidSize(zoomNoneButton, btn_size);
 		zoomNoneButton.setFocusable(false);
 		zoomNoneButton.setIcon(UIStorage.NOZOOM_ICON);
-		zoomNoneButton.setToolTipText(I18N.getString("ZoomNone")); //$NON-NLS-1$
+		zoomNoneButton.setToolTipText(LangModelScheduler.getString("ZoomNone")); //$NON-NLS-1$
 		zoomNoneButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -192,7 +192,7 @@ class PlanToolBar extends JPanel {
 			}
 		});
 
-		box.add(new JLabel(I18N.getString("Detalization"))); //$NON-NLS-1$
+		box.add(new JLabel(LangModelScheduler.getString("Detalization"))); //$NON-NLS-1$
 		box.add(Box.createHorizontalStrut(4));
 		//		{
 		//			int width = 0;
@@ -209,7 +209,7 @@ class PlanToolBar extends JPanel {
 
 		box.add(scaleComboBox);
 		box.add(Box.createHorizontalStrut(10));
-		box.add(new JLabel(I18N.getString("Date"))); //$NON-NLS-1$
+		box.add(new JLabel(LangModelScheduler.getString("Date"))); //$NON-NLS-1$
 		box.add(Box.createHorizontalStrut(4));
 		{
 			Dimension d = new Dimension(137, H);
@@ -218,7 +218,7 @@ class PlanToolBar extends JPanel {
 		box.add(dateSpinner);
 		box.add(dateButton);
 		box.add(Box.createHorizontalStrut(10));
-		box.add(new JLabel(I18N.getString("Time"))); //$NON-NLS-1$
+		box.add(new JLabel(LangModelScheduler.getString("Time"))); //$NON-NLS-1$
 		box.add(Box.createHorizontalStrut(4));
 		{
 			Dimension d = new Dimension(55, H);
@@ -229,19 +229,19 @@ class PlanToolBar extends JPanel {
 		box.add(nowButton);
 		box.add(Box.createHorizontalStrut(10));
 		box.add(applyButton);
-		JButton legendButton = new JButton(I18N.getString("Legend"));
-		legendButton.setToolTipText(I18N.getString("Legend"));
+		JButton legendButton = new JButton(LangModelScheduler.getString("Legend"));
+		legendButton.setToolTipText(LangModelScheduler.getString("Legend"));
 		legendButton.setMargin(UIStorage.INSET_NULL);
 		box.add(Box.createHorizontalStrut(10));
 		box.add(legendButton);
 		{
 
 			final JDialog dialog = new JDialog();
-			dialog.setTitle(I18N.getString("Legend"));
+			dialog.setTitle(LangModelScheduler.getString("Legend"));
 			JPanel legendPanel = new JPanel(new GridLayout(0, 1));
 			legendPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 			final FlashIcon flashIcon = new FlashIcon();
-			final JLabel flashLabel = new JLabel(I18N.getString("Not_saved"),
+			final JLabel flashLabel = new JLabel(LangModelScheduler.getString("Not_saved"),
 					flashIcon, SwingConstants.LEFT);
 			javax.swing.Timer timer = new javax.swing.Timer(TestLine.TIME_OUT,
 					new ActionListener() {
@@ -256,20 +256,20 @@ class PlanToolBar extends JPanel {
 			timer.start();
 
 			legendPanel.add(flashLabel);
-			legendPanel.add(new JLabel(I18N.getString("Scheduled"), PlanToolBar
+			legendPanel.add(new JLabel(LangModelScheduler.getString("Scheduled"), PlanToolBar
 					.getColorIcon(TestLine.COLOR_SCHEDULED),
 					SwingConstants.LEFT));
-			legendPanel.add(new JLabel(I18N.getString("Done"), PlanToolBar
+			legendPanel.add(new JLabel(LangModelScheduler.getString("Done"), PlanToolBar
 					.getColorIcon(TestLine.COLOR_COMPLETED),
 					SwingConstants.LEFT));
-			legendPanel.add(new JLabel(I18N.getString("Running"), PlanToolBar
+			legendPanel.add(new JLabel(LangModelScheduler.getString("Running"), PlanToolBar
 					.getColorIcon(TestLine.COLOR_PROCCESSING),
 					SwingConstants.LEFT));
 			legendPanel
-					.add(new JLabel(I18N.getString("Aborted"), PlanToolBar
+					.add(new JLabel(LangModelScheduler.getString("Aborted"), PlanToolBar
 							.getColorIcon(TestLine.COLOR_ABORDED),
 							SwingConstants.LEFT));
-			legendPanel.add(new JLabel(I18N.getString("Unrecognized"),
+			legendPanel.add(new JLabel(LangModelScheduler.getString("Unrecognized"),
 					PlanToolBar.getColorIcon(TestLine.COLOR_UNRECOGNIZED),
 					SwingConstants.LEFT));
 			dialog.getContentPane().add(legendPanel);
@@ -289,7 +289,7 @@ class PlanToolBar extends JPanel {
 		}
 
 		applyButton.setIcon(UIStorage.REFRESH_ICON);
-		applyButton.setToolTipText(I18N.getString("Apply")); //$NON-NLS-1$
+		applyButton.setToolTipText(LangModelScheduler.getString("Apply")); //$NON-NLS-1$
 		applyButton.setMargin(UIStorage.INSET_NULL);
 
 		box.add(Box.createHorizontalGlue());
@@ -299,7 +299,7 @@ class PlanToolBar extends JPanel {
 		add(box, gbc);
 
 		nowButton.setFocusable(false);
-		nowButton.setToolTipText(I18N.getString("CurrentTime")); //$NON-NLS-1$
+		nowButton.setToolTipText(LangModelScheduler.getString("CurrentTime")); //$NON-NLS-1$
 		nowButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -309,7 +309,7 @@ class PlanToolBar extends JPanel {
 		});
 
 		applyButton.setFocusable(false);
-		applyButton.setToolTipText(I18N.getString("Apply")); //$NON-NLS-1$
+		applyButton.setToolTipText(LangModelScheduler.getString("Apply")); //$NON-NLS-1$
 		applyButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {

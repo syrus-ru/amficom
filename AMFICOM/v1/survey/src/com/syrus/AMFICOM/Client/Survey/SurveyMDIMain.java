@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.DefaultAlarmApplicationModelFactory;
@@ -77,7 +78,6 @@ import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
 import com.syrus.AMFICOM.Client.Schematics.Elements.ElementsListFrame;
 import com.syrus.AMFICOM.Client.Schematics.Elements.PropsFrame;
 import com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeViewerFrame;
-import com.syrus.AMFICOM.Client.Survey.General.I18N;
 import com.syrus.AMFICOM.Client.Survey.UI.ReloadAttributes;
 import com.syrus.io.IniFile;
 
@@ -156,7 +156,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		setLocation(0, 0);
 
 		//		setSize(new Dimension(960, 650));
-		this.setTitle(I18N.getString("Observing_AMFICOM"));
+		this.setTitle(LangModelSurvey.getString("Observing_AMFICOM"));
 		this
 				.addComponentListener(new SurveyMDIMain_this_componentAdapter(
 						this));

@@ -13,9 +13,9 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class TestParametersPanel extends JPanel implements OperationListener {
@@ -156,7 +156,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	private void jbInit() throws Exception {
 		setLayout(new BorderLayout());
 
-		patternRadioButton = UIStorage.createRadioButton(I18N
+		patternRadioButton = UIStorage.createRadioButton(LangModelScheduler
 				.getString("UsePattern"), new AbstractAction() { //$NON-NLS-1$
 
 					public void actionPerformed(ActionEvent e) {
@@ -165,7 +165,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 						revalidate();
 					}
 				});
-		paramsRadioButton = UIStorage.createRadioButton(I18N
+		paramsRadioButton = UIStorage.createRadioButton(LangModelScheduler
 				.getString("UseParameters"), new AbstractAction() { //$NON-NLS-1$
 
 					public void actionPerformed(ActionEvent e) {
@@ -195,12 +195,12 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		gbc.weighty = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		patternPanel.setBorder(BorderFactory.createEtchedBorder());
-		useAnalysisBox = new JCheckBox(I18N.getString("PerformAnalys"), true); //$NON-NLS-1$
+		useAnalysisBox = new JCheckBox(LangModelScheduler.getString("PerformAnalys"), true); //$NON-NLS-1$
 		patternPanel.add(useAnalysisBox, gbc);
-		final JLabel analysisLabel = new JLabel(I18N.getString("Analysis")); //$NON-NLS-1$
+		final JLabel analysisLabel = new JLabel(LangModelScheduler.getString("Analysis")); //$NON-NLS-1$
 		patternPanel.add(analysisLabel, gbc);
 		patternPanel.add(analysisComboBox, gbc);
-		final JLabel evaluationLabel = new JLabel(I18N
+		final JLabel evaluationLabel = new JLabel(LangModelScheduler
 				.getString("EvaluationAnalysis")); //$NON-NLS-1$
 		patternPanel.add(evaluationLabel, gbc);
 		patternPanel.add(evaluationComboBox, gbc);
@@ -316,7 +316,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			JOptionPane
 					.showMessageDialog(
 							this,
-							I18N.getString("Do_not_choose_measurement_pattern"), I18N.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelScheduler.getString("Do_not_choose_measurement_pattern"), LangModelScheduler.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.OK_OPTION);
 			parameters = null;
 			return;

@@ -15,9 +15,7 @@ src/com/syrus/AMFICOM/Client/General/Command/Survey/SurveyViewAllSchemeCommand.j
 src/com/syrus/AMFICOM/Client/General/Command/Survey/SurveyViewMapSetupCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Survey/ViewSurveyNavigatorCommand.java                  
 src/com/syrus/AMFICOM/Client/General/Lang/LangModelSurvey.java                                       
-src/com/syrus/AMFICOM/Client/General/Lang/LangModelSurvey_ru.java                                    
 src/com/syrus/AMFICOM/Client/General/Lang/LangModelSchedule.java                                       
-src/com/syrus/AMFICOM/Client/General/Lang/LangModelSchedule_ru.java                                    
 src/com/syrus/AMFICOM/Client/General/Model/AlarmApplicationModel.java                                
 src/com/syrus/AMFICOM/Client/General/Model/AlarmApplicationModelFactory.java                         
 src/com/syrus/AMFICOM/Client/General/Model/DefaultAlarmApplicationModelFactory.java                  
@@ -89,7 +87,6 @@ src/com/syrus/AMFICOM/Client/Survey/Alarm/Sorter/AlarmSorter.java
 src/com/syrus/AMFICOM/Client/Survey/Alarm/MessageDialog.java                                         
 src/com/syrus/AMFICOM/Client/Survey/Alarm/UI/AlarmDisplayModel.java                                  
 src/com/syrus/AMFICOM/Client/Survey/ArchiveTreeModel.java          
-src/com/syrus/AMFICOM/Client/Survey/General/I18N.java
 src/com/syrus/AMFICOM/Client/Survey/General/ConstStorage.java                                            
 src/com/syrus/AMFICOM/Client/Survey/Report/AlarmReportModel.java                                       
 src/com/syrus/AMFICOM/Client/Survey/Result/ResourceButton.java                                       

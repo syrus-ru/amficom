@@ -13,7 +13,6 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.ComponentEvent;
 
 public class AlarmPopupFrame extends JInternalFrame

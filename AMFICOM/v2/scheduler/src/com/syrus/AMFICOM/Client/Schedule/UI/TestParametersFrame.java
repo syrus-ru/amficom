@@ -6,11 +6,11 @@ import java.util.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TestParametersFrame extends JInternalFrame implements
@@ -31,7 +31,7 @@ public class TestParametersFrame extends JInternalFrame implements
 	}
 
 	private void jbInit() throws Exception {
-		setTitle(I18N.getString("Measurement_options")); //$NON-NLS-1$
+		setTitle(LangModelScheduler.getString("Measurement_options")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);

@@ -4,7 +4,7 @@ import java.util.*;
 
 public class LangModelScheduler {
 
-	private static final String			BUNDLE_NAME		= "scheduler";
+	private static final String			BUNDLE_NAME		= "com.syrus.AMFICOM.Client.General.Lang.scheduler";
 
 	private static final ResourceBundle	RESOURCE_BUNDLE	= ResourceBundle
 																.getBundle(BUNDLE_NAME);

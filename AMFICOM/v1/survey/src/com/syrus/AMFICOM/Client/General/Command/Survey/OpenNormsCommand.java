@@ -1,17 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import java.awt.*; 
-import javax.swing.*; 
-
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Survey.*;
-//import com.syrus.AMFICOM.Client.Resource.Analysis.*;
-//import com.syrus.AMFICOM.Client.Survey.Analysis.*;
 
 public class OpenNormsCommand extends VoidCommand 
 {
@@ -21,6 +14,7 @@ public class OpenNormsCommand extends VoidCommand
 
 	public OpenNormsCommand()
 	{
+		// nothing
 	}
 
 	public OpenNormsCommand(Dispatcher dispatcher, ApplicationContext aContext, ApplicationModelFactory factory)
@@ -74,33 +68,33 @@ public class OpenNormsCommand extends VoidCommand
 
 		LangModelAnalyse.initialize();
 		new com.syrus.AMFICOM.Client.Analysis.Reflectometry.Evaluation(new ReflectometryAnalyseApplicationModelFactory());
-/*
-		try
-		{
-			String st = "com.syrus.AMFICOM.Client.Analysis.Reflectometry.Evaluation";
-			System.out.println("Opening " + st);
-			Class cl = Class.forName(st);
-			String args[] = new String[0];
-			java.lang.reflect.Method mainMethod = cl.getMethod("main", new Class [] { args.getClass() });
-			mainMethod.invoke(cl, new Object [] { args });
-		}
-		catch(ClassNotFoundException cnfe)
-		{
-			System.out.println("Не найден ресурс класса. проверьте настройки системы");
-		}
-		catch(IllegalAccessException iae)
-		{
-			System.out.println("Нет прав на создание элемента класса");
-		}
-//		catch(InstantiationException ie)
+
+//		try
 //		{
-//			System.out.println("Ошибка создания объекта класса");
+//			String st = "com.syrus.AMFICOM.Client.Analysis.Reflectometry.Evaluation";
+//			System.out.println("Opening " + st);
+//			Class cl = Class.forName(st);
+//			String args[] = new String[0];
+//			java.lang.reflect.Method mainMethod = cl.getMethod("main", new Class [] { args.getClass() });
+//			mainMethod.invoke(cl, new Object [] { args });
 //		}
-		catch(Exception e)
-		{
-			System.out.println("Ошибка запуска модуля - " + e.getMessage());
-			dispatcher.notify(new StatusMessageEvent("Ошибка открытия модуля Evaluation"));
-		}
-*/
+//		catch(ClassNotFoundException cnfe)
+//		{
+//			System.out.println("Не найден ресурс класса. проверьте настройки системы");
+//		}
+//		catch(IllegalAccessException iae)
+//		{
+//			System.out.println("Нет прав на создание элемента класса");
+//		}
+////		catch(InstantiationException ie)
+////		{
+////			System.out.println("Ошибка создания объекта класса");
+////		}
+//		catch(Exception e)
+//		{
+//			System.out.println("Ошибка запуска модуля - " + e.getMessage());
+//			dispatcher.notify(new StatusMessageEvent("Ошибка открытия модуля Evaluation"));
+//		}
+
 	}
 }

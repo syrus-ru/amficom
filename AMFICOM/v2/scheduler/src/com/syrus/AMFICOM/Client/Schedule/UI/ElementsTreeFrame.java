@@ -2,8 +2,8 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class ElementsTreeFrame extends JInternalFrame {
@@ -13,7 +13,7 @@ public class ElementsTreeFrame extends JInternalFrame {
 	public ElementsTreeFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
 
-		setTitle(I18N.getString("Comonents_Tree")); //$NON-NLS-1$
+		setTitle(LangModelScheduler.getString("Comonents_Tree")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);

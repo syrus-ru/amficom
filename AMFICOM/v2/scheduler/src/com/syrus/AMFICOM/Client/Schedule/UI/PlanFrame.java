@@ -4,8 +4,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class PlanFrame extends JInternalFrame {
@@ -17,7 +17,7 @@ public class PlanFrame extends JInternalFrame {
 	public PlanFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
 
-		setTitle(I18N.getString("Plan.Title")); //$NON-NLS-1$
+		setTitle(LangModelScheduler.getString("Plan.Title")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);

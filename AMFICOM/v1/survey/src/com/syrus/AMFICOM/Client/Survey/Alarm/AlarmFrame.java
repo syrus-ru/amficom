@@ -7,22 +7,21 @@ import java.awt.event.*;
 import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.io.*;
 import oracle.jdeveloper.layout.*;
 
 import com.syrus.AMFICOM.Client.Survey.Alarm.UI.*;
 import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.*;
+
 import oracle.jdeveloper.layout.XYConstraints;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -87,7 +86,7 @@ public class AlarmFrame extends JInternalFrame
 		this.setMaximizable(true);
 		this.setResizable(true);
 
-			this.setTitle(LangModelSurvey.String("AlarmTitle"));
+			this.setTitle(LangModelSurvey.getString("AlarmTitle"));
 		this.getContentPane().setLayout(borderLayout1);
 //		this.setTitle("Сигналы тревоги");
 		this.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter()
@@ -313,7 +312,7 @@ public class AlarmFrame extends JInternalFrame
 					deleted_alarms.add(alarm.getId());
 			}
 		for	(int i = 0; i < deleted_alarms.size(); i++)
-			ht.remove(((String )deleted_alarms.get(i)));
+			ht.remove(deleted_alarms.get(i));
 
 		DataSet ds = new DataSet(ht);
 		alarmPane.setContents(filter.filter(ds));

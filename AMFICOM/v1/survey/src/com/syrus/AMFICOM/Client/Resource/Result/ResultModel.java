@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Result;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Survey.General.*;
@@ -42,11 +43,11 @@ public class ResultModel extends ObjectResourceModel {
 			else if (colId.equals(ConstStorage.COLUMN_NAME_RESULT_TYPE)) {
 
 				Hashtable actions = new Hashtable();
-				actions.put(Analysis.typ, I18N.getString("Analysis")); //$NON-NLS-1$
-				actions.put(Modeling.typ, I18N.getString("Modeling")); //$NON-NLS-1$
-				actions.put(Evaluation.typ, I18N.getString("Evaluation")); //$NON-NLS-1$
-				actions.put(Test.typ, I18N.getString("Testing")); //$NON-NLS-1$
-				actions.put(TestRequest.typ, I18N.getString("TestRequest")); //$NON-NLS-1$
+				actions.put(Analysis.typ, LangModelSurvey.getString("Analysis")); //$NON-NLS-1$
+				actions.put(Modeling.typ, LangModelSurvey.getString("Modeling")); //$NON-NLS-1$
+				actions.put(Evaluation.typ, LangModelSurvey.getString("Evaluation")); //$NON-NLS-1$
+				actions.put(Test.typ, LangModelSurvey.getString("Testing")); //$NON-NLS-1$
+				actions.put(TestRequest.typ, LangModelSurvey.getString("TestRequest")); //$NON-NLS-1$
 				s = (String) actions.get(this.result.getResultType());
 				if (s == null) s = ""; //$NON-NLS-1$
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_CREATED))

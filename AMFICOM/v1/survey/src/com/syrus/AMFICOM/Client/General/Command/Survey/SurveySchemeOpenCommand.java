@@ -1,8 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
 import java.awt.*;
-import java.awt.event.*;
-
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
@@ -88,7 +86,7 @@ public class SurveySchemeOpenCommand extends VoidCommand
 				frame = new SchemeViewerFrame(aContext, spanel);
 //				frame = new SchemeViewerFrame(aContext);
 				frame.setTitle("Ñץולא סועט");
-				frame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+				frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				desktopPane.add(frame);
 			}
 			frame.setLocation(dim.width / 5, dim.height / 4);
@@ -108,7 +106,7 @@ public class SurveySchemeOpenCommand extends VoidCommand
 			{
 				elementsListFrame = new ElementsListFrame(aContext, false);
 				desktopPane.add(elementsListFrame);
-				elementsListFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+				elementsListFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			}
 			elementsListFrame.setVisible(true);
 			elementsListFrame.setSize(dim.width / 5, 2 * dim.height / 8);
@@ -117,7 +115,7 @@ public class SurveySchemeOpenCommand extends VoidCommand
 			{
 				propsFrame = new PropsFrame(aContext, false);
 				desktopPane.add(propsFrame);
-				propsFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+				propsFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			}
 //			propsFrame.can_be_editable = false;
 			propsFrame.setVisible(true);

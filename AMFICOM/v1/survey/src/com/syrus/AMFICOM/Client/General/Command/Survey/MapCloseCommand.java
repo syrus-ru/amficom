@@ -13,6 +13,7 @@ public class MapCloseCommand extends VoidCommand
 
 	public MapCloseCommand()
 	{
+		// nothing
 	}
 
 	public MapCloseCommand(Dispatcher dispatcher, ApplicationContext aContext)

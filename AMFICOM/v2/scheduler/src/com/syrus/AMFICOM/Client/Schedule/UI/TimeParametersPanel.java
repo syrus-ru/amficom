@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
@@ -129,7 +130,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				gbc.gridy++;
 				gbc.ipadx = 0;
 				gbc.weightx = 1.0;
-				panel.add(new JLabel(I18N.getString("hh_mm")), gbc);
+				panel.add(new JLabel(LangModelScheduler.getString("hh_mm")), gbc);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gbc.gridx += 2;
 				gbc.weightx = 0.0;
@@ -290,7 +291,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			this.gbc.weightx = 1.0;
 			this.gbc.gridwidth = 1;
 			this.gbc.gridx = 1;
-			add(new JLabel(I18N.getString("Each")), this.gbc);
+			add(new JLabel(LangModelScheduler.getString("Each")), this.gbc);
 			this.gbc.gridwidth = GridBagConstraints.RELATIVE;
 			this.gbc.gridx++;
 			//gbc.ipadx = TimeParametersPanel.btn_size.width;
@@ -298,7 +299,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			this.gbc.gridwidth = GridBagConstraints.REMAINDER;
 			this.gbc.gridx++;
 			this.gbc.ipadx = 0;
-			add(new JLabel(I18N.getString("hours")), this.gbc);
+			add(new JLabel(LangModelScheduler.getString("hours")), this.gbc);
 			this.gbc.gridx = 1;
 			this.gbc.gridy++;
 			addHorizontalSeparator(this, this.gbc);
@@ -316,13 +317,13 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 				public void actionPerformed(ActionEvent e) {
 					JPanel p = new JPanel();
-					p.add(new JLabel(I18N.getString("Test_time") + ":"));
+					p.add(new JLabel(LangModelScheduler.getString("Test_time") + ":"));
 					HourSpinner hs = new HourSpinner();
 					hs.getModel().setValue(new Date(0));
 					p.add(hs);
-					p.add(new JLabel(" " + I18N.getString("hh_mm") + " "));
+					p.add(new JLabel(" " + LangModelScheduler.getString("hh_mm") + " "));
 					int res = JOptionPane
-							.showConfirmDialog(HourPanel.this, p, I18N
+							.showConfirmDialog(HourPanel.this, p, LangModelScheduler
 									.getString("Add"),
 									JOptionPane.OK_CANCEL_OPTION);
 					if (res == JOptionPane.OK_OPTION) {
@@ -364,7 +365,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				this.gbc.gridy++;
 				this.gbc.gridwidth = 1;
 				this.gbc.gridheight = 1;
-				panel.add(new JLabel(I18N.getString("Time")), this.gbc);
+				panel.add(new JLabel(LangModelScheduler.getString("Time")), this.gbc);
 				this.gbc.gridwidth = GridBagConstraints.RELATIVE;
 				this.gbc.gridheight = 2;
 				this.gbc.gridx++;
@@ -383,7 +384,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				this.gbc.gridy++;
 				this.gbc.ipadx = 0;
 				this.gbc.weightx = 1.0;
-				panel.add(new JLabel(I18N.getString("hh_mm")), this.gbc);
+				panel.add(new JLabel(LangModelScheduler.getString("hh_mm")), this.gbc);
 				this.gbc.gridwidth = GridBagConstraints.REMAINDER;
 				this.gbc.gridx += 2;
 				this.gbc.weightx = 0.0;
@@ -528,7 +529,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			gbc.gridx = 1;
 			gbc.weightx = 1.0;
 			gbc.gridwidth = 1;
-			add(new JLabel(I18N.getString("Each")), gbc);
+			add(new JLabel(LangModelScheduler.getString("Each")), gbc);
 			gbc.gridx++;
 			gbc.gridwidth = GridBagConstraints.RELATIVE;
 			//gbc.ipadx = TimeParametersPanel.btn_size.width;
@@ -536,7 +537,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			gbc.ipadx = 0;
 			gbc.gridx++;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			add(new JLabel(I18N.getString("mins")), gbc);
+			add(new JLabel(LangModelScheduler.getString("mins")), gbc);
 			addGlueLabel();
 		}
 
@@ -1518,7 +1519,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		startDateButton.setDefaultCapable(false);
 
 		startDateButton.setFocusable(false);
-		startDateButton.setToolTipText(I18N.getString("Calendar"));
+		startDateButton.setToolTipText(LangModelScheduler.getString("Calendar"));
 		startDateButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1549,7 +1550,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		endDateButton.setDefaultCapable(false);
 
 		endDateButton.setFocusable(false);
-		endDateButton.setToolTipText(I18N.getString("Calendar"));
+		endDateButton.setToolTipText(LangModelScheduler.getString("Calendar"));
 		endDateButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1570,7 +1571,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		addHorizontalSeparator(this, gbc);
 
-		patternRadioButton = UIStorage.createRadioButton(I18N
+		patternRadioButton = UIStorage.createRadioButton(LangModelScheduler
 				.getString("UsePattern"), new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1666,7 +1667,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					}
 
 				});
-		oneRadioButton = UIStorage.createRadioButton(I18N.getString("Onetime"),
+		oneRadioButton = UIStorage.createRadioButton(LangModelScheduler.getString("Onetime"),
 				new AbstractAction() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -1684,7 +1685,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					}
 				});
 
-		paramsRadioButton = UIStorage.createRadioButton(I18N
+		paramsRadioButton = UIStorage.createRadioButton(LangModelScheduler
 				.getString("UseParameters"), new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1713,7 +1714,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		gbc.gridy++;
 		addHorizontalSeparator(this, gbc);
 
-		continuosRadioButton = new JRadioButton(I18N.getString("Continual"));
+		continuosRadioButton = new JRadioButton(LangModelScheduler.getString("Continual"));
 		continuosRadioButton.addItemListener(new ItemListener() {
 
 			public void itemStateChanged(ItemEvent e) {
@@ -1733,7 +1734,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			}
 		});
 
-		periodicalRadioButton = new JRadioButton(I18N.getString("Periodical"));
+		periodicalRadioButton = new JRadioButton(LangModelScheduler.getString("Periodical"));
 		periodicalRadioButton.addItemListener(new ItemListener() {
 
 			public void itemStateChanged(ItemEvent e) {
@@ -1829,8 +1830,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			gbc.weighty = weightY;
 		}
 
-		synchroRadioButton = new JRadioButton(I18N.getString("Together"));
-		alternateRadioButton = new JRadioButton(I18N.getString("InTurn"));
+		synchroRadioButton = new JRadioButton(LangModelScheduler.getString("Together"));
+		alternateRadioButton = new JRadioButton(LangModelScheduler.getString("InTurn"));
 		synchroRadioButton.setEnabled(false);
 		alternateRadioButton.setEnabled(false);
 		ButtonGroup group3 = new ButtonGroup();
@@ -1852,8 +1853,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		addHorizontalSeparator(this, gbc);
 
 		{
-			applyButton = new JButton(I18N.getString("Apply"));
-			createButton = new JButton(I18N.getString("Create"));
+			applyButton = new JButton(LangModelScheduler.getString("Apply"));
+			createButton = new JButton(LangModelScheduler.getString("Create"));
 
 			applyButton.addActionListener(new ActionListener() {
 

@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Test.*;
 import com.syrus.AMFICOM.Client.Survey.*;
 
 public class ViewSurveyNavigatorCommand extends ViewNavigatorCommand

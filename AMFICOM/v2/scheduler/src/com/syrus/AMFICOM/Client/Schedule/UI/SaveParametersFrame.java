@@ -11,9 +11,9 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.CORBA.General.TestReturnType;
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 /**
@@ -56,7 +56,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 	}
 
 	private void init() {
-		setTitle(I18N.getString("Saving_options")); //$NON-NLS-1$
+		setTitle(LangModelScheduler.getString("Saving_options")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);
@@ -74,7 +74,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 			gbc.weightx = 1.0;
 			gbc.weighty = 0.0;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			allResultsButton = new JRadioButton(I18N
+			allResultsButton = new JRadioButton(LangModelScheduler
 					.getString("AllTestResults")); //$NON-NLS-1$
 			allResultsButton
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -83,7 +83,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 							//jButton1_actionPerformed(e);
 						}
 					});
-			recognizedEventsButton = new JRadioButton(I18N
+			recognizedEventsButton = new JRadioButton(LangModelScheduler
 					.getString("Only_recognized_events")); //$NON-NLS-1$
 			recognizedEventsButton
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -92,7 +92,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 							//jButton2_actionPerformed(e);
 						}
 					});
-			measurementIdButton = new JRadioButton(I18N
+			measurementIdButton = new JRadioButton(LangModelScheduler
 					.getString("Only_Measurement_Id")); //$NON-NLS-1$
 			measurementIdButton
 					.addActionListener(new java.awt.event.ActionListener() {

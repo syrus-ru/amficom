@@ -1,17 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import java.awt.*; 
-import javax.swing.*; 
 
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Survey.*;
-//import com.syrus.AMFICOM.Client.Resource.Analysis.*;
-//import com.syrus.AMFICOM.Client.Survey.Analysis.*;
+
 
 public class OpenAnalysisCommand extends VoidCommand 
 {
@@ -21,6 +16,7 @@ public class OpenAnalysisCommand extends VoidCommand
 
 	public OpenAnalysisCommand()
 	{
+		// nothing 
 	}
 
 	public OpenAnalysisCommand(Dispatcher dispatcher, ApplicationContext aContext, ApplicationModelFactory factory)

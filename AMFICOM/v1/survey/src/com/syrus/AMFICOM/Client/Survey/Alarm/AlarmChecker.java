@@ -1,25 +1,21 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm;
 
-import java.io.*;
 import java.util.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.text.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.io.*;
 
-import com.syrus.AMFICOM.Client.Survey.*;
-
+/**
+ * @deprecated
+ */
 public class AlarmChecker extends Thread
 {
 	private Dispatcher dispatcher;

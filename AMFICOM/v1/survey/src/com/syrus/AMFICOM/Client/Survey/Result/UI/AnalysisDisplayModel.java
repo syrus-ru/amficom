@@ -10,33 +10,30 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
 
 public class AnalysisDisplayModel extends StubDisplayModel
 {
-	public AnalysisDisplayModel()
-	{
-	}
 
-	public PropertyEditor getColumnEditor(ObjectResource o, String col_id)
+	public PropertyEditor getColumnEditor(ObjectResource o, String colId)
 	{
 		if (!(o instanceof Analysis))
 			return null;
 		Analysis a = (Analysis)o;
 
-		if(col_id.equals("name"))
+		if(colId.equals("name"))
 			return new TextFieldEditor(a.getName());
 		return null;
 	}
 
-	public String getColumnName (String col_id)
+	public String getColumnName (String colId)
 	{
 		String s = "";
-		if(col_id.equals("id"))
+		if(colId.equals("id"))
 			s = "Идентификатор";
-		if(col_id.equals("name"))
+		if(colId.equals("name"))
 			s = "Название";
-		if(col_id.equals("created"))
+		if(colId.equals("created"))
 			s = "Время создания";
-		if(col_id.equals("user_id"))
+		if(colId.equals("user_id"))
 			s = "Пользователь";
-		if(col_id.equals("description"))
+		if(colId.equals("description"))
 			s = "Комментарий";
 		return s;
 	}
@@ -53,11 +50,11 @@ public class AnalysisDisplayModel extends StubDisplayModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(a.getName());
 		if(col_id.equals("modified"))
-			return new TextFieldEditor(sdf.format(new Date(a.modified)));
+			return new TextFieldEditor(sdf.format(new Date(a.getModified())));
 		if(col_id.equals("user_id"))
-			return new TextFieldEditor(a.user_id);
+			return new TextFieldEditor(a.getUserId());
 		if(col_id.equals("description"))
-			return new TextFieldEditor(a.description);
+			return new TextFieldEditor(a.getDescription());
 		return null;
 	}
 

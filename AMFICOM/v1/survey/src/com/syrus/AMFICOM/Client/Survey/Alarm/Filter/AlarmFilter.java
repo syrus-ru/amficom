@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm.Filter;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Survey.General.I18N;
 import com.syrus.AMFICOM.CORBA.General.*;
 import java.util.*;
 
@@ -47,7 +47,7 @@ public class AlarmFilter extends ObjectResourceFilter
 		String result = null;
 		if(colId == null)
 			result = "";
-		else result = I18N.getString(colId);
+		else result = LangModelSurvey.getString(colId);
 		return result;
 //		if(colId.equals("source"))
 //			return LangModelSurvey.String("labelsource");

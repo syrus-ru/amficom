@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.*;
 import java.util.regex.*;
 
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -61,19 +61,19 @@ public class TemporalPattern implements TransferableObject {
 		public void fillAllData() {
 			if (this.minutes == null)
 					this.minutes = parseExpression(
-							I18N.getString("min"), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelScheduler.getString("min"), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.hours == null)
 					this.hours = parseExpression(
-							I18N.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelScheduler.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.dayOfMonth == null)
-					this.dayOfMonth = parseExpression(I18N
+					this.dayOfMonth = parseExpression(LangModelScheduler
 							.getString("day_of_month"), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.month == null)
 					this.month = parseExpression(
-							I18N.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelScheduler.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
 			this.month.names = MONTH_NAMES;
 			if (this.dayOfWeek == null)
-					this.dayOfWeek = parseExpression(I18N
+					this.dayOfWeek = parseExpression(LangModelScheduler
 							.getString("day_of_week"), //$NON-NLS-1$
 							"*", 0, 6); //$NON-NLS-1$ //$NON-NLS-2$
 			this.dayOfWeek.names = DAY_OF_WEEK_NAMES;
@@ -109,7 +109,7 @@ public class TemporalPattern implements TransferableObject {
 				if (this.hours.isAll()) {
 					desc.append(this.minutes.toString());
 					desc.append(" "); //$NON-NLS-1$
-					desc.append(I18N.getString("of")); //$NON-NLS-1$
+					desc.append(LangModelScheduler.getString("of")); //$NON-NLS-1$
 					desc.append(" "); //$NON-NLS-1$
 					desc.append(this.hours.toString());
 
@@ -216,32 +216,32 @@ public class TemporalPattern implements TransferableObject {
 						switch (i) {
 							case 1:
 								//minute
-								this.minutes = parseExpression(I18N
+								this.minutes = parseExpression(LangModelScheduler
 										.getString("min"), subString, 0, //$NON-NLS-1$
 										59);
 								break;
 							case 2:
 								//hour
-								this.hours = parseExpression(I18N
+								this.hours = parseExpression(LangModelScheduler
 										.getString("hour"), //$NON-NLS-1$
 										subString, 0, //$NON-NLS-1$
 										23);
 								break;
 							case 3:
 								//day of month
-								this.dayOfMonth = parseExpression(I18N
+								this.dayOfMonth = parseExpression(LangModelScheduler
 										.getString("day_of_month"), subString, //$NON-NLS-1$
 										1, 31);
 								break;
 							case 4:
 								//month
-								this.month = parseExpression(I18N
+								this.month = parseExpression(LangModelScheduler
 										.getString("month"), subString, 0, //$NON-NLS-1$
 										11);
 								break;
 							case 5:
 								//day of week
-								this.dayOfWeek = parseExpression(I18N
+								this.dayOfWeek = parseExpression(LangModelScheduler
 										.getString("day_of_week"), //$NON-NLS-1$
 										subString, 0, 6);
 								break;
@@ -568,7 +568,7 @@ public class TemporalPattern implements TransferableObject {
 				for (int i = 0; i < this.divisor.length; i++) {
 					if (sbuf.length() > 0) sbuf.append(", "); //$NON-NLS-1$
 
-					sbuf.append(I18N.getString("each")); //$NON-NLS-1$
+					sbuf.append(LangModelScheduler.getString("each")); //$NON-NLS-1$
 					sbuf.append(" "); //$NON-NLS-1$
 					String str = Integer.toString(this.divisor[i]);
 					if (this.divisor[i] != 1) {
@@ -582,14 +582,14 @@ public class TemporalPattern implements TransferableObject {
 				for (int i = 0; i < this.starts.length; i++) {
 					if (this.starts[i] != this.ends[i]) {
 						if (sbuf.length() > 0) sbuf.append(", "); //$NON-NLS-1$
-						sbuf.append(I18N.getString("from")); //$NON-NLS-1$
+						sbuf.append(LangModelScheduler.getString("from")); //$NON-NLS-1$
 						sbuf.append(" "); //$NON-NLS-1$
 						if (this.names == null)
 							sbuf.append(Integer.toString(this.starts[i]));
 						else
 							sbuf.append(this.names[this.starts[i]]);
 						sbuf.append(" "); //$NON-NLS-1$
-						sbuf.append(I18N.getString("to")); //$NON-NLS-1$
+						sbuf.append(LangModelScheduler.getString("to")); //$NON-NLS-1$
 						sbuf.append(" "); //$NON-NLS-1$
 						if (this.names == null)
 							sbuf.append(Integer.toString(this.ends[i]));
@@ -615,18 +615,18 @@ public class TemporalPattern implements TransferableObject {
 		}
 	}
 	public static final String[]	DAY_OF_WEEK_NAMES		= new String[] {
-			I18N.getString("Sunday"), I18N.getString("Monday"), //$NON-NLS-1$ //$NON-NLS-2$
-			I18N.getString("Tuesday"), I18N.getString("Wednesday"), //$NON-NLS-1$ //$NON-NLS-2$
-			I18N.getString("Thursday"), I18N.getString("Friday"), //$NON-NLS-1$ //$NON-NLS-2$
-			I18N.getString("Saturday"),						};							//$NON-NLS-1$
+			LangModelScheduler.getString("Sunday"), LangModelScheduler.getString("Monday"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelScheduler.getString("Tuesday"), LangModelScheduler.getString("Wednesday"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelScheduler.getString("Thursday"), LangModelScheduler.getString("Friday"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelScheduler.getString("Saturday"),						};							//$NON-NLS-1$
 
 	public static final String[]	MONTH_NAMES				= new String[] {
-			I18N.getString("January"), I18N.getString("February"), //$NON-NLS-1$ //$NON-NLS-2$
-			I18N.getString("March"), I18N.getString("April"), //$NON-NLS-1$ //$NON-NLS-2$
-			I18N.getString("May"), I18N.getString("June"), //$NON-NLS-1$ //$NON-NLS-2$
-			I18N.getString("July"), I18N.getString("Augest"), //$NON-NLS-1$ //$NON-NLS-2$
-			I18N.getString("September"), I18N.getString("October"), //$NON-NLS-1$ //$NON-NLS-2$
-			I18N.getString("November"), I18N.getString("December")};					//$NON-NLS-1$ //$NON-NLS-2$
+			LangModelScheduler.getString("January"), LangModelScheduler.getString("February"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelScheduler.getString("March"), LangModelScheduler.getString("April"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelScheduler.getString("May"), LangModelScheduler.getString("June"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelScheduler.getString("July"), LangModelScheduler.getString("Augest"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelScheduler.getString("September"), LangModelScheduler.getString("October"), //$NON-NLS-1$ //$NON-NLS-2$
+			LangModelScheduler.getString("November"), LangModelScheduler.getString("December")};					//$NON-NLS-1$ //$NON-NLS-2$
 	public static final int			TIMESTAMPTYPE_CONTINUOS	= 2;
 
 	public static final int			TIMESTAMPTYPE_ONETIME	= 1;

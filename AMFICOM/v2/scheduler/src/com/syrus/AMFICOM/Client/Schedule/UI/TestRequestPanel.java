@@ -11,9 +11,9 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
 /**
@@ -145,7 +145,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 
 		if (needNewReq) {
 			testRequest = new TestRequest(dsi.GetUId(TestRequest.typ));
-			testRequest.setName(I18N.getString("Test created at")
+			testRequest.setName(LangModelScheduler.getString("Test created at")
 					+ " "
 					+ UIStorage.SDF
 							.format(new Date(System.currentTimeMillis())));
@@ -258,7 +258,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
 		//		this.setLayout(new GridLayout(0,2));
-		JLabel titleLabel = new JLabel(I18N.getString("Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel titleLabel = new JLabel(LangModelScheduler.getString("Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		gbc.weightx = 0.0;
 		gbc.gridheight = 1;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
@@ -269,7 +269,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		add(nameTextField, gbc);
 		//		add(nameTextField);
 
-		JLabel ownerLabel = new JLabel(I18N.getString("Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel ownerLabel = new JLabel(LangModelScheduler.getString("Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		gbc.weightx = 0.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(ownerLabel, gbc);
@@ -279,7 +279,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		add(ownerTextField, gbc);
 		//		add(ownerTextField);
 
-		JLabel typeLabel = new JLabel(I18N.getString("Type") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel typeLabel = new JLabel(LangModelScheduler.getString("Type") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		gbc.gridheight = GridBagConstraints.RELATIVE;
 		gbc.weightx = 0.0;
@@ -290,7 +290,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		add(typeTextField, gbc);
 		//		add(typeTextField);
 
-		JLabel objectLabel = new JLabel(I18N.getString("TestObject") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel objectLabel = new JLabel(LangModelScheduler.getString("TestObject") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		gbc.gridheight = GridBagConstraints.REMAINDER;
 		gbc.weightx = 0.0;

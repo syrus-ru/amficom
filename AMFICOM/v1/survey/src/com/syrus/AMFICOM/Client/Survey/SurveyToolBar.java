@@ -8,7 +8,6 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Survey.General.I18N;
 
 public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 {
@@ -59,7 +58,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		menuViewMapOpen.setMaximumSize(buttonSize);
 		menuViewMapOpen.setPreferredSize(buttonSize);
-		menuViewMapOpen.setToolTipText(I18N.getString("Topological_scheme_of_net"));
+		menuViewMapOpen.setToolTipText(LangModelSurvey.getString("Topological_scheme_of_net"));
 		menuViewMapOpen.setName("menuVisualizeNetGIS");
 		menuViewMapOpen.addActionListener(actionAdapter);
 
@@ -67,7 +66,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		menuViewSchemeOpen.setMaximumSize(buttonSize);
 		menuViewSchemeOpen.setPreferredSize(buttonSize);
-		menuViewSchemeOpen.setToolTipText(I18N.getString("Net_scheme"));
+		menuViewSchemeOpen.setToolTipText(LangModelSurvey.getString("Net_scheme"));
 		menuViewSchemeOpen.setName("menuVisualizeNet");
 		menuViewSchemeOpen.addActionListener(actionAdapter);
 
@@ -75,7 +74,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
                                 getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));  
 		menuViewArchive.setMaximumSize(buttonSize);
 		menuViewArchive.setPreferredSize(buttonSize);
-		menuViewArchive.setToolTipText(I18N.getString("Measurement_archive"));
+		menuViewArchive.setToolTipText(LangModelSurvey.getString("Measurement_archive"));
 		menuViewArchive.setName("menuEvaluateArchive");
 		menuViewArchive.addActionListener(actionAdapter);
 
@@ -83,7 +82,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
                                 getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));  
 		menuViewAlarms.setMaximumSize(buttonSize);
 		menuViewAlarms.setPreferredSize(buttonSize);
-		menuViewAlarms.setToolTipText(I18N.getString("Alarm_signals"));
+		menuViewAlarms.setToolTipText(LangModelSurvey.getString("Alarm_signals"));
 		menuViewAlarms.setName("menuMaintainAlarm");
 		menuViewAlarms.addActionListener(actionAdapter);
 
@@ -91,7 +90,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
                                 getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));  
 		menuViewResult.setMaximumSize(buttonSize);
 		menuViewResult.setPreferredSize(buttonSize);
-		menuViewResult.setToolTipText(I18N.getString("Results_overview"));
+		menuViewResult.setToolTipText(LangModelSurvey.getString("Results_overview"));
 		menuViewResult.setName("menuEvaluateResult");
 		menuViewResult.addActionListener(actionAdapter);
 
@@ -99,7 +98,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		menuEvaluateScheduler.setMaximumSize(buttonSize);
 		menuEvaluateScheduler.setPreferredSize(buttonSize);
-		menuEvaluateScheduler.setToolTipText(I18N.getString("Scheduling"));
+		menuEvaluateScheduler.setToolTipText(LangModelSurvey.getString("Scheduling"));
 		menuEvaluateScheduler.setName("menuEvaluateScheduler");
 		menuEvaluateScheduler.addActionListener(actionAdapter);
 
@@ -107,7 +106,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		menuEvaluateAnalize.setMaximumSize(buttonSize);
 		menuEvaluateAnalize.setPreferredSize(buttonSize);
-		menuEvaluateAnalize.setToolTipText(I18N.getString("Evaluation_analysis"));
+		menuEvaluateAnalize.setToolTipText(LangModelSurvey.getString("Evaluation_analysis"));
 		menuEvaluateAnalize.setName("menuEvaluateAnalize");
 		menuEvaluateAnalize.addActionListener(actionAdapter);
 
@@ -115,7 +114,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		menuEvaluateAnalizeExt.setMaximumSize(buttonSize);
 		menuEvaluateAnalizeExt.setPreferredSize(buttonSize);
-		menuEvaluateAnalizeExt.setToolTipText(I18N.getString("Researching"));
+		menuEvaluateAnalizeExt.setToolTipText(LangModelSurvey.getString("Researching"));
 		menuEvaluateAnalizeExt.setName("menuEvaluateAnalizeExt");
 		menuEvaluateAnalizeExt.addActionListener(actionAdapter);
 
@@ -123,7 +122,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		menuEvaluateNorms.setMaximumSize(buttonSize);
 		menuEvaluateNorms.setPreferredSize(buttonSize);
-		menuEvaluateNorms.setToolTipText(I18N.getString("Evaluation"));
+		menuEvaluateNorms.setToolTipText(LangModelSurvey.getString("Evaluation"));
 		menuEvaluateNorms.setName("menuEvaluateNorms");
 		menuEvaluateNorms.addActionListener(actionAdapter);
 
@@ -131,7 +130,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		menuEvaluatePrognosis.setMaximumSize(buttonSize);
 		menuEvaluatePrognosis.setPreferredSize(buttonSize);
-		menuEvaluatePrognosis.setToolTipText(I18N.getString("Forecasting"));
+		menuEvaluatePrognosis.setToolTipText(LangModelSurvey.getString("Forecasting"));
 		menuEvaluatePrognosis.setName("menuEvaluatePrognosis");
 		menuEvaluatePrognosis.addActionListener(actionAdapter);
 

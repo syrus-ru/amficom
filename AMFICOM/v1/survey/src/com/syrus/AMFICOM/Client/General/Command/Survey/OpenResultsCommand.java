@@ -8,10 +8,7 @@ import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Survey.*;
 import com.syrus.AMFICOM.Client.Survey.Result.*;
-import java.util.*;
 
 public class OpenResultsCommand extends VoidCommand
 {
@@ -24,6 +21,7 @@ public class OpenResultsCommand extends VoidCommand
 
 	public OpenResultsCommand()
 	{
+		 // nothing
 	}
 
 	public OpenResultsCommand(Dispatcher dispatcher, JDesktopPane desktop, ApplicationContext aContext, ApplicationModelFactory factory)
@@ -74,9 +72,9 @@ public class OpenResultsCommand extends VoidCommand
 		aC.setDataSourceInterface(aC.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 		aC.setDispatcher(dispatcher);
 
-		DataSourceInterface dataSource = aC.getDataSourceInterface();
-		if(dataSource == null)
-			;//			return;
+//		DataSourceInterface dataSource = aC.getDataSourceInterface();
+//		if(dataSource == null);
+//		//			return;
 		System.out.println("Starting Results frame");
 
 		//		dataSource.GetResults();
@@ -102,10 +100,10 @@ public class OpenResultsCommand extends VoidCommand
 		frame.toFront();
 
 	/*	Enumeration enum = Pool.getHash("result").elements();
-		Result r = (Result)enum.nextElement();
+		Result result = (Result)enum.nextElement();
 		while (enum.hasMoreElements())
-			r = (Result)enum.nextElement();
-		//frame.setResult(r);
+			result = (Result)enum.nextElement();
+		//frame.setResult(result);
 		frame.showActiveResult();*/
 	}
 

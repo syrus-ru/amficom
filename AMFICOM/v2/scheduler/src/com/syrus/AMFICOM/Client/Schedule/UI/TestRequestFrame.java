@@ -6,10 +6,10 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TestRequestFrame extends JInternalFrame implements
@@ -22,7 +22,7 @@ public class TestRequestFrame extends JInternalFrame implements
 
 	public TestRequestFrame(ApplicationContext aContext) {
 		//this.aContext = aContext;
-		setTitle(I18N.getString("TestOptions")); //$NON-NLS-1$
+		setTitle(LangModelScheduler.getString("TestOptions")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);

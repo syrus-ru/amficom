@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.Resource.Result;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
-import com.syrus.AMFICOM.Client.Survey.General.I18N;
 
 import java.awt.*;
 import java.util.*;
@@ -30,7 +30,7 @@ public class ResultSetModel extends ObjectResourceModel {
 							this.resultSet.getEndTime()));
 			if (colId.equals(ConstStorage.COLUMN_NAME_ACTIVE)) {
 				if (this.resultSet.isActive())
-					s = I18N.getString("Yes"); //$NON-NLS-1$
+					s = LangModelSurvey.getString("Yes"); //$NON-NLS-1$
 				else
 					s = ""; //$NON-NLS-1$
 			}

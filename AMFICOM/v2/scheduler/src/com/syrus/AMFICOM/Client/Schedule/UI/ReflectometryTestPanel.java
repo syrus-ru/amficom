@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -190,7 +191,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 				ByteArray byteArray;
 				String refract = refractTextField.getText();
 				if ((refract == null) || (refract.length() == 0))
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("index_of_refraction_is_not_set")); //$NON-NLS-1$
 				byteArray = new ByteArray(Double.parseDouble(refract));
 				// dsi.GetUId("testargument")
@@ -198,7 +199,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
 						.getBytes(), PARAMETER_REFRACTION, "double"); //$NON-NLS-1$
 				if (refractParam == null)
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("index_of_refraction_is_not_set"));
 
 				tas.addArgument(refractParam);
@@ -207,12 +208,12 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 						PARAMETER_WAVELENGHT);
 				Object wave = waveLengthComboBox.getSelectedItem();
 				if (wave == null)
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("wave_length_is_not_set"));
 
 				String waveStr = wave.toString();
 				if ((waveStr == null) || (waveStr.length() == 0))
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("wave_length_is_not_set"));
 				byteArray = new ByteArray(Integer.parseInt(waveStr));
 				//			 dsi.GetUId("testargument")
@@ -223,11 +224,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 
 				Object average = averageQuantityComboBox.getSelectedItem();
 				if (average == null)
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("average_quantity_is_not_set"));
 				String averageStr = average.toString();
 				if ((averageStr == null) || (averageStr.length() == 0))
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("average_quantity_is_not_set"));
 
 				apt = (ActionParameterType) testType.getSortedArguments().get(
@@ -240,11 +241,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 				tas.addArgument(averageOutCountParam);
 				Object pulse = pulseWidthComboBox.getSelectedItem();
 				if (pulse == null)
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("pulse_width_is_not_set"));
 				String pulseStr = pulse.toString();
 				if ((pulseStr == null) || (pulseStr.length() == 0))
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("pulse_width_is_not_set"));
 				apt = (ActionParameterType) testType.getSortedArguments().get(
 						PARAMETER_PULSE_WIDTH);
@@ -257,11 +258,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 
 				Object resolution = resolutionComboBox.getSelectedItem();
 				if (resolution == null)
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("resolution_is_not_set"));
 				String resolutionStr = resolution.toString();
 				if ((resolutionStr == null) || (resolutionStr.length() == 0))
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("resolution_is_not_set"));
 				apt = (ActionParameterType) testType.getSortedArguments().get(
 						PARAMETER_RESOLUTION);
@@ -274,12 +275,12 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 
 				Object distance = maxDistanceComboBox.getSelectedItem();
 				if (distance == null)
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("distance_is_not_set"));
 
 				String distanceStr = distance.toString();
 				if ((distanceStr == null) || (distanceStr.length() == 0))
-						throw new IllegalArgumentException(I18N
+						throw new IllegalArgumentException(LangModelScheduler
 								.getString("distance_is_not_set"));
 				apt = (ActionParameterType) testType.getSortedArguments().get(
 						PARAMETER_MAX_DISTANCE);
@@ -293,7 +294,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 			} catch (IllegalArgumentException e) {
 				String message = e.getMessage();
 				System.out.println(message);
-				JOptionPane.showMessageDialog(this, message, I18N
+				JOptionPane.showMessageDialog(this, message, LangModelScheduler
 						.getString("Error"), JOptionPane.OK_OPTION);
 				tas = null;
 			}
@@ -583,13 +584,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 				}
 			}
 		});
-		JLabel refractLabel = new JLabel(I18N.getString("Index_Of_Refraction")); //$NON-NLS-1$
-		JLabel waveLengthLabel = new JLabel(I18N.getString("WaveLength")); //$NON-NLS-1$
-		JLabel countOfAverageOutLabel = new JLabel(I18N
+		JLabel refractLabel = new JLabel(LangModelScheduler.getString("Index_Of_Refraction")); //$NON-NLS-1$
+		JLabel waveLengthLabel = new JLabel(LangModelScheduler.getString("WaveLength")); //$NON-NLS-1$
+		JLabel countOfAverageOutLabel = new JLabel(LangModelScheduler
 				.getString("AverageQuantity")); //$NON-NLS-1$
-		JLabel pulseWidthLabel = new JLabel(I18N.getString("PulseWidth")); //$NON-NLS-1$
-		JLabel resolutionLabel = new JLabel(I18N.getString("Resolution")); //$NON-NLS-1$
-		JLabel maxDistanceLabel = new JLabel(I18N.getString("Distance")); //$NON-NLS-1$
+		JLabel pulseWidthLabel = new JLabel(LangModelScheduler.getString("PulseWidth")); //$NON-NLS-1$
+		JLabel resolutionLabel = new JLabel(LangModelScheduler.getString("Resolution")); //$NON-NLS-1$
+		JLabel maxDistanceLabel = new JLabel(LangModelScheduler.getString("Distance")); //$NON-NLS-1$
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;

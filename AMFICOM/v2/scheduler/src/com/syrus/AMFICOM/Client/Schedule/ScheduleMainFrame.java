@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Schedule.UI.*;
-import com.syrus.AMFICOM.Client.Scheduler.General.*;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.io.*;
 
