@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.6 2005/02/11 10:22:30 bob Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.7 2005/02/11 11:55:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/11 10:22:30 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/11 11:55:46 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -143,7 +143,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 	public void saveParameterType(ParameterType parameterType, AccessIdentity  accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
 		try {
-			database.update(parameterType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(parameterType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.saveParameterType | UpdateObjectException: " + e.getMessage());
@@ -164,7 +164,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 				CommunicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		try {
-			database.update(characteristicType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(characteristicType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristicType | UpdateObjectException: " + e.getMessage());
@@ -185,7 +185,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 	public void saveCharacteristic(Characteristic characteristic, AccessIdentity  accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
-			database.update(characteristic, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(characteristic, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristic | UpdateObjectException: " + e.getMessage());
@@ -208,7 +208,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 	public void saveParameterTypes(List list, AccessIdentity  accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.saveParameterTypes | UpdateObjectException: " + e.getMessage());
@@ -227,7 +227,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 	public void saveCharacteristicTypes(List list, AccessIdentity  accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristicTypes | UpdateObjectException: " + e.getMessage());
@@ -249,7 +249,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 	public void saveCharacteristics(List list, AccessIdentity  accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristics | UpdateObjectException: " + e.getMessage());

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.8 2005/02/11 10:34:58 bob Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.9 2005/02/11 11:56:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -31,7 +30,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/11 10:34:58 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/11 11:56:08 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -333,7 +332,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	public void saveServers(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveServers | UpdateObjectException: " + e.getMessage();
