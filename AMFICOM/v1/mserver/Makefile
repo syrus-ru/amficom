@@ -20,6 +20,7 @@ SOURCES := com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
 	com/syrus/AMFICOM/mserver/MServerMeasurementObjectLoader.java \
 	com/syrus/AMFICOM/mserver/MeasurementServer.java \
 	com/syrus/AMFICOM/mserver/MServerImplementation.java \
+	com/syrus/AMFICOM/mserver/MCMConnectionManager.java \
 	com/syrus/AMFICOM/setup/MeasurementServerSetup.java
 
 
