@@ -18,47 +18,38 @@ import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
 public class TestRequestFrame extends JInternalFrame implements
 		OperationListener {
 
-	public static final String	COMMAND_CREATE_TEST			= "CreateTest";
+	public static final String	COMMAND_CREATE_TEST				= "CreateTest";
+	public static final String	COMMAND_APPLY_TEST				= "ApplyTest";
+	public static final String	COMMAND_DATA_REQUEST			= "DataRequest";
+	public static final String	COMMAND_SEND_DATA				= "SendData";
 
-	public static final String	COMMAND_APPLY_TEST			= "ApplyTest";
+	public static final int		DATA_ID_PARAMETERS				= 1;
+	public static final int		DATA_ID_PARAMETERS_PATTERN		= 2;
+	public static final int		DATA_ID_TIMESTAMP				= 3;
+	public static final int		DATA_ID_TYPE					= 4;
+	public static final int		DATA_ID_ELEMENTS				= 5;
+	public static final int		DATA_ID_PARAMETERS_ANALYSIS		= 6;
+	public static final int		DATA_ID_PARAMETERS_EVALUATION	= 7;
+	public static final int		DATA_ID_RETURN_TYPE				= 8;
 
-	public static final String	COMMAND_DATA_REQUEST		= "DataRequest";
-
-	public static final String	COMMAND_SEND_DATA			= "SendData";
-
-	public static final int		DATA_ID_PARAMETERS			= 1;
-
-	public static final int		DATA_ID_PARAMETERS_PATTERN	= 2;
-
-	public static final int		DATA_ID_TIMESTAMP			= 3;
-
-	public static final int		DATA_ID_TYPE				= 4;
-
-	public static final int		DATA_ID_ELEMENTS			= 5;
-
-	private int					receiveDataCount			= 0;
-
-	private static final int	FLAG_CREATE					= 1 << 0;
-
-	private static final int	FLAG_APPLY					= 1 << 1;
-
-	private int					flag						= 0;
+	private int					receiveDataCount				= 0;
+	private static final int	FLAG_CREATE						= 1 << 0;
+	private static final int	FLAG_APPLY						= 1 << 1;
+	private int					flag							= 0;
 
 	private ApplicationContext	aContext;
-
 	private Dispatcher			dispatcher;
-
 	private TestRequestPanel	panel;
 
 	//	private ArrayList unsavedTestList;
 
-	private HashMap				receiveElements;
+	private HashMap				receiveTreeElements;
+	private HashMap				receiveData;
+	private TestReturnType		returnType;
 
-	private TimeStamp			receiveTimeStamp;
-
-	private TestSetup			receiveTestSetup;
-
-	private TestArgumentSet		receiveTestArgumentSet;
+	//	private TimeStamp receiveTimeStamp;
+	//	private TestSetup receiveTestSetup;
+	//	private TestArgumentSet receiveTestArgumentSet;
 
 	public TestRequestFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -125,10 +116,11 @@ public class TestRequestFrame extends JInternalFrame implements
 			// creating test
 			if (flag == 0) {
 				flag = FLAG_CREATE;
-				receiveElements = null;
-				receiveTimeStamp = null;
-				receiveTestSetup = null;
-				receiveTestArgumentSet = null;
+				if (receiveData == null)
+					receiveData = new HashMap();
+				else
+					receiveData.clear();
+				receiveTreeElements = null;
 
 				receiveDataCount = 0;
 				dispatcher.notify(new OperationEvent("", 0,
@@ -138,11 +130,11 @@ public class TestRequestFrame extends JInternalFrame implements
 			// apply test
 			if (flag == 0) {
 				flag = FLAG_APPLY;
-				receiveElements = null;
-				receiveTimeStamp = null;
-				receiveTestSetup = null;
-				receiveTestArgumentSet = null;
-
+				receiveTreeElements = null;
+				if (receiveData == null)
+					receiveData = new HashMap();
+				else
+					receiveData.clear();
 				receiveDataCount = 0;
 				dispatcher.notify(new OperationEvent("", 0,
 						TestRequestFrame.COMMAND_DATA_REQUEST));
@@ -153,22 +145,35 @@ public class TestRequestFrame extends JInternalFrame implements
 				System.out.println("parameters id have got");
 			} else if (id == DATA_ID_ELEMENTS) {
 				System.out.println("elements id have got");
-				receiveElements = (HashMap) obj;
+				receiveTreeElements = (HashMap) obj;
 			} else if (id == DATA_ID_TIMESTAMP) {
 				System.out.println("timestamp id have hot");
 			}
-			if (obj instanceof TestArgumentSet) {
-				System.out.println("parameters instanceof have got");
-				receiveTestArgumentSet = (TestArgumentSet) obj;
+			if (obj instanceof AnalysisType) {
+				System.out.println("AnalysisType instanceof have got");
+				receiveData.put(AnalysisType.typ, obj);
+			} else if (obj instanceof EvaluationType) {
+				System.out.println("EvaluationType instanceof have got");
+				receiveData.put(EvaluationType.typ, obj);
+			} else if (obj instanceof TestArgumentSet) {
+				System.out.println("TestArgumentSet instanceof have got");
+				receiveData.put(TestArgumentSet.typ, obj);
+				receiveDataCount+=2;
+				//receiveTestArgumentSet = (TestArgumentSet) obj;
 			} else if (obj instanceof TestSetup) {
-				System.out.println("parameter pattern instanceof have got");
-				receiveTestSetup = (TestSetup) obj;
+				System.out.println("TestSetup instanceof have got");
+				//receiveTestSetup = (TestSetup) obj;
+				System.out.println(((TestSetup) obj).id);
+				receiveData.put(TestSetup.typ, obj);
 			} else if (obj instanceof TimeStamp) {
 				System.out.println("timestamp instanceof have got");
-				receiveTimeStamp = (TimeStamp) obj;
+				//receiveTimeStamp = (TimeStamp) obj;
+				receiveData.put(TimeStamp.typ, obj);
+			} else if (obj instanceof TestReturnType) {
+				returnType = (TestReturnType) obj;
 			}
 			System.out.println("receiveDataCount:" + receiveDataCount);
-			if (4 == receiveDataCount) {
+			if (7 == receiveDataCount) {
 				if ((flag & FLAG_CREATE) != 0) {
 					System.out.println("createTest");
 					createTest();
@@ -187,38 +192,42 @@ public class TestRequestFrame extends JInternalFrame implements
 	}
 
 	private void createTest() {
-		Test tempTest = new Test(""); //текущий тест
-		tempTest.id = null; // id of unsaved test , will set directly before saving 
-		tempTest.status = TestStatus.TEST_STATUS_SCHEDULED;
-		TestType testType = (TestType) receiveElements.get(TestType.typ);
-		KIS kis = (KIS) receiveElements.get(KIS.typ);
-		MonitoredElement me = (MonitoredElement) receiveElements
+		Test test = new Test(""); //текущий тест
+		test.id = null; // id of unsaved test , will set directly before
+		// saving
+		test.status = TestStatus.TEST_STATUS_SCHEDULED;
+		TestType testType = (TestType) receiveTreeElements.get(TestType.typ);
+		KIS kis = (KIS) receiveTreeElements.get(KIS.typ);
+		MonitoredElement me = (MonitoredElement) receiveTreeElements
 				.get(MonitoredElement.typ);
-		tempTest.test_type_id = testType.id;
-		tempTest.kis_id = kis.id;
-		tempTest.monitored_element_id = me.id;
+		test.test_type_id = testType.id;
+		test.kis_id = kis.id;
+		test.monitored_element_id = me.id;
+
+		test.return_type = returnType;
 
 		TestTimeStamps test_time_stamps = new TestTimeStamps();
 		test_time_stamps._default();
-		
-		// this is new TimeStamp model
-		tempTest.timeStamp = receiveTimeStamp;
-		TimeStamp timeStamp=tempTest.timeStamp;
 
-		if (receiveTimeStamp.getType() == TimeStamp.TIMESTAMPTYPE_ONETIME) {
-			tempTest.temporal_type = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
-			tempTest.start_time = receiveTimeStamp.getPeriodStart();
-//			tempTest.duration = receiveTimeStamp.getPeriodEnd()	- receiveTimeStamp.getPeriodStart();
-			tempTest.duration = 0;
+		// this is new TimeStamp model
+		test.timeStamp = (TimeStamp) receiveData.get(TimeStamp.typ);
+		TimeStamp timeStamp = test.timeStamp;
+
+		if (test.timeStamp.getType() == TimeStamp.TIMESTAMPTYPE_ONETIME) {
+			test.temporal_type = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
+			test.start_time = test.timeStamp.getPeriodStart();
+			//			tempTest.duration = receiveTimeStamp.getPeriodEnd() -
+			// receiveTimeStamp.getPeriodStart();
+			test.duration = 0;
 			timeStamp.setPeriodEnd(timeStamp.getPeriodStart());
-			 
-		} else if (receiveTimeStamp.getType() == TimeStamp.TIMESTAMPTYPE_PERIODIC) {
-			tempTest.temporal_type = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
-			tempTest.start_time = receiveTimeStamp.getPeriodStart();
+
+		} else if (test.timeStamp.getType() == TimeStamp.TIMESTAMPTYPE_PERIODIC) {
+			test.temporal_type = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
+			test.start_time = test.timeStamp.getPeriodStart();
 			/**
 			 * @TODO periodical time
 			 */
-			Time period = receiveTimeStamp.getPeriod();
+			Time period = test.timeStamp.getPeriod();
 			long interval = 0;
 			int scale = period.getScale();
 			int value = period.getValue();
@@ -237,21 +246,54 @@ public class TestRequestFrame extends JInternalFrame implements
 			}
 			PeriodicalTestParameters ptp = new PeriodicalTestParameters();
 			ptp.dt = interval;
-			ptp.end_time = receiveTimeStamp.getPeriodEnd();
+			ptp.end_time = test.timeStamp.getPeriodEnd();
 			test_time_stamps.ptpars(ptp);
 		}
 		// this is only for backward compatability
-		tempTest.time_stamps = test_time_stamps;
+		test.time_stamps = test_time_stamps;
 
-		tempTest.test_argument_set_id = "";
-		tempTest.testArgumentSet = receiveTestArgumentSet;
-		tempTest.test_setup_id = "";
-		tempTest.testSetup = receiveTestSetup;
-		/**
-		 * @todo set Analysis and Evaluation to Test 
-		 */
+		test.test_argument_set_id = "";
+		test.testArgumentSet = (TestArgumentSet) receiveData
+				.get(TestArgumentSet.typ);
+		
+		test.testSetup = (TestSetup) receiveData.get(TestSetup.typ);
+		if (test.testSetup!=null)
+			test.test_setup_id = test.testSetup.id;
 
-		this.dispatcher.notify(new TestUpdateEvent(this, tempTest,
+		{
+			DataSourceInterface dsi = aContext.getDataSourceInterface();
+			AnalysisType analysisType = (AnalysisType) receiveData
+					.get(AnalysisType.typ);
+			if (analysisType == null)
+				test.analysis_id = "";
+			else {
+				Analysis anal = new Analysis(dsi.GetUId(Analysis.typ));
+				anal.monitored_element_id = me.id;
+				anal.type_id = analysisType.id;
+				anal.criteria_set_id = test.testSetup.criteria_set_id;
+				test.analysis_id = anal.id;
+				Pool.put(Analysis.typ, anal.getId(), anal);
+				System.err.println("test.analysis_id:" + test.analysis_id);
+			}
+
+			EvaluationType evaluationType = (EvaluationType) receiveData
+					.get(EvaluationType.typ);
+			if (evaluationType == null)
+				test.evaluation_id = "";
+			else {
+				Evaluation eval = new Evaluation(dsi.GetUId(Evaluation.typ));
+				eval.monitored_element_id = me.id;
+				eval.type_id = evaluationType.id;
+				eval.threshold_set_id = test.testSetup.threshold_set_id;
+				eval.etalon_id = test.testSetup.etalon_id;
+				test.evaluation_id = eval.getId();
+				Pool.put(Evaluation.typ, eval.getId(), eval);
+				System.err.println("test.evaluation_id:" + test.evaluation_id);
+			}
+
+		}
+
+		this.dispatcher.notify(new TestUpdateEvent(this, test,
 				TestUpdateEvent.TEST_SELECTED_EVENT));
 		//unsavedTestList.add(tempTest);
 
