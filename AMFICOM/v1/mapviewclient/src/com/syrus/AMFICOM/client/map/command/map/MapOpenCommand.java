@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.17 2005/02/22 11:00:14 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.18 2005/03/01 15:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
 /**
  * открыть карту. карта открывается в новом виде
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/02/22 11:00:14 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/01 15:38:42 $
  * @module mapviewclient_v1
  */
 public class MapOpenCommand extends VoidCommand
@@ -99,7 +99,9 @@ public class MapOpenCommand extends VoidCommand
 			return;
 		}
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(MapTableController.getInstance(), ObjectEntities.MAP_ENTITY);
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(
+				LangModelMap.getString("Map"),
+				MapTableController.getInstance());
 
 		mcd.setCanDelete(this.canDelete);
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.17 2005/02/22 11:00:14 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.18 2005/03/01 15:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 /**
  * открыть вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/02/22 11:00:14 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/01 15:38:42 $
  * @module mapviewclient_v1
  */
 public class MapViewOpenCommand extends VoidCommand
@@ -98,7 +98,9 @@ public class MapViewOpenCommand extends VoidCommand
 			return;
 		}
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(MapViewTableController.getInstance(), ObjectEntities.MAP_ENTITY);//ObjectEntities.MAP_VIEW_ENTITY
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(
+				LangModelMap.getString("MapView"),
+				MapViewTableController.getInstance());
 
 		mcd.setCanDelete(this.canDelete);
 

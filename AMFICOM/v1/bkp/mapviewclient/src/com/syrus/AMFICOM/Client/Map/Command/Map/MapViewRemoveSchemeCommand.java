@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewRemoveSchemeCommand.java,v 1.4 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.5 2005/03/01 15:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,8 @@
  */
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
+
+import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
@@ -22,17 +24,14 @@ import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.SchemeController;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
-
-import javax.swing.JDesktopPane;
 
 /**
  * убрать из вида выбранную схему 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/01 15:38:42 $
  * @module mapviewclient_v1
  */
 public class MapViewRemoveSchemeCommand extends VoidCommand
@@ -66,8 +65,8 @@ public class MapViewRemoveSchemeCommand extends VoidCommand
 				LangModelMap.getString("MapOpening")));
 
 		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(
-				SchemeController.getInstance(), 
-				ObjectEntities.SCHEME_ENTITY);
+				LangModelMap.getString("Scheme"),
+				SchemeController.getInstance());
 
 		mcd.setContents(mapView.getSchemes());
 

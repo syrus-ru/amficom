@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.6 2005/02/10 12:59:54 krupenn Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.7 2005/03/01 15:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/10 12:59:54 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/01 15:38:42 $
  * @module mapviewclient_v1
  */
 public class MapViewAddSchemeCommand extends VoidCommand
@@ -79,8 +79,8 @@ public class MapViewAddSchemeCommand extends VoidCommand
 				LangModelMap.getString("MapOpening")));
 
 		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(
-				SchemeController.getInstance(), 
-				ObjectEntities.SCHEME_ENTITY);
+				LangModelMap.getString("Scheme"),
+				SchemeController.getInstance());
 
 	
 		try
