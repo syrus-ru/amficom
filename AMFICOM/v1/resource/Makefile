@@ -7,6 +7,7 @@ IDLDIR=../idl_v1/idl
 
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
 
+JAVACFLAGS = -source 1.4 -target 1.4
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
