@@ -1,5 +1,5 @@
 /*
- * $Id: ComplexReflectogramEvent.java,v 1.1 2005/01/25 14:16:50 saa Exp $
+ * $Id: ComplexReflectogramEvent.java,v 1.2 2005/01/26 14:59:25 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/01/25 14:16:50 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 14:59:25 $
  * @module
  */
 public class ComplexReflectogramEvent implements SimpleReflectogramEvent
@@ -29,10 +29,7 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 	public int getBegin() { return begin; }
 	public int getEnd() { return end; }
 	public int getEventType() { return type; }
-	public void setBegin(int begin) { this.begin = begin; }
-	public void setEnd(int end) { this.end = end; }
-	public void setEventType(int type) { this.type = type; }
-	
+
 	public double getALet() { return aLet; }
 	public double getMLoss() { return mLoss; }
 	public double getWidth0() { return end - begin; }

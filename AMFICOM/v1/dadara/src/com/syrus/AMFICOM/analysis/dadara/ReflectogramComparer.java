@@ -20,7 +20,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/01/25 14:16:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/26 14:59:25 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -358,13 +358,13 @@ public class ReflectogramComparer
 	public static double getLossDifference(ModelTraceManager etalon,
 			ModelTraceManager data)
 	{
-		ComplexReflectogramEvent[] dataCRE = data.getComplexEvents();
-		ComplexReflectogramEvent[] etalonCRE = etalon.getComplexEvents();
+		SimpleReflectogramEvent[] dataSRE = data.getSimpleEvents();
+		SimpleReflectogramEvent[] etalonSRE = etalon.getSimpleEvents();
 
-		int length1 = ReflectogramMath.getLastConnectorBegin(dataCRE);
-		int length2 = ReflectogramMath.getLastConnectorBegin(etalonCRE);
+		int length1 = ReflectogramMath.getLastConnectorBegin(dataSRE);
+		int length2 = ReflectogramMath.getLastConnectorBegin(etalonSRE);
 
-		int c = etalonCRE[0].getEnd();
+		int c = etalonSRE[0].getEnd();
 
 		double a1 = data.getY(c);
 		double a2 = data.getY(length1);

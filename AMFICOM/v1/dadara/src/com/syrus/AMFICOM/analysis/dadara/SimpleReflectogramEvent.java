@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEvent.java,v 1.1 2005/01/25 14:16:50 saa Exp $
+ * $Id: SimpleReflectogramEvent.java,v 1.2 2005/01/26 14:59:25 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/01/25 14:16:50 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 14:59:25 $
  * @module
  */
 public interface SimpleReflectogramEvent
@@ -22,7 +22,4 @@ public interface SimpleReflectogramEvent
 	int getBegin();
 	int getEnd();
 	int getEventType();
-	void setBegin(int begin);
-	void setEnd(int end);
-	void setEventType(int type);
 }

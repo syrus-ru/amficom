@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.1 2005/01/25 14:16:50 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.2 2005/01/26 14:59:25 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/01/25 14:16:50 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 14:59:25 $
  * @module
  */
 public class ModelTraceManager
@@ -68,7 +68,29 @@ public class ModelTraceManager
 	{
 		return reMT;
 	}
-	
+
+	public int getNEvents()
+	{
+		if (re != null)
+			return re.length;
+		else return 0;
+	}
+
+	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
+	{
+		return getComplexEvent(nEvent);
+	}
+
+	public SimpleReflectogramEvent[] getSimpleEvents()
+	{
+		return getComplexEvents();
+	}
+
+	public ComplexReflectogramEvent getComplexEvent(int nEvent)
+	{
+		return new ComplexReflectogramEvent(re[nEvent]);
+	}
+
 	public ComplexReflectogramEvent[] getComplexEvents()
 	{
 		ComplexReflectogramEvent[] ret = new ComplexReflectogramEvent[re.length];
@@ -76,7 +98,6 @@ public class ModelTraceManager
 			ret[i] = new ComplexReflectogramEvent(re[i]);
 		return ret;
 	}
-
 
 	public void setDeltaX(double deltaX)
 	{
@@ -89,7 +110,7 @@ public class ModelTraceManager
 		if (re.length > 0)
 			return re[0].getDeltaX();
 		else
-			return 0.0; // FIXME
+			return 1.0; // FIXME
 	}
 
 	public void fixEventTypes(ModelTraceManager etalon, int delta)
@@ -108,18 +129,6 @@ public class ModelTraceManager
 				}
 			}
 		}
-	}
-
-	public int getNEvents()
-	{
-		if (re != null)
-			return re.length;
-		else return 0;
-	}
-
-	public ComplexReflectogramEvent getComplexEvent(int nEvent)
-	{
-		return new ComplexReflectogramEvent(re[nEvent]);
 	}
 
 	public double getThresholdY(int key, int x, int nEvent)
@@ -173,11 +182,6 @@ public class ModelTraceManager
 	{
 		return new ModelTraceImplREOld(ReflectogramEvent.getThresholdReflectogramEvents(re, key)); //????
 	}
-
-	/*public ModelTrace getModelTrace()
-	{
-		return new ModelTraceImplREOld(re);
-	}*/
 
 	/**
 	 * @deprecated
