@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.5 2005/03/10 15:23:06 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.6 2005/03/22 16:46:45 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,8 +22,13 @@ import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.UserDatabase;
+import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
+import com.syrus.AMFICOM.administration.corba.Server_Transferable;
+import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -39,138 +44,174 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/10 15:23:06 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/22 16:46:45 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLoader {
 
-	public User loadUser(Identifier id) throws RetrieveObjectException, CommunicationException {
-		User user = null;
+	public User loadUser(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			user = new User(id);
+			return new User(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("User '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				user = new User(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable) id.getTransferable()));
-				AdministrationDatabaseContext.getUserDatabase().update(user, null, StorableObjectDatabase.UPDATE_FORCE);
+			Log.debugMessage("User '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
+				try {
+					User_Transferable transferable = mServerRef.transmitUser((Identifier_Transferable) id.getTransferable());
+					User user = new User(transferable);
+
+					try {
+						AdministrationDatabaseContext.getUserDatabase().insert(user);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return user;
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("Measurement '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve measurement '" + id + "' from MServer database -- " + are.message);
+				}
 			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "User '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve user '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		return user;
 	}
 
-	public Domain loadDomain(Identifier id) throws RetrieveObjectException, CommunicationException {
-		Domain domain = null;
+	public Domain loadDomain(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			domain = new Domain(id);
+			return new Domain(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Domain '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				domain = new Domain(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable) id.getTransferable()));
-				AdministrationDatabaseContext.getDomainDatabase().update(domain, null, StorableObjectDatabase.UPDATE_FORCE);
+			Log.debugMessage("Domain '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
+				try {
+					Domain_Transferable transferable = mServerRef.transmitDomain((Identifier_Transferable) id.getTransferable());
+					Domain domain = new Domain(transferable);
+
+					try {
+						AdministrationDatabaseContext.getDomainDatabase().insert(domain);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return domain;
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("Domain '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve domain '" + id + "' from MServer database -- " + are.message);
+				}
 			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Domain '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve domain '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		return domain;
 	}
 
-	public Server loadServer(Identifier id) throws RetrieveObjectException, CommunicationException {
-		Server server = null;
+	public Server loadServer(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			server = new Server(id);
+			return new Server(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Server '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				server = new Server(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable) id.getTransferable()));
-				AdministrationDatabaseContext.getServerDatabase().update(server, null, StorableObjectDatabase.UPDATE_FORCE);
+			Log.debugMessage("Server '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
+				try {
+					Server_Transferable transferable = mServerRef.transmitServer((Identifier_Transferable) id.getTransferable());
+					Server server = new Server(transferable);
+
+					try {
+						AdministrationDatabaseContext.getServerDatabase().insert(server);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return server;
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("Server '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve server '" + id + "' from MServer database -- " + are.message);
+				}
 			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Server '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve Server '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		return server;
 	}
 
-	public MCM loadMCM(Identifier id) throws RetrieveObjectException, CommunicationException {
-		MCM mcm = null;
+	public MCM loadMCM(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			mcm = new MCM(id);
+			return new MCM(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("MCM '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				mcm = new MCM(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable()));
-				AdministrationDatabaseContext.getMCMDatabase().update(mcm, null, StorableObjectDatabase.UPDATE_FORCE);
+			Log.debugMessage("MCM '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
+				try {
+					MCM_Transferable transferable = mServerRef.transmitMCM((Identifier_Transferable) id.getTransferable());
+					MCM mcm = new MCM(transferable);
+
+					try {
+						AdministrationDatabaseContext.getMCMDatabase().insert(mcm);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return mcm;
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("MCM '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve MCM '" + id + "' from MServer database -- " + are.message);
+				}
 			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "MCM '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve MCM '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		return mcm;
 	}
 
 
