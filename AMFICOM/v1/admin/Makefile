@@ -20,7 +20,9 @@ $(call checkenve,ORACLE_HOME)
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 
-SOURCES := com/syrus/AMFICOM/administration/DatabaseAdministrationObjectLoader.java \
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.java)
+
+#SOURCES := com/syrus/AMFICOM/administration/DatabaseAdministrationObjectLoader.java \
 		com/syrus/AMFICOM/administration/AdministrationObjectLoader.java \
 		com/syrus/AMFICOM/administration/AdministrationStorableObjectPool.java \
 		com/syrus/AMFICOM/administration/AdministrationDatabaseContext.java \
@@ -39,8 +41,7 @@ SOURCES := com/syrus/AMFICOM/administration/DatabaseAdministrationObjectLoader.j
 		com/syrus/AMFICOM/administration/MCMWrapper.java \
 		com/syrus/AMFICOM/administration/MCMDatabase.java \
 		com/syrus/AMFICOM/administration/StringFieldConditionImpl.java \
-		com/syrus/AMFICOM/administration/LinkedIdsConditionImpl.java \
-		com/syrus/AMFICOM/administration/DomainCondition.java
+		com/syrus/AMFICOM/administration/TypicalCondition.java
 
 
 $(LIBNAME): .mach
@@ -50,7 +51,7 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -70,7 +71,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
+	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/administration/*.class) 
 	$(RM) .mach
 
 .PHONY:	cleancorba
@@ -90,5 +91,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/administration.idl \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(SOURCES)
 

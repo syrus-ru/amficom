@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.5 2005/02/03 14:30:14 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.6 2005/02/08 12:23:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 14:30:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/02/08 12:23:41 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -422,8 +422,6 @@ public class MCMDatabase extends StorableObjectDatabase {
 			if (condition instanceof LinkedIdsCondition) {
 				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
 				List kisIds = linkedIdsCondition.getLinkedIds();
-				if (kisIds == null)
-					kisIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
 				list = this.retrieveByKISs(kisIds);
 			}
 			else {
