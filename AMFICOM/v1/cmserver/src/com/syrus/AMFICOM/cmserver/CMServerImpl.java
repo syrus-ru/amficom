@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.90 2005/02/14 15:32:39 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.91 2005/02/18 18:16:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,10 +19,7 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.UserWrapper;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -35,6 +32,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -43,7 +41,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/02/14 15:32:39 $
+ * @version $Revision: 1.91 $, $Date: 2005/02/18 18:16:57 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -189,25 +187,15 @@ public class CMServerImpl extends CMMeasurementTransmit {
 		Log.debugMessage("CMServerImpl.delete | trying to delete... ", Log.DEBUGLEVEL03);
 		Identifier id = new Identifier(id_Transferable);
 		short entityCode = id.getMajor();
-		try {
-			if (ObjectGroupEntities.isInGeneralGroup(entityCode))
-				GeneralStorableObjectPool.delete(id);
-			if (ObjectGroupEntities.isInAdministrationGroup(entityCode))
-				AdministrationStorableObjectPool.delete(id);
-			if (ObjectGroupEntities.isInConfigurationGroup(entityCode))
-				ConfigurationStorableObjectPool.delete(id);
-			if (ObjectGroupEntities.isInMeasurementGroup(entityCode))
-				MeasurementStorableObjectPool.delete(id);
-			Log.errorMessage("CMServerImpl.delete | Wrong entity code: " + entityCode);
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		}
-		catch (DatabaseException de) {
-			Log.errorException(de);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		}
+		if (ObjectGroupEntities.isInGeneralGroup(entityCode))
+			GeneralStorableObjectPool.delete(id);
+		if (ObjectGroupEntities.isInAdministrationGroup(entityCode))
+			AdministrationStorableObjectPool.delete(id);
+		if (ObjectGroupEntities.isInConfigurationGroup(entityCode))
+			ConfigurationStorableObjectPool.delete(id);
+		if (ObjectGroupEntities.isInMeasurementGroup(entityCode))
+			MeasurementStorableObjectPool.delete(id);
+		Log.errorMessage("CMServerImpl.delete | Wrong entity code: " + entityCode);
 
 	}
 
@@ -241,17 +229,9 @@ public class CMServerImpl extends CMMeasurementTransmit {
 			ConfigurationStorableObjectPool.delete(configurationList);
 			MeasurementStorableObjectPool.delete(measurementList);
 		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		}
-		catch (DatabaseException de) {
-			Log.errorException(de);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_DELETE, CompletionStatus.COMPLETED_NO, ide.getMessage());
 		}
 	}
 
