@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.2 2004/12/15 12:01:09 bass Exp $
+ * $Id: ImagesPanel.java,v 1.3 2004/12/15 15:13:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.corba.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -26,7 +26,7 @@ import javax.swing.border.BevelBorder;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/12/15 12:01:09 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/15 15:13:01 $
  * @module generalclient_v1
  */
 public class ImagesPanel extends JPanel

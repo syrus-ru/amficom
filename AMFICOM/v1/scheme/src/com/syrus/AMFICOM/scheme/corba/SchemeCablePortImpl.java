@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCablePortImpl.java,v 1.4 2004/12/15 13:47:41 bass Exp $
+ * $Id: SchemeCablePortImpl.java,v 1.5 2004/12/15 15:08:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/12/15 13:47:41 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/15 15:08:31 $
  * @module schemecommon_v1
  */
 final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
@@ -77,6 +77,13 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	}
 
 	public long created() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see java.util.JavaUtilIStorableObject#createdImpl()
+	 */
+	public Date createdImpl() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -191,6 +198,13 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	}
 
 	public long modified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
+	 */
+	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 

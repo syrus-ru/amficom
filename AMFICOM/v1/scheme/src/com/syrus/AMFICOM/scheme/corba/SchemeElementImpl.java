@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.6 2004/12/15 13:47:41 bass Exp $
+ * $Id: SchemeElementImpl.java,v 1.7 2004/12/15 15:08:32 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -20,7 +20,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/12/15 13:47:41 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/15 15:08:32 $
  * @module schemecommon_v1
  */
 final class SchemeElementImpl extends SchemeElement implements Cloneable {
@@ -86,6 +86,13 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	public long created() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see java.util.JavaUtilIStorableObject#createdImpl()
+	 */
+	public Date createdImpl() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -191,6 +198,13 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	public long modified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
+	 */
+	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 
