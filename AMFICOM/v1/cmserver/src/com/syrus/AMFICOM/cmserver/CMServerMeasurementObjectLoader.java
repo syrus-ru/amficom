@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.18 2004/12/27 13:53:36 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.19 2005/01/19 20:59:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,9 +49,9 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/27 13:53:36 $
- * @author $Author: bob $
- * @module module_name
+ * @version $Revision: 1.19 $, $Date: 2005/01/19 20:59:10 $
+ * @author $Author: arseniy $
+ * @module cmserver_v1
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
     protected static Identifier mcmId;

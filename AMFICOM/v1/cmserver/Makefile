@@ -9,11 +9,11 @@ IDLDIR=../idl_v1/idl
 HOST=mongol
 SERVICE_NAME=mongol
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/mcm_interface.jar
-
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,IDLJ)
+
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/mcm_interface.jar
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
@@ -35,8 +35,10 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMServerConfigurationObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMServerMeasurementObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/DatabaseContextSetup.java \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMGeneralReceive.java \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMAdministrationReceive.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMConfigurationReceive.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMConfigurationMeasurementReceive.java \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMMeasurementReceive.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMServerImpl.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/ClientMeasurementServer.java 
 	touch $@

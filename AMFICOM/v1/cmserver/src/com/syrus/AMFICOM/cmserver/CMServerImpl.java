@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.83 2005/01/17 10:34:03 bob Exp $
+ * $Id: CMServerImpl.java,v 1.84 2005/01/19 20:59:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -73,6 +74,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
@@ -92,7 +94,6 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Modeling;
-import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultCondition;
 import com.syrus.AMFICOM.measurement.ResultSortCondition;
@@ -109,7 +110,6 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSortCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
@@ -120,17 +120,17 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/01/17 10:34:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.84 $, $Date: 2005/01/19 20:59:09 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
-public class CMServerImpl extends CMConfigurationMeasurementReceive {
+public class CMServerImpl extends CMMeasurementReceive {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 4048793468187259186L;
+	private static final long serialVersionUID = 4048793468187259186L;
 
 	private DomainCondition domainCondition;
 
@@ -300,7 +300,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
     
-    public Characteristic_Transferable transmitCharacteristic(
+	public Characteristic_Transferable transmitCharacteristic(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -331,7 +331,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public CharacteristicType_Transferable transmitCharacteristicType(
+	public CharacteristicType_Transferable transmitCharacteristicType(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -362,7 +362,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Equipment_Transferable transmitEquipment(
+	public Equipment_Transferable transmitEquipment(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -393,7 +393,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public EquipmentType_Transferable transmitEquipmentType(
+	public EquipmentType_Transferable transmitEquipmentType(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -424,7 +424,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public KIS_Transferable transmitKIS(
+	public KIS_Transferable transmitKIS(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -455,7 +455,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
     
-    public MCM_Transferable transmitMCM(
+	public MCM_Transferable transmitMCM(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -486,7 +486,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MeasurementPort_Transferable transmitMeasurementPort(
+	public MeasurementPort_Transferable transmitMeasurementPort(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -517,7 +517,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MeasurementPortType_Transferable transmitMeasurementPortType(
+	public MeasurementPortType_Transferable transmitMeasurementPortType(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -548,7 +548,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Port_Transferable transmitPort(
+	public Port_Transferable transmitPort(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -579,7 +579,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public PortType_Transferable transmitPortType(
+	public PortType_Transferable transmitPortType(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -610,7 +610,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Server_Transferable transmitServer(
+	public Server_Transferable transmitServer(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -641,7 +641,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public User_Transferable transmitUser(
+	public User_Transferable transmitUser(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -674,7 +674,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 
 
 
-    public Domain_Transferable transmitDomain(	Identifier_Transferable identifier_Transferable,
+	public Domain_Transferable transmitDomain(	Identifier_Transferable identifier_Transferable,
 							AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
@@ -766,7 +766,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
     
-    public TransmissionPathType_Transferable transmitTransmissionPathType(  Identifier_Transferable identifier_Transferable,
+	public TransmissionPathType_Transferable transmitTransmissionPathType(  Identifier_Transferable identifier_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
         throws AMFICOMRemoteException {
         Identifier id = new Identifier(identifier_Transferable);
@@ -797,7 +797,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public CableThreadType_Transferable[] transmitCableThreadTypes(
+	public CableThreadType_Transferable[] transmitCableThreadTypes(
             Identifier_Transferable[] ids_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -846,7 +846,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
     
-    public CableThreadType_Transferable[] transmitCableThreadTypesButIds(
+	public CableThreadType_Transferable[] transmitCableThreadTypesButIds(
 			Identifier_Transferable[] ids_Transferable,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
@@ -895,7 +895,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
     
-    public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -941,7 +941,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Characteristic_Transferable[] transmitCharacteristicsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Characteristic_Transferable[] transmitCharacteristicsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1035,7 +1035,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public CharacteristicType_Transferable[] transmitCharacteristicTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public CharacteristicType_Transferable[] transmitCharacteristicTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1081,7 +1081,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public CharacteristicType_Transferable[] transmitCharacteristicTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1127,7 +1127,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Domain_Transferable[] transmitDomainsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Domain_Transferable[] transmitDomainsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1173,7 +1173,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Domain_Transferable[] transmitDomainsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
+	public Domain_Transferable[] transmitDomainsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.transmitDomainsButIdsCondition | requiere "
                 + (ids_Transferable.length == 0 ? "all" : Integer
                         .toString(ids_Transferable.length))
@@ -1217,7 +1217,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Equipment_Transferable[] transmitEquipments(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Equipment_Transferable[] transmitEquipments(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1263,7 +1263,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Equipment_Transferable[] transmitEquipmentsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Equipment_Transferable[] transmitEquipmentsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1309,7 +1309,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Equipment_Transferable[] transmitEquipmentsButIdsCondition(
+	public Equipment_Transferable[] transmitEquipmentsButIdsCondition(
             Identifier_Transferable[] ids_Transferable,
             AccessIdentifier_Transferable accessIdentifier,
             DomainCondition_Transferable domainCondition)
@@ -1357,7 +1357,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public EquipmentType_Transferable[] transmitEquipmentTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public EquipmentType_Transferable[] transmitEquipmentTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1403,7 +1403,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public EquipmentType_Transferable[] transmitEquipmentTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public EquipmentType_Transferable[] transmitEquipmentTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1449,7 +1449,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public KIS_Transferable[] transmitKISs(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public KIS_Transferable[] transmitKISs(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1495,7 +1495,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public KIS_Transferable[] transmitKISsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public KIS_Transferable[] transmitKISsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1541,7 +1541,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public KIS_Transferable[] transmitKISsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
+	public KIS_Transferable[] transmitKISsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.transmitKISsButIdsCondition | requiere "
                 + (ids_Transferable.length == 0 ? "all" : Integer
                         .toString(ids_Transferable.length))
@@ -1585,7 +1585,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
     
-    public Link_Transferable transmitLink(
+	public Link_Transferable transmitLink(
 			Identifier_Transferable id_Transferable,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
@@ -1843,7 +1843,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
     
-    public MCM_Transferable[] transmitMCMs(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public MCM_Transferable[] transmitMCMs(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {	
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1885,7 +1885,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MCM_Transferable[] transmitMCMsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public MCM_Transferable[] transmitMCMsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -1930,7 +1930,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MCM_Transferable[] transmitMCMsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
+	public MCM_Transferable[] transmitMCMsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.transmitMCMsButIdsCondition | requiere "
                 + (ids_Transferable.length == 0 ? "all" : Integer
                         .toString(ids_Transferable.length))
@@ -1974,7 +1974,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MeasurementPort_Transferable[] transmitMeasurementPorts(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public MeasurementPort_Transferable[] transmitMeasurementPorts(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2019,7 +2019,8 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
         }
     }
-    public MeasurementPort_Transferable[] transmitMeasurementPortsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+
+	public MeasurementPort_Transferable[] transmitMeasurementPortsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2065,7 +2066,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MeasurementPort_Transferable[] transmitMeasurementPortsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
+	public MeasurementPort_Transferable[] transmitMeasurementPortsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.transmitMeasurementPortsButIds | requiere "
                 + (ids_Transferable.length == 0 ? "all" : Integer
                         .toString(ids_Transferable.length))
@@ -2109,7 +2110,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MeasurementPortType_Transferable[] transmitMeasurementPortTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public MeasurementPortType_Transferable[] transmitMeasurementPortTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2155,7 +2156,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MeasurementPortType_Transferable[] transmitMeasurementPortTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public MeasurementPortType_Transferable[] transmitMeasurementPortTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2201,7 +2202,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MonitoredElement_Transferable[] transmitMonitoredElementsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public MonitoredElement_Transferable[] transmitMonitoredElementsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2247,7 +2248,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MonitoredElement_Transferable[] transmitMonitoredElementsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
+	public MonitoredElement_Transferable[] transmitMonitoredElementsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.transmitMonitoredElementsButIdsCondition | requiere "
                 + (ids_Transferable.length == 0 ? "all" : Integer
                         .toString(ids_Transferable.length))
@@ -2291,7 +2292,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Port_Transferable[] transmitPorts(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Port_Transferable[] transmitPorts(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2337,7 +2338,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Port_Transferable[] transmitPortsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Port_Transferable[] transmitPortsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2383,7 +2384,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Port_Transferable[] transmitPortsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
+	public Port_Transferable[] transmitPortsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.transmitPortsButIdsCondition | requiere "
                 + (ids_Transferable.length == 0 ? "all" : Integer
                         .toString(ids_Transferable.length))
@@ -2427,7 +2428,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public PortType_Transferable[] transmitPortTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public PortType_Transferable[] transmitPortTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2473,7 +2474,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public PortType_Transferable[] transmitPortTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public PortType_Transferable[] transmitPortTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2519,7 +2520,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Server_Transferable[] transmitServers(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Server_Transferable[] transmitServers(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2565,7 +2566,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Server_Transferable[] transmitServersButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Server_Transferable[] transmitServersButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2611,7 +2612,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Server_Transferable[] transmitServersButIdsCondition(
+	public Server_Transferable[] transmitServersButIdsCondition(
             Identifier_Transferable[] ids_Transferable,
             AccessIdentifier_Transferable accessIdentifier,
             DomainCondition_Transferable domainCondition)
@@ -2659,7 +2660,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public TransmissionPath_Transferable[] transmitTransmissionPathsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public TransmissionPath_Transferable[] transmitTransmissionPathsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2705,7 +2706,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
     
-    public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2751,7 +2752,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public TransmissionPath_Transferable[] transmitTransmissionPathsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition_Transferable) throws AMFICOMRemoteException {
+	public TransmissionPath_Transferable[] transmitTransmissionPathsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition_Transferable) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.transmitTransmissionPathsButIdsCondition | requiere "
                 + (ids_Transferable.length == 0 ? "all" : Integer
                         .toString(ids_Transferable.length))
@@ -2795,7 +2796,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public User_Transferable[] transmitUsers(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public User_Transferable[] transmitUsers(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
             Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
@@ -2841,7 +2842,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public User_Transferable[] transmitUsersButIdsCondition(Identifier_Transferable[] ids_Transferable, 
+	public User_Transferable[] transmitUsersButIdsCondition(Identifier_Transferable[] ids_Transferable, 
 															AccessIdentifier_Transferable accessIdentifier,
 												   StringFieldCondition_Transferable stringFieldCondition_Transferable) throws AMFICOMRemoteException {
         try {
@@ -2924,7 +2925,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public Evaluation_Transferable transmitEvaluation(
+	public Evaluation_Transferable transmitEvaluation(
             Identifier_Transferable identifier_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -2956,7 +2957,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Evaluation_Transferable[] transmitEvaluations(
+	public Evaluation_Transferable[] transmitEvaluations(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -3008,7 +3009,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Evaluation_Transferable[] transmitEvaluationsButIds(
+	public Evaluation_Transferable[] transmitEvaluationsButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -3060,7 +3061,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Evaluation_Transferable[] transmitEvaluationsButIdsCondition(
+	public Evaluation_Transferable[] transmitEvaluationsButIdsCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             DomainCondition_Transferable domainCondition_Transferable)
@@ -3111,7 +3112,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public EvaluationType_Transferable transmitEvaluationType(	Identifier_Transferable identifier_Transferable,
+	public EvaluationType_Transferable transmitEvaluationType(	Identifier_Transferable identifier_Transferable,
 									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
@@ -3650,7 +3651,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
     
-    public TransmissionPathType_Transferable[] transmitTransmissionPathTypes(   Identifier_Transferable[] identifier_Transferables,
+	public TransmissionPathType_Transferable[] transmitTransmissionPathTypes(   Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
         try {
@@ -3771,7 +3772,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 
 	}
 
-    public AnalysisType_Transferable[] transmitAnalysisTypesButIds(
+	public AnalysisType_Transferable[] transmitAnalysisTypesButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -3825,7 +3826,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public AnalysisType_Transferable[] transmitAnalysisTypesButIdsCondition(
+	public AnalysisType_Transferable[] transmitAnalysisTypesButIdsCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
@@ -3930,7 +3931,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 
 	}
 
-    public EvaluationType_Transferable[] transmitEvaluationTypesButIds(
+	public EvaluationType_Transferable[] transmitEvaluationTypesButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -3982,7 +3983,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public EvaluationType_Transferable[] transmitEvaluationTypesButIdsCondition(
+	public EvaluationType_Transferable[] transmitEvaluationTypesButIdsCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
@@ -4084,7 +4085,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public MeasurementType_Transferable[] transmitMeasurementTypesButIds(
+	public MeasurementType_Transferable[] transmitMeasurementTypesButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -4238,7 +4239,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
     
-    public ParameterType_Transferable[] transmitParameterTypes(	Identifier_Transferable[] identifier_Transferables,
+	public ParameterType_Transferable[] transmitParameterTypes(	Identifier_Transferable[] identifier_Transferables,
 									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
@@ -4289,7 +4290,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public ParameterType_Transferable[] transmitParameterTypesButIds(
+	public ParameterType_Transferable[] transmitParameterTypesButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -4341,7 +4342,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public ParameterType_Transferable[] transmitParameterTypesButIdsCondition(
+	public ParameterType_Transferable[] transmitParameterTypesButIdsCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             StringFieldCondition_Transferable stringFieldCondition_Transferable)
@@ -4392,7 +4393,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] identifier_Transferables,
+	public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] identifier_Transferables,
 							AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 
@@ -4446,7 +4447,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public Analysis_Transferable[] transmitAnalysesButIds(
+	public Analysis_Transferable[] transmitAnalysesButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -4495,7 +4496,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Analysis_Transferable[] transmitAnalysesButIdsCondition(
+	public Analysis_Transferable[] transmitAnalysesButIdsCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             DomainCondition_Transferable domainCondition_Transferable)
@@ -4596,7 +4597,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 
 	}
 
-    public Modeling_Transferable[] transmitModelingsButIds(
+	public Modeling_Transferable[] transmitModelingsButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -4649,7 +4650,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Modeling_Transferable[] transmitModelingsButIdsCondition(
+	public Modeling_Transferable[] transmitModelingsButIdsCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             DomainCondition_Transferable domainCondition_Transferable)
@@ -4748,7 +4749,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public Measurement_Transferable[] transmitMeasurementsButIds(
+	public Measurement_Transferable[] transmitMeasurementsButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -4800,7 +4801,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Measurement_Transferable[] transmitMeasurementsButIdsLinkedCondition(
+	public Measurement_Transferable[] transmitMeasurementsButIdsLinkedCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
@@ -4856,7 +4857,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 			}
     }
 
-    public Measurement_Transferable[] transmitMeasurementsButIdsDomainCondition(
+	public Measurement_Transferable[] transmitMeasurementsButIdsDomainCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             DomainCondition_Transferable domainCondition_Transferable)
@@ -4907,7 +4908,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public MeasurementSetup_Transferable[] transmitMeasurementSetups(	Identifier_Transferable[] identifier_Transferables,
+	public MeasurementSetup_Transferable[] transmitMeasurementSetups(	Identifier_Transferable[] identifier_Transferables,
 										AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
@@ -4955,7 +4956,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIds(
+	public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -5004,7 +5005,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }   
 
-    public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIdsLinkedCondition(
+	public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIdsLinkedCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
@@ -5052,7 +5053,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Result_Transferable[] transmitResults(	Identifier_Transferable[] identifier_Transferables,
+	public Result_Transferable[] transmitResults(	Identifier_Transferable[] identifier_Transferables,
 							AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
@@ -5103,7 +5104,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public Result_Transferable[] transmitResultsButIds(
+	public Result_Transferable[] transmitResultsButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -5155,7 +5156,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Result_Transferable[] transmitResultsButIdsDomainCondition(
+	public Result_Transferable[] transmitResultsButIdsDomainCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             DomainCondition_Transferable domainCondition_Transferable)
@@ -5206,7 +5207,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Result_Transferable[] transmitResultsButIdsLinkedCondition(
+	public Result_Transferable[] transmitResultsButIdsLinkedCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
@@ -5359,7 +5360,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
     
-    public Set_Transferable[] transmitSets(	Identifier_Transferable[] identifier_Transferables,
+	public Set_Transferable[] transmitSets(	Identifier_Transferable[] identifier_Transferables,
 						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
@@ -5410,7 +5411,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public Set_Transferable[] transmitSetsButIds(Identifier_Transferable[] identifier_Transferables,
+	public Set_Transferable[] transmitSetsButIds(Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
         try {
@@ -5461,7 +5462,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Set_Transferable[] transmitSetsButIdsCondition(
+	public Set_Transferable[] transmitSetsButIdsCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             DomainCondition_Transferable domainCondition_Transferable)
@@ -5563,7 +5564,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public TemporalPattern_Transferable[] transmitTemporalPatternsButIds(
+	public TemporalPattern_Transferable[] transmitTemporalPatternsButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -5666,7 +5667,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-    public Test_Transferable[] transmitTestsButIds(
+	public Test_Transferable[] transmitTestsButIds(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
@@ -5718,7 +5719,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-    public Test_Transferable[] transmitTestsButIdsCondition(
+	public Test_Transferable[] transmitTestsButIdsCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
             TemporalCondition_Transferable temporalCondition_Transferable)
@@ -5770,7 +5771,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
     }
 
     //  Refresh object from a pool    
-    public Identifier_Transferable[] transmitRefreshedConfigurationObjects(StorableObject_Transferable[] storableObjects_Transferables, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Identifier_Transferable[] transmitRefreshedConfigurationObjects(StorableObject_Transferable[] storableObjects_Transferables, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Map storableObjectMap = new HashMap();
             for (int i = 0; i < storableObjects_Transferables.length; i++) {
@@ -5815,7 +5816,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
     
-    public Identifier_Transferable[] transmitRefreshedMeasurementObjects(StorableObject_Transferable[] storableObjects_Transferables, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+	public Identifier_Transferable[] transmitRefreshedMeasurementObjects(StorableObject_Transferable[] storableObjects_Transferables, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Map storableObjectMap = new HashMap();
             for (int i = 0; i < storableObjects_Transferables.length; i++) {

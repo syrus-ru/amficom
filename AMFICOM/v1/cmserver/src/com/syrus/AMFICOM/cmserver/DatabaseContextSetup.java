@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.14 2005/01/17 10:34:03 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.15 2005/01/19 20:59:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
+import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
@@ -49,7 +50,6 @@ import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
-import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
@@ -57,9 +57,9 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/01/17 10:34:03 $
- * @author $Author: bob $
- * @module mserver_v1
+ * @version $Revision: 1.15 $, $Date: 2005/01/19 20:59:10 $
+ * @author $Author: arseniy $
+ * @module cmserver_v1
  */
 
 public abstract class DatabaseContextSetup {
@@ -75,24 +75,26 @@ public abstract class DatabaseContextSetup {
 	public static final String DEFAULT_DATABASE_LOADER_ONLY = "false";
 
 	private DatabaseContextSetup() {
-		// empty
+		// singleton constructor
 	}
 
 	public static void initDatabaseContext() {
 		AdministrationDatabaseContext.init(new UserDatabase(),
-			new DomainDatabase(),
-			new ServerDatabase(), 
-			new MCMDatabase());
+				new DomainDatabase(),
+				new ServerDatabase(),
+				new MCMDatabase());
 		
-		GeneralDatabaseContext.init(new CharacteristicTypeDatabase(),
-			new CharacteristicDatabase());
-		
-		ConfigurationDatabaseContext.init(new EquipmentTypeDatabase(),
+		GeneralDatabaseContext.init(new ParameterTypeDatabase(),
+				new CharacteristicTypeDatabase(),
+				new CharacteristicDatabase());
+
+		ConfigurationDatabaseContext.init(
+				new EquipmentTypeDatabase(),
 				new PortTypeDatabase(),
 				new MeasurementPortTypeDatabase(),
 				new LinkTypeDatabase(),
 				new CableLinkTypeDatabase(),
-				new CableThreadTypeDatabase(),
+				new CableThreadTypeDatabase(),										  
 				new EquipmentDatabase(),
 				new PortDatabase(),
 				new MeasurementPortDatabase(),
@@ -102,8 +104,8 @@ public abstract class DatabaseContextSetup {
 				new MonitoredElementDatabase(),
 				new LinkDatabase(),
 				new CableThreadDatabase());
-		MeasurementDatabaseContext.init(new ParameterTypeDatabase(),
-				new MeasurementTypeDatabase(),
+
+		MeasurementDatabaseContext.init(new MeasurementTypeDatabase(),
 				new AnalysisTypeDatabase(),
 				new EvaluationTypeDatabase(),
 				new SetDatabase(),
@@ -121,10 +123,10 @@ public abstract class DatabaseContextSetup {
 		boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY, DEFAULT_DATABASE_LOADER_ONLY)).booleanValue();
 		int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, DEFAULT_CONFIGURATION_POOL_SIZE);
 		int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, DEFAULT_MEASUREMENT_POOL_SIZE);
-		
+
 		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader());
 		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader());
-		
+
 		if (! databaseLoaderOnly) {
 			long refreshTimeout = ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, DEFAULT_REFRESH_TIMEOUT) * 1000L * 60L;
 			ConfigurationStorableObjectPool.init(new CMServerConfigurationObjectLoader(refreshTimeout), configurationPoolSize);
