@@ -1,5 +1,5 @@
 /**
- * $Id: LinkedIdsConditionImpl.java,v 1.1 2005/03/01 15:33:57 krupenn Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/03/24 13:10:07 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,11 +18,13 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
@@ -39,47 +41,59 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		this.entityCode = entityCode;
 	}
 
-	private boolean checkDomain(DomainMember domainMember) throws ApplicationException {
-		Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+	private boolean checkDomain(DomainMember domainMember) {
 		boolean condition = false;
-		/* if linked ids is domain id */
-		for (Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
-			Identifier id = (Identifier) it.next();
-			if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
-				Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
-				if (dmDomain.isChild(domain))
-					condition = true;
-
+		try {
+			Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			Identifier id;
+			Domain domain;
+			for (Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
+				id = (Identifier) it.next();
+				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
+					domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
+					if (dmDomain.isChild(domain))
+						condition = true;
+				}
 			}
-
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
 		}
 		return condition;
 	}
 
-	public boolean isConditionTrue(Object object) throws ApplicationException {
+	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
 		boolean condition = false;
-		DomainMember domainMember;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MAP_ENTITY_CODE:
-				domainMember = (Map) object;
+				Map map = (Map) object;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.DOMAIN_ENTITY_CODE:
+						condition = this.checkDomain(map);
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
 				break;
 			default:
-				throw new UnsupportedOperationException("LinkedIdsConditionImpl.isConditionTrue | entityCode "
-						+ ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
+				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
+						+ ", " + ObjectEntities.codeToString(this.entityCode),
+						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
-		if (domainMember != null)
-			condition = this.checkDomain(domainMember);
 		return condition;
 	}
 
-	public void setEntityCode(Short entityCode) {
+	public void setEntityCode(Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.MAP_ENTITY_CODE:
 				this.entityCode = entityCode;
 				break;
 			default:
-				throw new UnsupportedOperationException("LinkedIdsConditionImpl.setEntityCode | entityCode "
-						+ ObjectEntities.codeToString(entityCode.shortValue()) + " is unknown for this condition");
+				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
+						+ ", " + ObjectEntities.codeToString(this.entityCode),
+						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 	}
 
