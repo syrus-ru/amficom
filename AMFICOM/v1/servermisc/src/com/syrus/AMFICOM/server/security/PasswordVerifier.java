@@ -1,5 +1,5 @@
 /*
- * $Id: PasswordVerifier.java,v 1.2 2004/07/07 14:04:06 bass Exp $
+ * $Id: PasswordVerifier.java,v 1.3 2004/07/07 14:48:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,9 @@ import java.util.Arrays;
 
 /**
  * This class brings the same functionality as the Linux crypt() function does.
- * See crypt(3) manual entry for details.
+ * See <b><tt>crypt(3)</tt></b> manual entry for details.
  *
- * @version $Revision: 1.2 $, $Date: 2004/07/07 14:04:06 $
+ * @version $Revision: 1.3 $, $Date: 2004/07/07 14:48:07 $
  * @author $Author: bass $
  * @module servermisc_v1
  * @see "<b><tt>crypt(3)</tt></b> manual entry."
@@ -116,7 +116,7 @@ public final class PasswordVerifier {
 	/**
 	 * Common public interface to crypt: depending on whether native library
 	 * is loaded, either native (faster) or portable implementation will be
-	 * used. See crypt(3) manual page for details.
+	 * used. See <b><tt>crypt(3)</tt></b> manual page for details.
 	 *
 	 * @param key user-typed password.
 	 * @param salt MD5 salt.
@@ -331,7 +331,7 @@ public final class PasswordVerifier {
 	 * @param buffer the buffer to which encoded data should be recorded.
 	 * @param bufferPosition offset within the buffer. Encoded data is
 	 *        written to the subsequent buffer entries.
-	 * @param byteCount number of bytes (od encoded data) to store in
+	 * @param byteCount number of bytes (of encoded data) to store in
 	 *        buffer.
 	 */	
 	private static void base64From24Bit(byte b2, byte b1, byte b0,
