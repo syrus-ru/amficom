@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.13 2004/10/25 08:19:31 stas Exp $
+ * $Id: RISDSessionInfo.java,v 1.14 2004/11/02 08:06:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import org.omg.PortableServer.*;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2004/10/25 08:19:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2004/11/02 08:06:35 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -59,6 +59,10 @@ public final class RISDSessionInfo extends SessionInterface {
 	 * New-style session id.
 	 */
 	private AccessIdentifier_Transferable accessIdentifier;
+
+	private Identifier domainId;
+
+	private Identifier userId;
 
 	/**
 	 * Время начала сессии.
@@ -187,6 +191,9 @@ public final class RISDSessionInfo extends SessionInterface {
 				userId,
 
 				new Identifier_Transferable("Null_0"));
+
+			this.domainId = new Identifier(this.accessIdentifier.domain_id);
+			this.userId = new Identifier(this.accessIdentifier.user_id);
 
 			final Class clazz = ClientLRUMap.class;
 			final int size = 200;
@@ -350,15 +357,39 @@ public final class RISDSessionInfo extends SessionInterface {
 		}
 	}
 
+	/**
+	 * Getter for {@link #accessIdentity} property.
+	 * @see #accessIdentity
+	 */
 	public AccessIdentity_Transferable getAccessIdentity() {
 		return this.accessIdentity;
 	}
 
+	/**
+	 * Getter for {@link #accessIdentifier} property.
+	 * @see #accessIdentifier
+	 */
 	public AccessIdentifier_Transferable getAccessIdentifier() {
 		return this.accessIdentifier;
 	}
 
 	/**
+	 * Getter for {@link #domainId} property. To be renamed.
+	 * @see #domainId
+	 */
+	public Identifier getDomainIdentifier() {
+		return this.domainId;
+	}
+
+	/**
+	 * Getter for {@link #userId} property. To be renamed.
+	 * @see #userId
+	 */
+	public Identifier getUserIdentifier() {
+		return this.userId;
+	}
+
+	/** 
 	 * Есть ли открытая сессия.
 	 */
 	public boolean isOpened() {
@@ -393,14 +424,23 @@ public final class RISDSessionInfo extends SessionInterface {
 		return ci;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getUserId() {
 		return accessIdentity.user_id;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setDomainId(String domain_id) {
 		accessIdentity.domain_id = domain_id;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getDomainId() {
 		return (this.accessIdentity == null) ? null : this.accessIdentity.domain_id;
 	}

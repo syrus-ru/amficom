@@ -1,5 +1,5 @@
 /*
- * $Id: SessionInterface.java,v 1.5 2004/10/21 14:24:20 bass Exp $
+ * $Id: SessionInterface.java,v 1.6 2004/11/02 08:06:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Vector;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/10/21 14:24:20 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/02 08:06:35 $
  * @module generalclient_v1
  */
 public abstract class SessionInterface {
@@ -52,9 +52,19 @@ public abstract class SessionInterface {
 
 	public abstract ConnectionInterface getConnectionInterface();
 
+	/**
+	 * @deprecated
+	 */
 	public abstract String getUserId();
 
-	public abstract void setDomainId(String domain_id);
+	/**
+	 * @deprecated
+	 */
+	public abstract void setDomainId(final String domainId);
+
+	/**
+	 * @deprecated
+	 */
 	public abstract String getDomainId();
 
 	public static void CloseSession(SessionInterface si)
