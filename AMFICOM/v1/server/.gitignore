@@ -9,4 +9,3 @@ load_server.bat
 *.gz
 *.swp
 Makefile.inc
-test
