@@ -1,5 +1,5 @@
 --
--- $Id: domains.sql,v 1.1 2004/10/14 08:31:53 bass Exp $
+-- $Id: domains.sql,v 1.2 2004/10/14 09:08:34 bass Exp $
 --
 -- Dependencies:
 --	amficom.imageresources;
@@ -38,5 +38,8 @@ CREATE TABLE amficom.domains (
 	CONSTRAINT domain_usr_fk FOREIGN KEY (owner_id)
 		REFERENCES amficom.users (id)
 );
+
+COMMENT ON COLUMN domains.domain_id IS 'Shouldn''t this be a foreign key?';
+COMMENT ON COLUMN domains.object_permission_id IS 'Shouldn''t this be a foreign key?';
 
 GRANT REFERENCES (name) ON amficom.domains TO mcm;
