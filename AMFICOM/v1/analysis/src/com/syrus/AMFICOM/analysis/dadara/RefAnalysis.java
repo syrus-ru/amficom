@@ -120,19 +120,19 @@ public class RefAnalysis
 
 				int adz = 0;
 				int edz = 0;
+				int N = re[i].getEnd() - re[i].getBegin();
+				double[] yarr = mt.getYArrayZeroPad(re[i].getBegin(), N);
 				// find max
 				double vmax = Po;
-				for (int k = re[i].getBegin(); k < re[i].getEnd(); k++) {
-					if (vmax < mt.getY(k))
-						vmax = mt.getY(k);
+				for (int k = 0; k < N; k++) {
+					if (vmax < yarr[k])
+						vmax = yarr[k];
 				}
-				// find width // NOTE: changed a little by saa, 2004-07
-				for (int k = re[i].getBegin(); k < re[i].getEnd(); k++) {
-					//if(re[i].refAmplitude(k) > re[i].aLet_connector +
-					// re[i].a1_connector - 1.5) -- OLD
-					if (mt.getY(k) > vmax - 1.5)
+				// find width
+				for (int k = 0; k < N; k++) {
+					if (yarr[k] > vmax - 1.5)
 						edz++;
-					if (mt.getY(k) > Po + .5)
+					if (yarr[k] > Po + .5)
 						adz++;
 				}
 
