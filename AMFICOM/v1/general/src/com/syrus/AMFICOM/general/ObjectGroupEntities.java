@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.6 2004/12/07 17:08:10 bass Exp $
+ * $Id: ObjectGroupEntities.java,v 1.7 2004/12/21 16:32:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/07 17:08:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/12/21 16:32:06 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public final class ObjectGroupEntities {
@@ -20,6 +20,7 @@ public final class ObjectGroupEntities {
 	public static final String SCHEME_GROUP = "SchemeGroup";
 	public static final String MAP_GROUP = "MapGroup";
 	public static final String RESOURCE_GROUP = "ResourceGroup";
+	public static final String MAPVIEW_GROUP = "MapViewGroup";
     
 	//  Group Codes
 	public static final short UNKNOWN_GROUP_CODE = 0x0000;
@@ -29,8 +30,10 @@ public final class ObjectGroupEntities {
 	public static final short SCHEME_GROUP_CODE = 0x0004;
 	public static final short MAP_GROUP_CODE = 0x0005;
 	public static final short RESOURCE_GROUP_CODE = 0x0006;
+	public static final short MAPVIEW_GROUP_CODE = 0x0007;
 
 	private ObjectGroupEntities() {
+		// singleton constructor
 	}
 
 	public static short stringToCode(final String groupString) {
@@ -47,6 +50,8 @@ public final class ObjectGroupEntities {
 			return MAP_GROUP_CODE;
 		else if (groupString.equals(RESOURCE_GROUP))
 			return RESOURCE_GROUP_CODE;
+		else if (groupString.equals(MAPVIEW_GROUP))
+			return MAPVIEW_GROUP_CODE;
 		return UNKNOWN_GROUP_CODE;        
 	}
     
@@ -65,6 +70,8 @@ public final class ObjectGroupEntities {
 				return MAP_GROUP;
 			case RESOURCE_GROUP_CODE:
 				return RESOURCE_GROUP;
+			case MAPVIEW_GROUP_CODE:
+				return MAPVIEW_GROUP;
 			case UNKNOWN_GROUP_CODE:
 			default:
 				return null;        
@@ -135,6 +142,16 @@ public final class ObjectGroupEntities {
 	public static boolean isInResourceGroup(final String entityName) {
 		return isInResourceGroup(ObjectEntities.stringToCode(entityName));
 	}
+	
+	public static boolean isInMapViewGroup(final short entityCode) {
+		assert ObjectEntities.codeToString(entityCode) != null;
+		return entityCode >= ObjectEntities.MAPVIEW_MIN_ENTITY_CODE
+			&& entityCode <= ObjectEntities.MAPVIEW_MAX_ENTITY_CODE;
+	}
+
+	public static boolean isInMapViewGroup(final String entityName) {
+		return isInMapViewGroup(ObjectEntities.stringToCode(entityName));
+	}
 
 	public static short getGroupCode(final short entityCode) {
 		if (isInAdministrationGroup(entityCode))
@@ -149,6 +166,8 @@ public final class ObjectGroupEntities {
 			return MAP_GROUP_CODE;
 		else if (isInResourceGroup(entityCode))
 			return RESOURCE_GROUP_CODE;
+		else if (isInMapViewGroup(entityCode))
+			return MAPVIEW_GROUP_CODE;
 		return UNKNOWN_GROUP_CODE;        
 	}
 

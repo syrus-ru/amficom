@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.37 2004/12/10 10:15:42 max Exp $
+ * $Id: ObjectEntities.java,v 1.38 2004/12/21 16:32:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/10 10:15:42 $
- * @author $Author: max $
+ * @version $Revision: 1.38 $, $Date: 2004/12/21 16:32:06 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -101,6 +101,9 @@ public final class ObjectEntities {
 
 	/*       Resource       */
 	public static final String IMAGE_RESOURCE_ENTITY = "ImageResource";
+	
+	/*		MapView			*/
+	public static final String MAPVIEW_ENTITY = "MapView";
 
 	/*        Updike        */
 	/**
@@ -223,7 +226,7 @@ public final class ObjectEntities {
 	public static final short PHYSICAL_LINK_TYPE_ENTITY_CODE = 0x02C2;
 
 	public static final short MAP_MAX_ENTITY_CODE = 0x0300;
-
+	
 	/*
 	 * Resource:       769-832 (0x0301-0x0340)
 	 * Resource Types: 833-896 (0x0341-0x0380)
@@ -233,6 +236,16 @@ public final class ObjectEntities {
 	public static final short IMAGE_RESOURCE_ENTITY_CODE = RESOURCE_MIN_ENTITY_CODE;
 
 	public static final short RESOURCE_MAX_ENTITY_CODE = 0x0380;
+	
+	/*
+	 * MapView:			(0x0380 - 0x0400)
+	 */
+	public static final short MAPVIEW_MIN_ENTITY_CODE = 0x380;
+	
+	public static final short MAPVIEW_ENTITY_CODE = 0x380;
+	
+	public static final short MAPVIEW_MAX_ENTITY_CODE = 0x400;
+
 
 	/*
 	 * Updike: 32767 (0x7FFF)
@@ -316,6 +329,8 @@ public final class ObjectEntities {
 		else if (entity.equals(MAP_ENTITY)) return MAP_ENTITY_CODE;
 
 		else if (entity.equals(IMAGE_RESOURCE_ENTITY)) return IMAGE_RESOURCE_ENTITY_CODE;
+		
+		else if (entity.equals(MAPVIEW_ENTITY)) return MAPVIEW_ENTITY_CODE;
 
 		else if (entity.equals(UPDIKE_ENTITY)) return UPDIKE_ENTITY_CODE;
 
@@ -459,6 +474,9 @@ public final class ObjectEntities {
 
 			case IMAGE_RESOURCE_ENTITY_CODE:
 				return IMAGE_RESOURCE_ENTITY;
+			
+			case MAPVIEW_ENTITY_CODE:
+				return MAPVIEW_ENTITY;
 
 			case UPDIKE_ENTITY_CODE:
 				return UPDIKE_ENTITY;
