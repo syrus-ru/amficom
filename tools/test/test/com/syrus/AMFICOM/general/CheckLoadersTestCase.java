@@ -1,5 +1,5 @@
 /*
- * $Id: CheckLoadersTestCase.java,v 1.2 2005/02/02 07:31:03 bob Exp $
+ * $Id: CheckLoadersTestCase.java,v 1.3 2005/02/02 07:46:19 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/02 07:31:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/02 07:46:19 $
  * @author $Author: bob $
  * @module tools
  */
@@ -57,8 +57,12 @@ public class CheckLoadersTestCase extends TestCase {
 				/*
 				 * except ObjectEntities.PERMATTR_ENTITY_CODE due to this entity
 				 * is not exist
+				 * ObjectEntities.SETPARAMETER_ENTITY_CODE, ObjectEntities.SETPARAMETER_ENTITY_CODE
+				 * are not
+				 * StorableObject and there is no reason operate this it
 				 */
-				if (ec == ObjectEntities.PERMATTR_ENTITY_CODE)
+				if (ec == ObjectEntities.PERMATTR_ENTITY_CODE || ec == ObjectEntities.SETPARAMETER_ENTITY_CODE
+						|| ec == ObjectEntities.RESULTPARAMETER_ENTITY_CODE)
 					continue;
 				String entityName = ObjectEntities.codeToString(ec);
 				if (entityName != null) {
