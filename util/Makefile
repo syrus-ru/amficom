@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2004/06/01 11:03:35 bass Exp $
+# $Id: Makefile,v 1.7 2004/06/01 14:16:28 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -111,7 +111,7 @@ $(MODULE_NAME)server.jar: all
 
 .PHONY: dist
 dist: distclean
-	tar cf ../$(MODULE_NAME)-$(MODULE_VERSION).tar ../$(MODULE_NAME)
+	cd .. && tar cf $(MODULE_NAME)-$(MODULE_VERSION).tar $(MODULE_NAME)
 	bzip2 -9 ../$(MODULE_NAME)-$(MODULE_VERSION).tar
 
 .PHONY: distclean
