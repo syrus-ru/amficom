@@ -1,4 +1,4 @@
-CREATE OR REPLACE TYPE CronStrings AS TABLE OF VARCHAR2(64)
+CREATE OR REPLACE TYPE CronStringArray AS TABLE OF VARCHAR2(64)
 /
 
 CREATE TABLE TemporalPattern (
@@ -9,7 +9,7 @@ CREATE TABLE TemporalPattern (
  modifier_id VARCHAR2(32) NOT NULL,
 --
  description VARCHAR2(256),
- value CronStrings,
+ value CronStringArray,
 --
  CONSTRAINT tp_pk PRIMARY KEY (id),
  CONSTRAINT tp_creator_fk FOREIGN KEY (creator_id)
