@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.16 2004/09/29 15:03:34 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.17 2004/09/29 16:07:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/09/29 15:03:34 $
+ * @version $Revision: 1.17 $, $Date: 2004/09/29 16:07:35 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -397,7 +397,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	{
 		if(!isVisible(visibleBounds))
 			return;
-			
+
+		updateLengthLt();
+
 		boolean showName = false;
 		if(MapPropertiesManager.isShowPhysicalNodes())
 		{
@@ -480,6 +482,15 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			returnValue += nodeLink.getLengthLt();
 		}
 		return returnValue;
+	}
+
+	public void updateLengthLt()
+	{
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		{
+			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
+			nodeLink.updateLengthLt();
+		}
 	}
 
 	/**
@@ -661,6 +672,8 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		this.setMapProtoId(mples.mapProtoId);
 		
 		nodeLinksSorted = false;
+
+		updateLengthLt();
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException

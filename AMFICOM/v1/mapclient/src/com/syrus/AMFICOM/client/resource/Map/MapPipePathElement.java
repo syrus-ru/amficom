@@ -231,7 +231,20 @@ public class MapPipePathElement extends MapLinkElement
 		
 		return point;
 	}
-	
+
+	//¬озвращает топологическую длинну в метрах
+	public double getLengthLt()
+	{
+		double length = 0;
+		Iterator e = getLinks().iterator();
+		while( e.hasNext())
+		{
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.next();
+			length = length + link.getLengthLt();
+		}
+		return length;
+	}
+
 	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
 		return false;
