@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.10 2005/01/26 08:59:22 max Exp $
+ * $Id: SchemeImageResource.java,v 1.11 2005/02/15 08:41:26 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.*;
 import java.util.zip.*;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.10 $, $Date: 2005/01/26 08:59:22 $
+ * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/15 08:41:26 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -48,11 +48,14 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 * {@link #setData0(List)}.
 	 */
 	protected SchemeImageResource(final Identifier id,
-			final Date created,
-			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId) {
-		super(id, created, modified, creatorId, modifierId);
+			final long version) {
+		super(id, 
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId, 
+			creatorId, 
+			version);
 		this.data = new ArrayList(3);
 	}
 
@@ -63,14 +66,13 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 */
 	public static SchemeImageResource createInstance(final Identifier creatorId) throws CreateObjectException {
 		try {
-			final Date created1 = new Date();
-			return new SchemeImageResource(
+			SchemeImageResource schemeImageResource = new SchemeImageResource(
 				IdentifierPool.getGeneratedIdentifier(
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
-				created1,
-				created1,
 				creatorId,
-				creatorId);
+				0L);
+			schemeImageResource.changed = true;
+			return schemeImageResource;
 		} catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("SchemeImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
@@ -116,12 +118,12 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 * entity version on every modification.
 	 */
 	public void setData(final List data) {
-		this.currentVersion = getNextVersion();
+		this.changed = true;
 		setData0(data);
 	}
 
 	public void setImage(final byte image[]) {
-		this.currentVersion = getNextVersion();
+		this.changed = true;
 		setImage0(image);
 	}
 
@@ -129,8 +131,9 @@ public final class SchemeImageResource extends AbstractImageResource {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
+			final long version,
 			final byte packedData[]) {
-		super.setAttributes(created, modified, creatorId, modifierId);
+		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.data = safeUnpack(packedData);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.7 2005/02/15 08:13:16 bob Exp $
+ * $Id: BitmapImageResource.java,v 1.8 2005/02/15 08:41:26 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Date;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/02/15 08:13:16 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/15 08:41:26 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -44,14 +44,16 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	}
 
 	protected BitmapImageResource(final Identifier id,
-			final Date created,
-			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId,
 			final long version,
 			final String codename,
 			final byte image[]) {
-		super(id, created, modified, creatorId, modifierId, version);
+		super(id, 
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId, 
+			creatorId, 
+			version);
 		this.codename = codename;
 		this.image = image;
 	}
@@ -60,17 +62,13 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 			final String codename,
 			final byte image[]) throws CreateObjectException {
 		try {
-			final Date created = new Date(System.currentTimeMillis());
 			BitmapImageResource bitmapImageResource = new BitmapImageResource(
 				IdentifierPool.getGeneratedIdentifier(
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				0L,
-				codename,
-				image);
+					creatorId,
+					0L,
+					codename,
+					image);
 			bitmapImageResource.changed = true;
 			return bitmapImageResource;
 		} catch (IllegalObjectEntityException ioee) {

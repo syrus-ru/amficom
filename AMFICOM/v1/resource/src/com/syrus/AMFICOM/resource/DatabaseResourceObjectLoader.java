@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.5 2005/02/15 08:13:16 bob Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.6 2005/02/15 08:41:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/15 08:13:16 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/15 08:41:26 $
  * @author $Author: bob $
  * @module resource_v1
  */
@@ -120,7 +120,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 	public void saveImageResource(AbstractImageResource abstractImageResource, boolean force) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
 		try {
-			database.update(abstractImageResource, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(abstractImageResource, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("ResourceObjectLoader.saveImageResource | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
 			throw new DatabaseException("ResourceObjectLoader.saveImageResource | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$

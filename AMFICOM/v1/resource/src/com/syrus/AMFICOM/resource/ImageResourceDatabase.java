@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.10 2005/02/15 08:12:07 max Exp $
+ * $Id: ImageResourceDatabase.java,v 1.11 2005/02/15 08:41:26 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.10 $, $Date: 2005/02/15 08:12:07 $
+ * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/15 08:41:26 $
  * @module resource_v1
  */
 
@@ -287,7 +287,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			BitmapImageResource bitmapImageResource;
 			if (storableObject == null) {
 				bitmapImageResource = new BitmapImageResource(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null, null, null, null, null, null);
+					null, 0L, null, null);
 			} else {
 				bitmapImageResource = (BitmapImageResource) storableObject;
 			}
@@ -296,6 +296,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 				image);
 			
@@ -304,7 +305,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			FileImageResource fileImageResource;
 			if (storableObject == null) {
 				fileImageResource = new FileImageResource(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-						null, null, null, null, null);
+						null, 0L, null);
 			} else {
 				fileImageResource = (FileImageResource) storableObject;
 			}
@@ -312,13 +313,14 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 					DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+					resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 					DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)));
 			return fileImageResource;
 		} else if (sort == ImageResourceSort._SCHEME) {
 			SchemeImageResource schemeImageResource;
 			if (storableObject == null) {
 				schemeImageResource = new SchemeImageResource(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-						null, null, null, null);
+						null, 0L);
 			} else {
 				schemeImageResource = (SchemeImageResource) storableObject;
 			}
@@ -327,6 +329,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 					DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+					resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 					image);			
 			return schemeImageResource;
 		}
