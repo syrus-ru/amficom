@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import java.awt.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceCatalogController;
 
 public abstract class ObjectResourceTreeModel
 {
@@ -18,6 +19,15 @@ public abstract class ObjectResourceTreeModel
 
 	public abstract void nodeAfterSelected(ObjectResourceTreeNode node);
 	public abstract void nodeBeforeExpanded(ObjectResourceTreeNode node);
+
+	private ObjectResourceCatalogController defaultController = null;
+
+	public ObjectResourceCatalogController getCatalogController()
+	{
+		if(defaultController == null)
+			defaultController = new DefaultCatalogController();
+		return defaultController;
+	}
 
 	public ObjectResourceCatalogActionModel getNodeActionModel(ObjectResourceTreeNode node)
 	{
