@@ -196,6 +196,8 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 //			}
 
 			MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+			if (ms == null)
+				return;
 			SetParameter[] params = ms.getParameterSet().getParameters();
 			double len = 0;
 			try
