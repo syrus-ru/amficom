@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.9 2004/10/19 12:23:28 bob Exp $
+ * $Id: Identifier.java,v 1.10 2004/11/11 08:00:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,17 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.io.Serializable;
+
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/19 12:23:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/11/11 08:00:13 $
+ * @author $Author: max $
  * @module general_v1
  */
 
-public class Identifier implements Comparable, Cloneable, TransferableObject {
+public class Identifier implements Comparable, Cloneable, TransferableObject, Serializable {
 	public static final String SEPARATOR = "_";
 
 	private short major;

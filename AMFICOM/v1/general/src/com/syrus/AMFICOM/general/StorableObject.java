@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.10 2004/11/04 13:16:56 bob Exp $
+ * $Id: StorableObject.java,v 1.11 2004/11/11 08:00:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,16 +8,17 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/11/04 13:16:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/11/11 08:00:13 $
+ * @author $Author: max $
  * @module general_v1
  */
 
-public abstract class StorableObject implements Identified, TransferableObject {
+public abstract class StorableObject implements Identified, TransferableObject, Serializable  {
 
 	protected Identifier	id;
 	protected Date			created;
