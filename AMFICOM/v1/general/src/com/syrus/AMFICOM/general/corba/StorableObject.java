@@ -11,11 +11,11 @@ package com.syrus.AMFICOM.general.corba;
 public abstract class StorableObject implements com.syrus.AMFICOM.general.corba.IStorableObject
 {
   protected com.syrus.AMFICOM.general.Identifier id = null;
-  protected long created = (long)0;
-  protected long modified = (long)0;
+  protected long created = 0;
+  protected long modified = 0;
   protected com.syrus.AMFICOM.general.Identifier creatorId = null;
   protected com.syrus.AMFICOM.general.Identifier modifierId = null;
-  protected long version = (long)0;
+  protected long version = 0;
 
   public abstract com.syrus.AMFICOM.general.corba.StorableObject cloneInstance ();
 
