@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.13 2005/02/28 15:28:02 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.14 2005/03/02 10:48:33 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/02/28 15:28:02 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/02 10:48:33 $
  * @module
  */
 public class ModelTraceManager
@@ -551,9 +551,16 @@ public class ModelTraceManager
 		private ThreshDY th;
 		private int key;
 		private double dyGrid; // точность представления dy
-		private double dyFrac; // сохраненная дробная часть порога, не ложащаяся на сетку  1/1000 дБ
+		private double dyFrac; // сохраненная дробная часть порога, не ложащаяся на заданную сетку
 		protected int posX;
 		protected double posY;
+		private void snapToGrid()
+		{
+			if (dyGrid > 0)
+				th.values[key] =
+					Math.rint(th.values[key] / dyGrid) * dyGrid;
+		}
+
 		protected ThresholdHandleDY(int thId, int key, int posX, double posY, double dyGrid)
 		{
 			this.th = tDY[thId];
@@ -604,19 +611,18 @@ public class ModelTraceManager
 				posX = posMax;
 			this.posX = posX;
 			this.posY = posY;
+			snapToGrid();
 		}
 		public void moveBy(double dx, double dy) // dx is ignored
 		{
-			// привязка к сетке указанного шага (тип., 0.001 дБ)
-			if (dyGrid > 0)
-			{
-				dyFrac += dy;
-				dy = Math.round(dyFrac / dyGrid) * dyGrid;
-				dyFrac -= dy;
-			}
-			invalidateThMTByKey(key);
-			posY += dy;
+			dy += dyFrac;
 			th.values[key] += dy;
+			double desiredValue = th.values[key]; 
+			snapToGrid();
+			dyFrac = desiredValue - th.values[key];
+			invalidateThMTByKey(key);
+			posY += dy - dyFrac;
+			// привязка к такой же сетке значения самого порога
 		}
 		public int getX()
 		{
@@ -627,49 +633,6 @@ public class ModelTraceManager
 			return posY;
 		}
 	}
-
-	/*
-	// определяем, к какому DY-порогу лучше относится данная точка
-	// при выборе между A и A граница порога - посередине между порогами,
-	// при выборе между A и L - по уровню Y = (Y_A + Y_L)/2
-	private int getNearestThreshDYByX(int key, int x)
-	{
-		for (int i = 0; i < tDY.length - 1; i++)
-		{
-			int thisEnd = tDY[i].xMax;
-			int nextBegin = tDY[i + 1].xMin;
-			if (x > nextBegin)
-				continue;
-			int separator;
-			boolean isAtoL = tDY[i].typeL || tDY[i + 1].typeL;
-			if (isAtoL == false)
-			{
-				// между порогами A-A или DX-DX
-				// устанавливаем границу раздела посередине
-				separator = (thisEnd + nextBegin) / 2;
-			}
-			else
-			{
-				// между порогами, A-L или L-A
-				// ищем границу раздела по уровню 1/2 высоты
-				int x0 = thisEnd;
-				int N = nextBegin - thisEnd;
-				double[] yArr = getThresholdMT(key).getYArray(x0, N);
-				double median = (yArr[0] + yArr[N - 1]) / 2.0;
-				separator = x0;
-				for (int k = 0; k < N; k++)
-					if (yArr[k] <= median ^ median <= yArr[0])
-						separator++;
-			}
-			if (x < separator)
-			{
-				return i;
-			}
-		}
-		// note: empty tDY would cause return of -1
-		return tDY.length - 1;
-	}
-	*/
 
 	private ArrayList getAllThreshByNEvent(int nEvent)
 	{
