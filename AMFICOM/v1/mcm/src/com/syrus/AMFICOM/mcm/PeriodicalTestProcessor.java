@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.21 2004/10/27 09:53:13 bob Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.22 2004/10/29 09:59:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,13 +26,14 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/10/27 09:53:13 $
+ * @version $Revision: 1.22 $, $Date: 2004/10/29 09:59:55 $
  * @author $Author: bob $
  * @module mcm_v1
  */
 
 public class PeriodicalTestProcessor extends TestProcessor {
-	private static final long FRAME = 24*60*60*1000;//ms
+	private static final long FRAME = 24*60*60*1000;//ms	
+	
 	/*	Error codes for method processFall()	*/
 	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
 	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;
@@ -147,6 +148,11 @@ public class PeriodicalTestProcessor extends TestProcessor {
 							 + ", lastMeasurementAcquisition: " + super.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
 			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && super.lastMeasurementAcquisition)
 				super.complete();
+			else if (super.lastMeasurementAcquisition && (this.endTime + super.forgetFrame < System.currentTimeMillis())){
+					Log.debugMessage("Past " + (super.forgetFrame/1000) + " sec since last measurement,"
+									 + " forget acquere results for '" + super.test.getId().getCode() + "'", Log.DEBUGLEVEL03);
+					super.abort();
+				}
 
 			try {
 				sleep(super.initialTimeToSleep);

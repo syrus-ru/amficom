@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.12 2004/08/23 20:48:29 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.13 2004/10/29 09:59:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/23 20:48:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2004/10/29 09:59:55 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -45,8 +45,9 @@ public class OnetimeTestProcessor extends TestProcessor {
 		Identifier measurementId = null;
 		Measurement measurement = null;
 		while (super.running) {
-			if (! super.lastMeasurementAcquisition) {
-				if (this.startTime.getTime() <= System.currentTimeMillis()) {
+			long time = this.startTime.getTime();
+			if (! super.lastMeasurementAcquisition) {				
+				if ( time <= System.currentTimeMillis()) {
 					try {
 						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
 						super.clearFalls();
@@ -98,9 +99,16 @@ public class OnetimeTestProcessor extends TestProcessor {
 			}	//if (! super.lastMeasurementAcquisition)
 
 			super.processMeasurementResult();
-System.out.println("numberOfReceivedMResults: " + super.numberOfReceivedMResults + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements + ", lastMeasurementAcquisition: " + lastMeasurementAcquisition);
+			Log.debugMessage("numberOfReceivedMResults: " + super.numberOfReceivedMResults 
+							   + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
+							   + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
 			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && this.lastMeasurementAcquisition)
 				super.complete();
+			else if (super.lastMeasurementAcquisition && (time + super.forgetFrame < System.currentTimeMillis())){
+				Log.debugMessage("Past " + (super.forgetFrame/1000) + " sec since last measurement,"
+								 + " forget acquere results for '" + super.test.getId().getCode() + "'", Log.DEBUGLEVEL03);
+				super.abort();
+			}
 
 			try {
 				sleep(super.initialTimeToSleep);
