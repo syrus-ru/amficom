@@ -649,7 +649,7 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 		{
 			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)ae;
 
-			List data = tdse.getDataSet();
+			List data = tdse.getList();
 			int n = tdse.getSelectionNumber();
 
 			if (n != -1)
