@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTestCase.java,v 1.2 2004/08/31 15:29:12 bob Exp $
+ * $Id: CharacteristicTestCase.java,v 1.3 2004/09/10 14:49:01 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,14 +25,15 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/31 15:29:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/09/10 14:49:01 $
+ * @author $Author: max $
  * @module tools
  */
 public class CharacteristicTestCase extends ConfigureTestCase {
@@ -95,7 +96,7 @@ public class CharacteristicTestCase extends ConfigureTestCase {
 
 	}
 	
-	public void testRetrieveCharacteristics() throws RetrieveObjectException, ObjectNotFoundException{
+	public void testRetrieveCharacteristics() throws ObjectNotFoundException, RetrieveObjectException, IllegalDataException{
 		
 		EquipmentDatabase equipmentDatabase = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
 		List eqList = equipmentDatabase.retrieveAll();
