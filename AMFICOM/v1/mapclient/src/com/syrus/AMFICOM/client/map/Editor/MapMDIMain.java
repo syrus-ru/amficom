@@ -274,7 +274,8 @@ public class MapMDIMain extends JFrame implements OperationListener
 		internal_dispatcher.register(this, "mapframeshownevent");
 		internal_dispatcher.register(this, "mapselectevent");
 		internal_dispatcher.register(this, "mapcloseevent");
-		internal_dispatcher.register(this, "mapaddschemeelementevent");
+		Environment.the_dispatcher.register(this, "mapaddschemeelementevent");
+		Environment.the_dispatcher.register(this, "mapaddschemeevent");
 
 		setDefaultModel(aModel);
 
@@ -418,6 +419,37 @@ public class MapMDIMain extends JFrame implements OperationListener
 			aModel.setEnabled("menuMapClose", false);
 			aModel.fireModelChanged("");
 			setTitle(LangModelConfig.getString("MapTitle"));
+		}
+		else
+		if (ae.getActionCommand().equals("mapaddschemeevent"))
+        {
+			MapMainFrame fr = (MapMainFrame )Pool.get("environment", "mapmainframe");
+			if(fr != null)
+				if(fr.getParent() != null)
+					if(fr.getParent().equals(desktopPane))
+					{
+						Dimension dim = desktopPane.getSize();
+
+						String scheme_id = (String)ae.getSource();
+						Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
+						scheme.unpack();
+
+						SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
+						panel.ignore_loading = true;
+						panel.setGraphSize(new Dimension());
+
+						SchemeViewerFrame frame = new SchemeViewerFrame(aContext, panel);
+						frame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+						frame.setTitle(scheme.getName());
+						desktopPane.add(frame);
+
+						frame.setLocation(0, 0);
+						frame.setSize(dim.width * 4 / 5, dim.height);
+						frame.setVisible(true);
+						frame.toFront();
+
+						panel.openScheme(scheme);
+					}
 		}
 		else
 		if (ae.getActionCommand().equals("mapaddschemeelementevent"))
