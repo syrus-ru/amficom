@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.8 2005/03/23 14:55:35 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.9 2005/03/24 09:40:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,9 @@ package com.syrus.AMFICOM.scheme;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.logic.*;
 import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.scheme.logic.*;
 import com.syrus.util.Log;
 import java.util.*;
 
@@ -19,11 +21,12 @@ import java.util.*;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/23 14:55:35 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/24 09:40:15 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
-		implements Describable, SchemeCellContainer, Characterizable {
+		implements Describable, SchemeCellContainer, Characterizable,
+		LibraryEntry {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	private Collection characteristics;
@@ -270,6 +273,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param itemListener
+	 * @see Item#addChangeListener(ItemListener)
+	 */
+	public void addChangeListener(final ItemListener itemListener) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @param characteristic
 	 * @see Characterizable#addCharacteristic(Characteristic)
 	 */
@@ -278,6 +289,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		assert !getCharacteristics().contains(characteristic): ErrorMessages.COLLECTION_IS_A_SET;
 		this.characteristics.add(characteristic);
 		this.changed = true;
+	}
+
+	/**
+	 * @param childItem
+	 * @see Item#addChild(Item)
+	 */
+	public void addChild(final Item childItem) {
+		throw new UnsupportedOperationException(ErrorMessages.CHILDREN_PROHIBITED);
 	}
 
 	public void addSchemeDevice(final SchemeDevice schemeDevice) {
@@ -290,6 +309,20 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see Item#canHaveChildren()
+	 */
+	public boolean canHaveChildren() {
+		return getMaxChildrenCount() != 0;
+	}
+
+	/**
+	 * @see Item#canHaveParent()
+	 */
+	public boolean canHaveParent() {
+		return true;
 	}
 
 	public Object clone() {
@@ -313,6 +346,13 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public CharacteristicSort getCharacteristicSort() {
 		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPROTOELEMENT;
+	}
+
+	/**
+	 * @see Item#getChildren()
+	 */
+	public List getChildren() {
+		throw new UnsupportedOperationException(ErrorMessages.CHILDREN_PROHIBITED);
 	}
 
 	/**
@@ -380,11 +420,45 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @see Item#getMaxChildrenCount()
+	 */
+	public int getMaxChildrenCount() {
+		return 0;
+	}
+
+	/**
 	 * @see Namable#getName()
 	 */
 	public String getName() {
 		assert this.name != null && this.name.length() != 0: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		return this.name;
+	}
+
+	/**
+	 * @return <code>this</code>.
+	 * @see Item#getObject()
+	 */
+	public Object getObject() {
+		return this;
+	}
+
+	/**
+	 * @throws UnsupportedOperationException if this
+	 *         <code>schemeProtoElement</code> has no parent
+	 *         <code>schemeProtoGroup</code> (i. e. is either orphan
+	 *         (which is invalid) or enclosed by another
+	 *         <code>schemeProtoElement</code> (which has no relation with
+	 *         library hierarchy)).
+	 * @see Item#getParent()
+	 */
+	public Item getParent() {
+		final SchemeProtoGroup parentSchemeProtoGroup = getParentSchemeProtoGroup();
+		if (parentSchemeProtoGroup == null) {
+			if (getParentSchemeProtoElement() == null)
+				throw new UnsupportedOperationException(ErrorMessages.HEADLESS_CHILD_PROHIBITED);
+			throw new UnsupportedOperationException(ErrorMessages.OUT_OF_LIBRARY_HIERARCHY);
+		}
+		return parentSchemeProtoGroup;
 	}
 
 	public SchemeProtoElement getParentSchemeProtoElement() {
@@ -494,6 +568,21 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @see Item#isService()
+	 */
+	public boolean isService() {
+		return false;
+	}
+
+	/**
+	 * @param itemListener
+	 * @see Item#removeChangeListener(ItemListener)
+	 */
+	public void removeChangeListener(final ItemListener itemListener) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @param characteristic
 	 * @see Characterizable#removeCharacteristic(Characteristic)
 	 */
@@ -585,6 +674,33 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			return;
 		this.name = name;
 		this.changed = true;
+	}
+
+	/**
+	 * @param library
+	 * @see Item#setParent(Item)
+	 */
+	public void setParent(final Item library) {
+		setParent((Library) library);
+	}
+
+	/**
+	 * @param library
+	 * @throws UnsupportedOperationException if this
+	 *         <code>schemeProtoElement</code> has no parent
+	 *         <code>schemeProtoGroup</code> (i. e. is either orphan
+	 *         (which is invalid) or enclosed by another
+	 *         <code>schemeProtoElement</code> (which has no relation with
+	 *         library hierarchy)).
+	 * @see LibraryEntry#setParent(Library)
+	 */
+	public void setParent(final Library library) {
+		if (getParentSchemeProtoGroup() == null) {
+			if (getParentSchemeProtoElement() == null)
+				throw new UnsupportedOperationException(ErrorMessages.HEADLESS_CHILD_PROHIBITED);
+			throw new UnsupportedOperationException(ErrorMessages.OUT_OF_LIBRARY_HIERARCHY);
+		}
+		setParentSchemeProtoGroup((SchemeProtoGroup) library);
 	}
 
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {

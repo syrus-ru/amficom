@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.6 2005/03/23 14:55:35 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.7 2005/03/24 09:40:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,9 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.logic.*;
 import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.scheme.logic.*;
 import com.syrus.util.Log;
 import java.util.*;
 
@@ -17,11 +19,11 @@ import java.util.*;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/23 14:55:35 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/24 09:40:15 $
  * @module scheme_v1
  */
 public final class SchemeProtoGroup extends AbstractCloneableStorableObject
-		implements Describable, SchemeSymbolContainer {
+		implements Describable, SchemeSymbolContainer, Library {
 	private static final long serialVersionUID = 3256721788422862901L;
 
 	private String description;
@@ -119,6 +121,46 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param itemListener
+	 * @see Item#addChangeListener(ItemListener)
+	 */
+	public void addChangeListener(final ItemListener itemListener) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param childItem
+	 * @throws UnsupportedOperationException if <code>childItem</code> is
+	 *         an instance of neither {@link Library}nor
+	 *         {@link LibraryEntry}.
+	 * @see Item#addChild(Item)
+	 */
+	public void addChild(final Item childItem) {
+		if (childItem instanceof Library)
+			addChild((Library) childItem);
+		else if (childItem instanceof LibraryEntry)
+			addChild((LibraryEntry) childItem);
+		else
+			throw new UnsupportedOperationException(ErrorMessages.UNSUPPORTED_CHILD_TYPE);
+	}
+
+	/**
+	 * @param library
+	 * @see Library#addChild(Library)
+	 */
+	public void addChild(final Library library) {
+		addSchemeProtoGroup((SchemeProtoGroup) library);
+	}
+
+	/**
+	 * @param libraryEntry
+	 * @see Library#addChild(LibraryEntry)
+	 */
+	public void addChild(final LibraryEntry libraryEntry) {
+		addSchemeProtoElement((SchemeProtoElement) libraryEntry);
+	}
+
+	/**
 	 * @param schemeProtoElement cannot be <code>null</code>.
 	 */
 	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
@@ -141,6 +183,20 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @see Item#canHaveChildren()
+	 */
+	public boolean canHaveChildren() {
+		return getMaxChildrenCount() != 0;
+	}
+
+	/**
+	 * @see Item#canHaveParent()
+	 */
+	public boolean canHaveParent() {
+		return true;
+	}
+
+	/**
 	 * @see Object#clone()
 	 * @bug If a parent <code>schemeProtoGroup</code> is <code>null</code>
 	 *      for <em>this</em> object, that doesn't mean it'll be
@@ -157,6 +213,24 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		clone.symbolId = this.symbolId;
 		clone.parentSchemeProtoGroupId = this.parentSchemeProtoGroupId;
 		return clone;
+	}
+
+	/**
+	 * @return a <em>mutable</em> <code>List</code> of
+	 *         <code>SchemeProtoGroup</code>s and
+	 *         <code>SchemeProtoElement</codes>s, which can be freely
+	 *         modified. One of the drawbacks of this approach is that a new
+	 *         object is created on every invocation. If you need an
+	 *         <em>immutable</em> shared instance, let me know.
+	 * @see Item#getChildren()
+	 */
+	public List getChildren() {
+		final Collection schemeProtoGroups = getSchemeProtoGroups();
+		final Collection schemeProtoElements = getSchemeProtoElements();
+		final List children = new ArrayList(schemeProtoGroups.size() + schemeProtoElements.size());
+		children.addAll(schemeProtoGroups);
+		children.addAll(schemeProtoElements);
+		return children;
 	}
 
 	/**
@@ -190,11 +264,33 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @see Item#getMaxChildrenCount()
+	 */
+	public int getMaxChildrenCount() {
+		return Integer.MAX_VALUE;
+	}
+
+	/**
 	 * @see Namable#getName()
 	 */
 	public String getName() {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		return this.name;
+	}
+
+	/**
+	 * @return <code>this</code>.
+	 * @see Item#getObject()
+	 */
+	public Object getObject() {
+		return this;
+	}
+
+	/**
+	 * @see Item#getParent()
+	 */
+	public Item getParent() {
+		return getParentSchemeProtoGroup();
 	}
 
 	/**
@@ -263,6 +359,21 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @see Item#isService()
+	 */
+	public boolean isService() {
+		return false;
+	}
+
+	/**
+	 * @param itemListener
+	 * @see Item#removeChangeListener(ItemListener)
+	 */
+	public void removeChangeListener(final ItemListener itemListener) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * The <code>schemeProtoElement</code> must belong to this
 	 * <code>schemeProtoGroup</code>, or crap will meet the fan.
 	 *
@@ -289,8 +400,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	public void removeSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
 		assert schemeProtoGroup != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getSchemeProtoGroups().contains(schemeProtoGroup): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeProtoGroup.parentSchemeProtoGroupId = Identifier.VOID_IDENTIFIER;
-		schemeProtoGroup.changed = true;
+		schemeProtoGroup.setParentSchemeProtoGroup(null);
 	}
 
 	/**
@@ -345,6 +455,40 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		if (this.name.equals(name))
 			return;
 		this.name = name;
+		this.changed = true;
+	}
+
+	/**
+	 * @param library
+	 * @see Item#setParent(Item)
+	 */
+	public void setParent(final Item library) {
+		setParent((Library) library);
+	}
+
+	/**
+	 * @param library
+	 * @see Library#setParent(Library)
+	 */
+	public void setParent(final Library library) {
+		setParentSchemeProtoGroup((SchemeProtoGroup) library);
+	}
+
+	/**
+	 * @param parentSchemeProtoGroup
+	 * @todo Check whether <code>parentSchemeProtoGroup</code> is not a
+	 *       lower-level descendant of <code>this</code>.
+	 */
+	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
+		assert parentSchemeProtoGroup != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		Identifier newParentSchemeProtoGroupId;
+		if (parentSchemeProtoGroup == null)
+			newParentSchemeProtoGroupId = Identifier.VOID_IDENTIFIER;
+		else
+			newParentSchemeProtoGroupId = parentSchemeProtoGroup.getId();
+		if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId))
+			return;
+		this.parentSchemeProtoGroupId = newParentSchemeProtoGroupId;
 		this.changed = true;
 	}
 
