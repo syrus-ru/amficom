@@ -5,11 +5,10 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TimeParametersFrame extends JInternalFrame implements
@@ -24,7 +23,7 @@ public class TimeParametersFrame extends JInternalFrame implements
 	public TimeParametersFrame(ApplicationContext aContext) {
 		//		this.aContext = aContext;
 		initModule(aContext.getDispatcher());
-		setTitle(LangModelScheduler.getString("TemporalType.Title")); //$NON-NLS-1$
+		setTitle(LangModelSchedule.getString("TemporalType.Title")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);
@@ -40,9 +39,8 @@ public class TimeParametersFrame extends JInternalFrame implements
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG_LEVEL >= 3)
-				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
-						+ commandName);
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
+				+ commandName, getClass().getName());
 		//		int id = ae.getID();
 		//		Object obj = ae.getSource();
 
@@ -50,8 +48,8 @@ public class TimeParametersFrame extends JInternalFrame implements
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
 			if (tue.TEST_SELECTED) {
-				TestRequest treq = (TestRequest) Pool.get(TestRequest.typ,
-						test.getRequestId());
+				TestRequest treq = (TestRequest) Pool.get(TestRequest.typ, test
+						.getRequestId());
 				if (treq != null) {
 					panel.setTestRequest(treq);
 				}

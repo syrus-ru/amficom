@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Schedule;
+ package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Command.Session.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -61,7 +61,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		setContentPane(mainPanel);
 		setResizable(true);
-		setTitle(LangModelScheduler.getString("Scheduling_AMFICOM"));
+		setTitle(LangModelSchedule.getString("Scheduling_AMFICOM"));
 		setJMenuBar(menuBar);
 
 		mainPanel.setLayout(new BorderLayout());
@@ -250,9 +250,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG_LEVEL >= 5)
-				System.out.println(getClass().getName() + " > commandName:"
-						+ commandName + "\t" + ae.getClass().getName());
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
+				+ commandName, getClass().getName());
 		if (commandName.equals(StatusMessageEvent.type)) {
 			StatusMessageEvent sme = (StatusMessageEvent) ae;
 			statusBar.setText("status", sme.getText());
@@ -394,7 +393,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
 		aContext.getDispatcher().notify(
-				new StatusMessageEvent(LangModelScheduler.getString("Loading_BD")));
+				new StatusMessageEvent(LangModelSchedule
+						.getString("Loading_BD")));
 		//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
@@ -410,7 +410,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		sdsi.LoadEvaluationTypes();
 
 		aContext.getDispatcher().notify(
-				new StatusMessageEvent(LangModelScheduler.getString("Loding_BD_finished")));
+				new StatusMessageEvent(LangModelSchedule
+						.getString("Loding_BD_finished")));
 
 		treeFrame.init();
 

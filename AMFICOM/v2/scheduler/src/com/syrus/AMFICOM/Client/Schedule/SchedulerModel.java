@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
@@ -50,7 +51,7 @@ public class SchedulerModel implements OperationListener {
 	public static final int		DATA_ID_TIMESTAMP				= 3;
 	public static final int		DATA_ID_TYPE					= 4;
 
-	public static final int		DEBUG_LEVEL						= 3;
+	//public static final int DEBUG_LEVEL = 3;
 
 	private static final int	FLAG_APPLY						= 1 << 1;
 	private static final int	FLAG_CREATE						= 1 << 0;
@@ -78,9 +79,8 @@ public class SchedulerModel implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG_LEVEL >= 5)
-				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
-						+ commandName);
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
+				+ commandName, getClass().getName());
 		int id = ae.getID();
 		Object obj = ae.getSource();
 		if (commandName.equals(TestUpdateEvent.TYPE)) {

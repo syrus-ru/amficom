@@ -9,7 +9,7 @@ import javax.swing.border.*;
 import javax.swing.tree.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 
@@ -47,7 +47,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			this.dispatcher = aContext.getDispatcher();
 
 			root = new ObjectResourceTreeNode(
-					"root", LangModelScheduler.getString("TestType"), true, //$NON-NLS-1$ //$NON-NLS-2$
+					"root", LangModelSchedule.getString("TestType"), true, //$NON-NLS-1$ //$NON-NLS-2$
 					(ImageIcon) UIStorage.FOLDER_ICON);
 
 			Hashtable kisTable = Pool.getHash(KIS.typ);
@@ -263,7 +263,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			JOptionPane
 					.showMessageDialog(
 							this,
-							LangModelScheduler.getString("Do_not_choose_Measurement_element"), LangModelScheduler.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelSchedule.getString("Do_not_choose_Measurement_element"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.OK_OPTION);
 			parameters = null;
 		}
@@ -276,9 +276,8 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 	public void operationPerformed(OperationEvent oe) {
 		String commandName = oe.getActionCommand();
-		if (SchedulerModel.DEBUG_LEVEL >= 5)
-				System.out.println(getClass().getName() + " commandName:" //$NON-NLS-1$
-						+ commandName);
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
+				+ commandName, getClass().getName());
 		if (commandName.equals(TreeDataSelectionEvent.type)) {
 			TreeDataSelectionEvent dse = (TreeDataSelectionEvent) oe;
 			//			selectedObject = dse.selectedObject;
@@ -305,10 +304,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			if (!skipTestUpdate) {
 				TestUpdateEvent tue = (TestUpdateEvent) oe;
-				if (tue.TEST_SELECTED) {
-					if (SchedulerModel.DEBUG_LEVEL >= 5)
-							System.out
-									.println("commandName.equals(TestUpdateEvent.TYPE)"); //$NON-NLS-1$
+				if (tue.TEST_SELECTED) {					
 					Test test = tue.test;
 					TestType testType = (TestType) Pool.get(TestType.typ, test
 							.getTestTypeId());
@@ -431,7 +427,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		//Toolbar
 		loadButton = new JButton();
 		loadButton.setIcon(UIStorage.OPEN_FILE_ICON);
-		loadButton.setToolTipText(LangModelScheduler.getString("Open")); //$NON-NLS-1$
+		loadButton.setToolTipText(LangModelSchedule.getString("Open")); //$NON-NLS-1$
 		loadButton.setMargin(UIStorage.INSET_NULL);
 		loadButton.setBorder(BorderFactory
 				.createEtchedBorder(EtchedBorder.LOWERED));
@@ -450,7 +446,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		delMapGroupButton = new JButton();
 		delMapGroupButton.setMargin(UIStorage.INSET_NULL);
 		delMapGroupButton.setIcon(UIStorage.DELETE_ICON);
-		delMapGroupButton.setToolTipText(LangModelScheduler.getString("Delete")); //$NON-NLS-1$
+		delMapGroupButton.setToolTipText(LangModelSchedule.getString("Delete")); //$NON-NLS-1$
 		delMapGroupButton.setBorder(BorderFactory
 				.createEtchedBorder(EtchedBorder.LOWERED));
 		delMapGroupButton.setFocusPainted(false);

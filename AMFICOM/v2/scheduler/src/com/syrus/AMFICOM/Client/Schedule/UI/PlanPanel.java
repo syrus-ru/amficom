@@ -9,13 +9,12 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 
-import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.Filter.*;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
@@ -132,7 +131,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 
 	/**
-	 * @todo  only for testing mode
+	 * @todo only for testing mode
 	 */
 	public static void main(String[] args) {
 		JScrollPane scroll = new JScrollPane();
@@ -178,9 +177,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG_LEVEL >= 5)
-				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
-						+ commandName);
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
+				+ commandName, getClass().getName());
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			if (tue.TEST_SELECTED) {
@@ -200,8 +198,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 					found = true;
 				}
 				if (!found) {
-					if (SchedulerModel.DEBUG_LEVEL >= 3)
-							System.out.println("new test catched"); //$NON-NLS-1$
+					Environment.log(Environment.LOG_LEVEL_INFO,
+							"new test catched"); //$NON-NLS-1$
 					unsavedTests.add(test);
 					{
 						TestLine testLine;
@@ -611,13 +609,12 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 
 	private void updateTests() {
-		if (SchedulerModel.DEBUG_LEVEL >= 3)
-				System.out.println(getClass().getName() + " updateTests"); //$NON-NLS-1$
+		Environment.log(Environment.LOG_LEVEL_INFO,
+				"updateTests", getClass().getName()); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
-		aContext.getDispatcher()
-				.notify(
-						new StatusMessageEvent(LangModelScheduler
-								.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
+		aContext.getDispatcher().notify(
+				new StatusMessageEvent(LangModelSchedule
+						.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
 		DataSourceInterface dsi = aContext.getDataSourceInterface();
 		if (dsi == null) return;
 
@@ -627,16 +624,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 				.getTime());
 
 		SimpleDateFormat lsdf = new SimpleDateFormat("dd.MM.yyyy HH:mm"); //$NON-NLS-1$
-		if (SchedulerModel.DEBUG_LEVEL >= 3)
-				System.out.println(ids.length + " test(s) found from " //$NON-NLS-1$
-						+ lsdf.format(scaleStart) + " till " //$NON-NLS-1$
-						+ lsdf.format(scaleEnd));
+		Environment.log(Environment.LOG_LEVEL_INFO, ids.length
+				+ " test(s) found from " //$NON-NLS-1$
+				+ lsdf.format(scaleStart) + " till " //$NON-NLS-1$
+				+ lsdf.format(scaleEnd));
 
 		//выбираем необходимые тесты из пула
 		Hashtable hash = new Hashtable();
 		for (int i = 0; i < ids.length; i++) {
-			if (SchedulerModel.DEBUG_LEVEL >= 5)
-					System.out.println("get test#" + ids[i]); //$NON-NLS-1$
+			Environment.log(Environment.LOG_LEVEL_INFO, "get test#" + ids[i]); //$NON-NLS-1$
 			Test test = (Test) Pool.get(Test.TYPE, ids[i]);
 			//			DataSourceInterface dsi = aContext.getDataSourceInterface();
 			if (test.getAnalysisId().length() > 0) //$NON-NLS-1$
@@ -652,8 +648,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 			if (test != null) {
 				hash.put(test.getId(), test);
 			} else {
-				if (SchedulerModel.DEBUG_LEVEL >= 3)
-						System.err.println("test " + ids[i] + " is null"); //$NON-NLS-1$ //$NON-NLS-2$
+				Environment.log(Environment.LOG_LEVEL_WARNING,
+						"test " + ids[i] + " is null"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 		}
@@ -680,8 +676,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 					java.util.List testIds = treq.getTestIds();
 					for (Iterator it2 = testIds.iterator(); it2.hasNext();) {
 						String testId = (String) it2.next();
-						if (SchedulerModel.DEBUG_LEVEL >= 3)
-								System.out.println("test_id:" + testId); //$NON-NLS-1$
+						Environment.log(Environment.LOG_LEVEL_INFO,
+								"test_id:" + testId); //$NON-NLS-1$
 						if (tests.get(testId) == null) add_tests.add(testId);
 					}
 				}
@@ -730,7 +726,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 				30 + 25 * testLines.values().size()));
 		parent.repaint();
 		//		this.setCursor(UIStorage.DEFAULT_CURSOR);
-		dispatcher.notify(new StatusMessageEvent(LangModelScheduler
+		dispatcher.notify(new StatusMessageEvent(LangModelSchedule
 				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
 		dispatcher.notify(new OperationEvent(tests, 0, COMMAND_NAME_ALL_TESTS));
 	}

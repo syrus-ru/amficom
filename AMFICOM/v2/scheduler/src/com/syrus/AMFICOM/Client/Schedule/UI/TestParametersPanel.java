@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class TestParametersPanel extends JPanel implements OperationListener {
@@ -83,7 +83,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	String							currentParametersPanelName;
 
 	/**
-	 * @todo only for testing mode 
+	 * @todo only for testing mode
 	 */
 	public static void main(String[] args) {
 		Environment.initialize();
@@ -156,7 +156,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	private void jbInit() throws Exception {
 		setLayout(new BorderLayout());
 
-		patternRadioButton = UIStorage.createRadioButton(LangModelScheduler
+		patternRadioButton = UIStorage.createRadioButton(LangModelSchedule
 				.getString("UsePattern"), new AbstractAction() { //$NON-NLS-1$
 
 					public void actionPerformed(ActionEvent e) {
@@ -165,7 +165,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 						revalidate();
 					}
 				});
-		paramsRadioButton = UIStorage.createRadioButton(LangModelScheduler
+		paramsRadioButton = UIStorage.createRadioButton(LangModelSchedule
 				.getString("UseParameters"), new AbstractAction() { //$NON-NLS-1$
 
 					public void actionPerformed(ActionEvent e) {
@@ -195,12 +195,14 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		gbc.weighty = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		patternPanel.setBorder(BorderFactory.createEtchedBorder());
-		useAnalysisBox = new JCheckBox(LangModelScheduler.getString("PerformAnalys"), true); //$NON-NLS-1$
+		useAnalysisBox = new JCheckBox(LangModelSchedule
+				.getString("PerformAnalys"), true); //$NON-NLS-1$
 		patternPanel.add(useAnalysisBox, gbc);
-		final JLabel analysisLabel = new JLabel(LangModelScheduler.getString("Analysis")); //$NON-NLS-1$
+		final JLabel analysisLabel = new JLabel(LangModelSchedule
+				.getString("Analysis")); //$NON-NLS-1$
 		patternPanel.add(analysisLabel, gbc);
 		patternPanel.add(analysisComboBox, gbc);
-		final JLabel evaluationLabel = new JLabel(LangModelScheduler
+		final JLabel evaluationLabel = new JLabel(LangModelSchedule
 				.getString("EvaluationAnalysis")); //$NON-NLS-1$
 		patternPanel.add(evaluationLabel, gbc);
 		patternPanel.add(evaluationComboBox, gbc);
@@ -316,7 +318,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			JOptionPane
 					.showMessageDialog(
 							this,
-							LangModelScheduler.getString("Do_not_choose_measurement_pattern"), LangModelScheduler.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelSchedule
+									.getString("Do_not_choose_measurement_pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.OK_OPTION);
 			parameters = null;
 			return;
@@ -327,7 +330,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		//DataSourceInterface dsi = aContext.getDataSourceInterface();
 		if (useAnalysisBox.isSelected()) {
 			/**
-			 * @todo neeed to put  evaluation and analysis
+			 * @todo neeed to put evaluation and analysis
 			 */
 			evaluationType = (EvaluationType) evaluationComboBox
 					.getSelectedObjectResource();
@@ -345,9 +348,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		ApplicationModel aModel = aContext.getApplicationModel();
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-		if (SchedulerModel.DEBUG_LEVEL >= 5)
-				System.out.println(getClass().getName() + " commandName:" //$NON-NLS-1$
-						+ commandName);
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
+				+ commandName, getClass().getName());
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			if (paramsRadioButton.isSelected()) {
 				TestArgumentSet tas = ((ParametersTestPanel) (testPanels

@@ -11,7 +11,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.CORBA.General.TestReturnType;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
@@ -30,7 +30,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 	private JRadioButton	recognizedEventsButton;
 	private JRadioButton	measurementIdButton;
 
-	/** 
+	/**
 	 * @todo only for testing mode
 	 */
 	public static void main(String[] args) {
@@ -56,7 +56,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 	}
 
 	private void init() {
-		setTitle(LangModelScheduler.getString("Saving_options")); //$NON-NLS-1$
+		setTitle(LangModelSchedule.getString("Saving_options")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);
@@ -74,7 +74,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 			gbc.weightx = 1.0;
 			gbc.weighty = 0.0;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			allResultsButton = new JRadioButton(LangModelScheduler
+			allResultsButton = new JRadioButton(LangModelSchedule
 					.getString("AllTestResults")); //$NON-NLS-1$
 			allResultsButton
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -83,7 +83,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 							//jButton1_actionPerformed(e);
 						}
 					});
-			recognizedEventsButton = new JRadioButton(LangModelScheduler
+			recognizedEventsButton = new JRadioButton(LangModelSchedule
 					.getString("Only_recognized_events")); //$NON-NLS-1$
 			recognizedEventsButton
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -92,7 +92,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 							//jButton2_actionPerformed(e);
 						}
 					});
-			measurementIdButton = new JRadioButton(LangModelScheduler
+			measurementIdButton = new JRadioButton(LangModelSchedule
 					.getString("Only_Measurement_Id")); //$NON-NLS-1$
 			measurementIdButton
 					.addActionListener(new java.awt.event.ActionListener() {
@@ -133,12 +133,11 @@ public class SaveParametersFrame extends JInternalFrame implements
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG_LEVEL >= 5)
-				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
-						+ commandName);
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
+				+ commandName, getClass().getName());
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			/**
-			 * @todo must send data edit in this form 
+			 * @todo must send data edit in this form
 			 */
 			TestReturnType returnType = this.getParameter();
 			dispatcher.notify(new OperationEvent(returnType,

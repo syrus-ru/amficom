@@ -6,23 +6,22 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelScheduler;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TestRequestFrame extends JInternalFrame implements
 		OperationListener {
 
-//	private ApplicationContext	aContext;
+	//	private ApplicationContext aContext;
 	private Dispatcher			dispatcher;
 	private Test				receivedTest;
 	private TestRequestPanel	panel;
 
 	public TestRequestFrame(ApplicationContext aContext) {
 		//this.aContext = aContext;
-		setTitle(LangModelScheduler.getString("TestOptions")); //$NON-NLS-1$
+		setTitle(LangModelSchedule.getString("TestOptions")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);
@@ -37,9 +36,8 @@ public class TestRequestFrame extends JInternalFrame implements
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG_LEVEL >= 5)
-				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
-						+ commandName);
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
+				+ commandName, getClass().getName());
 		//		int id = ae.getID();
 		//		Object obj = ae.getSource();
 
@@ -154,9 +152,9 @@ public class TestRequestFrame extends JInternalFrame implements
 		//		}
 	}
 
-//	private void initModule(Dispatcher dispatcher) {
-//		this.dispatcher = dispatcher;
-//		this.dispatcher.register(this, TestUpdateEvent.TYPE);
-//	}
+	//	private void initModule(Dispatcher dispatcher) {
+	//		this.dispatcher = dispatcher;
+	//		this.dispatcher.register(this, TestUpdateEvent.TYPE);
+	//	}
 
 }
