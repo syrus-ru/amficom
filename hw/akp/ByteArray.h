@@ -12,6 +12,7 @@
 class ByteArray {
 public:
 	ByteArray(unsigned int length, char* data);
+	ByteArray(char* ndata);
 	ByteArray(unsigned int length);
 	virtual ~ByteArray();
 	unsigned int getLength() const;
