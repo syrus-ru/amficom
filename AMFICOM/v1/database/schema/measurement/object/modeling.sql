@@ -7,9 +7,11 @@ CREATE TABLE Modeling (
 --
  name VARCHAR(256),
 --
+ monitored_element_id VARCHAR2(32),
  scheme_path_id VARCHAR2(32),
  measurement_type_id VARCHAR2(32) NOT NULL,
  argument_set_id VARCHAR2(32) NOT NULL,
+ sort NUMBER(2,0) NOT NULL,
 --
  CONSTRAINT modeling_pk PRIMARY KEY (id),
  CONSTRAINT modeling_creator_fk FOREIGN KEY (creator_id)
@@ -20,6 +22,9 @@ CREATE TABLE Modeling (
  CONSTRAINT modeling_tp_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
+ CONSTRAINT modeling_me_fk FOREIGN KEY (monitored_element_id)
+  REFERENCES MonitoredElement (id) ON DELETE CASCADE,
+
  CONSTRAINT modeling_mnttype_fk FOREIGN KEY (measurement_type_id)
   REFERENCES MeasurementType (id) ON DELETE CASCADE,
 CONSTRAINT modeling_argset_fk FOREIGN KEY (argument_set_id)
