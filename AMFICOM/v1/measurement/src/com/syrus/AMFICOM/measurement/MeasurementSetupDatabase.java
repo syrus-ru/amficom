@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.47 2004/12/08 09:11:37 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.48 2004/12/10 16:24:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/12/08 09:11:37 $
+ * @version $Revision: 1.48 $, $Date: 2004/12/10 16:24:51 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -267,7 +267,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			+ DatabaseIdentifier.toSQLString((criteriaSet != null) ? criteriaSet.getId() : null) + COMMA
 			+ DatabaseIdentifier.toSQLString((thresholdSet != null) ? thresholdSet.getId() : null) + COMMA
 			+ DatabaseIdentifier.toSQLString((etalon != null) ? etalon.getId() : null) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementSetup.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ Long.toString(measurementSetup.getMeasurementDuration());
 		return values;
 	}
@@ -285,7 +285,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (criteriaSet != null) ? criteriaSet.getId() : null);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (thresholdSet != null) ? thresholdSet.getId() : null);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (etalon != null) ? etalon.getId() : null);
-			preparedStatement.setString(++i, measurementSetup.getDescription());
+			DatabaseString.setString(preparedStatement, ++i, measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			preparedStatement.setLong(++i, measurementSetup.getMeasurementDuration());
 			
 		} catch (SQLException sqle) {

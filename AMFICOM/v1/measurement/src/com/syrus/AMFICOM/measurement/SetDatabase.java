@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.43 2004/12/09 14:50:11 bob Exp $
+ * $Id: SetDatabase.java,v 1.44 2004/12/10 16:24:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/09 14:50:11 $
+ * @version $Revision: 1.44 $, $Date: 2004/12/10 16:24:51 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -91,7 +91,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		Set set = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ Integer.toString(set.getSort().value()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(set.getDescription()) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(set.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return values;
 	}	
 	
@@ -101,7 +101,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			preparedStatement.setInt(++i, set.getSort().value());
-			preparedStatement.setString(++i, set.getDescription());
+			DatabaseString.setString(preparedStatement, ++i, set.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}

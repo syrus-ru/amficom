@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.53 2004/12/08 09:11:37 bob Exp $
+ * $Id: TestDatabase.java,v 1.54 2004/12/10 16:24:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2004/12/08 09:11:37 $
+ * @version $Revision: 1.54 $, $Date: 2004/12/10 16:24:55 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -138,7 +138,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ test.getStatus().value() + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
 			+ test.getReturnType().value() + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(test.getDescription()) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(test.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 	}
 	
 	
@@ -170,7 +170,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			preparedStatement.setInt(++i, test.getStatus().value());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, test.getMonitoredElement().getId());
 			preparedStatement.setInt(++i, test.getReturnType().value());
-			preparedStatement.setString(++i, test.getDescription());
+			DatabaseString.setString(preparedStatement, ++i, test.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}

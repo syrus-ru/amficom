@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.42 2004/12/08 09:11:37 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.43 2004/12/10 16:24:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/12/08 09:11:37 $
+ * @version $Revision: 1.43 $, $Date: 2004/12/10 16:24:51 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -98,8 +98,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		AnalysisType analysisType = fromStorableObject(storableObject);		
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
-			+ APOSTOPHE + DatabaseString.toQuerySubString(analysisType.getCodename()) + APOSTOPHE + COMMA 
-			+ APOSTOPHE + DatabaseString.toQuerySubString(analysisType.getDescription()) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(analysisType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 
+			+ APOSTOPHE + DatabaseString.toQuerySubString(analysisType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return sql;
 	}
 	
@@ -538,8 +538,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		AnalysisType analysisType = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
-			preparedStatement.setString(++i, analysisType.getCodename());
-			preparedStatement.setString(++i, analysisType.getDescription());
+			DatabaseString.setString(preparedStatement, ++i, analysisType.getCodename(), SIZE_CODENAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, analysisType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.44 2004/12/08 09:11:37 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.45 2004/12/10 16:24:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/12/08 09:11:37 $
+ * @version $Revision: 1.45 $, $Date: 2004/12/10 16:24:51 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -96,8 +96,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			UpdateObjectException {
 		MeasurementType measurementType = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getCodename()) + APOSTOPHE + COMMA 
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getDescription()) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return sql;
 	}	
 
@@ -429,7 +429,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
     }
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		MeasurementType measurementType = this.fromStorableObject(storableObject);
+//		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -649,7 +649,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		List list = null;
 		
 		try {
-			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename) + APOSTOPHE);
+			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}  catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}
@@ -686,8 +686,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		MeasurementType measurementType = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			try {				
-				preparedStatement.setString(++i, measurementType.getCodename());
-				preparedStatement.setString(++i, measurementType.getDescription());
+				DatabaseString.setString(preparedStatement, ++i, measurementType.getCodename(), SIZE_CODENAME_COLUMN);
+				DatabaseString.setString(preparedStatement, ++i, measurementType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			} catch (SQLException sqle) {
 				throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 			}

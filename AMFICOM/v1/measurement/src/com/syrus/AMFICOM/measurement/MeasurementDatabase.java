@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.41 2004/12/08 09:11:37 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.42 2004/12/10 16:24:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/12/08 09:11:37 $
+ * @version $Revision: 1.42 $, $Date: 2004/12/10 16:24:51 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -61,7 +61,9 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	public static final String LINK_SORT = "sort";
 	
 	private static String columns;	
-	private static String updateMultiplySQLValues;	
+	private static String updateMultiplySQLValues;
+	
+	private static final int SIZE_LOCAL_ADDRESS_COLUMN = 64;
 	
 	protected String getEnityName() {		
 		return ObjectEntities.MEASUREMENT_ENTITY;
@@ -110,13 +112,13 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		Measurement measurement = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getType().getId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getName()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getMonitoredElementId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getSetup().getId()) + COMMA
 			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA
 			+ Long.toString(measurement.getDuration()) + COMMA
 			+ Integer.toString(measurement.getStatus().value()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getLocalAddress()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getTestId());
 		return values;
 	}
@@ -128,13 +130,13 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getType().getId()); 
-			preparedStatement.setString(++i, measurement.getName());
+			DatabaseString.setString(preparedStatement, ++i, measurement.getName(), SIZE_NAME_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getMonitoredElementId()); 
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getSetup().getId());
 			preparedStatement.setTimestamp(++i, new Timestamp(measurement.getStartTime().getTime()));
 			preparedStatement.setLong(++i, measurement.getDuration());
 			preparedStatement.setInt(++i, measurement.getStatus().value());
-			preparedStatement.setString(++i, measurement.getLocalAddress());
+			DatabaseString.setString(preparedStatement, ++i, measurement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getTestId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);

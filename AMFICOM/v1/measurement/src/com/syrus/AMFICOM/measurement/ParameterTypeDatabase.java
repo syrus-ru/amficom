@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.36 2004/12/08 09:11:37 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.37 2004/12/10 16:24:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/08 09:11:37 $
+ * @version $Revision: 1.37 $, $Date: 2004/12/10 16:24:51 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -79,9 +79,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			UpdateObjectException {
 		ParameterType parameterType = fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getCodename()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getDescription()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getName()) + APOSTOPHE + COMMA +
+			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA +
 			+ parameterType.getSort().value();
 	}	
 
@@ -163,7 +163,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		List list = null;
 		
 		try {
-			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename) + APOSTOPHE);
+			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}  catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}
@@ -194,9 +194,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		ParameterType parameterType = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
-			preparedStatement.setString(++i, parameterType.getCodename());
-			preparedStatement.setString(++i, parameterType.getDescription());
-			preparedStatement.setString(++i, parameterType.getName());
+			DatabaseString.setString(preparedStatement, ++i, parameterType.getCodename(), SIZE_CODENAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, parameterType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, parameterType.getName(), SIZE_NAME_COLUMN);
 			preparedStatement.setInt(++i, parameterType.getSort().value());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);

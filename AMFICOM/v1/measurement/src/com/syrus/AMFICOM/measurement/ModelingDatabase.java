@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.13 2004/12/08 09:11:37 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.14 2004/12/10 16:24:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/12/08 09:11:37 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/10 16:24:51 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -104,7 +104,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
         Modeling modeling = fromStorableObject(storableObject);
         int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
         try {
-            preparedStatement.setString(++i, modeling.getName());            
+        	DatabaseString.setString(preparedStatement, ++i, modeling.getName(), SIZE_NAME_COLUMN);            
             DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getMonitoredElementId());     
             DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getSchemePathId());
             /**
@@ -124,7 +124,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
         Modeling modeling = fromStorableObject(storableObject);
     	
         String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-            + APOSTOPHE + DatabaseString.toQuerySubString(modeling.getName()) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(modeling.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
             + DatabaseIdentifier.toSQLString(modeling.getMonitoredElementId()) + COMMA
 			+ APOSTOPHE + DatabaseIdentifier.toSQLString(modeling.getSchemePathId()) + APOSTOPHE + COMMA
             + DatabaseIdentifier.toSQLString(modeling.getMeasurementType().getId()) + COMMA
@@ -164,7 +164,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 
     
     public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-        Modeling modeling = this.fromStorableObject(storableObject);
+//        Modeling modeling = this.fromStorableObject(storableObject);
         switch (retrieveKind) {
             default:
                 return null;

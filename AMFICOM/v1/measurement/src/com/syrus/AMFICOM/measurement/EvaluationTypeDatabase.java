@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.39 2004/12/08 09:11:37 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.40 2004/12/10 16:24:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/12/08 09:11:37 $
+ * @version $Revision: 1.40 $, $Date: 2004/12/10 16:24:51 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -100,8 +100,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		EvaluationType evaluationType = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
-			preparedStatement.setString(++i, evaluationType.getCodename()); 
-			preparedStatement.setString(++i, evaluationType.getDescription()); 
+			DatabaseString.setString(preparedStatement, ++i, evaluationType.getCodename(), SIZE_CODENAME_COLUMN); 
+			DatabaseString.setString(preparedStatement, ++i, evaluationType.getDescription(), SIZE_DESCRIPTION_COLUMN); 
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -112,8 +112,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		EvaluationType evaluationType = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-		+ APOSTOPHE + DatabaseString.toQuerySubString(evaluationType.getCodename()) + APOSTOPHE + COMMA
-		+ APOSTOPHE + DatabaseString.toQuerySubString(evaluationType.getDescription()) + APOSTOPHE;		
+		+ APOSTOPHE + DatabaseString.toQuerySubString(evaluationType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+		+ APOSTOPHE + DatabaseString.toQuerySubString(evaluationType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;		
 		return values;
 	}
 	
@@ -526,7 +526,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		List list = null;
 		
 		try {
-			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename) + APOSTOPHE);
+			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}  catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}
