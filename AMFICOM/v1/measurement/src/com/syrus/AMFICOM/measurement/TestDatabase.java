@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.29 2004/08/30 07:37:18 bob Exp $
+ * $Id: TestDatabase.java,v 1.30 2004/08/30 14:42:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/08/30 07:37:18 $
+ * @version $Revision: 1.30 $, $Date: 2004/08/30 14:42:26 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -63,14 +63,6 @@ public class TestDatabase extends StorableObjectDatabase {
 	public static final String LINK_COLMN_TEST_ID = "test_id";
 	
     public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
-    
-    private static TestDatabase instance;
-    
-    public static TestDatabase getInstance(){
-    	if (instance == null)
-    		instance = new TestDatabase();
-    	return instance;
-    }
 	
 	private Test fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Test)
@@ -822,7 +814,9 @@ public class TestDatabase extends StorableObjectDatabase {
 			Log.debugMessage("TestDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
-				result.add(updateTestFromResultSet(null, resultSet));
+				Test test = updateTestFromResultSet(null, resultSet);
+				retrieveMeasurementSetupTestLinks(test);
+				result.add(test);
 			}
 		}
 		catch (SQLException sqle) {
@@ -874,7 +868,9 @@ public class TestDatabase extends StorableObjectDatabase {
 				stmt.setString(1, idStr);
 				resultSet = stmt.executeQuery();
 				if (resultSet.next()){
-					result.add(updateTestFromResultSet(null, resultSet));
+					Test test = updateTestFromResultSet(null, resultSet);
+					retrieveMeasurementSetupTestLinks(test);
+					result.add(test);
 				} else{
 					Log.errorMessage("TestDatabase.retriveByIdsPreparedStatement | No such test: " + idStr);									
 				}
