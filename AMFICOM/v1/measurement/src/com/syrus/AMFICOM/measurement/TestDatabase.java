@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.34 2004/09/09 09:21:47 bob Exp $
+ * $Id: TestDatabase.java,v 1.35 2004/09/09 14:26:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/09/09 09:21:47 $
+ * @version $Revision: 1.35 $, $Date: 2004/09/09 14:26:00 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -715,7 +715,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	public List retrieveTests(TestStatus status) throws RetrieveObjectException {
 		List list = null;
 		try{
-		list = retriveByIdsOneQuery(null, COLUMN_STATUS + EQUALS + Integer.toString(status.value())
+		list = retrieveByIds(null, COLUMN_STATUS + EQUALS + Integer.toString(status.value())
 									+ SQL_ORDER_BY + COLUMN_START_TIME + SQL_ASC);
 		}catch(IllegalDataException ide){
 			Log.debugMessage("TestDatabase.retrieveTests | Trying: " + ide, Log.DEBUGLEVEL09);
@@ -748,7 +748,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		List list = null;
 		
 		try {
-			list = retriveByIdsOneQuery(null, condition);
+			list = retrieveByIds(null, condition);
 		}  catch (IllegalDataException ide) {			
 			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Trying: " + ide, Log.DEBUGLEVEL09);
 		}
