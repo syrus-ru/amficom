@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.41 2005/03/17 13:39:45 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.42 2005/03/18 18:15:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/03/17 13:39:45 $
+ * @version $Revision: 1.42 $, $Date: 2005/03/18 18:15:15 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -240,9 +240,8 @@ public abstract class StorableObjectPool {
 					entityKey = (Short) entityIt.next();
 					levelEntitySavingObjects = (Collection) levelSavingObjectsMap.get(entityKey);
 
-					if (levelEntitySavingObjects != null) {
+					if (levelEntitySavingObjects != null)
 						this.saveStorableObjects(entityKey.shortValue(), levelEntitySavingObjects, force);
-					}
 					else
 						Log.errorMessage("Cannot find levelEntitySavingObjects for entity code "
 								+ entityKey + ", dependency level " + (-dependencyKey.intValue()));
@@ -266,8 +265,8 @@ public abstract class StorableObjectPool {
 		StorableObject dependencyObject = null;
 		for (Iterator dIt = dependencies.iterator(); dIt.hasNext();) {
 			Object object = dIt.next();
-			if (object == null)
-				continue;
+//			if (object == null)
+//				continue;
 			if (object instanceof Identifier)
 				dependencyObject = this.getStorableObjectExt((Identifier) object);
 			else
