@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.12 2005/03/29 19:48:35 arseniy Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.13 2005/03/30 11:08:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.cmserver;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -70,7 +69,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/29 19:48:35 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/30 11:08:09 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -578,9 +577,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitCableLinkTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -608,9 +605,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitCableThreadTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -638,9 +633,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitLinkTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -668,9 +661,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitPortTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -698,9 +689,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitEquipmentTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -728,9 +717,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPortTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -758,9 +745,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -794,9 +779,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitCableThreads | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -824,9 +807,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitLinks | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -854,9 +835,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitPorts | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -884,9 +863,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitEquipments | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -914,9 +891,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitKISs | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -944,9 +919,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPorts | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -974,9 +947,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitMonitoredElements | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1004,9 +975,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPaths | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1038,9 +1007,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitCableThreadTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1069,9 +1036,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitLinkTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1100,9 +1065,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitPortTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1131,9 +1094,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitEquipmentTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1162,9 +1123,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPortTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1193,9 +1152,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1230,9 +1187,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitLinksButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1261,9 +1216,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitPortsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1292,9 +1245,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitEquipmentsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1323,9 +1274,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitKISsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1354,9 +1303,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPortsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1385,9 +1332,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitMonitoredElementsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1416,9 +1361,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -1454,9 +1397,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitCableLinkTypesButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -1494,9 +1435,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitCableThreadTypesButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -1539,9 +1478,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitCableThreadsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -1579,9 +1516,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitPortsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -1619,9 +1554,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitEquipmentsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -1659,9 +1592,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitKISsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -1699,9 +1630,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitMeasurementPortsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -1739,9 +1668,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitMonitoredElementsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -1779,9 +1706,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		Log.debugMessage("CMConfigurationTransmit.transmitTransmissionPathsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {

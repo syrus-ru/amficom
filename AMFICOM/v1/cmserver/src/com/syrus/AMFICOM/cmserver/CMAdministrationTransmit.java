@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationTransmit.java,v 1.9 2005/03/29 20:24:27 arseniy Exp $
+ * $Id: CMAdministrationTransmit.java,v 1.10 2005/03/30 11:08:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.cmserver;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -46,7 +45,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/29 20:24:27 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/30 11:08:09 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -195,9 +194,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitUsers | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -225,9 +222,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitDomains | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -255,9 +250,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitServers | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -285,9 +278,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitMCMs | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -318,9 +309,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitUsersButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -349,9 +338,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -380,9 +367,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitServersButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -411,9 +396,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -448,9 +431,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitUsersButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -488,9 +469,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -528,9 +507,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitServersButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -568,9 +545,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {

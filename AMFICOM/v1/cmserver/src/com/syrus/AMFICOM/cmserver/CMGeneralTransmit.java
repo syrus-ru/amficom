@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.12 2005/03/29 20:48:25 arseniy Exp $
+ * $Id: CMGeneralTransmit.java,v 1.13 2005/03/30 11:08:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.cmserver;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -44,7 +43,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/29 20:48:25 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/30 11:08:09 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -161,9 +160,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitParameterTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -191,9 +188,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypes | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -221,9 +216,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristics | requiered " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -255,9 +248,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -286,9 +277,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypesButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -317,9 +306,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIds | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Collection objects = null;
 		try {
@@ -354,9 +341,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -394,9 +379,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypesButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -434,9 +417,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 		Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = new HashSet(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			ids.add(new Identifier(identifier_Transferables[i]));
+		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
