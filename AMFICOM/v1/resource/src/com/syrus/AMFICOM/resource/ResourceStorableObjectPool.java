@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.9 2005/02/21 07:38:33 max Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.10 2005/02/22 11:21:51 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.Hashtable;
 import java.util.Set;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.9 $, $Date: 2005/02/21 07:38:33 $
+ * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/02/22 11:21:51 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -35,7 +35,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	}
 	
 	private ResourceStorableObjectPool(Class cacheMapClass){
-		super(cacheMapClass);
+		super(ObjectGroupEntities.RESOURCE_GROUP_CODE, cacheMapClass);
 	}
 	
 	public static void init(ResourceObjectLoader rObjectLoader1, Class cacheClass, final int size) {

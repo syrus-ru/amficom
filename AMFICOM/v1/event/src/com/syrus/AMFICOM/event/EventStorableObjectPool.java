@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.9 2005/02/18 17:51:16 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.10 2005/02/22 11:20:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/18 17:51:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/02/22 11:20:42 $
+ * @author $Author: bob $
  * @module event_v1
  */
 
@@ -50,7 +50,7 @@ public class EventStorableObjectPool extends StorableObjectPool {
 	}
 
 	private EventStorableObjectPool(Class cacheMapClass) {
-		super(cacheMapClass);
+		super(ObjectGroupEntities.EVENT_GROUP_CODE, cacheMapClass);
 	}
 
 	/**
