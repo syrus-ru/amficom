@@ -7,8 +7,7 @@ public class MiscUtil
 	public static List convert(Map map)
 	{
 		List list = new LinkedList();
-		for(Iterator it = map.values().iterator(); it.hasNext();)
-			list.add(it.next());
+		list.addAll(map.values());
 		return list;
 	}
 
