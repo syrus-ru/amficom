@@ -1,0 +1,13 @@
+corba
+mcm
+r.sql
+*.jar
+*.jpr*
+*.jpx*
+*.trc
+*.tar
+*.gz
+*.swp
+*.log
+classes
+logs
