@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.5 2005/01/28 10:08:11 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.6 2005/01/28 10:27:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/28 10:08:11 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/28 10:27:28 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -313,7 +313,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				characteristics.add(characteristic);
 			}
 
-			// This is not correct, because method
+			// NOTE
+			// The below code is not correct, because method
 			// Characterized.setCharacteristics(List characteristics)
 			// updates version of Characterized StorableObject.
 			// Instead, one must set characteristics from returned characteristicMap,
