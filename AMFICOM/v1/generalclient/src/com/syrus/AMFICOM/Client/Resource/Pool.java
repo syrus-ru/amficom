@@ -190,7 +190,7 @@ public final class Pool {
 	public static Hashtable getChangedHash(String objTypeId) {
 		Hashtable result = null;
 		if (objTypeId != null) {
-			Hashtable table = (Hashtable) objHash.get(objTypeId);
+			Map table = (Map) objHash.get(objTypeId);
 			if (table == null)
 				result = null;
 			else {
