@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.23 2004/10/22 13:00:32 bob Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.24 2004/10/25 13:32:07 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/10/22 13:00:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2004/10/25 13:32:07 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -77,7 +77,7 @@ public class ConfigurationDatabaseContext {
 		transmissionPathDatabase = transmissionPathDatabase1;
 		kisDatabase = kisDatabase1;
 		monitoredElementDatabase = monitoredElementDatabase1;
-		linkDatabase = linkTypeDatabase1;
+		linkDatabase = linkDatabase1;
 	}
 	public static StorableObjectDatabase getCharacteristicDatabase() {
 		return characteristicDatabase;
@@ -99,6 +99,9 @@ public class ConfigurationDatabaseContext {
 	}
     public static StorableObjectDatabase getKISTypeDatabase() {
         return kisTypeDatabase;
+    }
+    public static StorableObjectDatabase getLinkDatabase() {
+        return linkDatabase;
     }
     public static StorableObjectDatabase getLinkTypeDatabase() {
         return linkTypeDatabase;
