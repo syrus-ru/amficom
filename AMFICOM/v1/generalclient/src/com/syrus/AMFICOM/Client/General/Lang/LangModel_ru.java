@@ -177,7 +177,7 @@ public class LangModel_ru extends LangModel
 		{ "Help", "Помощь" },
 		{ "Ok", "OK" },
 		{ "Remove", "Удалить" },
-		{ "Cance;", "Отменить" },
+		{ "Cancel", "Отменить" },
 
 // Label strings
 		{ "labelName", "Имя" },

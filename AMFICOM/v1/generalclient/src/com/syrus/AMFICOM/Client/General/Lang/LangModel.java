@@ -73,8 +73,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-public class LangModel 
-//extends ListResourceBundle
+public class LangModel //extends ListResourceBundle
 {
 	static public Locale locale;
 	static public String language;
@@ -126,14 +125,14 @@ public class LangModel
 		country = c;
 		try
 		{
-			lang = ResourceBundle.getBundle(resourceBundle);
-/*
+//			lang = ResourceBundle.getBundle(resourceBundle);
+
 			locale = new Locale(language, country);
 			lang = ResourceBundle.getBundle(
 					resourceBundle,
 //					"com.syrus.AMFICOM.Client.General.Lang.LangModel",
 					locale);
-*/
+
 			System.out.println("initialize locale - " + locale.toString());
 			symbols = new DateFormatSymbols(locale);
 		}
