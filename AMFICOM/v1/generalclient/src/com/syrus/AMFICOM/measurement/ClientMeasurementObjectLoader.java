@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.24 2005/02/25 09:16:15 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.25 2005/03/28 15:57:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.omg.CORBA.SystemException;
+
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -46,7 +45,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/02/25 09:16:15 $
+ * @version $Revision: 1.25 $, $Date: 2005/03/28 15:57:17 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -70,6 +69,8 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.delete | Couldn't delete id =" + id.toString() + ")";
 			throw new IllegalDataException(msg, e);
+		} catch (SystemException e) {
+			throw new IllegalDataException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
@@ -85,191 +86,177 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.delete | AMFICOMRemoteException ";
 			throw new IllegalDataException(msg, e);
+		} catch (SystemException e) {
+			throw new IllegalDataException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public MeasurementType loadMeasurementType(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public MeasurementType loadMeasurementType(Identifier id) throws ApplicationException {
 		try {
 			return new MeasurementType(this.server.transmitMeasurementType((Identifier_Transferable) id
 					.getTransferable(), getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadMeasurementType | new MeasurementType(" + id.toString()
-					+ ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadMeasurementType | server.transmitMeasurementType("
 					+ id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public AnalysisType loadAnalysisType(Identifier id) throws DatabaseException, CommunicationException {
+	public AnalysisType loadAnalysisType(Identifier id) throws ApplicationException {
 		try {
 			return new AnalysisType(this.server.transmitAnalysisType((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadAnalysisType | new AnalysisType(" + id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadAnalysisType | server.transmitAnalysisType("
 					+ id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public EvaluationType loadEvaluationType(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public EvaluationType loadEvaluationType(Identifier id) throws ApplicationException {
 		try {
 			return new EvaluationType(this.server.transmitEvaluationType(
 				(Identifier_Transferable) id.getTransferable(), getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadEvaluationType | new EvaluationType(" + id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadEvaluationType | server.transmitEvaluationType("
 					+ id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Set loadSet(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public Set loadSet(Identifier id) throws ApplicationException {
 		try {
 			return new Set(this.server.transmitSet((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadSet | new Set(" + id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadSet | server.transmitSet(" + id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public MeasurementSetup loadMeasurementSetup(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public MeasurementSetup loadMeasurementSetup(Identifier id) throws ApplicationException {
 		try {
 			return new MeasurementSetup(this.server.transmitMeasurementSetup((Identifier_Transferable) id
 					.getTransferable(), getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadMeasurementSetup | new MeasurementSetup(" + id.toString()
-					+ ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadMeasurementSetup | server.transmitMeasurementSetup("
 					+ id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException {
+	public Modeling loadModeling(Identifier id) throws ApplicationException {
 		try {
 			return new Modeling(this.server.transmitModeling((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadMeasurement | new Measurement(" + id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadMeasurement | server.transmitMeasurement(" + id.toString()
 					+ ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public ModelingType loadModelingType(Identifier id) throws DatabaseException, CommunicationException {
+	public ModelingType loadModelingType(Identifier id) throws ApplicationException {
 		try {
 			return new ModelingType(this.server.transmitModelingType((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadMeasurement | new Measurement(" + id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadMeasurement | server.transmitMeasurement(" + id.toString()
 					+ ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Measurement loadMeasurement(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public Measurement loadMeasurement(Identifier id) throws ApplicationException {
 		try {
 			return new Measurement(this.server.transmitMeasurement((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadMeasurement | new Measurement(" + id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadMeasurement | server.transmitMeasurement(" + id.toString()
 					+ ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Analysis loadAnalysis(Identifier id) throws DatabaseException, CommunicationException {
+	public Analysis loadAnalysis(Identifier id) throws ApplicationException {
 		try {
 			return new Analysis(this.server.transmitAnalysis((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadAnalysis | new Analysis(" + id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadAnalysis | server.transmitAnalysis(" + id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Evaluation loadEvaluation(Identifier id) throws DatabaseException, CommunicationException {
+	public Evaluation loadEvaluation(Identifier id) throws ApplicationException {
 		try {
 			return new Evaluation(this.server.transmitEvaluation((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadEvaluation | new Evaluation(" + id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadEvaluation | server.transmitEvaluation(" + id.toString()
 					+ ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Test loadTest(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public Test loadTest(Identifier id) throws ApplicationException {
 		try {
 			return new Test(this.server.transmitTest((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientTestObjectLoader.loadTest | new Test(" + id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientTestObjectLoader.loadTest | server.transmitTest(" + id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Result loadResult(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public Result loadResult(Identifier id) throws ApplicationException {
 		try {
 			return new Result(this.server.transmitResult((Identifier_Transferable) id.getTransferable(),
 				getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadResult | new Result(" + id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadResult | server.transmitResult(" + id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public TemporalPattern loadTemporalPattern(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public TemporalPattern loadTemporalPattern(Identifier id) throws ApplicationException {
 		try {
 			return new TemporalPattern(this.server.transmitTemporalPattern((Identifier_Transferable) id
 					.getTransferable(), getAccessIdentifierTransferable()));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.loadTemporalPattern | new TemporalPattern(" + id.toString()
-					+ ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.loadTemporalPattern | server.transmitTemporalPattern("
 					+ id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadAnalyses(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadAnalyses(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -284,15 +271,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Analysis(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadAnalysesButIds(StorableObjectCondition storableObjectCondition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadAnalysesButIds(StorableObjectCondition storableObjectCondition, Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Analysis_Transferable[] transferables;
@@ -309,14 +295,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Analysis(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadAnalysisTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadAnalysisTypes(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -331,15 +317,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new AnalysisType(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public Collection loadAnalysisTypesButIds(StorableObjectCondition storableObjectCondition, Collection ids)
-			throws DatabaseException, CommunicationException {
+			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			AnalysisType_Transferable[] transferables;
@@ -356,14 +342,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new AnalysisType(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadEvaluations(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadEvaluations(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -378,15 +364,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Evaluation(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public Collection loadEvaluationsButIds(StorableObjectCondition storableObjectCondition, Collection ids)
-			throws DatabaseException, CommunicationException {
+			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Evaluation_Transferable[] transferables;
@@ -403,14 +389,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Evaluation(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadEvaluationTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadEvaluationTypes(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -425,15 +411,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new EvaluationType(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public Collection loadEvaluationTypesButIds(StorableObjectCondition storableObjectCondition, Collection ids)
-			throws DatabaseException, CommunicationException {
+			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			EvaluationType_Transferable[] transferables;
@@ -450,14 +436,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new EvaluationType(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadMeasurements(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadMeasurements(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -473,15 +459,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Measurement(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public Collection loadMeasurementsButIds(StorableObjectCondition storableObjectCondition, Collection ids)
-			throws DatabaseException, CommunicationException {
+			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Measurement_Transferable[] transferables;
@@ -499,14 +485,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Measurement(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadModelings(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadModelings(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -521,14 +507,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Modeling(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadModelingTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadModelingTypes(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -543,15 +529,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new ModelingType(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public Collection loadModelingsButIds(StorableObjectCondition storableObjectCondition, Collection ids)
-			throws DatabaseException, CommunicationException {
+			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Modeling_Transferable[] transferables;
@@ -569,15 +555,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Modeling(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadModelingTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadModelingTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			ModelingType_Transferable[] transferables;
@@ -594,14 +579,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new ModelingType(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadMeasurementSetups(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadMeasurementSetups(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -616,15 +601,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new MeasurementSetup(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadMeasurementSetupsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadMeasurementSetupsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			MeasurementSetup_Transferable[] transferables = null;
@@ -645,14 +629,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadMeasurementTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadMeasurementTypes(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -667,15 +651,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new MeasurementType(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadMeasurementTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadMeasurementTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -691,14 +674,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new MeasurementType(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadResults(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadResults(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -713,15 +696,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Result(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadResultsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadResultsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Result_Transferable[] transferables;
@@ -738,14 +720,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Result(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadSets(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadSets(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -760,15 +742,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Set(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadSetsButIds(StorableObjectCondition storableObjectCondition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadSetsButIds(StorableObjectCondition storableObjectCondition, Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Set_Transferable[] transferables;
@@ -785,14 +766,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Set(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadTemporalPatterns(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadTemporalPatterns(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -807,15 +788,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new TemporalPattern(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public Collection loadTemporalPatternsButIds(StorableObjectCondition storableObjectCondition, Collection ids)
-			throws DatabaseException, CommunicationException {
+			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -830,14 +811,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new TemporalPattern(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadTests(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadTests(Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -852,15 +833,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Test(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public Collection loadTestsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadTestsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Test_Transferable[] transferables;
@@ -876,10 +856,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new Test(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 	
@@ -895,8 +875,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws ApplicationException {
 		MeasurementType_Transferable transferables = (MeasurementType_Transferable) measurementType.getTransferable();
 		try {
 			measurementType.updateFromHeaderTransferable(this.server.receiveMeasurementType(transferables, force, getAccessIdentifierTransferable()));
@@ -906,12 +885,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 
 		AnalysisType_Transferable transferables = (AnalysisType_Transferable) analysisType.getTransferable();
 
@@ -923,12 +904,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 		EvaluationType_Transferable transferables = (EvaluationType_Transferable) evaluationType.getTransferable();
 		try {
 			evaluationType.updateFromHeaderTransferable(this.server.receiveEvaluationType(transferables, force, getAccessIdentifierTransferable()));
@@ -938,12 +921,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveSet(Set set, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveSet(Set set, boolean force) throws VersionCollisionException, ApplicationException {
 		Set_Transferable transferables = (Set_Transferable) set.getTransferable();
 		try {
 			set.updateFromHeaderTransferable(this.server.receiveSet(transferables, force, getAccessIdentifierTransferable()));
@@ -953,12 +937,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force)
-			throws VersionCollisionException, DatabaseException, CommunicationException {
+			throws VersionCollisionException, ApplicationException {
 		MeasurementSetup_Transferable transferables = (MeasurementSetup_Transferable) measurementSetup
 				.getTransferable();
 		try {
@@ -969,12 +955,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveModeling(Modeling modeling, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveModeling(Modeling modeling, boolean force) throws VersionCollisionException, ApplicationException {
 		Modeling_Transferable transferables = (Modeling_Transferable) modeling.getTransferable();
 		try {
 			modeling.updateFromHeaderTransferable(this.server.receiveModeling(transferables, force, getAccessIdentifierTransferable()));
@@ -984,12 +971,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveModelingType(ModelingType modelingType, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 		ModelingType_Transferable transferables = (ModelingType_Transferable) modelingType.getTransferable();
 		try {
 			modelingType.updateFromHeaderTransferable(this.server.receiveModelingType(transferables, force, getAccessIdentifierTransferable()));
@@ -999,12 +988,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveMeasurement(Measurement measurement, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 		Measurement_Transferable transferables = (Measurement_Transferable) measurement.getTransferable();
 		try {
 			measurement.updateFromHeaderTransferable(this.server.receiveMeasurement(transferables, force, getAccessIdentifierTransferable()));
@@ -1014,12 +1005,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveAnalysis(Analysis analysis, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveAnalysis(Analysis analysis, boolean force) throws VersionCollisionException, ApplicationException {
 		Analysis_Transferable transferables = (Analysis_Transferable) analysis.getTransferable();
 		try {
 			analysis.updateFromHeaderTransferable(this.server.receiveAnalysis(transferables, force, getAccessIdentifierTransferable()));
@@ -1029,12 +1021,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveEvaluation(Evaluation evaluation, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 		Evaluation_Transferable transferables = (Evaluation_Transferable) evaluation.getTransferable();
 		try {
 			evaluation.updateFromHeaderTransferable(this.server.receiveEvaluation(transferables, force, getAccessIdentifierTransferable()));
@@ -1044,12 +1038,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveTest(Test test, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveTest(Test test, boolean force) throws VersionCollisionException, ApplicationException {
 		Test_Transferable transferables = (Test_Transferable) test.getTransferable();
 		try {
 			test.updateFromHeaderTransferable(this.server.receiveTest(transferables, force, getAccessIdentifierTransferable()));
@@ -1059,12 +1054,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveResult(Result result, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveResult(Result result, boolean force) throws VersionCollisionException, ApplicationException {
 		Result_Transferable transferables = (Result_Transferable) result.getTransferable();
 		try {
 			result.updateFromHeaderTransferable(this.server.receiveResult(transferables, force, getAccessIdentifierTransferable()));
@@ -1074,12 +1070,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
-	}
+	} 
 
 	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 		TemporalPattern_Transferable transferables = (TemporalPattern_Transferable) temporalPattern.getTransferable();
 		try {
 			temporalPattern.updateFromHeaderTransferable(this.server.receiveTemporalPattern(transferables, force, getAccessIdentifierTransferable()));
@@ -1089,12 +1087,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveMeasurementTypes(Collection measurementTypes, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[measurementTypes.size()];
 		int i = 0;
 		for (Iterator it = measurementTypes.iterator(); it.hasNext(); i++) {
@@ -1108,13 +1108,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
 
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveAnalysisTypes(Collection analysisTypes, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[analysisTypes.size()];
 		int i = 0;
 		for (Iterator it = analysisTypes.iterator(); it.hasNext(); i++) {
@@ -1128,12 +1130,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveEvaluationTypes(Collection evaluationTypes, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[evaluationTypes.size()];
 		int i = 0;
 		for (Iterator it = evaluationTypes.iterator(); it.hasNext(); i++) {
@@ -1147,11 +1151,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveSets(Collection sets, boolean force) throws DatabaseException, CommunicationException,
+	public void saveSets(Collection sets, boolean force) throws ApplicationException,
 			VersionCollisionException {
 		Set_Transferable[] transferables = new Set_Transferable[sets.size()];
 		int i = 0;
@@ -1166,12 +1172,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveModelings(Collection modelings, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveModelings(Collection modelings, boolean force) throws VersionCollisionException, ApplicationException {
 		Modeling_Transferable[] transferables = new Modeling_Transferable[modelings.size()];
 		int i = 0;
 		for (Iterator it = modelings.iterator(); it.hasNext(); i++) {
@@ -1185,12 +1192,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveModelingTypes(Collection modelingTypes, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveModelingTypes(Collection modelingTypes, boolean force) throws VersionCollisionException, ApplicationException {
 		ModelingType_Transferable[] transferables = new ModelingType_Transferable[modelingTypes.size()];
 		int i = 0;
 		for (Iterator it = modelingTypes.iterator(); it.hasNext(); i++) {
@@ -1204,12 +1212,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveMeasurementSetups(Collection measurementSetups, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[measurementSetups.size()];
 		int i = 0;
 		for (Iterator it = measurementSetups.iterator(); it.hasNext(); i++) {
@@ -1223,12 +1233,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveMeasurements(Collection measurements, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveMeasurements(Collection measurements, boolean force) throws VersionCollisionException, ApplicationException {
 		Measurement_Transferable[] transferables = new Measurement_Transferable[measurements.size()];
 		int i = 0;
 		for (Iterator it = measurements.iterator(); it.hasNext(); i++) {
@@ -1242,12 +1253,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveAnalyses(Collection analyses, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveAnalyses(Collection analyses, boolean force) throws VersionCollisionException, ApplicationException {
 		Analysis_Transferable[] transferables = new Analysis_Transferable[analyses.size()];
 		int i = 0;
 		for (Iterator it = analyses.iterator(); it.hasNext(); i++) {
@@ -1261,12 +1273,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveEvaluations(Collection evaluations, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveEvaluations(Collection evaluations, boolean force) throws VersionCollisionException, ApplicationException {
 		Evaluation_Transferable[] transferables = new Evaluation_Transferable[evaluations.size()];
 		int i = 0;
 		for (Iterator it = evaluations.iterator(); it.hasNext(); i++) {
@@ -1280,11 +1293,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveTests(Collection tests, boolean force) throws DatabaseException, CommunicationException,
+	public void saveTests(Collection tests, boolean force) throws ApplicationException,
 			VersionCollisionException {
 		Test_Transferable[] transferables = new Test_Transferable[tests.size()];
 		int i = 0;
@@ -1299,12 +1314,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public void saveResults(Collection results, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveResults(Collection results, boolean force) throws VersionCollisionException, ApplicationException {
 		Result_Transferable[] transferables = new Result_Transferable[results.size()];
 		int i = 0;
 		for (Iterator it = results.iterator(); it.hasNext(); i++) {
@@ -1318,12 +1334,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
 	public void saveTemporalPatterns(Collection temporalPatterns, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
+			ApplicationException {
 		TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[temporalPatterns.size()];
 		int i = 0;
 		for (Iterator it = temporalPatterns.iterator(); it.hasNext(); i++) {
@@ -1337,11 +1355,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, 0l, 0l);
 
-			throw new CommunicationException(msg, e);
+			throw new ApplicationException(msg, e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 
-	public java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException {
+	public java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException {
 		try {
 			java.util.Set refreshedIds = new HashSet();
 			Identifier_Transferable[] identifier_Transferables;
@@ -1361,7 +1381,9 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 			return refreshedIds;
 		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
+			throw new ApplicationException(e);
+		} catch (SystemException e) {
+			throw new ApplicationException("System corba exception:" + e.getMessage(), e);
 		}
 	}
 }
