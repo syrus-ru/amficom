@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.33 2004/10/20 15:03:02 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.34 2004/10/21 05:33:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/10/20 15:03:02 $
+ * @version $Revision: 1.34 $, $Date: 2004/10/21 05:33:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -637,8 +638,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
             LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
             List linkedIds = linkedIdsCondition.getLinkedIds();
             if (linkedIds == null){
-            	linkedIds = new ArrayList(1);
-            	linkedIds.add(linkedIdsCondition.getIdentifier());
+            	linkedIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
             }
             list = this.retrieveButIdMeasurementIds(ids, linkedIds);
         } else {

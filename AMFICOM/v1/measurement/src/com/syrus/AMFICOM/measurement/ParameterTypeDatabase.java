@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.30 2004/10/19 07:48:21 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.31 2004/10/21 05:33:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/10/19 07:48:21 $
+ * @version $Revision: 1.31 $, $Date: 2004/10/21 05:33:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -237,8 +238,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
 			try{
 				ParameterType type = this.retrieveForCodename(stringFieldCondition.getString());
-				list = new ArrayList(1);
-				list.add(type);
+				list = Collections.singletonList(type);
 			}catch(ObjectNotFoundException e){
 				String msg = getEnityName() + "Database.retrieveByCondition | Cannot found object with codename '" + stringFieldCondition.getString() + "'";
 				throw new RetrieveObjectException(msg, e);
