@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.51 2004/11/17 13:39:29 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.52 2004/11/18 12:05:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,7 +29,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/11/17 13:39:29 $
+ * @version $Revision: 1.52 $, $Date: 2004/11/18 12:05:13 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -524,6 +527,81 @@ public abstract class StorableObjectDatabase {
 	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException;
 	
+	
+	/**
+	 * 
+	 * @param storableObjects
+	 * @return List&lt;Identifier&gt; of changed storable objects
+	 * @throws RetrieveObjectException
+	 */
+	public Set refresh(Set storableObjects) throws RetrieveObjectException {
+		if (storableObjects == null || storableObjects.isEmpty())
+			return Collections.EMPTY_SET;
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_SELECT);
+			buffer.append(COLUMN_ID);
+			buffer.append(SQL_FROM);
+			buffer.append(this.getEnityName());
+			buffer.append(SQL_WHERE);
+			buffer.append("1=1");
+			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				buffer.append(SQL_AND);
+				buffer.append(OPEN_BRACKET);
+				buffer.append(COLUMN_ID);
+				buffer.append(EQUALS);
+				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getId()));
+				buffer.append(SQL_AND);
+				buffer.append(NOT);
+				buffer.append(OPEN_BRACKET);
+				buffer.append(COLUMN_MODIFIED);
+				buffer.append(EQUALS);
+				buffer.append(DatabaseDate.toUpdateSubString(storableObject.getModified()));
+//				buffer.append(SQL_AND);
+//				buffer.append(COLUMN_MODIFIER_ID);
+//				buffer.append(EQUALS);
+//				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getModifierId()));
+				buffer.append(CLOSE_BRACKET);
+				buffer.append(CLOSE_BRACKET);
+			}
+			sql = buffer.toString();
+		}
+		
+		Set ids = new HashSet();
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage(this.getEnityName() + "Database.refresh | Trying: " + sql,
+						Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				Identifier identifier = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
+				ids.add(identifier);
+			}
+		} catch (SQLException sqle) {
+			String mesg = this.getEnityName() + "Database.refresh | Cannot execute query "
+					+ sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		} finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;				
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
+			}
+		}
+		return ids;
+	}
+	
 	/**
 	 * retrive storable objects by identifiers not in ids
 	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
@@ -773,7 +851,7 @@ public abstract class StorableObjectDatabase {
 		}
 
 		return result;
-	}
+	}	
 	
 	protected void updateEntity(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
