@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.37 2004/12/09 15:52:53 arseniy Exp $
+ * $Id: Set.java,v 1.38 2005/01/28 15:17:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/09 15:52:53 $
+ * @version $Revision: 1.38 $, $Date: 2005/01/28 15:17:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -224,12 +224,11 @@ public class Set extends StorableObject {
 									meIds);
 	}
 
+	public short getEntityCode() {
+		return ObjectEntities.SET_ENTITY_CODE;
+	}
 
-    public short getEntityCode() {
-        return ObjectEntities.SET_ENTITY_CODE;
-    }
-    
-    public SetSort getSort() {
+	public SetSort getSort() {
 		return SetSort.from_int(this.sort);
 	}
 
@@ -370,10 +369,10 @@ public class Set extends StorableObject {
 		List dependencies = new LinkedList();
 		if (this.monitoredElementIds != null)
 			dependencies.addAll(this.monitoredElementIds);
-		
-		for(int i=0;i<this.parameters.length;i++)
+
+		for (int i = 0; i < this.parameters.length; i++)
 			dependencies.add(this.parameters[i].getType());
-		
+
 		return dependencies;
 	}
 	

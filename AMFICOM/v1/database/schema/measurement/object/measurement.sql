@@ -6,8 +6,8 @@ CREATE TABLE Measurement (
  modifier_id VARCHAR2(32) NOT NULL,
 --
  type_id VARCHAR2(32) NOT NULL,
- name VARCHAR2(128),
  monitored_element_id VARCHAR2(32) NOT NULL,
+ name VARCHAR2(128),
 --
  setup_id VARCHAR2(32) NOT NULL,
  start_time DATE NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE Measurement (
 --
  CONSTRAINT mnt_mnttype_fk FOREIGN KEY (type_id)
   REFERENCES MeasurementType (id) ON DELETE CASCADE,
-CONSTRAINT mnt_me_fk FOREIGN KEY (monitored_element_id)
+ CONSTRAINT mnt_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE,
 --
  CONSTRAINT mnt_mntsetup_fk FOREIGN KEY (setup_id)
