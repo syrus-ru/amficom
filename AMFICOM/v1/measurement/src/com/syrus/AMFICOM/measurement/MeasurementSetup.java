@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.32 2004/11/05 08:03:11 max Exp $
+ * $Id: MeasurementSetup.java,v 1.33 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/11/05 08:03:11 $
- * @author $Author: max $
+ * @version $Revision: 1.33 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -60,11 +60,7 @@ public class MeasurementSetup extends StorableObject {
 	}
 
 	public MeasurementSetup(MeasurementSetup_Transferable mst) throws CreateObjectException {
-		super(new Identifier(mst.id),
-					new Date(mst.created),
-					new Date(mst.modified),
-					new Identifier(mst.creator_id),
-					new Identifier(mst.modifier_id));
+		super(mst.header);
 
 		try {
 			this.parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
@@ -218,17 +214,14 @@ public class MeasurementSetup extends StorableObject {
 		for (int i = 0; i < meIds.length; i++)
 			meIds[i] = (Identifier_Transferable) ((Identifier) this.monitoredElementIds.get(i)).getTransferable();
 
-		return new MeasurementSetup_Transferable((Identifier_Transferable) super.id.getTransferable(),
-																						 super.created.getTime(), super.modified.getTime(),
-																						 (Identifier_Transferable) super.creatorId.getTransferable(),
-																						 (Identifier_Transferable) super.modifierId.getTransferable(),
-																						 (Identifier_Transferable) this.parameterSet.getId().getTransferable(),
-																						 (this.criteriaSet != null) ? (Identifier_Transferable) this.criteriaSet.getId().getTransferable() : (new Identifier_Transferable("")),
-																						 (this.thresholdSet != null) ? (Identifier_Transferable) this.thresholdSet.getId().getTransferable() : (new Identifier_Transferable("")),
-																						 (this.etalon != null) ? (Identifier_Transferable) this.etalon.getId().getTransferable() : (new Identifier_Transferable("")),
-																						 this.description,
-																						 this.measurementDuration,
-																						 meIds);
+		return new MeasurementSetup_Transferable(super.getHeaderTransferable(),
+												 (Identifier_Transferable) this.parameterSet.getId().getTransferable(),
+												 (this.criteriaSet != null) ? (Identifier_Transferable) this.criteriaSet.getId().getTransferable() : (new Identifier_Transferable("")),
+												 (this.thresholdSet != null) ? (Identifier_Transferable) this.thresholdSet.getId().getTransferable() : (new Identifier_Transferable("")),
+												 (this.etalon != null) ? (Identifier_Transferable) this.etalon.getId().getTransferable() : (new Identifier_Transferable("")),
+												 this.description,
+												 this.measurementDuration,
+												 meIds);
 	}
 
     public short getEntityCode() {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.38 2004/11/04 13:15:37 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.39 2004/11/12 11:45:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/11/04 13:15:37 $
+ * @version $Revision: 1.39 $, $Date: 2004/11/12 11:45:00 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -535,15 +535,15 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		try {
-			id = new Identifier(domainT.creator_id);
+			id = new Identifier(domainT.header.creator_id);
 			Log.debugMessage("Getting user '" + id + "' (domain creator)", Log.DEBUGLEVEL05);
 			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
 	
-			id = new Identifier(domainT.modifier_id);
+			id = new Identifier(domainT.header.modifier_id);
 			Log.debugMessage("Getting user '" + id + "' (domain modifier)", Log.DEBUGLEVEL05);
 			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
 	
-			id = new Identifier(domainT.id);
+			id = new Identifier(domainT.header.id);
 			Log.debugMessage("Getting domain '" + id + "' ", Log.DEBUGLEVEL05);
 			domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(id, true);
 		}
@@ -566,11 +566,11 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		try {
-			id = new Identifier(serverT.creator_id);
+			id = new Identifier(serverT.header.creator_id);
 			Log.debugMessage("Getting user '" + id + "' (server creator)", Log.DEBUGLEVEL05);
 			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
 	
-			id = new Identifier(serverT.modifier_id);
+			id = new Identifier(serverT.header.modifier_id);
 			Log.debugMessage("Getting user '" + id + "' (server modifier)", Log.DEBUGLEVEL05);
 			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
 	
@@ -578,16 +578,16 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			Log.debugMessage("Getting user '" + id + "' (server user)", Log.DEBUGLEVEL05);
 			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
 	
-			id = new Identifier(serverT.id);
+			id = new Identifier(serverT.header.id);
 			Log.debugMessage("Getting server '" + id + "' ", Log.DEBUGLEVEL05);
 			server = (Server)ConfigurationStorableObjectPool.getStorableObject(id, true);
 	
 	
-			id = new Identifier(mcmT.creator_id);
+			id = new Identifier(mcmT.header.creator_id);
 			Log.debugMessage("Getting user '" + id + "' (mcm creator)", Log.DEBUGLEVEL05);
 			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
 	
-			id = new Identifier(mcmT.modifier_id);
+			id = new Identifier(mcmT.header.modifier_id);
 			Log.debugMessage("Getting user '" + id + "' (mcm modifier)", Log.DEBUGLEVEL05);
 			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
 	
@@ -595,7 +595,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			Log.debugMessage("Getting user '" + id + "' (mcm user)", Log.DEBUGLEVEL05);
 			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
 	
-			id = new Identifier(mcmT.id);
+			id = new Identifier(mcmT.header.id);
 			Log.debugMessage("Getting MCM '" + id + "' ", Log.DEBUGLEVEL05);
 			mcm = (MCM)ConfigurationStorableObjectPool.getStorableObject(id, true);
 		}
@@ -650,7 +650,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 				/*	Now load only transmission paths.
 				 *	Other sorts of monitored element - disregard	*/
-				MonitoredElement_Transferable[] mesT = mServerRef.transmitKISMonitoredElements(kisT.id);
+				MonitoredElement_Transferable[] mesT = mServerRef.transmitKISMonitoredElements(kisT.header.id);
 				TransmissionPath_Transferable tpT;
 				for (int j = 0; j < mesT.length; j++) {
 					for (int k = 0; k < mesT[j].monitored_domain_member_ids.length; k++) {

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.33 2004/11/05 08:03:11 max Exp $
+ * $Id: AnalysisType.java,v 1.34 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/11/05 08:03:11 $
- * @author $Author: max $
+ * @version $Revision: 1.34 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -70,13 +70,9 @@ public class AnalysisType extends ActionType {
 	}
 
 	public AnalysisType(AnalysisType_Transferable att) throws CreateObjectException {
-		super(new Identifier(att.id),
-					new Date(att.created),
-					new Date(att.modified),
-					new Identifier(att.creator_id),
-					new Identifier(att.modifier_id),
-					new String(att.codename),
-					new String(att.description));
+		super(att.header,
+			  new String(att.codename),
+			  new String(att.description));
 
 		try {
 			this.inParameterTypes = new ArrayList(att.in_parameter_type_ids.length);
@@ -194,17 +190,13 @@ public class AnalysisType extends ActionType {
 		for (Iterator iterator = this.outParameterTypes.iterator(); iterator.hasNext();)
 			outParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
 
-		return new AnalysisType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																				 super.created.getTime(),
-																				 super.modified.getTime(),
-																				 (Identifier_Transferable)super.creatorId.getTransferable(),
-																				 (Identifier_Transferable)super.modifierId.getTransferable(),
-																				 new String(super.codename),
-																				 (super.description != null) ? (new String(super.description)) : "",
-																				 inParTypeIds,
-																				 criteriaParTypeIds,
-																				 etalonParTypeIds,
-																				 outParTypeIds);
+		return new AnalysisType_Transferable(super.getHeaderTransferable(),
+											 new String(super.codename),
+											 (super.description != null) ? (new String(super.description)) : "",
+											 inParTypeIds,
+											 criteriaParTypeIds,
+											 etalonParTypeIds,
+											 outParTypeIds);
 	}
 
 	public short getEntityCode() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.32 2004/11/05 08:03:11 max Exp $
+ * $Id: Measurement.java,v 1.33 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/11/05 08:03:11 $
- * @author $Author: max $
+ * @version $Revision: 1.33 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -62,13 +62,9 @@ public class Measurement extends Action {
 	}
 
 	public Measurement(Measurement_Transferable mt) throws CreateObjectException {
-		super(new Identifier(mt.id),
-					new Date(mt.created),
-					new Date(mt.modified),
-					new Identifier(mt.creator_id),
-					new Identifier(mt.modifier_id),
-					null,
-					new Identifier(mt.monitored_element_id));
+		super(mt.header,
+			  null,
+			  new Identifier(mt.monitored_element_id));
 		try {
 			super.type = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
 
@@ -134,21 +130,17 @@ public class Measurement extends Action {
 	}
 
 	public Object getTransferable() {
-		return new Measurement_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																				super.created.getTime(),
-																				super.modified.getTime(),
-																				(Identifier_Transferable)super.creatorId.getTransferable(),
-																				(Identifier_Transferable)super.modifierId.getTransferable(),
-																				(Identifier_Transferable)super.type.getId().getTransferable(),																				
-																				(Identifier_Transferable)super.monitoredElementId.getTransferable(),
-																				new String(super.type.getCodename()),
-																				this.name,
-																				(Identifier_Transferable)this.setup.getId().getTransferable(),
-																				this.startTime.getTime(),
-																				this.duration,
-																				MeasurementStatus.from_int(this.status),
-																				new String(this.localAddress),
-																				(Identifier_Transferable)this.testId.getTransferable());
+		return new Measurement_Transferable(super.getHeaderTransferable(),
+											(Identifier_Transferable)super.type.getId().getTransferable(),
+											(Identifier_Transferable)super.monitoredElementId.getTransferable(),
+											new String(super.type.getCodename()),
+											this.name,
+											(Identifier_Transferable)this.setup.getId().getTransferable(),
+											this.startTime.getTime(),
+											this.duration,
+											MeasurementStatus.from_int(this.status),
+											new String(this.localAddress),
+											(Identifier_Transferable)this.testId.getTransferable());
 	}
 
     public short getEntityCode() {

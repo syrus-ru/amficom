@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.48 2004/11/04 09:03:45 bob Exp $
+ * $Id: TemporalPattern.java,v 1.49 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,13 +26,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/11/04 09:03:45 $
+ * @version $Revision: 1.49 $, $Date: 2004/11/12 11:44:53 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -796,8 +795,7 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public TemporalPattern(TemporalPattern_Transferable tpt) throws CreateObjectException {
-		super(new Identifier(tpt.id), new Date(tpt.created), new Date(tpt.modified),
-			new Identifier(tpt.creator_id), new Identifier(tpt.modifier_id));
+		super(tpt.header);
 
 		this.description = new String(tpt.description);
 		//this.cronStrings = new String[tpt.cronStrings.length];
@@ -902,10 +900,7 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public Object getTransferable() {
-		return new TemporalPattern_Transferable((Identifier_Transferable) this.id.getTransferable(),
-							this.created.getTime(), this.modified.getTime(),
-							(Identifier_Transferable) this.creatorId.getTransferable(),
-							(Identifier_Transferable) this.modifierId.getTransferable(),
+		return new TemporalPattern_Transferable(super.getHeaderTransferable(),
 							new String(this.description), getCronStrings());
 	}
 

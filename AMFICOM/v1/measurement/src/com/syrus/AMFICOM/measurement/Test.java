@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.63 2004/11/05 08:03:11 max Exp $
+ * $Id: Test.java,v 1.64 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2004/11/05 08:03:11 $
- * @author $Author: max $
+ * @version $Revision: 1.64 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -199,11 +199,7 @@ public class Test extends StorableObject {
 
 
 	public Test(Test_Transferable tt) throws CreateObjectException {
-			super(new Identifier(tt.id),
-					new Date(tt.created),
-					new Date(tt.modified),
-					new Identifier(tt.creator_id),
-					new Identifier(tt.modifier_id));
+		super(tt.header);
 		this.temporalType = tt.temporal_type.value();
 		this.timeStamps = new TestTimeStamps(tt.time_stamps);
 		/**
@@ -325,21 +321,17 @@ public class Test extends StorableObject {
 		for (Iterator iterator = this.measurementSetupIds.iterator(); iterator.hasNext();)
 			msIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 		
-		return new Test_Transferable((Identifier_Transferable)this.id.getTransferable(),
-																 super.created.getTime(),
-																 super.modified.getTime(),
-																 (Identifier_Transferable)super.creatorId.getTransferable(),
-																 (Identifier_Transferable)super.modifierId.getTransferable(),
-																 TestTemporalType.from_int(this.temporalType),
-																 this.timeStamps.getTransferable(),
-																 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
-																 (this.analysisType != null) ? (Identifier_Transferable)this.analysisType.getId().getTransferable() : (new Identifier_Transferable("")),
-																 (this.evaluationType != null) ? (Identifier_Transferable)this.evaluationType.getId().getTransferable() : (new Identifier_Transferable("")),
-																 TestStatus.from_int(this.status),
-																 (Identifier_Transferable)this.monitoredElement.getId().getTransferable(),
-																 TestReturnType.from_int(this.returnType),
-																 new String(this.description),
-																 msIds);
+		return new Test_Transferable(super.getHeaderTransferable(),
+									 TestTemporalType.from_int(this.temporalType),
+									 this.timeStamps.getTransferable(),
+									 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
+									 (this.analysisType != null) ? (Identifier_Transferable)this.analysisType.getId().getTransferable() : (new Identifier_Transferable("")),
+									 (this.evaluationType != null) ? (Identifier_Transferable)this.evaluationType.getId().getTransferable() : (new Identifier_Transferable("")),
+									 TestStatus.from_int(this.status),
+									 (Identifier_Transferable)this.monitoredElement.getId().getTransferable(),
+									 TestReturnType.from_int(this.returnType),
+									 new String(this.description),
+									 msIds);
 	}
 
 	public List retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)	throws RetrieveObjectException, ObjectNotFoundException {

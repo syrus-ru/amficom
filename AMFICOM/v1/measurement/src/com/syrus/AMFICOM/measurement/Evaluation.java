@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.29 2004/11/05 08:03:11 max Exp $
+ * $Id: Evaluation.java,v 1.30 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/05 08:03:11 $
- * @author $Author: max $
+ * @version $Revision: 1.30 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -49,13 +49,9 @@ public class Evaluation extends Action {
 	}
 
 	public Evaluation(Evaluation_Transferable et) throws CreateObjectException {
-		super(new Identifier(et.id),
-					new Date(et.created),
-					new Date(et.modified),
-					new Identifier(et.creator_id),
-					new Identifier(et.modifier_id),
-					null,
-					new Identifier(et.monitored_element_id));
+		super(et.header,
+			  null,
+			  new Identifier(et.monitored_element_id));
 
 		try {
 			super.type = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
@@ -105,15 +101,11 @@ public class Evaluation extends Action {
 	}
 
 	public Object getTransferable() {
-		return new Evaluation_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																			 super.created.getTime(),
-																			 super.modified.getTime(),
-																			 (Identifier_Transferable)super.creatorId.getTransferable(),
-																			 (Identifier_Transferable)super.modifierId.getTransferable(),
-																			 (Identifier_Transferable)super.type.getId().getTransferable(),
-																			 (Identifier_Transferable)super.monitoredElementId.getTransferable(),
-																			 new String(super.type.getCodename()),
-																			 (Identifier_Transferable)this.thresholdSet.getId().getTransferable());
+		return new Evaluation_Transferable(super.getHeaderTransferable(),
+										   (Identifier_Transferable)super.type.getId().getTransferable(),
+										   (Identifier_Transferable)super.monitoredElementId.getTransferable(),
+										   new String(super.type.getCodename()),
+										   (Identifier_Transferable)this.thresholdSet.getId().getTransferable());
 	}
 
 	public short getEntityCode() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.12 2004/11/05 08:03:11 max Exp $
+ * $Id: Modeling.java,v 1.13 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/05 08:03:11 $
- * @author $Author: max $
+ * @version $Revision: 1.13 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -102,14 +102,9 @@ public class Modeling extends Action {
 	}
 	
 	public Modeling(Modeling_Transferable mt) throws CreateObjectException {
-			super(new Identifier(mt.id),
-					new Date(mt.created),
-					new Date(mt.modified),
-					new Identifier(mt.creator_id),
-					new Identifier(mt.modifier_id),
-					null,
-					null
-					);
+			super(mt.header,
+				  null,
+				  null);
 		this.name = mt.name;
 		this.sort = mt.sort.value();
 		/**
@@ -181,18 +176,13 @@ public class Modeling extends Action {
 	}
 
 	public Object getTransferable() {
-		return new Modeling_Transferable((Identifier_Transferable)this.id.getTransferable(),
-																 super.created.getTime(),
-																 super.modified.getTime(),
-																 (Identifier_Transferable)super.creatorId.getTransferable(),
-																 (Identifier_Transferable)super.modifierId.getTransferable(),
-																 new String(this.name),																 
-																 (this.schemePathId != null) ? this.schemePathId : "" ,
-																 (this.monitoredElementId != null) ? (Identifier_Transferable)this.monitoredElementId.getTransferable() : (new Identifier_Transferable("")),		
-																 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
-																 (Identifier_Transferable)this.argumentSet.getId().getTransferable(),
-																 ModelingSort.from_int(this.sort)
-																 );
+		return new Modeling_Transferable(super.getHeaderTransferable(),
+										 new String(this.name),
+										 (this.schemePathId != null) ? this.schemePathId : "" ,
+										 (this.monitoredElementId != null) ? (Identifier_Transferable)this.monitoredElementId.getTransferable() : (new Identifier_Transferable("")),
+										 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
+										 (Identifier_Transferable)this.argumentSet.getId().getTransferable(),
+										 ModelingSort.from_int(this.sort));
 	}
 
 	protected synchronized void setAttributes(Date created,

@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.29 2004/11/05 08:03:11 max Exp $
+ * $Id: Analysis.java,v 1.30 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/05 08:03:11 $
- * @author $Author: max $
+ * @version $Revision: 1.30 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -53,13 +53,9 @@ public class Analysis extends Action {
     }
     
     public Analysis(Analysis_Transferable at) throws CreateObjectException {
-		super(new Identifier(at.id),
-					new Date(at.created),
-					new Date(at.modified),
-					new Identifier(at.creator_id),
-					new Identifier(at.modifier_id),
-					null,
-					new Identifier(at.monitored_element_id));
+		super(at.header,
+			  null,
+			  new Identifier(at.monitored_element_id));
 		try {
 			super.type = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
 
@@ -93,15 +89,11 @@ public class Analysis extends Action {
 	}
 
 	public Object getTransferable() {
-		return new Analysis_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																			super.created.getTime(),
-																			super.modified.getTime(),
-																			(Identifier_Transferable)super.creatorId.getTransferable(),
-																			(Identifier_Transferable)super.modifierId.getTransferable(),
-																			(Identifier_Transferable)super.type.getId().getTransferable(),
-																			(Identifier_Transferable)super.monitoredElementId.getTransferable(),
-																			new String(super.type.getCodename()),
-																			(Identifier_Transferable)this.criteriaSet.getId().getTransferable());
+		return new Analysis_Transferable(super.getHeaderTransferable(),
+										 (Identifier_Transferable)super.type.getId().getTransferable(),
+										 (Identifier_Transferable)super.monitoredElementId.getTransferable(),
+										 new String(super.type.getCodename()),
+										 (Identifier_Transferable)this.criteriaSet.getId().getTransferable());
 	}
 
 	public Set getCriteriaSet() {

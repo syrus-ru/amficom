@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.22 2004/11/05 08:03:11 max Exp $
+ * $Id: Result.java,v 1.23 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/11/05 08:03:11 $
- * @author $Author: max $
+ * @version $Revision: 1.23 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -56,11 +56,7 @@ public class Result extends StorableObject {
 	}
 
 	public Result(Result_Transferable rt) throws CreateObjectException {
-		super(new Identifier(rt.id),
-					new Date(rt.created),
-					new Date(rt.modified),
-					new Identifier(rt.creator_id),
-					new Identifier(rt.modifier_id));
+		super(rt.header);
 
 		this.sort = rt.sort.value();
 		this.alarmLevel = rt.alarm_level.value();
@@ -159,18 +155,14 @@ public class Result extends StorableObject {
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable)this.parameters[i].getTransferable();
-		return new Result_Transferable((Identifier_Transferable)this.id.getTransferable(),
-																	 super.created.getTime(),
-																	 super.modified.getTime(),
-																	 (Identifier_Transferable)super.creatorId.getTransferable(),
-																	 (Identifier_Transferable)super.modifierId.getTransferable(),
-																	 (this.sort != ResultSort._RESULT_SORT_MODELING)?(Identifier_Transferable)this.measurement.getId().getTransferable():(new Identifier_Transferable("")),
-																	 (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
-																	 (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
-																	 (this.sort == ResultSort._RESULT_SORT_MODELING)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
-																	 ResultSort.from_int(this.sort),
-																	 pts,
-																	 AlarmLevel.from_int(this.alarmLevel));
+		return new Result_Transferable(super.getHeaderTransferable(),
+									   (this.sort != ResultSort._RESULT_SORT_MODELING)?(Identifier_Transferable)this.measurement.getId().getTransferable():(new Identifier_Transferable("")),
+									   (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
+									   (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
+									   (this.sort == ResultSort._RESULT_SORT_MODELING)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
+									   ResultSort.from_int(this.sort),
+									   pts,
+									   AlarmLevel.from_int(this.alarmLevel));
 	}
 
     public short getEntityCode() {

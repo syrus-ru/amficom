@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.24 2004/11/04 09:03:45 bob Exp $
+ * $Id: ParameterType.java,v 1.25 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,22 +12,21 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/04 09:03:45 $
+ * @version $Revision: 1.25 $, $Date: 2004/11/12 11:44:53 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -54,13 +53,9 @@ public class ParameterType extends StorableObjectType {
 	}
 
 	public ParameterType(ParameterType_Transferable ptt) throws CreateObjectException {
-		super(new Identifier(ptt.id),
-					new Date(ptt.created),
-					new Date(ptt.modified),
-					new Identifier(ptt.creator_id),
-					new Identifier(ptt.modifier_id),
-					new String(ptt.codename),
-					new String(ptt.description));
+		super(ptt.header,
+			  new String(ptt.codename),
+			  new String(ptt.description));
 		this.name = new String(ptt.name);
 		this.sort = ptt.sort.value();
 	}
@@ -152,15 +147,11 @@ public class ParameterType extends StorableObjectType {
     }
     
     public Object getTransferable() {
-		return new ParameterType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																					super.created.getTime(),
-																					super.modified.getTime(),
-																					(Identifier_Transferable)super.creatorId.getTransferable(),
-																					(Identifier_Transferable)super.modifierId.getTransferable(),
-																					new String(super.codename),
-																					(super.description != null) ? (new String(super.description)) : "",
-																					new String(this.name),
-																					DataType.from_int(this.sort));
+		return new ParameterType_Transferable(super.getHeaderTransferable(),
+											  new String(super.codename),
+											  (super.description != null) ? (new String(super.description)) : "",
+											  new String(this.name),
+											  DataType.from_int(this.sort));
 	}
 	
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.28 2004/11/04 13:16:30 bob Exp $
+ * $Id: Set.java,v 1.29 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/04 13:16:30 $
+ * @version $Revision: 1.29 $, $Date: 2004/11/12 11:44:53 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -64,11 +64,7 @@ public class Set extends StorableObject {
 	}
 
 	public Set(Set_Transferable st) throws CreateObjectException {
-		super(new Identifier(st.id),
-					new Date(st.created),
-					new Date(st.modified),
-					new Identifier(st.creator_id),
-					new Identifier(st.modifier_id));
+		super(st.header);
 		this.sort = st.sort.value();
 		this.description = new String(st.description);
 
@@ -196,15 +192,11 @@ public class Set extends StorableObject {
 		for (Iterator iterator = this.monitoredElementIds.iterator(); iterator.hasNext();)
 			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 	
-		return new Set_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																super.created.getTime(),
-																super.modified.getTime(),
-																(Identifier_Transferable)super.creatorId.getTransferable(),
-																(Identifier_Transferable)super.modifierId.getTransferable(),
-																SetSort.from_int(this.sort),
-																new String(this.description),
-																pts,
-																meIds);
+		return new Set_Transferable(super.getHeaderTransferable(),
+									SetSort.from_int(this.sort),
+									new String(this.description),
+									pts,
+									meIds);
 	}
 
 

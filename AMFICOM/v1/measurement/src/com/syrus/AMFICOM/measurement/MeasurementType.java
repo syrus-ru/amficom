@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.31 2004/11/05 08:03:11 max Exp $
+ * $Id: MeasurementType.java,v 1.32 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/11/05 08:03:11 $
- * @author $Author: max $
+ * @version $Revision: 1.32 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -67,13 +67,9 @@ public class MeasurementType extends ActionType {
 	}
 
 	public MeasurementType(MeasurementType_Transferable mtt) throws CreateObjectException {
-		super(new Identifier(mtt.id),
-					new Date(mtt.created),
-					new Date(mtt.modified),
-					new Identifier(mtt.creator_id),
-					new Identifier(mtt.modifier_id),
-					new String(mtt.codename),
-					new String(mtt.description));
+		super(mtt.header,
+			  new String(mtt.codename),
+			  new String(mtt.description));
 
 		try {
 			this.inParameterTypes = new ArrayList(mtt.in_parameter_type_ids.length);
@@ -175,16 +171,12 @@ public class MeasurementType extends ActionType {
 			measurementPortTypeIds[i++] = (Identifier_Transferable) ((MeasurementPortType) iterator.next()).getId().getTransferable();
 
 
-		return new MeasurementType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																						super.created.getTime(),
-																						super.modified.getTime(),
-																						(Identifier_Transferable)super.creatorId.getTransferable(),
-																						(Identifier_Transferable)super.modifierId.getTransferable(),
-																						new String(super.codename),
-																						(super.description != null) ? (new String(super.description)) : "",
-																						inParTypeIds,
-																						outParTypeIds,
-																						measurementPortTypeIds);
+		return new MeasurementType_Transferable(super.getHeaderTransferable(),
+												new String(super.codename),
+												(super.description != null) ? (new String(super.description)) : "",
+												inParTypeIds,	
+												outParTypeIds,
+												measurementPortTypeIds);
 	}
 
     public short getEntityCode() {

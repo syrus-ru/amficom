@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.43 2004/11/12 07:39:51 max Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.44 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/11/12 07:39:51 $
- * @author $Author: max $
+ * @version $Revision: 1.44 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -145,7 +145,7 @@ public class MeasurementStorableObjectPool {
 		mObjectLoader = mObjectLoader1;
 	}
     
-    public static void serializePools() {
+    public static void serializePool() {
     	java.util.Set entityCodeSet = objectPoolMap.keySet();
         for (Iterator it = entityCodeSet.iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();

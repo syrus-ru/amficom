@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.29 2004/11/05 08:03:11 max Exp $
+ * $Id: EvaluationType.java,v 1.30 2004/11/12 11:44:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/05 08:03:11 $
- * @author $Author: max $
+ * @version $Revision: 1.30 $, $Date: 2004/11/12 11:44:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -68,13 +68,9 @@ public class EvaluationType extends ActionType {
 	}
 
 	public EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
-		super(new Identifier(ett.id),
-					new Date(ett.created),
-					new Date(ett.modified),
-					new Identifier(ett.creator_id),
-					new Identifier(ett.modifier_id),
-					new String(ett.codename),
-					new String(ett.description));
+		super(ett.header,
+			  new String(ett.codename),
+			  new String(ett.description));
 
 		try {
 			this.inParameterTypes = new ArrayList(ett.in_parameter_type_ids.length);
@@ -193,17 +189,13 @@ public class EvaluationType extends ActionType {
 		for (Iterator iterator = this.outParameterTypes.iterator(); iterator.hasNext();)
 			outParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
 
-		return new EvaluationType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																					 super.created.getTime(),
-																					 super.modified.getTime(),
-																					 (Identifier_Transferable)super.creatorId.getTransferable(),
-																					 (Identifier_Transferable)super.modifierId.getTransferable(),
-																					 new String(super.codename),
-																					 (super.description != null) ? (new String(super.description)) : "",
-																					 inParTypeIds,
-																					 thresholdParTypeIds,
-																					 etalonParTypeIds,
-																					 outParTypeIds);
+		return new EvaluationType_Transferable(super.getHeaderTransferable(),
+											   new String(super.codename),
+											   (super.description != null) ? (new String(super.description)) : "",
+											   inParTypeIds,
+											   thresholdParTypeIds,
+											   etalonParTypeIds,
+											   outParTypeIds);
 	}
 
     public short getEntityCode() {
