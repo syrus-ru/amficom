@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.6 2005/04/01 08:37:09 max Exp $
+ * $Id: Filter.java,v 1.7 2005/04/01 10:42:34 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-import com.syrus.AMFICOM.filterclient.ConditionWrapper;
+import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/01 08:37:09 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 10:42:34 $
  * @author $Author: max $
  * @module misc
  */
