@@ -156,7 +156,7 @@
                         <logOutput>true</logOutput>
                         <programArguments class="java.lang.String"/>
                         <runActiveFile>true</runActiveFile>
-                        <runDirectoryURL path="../../../../../My Documents/ISM/prog/java/"/>
+                        <runDirectoryURL path="../run/"/>
                         <targetURL/>
                         <useProxy>true</useProxy>
                      </Value>
