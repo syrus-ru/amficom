@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.72 2005/02/28 14:12:18 bob Exp $
+ * $Id: ResultDatabase.java,v 1.73 2005/02/28 15:30:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/02/28 14:12:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.73 $, $Date: 2005/02/28 15:30:24 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -440,8 +440,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION+ COMMA
-				+ APOSTOPHE + SQL_EMPTY_BLOB + APOSTOPHE
-				+ CLOSE_BRACKET;
+				+ SQL_FUNCTION_EMPTY_BLOB + CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		int i = 0;
 		Identifier parameterId = null;

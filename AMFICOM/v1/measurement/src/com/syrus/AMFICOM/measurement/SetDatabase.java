@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.71 2005/02/28 14:12:18 bob Exp $
+ * $Id: SetDatabase.java,v 1.72 2005/02/28 15:30:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import oracle.sql.BLOB;
-
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -43,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/02/28 14:12:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.72 $, $Date: 2005/02/28 15:30:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -71,7 +69,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
-				+ QUESTION  + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultiplySQLValues;
@@ -339,7 +337,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
-			+ QUESTION + CLOSE_BRACKET;
+			+ SQL_FUNCTION_EMPTY_BLOB + CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		int i = 0;
 		Identifier parameterId = null;
@@ -353,7 +351,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, set.getId());
-				preparedStatement.setBlob(4, BLOB.empty_lob());
+
 				Log.debugMessage("SetDatabase.insertSetParameters | Inserting parameter " + parameterTypeId.toString() + " for set " + setIdStr, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
@@ -376,7 +374,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -601,7 +600,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			objects = this.retrieveByIdsOneQuery(null, condition);
 		else
 			objects = this.retrieveByIdsOneQuery(ids, condition);
-		
+
 		this.retrieveSetParametersByOneQuery(objects);
 		this.retrieveSetMELinksByOneQuery(objects);
 
