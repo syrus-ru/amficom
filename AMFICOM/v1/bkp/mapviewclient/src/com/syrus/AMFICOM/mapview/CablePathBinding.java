@@ -1,36 +1,60 @@
-package com.syrus.AMFICOM.Client.Map.mapview;
+/**
+ * $Id: CablePathBinding.java,v 1.1 2005/01/31 13:11:21 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
 
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+package com.syrus.AMFICOM.mapview;
+
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItemDefaultFactory;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 
+/**
+ * Класс хранит данные о привязке кабеля к линиям.
+ * @author $Author: krupenn $
+ * @version $Revision: 1.1 $, $Date: 2005/01/31 13:11:21 $
+ * @module mapviewclient_v1
+ */
 public final class CablePathBinding extends HashMap
 {
+	/**
+	 * кабель.
+	 */
 	private CablePath cablePath;
 	
-	private static CableChannelingItemDefaultFactory cciFactory = new CableChannelingItemDefaultFactory();
-	
+	/**
+	 * Конструктор.
+	 * @param cablePath кабель
+	 */
 	public CablePathBinding(CablePath cablePath)
 	{
 		this.cablePath = cablePath;
 	}
 
+	/**
+	 * Конструктор.
+	 * @param mcpb привязка
+	 */
 	public CablePathBinding(CablePathBinding mcpb)
 	{
 		super(mcpb);
 		this.cablePath = mcpb.getCablePath();
 	}
 
+	/**
+	 * Найти объект привязки кабеля, начинающийся на заданном узле.
+	 * @param node узел
+	 * @return объект привязки, или <code>null</code>, если не найден
+	 */
 	public CableChannelingItem getCCI(AbstractNode node)
 	{
 		for(Iterator it = super.values().iterator(); it.hasNext();)
@@ -42,11 +66,21 @@ public final class CablePathBinding extends HashMap
 		return null;
 	}
 	
+	/**
+	 * Найти объект привязки кабеля к заданной линии.
+	 * @param link линия
+	 * @return объект привязки, или <code>null</code>, если не найден
+	 */
 	public CableChannelingItem getCCI(PhysicalLink link)
 	{
 		return (CableChannelingItem )(super.get(link));
 	}
 	
+	/**
+	 * Получить объект привязки к элементу.
+	 * @param key элемент
+	 * @return объект привязки, или <code>null</code>, если не найден
+	 */
 	public Object get(Object key)
 	{
 		Object entry = null;
@@ -58,36 +92,20 @@ public final class CablePathBinding extends HashMap
 		return entry;
 	}
 
-	public static CableChannelingItem generateCCI(PhysicalLink link)
-	{
-		CableChannelingItem cci = cciFactory.newInstance();
-		cci.startSiteNodeImpl((SiteNode )link.getStartNode());
-		if(! (link instanceof UnboundLink))
-		{
-			cci.startSpare(MapPropertiesManager.getSpareLength());
-			cci.physicalLinkImpl(link);
-			cci.endSpare(MapPropertiesManager.getSpareLength());
-		}
-		cci.endSiteNodeImpl((SiteNode )link.getEndNode());
-		
-		try
-		{
-			SchemeStorableObjectPool.putStorableObject(cci);
-		}
-		catch (IllegalObjectEntityException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
 
-		return cci;
-	}
-
+	/**
+	 * Установить кабель.
+	 * @param cablePath кабель
+	 */
 	public void setCablePath(CablePath cablePath)
 	{
 		this.cablePath = cablePath;
 	}
 
+	/**
+	 * Получить кабель.
+	 * @return кабель
+	 */
 	public CablePath getCablePath()
 	{
 		return cablePath;

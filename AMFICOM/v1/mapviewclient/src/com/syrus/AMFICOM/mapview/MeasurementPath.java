@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.4 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.1 2005/01/31 13:11:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,9 +9,8 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.mapview;
+package com.syrus.AMFICOM.mapview;
 
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -33,12 +32,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.PathElement;
-import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 import java.util.Collections;
@@ -48,13 +42,11 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * элемент пути 
+ * Элемент пути.
  * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2005/01/30 15:38:18 $
- * @module
  * @author $Author: krupenn $
+ * @version $Revision: 1.1 $, $Date: 2005/01/31 13:11:21 $
+ * @module mapviewclient_v1
  * @todo getCablePaths(), getStartNode(), getEndNode()
  */
 public class MeasurementPath implements MapElement
@@ -69,7 +61,6 @@ public class MeasurementPath implements MapElement
 
 	protected List		characteristics;
 
-
 	protected transient boolean selected = false;
 
 	protected transient boolean alarmState = false;
@@ -78,65 +69,50 @@ public class MeasurementPath implements MapElement
 
 	protected transient Map map = null;
 
-	private AbstractNode					startNode;
-	private AbstractNode					endNode;
-
 	protected SchemePath schemePath;
 	protected Scheme scheme;
 
 	protected MapView mapView;
 
-	public String[][] getExportColumns()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public void setColumn(String field, String value)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public MeasurementPath(
+	/**
+	 * Конструктор.
+	 * @param schemePath схемный путь
+	 * @param id идентификатор
+	 * @param mapView вид
+	 */
+	protected MeasurementPath(
 			SchemePath schemePath,
 			Identifier id, 
-			AbstractNode stNode, 
-			AbstractNode eNode, 
 			MapView mapView)
 	{
 		this.mapView = mapView;
 
-		this.setId(id);
-		this.setName(schemePath.name());
+		this.id = id;
+		this.schemePath = schemePath;
+		this.name = schemePath.name();
 		if(mapView != null)
 		{
 			map = mapView.getMap();
 		}
-		setStartNode(stNode);
-		setEndNode(eNode);
 		this.characteristics = new LinkedList();
-		
-		setSchemePath(schemePath);
 	}
 
 	public static MeasurementPath createInstance(
 			SchemePath schemePath,
-			AbstractNode stNode, 
-			AbstractNode eNode, 
 			MapView mapView)
 		throws CreateObjectException 
 	{
-		if (stNode == null || mapView == null || eNode == null || schemePath == null)
+		if (mapView == null || schemePath == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try
 		{
 			Identifier ide =
 				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+//				IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
 			return new MeasurementPath(
 				schemePath,
 				ide,
-				stNode, 
-				eNode, 
 				mapView);
 		}
 		catch (IllegalObjectEntityException e)
@@ -149,26 +125,25 @@ public class MeasurementPath implements MapElement
 		}
 	}
 
-	public void setEndNode(AbstractNode endNode) 
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	public void setStartNode(AbstractNode startNode) 
-	{
-		throw new UnsupportedOperationException();
-	}
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public List getCharacteristics() 
 	{
 		return Collections.unmodifiableList(this.characteristics);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addCharacteristic(Characteristic ch)
 	{
 		this.characteristics.add(ch);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void removeCharacteristic(Characteristic ch)
 	{
 		this.characteristics.remove(ch);
@@ -179,6 +154,9 @@ public class MeasurementPath implements MapElement
 		this.id = id;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Identifier getId()
 	{
 		return id;
@@ -204,32 +182,50 @@ public class MeasurementPath implements MapElement
 		this.description = description;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Map getMap()
 	{
 		return map;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMap(Map map)
 	{
 		this.map = map;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isSelected()
 	{
 		return selected;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
 		getMap().setSelected(this, selected);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setAlarmState(boolean alarmState)
 	{
 		this.alarmState = alarmState;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean getAlarmState()
 	{
 		return alarmState;
@@ -237,6 +233,9 @@ public class MeasurementPath implements MapElement
 
 	protected DoublePoint location = new DoublePoint(0.0, 0.0);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public DoublePoint getLocation()
 	{
 		int count = 0;
@@ -257,16 +256,17 @@ public class MeasurementPath implements MapElement
 	}
 
 
-	public void setLocation(DoublePoint location)
-	{
-		throw new UnsupportedOperationException();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isRemoved()
 	{
 		return removed;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setRemoved(boolean removed)
 	{
 		this.removed = removed;
@@ -282,13 +282,6 @@ public class MeasurementPath implements MapElement
 		return this.mapView;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	public void setSchemePath(SchemePath schemePath)
 	{
 		this.schemePath = schemePath;
@@ -514,16 +507,25 @@ public class MeasurementPath implements MapElement
 			return (NodeLink)getSortedNodeLinks().get(index - 1);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public MapElementState getState()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void revert(MapElementState state)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public java.util.Map getExportMap()
 	{
 		throw new UnsupportedOperationException();

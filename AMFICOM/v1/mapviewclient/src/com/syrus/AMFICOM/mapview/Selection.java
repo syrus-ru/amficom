@@ -1,5 +1,5 @@
 /**
- * $Id: Selection.java,v 1.5 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: Selection.java,v 1.1 2005/01/31 13:11:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,13 +9,8 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.mapview;
+package com.syrus.AMFICOM.mapview;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -29,12 +24,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
  * Набор выбранных элементов.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.1 $, $Date: 2005/01/31 13:11:21 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -47,8 +43,6 @@ public final class Selection
 	
 	protected Map map;
 	
-	protected LogicalNetLayer lnl;
-
 	/** 
 	 * Выбраны только топологические узлы. Используется для
 	 * вставки сетевых узлов вместо топологических. 
@@ -79,10 +73,9 @@ public final class Selection
 	 */
 	private boolean physicalLinkSelection = true;
 
-	public Selection(LogicalNetLayer lnl)
+	public Selection(Map map)
 	{
-		this.lnl = lnl;
-		this.map = lnl.getMapView().getMap();
+		this.map = map;
 	}
 
 	public boolean isRemoved()
@@ -266,11 +259,6 @@ public final class Selection
 		return getName();
 	}
 
-	public Object clone(DataSourceInterface dataSource)
-	{
-		throw new UnsupportedOperationException();
-	}
-	
 	public void revert(MapElementState state)
 	{
 		throw new UnsupportedOperationException();

@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.4 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: VoidElement.java,v 1.1 2005/01/31 13:11:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,7 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.mapview;
+package com.syrus.AMFICOM.mapview;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
@@ -17,15 +17,15 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.mapview.MapView;
 
 import java.util.List;
-import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Пустой элемент.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.1 $, $Date: 2005/01/31 13:11:21 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement 
@@ -67,13 +67,6 @@ public final class VoidElement implements MapElement
 		return s1;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	public boolean isSelected()
 	{
 		return true;

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.2 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: UnboundLink.java,v 1.1 2005/01/31 13:11:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,9 +9,8 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.mapview;
+package com.syrus.AMFICOM.mapview;
 
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -31,14 +30,14 @@ import java.util.List;
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.1 $, $Date: 2005/01/31 13:11:21 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
 {
 	protected CablePath cablePath;
 	
-	public UnboundLink(
+	protected UnboundLink(
 			Identifier id,
 			AbstractNode stNode, 
 			AbstractNode eNode, 
@@ -61,7 +60,7 @@ public class UnboundLink extends PhysicalLink
 		try
 		{
 			Identifier ide =
-				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
 			return new UnboundLink(
 				ide,
 				stNode, 
@@ -77,14 +76,6 @@ public class UnboundLink extends PhysicalLink
 		{
 			throw new CreateObjectException("MapUnboundLinkElement.createInstance | cannot generate identifier ", e);
 		}
-	}
-
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"";
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
 	}
 
 	public void setCablePath(CablePath cablePath)

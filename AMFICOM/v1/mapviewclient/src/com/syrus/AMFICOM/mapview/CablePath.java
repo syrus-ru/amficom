@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.4 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: CablePath.java,v 1.1 2005/01/31 13:11:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,11 +9,8 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.mapview;
+package com.syrus.AMFICOM.mapview;
 
-import com.syrus.AMFICOM.Client.Map.mapview.CablePathBinding;
-import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,6 +26,7 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
@@ -39,12 +37,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
- * 
- * 
- * 
+ * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.1 $, $Date: 2005/01/31 13:11:21 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -86,7 +81,7 @@ public class CablePath implements MapElement
 	
 	protected CablePathBinding binding;
 
-	public CablePath(
+	protected CablePath(
 			SchemeCableLink schemeCableLink,
 			Identifier id, 
 			AbstractNode stNode, 
@@ -95,19 +90,23 @@ public class CablePath implements MapElement
 	{
 		this.mapView = mapView;
 
-		this.setId(id);
-		this.setName(schemeCableLink.name());
+		this.id = id;
+
+		this.schemeCableLink = schemeCableLink;
+		this.name = schemeCableLink.name();
+
 		if(mapView != null)
 		{
 			map = mapView.getMap();
 		}
-		this.setStartNode(stNode);
-		this.setEndNode(eNode);
+
+		this.startNode = stNode;
+		this.endNode = eNode;
+		nodeLinksSorted = false;
+
 		this.characteristics = new LinkedList();
 		
 		binding = new CablePathBinding(this);
-
-		setSchemeCableLink(schemeCableLink);
 	}
 
 	public static CablePath createInstance(
@@ -123,7 +122,7 @@ public class CablePath implements MapElement
 		try
 		{
 			Identifier ide =
-				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
 			return new CablePath(
 				schemeCableLink,
 				ide,
@@ -163,16 +162,25 @@ public class CablePath implements MapElement
 		nodeLinksSorted = false;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public List getCharacteristics() 
 	{
 		return Collections.unmodifiableList(schemeCableLink.characteristicsImpl().getValue());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addCharacteristic(Characteristic ch)
 	{
 		schemeCableLink.addCharacteristic(ch);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void removeCharacteristic(Characteristic ch)
 	{
 		schemeCableLink.removeCharacteristic(ch);
@@ -183,6 +191,9 @@ public class CablePath implements MapElement
 		this.id = id;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Identifier getId()
 	{
 		return id;
@@ -263,16 +274,25 @@ public class CablePath implements MapElement
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setLocation(DoublePoint location)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isRemoved()
 	{
 		return removed;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setRemoved(boolean removed)
 	{
 		this.removed = removed;
@@ -297,14 +317,6 @@ public class CablePath implements MapElement
 		return null;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane";
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	public void setSchemeCableLink(SchemeCableLink schemeCableLink)
 	{
 		this.schemeCableLink = schemeCableLink;
@@ -377,15 +389,15 @@ public class CablePath implements MapElement
 		binding.clear();
 	}
 
-	public void setLinks(List list)
-	{	
-		this.clearLinks();		
-		
-		for(Iterator it = list.iterator(); it.hasNext();)
-		{
-			this.addLink((PhysicalLink)it.next());
-		}
-	}
+//	public void setLinks(List list)
+//	{	
+//		this.clearLinks();		
+//		
+//		for(Iterator it = list.iterator(); it.hasNext();)
+//		{
+//			this.addLink((PhysicalLink)it.next());
+//		}
+//	}
 
 
 	/**
@@ -402,10 +414,10 @@ public class CablePath implements MapElement
 	/**
 	 * Внимание! концевые точки линии не обновляются
 	 */
-	public void addLink(PhysicalLink addLink)
+	public void addLink(PhysicalLink addLink, CableChannelingItem cci)
 	{
 		links.add(addLink);
-		binding.put(addLink, com.syrus.AMFICOM.Client.Map.mapview.CablePathBinding.generateCCI(addLink));
+		binding.put(addLink, cci);
 		linksSorted = false;
 		nodeLinksSorted = false;
 		sortLinks();
@@ -504,15 +516,14 @@ public class CablePath implements MapElement
 	public java.util.List getSortedNodes()
 	{
 		if(!nodeLinksSorted)
-			return null;
+			return Collections.EMPTY_LIST;
 		return sortedNodes;
 	}
 
 	public java.util.List getSortedNodeLinks()
 	{
 		if(!nodeLinksSorted)
-			return null;
-//			throw new Exception("NodeLinks not sorted!");
+			return Collections.EMPTY_LIST;
 		return sortedNodeLinks;
 	}
 
@@ -636,16 +647,25 @@ public class CablePath implements MapElement
 		return link;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public MapElementState getState()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void revert(MapElementState state)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public java.util.Map getExportMap()
 	{
 		throw new UnsupportedOperationException();

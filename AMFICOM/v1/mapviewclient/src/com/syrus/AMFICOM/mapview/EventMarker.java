@@ -1,26 +1,20 @@
-package com.syrus.AMFICOM.Client.Map.mapview;
+package com.syrus.AMFICOM.mapview;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.Client.Map.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 
 public class EventMarker extends Marker
 {
-	public static final String IMAGE_NAME = "eventmarker";
-
 	public EventMarker(
 			Identifier id, 
 			MapView mapView,
 			double len, 
 			MeasurementPath path,
-			Identifier meId)
+			Identifier meId,
+			String name)
 	{
-		super(id, mapView, len, path, meId);
-
-//		this.setIconName(IMAGE_NAME);
-		this.setName(LangModelMap.getString("Event"));
+		super(id, mapView, len, path, meId, name);
 	}
 
 //	public static MapEventMarker createInstance(

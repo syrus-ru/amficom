@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.4 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: Marker.java,v 1.1 2005/01/31 13:11:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,7 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.mapview;
+package com.syrus.AMFICOM.mapview;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -20,20 +20,17 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.PathDecompositor;
-
-import java.lang.UnsupportedOperationException;
 
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
-import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.CablePath;
 
 /**
  * Название: Маркер связывания оптической дистанции Lo, полученной      * 
@@ -56,7 +53,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.1 $, $Date: 2005/01/31 13:11:21 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -90,7 +87,7 @@ public class Marker extends AbstractNode
 	 * @param topologicalDistance
 	 * @param path
 	 */
-	public Marker(
+	protected Marker(
 			Identifier id, 
 			MapView mapView,
 			AbstractNode startNode,
@@ -99,7 +96,7 @@ public class Marker extends AbstractNode
 			MeasurementPath path,
 			DoublePoint dpoint)
 	{
-		this(id, mapView, 0.0, path, path.getMonitoredElementId());
+		this(id, mapView, 0.0, path, path.getMonitoredElementId(), String.valueOf(id.getMinor()));
 		
 		this.startNode = startNode;
 		this.endNode = endNode;
@@ -158,7 +155,8 @@ public class Marker extends AbstractNode
 			MapView mapView,
 			double opticalDistance, 
 			MeasurementPath path,
-			Identifier meId)
+			Identifier meId,
+			String name)
 	{
 		super(id);
 
@@ -170,6 +168,7 @@ public class Marker extends AbstractNode
 		super.name = id.toString();
 		super.description = "";
 		super.location = new DoublePoint(0.0, 0.0);
+		super.name = name;
 
 		this.mapView = mapView;
 		this.meId = meId;
@@ -190,7 +189,8 @@ public class Marker extends AbstractNode
 			MapView mapView,
 			double opticalDistance, 
 			MeasurementPath path,
-			Identifier meId)
+			Identifier meId,
+			String name)
 		throws CreateObjectException 
 	{
 		if (meId == null || mapView == null || path == null)
@@ -205,7 +205,8 @@ public class Marker extends AbstractNode
 				mapView,
 				opticalDistance, 
 				path,
-				meId);
+				meId,
+				name);
 		}
 		catch (IdentifierGenerationException e)
 		{
@@ -232,13 +233,6 @@ public class Marker extends AbstractNode
 		return this.mapView;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	public double getOpticalDistanceFromStart()
 	{
 		return 0.0;

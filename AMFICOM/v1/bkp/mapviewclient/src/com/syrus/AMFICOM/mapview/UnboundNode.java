@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.2 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.1 2005/01/31 13:11:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,7 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.mapview;
+package com.syrus.AMFICOM.mapview;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -31,7 +31,7 @@ import java.util.List;
  * ни к какому элементу топологической схемы.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.1 $, $Date: 2005/01/31 13:11:21 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -60,7 +60,7 @@ public class UnboundNode extends SiteNode
 	 * @param map топологическая схема
 	 * @param pe тип элемента (должен быть {@link SiteNodeType#UNBOUND})
 	 */
-	public UnboundNode(
+	protected UnboundNode(
 		SchemeElement schemeElement,
 		Identifier id,
 		DoublePoint location,
@@ -109,6 +109,7 @@ public class UnboundNode extends SiteNode
 		{
 			Identifier ide =
 				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+//				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
 			return new UnboundNode(
 				schemeElement,
 				ide,
@@ -135,15 +136,6 @@ public class UnboundNode extends SiteNode
 	{
 		return this.canBind;
 	}
-
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"";
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-
 
 	public void setSchemeElement(SchemeElement schemeElement)
 	{
