@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.74 2005/03/23 18:02:27 arseniy Exp $
+ * $Id: Equipment.java,v 1.75 2005/03/23 18:18:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/03/23 18:02:27 $
+ * @version $Revision: 1.75 $, $Date: 2005/03/23 18:18:10 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -97,11 +97,11 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.supplier = new String(et.supplierCode);
 		this.longitude = et.longitude;
 		this.latitude = et.latitude;
-		this.hwSerial = et.hwSerial;
-		this.hwVersion = et.hwVersion;
-		this.swSerial = et.swSerial;
-		this.swVersion = et.swVersion;
-		this.inventoryNumber = et.inventoryNumber;
+		this.hwSerial = new String(et.hwSerial);
+		this.hwVersion = new String(et.hwVersion);
+		this.swSerial = new String(et.swSerial);
+		this.swVersion = new String(et.swVersion);
+		this.inventoryNumber = new String(et.inventoryNumber);
 
 		try {
 			this.characteristics = new ArrayList(et.characteristic_ids.length);
