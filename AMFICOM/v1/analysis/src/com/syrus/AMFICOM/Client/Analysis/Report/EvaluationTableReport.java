@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Report;
 
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
@@ -46,27 +47,27 @@ class EvaluationTableReportTableColumnModel extends DividableTableColumnModel
 
 class EvaluationTableReportTableModel extends DividableTableModel
 {
-	int width = 0;
+	private int width = 0;
 
-	int length = 0;
+	private int length = 0;
 
-	AMTReportTable reportTable = null;
+  private TableModel model = null;
 
-	boolean viewColumnNames = false;
+	private boolean viewColumnNames = false;
 
 	public EvaluationTableReportTableModel(int divisionsNumber,
 		ObjectsReport report) throws CreateReportException
 	{
 		super(divisionsNumber,
-			((AMTReportTable) report.getReserve()).model.getColumnCount());
+			((TableModel) report.getReserve()).getColumnCount());
 
-		reportTable = (AMTReportTable) report.getReserve();
+		model = (TableModel) report.getReserve();
 
-		width = reportTable.model.getColumnCount();
-		length = reportTable.model.getRowCount();
+		width = model.getColumnCount();
+		length = model.getRowCount();
 
 		for (int i = 0; i < width; i++)
-			if (!reportTable.model.getColumnName(i).equals(""))
+			if (!model.getColumnName(i).equals(""))
 			{
 				viewColumnNames = true;
 				length++;
@@ -91,7 +92,7 @@ class EvaluationTableReportTableModel extends DividableTableModel
 	public Object getValueAt(int row, int col)
 	{
 		if ((row == 0) && viewColumnNames)
-			return reportTable.model.getColumnName(col % width);
+			return model.getColumnName(col % width);
 
 		int index = (this.getRowCount() - 1) * (int) (col / width) + row - 1;
 
@@ -101,6 +102,6 @@ class EvaluationTableReportTableModel extends DividableTableModel
 		if (!viewColumnNames)
 			index++;
 
-		return reportTable.model.getValueAt(index, col);
+		return model.getValueAt(index, col);
 	}
 }

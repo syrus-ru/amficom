@@ -13,6 +13,8 @@ import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Report.*;
 
+import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationTableReport;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -105,15 +107,16 @@ public class ObserveReportModel extends APOReportModel
 				CreateReportException.cantImplement);
 
 		JComponent returnValue = null;
-/*		if (rp.getReserve() instanceof AMTReportTable)
+		if (rp.field.equals(ObserveReportModel.alarms_list))
 		{
-			EvaluationTableReport er = new EvaluationTableReport(rp, divisionsNumber);
+			AlarmsList er = new AlarmsList(rp, divisionsNumber);
 			returnValue = new ReportResultsTablePanel(
 				er.columnModel,
 				er.tableModel,
 				rt.findROforReport(rp));
 		}
-		else
+    
+/*		else
 		{
 			returnValue = new EvaluationGraphPanel(rt.findROforReport(rp));
 		}*/
@@ -131,7 +134,7 @@ public class ObserveReportModel extends APOReportModel
   
 	public void setData(ReportTemplate rt, Object data)
 	{
-		if (rt.templateType.equals(ReportTemplate.rtt_Survey))
+		if (rt.templateType.equals(ReportTemplate.rtt_Observe))
 		{
 			AMTReport aReport = (AMTReport) data;
 			for (Iterator it = rt.objectRenderers.iterator(); it.hasNext();)

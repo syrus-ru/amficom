@@ -1,26 +1,19 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import java.util.ArrayList;
+import java.util.Hashtable;
 import javax.swing.table.TableModel;
 import javax.swing.JPanel;
 
 public class AMTReport
 {
-	public ArrayList tables = new ArrayList();
-
-	public ArrayList panels = new ArrayList();
+	public Hashtable data = new Hashtable();
 
 	public AMTReport()
 	{
 	}
 
-	public void addReportTable(String title, TableModel model)
+	public void addRecord(String teTitle, Object teData)
 	{
-		tables.add(new AMTReportTable(title, model));
-	}
-
-	public void addReportPanel(String title, JPanel panel)
-	{
-		panels.add(new AMTReportPanel(title, panel));
+		data.put(teTitle,teData);
 	}
 }

@@ -8,12 +8,13 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Report.SelectTypeTemplateWindow;
+import com.syrus.AMFICOM.Client.General.Report.AMTReport;
 
 public class OpenTypedTemplateCommand extends VoidCommand
 {
 	public ApplicationContext aContext;
 	public String templateType;
-	public Object reportData;
+	public AMTReport reportData;
 
 	public SelectTypeTemplateWindow frame;
 
@@ -24,7 +25,7 @@ public class OpenTypedTemplateCommand extends VoidCommand
 	public OpenTypedTemplateCommand(
 			ApplicationContext aContext,
 			String templateType,
-			Object reportData)
+			AMTReport reportData)
 	{
 		this.aContext = aContext;
 		this.templateType = templateType;

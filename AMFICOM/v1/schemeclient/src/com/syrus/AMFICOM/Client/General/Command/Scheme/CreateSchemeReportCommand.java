@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.Client.General.Report.AMTReport;
 
 public class CreateSchemeReportCommand extends VoidCommand
 {
-	public static final String TABLE = "table";
 	public static final String PANEL = "panel";
 	public static final String TYPE = "type";
 
@@ -56,7 +55,7 @@ public class CreateSchemeReportCommand extends VoidCommand
 		for (Iterator it = panels.iterator(); it.hasNext();)
 		{
 			UgoPanel rf = (UgoPanel)it.next();
-			report.addReportPanel(rf.getReportTitle(), rf);
+			report.addRecord(rf.getReportTitle(), rf);
 		}
 
 		new OpenTypedTemplateCommand(aContext, type,

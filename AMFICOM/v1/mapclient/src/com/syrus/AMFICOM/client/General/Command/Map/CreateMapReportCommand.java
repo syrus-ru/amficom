@@ -23,8 +23,6 @@ public class CreateMapReportCommand extends VoidCommand
 	public static final String MAP = "map";
 
 	ApplicationContext aContext;
-/*	ArrayList tableFrames = new ArrayList();
-	ArrayList panels = new ArrayList();*/
   MapMainFrame mmf = null;
 
 	public CreateMapReportCommand(ApplicationContext aContext)
@@ -35,15 +33,6 @@ public class CreateMapReportCommand extends VoidCommand
 	public Object clone()
 	{
 		CreateMapReportCommand rc = new CreateMapReportCommand(aContext);
-/*      for (Iterator it = tableFrames.iterator(); it.hasNext();)
-		{
-			ATableFrame tf = (ATableFrame)it.next();
-			rc.setParameter(TABLE, tf);
-		}*/
-/*		for (Iterator it = panels.iterator(); it.hasNext();)
-		{
-			rc.setParameter(PANEL, it.next());
-		}*/
     
     rc.setParameter(MAP,this.mmf);
 		return rc;
@@ -65,7 +54,7 @@ public class CreateMapReportCommand extends VoidCommand
 		{
 			MapRenderPanel mrp = new MapRenderPanel(mmf);
 
-			report.addReportPanel(MapReportModel.rep_topology, mrp);
+			report.addRecord(new MapReportModel().getLangForField(MapReportModel.rep_topology), mrp);
 
 			new OpenTypedTemplateCommand(
         aContext,

@@ -15,7 +15,9 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScaledGraphPanel;
 
+import java.util.Enumeration;
 import javax.swing.JComponent;
+import javax.swing.table.TableModel;
 
 import java.util.Vector;
 import java.util.Iterator;
@@ -128,7 +130,7 @@ abstract public class ESAPEReportModel extends APOReportModel
 				CreateReportException.cantImplement);
 
 		JComponent returnValue = null;
-		if (rp.getReserve() instanceof AMTReportTable)
+		if (rp.getReserve() instanceof TableModel)
 		{
 			EvaluationTableReport er = new EvaluationTableReport(rp, divisionsNumber);
 			returnValue = new ReportResultsTablePanel(
@@ -143,53 +145,15 @@ abstract public class ESAPEReportModel extends APOReportModel
 		return returnValue;
 	}
 
-	public void setData(ReportTemplate rt, Object data)
+	public void setData(ReportTemplate rt, AMTReport aReport)
 	{
-		if (   rt.templateType.equals(ReportTemplate.rtt_Evaluation)
+		if (  rt.templateType.equals(ReportTemplate.rtt_Evaluation)
 			 || rt.templateType.equals(ReportTemplate.rtt_Modeling)
 			 || rt.templateType.equals(ReportTemplate.rtt_Analysis)
 			 || rt.templateType.equals(ReportTemplate.rtt_Prediction)
 			 || rt.templateType.equals(ReportTemplate.rtt_Survey))
 		{
-			AMTReport aReport = (AMTReport) data;
-			for (Iterator it = rt.objectRenderers.iterator(); it.hasNext();)
-			{
-				RenderingObject curRenderer = (RenderingObject)it.next();
-				String itsTableTitle = curRenderer.getReportToRender().field;
-
-				for (Iterator it2 = aReport.tables.iterator(); it2.hasNext();)
-				{
-					AMTReportTable curTable = (AMTReportTable)it2.next();
-					if (curTable.title.equals(getLangForField(itsTableTitle)))
-					{
-						try
-						{
-							curRenderer.getReportToRender().setReserve(curTable);
-						}
-						catch (Exception exc)
-						{}
-						break;
-					}
-				}
-
-				if (curRenderer.getReportToRender().getReserve() != null)
-					continue;
-
-				for (Iterator it2 = aReport.panels.iterator(); it2.hasNext();)
-				{
-					AMTReportPanel curPanel = (AMTReportPanel)it2.next();
-					if (curPanel.title.equals(getLangForField(itsTableTitle)))
-					{
-						try
-						{
-							curRenderer.getReportToRender().setReserve(curPanel);
-						}
-						catch (Exception exc)
-						{}
-						break;
-					}
-				}
-			}
+      super.setData(rt,aReport);
 		}
 	}
 }

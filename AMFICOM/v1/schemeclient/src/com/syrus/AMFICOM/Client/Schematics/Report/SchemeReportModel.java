@@ -135,32 +135,11 @@ public class SchemeReportModel extends APOReportModel
 		return schemePanel;
 	}
 
-	public void setData(ReportTemplate rt, Object data)
+	public void setData(ReportTemplate rt, AMTReport aReport)
 	{
 		if (rt.templateType.equals(ReportTemplate.rtt_Scheme))
 		{
-			AMTReport aReport = (AMTReport) data;
-			for (int i = 0; i < rt.objectRenderers.size(); i++)
-			{
-				RenderingObject curRenderer = (RenderingObject) rt.objectRenderers.
-					get(i);
-				String itsTableTitle = curRenderer.getReportToRender().field;
-
-				for (int j = 0; j < aReport.panels.size(); j++)
-				{
-					AMTReportPanel curPanel = (AMTReportPanel) aReport.panels.get(j);
-					if (curPanel.title.equals(getLangForField(itsTableTitle)))
-					{
-						try
-						{
-							curRenderer.getReportToRender().setReserve(curPanel);
-						}
-						catch (Exception exc)
-						{}
-						break;
-					}
-				}
-			}
+      super.setData(rt,aReport);            
 		}
 	}
 }

@@ -141,51 +141,11 @@ public class MapReportModel extends APOReportModel
 		return returnValue;
 	}
 
-	public void setData(ReportTemplate rt, Object data)
+	public void setData(ReportTemplate rt, AMTReport aReport)
 	{
-//      if (rt.templateType.equals(ReportTemplate.rtt_Map))
 		if (rt.templateType.equals(ReportTemplate.rtt_Map))
 		{
-			AMTReport aReport = (AMTReport) data;
-			for (int i = 0; i < rt.objectRenderers.size(); i++)
-			{
-				RenderingObject curRenderer = (RenderingObject) rt.objectRenderers.
-					get(i);
-				String itsTableTitle = curRenderer.getReportToRender().field;
-
-/*            for (int j = 0; j < aReport.tables.size(); j++)
-				{
-					AMTReportTable curTable = (AMTReportTable) aReport.tables.get(j);
-					if (curTable.title.equals(getLangForField(itsTableTitle)))
-					{
-						try
-						{
-							curRenderer.getReportToRender().setReserve(curTable);
-						}
-						catch (Exception exc)
-						{}
-						break;
-					}
-				}
-
-				if (curRenderer.getReportToRender().getReserve() != null)
-					continue;*/
-
-				for (int j = 0; j < aReport.panels.size(); j++)
-				{
-					AMTReportPanel curPanel = (AMTReportPanel) aReport.panels.get(j);
-					if (curPanel.title.equals(itsTableTitle))
-					{
-						try
-						{
-							curRenderer.getReportToRender().setReserve(curPanel.panel);
-						}
-						catch (Exception exc)
-						{}
-						break;
-					}
-				}
-			}
+      super.setData(rt,aReport);      
 		}
 	}
 }

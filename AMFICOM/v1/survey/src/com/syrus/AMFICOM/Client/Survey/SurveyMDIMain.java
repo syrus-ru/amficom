@@ -103,6 +103,8 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 	public ApplicationContext	aContext			= new ApplicationContext();
 
 	public String				domain_id;
+  
+  public static final String alarmFrameDisplayed = "alarmFrameDisplayed";
 
 	//	public AlarmChecker alarmChecker = null;
 
@@ -127,6 +129,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 
 	ReloadAttributes			myalarmTread		= null;
 
+  private CreateSurveyReportCommand csrCommand = null;
 	//	SchemeAlarmUpdater schemeAlarmUpdater = null;
 
 	public SurveyMDIMain(ApplicationContext aContext) {
@@ -364,8 +367,9 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		aModel.setCommand("menuWindowRestoreAll", new WindowRestoreAllCommand(
 				desktopPane));
 		aModel.setCommand("menuWindowList", new WindowListCommand(desktopPane));
-    
-		aModel.setCommand("menuTemplateReport", new CreateSurveyReportCommand(aContext));    
+
+    csrCommand = new CreateSurveyReportCommand(aContext);
+		aModel.setCommand("menuTemplateReport", csrCommand);    
 
 		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
 
@@ -434,8 +438,10 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		internal_dispatcher.register(this, SchemeElementsEvent.type);
 		internal_dispatcher.register(this, "addschemeelementevent");
 		internal_dispatcher.register(this, "addschemeevent");
+		internal_dispatcher.register(this, SurveyMDIMain.alarmFrameDisplayed);    
 		Environment.the_dispatcher.register(this, "mapaddschemeevent");
 		Environment.the_dispatcher.register(this, "mapaddschemeelementevent");
+    
 		if (aContext.getApplicationModel() == null)
 				aContext.setApplicationModel(new ApplicationModel());
 		setModel(aContext.getApplicationModel());
@@ -460,7 +466,8 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 	}
 
 	public void operationPerformed(OperationEvent ae) {
-		if (ae.getActionCommand().equals("mapframeshownevent")) {
+		if (ae.getActionCommand().equals("mapframeshownevent"))
+    {
 			JInternalFrame frame = (JInternalFrame) ae.getSource();
 
 			Dimension dim = desktopPane.getSize();
@@ -481,14 +488,18 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 				myalarmTread.start();
 			}
 
-		} else if (ae.getActionCommand().equals("mapjframeshownevent")) {
+		}
+    else if (ae.getActionCommand().equals("mapjframeshownevent"))
+    {
 			JInternalFrame frame = (JInternalFrame) ae.getSource();
 
 			Dimension dim = desktopPane.getPreferredSize();
 
 			frame.setLocation(dim.width / 5, dim.height / 4);
 			frame.setSize(dim.width * 3 / 5, dim.height * 3 / 4);
-		} else if (ae.getActionCommand().equals("mapcloseevent")) {
+		}
+    else if (ae.getActionCommand().equals("mapcloseevent"))
+    {
 			for (int i = 0; i < desktopPane.getComponents().length; i++) {
 				Component comp = desktopPane.getComponent(i);
 				if (comp instanceof MapMainFrame) {
@@ -507,9 +518,11 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 
 			if (myalarmTread != null) myalarmTread.stop_running();
 			myalarmTread = null;
-		} else if (ae.getActionCommand().equals(SchemeElementsEvent.type)) {
+		}
+    else if (ae.getActionCommand().equals(SchemeElementsEvent.type)) {
 			SchemeElementsEvent sev = (SchemeElementsEvent) ae;
-			if (sev.OPEN_PRIMARY_SCHEME) {
+			if (sev.OPEN_PRIMARY_SCHEME)
+      {
 				/*
 				 * if (schemeAlarmUpdater == null) { for(int i = 0; i <
 				 * desktopPane.getComponents().length; i++) { Component comp =
@@ -528,7 +541,8 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 				aModel.setEnabled("menuVisualizeSchemeClose", true);
 				aModel.fireModelChanged("");
 			}
-			if (sev.CLOSE_SCHEME) {
+			if (sev.CLOSE_SCHEME)
+      {
 				for (int i = 0; i < desktopPane.getComponents().length; i++) {
 					Component comp = desktopPane.getComponent(i);
 					if (comp instanceof SchemeViewerFrame) {
@@ -546,7 +560,9 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 				aModel.setEnabled("menuVisualizeSchemeClose", false);
 				aModel.fireModelChanged("");
 			}
-		} else if (ae.getActionCommand().equals("mapaddschemeevent")) {
+		}
+    else if (ae.getActionCommand().equals("mapaddschemeevent"))
+    {
 			MapMainFrame fr = (MapMainFrame) Pool.get("environment",
 					"mapmainframe");
 			if (fr != null)
@@ -581,7 +597,9 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 
 								panel.openScheme(scheme);
 							}
-		} else if (ae.getActionCommand().equals("mapaddschemeelementevent")) {
+		}
+    else if (ae.getActionCommand().equals("mapaddschemeelementevent"))
+    {
 			MapMainFrame fr = (MapMainFrame) Pool.get("environment",
 					"mapmainframe");
 			if (fr != null)
@@ -613,7 +631,9 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 								frame.toFront();
 								panel.openSchemeElement(se);
 							}
-		} else if (ae.getActionCommand().equals("addschemeevent")) {
+		}
+    else if (ae.getActionCommand().equals("addschemeevent"))
+    {
 			Dimension dim = desktopPane.getSize();
 
 			String scheme_id = (String) ae.getSource();
@@ -635,7 +655,9 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 			frame.toFront();
 
 			panel.openScheme(scheme);
-		} else if (ae.getActionCommand().equals("addschemeelementevent")) {
+		}
+    else if (ae.getActionCommand().equals("addschemeelementevent"))
+    {
 			String se_id = (String) ae.getSource();
 			SchemeElement se = (SchemeElement) Pool.get(SchemeElement.typ,
 					se_id);
@@ -655,18 +677,23 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 			frame.setVisible(true);
 			frame.toFront();
 			panel.openSchemeElement(se);
-		} else if (ae.getActionCommand().equals("contextchange")) {
+		}
+    else if (ae.getActionCommand().equals("contextchange"))
+    {
 			ContextChangeEvent cce = (ContextChangeEvent) ae;
 			System.out.println("perform context change \""
 					+ Long.toHexString(cce.change_type) + "\" at "
 					+ this.getTitle());
 			//			ApplicationModel aModel = aContext.getApplicationModel();
-			if (cce.SESSION_OPENED) {
+			if (cce.SESSION_OPENED)
+      {
 				SessionInterface ssi = (SessionInterface) cce.getSource();
-				if (aContext.getSessionInterface().equals(ssi)) {
+				if (aContext.getSessionInterface().equals(ssi))
+        {
 					if (!Checker.checkCommandByUserId(aContext
 							.getSessionInterface().getUserId(),
-							Checker.enterObservingModul)) {
+							Checker.enterObservingModul))
+          {
 						new SessionCloseCommand(Environment.the_dispatcher,
 								aContext).execute();
 						return;
@@ -677,52 +704,69 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 					setSessionOpened();
 				}
 			}
-			if (cce.SESSION_CLOSED) {
+			if (cce.SESSION_CLOSED)
+      {
 				SessionInterface ssi = (SessionInterface) cce.getSource();
-				if (aContext.getSessionInterface().equals(ssi)) {
+				if (aContext.getSessionInterface().equals(ssi))
+        {
 					aContext.setDataSourceInterface(null);
 
 					setSessionClosed();
 				}
 			}
-			if (cce.SESSION_CHANGING) {
+			if (cce.SESSION_CHANGING)
+      {
 				statusBar.setText("status", LangModel
 						.getString("statusSettingSession"));
 			}
-			if (cce.SESSION_CHANGED) {
+			if (cce.SESSION_CHANGED)
+      {
 				// nothing
 			}
-			if (cce.CONNECTION_OPENED) {
+			if (cce.CONNECTION_OPENED)
+      {
 				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (aContext.getConnectionInterface().equals(cci)) {
+				if (aContext.getConnectionInterface().equals(cci))
+        {
 					setConnectionOpened();
 				}
 			}
-			if (cce.CONNECTION_CLOSED) {
+			if (cce.CONNECTION_CLOSED)
+      {
 				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (aContext.getConnectionInterface().equals(cci)) {
+				if (aContext.getConnectionInterface().equals(cci))
+        {
 					setConnectionClosed();
 
 				}
 			}
-			if (cce.CONNECTION_FAILED) {
+			if (cce.CONNECTION_FAILED)
+      {
 				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (aContext.getConnectionInterface().equals(cci)) {
+				if (aContext.getConnectionInterface().equals(cci))
+        {
 					setConnectionFailed();
 				}
 			}
-			if (cce.CONNECTION_CHANGING) {
+			if (cce.CONNECTION_CHANGING)
+      {
 				statusBar.setText("status", LangModel
 						.getString("statusConnecting"));
 			}
-			if (cce.CONNECTION_CHANGED) {
+			if (cce.CONNECTION_CHANGED)
+      {
 			}
-			if (cce.DOMAIN_SELECTED) {
+			if (cce.DOMAIN_SELECTED)
+      {
 				domain_id = (String) cce.getSource();
 				statusBar.setText("domain", Pool.getName("domain", domain_id));
 				setDomainSelected();
 			}
 		}
+    else if (ae.getActionCommand().equals(SurveyMDIMain.alarmFrameDisplayed))
+    {
+      csrCommand.setParameter(ae.getSource());
+    }
 	}
 
 	public void setConnectionOpened() {

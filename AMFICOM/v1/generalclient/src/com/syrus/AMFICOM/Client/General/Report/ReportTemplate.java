@@ -90,6 +90,14 @@ public class ReportTemplate extends ObjectResource implements Serializable
 	 */
 	static final public String rtt_Map = "rtt_Map";
 	/**
+	 * <p>Шаблон по наблюдению</p>
+	 */
+	static final public String rtt_Observe = "rtt_Observe";
+	/**
+	 * <p>Шаблон по планированию</p>
+	 */
+	static final public String rtt_Sheduler = "rtt_Sheduler";
+	/**
 	 * <p>Все шаблоны</p>
 	 */
 	static final public String rtt_AllTemplates = "rtt_AllTemplates";

@@ -77,6 +77,7 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
   public OptimizeMainToolBar mainToolBar; // панелька с кнопками, дублирующими главное меню
   // </Vit>
 
+  private CreateOptimizeReportCommand corCommand = null;
     //-------------------------------------------------------------------------------------------------------------
     public OptimizeMDIMain(ApplicationContext aContext)
     { super();
@@ -241,7 +242,9 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
       aModel.setCommand("menuOptimizeModeUnidirect", new SetOptimizeModeCommand(  0, internal_dispatcher, desktopPane, aContext, this ));
       aModel.setCommand("menuOptimizeModeBidirect", new SetOptimizeModeCommand(  1, internal_dispatcher, desktopPane, aContext, this ));
       
-      aModel.setCommand("menuReportCreate", new CreateOptimizeReportCommand(  aContext,  this ) );
+      corCommand = new CreateOptimizeReportCommand(aContext);
+      corCommand.setMainWindow(this);
+      aModel.setCommand("menuReportCreate", corCommand);
       
       aModel.setCommand("menuOptimizeModeBidirect", new SetOptimizeModeCommand(  1, internal_dispatcher, desktopPane, aContext, this ));
 

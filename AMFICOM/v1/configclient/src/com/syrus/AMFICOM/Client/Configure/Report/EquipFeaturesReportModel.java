@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Configure.Report;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
+import com.syrus.AMFICOM.Client.General.Report.AMTReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
@@ -89,7 +90,7 @@ public class EquipFeaturesReportModel extends ReportModel
 		return returnValue;
 	}
 
-	public void setData(ReportTemplate rt,Object data)
+	public void setData(ReportTemplate rt,AMTReport data)
 	{
 	};
 }

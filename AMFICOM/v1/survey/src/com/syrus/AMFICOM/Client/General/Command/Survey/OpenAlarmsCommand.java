@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
+import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
 import java.awt.*;
 import javax.swing.*;
 
@@ -83,12 +84,20 @@ public class OpenAlarmsCommand extends VoidCommand
 		{
 			Component comp = desktop.getComponent(i);
 			if (comp instanceof AlarmFrame)
+      {
 				frame = (AlarmFrame)comp;
+        dispatcher.notify(
+          new OperationEvent(frame,0,SurveyMDIMain.alarmFrameDisplayed));
+        break;        
+      }
 		}
 		if (frame == null)
 		{
 			frame = new AlarmFrame(aC);
 			desktop.add(frame);
+      
+      dispatcher.notify(
+        new OperationEvent(frame,0,SurveyMDIMain.alarmFrameDisplayed));
 		}
 		Dimension dim = new Dimension(desktop.getWidth(), desktop.getHeight());
 		frame.setLocation(0, 0);

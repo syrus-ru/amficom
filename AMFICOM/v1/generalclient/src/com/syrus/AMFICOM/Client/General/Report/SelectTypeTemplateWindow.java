@@ -34,7 +34,7 @@ public class SelectTypeTemplateWindow extends JDialog
 	public ReportTemplateImplementationPanel rtiPanel = null;
 
 	private String templateType = "";
-	private Object reportData = null;
+	private AMTReport reportData = null;
 
 	private ReportTemplate selectedTemplate = null;
 	private JDialog rtiWindow = null;
@@ -63,7 +63,7 @@ public class SelectTypeTemplateWindow extends JDialog
 	public SelectTypeTemplateWindow(
 			ApplicationContext aC,
 			String templateType,
-			Object reportData)
+			AMTReport reportData)
 	{
 		this();
 

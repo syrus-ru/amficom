@@ -91,7 +91,7 @@ abstract public class ReportModel
 	 * @param rt Шаблон
 	 * @param data Информация для заполнения
 	 */
-	abstract public void setData(ReportTemplate rt,Object data);
+	abstract public void setData(ReportTemplate rt,AMTReport data);
 
 	public ReportModel()
 	{

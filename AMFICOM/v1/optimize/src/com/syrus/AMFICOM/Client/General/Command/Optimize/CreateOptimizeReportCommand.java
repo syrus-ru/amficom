@@ -1,61 +1,67 @@
 package com.syrus.AMFICOM.Client.General.Command.Optimize;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.syrus.AMFICOM.Client.General.Command.OpenTypedTemplateCommand;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelOptimize;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Optimize.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
+import com.syrus.AMFICOM.Client.General.Report.AMTReport;
 
-import com.syrus.AMFICOM.Client.General.Report.*;
+import com.syrus.AMFICOM.Client.Optimize.OptimizeMDIMain;
 
-// команда "закрыть всё" - закрывает все окна, кроме главного
-//========================================================================================================
 public class CreateOptimizeReportCommand extends VoidCommand
-{ private ApplicationContext aContext;
-  private OptimizeMDIMain mdiMain;
-  //--------------------------------------------------------------------------------
-  public CreateOptimizeReportCommand(){}
-  //--------------------------------------------------------------------------------
-  public CreateOptimizeReportCommand (  ApplicationContext aContext, OptimizeMDIMain optimizeMDIMain )
-  {	 this.aContext = aContext;
-     this.mdiMain = optimizeMDIMain;
-  }
-  //--------------------------------------------------------------------------------
-  public void setParameter(String field, Object value)
-  {	 if(field.equals("aContext"))
-     { setApplicationContext((ApplicationContext)value);
-     }
-  }
-  //--------------------------------------------------------------------------------
-  public void setApplicationContext(ApplicationContext aContext)
-  { this.aContext = aContext;
-  }
-  //--------------------------------------------------------------------------------
-  public Object clone()
-  { return new CreateOptimizeReportCommand(aContext, mdiMain);
-  }
-  //--------------------------------------------------------------------------------
-  public void execute()
-  {		System.out.println("CreateOptimizeReportCommand.execute() starting ...");
-  		AMTReport amtr = new AMTReport();
-  		amtr.addReportPanel( "схема", this.mdiMain.schemeFrame.schemePanel); // !!! поменять строковую константу на подгружаемую
- 		amtr.addReportTable( LangModelOptimize.getString("frameOptimizationParamsTitle"), 
-							 this.mdiMain.paramsFrame.getTableModelForReport() );
-  		amtr.addReportTable("пути тестирования", this.mdiMain.solutionFrame.getTableModelForReport());
-		new OpenTypedTemplateCommand(aContext, ReportTemplate.rtt_Optimization,   amtr); 
+{
+	ApplicationContext aContext;
 
-  		System.out.println("CreateOptimizeReportCommand.execute() - done");
-  }
-  //--------------------------------------------------------------------------------
-  // сделать неактивными некоторые пункты меню (кнопки делаются неактивными по событию close_all)
-  private void disableSomeMenuItems( ApplicationModel aModel )
-  {
-//      aModel.setAllItemsEnabled(false);
-//      aModel.enable("menuSession");
-//      aModel.enable("menuSessionNew");
-//      aModel.enable("menuSessionConnection");
-      aModel.fireModelChanged("");
-  }
-  //-----------------------------------------------------------------------------------------
+  private OptimizeMDIMain mainFrame = null;
+
+	public CreateOptimizeReportCommand(ApplicationContext aContext)
+	{
+		this.aContext = aContext;
+	}
+
+	public Object clone()
+	{
+		CreateOptimizeReportCommand rc = new CreateOptimizeReportCommand(aContext);
+    rc.mainFrame = this.mainFrame;
+    
+		return rc;
+	}
+
+	public void setMainWindow(OptimizeMDIMain value)
+	{
+		if (value != null)
+		{
+			mainFrame = value;
+		}
+	}
+
+	public void execute()
+	{
+    if (mainFrame == null)
+      return;
+
+    mainFrame.scheme;
+    mainFrame.optimizerContext;
+    mainFrame.kisSelectFrame;           // объект (окно), содержащй информацию о характеристиках и ценах оборудования
+    mainFrame.iterHistFrame;       // окно графика хода оптимизации
+    mainFrame.paramsFrame; // окно задания параметров оптимизации
+    mainFrame.solutionFrame;            // окно подробной нитки маршрута одного из решений
+    mainFrame.nodesModeFrame;// окно задания режимов узлов ( fixed , active )
+    mainFrame.ribsModeFrame;  // окно задания режимов рёбер ( active )
+    mainFrame.schemeFrame;                // окно отображения схемы
+    mainFrame.mapFrame;                      // окно отображения схемы
+      
+		AMTReport report = new AMTReport();
+    
+//    report.addReportTable(OptimizationReportModel.alarms_list,alarmFrame.getTableModel());    
+
+		new OpenTypedTemplateCommand(aContext, ReportTemplate.rtt_Optimization,
+																 report).execute();
+	}
 }
-//========================================================================================================
+
+
+

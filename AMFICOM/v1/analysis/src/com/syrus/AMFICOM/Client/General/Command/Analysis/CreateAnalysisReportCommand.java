@@ -18,10 +18,10 @@ public class CreateAnalysisReportCommand extends VoidCommand
 	public static final String PANEL = "panel";
 	public static final String TYPE = "type";
 
-	ApplicationContext aContext;
-	ArrayList tableFrames = new ArrayList();
-	ArrayList panels = new ArrayList();
-	String type = "";
+	private ApplicationContext aContext;
+	private ArrayList tableFrames = new ArrayList();
+	private ArrayList panels = new ArrayList();
+  private String type = "";
 
 	public CreateAnalysisReportCommand(ApplicationContext aContext)
 	{
@@ -41,7 +41,7 @@ public class CreateAnalysisReportCommand extends VoidCommand
 			SimpleResizableFrame rf = (SimpleResizableFrame)it.next();
 			rc.setParameter(PANEL, rf);
 		}
-		rc.type = type;
+
 		return rc;
 	}
 
@@ -67,13 +67,13 @@ public class CreateAnalysisReportCommand extends VoidCommand
 		for (Iterator it = tableFrames.iterator(); it.hasNext();)
 		{
 			ATableFrame tf = (ATableFrame)it.next();
-			report.addReportTable(tf.getReportTitle(),	tf.getTableModel());
+			report.addRecord(tf.getReportTitle(),	tf.getTableModel());
 		}
 
 		for (Iterator it = panels.iterator(); it.hasNext();)
 		{
 			SimpleResizableFrame rf = (SimpleResizableFrame)it.next();
-			report.addReportPanel(rf.getReportTitle(), rf.getTopGraphPanel());
+			report.addRecord(rf.getReportTitle(), rf.getTopGraphPanel());
 		}
 
 		new OpenTypedTemplateCommand(aContext, type,

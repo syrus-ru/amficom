@@ -34,8 +34,7 @@ public class EvaluationGraphPanel extends JPanel
 	{
 		this.ro = ro;
 
-		AMTReportPanel rPanel = (AMTReportPanel) ro.getReportToRender().getReserve();
-		this.sgPanel = (ScaledGraphPanel)rPanel.panel;
+		this.sgPanel = (ScaledGraphPanel)ro.getReportToRender().getReserve();
 
 		if (sgPanel == null)
 			throw new CreateReportException(
