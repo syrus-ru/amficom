@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.8 2004/12/09 12:01:32 bob Exp $
+ * $Id: IdentifierPool.java,v 1.9 2004/12/09 16:30:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/09 12:01:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/12/09 16:30:50 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public class IdentifierPool {
@@ -46,6 +46,10 @@ public class IdentifierPool {
 
 	public static void init(IdentifierGeneratorServer igServer1) {
 		init(igServer1, DEFAULT_CAPACITY);
+	}
+
+	public static synchronized void setIdentifierGeneratorServer(IdentifierGeneratorServer igServer1) {
+		igServer = igServer1;
 	}
 
 	public static synchronized Identifier getGeneratedIdentifier(final short entityCode) throws IllegalObjectEntityException {

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.17 2004/12/08 08:49:35 bass Exp $
+ * $Id: StorableObject.java,v 1.18 2004/12/09 16:30:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/12/08 08:49:35 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2004/12/09 16:30:50 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObject implements
@@ -61,6 +61,8 @@ public abstract class StorableObject implements
 		this.version = transferable.version;
 		this.currentVersion = this.version;
 	}
+
+	public abstract void insert() throws CreateObjectException;
 
 //	/**
 //	 * @see org.omg.CORBA.portable.ValueBase#_truncatable_ids()
