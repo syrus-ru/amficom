@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.8 2005/03/04 13:33:42 bass Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.9 2005/03/11 11:01:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/04 13:33:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/03/11 11:01:30 $
+ * @author $Author: bob $
  * @module resource_v1
  */
 public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
@@ -69,7 +69,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
 		Collection list = Collections.EMPTY_LIST;
 		try {
-			list = database.retrieveByIds(ids, null);
+			list = database.retrieveByIdsByCondition(ids, null);
 		} catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.loadImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.loadImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
@@ -81,7 +81,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
 		Collection list = Collections.EMPTY_LIST;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			list = database.retrieveButIdsByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
 			Log.errorMessage("ResourceObjectLoader.loadImageResourcesButIds | RetrieveObjectException: " + e.getMessage()); //$NON-NLS-1$
 			throw new DatabaseException("ResourceObjectLoader.loadImageResourcesButIds | RetrieveObjectException: " + e.getMessage()); //$NON-NLS-1$
