@@ -38,53 +38,53 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 
 public class KISGeneralPanel extends GeneralPanel
 {
-  KIS equipment;
-  SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	KIS equipment;
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
-  private JButton saveButton = new JButton();
+	private JButton saveButton = new JButton();
 
-  JLabel nameLabel = new JLabel();
-  JTextField nameField = new JTextField();
+	JLabel nameLabel = new JLabel();
+	JTextField nameField = new JTextField();
 
-  private JLabel portsNumberLabel = new JLabel();
-  private JTextField portsNumberField = new JTextField();
+	private JLabel portsNumberLabel = new JLabel();
+	private JTextField portsNumberField = new JTextField();
 
-  private JLabel domainLabel = new JLabel();
-  private ObjectResourceComboBox domainBox = new ObjectResourceComboBox(Domain.typ, true);
+	private JLabel domainLabel = new JLabel();
+	private ObjectResourceComboBox domainBox = new ObjectResourceComboBox(Domain.typ, true);
 
-  JLabel longitudeLabel = new JLabel();
-  private JTextField longitudeField = new JTextField();
-  private JLabel latitudeLabel = new JLabel();
-  private JTextField latitudeField = new JTextField();
+	JLabel longitudeLabel = new JLabel();
+	private JTextField longitudeField = new JTextField();
+	private JLabel latitudeLabel = new JLabel();
+	private JTextField latitudeField = new JTextField();
 
-  JLabel idLabel = new JLabel();
-  JTextField idField = new JTextField();
+	JLabel idLabel = new JLabel();
+	JTextField idField = new JTextField();
 
-  private JLabel modifyLabel1 = new JLabel();
-  private JLabel modifyLabel2 = new JLabel();
-  private JTextField modifyField = new JTextField();
+	private JLabel modifyLabel1 = new JLabel();
+	private JLabel modifyLabel2 = new JLabel();
+	private JTextField modifyField = new JTextField();
 
-  private JLabel cabelPortsNumberLabel1 = new JLabel();
-  private JLabel cabelPortsNumberLabel2 = new JLabel();
-  private JTextField cabelPortsNumberField = new JTextField();
+	private JLabel cabelPortsNumberLabel1 = new JLabel();
+	private JLabel cabelPortsNumberLabel2 = new JLabel();
+	private JTextField cabelPortsNumberField = new JTextField();
 
-  JLabel typeLabel = new JLabel();
-  ObjectResourceComboBox typeBox = new ObjectResourceComboBox(EquipmentType.typ, true);
+	JLabel typeLabel = new JLabel();
+	ObjectResourceComboBox typeBox = new ObjectResourceComboBox(EquipmentType.typ, true);
 
-  private JLabel agentLabel = new JLabel();
-  private JTextField agentField = new JTextField();
+	private JLabel agentLabel = new JLabel();
+	private JTextField agentField = new JTextField();
 
-  private BorderLayout borderLayout1 = new BorderLayout();
-  private BorderLayout borderLayout4 = new BorderLayout();
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private BorderLayout borderLayout1 = new BorderLayout();
+	private BorderLayout borderLayout4 = new BorderLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-  private JLabel descLabel = new JLabel();
-  JScrollPane descriptionScrollPane = new JScrollPane();
-  JPanel descriptionPanel = new JPanel();
-  public JTextPane descTextArea = new JTextPane();
+	private JLabel descLabel = new JLabel();
+	JScrollPane descriptionScrollPane = new JScrollPane();
+	JPanel descriptionPanel = new JPanel();
+	public JTextPane descTextArea = new JTextPane();
 
-  public KISGeneralPanel()
-  {
+	public KISGeneralPanel()
+	{
 	 super();
 	 try
 	 {
@@ -94,16 +94,16 @@ public class KISGeneralPanel extends GeneralPanel
 	 {
 		e.printStackTrace();
 	 }
-  }
+	}
 
-  public KISGeneralPanel(KIS equipment)
-  {
+	public KISGeneralPanel(KIS equipment)
+	{
 	 this();
 	 setObjectResource(equipment);
-  }
+	}
 
-  private void jbInit() throws Exception
-  {
+	private void jbInit() throws Exception
+	{
 	 setName(LangModelConfig.getString("menuNetCatEquipmentText"));
 
 	 this.setLayout(gridBagLayout1);
@@ -111,7 +111,7 @@ public class KISGeneralPanel extends GeneralPanel
 	 saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 	 saveButton.addActionListener(new java.awt.event.ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		  saveButton_actionPerformed(e);
+			saveButton_actionPerformed(e);
 		}
 	 });
 	 latitudeLabel.setText(LangModelConfig.getString("equip_latitude"));
@@ -199,15 +199,15 @@ public class KISGeneralPanel extends GeneralPanel
 		 this.add(idField, new GridBagConstraints(1, 13, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
 //		this.add(saveButton, new XYConstraints(200, 380, -1, -1));
-  }
+	}
 
-  public ObjectResource getObjectResource()
-  {
+	public ObjectResource getObjectResource()
+	{
 	 return equipment;
-  }
+	}
 
-  public boolean setObjectResource(ObjectResource or)
-  {
+	public boolean setObjectResource(ObjectResource or)
+	{
 	 this.equipment = (KIS )or;
 
 	 if(equipment != null)
@@ -231,16 +231,16 @@ public class KISGeneralPanel extends GeneralPanel
 
 		if(equipment instanceof KIS)
 		{
-		  this.agentField.setEnabled(true);
-		  this.agentField.setText(equipment.agent_id);
+			this.agentField.setEnabled(true);
+			this.agentField.setText(equipment.agent_id);
 		}
 		else
 		if(equipment instanceof Equipment)
 		{
-		  this.agentField.setEnabled(false);
-		  this.agentField.setText("");
+			this.agentField.setEnabled(false);
+			this.agentField.setText("");
 		}
-		this.domainBox.setSelected("sysdomain");//equipment.domain_id);
+		this.domainBox.setSelected(equipment.domain_id);
 		this.modifyField.setText(sdf.format(new Date(equipment.modified)));
 		this.portsNumberField.setText(Long.toString(equipment.ports.size()));
 		this.cabelPortsNumberField.setText(Long.toString(equipment.cports.size()));
@@ -261,31 +261,31 @@ public class KISGeneralPanel extends GeneralPanel
 	}
 	 return true;
 
-  }
+	}
 
-  public boolean modify()
-  {
+	public boolean modify()
+	{
 	 try
 	 {
 		try
 		{
-		  double d1 = Double.parseDouble(this.longitudeField.getText());
-		  d1 = MyUtil.fourdigits(d1);
-		  double d2 = Double.parseDouble(this.latitudeField.getText());
-		  d2 = MyUtil.fourdigits(d2);
-		  equipment.longitude = String.valueOf(d1);
-		  equipment.latitude = String.valueOf(d2);
+			double d1 = Double.parseDouble(this.longitudeField.getText());
+			d1 = MyUtil.fourdigits(d1);
+			double d2 = Double.parseDouble(this.latitudeField.getText());
+			d2 = MyUtil.fourdigits(d2);
+			equipment.longitude = String.valueOf(d1);
+			equipment.latitude = String.valueOf(d2);
 		}
 		catch (Exception ex)
 		{
-		  System.out.println("Unknown coordinates' format!");
-		  return false;
+			System.out.println("Unknown coordinates' format!");
+			return false;
 		}
 
 		if(MyUtil.validName(nameField.getText()))
 			equipment.name = nameField.getText();
 		else
-		  return false;
+			return false;
 
 		equipment.id = idField.getText();
 //			equipment.name = nameField.getText();
@@ -301,13 +301,13 @@ public class KISGeneralPanel extends GeneralPanel
 		return false;
 	 }
 	 return true;
-  }
+	}
 
-  void saveButton_actionPerformed(ActionEvent e)
-  {
+	void saveButton_actionPerformed(ActionEvent e)
+	{
 	 if(!Checker.checkCommandByUserId(
-		  aContext.getSessionInterface().getUserId(),
-		  Checker.catalogCMediting))
+			aContext.getSessionInterface().getUserId(),
+			Checker.catalogCMediting))
 	 {
 		return;
 	 }
@@ -317,5 +317,5 @@ public class KISGeneralPanel extends GeneralPanel
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 		dataSource.SaveKIS(equipment.getId());
 	 }
-  }
+	}
 }

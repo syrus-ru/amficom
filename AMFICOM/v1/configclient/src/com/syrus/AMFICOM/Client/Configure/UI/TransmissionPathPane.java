@@ -1,25 +1,15 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
+import java.awt.*;
 
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JButton;
+import javax.swing.*;
 
-import oracle.jdeveloper.layout.XYConstraints;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.MessageBox;
-import com.syrus.AMFICOM.Client.General.Checker;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-
+import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
 
 public class TransmissionPathPane extends PropertiesPanel
 {

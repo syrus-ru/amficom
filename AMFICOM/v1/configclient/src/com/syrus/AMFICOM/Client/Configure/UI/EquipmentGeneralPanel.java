@@ -246,7 +246,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 				this.agentField.setVisible(false);
 				this.agentLabel.setVisible(false);
 			}
-			this.domainBox.setSelected("sysdomain");//equipment.domain_id);
+			this.domainBox.setSelected(equipment.domain_id);
 			this.modifyField.setText(sdf.format(new Date(equipment.modified)));
 			this.portsNumberField.setText(Long.toString(equipment.ports.size()));
 			this.cabelPortsNumberField.setText(Long.toString(equipment.cports.size()));
