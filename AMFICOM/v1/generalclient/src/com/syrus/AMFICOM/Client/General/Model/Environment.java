@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.6 2004/07/16 13:52:50 krupenn Exp $
+ * $Id: Environment.java,v 1.7 2004/07/27 06:31:57 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,8 +33,8 @@ import java.util.logging.*;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/07/16 13:52:50 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2004/07/27 06:31:57 $
+ * @author $Author: bob $
  * @see
  */
 public class Environment extends Singleton
@@ -472,7 +472,8 @@ public class Environment extends Singleton
 		try 
 		{
 			domain_id = SessionInterface.getActiveSession().getDomainId();
-			iniFile.setValue("domain", domain_id);
+			if (domain_id != null)
+				iniFile.setValue("domain", domain_id);
 			iniFile.saveKeys();
 		} 
 		catch (Exception ex) 

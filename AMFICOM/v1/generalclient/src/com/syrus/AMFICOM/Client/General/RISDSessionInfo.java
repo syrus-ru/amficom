@@ -53,8 +53,8 @@ import org.omg.PortableServer.*;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/07/16 15:29:46 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2004/07/27 06:31:57 $
+ * @author $Author: bob $
  */
 public class RISDSessionInfo extends SessionInterface {
 	/**
@@ -519,7 +519,7 @@ public class RISDSessionInfo extends SessionInterface {
 	}
 
 	public String getDomainId() {
-		return accessIdentity.domain_id;
+		return (this.accessIdentity == null) ? null : this.accessIdentity.domain_id;
 	}
 
 	public String toString() {
