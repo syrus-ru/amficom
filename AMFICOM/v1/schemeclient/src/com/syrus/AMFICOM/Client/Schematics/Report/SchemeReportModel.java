@@ -85,9 +85,9 @@ public class SchemeReportModel extends APOReportModel
 		}
 	}
 
-	public boolean isTableReport(ObjectsReport rp)
+	public int getReportKind(ObjectsReport rp)
 	{
-		return false;
+		return -1;
 	}
 
 	public JComponent createReport(
