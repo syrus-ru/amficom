@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.28 2005/02/16 21:29:42 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.29 2005/02/18 08:51:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/02/16 21:29:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/02/18 08:51:34 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -438,6 +438,8 @@ public abstract class StorableObjectPool {
 		StorableObject dependencyObject = null;
 		for (Iterator dIt = dependencies.iterator(); dIt.hasNext();) {
 			Object object = dIt.next();
+			if (object == null)
+				continue;
 			if (object instanceof Identifier)
 				dependencyObject = this.getStorableObjectExt((Identifier) object);
 			else
