@@ -39,7 +39,7 @@ JGRAPHCP=$(EXTLIB)\jgraphpad.jar
 
 .PHONY:	$(TARGET)
 
-$(TARGET):	impl jar
+$(TARGET):	clean impl loc jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
@@ -53,6 +53,31 @@ impl:
 		-sourcepath $(SRC) \
 		@$(TARGET_CLASS_LIST)
 
+loc:
+	copy /y \
+		src\com\syrus\AMFICOM\Client\General\Lang\survey.properties \
+		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
+
+	copy /y \
+		src\com\syrus\AMFICOM\Client\General\Lang\survey_ru.properties \
+		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
+
+	copy /y \
+		src\com\syrus\AMFICOM\Client\General\Lang\oldschedulerkey.properties \
+		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
+
+	copy /y \
+		src\com\syrus\AMFICOM\Client\General\Lang\oldsurveykey.properties \
+		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
+
+	copy /y \
+		src\com\syrus\AMFICOM\Client\General\Lang\scheduler.properties \
+		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
+
+	copy /y \
+		src\com\syrus\AMFICOM\Client\General\Lang\scheduler_ru.properties \
+		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
+
 clean:
-	rd /s /q $(CLASSES)\com
-	del /f /q $(TARGET)
+	rm -rf $(CLASSES)\com
+	rm -f $(TARGET) $(TARGET_SRC)

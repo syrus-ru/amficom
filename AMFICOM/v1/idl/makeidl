@@ -38,7 +38,7 @@ ALL_LIBS=$(LIBNAME_GENERAL) \
 
 .PHONY:	$(LIBNAME)
 
-$(LIBNAME):	$(LIBNAME_OBJECT) jar
+$(LIBNAME):	clean $(LIBNAME_OBJECT) jar
 
 jar: jars
 	$(JAR) -cf $(LIBNAME) -C $(CLASSES) com\syrus\AMFICOM\CORBA
@@ -156,6 +156,6 @@ jar10:
 		-C $(CLASSES) com\syrus\AMFICOM\CORBA\_st_Constants.class \
 
 clean:
-	rd /s /q $(CLASSES)\com\syrus\AMFICOM
-	rd /s /q $(SRC)\com\syrus\AMFICOM
-	del /f /q $(ALL_LIBS) $(LIBNAME_OBJECT) $(LIBNAME)
+	rm -rf $(CLASSES)\com\syrus\AMFICOM
+	rm -rf $(SRC)\com\syrus\AMFICOM
+	rm -f $(ALL_LIBS) $(LIBNAME_OBJECT) $(LIBNAME) $(LIBNAME_SRC)

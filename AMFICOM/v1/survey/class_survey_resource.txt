@@ -70,9 +70,7 @@ com/syrus/AMFICOM/Client/Schedule/Filter/TestTypeTree.class
 com/syrus/AMFICOM/Client/Schedule/Sorter/TestSorter.class                                         
 
 com/syrus/AMFICOM/Client/General/Lang/LangModelSurvey.class                                       
-com/syrus/AMFICOM/Client/General/Lang/LangModelSurvey_ru.class                                    
 com/syrus/AMFICOM/Client/General/Lang/LangModelSchedule.class                                       
-com/syrus/AMFICOM/Client/General/Lang/LangModelSchedule_ru.class                                    
 
 com/syrus/AMFICOM/Client/Survey/Alarm/AlarmDescriptor.class                                          
 com/syrus/AMFICOM/Client/Survey/Alarm/AlarmDescriptorEvent.class                                          
