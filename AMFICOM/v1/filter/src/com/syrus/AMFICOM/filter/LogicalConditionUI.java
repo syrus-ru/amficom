@@ -1,5 +1,5 @@
 /*
-* $Id: LogicalConditionUI.java,v 1.2 2005/02/22 09:33:46 bob Exp $
+* $Id: LogicalConditionUI.java,v 1.3 2005/02/28 16:06:46 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.AMFICOM.logic.LogicalSchemeUI;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/22 09:33:46 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/28 16:06:46 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -66,13 +66,13 @@ public class LogicalConditionUI extends JPanel {
 		items.add(condition1);
 		items.add(condition2);
 		
-		LogicalItem result2 = new LogicalItem(LogicalItem.ROOT);
-		
-		LogicalItem andOperator21 = new LogicalItem(LogicalItem.AND);
-		
-		result2.addChild(andOperator21);
-		items.add(result2);
-		items.add(andOperator21);
+//		LogicalItem result2 = new LogicalItem(LogicalItem.ROOT);
+//		
+//		LogicalItem andOperator21 = new LogicalItem(LogicalItem.AND);
+//		
+//		result2.addChild(andOperator21);
+//		items.add(result2);
+//		items.add(andOperator21);
 
 		
 //		LogicalItem result = new LogicalItem(LogicalItem.ROOT);
