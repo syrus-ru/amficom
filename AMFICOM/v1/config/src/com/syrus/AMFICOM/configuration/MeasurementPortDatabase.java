@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.2 2004/08/11 16:45:02 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.3 2004/08/16 09:02:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -27,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/11 16:45:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2004/08/16 09:02:05 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -44,6 +46,8 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
     public static final String COLUMN_KIS_ID        = "kis_id";
     // port_id VARCHAR2(32),
     public static final String COLUMN_PORT_ID       = "port_id";
+    
+    public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
     
 	private MeasurementPort fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementPort)
@@ -203,7 +207,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 
 
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.PORT_ENTITY
+			+ ObjectEntities.MEASUREMENTPORT_ENTITY
 			+ OPEN_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
@@ -293,5 +297,72 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 					return;
 			}
 	}
+	
+	public static List retrieveAll() throws RetrieveObjectException {
+		List ports = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementPortDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				ports.add(new MeasurementPort(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementPortDatabase.retrieveAll | Cannot retrieve measurement port";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return ports;
+	}
+
+	public static void delete(MeasurementPort measurementPort) {
+		String mpIdStr = measurementPort.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			String sql = SQL_DELETE_FROM
+						+ ObjectEntities.MEASUREMENTPORT_ENTITY
+						+ SQL_WHERE
+						+ COLUMN_ID + EQUALS
+						+ mpIdStr;
+			Log.debugMessage("MeasurementPortDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
 
 }

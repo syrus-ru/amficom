@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigureTestCase.java,v 1.1 2004/08/13 14:13:04 bob Exp $
+ * $Id: ConfigureTestCase.java,v 1.2 2004/08/16 09:05:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/13 14:13:04 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/16 09:05:09 $
  * @author $Author: bob $
  * @module tools
  */
@@ -38,7 +38,7 @@ public class ConfigureTestCase extends TestCase{
 		super(name);		
 	}
 
-	public static Test _suite(Class clazz) {
+	public static Test suiteWrapper(Class clazz) {
 		TestSuite suite = new TestSuite(clazz);
 		TestSetup wrapper = new TestSetup(suite) {
 

@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.6 2004/08/13 14:08:15 bob Exp $
+ * $Id: PortDatabase.java,v 1.7 2004/08/16 09:02:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/13 14:08:15 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/16 09:02:05 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -274,35 +274,6 @@ public class PortDatabase extends StorableObjectDatabase {
 					return;
 			}
 	}
-
-	public static void delete(Equipment equipment) {
-		String portIdStr = equipment.getId().toSQLString();
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			String sql = SQL_DELETE_FROM
-						+ ObjectEntities.PORT_ENTITY
-						+ SQL_WHERE
-						+ COLUMN_ID + EQUALS
-						+ portIdStr;
-			Log.debugMessage("PortDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
 	
 	public static List retrieveAll() throws RetrieveObjectException {
 		List ports = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
@@ -341,4 +312,32 @@ public class PortDatabase extends StorableObjectDatabase {
 		return ports;
 	}
 
+	public static void delete(Port port) {
+		String portIdStr = port.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			String sql = SQL_DELETE_FROM
+						+ ObjectEntities.PORT_ENTITY
+						+ SQL_WHERE
+						+ COLUMN_ID + EQUALS
+						+ portIdStr;
+			Log.debugMessage("PortDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
 }

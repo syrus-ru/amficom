@@ -1,5 +1,5 @@
 /*
- * $Id: PortTestCase.java,v 1.1 2004/08/13 14:13:04 bob Exp $
+ * $Id: PortTestCase.java,v 1.2 2004/08/16 09:05:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/13 14:13:04 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/16 09:05:09 $
  * @author $Author: bob $
  * @module tools
  */
@@ -41,31 +41,50 @@ public class PortTestCase extends ConfigureTestCase {
 	}
 
 	public static void main(java.lang.String[] args) {
-		junit.awtui.TestRunner.run(PortTestCase.class);
-		//		junit.swingui.TestRunner.run(TransmissionPathTestCase.class);
-		//		junit.textui.TestRunner.run(TransmissionPathTestCase.class);
+		Class clazz = PortTestCase.class;
+		junit.awtui.TestRunner.run(clazz);
+//		junit.swingui.TestRunner.run(clazz);
+//		junit.textui.TestRunner.run(clazz);
 	}
 
 	public static Test suite() {
-		return _suite(PortTestCase.class);
+		return suiteWrapper(PortTestCase.class);
 	}
 
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
-		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.PORT_ENTITY_CODE);
+
+		List list = PortDatabase.retrieveAll();
 
 		List portTypeList = PortTypeDatabase.retrieveAll();
+		
+		if (portTypeList.isEmpty())
+			fail("must be at less one port type at db");
+		
+		List equipmentList = EquipmentDatabase.retrieveAll();
+		
+		if (equipmentList.isEmpty())
+			fail("must be at less one equipment at db");
 
 		PortType type = (PortType) portTypeList.get(0);
 
-		Equipment equipment = (Equipment) EquipmentDatabase.retrieveAll().get(0);
+		Equipment equipment = (Equipment) equipmentList.get(0);
+
+		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.PORT_ENTITY_CODE);
 
 		Port port = Port.createInstance(id, ConfigureTestCase.creatorId, type, "testCasePort", equipment.getId(),
 										PortSort._PORT_SORT_PORT);
 
 		Port port2 = new Port((Port_Transferable) port.getTransferable());
+
+		assertEquals(port.getId(), port2.getId());
+
 		Port port3 = new Port(port2.getId());
-		// PortTypeDatabase.delete(portType);
+
+		assertEquals(port2.getId(), port3.getId());
+
+		if (!list.isEmpty())
+			PortDatabase.delete(port);
 
 	}
 
@@ -74,7 +93,7 @@ public class PortTestCase extends ConfigureTestCase {
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			Port port = (Port) it.next();
 			Port port2 = new Port(port.getId());
-
+			assertEquals(port.getId(), port2.getId());
 		}
 	}
 

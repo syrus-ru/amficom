@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.8 2004/08/11 16:45:02 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.9 2004/08/16 09:02:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/11 16:45:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2004/08/16 09:02:05 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -50,7 +50,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
     // monitored_element_id Identifier,
     public static final String LINK_COLUMN_MONITORED_ELEMENT_ID  = "monitored_element_id";
     // transmission_path_id Identifier,
-    public static final String LINK_COLUMN_TRANSMISSION_PATH_ID  = "transmission_path_id";
+    public static final String LINK_COLUMN_TRANSMISSION_PATH_ID  = "transmission_path_id";    
+    
+    public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private TransmissionPath fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TransmissionPath)
@@ -262,6 +264,8 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			+ COLUMN_FINISH_PORT_ID 
 			+ CLOSE_BRACKET
 			+ SQL_VALUES + OPEN_BRACKET
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -532,4 +536,69 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		}
 	}
 	
+	public static List retrieveAll() throws RetrieveObjectException {
+		List transPaths = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.TRANSPATH_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TransmissionPathDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				transPaths.add(new TransmissionPath(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "TransmissionPathDatabase.retrieveAll | Cannot retrieve transmission path";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return transPaths;
+	}
+
+	public static void delete(TransmissionPath transmissionPath) {
+		String tpIdStr = transmissionPath.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			String sql = SQL_DELETE_FROM
+						+ ObjectEntities.TRANSPATH_ENTITY
+						+ SQL_WHERE
+						+ COLUMN_ID + EQUALS
+						+ tpIdStr;
+			Log.debugMessage("TransmissionPathDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
 }

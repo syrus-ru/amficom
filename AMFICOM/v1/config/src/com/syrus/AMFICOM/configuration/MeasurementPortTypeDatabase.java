@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.1 2004/08/11 13:23:22 bob Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.2 2004/08/16 09:02:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/11 13:23:22 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/16 09:02:05 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -146,6 +146,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 			+ COLUMN_DESCRIPTION
 			+ CLOSE_BRACKET
 			+ SQL_VALUES
+			+ OPEN_BRACKET
 			+ ptIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(measurementPortType.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(measurementPortType.getModified()) + COMMA
@@ -196,7 +197,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MeasurementPortTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
-				measurementPortTypes.add(new PortType(new Identifier(resultSet.getString(COLUMN_ID))));			
+				measurementPortTypes.add(new MeasurementPortType(new Identifier(resultSet.getString(COLUMN_ID))));			
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -219,5 +220,34 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 		return measurementPortTypes;
+	}
+	
+	public static void delete(MeasurementPortType measurementPortType) {
+		String mtIdStr = measurementPortType.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			String sql = SQL_DELETE_FROM
+						+ ObjectEntities.MEASUREMENTPORTTYPE_ENTITY
+						+ SQL_WHERE
+						+ COLUMN_ID + EQUALS
+						+ mtIdStr;
+			Log.debugMessage("MeasurementPortTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
 	}
 }

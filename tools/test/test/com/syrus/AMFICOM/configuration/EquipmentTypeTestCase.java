@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeTestCase.java,v 1.1 2004/08/13 14:13:04 bob Exp $
+ * $Id: EquipmentTypeTestCase.java,v 1.2 2004/08/16 09:05:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/13 14:13:04 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/16 09:05:09 $
  * @author $Author: bob $
  * @module tools
  */
@@ -36,36 +36,42 @@ public class EquipmentTypeTestCase extends ConfigureTestCase {
 	}
 
 	public static void main(java.lang.String[] args) {
-		junit.awtui.TestRunner.run(EquipmentTypeTestCase.class);
-		//		junit.swingui.TestRunner.run(TransmissionPathTestCase.class);
-		//		junit.textui.TestRunner.run(TransmissionPathTestCase.class);
+		Class clazz = EquipmentTypeTestCase.class;
+		junit.awtui.TestRunner.run(clazz);
+//		junit.swingui.TestRunner.run(clazz);
+//		junit.textui.TestRunner.run(clazz);
 	}
 
 	public static Test suite() {
-		return _suite(EquipmentTypeTestCase.class);
+		return suiteWrapper(EquipmentTypeTestCase.class);
 	}
-	
+
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, ObjectNotFoundException, RetrieveObjectException {
+		List list = EquipmentTypeDatabase.retrieveAll();
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
 		EquipmentType eqType = EquipmentType.createInstance(id, ConfigureTestCase.creatorId, "testCaseEqType",
-													"portType created by EquipmentTypeTestCase");
+															"portType created by EquipmentTypeTestCase");
 		EquipmentType eqType2 = new EquipmentType((EquipmentType_Transferable) eqType.getTransferable());
-		
-		EquipmentType eqType3 = new EquipmentType(eqType2.getId());		
-			
-		//EquipmentTypeDatabase.delete(eqType);
+
+		assertEquals(eqType.getId(), eqType2.getId());
+
+		EquipmentType eqType3 = new EquipmentType(eqType2.getId());
+
+		assertEquals(eqType2.getId(), eqType3.getId());
+
+		if (!list.isEmpty())
+			EquipmentTypeDatabase.delete(eqType);
 
 	}
 
-		public void testRetriveAll() throws 
-	 RetrieveObjectException, ObjectNotFoundException{
-			List list = EquipmentTypeDatabase.retrieveAll();
-			for(Iterator it=list.iterator();it.hasNext();){
-				EquipmentType eqType = (EquipmentType)it.next();
-				EquipmentType eqType2 = new EquipmentType(eqType.getId());
-
-			}
+	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
+		List list = EquipmentTypeDatabase.retrieveAll();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			EquipmentType eqType = (EquipmentType) it.next();
+			EquipmentType eqType2 = new EquipmentType(eqType.getId());
+			assertEquals(eqType.getId(), eqType2.getId());
 		}
+	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: KISTestCase.java,v 1.1 2004/08/13 14:13:04 bob Exp $
+ * $Id: KISTestCase.java,v 1.2 2004/08/16 09:05:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,9 +7,13 @@
  */
 package test.com.syrus.AMFICOM.configuration;
 
+import java.util.Iterator;
+import java.util.List;
+
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -22,37 +26,56 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/13 14:13:04 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/16 09:05:09 $
  * @author $Author: bob $
  * @module tools
  */
-public class KISTestCase extends ConfigureTestCase {	
-	
+public class KISTestCase extends ConfigureTestCase {
+
 	public KISTestCase(String name) {
 		super(name);
 	}
 
 	public static void main(java.lang.String[] args) {
-		junit.awtui.TestRunner.run(KISTestCase.class);
-		//		junit.swingui.TestRunner.run(TransmissionPathTestCase.class);
-		//		junit.textui.TestRunner.run(TransmissionPathTestCase.class);
+		Class clazz = KISTestCase.class;
+		junit.awtui.TestRunner.run(clazz);
+//		junit.swingui.TestRunner.run(clazz);
+//		junit.textui.TestRunner.run(clazz);
 	}
 
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
+		List list = KISDatabase.retrieveAll();
+		MCM mcm = new MCM(new Identifier("MCM_2"));
+		
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.KIS_ENTITY_CODE);
-
-		MCM mcm = new MCM(new Identifier ("MCM_2"));
 		KIS kis = KIS.createInstance(id, ConfigureTestCase.creatorId, ConfigureTestCase.domainId, "testCaseKIS",
-										"kis  created by KISTestCase ",mcm.getId());
+										"kis  created by KISTestCase ", mcm.getId());
 
 		KIS kis2 = new KIS((KIS_Transferable) kis.getTransferable());
-		KIS kis3 = new KIS(kis2.getId());
-//		KISDatabase.delete(kis);
 
-	}	
+		assertEquals(kis.getId(), kis2.getId());
+
+		KIS kis3 = new KIS(kis2.getId());
+
+		assertEquals(kis2.getId(), kis3.getId());
+
+		if (!list.isEmpty())
+			KISDatabase.delete(kis);
+
+	}
 
 	public static Test suite() {
-		return _suite(KISTestCase.class);
+		return suiteWrapper(KISTestCase.class);
 	}
+
+	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
+		List list = KISDatabase.retrieveAll();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			KIS kis = (KIS) it.next();
+			KIS kis2 = new KIS(kis.getId());
+			assertEquals(kis.getId(), kis2.getId());
+		}
+	}
+
 }
