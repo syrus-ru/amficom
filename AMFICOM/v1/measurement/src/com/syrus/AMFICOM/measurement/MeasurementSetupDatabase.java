@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.30 2004/10/19 07:48:21 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.31 2004/10/20 14:54:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/10/19 07:48:21 $
+ * @version $Revision: 1.31 $, $Date: 2004/10/20 14:54:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -607,15 +607,15 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
         String condition = new String();
         StringBuffer measurementIdsStr = new StringBuffer();
         
-        for (Iterator it = measurementIds.iterator(); it.hasNext();) {
-            measurementIdsStr.append( ((Identifier) it.next()).getIdentifierString() );
-            if (it.hasNext())
-                measurementIdsStr.append(COMMA);
-        }
+       	for (Iterator it = measurementIds.iterator(); it.hasNext();) {
+        		measurementIdsStr.append( ((Identifier) it.next()).getIdentifierString() );
+        		if (it.hasNext())
+        			measurementIdsStr.append(COMMA);
+       	}
         
         condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
                         + SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-                        + SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET + measurementIdsStr 
+                        + SQL_WHERE + LINK_COLUMN_ME_ID + NOT + SQL_IN + OPEN_BRACKET + measurementIdsStr.toString() 
                         + CLOSE_BRACKET
                     + CLOSE_BRACKET;        
         return retrieveButIds(ids , condition);
@@ -634,7 +634,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				list = this.retrieveButIdsByMonitoredElement(ids, monitoredElement);			
         } else if ( condition instanceof LinkedIdsCondition ) {
             LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-            list = this.retrieveButIdMeasurementIds(ids, linkedIdsCondition.getMeasurementIds());
+            list = this.retrieveButIdMeasurementIds(ids, linkedIdsCondition.getLinkedIds());
         } else {
 			Log.errorMessage("MeasurementSetupDatabase.retrieveByCondition | Unknown condition class: " + condition);
 			list = this.retrieveButIds(ids);
