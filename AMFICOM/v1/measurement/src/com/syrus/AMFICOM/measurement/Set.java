@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.55 2005/04/05 15:57:17 arseniy Exp $
+ * $Id: Set.java,v 1.56 2005/04/06 15:01:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/04/05 15:57:17 $
+ * @version $Revision: 1.56 $, $Date: 2005/04/06 15:01:32 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -111,7 +111,11 @@ public class Set extends StorableObject {
 									 String description,
 									 SetParameter[] parameters,
 									 java.util.Set monitoredElementIds) throws CreateObjectException {
-		if (creatorId == null || sort == null || description == null || parameters == null)
+		if (creatorId == null
+				|| sort == null
+				|| description == null
+				|| parameters == null
+				|| monitoredElementIds == null || monitoredElementIds.isEmpty() || monitoredElementIds.contains(null))
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
