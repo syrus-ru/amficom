@@ -1,14 +1,14 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
+import java.awt.*;
 import java.text.SimpleDateFormat;
 
-import java.awt.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
 import com.syrus.AMFICOM.configuration.TransmissionPathType;
 
 public class TransmissionPathTypeGeneralPanel extends GeneralPanel

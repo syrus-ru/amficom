@@ -1,43 +1,19 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
-import com.syrus.AMFICOM.client_.general.ui_.ObjList;
-import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
+import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.MeasurementTypeController;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
 
 public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 	private static Dimension list_size = new Dimension(100, 50);

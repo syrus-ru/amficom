@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
+import java.awt.*;
+import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.*;
@@ -17,9 +17,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Schematics.Scheme.*;
-import com.syrus.AMFICOM.Client.Schematics.UI.*;
 import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceCatalogFrame;
 import com.syrus.AMFICOM.general.*;
 
 public class ElementsEditorMainFrame extends JFrame

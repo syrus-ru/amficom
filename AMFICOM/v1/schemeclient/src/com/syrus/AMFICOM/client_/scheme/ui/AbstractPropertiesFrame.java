@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractPropertiesFrame.java,v 1.2 2005/03/11 16:10:46 stas Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.3 2005/03/14 13:36:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,29 +9,18 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.*;
-import java.awt.BorderLayout;
-import java.awt.Toolkit;
 import java.lang.reflect.*;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JInternalFrame;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/11 16:10:46 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/14 13:36:18 $
  * @module schemeclient_v1
  */
 
@@ -42,8 +31,8 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 	JScrollPane scrollPane;
 	
 	protected ObjectResourceController controller;
-	protected ObjectResourcePropertiesPane panel;
-	protected GeneralPanel emptyPane;
+	protected StorableObjectEditor editor;
+	protected JComponent emptyPane;
 	
 	protected AbstractPropertiesFrame(String title, ApplicationContext aContext) {
 		super(title);
@@ -69,10 +58,9 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
-		this.emptyPane = new GeneralPanel();
-		JComponent pane = this.emptyPane.getGUI();
-		pane.setBackground(Color.WHITE);
-		setPropertiesPane(pane);
+		this.emptyPane = new JPanel();
+		emptyPane.setBackground(Color.WHITE);
+		setPropertiesPane(emptyPane);
 	}
 	
 	public void setContext(ApplicationContext aContext) {
@@ -98,21 +86,20 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 	public void setObjectResourceController(ObjectResourceController controller) {
 		this.controller = controller;
 
+		JComponent comp = emptyPane;
 		if (this.controller != null) {
 			PropertiesMananager manager = getPropertiesPaneManager();
-			if (manager != null)
-				this.panel = getPropertiesPane(manager);
-			else
-				this.panel = emptyPane;
+			if (manager != null) {
+				this.editor = getEditor(manager);
+				comp = this.editor.getGUI();
+			}
 		}
-		else
-			this.panel = emptyPane;
-		setPropertiesPane((JComponent)this.panel);
+		setPropertiesPane(comp);
 	}
 	
-	protected void setObject(Object obj) {
-		this.panel.setObject(obj);
-	}
+//	protected void setObject(Object obj) {
+//		this.panel.setObject(obj);
+//	}
 	
 	protected void setPropertiesPane(JComponent propertiesPane) {
 		scrollPane.getViewport().removeAll();
@@ -131,16 +118,12 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 			if (this.controller == null || !this.controller.equals(controller0))
 				setObjectResourceController(controller0);
 
-			List data = tdse.getList();
-			int n = tdse.getSelectionNumber();
-			if (n != -1)
-				setObject(data.get(n));
-			else
-				setObject(null);
+			if (this.editor != null)
+				this.editor.setObject(tdse.getSelectedObject());
 		}
 	}
 	
-	protected abstract ObjectResourcePropertiesPane getPropertiesPane(PropertiesMananager manager);
+	protected abstract StorableObjectEditor getEditor(PropertiesMananager manager);
 	
 	protected PropertiesMananager getPropertiesPaneManager() {
 		PropertiesMananager manager = null;

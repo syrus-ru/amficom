@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicPropertiesFrame.java,v 1.1 2005/03/10 08:09:08 stas Exp $
+ * $Id: CharacteristicPropertiesFrame.java,v 1.2 2005/03/14 13:36:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,11 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/10 08:09:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/14 13:36:19 $
  * @module schemeclient_v1
  */
 
@@ -26,10 +26,9 @@ public class CharacteristicPropertiesFrame extends AbstractPropertiesFrame {
 	/**
 	 * @param manager
 	 * @return CharacteristicPropertiesPane
-	 * @see com.syrus.AMFICOM.client_.scheme.ui.AbstractPropertiesFrame#getPropertiesPane(com.syrus.AMFICOM.client_.scheme.ui.PropertiesFrameMananager)
+	 * @see com.syrus.AMFICOM.client_.scheme.ui.AbstractPropertiesFrame#getEditor(PropertiesMananager)
 	 */
-	protected ObjectResourcePropertiesPane getPropertiesPane(
-			PropertiesMananager manager) {
+	protected StorableObjectEditor getEditor(PropertiesMananager manager) {
 		return manager.getCharacteristicPropertiesPanel();
 	}
 }

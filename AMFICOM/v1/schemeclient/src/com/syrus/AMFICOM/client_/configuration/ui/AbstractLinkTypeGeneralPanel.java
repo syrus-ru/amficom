@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkTypeGeneralPanel.java,v 1.2 2005/03/11 16:10:46 stas Exp $
+ * $Id: AbstractLinkTypeGeneralPanel.java,v 1.3 2005/03/14 13:36:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,20 +12,17 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
-import com.syrus.AMFICOM.general.ApplicationException;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/11 16:10:46 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/14 13:36:18 $
  * @module schemeclient_v1
  */
 
-public class AbstractLinkTypeGeneralPanel extends GeneralPanel
+public class AbstractLinkTypeGeneralPanel implements StorableObjectEditor
 {
 	protected AbstractLinkType linkType;
 
@@ -38,7 +35,6 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 	JTextField tfManufacturerCodeText = new JTextField();
 	JLabel lbDescriptionLabel = new JLabel(Constants.TEXT_DESCRIPTION);
 	JTextArea taDescriptionArea = new JTextArea(2,10);
-//	JPanel pnDescriptionPanel = new JPanel();
 	JPanel pnGeneralPanel = new JPanel();
 	
 	protected AbstractLinkTypeGeneralPanel() {
@@ -207,29 +203,12 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 		}
 	}
 
-	public boolean modify() {
-		if(!MiscUtil.validName(this.tfNameText.getText()))
-			return false;
-
-		linkType.setName(this.tfNameText.getText());
-		linkType.setDescription(this.taDescriptionArea.getText());
-		linkType.setManufacturer(this.tfManufacturerText.getText());
-		linkType.setManufacturerCode(this.tfManufacturerCodeText.getText());
-		return true;
-	}
-	
-	public boolean save() {
-		try {
-			ConfigurationStorableObjectPool.putStorableObject(linkType);
-			ConfigurationStorableObjectPool.flush(true);
-		} catch (ApplicationException ex) {
-			ex.printStackTrace();
-			return false;
+	public void commitChanges() {
+		if(MiscUtil.validName(this.tfNameText.getText())) {
+			linkType.setName(this.tfNameText.getText());
+			linkType.setDescription(this.taDescriptionArea.getText());
+			linkType.setManufacturer(this.tfManufacturerText.getText());
+			linkType.setManufacturerCode(this.tfManufacturerCodeText.getText());
 		}
-		return true;
-	}
-
-	public boolean delete() {
-		return true;
 	}
 }

@@ -2,15 +2,18 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+
 import javax.swing.*;
+
+import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.*;
-import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class KISPortsPanel extends GeneralPanel
 {

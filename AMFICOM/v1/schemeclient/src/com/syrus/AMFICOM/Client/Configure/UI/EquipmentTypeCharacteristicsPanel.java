@@ -4,10 +4,9 @@ import java.awt.BorderLayout;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.*;
 
 public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 {

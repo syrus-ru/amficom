@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicsPanel.java,v 1.3 2005/03/10 09:25:06 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.4 2005/03/14 13:36:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,73 +8,39 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import oracle.jdeveloper.layout.*;
 
 import com.syrus.AMFICOM.Client.Configure.UI.AddPropFrame;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
-import com.syrus.AMFICOM.client_.general.ui_.tree.TreeDataModel;
-import com.syrus.AMFICOM.client_.general.ui_.tree.StorableObjectTreeNode;
-import com.syrus.AMFICOM.client_.general.ui_.tree.StorableObjectTree;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CharacteristicTypeController;
-import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.corba.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/10 09:25:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/14 13:36:18 $
  * @module schemeclient_v1
  */
 
-public abstract class CharacteristicsPanel extends GeneralPanel implements
-		OperationListener {
+public abstract class CharacteristicsPanel implements
+		OperationListener, StorableObjectEditor {
 
+	ApplicationContext aContext;
 	private Dispatcher dispatcher = new Dispatcher();
 	protected CharacteristicTypeSort selectedTypeSort;
 	Map characteristics = new HashMap();
@@ -83,6 +49,7 @@ public abstract class CharacteristicsPanel extends GeneralPanel implements
 	Map addedCharacteristics = new HashMap();
 	Map removedCharacteristics = new HashMap();
 
+	JPanel pnPanel0 = new JPanel(); 
 	PropsADToolBar toolBar;
 	StorableObjectTree utp;
 	JTable jTable;
@@ -168,9 +135,13 @@ public abstract class CharacteristicsPanel extends GeneralPanel implements
 		n_panel.add(toolBar, BorderLayout.NORTH);
 		n_panel.add(utp, BorderLayout.CENTER);
 
-		this.setLayout(new BorderLayout());
-		this.add(n_panel, BorderLayout.NORTH);
-		this.add(scrollPane, BorderLayout.CENTER);
+		pnPanel0.setLayout(new BorderLayout());
+		pnPanel0.add(n_panel, BorderLayout.NORTH);
+		pnPanel0.add(scrollPane, BorderLayout.CENTER);
+	}
+	
+	public JComponent getGUI() {
+		return pnPanel0;
 	}
 
 	public void clear() {
@@ -181,7 +152,7 @@ public abstract class CharacteristicsPanel extends GeneralPanel implements
 		this.removedCharacteristics.clear();
 	}
 
-	public boolean modify() {
+	public void commitChanges() {
 		for (Iterator tit = typeSortsCharacterizedIds.values().iterator(); tit.hasNext();) {
 			Object obj = tit.next();
 			if (obj instanceof CharacterizableObject) {
@@ -200,7 +171,6 @@ public abstract class CharacteristicsPanel extends GeneralPanel implements
 				}
 			}
 		}
-		return true;
 	}
 
 	public boolean save() {

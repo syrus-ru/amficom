@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypePropertiesManager.java,v 1.2 2005/03/14 13:36:18 stas Exp $
+ * $Id: MeasurementTypePropertiesManager.java,v 1.1 2005/03/14 13:36:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,23 +9,24 @@
 package com.syrus.AMFICOM.client_.configuration.ui;
 
 import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/14 13:36:18 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/14 13:36:18 $
  * @module schemeclient_v1
  */
 
-public class LinkTypePropertiesManager implements PropertiesMananager {
+public class MeasurementTypePropertiesManager implements PropertiesMananager {
 
-	private static LinkTypePropertiesManager instance;
-	private static AbstractLinkTypeGeneralPanel generalPanel;
-	private static LinkTypeCharacteristicsPanel charPanel;
+	private static MeasurementTypePropertiesManager instance;
+	private static MeasurementTypeGeneralPanel generalPanel;
+	private static MeasurementTypeCharacteristicsPanel charPanel;
 	
-	public static LinkTypePropertiesManager getInstance() {
+	public static MeasurementTypePropertiesManager getInstance() {
 		if (instance == null) 
-			instance = new LinkTypePropertiesManager();
+			instance = new MeasurementTypePropertiesManager();
 		return instance;
 	}
 	
@@ -35,7 +36,7 @@ public class LinkTypePropertiesManager implements PropertiesMananager {
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
 		if (generalPanel == null)
-			generalPanel = new AbstractLinkTypeGeneralPanel();
+			generalPanel = new MeasurementTypeGeneralPanel();
 		return generalPanel;
 	}
 
@@ -45,7 +46,7 @@ public class LinkTypePropertiesManager implements PropertiesMananager {
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
 		if (charPanel == null)
-			charPanel = new LinkTypeCharacteristicsPanel();
+			charPanel = new MeasurementTypeCharacteristicsPanel();
 		return charPanel;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.3 2005/03/11 16:10:46 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.4 2005/03/14 13:36:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -25,11 +25,11 @@ import com.syrus.AMFICOM.measurement.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/11 16:10:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/14 13:36:18 $
  * @module schemeclient_v1
  */
 
-public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
+public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 	protected MeasurementPortType type;
 
 	JPanel pnPanel0 = new JPanel();
@@ -222,41 +222,38 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 		return types;
 	}
 
-	public boolean modify() {
-		if (!MiscUtil.validName(tfNameText.getText()))
-			return false;
+	public void commitChanges() {
+		if (MiscUtil.validName(tfNameText.getText())) {
+			this.type.setName(tfNameText.getText());
+			this.type.setDescription(this.taDescriptionArea.getText());
 
-		this.type.setName(tfNameText.getText());
-		this.type.setDescription(this.taDescriptionArea.getText());
-		
-		List types = new LinkedList();
-		for (Iterator it = types.iterator(); it.hasNext();) {
-			CheckableTreeNode node = (CheckableTreeNode) it.next();
-			MeasurementType mtype = (MeasurementType)node.getUserObject(); 
-			if (node.isChecked()) {
-				Collection pTypes = mtype.getMeasurementPortTypes();
-				if (!pTypes.contains(type)) {
-					List newPTypes = new LinkedList(pTypes);
-					newPTypes.add(type);
-					mtype.setMeasurementPortTypes(newPTypes);
+			List types = new LinkedList();
+			for (Iterator it = types.iterator(); it.hasNext();) {
+				CheckableTreeNode node = (CheckableTreeNode) it.next();
+				MeasurementType mtype = (MeasurementType) node.getUserObject();
+				if (node.isChecked()) {
+					Collection pTypes = mtype.getMeasurementPortTypes();
+					if (!pTypes.contains(type)) {
+						List newPTypes = new LinkedList(pTypes);
+						newPTypes.add(type);
+						mtype.setMeasurementPortTypes(newPTypes);
+					}
+				} else {
+					Collection pTypes = mtype.getMeasurementPortTypes();
+					if (pTypes.contains(type)) {
+						List newPTypes = new LinkedList(pTypes);
+						newPTypes.remove(type);
+						mtype.setMeasurementPortTypes(newPTypes);
+					}
 				}
 			}
-			else {
-				Collection pTypes = mtype.getMeasurementPortTypes();
-				if (pTypes.contains(type)) {
-					List newPTypes = new LinkedList(pTypes);
-					newPTypes.remove(type);
-					mtype.setMeasurementPortTypes(newPTypes);
-				}
+			try {
+				MeasurementStorableObjectPool.flush(false);
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
-		try {
-			MeasurementStorableObjectPool.flush(false);
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return true;
 	}
 
 	class MeasurementTypeModel implements TreeDataModel {

@@ -6,7 +6,8 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.*;

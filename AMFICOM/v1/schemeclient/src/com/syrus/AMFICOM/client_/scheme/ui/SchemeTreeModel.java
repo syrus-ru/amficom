@@ -1,29 +1,44 @@
-package com.syrus.AMFICOM.Client.Schematics.UI;
+/*
+ * $Id: SchemeTreeModel.java,v 1.1 2005/03/14 13:36:19 stas Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+package com.syrus.AMFICOM.client_.scheme.ui;
+
+/**
+ * @author $Author: stas $
+ * @version $Revision: 1.1 $, $Date: 2005/03/14 13:36:19 $
+ * @module schemeclient_v1
+ */
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Schematics.UI.SchemeController;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 
-public class SchemeTreeModel implements TreeDataModel
+public class SchemeTreeModel implements SOTreeDataModel
 {
+	static Icon catalogIcon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
+
 	ApplicationContext aContext;
-	StorableObjectTreeNode root = new StorableObjectTreeNode("root", "Сеть",
-			new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
 
 	private static Type[] schemeTypes = new Type[] {
 		Type.NETWORK,
@@ -31,107 +46,99 @@ public class SchemeTreeModel implements TreeDataModel
 		Type.CABLE_SUBNETWORK
 	};
 
-	public SchemeTreeModel(ApplicationContext aContext)
-	{
+	public SchemeTreeModel(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	public StorableObjectTreeNode getRoot()
-	{
-		return root;
+	public Color getNodeColor(SONode node) {
+		return Color.BLACK;
 	}
-
-	public Color getNodeTextColor(StorableObjectTreeNode node)
-	{
+	
+	public Icon getNodeIcon(SONode node) {
+		if(node.getUserObject() instanceof String)
+			return catalogIcon;
 		return null;
 	}
-
-	public Class getNodeChildClass(StorableObjectTreeNode node)
-	{
-		if(node.getUserObject() instanceof String)
-		{
+	
+	public String getNodeName(SONode node) {
+		if(node.getUserObject() instanceof String) {
 			String s = (String )node.getUserObject();
+			if(s.equals("root"))
+				return "Сеть";
+			if(s.equals("configure"))
+				return LangModelConfig.getString("label_configuration");
 			if(s.equals("SchemeProtoGroup"))
-				return SchemeProtoGroup.class;
-			if(s.equals("Scheme"))
-				return Scheme.class;
-			if(s.equals("SchemeElement"))
-				return SchemeElement.class;
-			if(s.equals("SchemeLink"))
-				return SchemeLink.class;
-			if(s.equals("SchemeCableLink"))
-				return SchemeCableLink.class;
-			if(s.equals("SchemePath"))
-				return SchemePath.class;
-			if(s.equals("SchemeProtoGroup"))
-				return SchemeProtoGroup.class;
-			if(s.equals("LinkType"))
-				return LinkType.class;
-			if(s.equals("CableLinkType"))
-				return CableLinkType.class;
-			if(s.equals("PortType"))
-				return PortType.class;
-			if(s.equals("TransmissionPathType"))
-				return TransmissionPathType.class;
-			if(s.equals("MeasurementPortType"))
-				return MeasurementPortType.class;
+				return "Компоненты сети";
 			if(s.equals("schemeTypes"))
-				return Type.class;
+				return "Схемы";
+			if(s.equals("netdirectory"))
+				return LangModelConfig.getString("menuNetDirText");
+			if(s.equals("jdirectory"))
+				return LangModelConfig.getString("menuJDirText");
+			if(s.equals("LinkType"))
+				return LangModelConfig.getString("menuNetDirLinkText");
+			if(s.equals("CableLinkType"))
+				return LangModelConfig.getString("menuNetDirCableText");
+			if(s.equals("PortType"))
+				return LangModelConfig.getString("menuNetDirPortText");
+//			if(s.equals("TransmissionPathType"))
+//				return LangModelConfig.getString("menuJDirPathText");
+			if(s.equals("MeasurementPortType"))
+				return LangModelConfig.getString("menuJDirAccessPointText");
 			if(s.equals("MeasurementType"))
-				return MeasurementType.class;
+				return LangModelConfig.getString("MeasurementType");
+			if(s.equals(Type.NETWORK))
+				return LangModelSchematics.getString("NETWORK");
+			if(s.equals(Type.BUILDING))
+				return LangModelSchematics.getString("BUILDING");
+			if(s.equals(Type.CABLE_SUBNETWORK))
+				return LangModelSchematics.getString("CABLE_SUBNETWORK");
 		}
-		else if (node.getUserObject() instanceof Type)
-			return Scheme.class;
-		else if (node.getUserObject() instanceof SchemeProtoGroup)
-		{
-			if (((SchemeProtoGroup)node.getUserObject()).schemeProtoGroups().length != 0)
-				return SchemeProtoGroup.class;
-			return SchemeProtoElement.class;
-		}
-		else if (node.getUserObject() instanceof Scheme)
-			return Scheme.class;
-		else if (node.getUserObject() instanceof SchemeElement)
-			return SchemeElement.class;
-		return null;
+		if (node.getUserObject() instanceof LinkType)
+			return ((LinkType)node.getUserObject()).getName();
+		if (node.getUserObject() instanceof CableLinkType)
+			return ((CableLinkType)node.getUserObject()).getName();
+		if (node.getUserObject() instanceof PortType)
+			return ((PortType)node.getUserObject()).getName();
+		if (node.getUserObject() instanceof MeasurementPortType)
+			return ((MeasurementPortType)node.getUserObject()).getName();
+		if (node.getUserObject() instanceof MeasurementType)
+			return ((MeasurementType)node.getUserObject()).getDescription();
+		
+		if (node.getUserObject() instanceof SchemeProtoGroup)
+			return ((SchemeProtoGroup)node.getUserObject()).name();
+		if (node.getUserObject() instanceof Scheme)
+			return ((Scheme)node.getUserObject()).name();
+		if (node.getUserObject() instanceof SchemeElement)
+			return ((SchemeElement)node.getUserObject()).name();
+		if (node.getUserObject() instanceof SchemeLink)
+			return ((SchemeLink)node.getUserObject()).name();
+		if (node.getUserObject() instanceof SchemeCableLink)
+			return ((SchemeCableLink)node.getUserObject()).name();
+		if (node.getUserObject() instanceof SchemePath)
+			return ((SchemePath)node.getUserObject()).name();
+		if (node.getUserObject() instanceof SchemePort)
+			return ((SchemePort)node.getUserObject()).name();
+		if (node.getUserObject() instanceof SchemeCablePort)
+			return ((SchemeCablePort)node.getUserObject()).name();
+		return "";
 	}
 
-	public ObjectResourceController getNodeChildController(StorableObjectTreeNode node)
+	public ObjectResourceController getNodeController(SONode node)
 	{
 		if(node.getUserObject() instanceof String)
 		{
 			String s = (String )node.getUserObject();
-			if(s.equals("SchemeProtoGroup"))
-				return null;
-			/**
-			 * @todo write SchemeProtoGroupController
-			 * return SchemeProtoGroupController.getInstance();
-			 */
 			if(s.equals("Scheme"))
 				return SchemeController.getInstance();
 			if(s.equals("SchemeElement"))
-				return null;
-			/**
-			 * @todo write SchemeElementController
-			 * return SchemeElementController.getInstance();
-			 */
+				return SchemeElementController.getInstance();
 			if(s.equals("SchemeLink"))
-				return null;
-			/**
-			 * @todo write SchemeLinkController
-			 * return SchemeLinkController.getInstance();
-			 */
+				return SchemeLinkController.getInstance();
 			if(s.equals("SchemeCableLink"))
-				return null;
-			/**
-			 * @todo write SchemeCableLinkController
-			 * return SchemeCableLinkController.getInstance();
-			 */
+			  return SchemeCableLinkController.getInstance();
 			if(s.equals("SchemePath"))
-				return null;
-			/**
-			 * @todo write SchemePathController
-			 * return SchemePathController.getInstance();
-			 */
+				return SchemePathController.getInstance();
 			if(s.equals("SchemeProtoGroup"))
 				return null;
 			/**
@@ -152,10 +159,24 @@ public class SchemeTreeModel implements TreeDataModel
 				return MeasurementTypeController.getInstance();
 			if(s.equals("schemeTypes"))
 				return null;
+			return null;
 		}
-		else if (node.getUserObject() instanceof Type)
+		if (node.getUserObject() instanceof Type)
 			return SchemeController.getInstance();
-		else if (node.getUserObject() instanceof SchemeProtoGroup)
+		if (node.getUserObject() instanceof LinkType)
+			return LinkTypeController.getInstance();
+		if (node.getUserObject() instanceof CableLinkType)
+			return CableLinkTypeController.getInstance();
+		if (node.getUserObject() instanceof PortType)
+			return PortTypeController.getInstance();
+		if (node.getUserObject() instanceof TransmissionPathType)
+			return TransmissionPathTypeController.getInstance();
+		if (node.getUserObject() instanceof MeasurementPortType)
+			return MeasurementPortTypeController.getInstance();
+		if (node.getUserObject() instanceof MeasurementType)
+			return MeasurementTypeController.getInstance();
+
+		if (node.getUserObject() instanceof SchemeProtoGroup)
 		{
 			if (((SchemeProtoGroup)node.getUserObject()).schemeProtoGroups().length != 0)
 				return null;
@@ -170,72 +191,46 @@ public class SchemeTreeModel implements TreeDataModel
 			 * return SchemeProtoElementController.getInstance();
 			 */
 		}
-		else if (node.getUserObject() instanceof Scheme)
+		if (node.getUserObject() instanceof Scheme)
 			return SchemeController.getInstance();
-		else if (node.getUserObject() instanceof SchemeElement)
-			return null;
-			/**
-			 * @todo write SchemeElementController
-			 * return SchemeElementController.getInstance();
-			 */
+		if (node.getUserObject() instanceof SchemeElement)
+			return SchemeElementController.getInstance();
 		return null;
 	}
 
-	public List getChildNodes(StorableObjectTreeNode node)
+	public void updateChildNodes(SONode node)
 	{
-		List vec = new ArrayList();
+		List vec = new LinkedList();
 		if(node.getUserObject() instanceof String)
 		{
 			String s = (String )node.getUserObject();
 			if(s.equals("root"))
 			{
-				vec.add(new StorableObjectTreeNode("configure", LangModelConfig.getString("label_configuration"),
-						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-				vec.add(new StorableObjectTreeNode ("SchemeProtoGroup", "Компоненты сети", 
-						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-				StorableObjectTreeNode sch = new StorableObjectTreeNode ("schemeTypes", "Схемы", 
-						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
-			
-				vec.add(sch);
-//				registerSearchableNode(Scheme.typ, sch);
+				vec.add(new SOMutableNode(this, "configure"));
+				vec.add(new SOMutableNode(this, "SchemeProtoGroup"));
+				vec.add(new SOMutableNode(this, "schemeTypes"));
 			}
 			else if(s.equals("configure"))
 			{
-				vec.add(new StorableObjectTreeNode("netdirectory", LangModelConfig.getString("menuNetDirText"),
-						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-				vec.add(new StorableObjectTreeNode("jdirectory", LangModelConfig.getString("menuJDirText"),
-						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
+				vec.add(new SOMutableNode(this, "netdirectory"));
+				vec.add(new SOMutableNode(this, "jdirectory"));
 			}
 			else if(s.equals("netdirectory"))
 			{
-				vec.add(new StorableObjectTreeNode("LinkType", LangModelConfig.getString("menuNetDirLinkText")));
-				vec.add(new StorableObjectTreeNode("CableLinkType", LangModelConfig.getString("menuNetDirCableText")));
-				vec.add(new StorableObjectTreeNode("PortType", LangModelConfig.getString("menuNetDirPortText")));
+				vec.add(new SOMutableNode(this, "LinkType"));
+				vec.add(new SOMutableNode(this, "CableLinkType"));
+				vec.add(new SOMutableNode(this, "PortType"));
 			}
 			else if(s.equals("jdirectory"))
 			{
-				vec.add(new StorableObjectTreeNode("MeasurementType", LangModelConfig.getString("MeasurementType")));
-				vec.add(new StorableObjectTreeNode("MeasurementPortType", LangModelConfig.getString("menuJDirAccessPointText")));
-//				vec.add(new StorableObjectTreeNode("TransmissionPathType", LangModelConfig.getString("menuJDirPathText"), true));
+				vec.add(new SOMutableNode(this, "MeasurementType"));
+				vec.add(new SOMutableNode(this, "MeasurementPortType"));
+//				vec.add(new SOMutableNode(this, "TransmissionPathType", LangModelConfig.getString("menuJDirPathText"), true));
 			}
 			else if(s.equals("schemeTypes"))
 			{
-				for (int i = 0; i < schemeTypes.length; i++)
-				{
-					String type;
-					switch (schemeTypes[i].value()) {
-						case Type._NETWORK:
-							type = LangModelSchematics.getString("NETWORK");
-							break;
-						case Type._CABLE_SUBNETWORK:
-							type = LangModelSchematics.getString("CABLE_SUBNETWORK");
-							break;
-						default:
-							type = LangModelSchematics.getString("BUILDING");
-					}
-
-					vec.add(new StorableObjectTreeNode(schemeTypes[i], type,
-								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
+				for (int i = 0; i < schemeTypes.length; i++) {
+					vec.add(new SOMutableNode(this, schemeTypes[i]));
 				}
 			}
 			else if (s.equals("LinkType")) {
@@ -246,8 +241,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
 						LinkType type = (LinkType)it.next();
-						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
-						vec.add(n);
+						vec.add(new SOMutableNode(this, type, false));
 					}
 				}
 				catch (ApplicationException ex) {
@@ -263,8 +257,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
 						CableLinkType type = (CableLinkType)it.next();
-						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
-						vec.add(n);
+						vec.add(new SOMutableNode(this, type, false));
 					}
 				}
 				catch (ApplicationException ex) {
@@ -278,8 +271,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = portTypes.iterator(); it.hasNext(); ) {
 						PortType type = (PortType)it.next();
-						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
-						vec.add(n);
+						vec.add(new SOMutableNode(this, type, false));
 					}
 				}
 				catch (ApplicationException ex) {
@@ -293,8 +285,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
 						TransmissionPathType type = (TransmissionPathType)it.next();
-						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
-						vec.add(n);
+						vec.add(new SOMutableNode(this, type, false));
 					}
 				}
 				catch (ApplicationException ex) {
@@ -308,8 +299,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
 						MeasurementPortType type = (MeasurementPortType)it.next();
-						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
-						vec.add(n);
+						vec.add(new SOMutableNode(this, type, false));
 					}
 				}
 				catch (ApplicationException ex) {
@@ -324,8 +314,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = measurementTypes.iterator(); it.hasNext(); ) {
 						MeasurementType type = (MeasurementType)it.next();
-						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getDescription(), true);
-						vec.add(n);
+						vec.add(new SOMutableNode(this, type, false));
 					}
 				}
 				catch (ApplicationException ex) {
@@ -343,8 +332,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = groups.iterator(); it.hasNext(); ) {
 						SchemeProtoGroup group = (SchemeProtoGroup)it.next();
-						StorableObjectTreeNode n = new StorableObjectTreeNode(group, group.name(), true);
-						vec.add(n);
+						vec.add(new SOMutableNode(this, group));
 					}
 				}
 				catch (ApplicationException ex) {
@@ -353,7 +341,7 @@ public class SchemeTreeModel implements TreeDataModel
 			}
 			else if (s.equals("Scheme"))
 			{
-				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getUserObject();
+				Scheme parent = (Scheme)((SONode)node.getParent()).getUserObject();
 				List ds = new LinkedList();
 				for (int i = 0; i < parent.schemeElements().length; i++)
 				{
@@ -366,14 +354,13 @@ public class SchemeTreeModel implements TreeDataModel
 					for(Iterator it = ds.iterator(); it.hasNext();)
 					{
 						Scheme sch = (Scheme)it.next();
-						vec.add(new StorableObjectTreeNode(sch, sch.name(), 
-							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), false));
+						vec.add(new SOMutableNode(this, sch));
 					}
 				}
 			}
 			else if (s.equals("SchemeElement"))
 			{
-				Object parent = ((StorableObjectTreeNode)node.getParent()).getUserObject();
+				Object parent = ((SONode)node.getParent()).getUserObject();
 				List ds = new LinkedList();
 				if (parent instanceof Scheme)
 				{
@@ -396,22 +383,22 @@ public class SchemeTreeModel implements TreeDataModel
 					{
 						SchemeElement element = (SchemeElement)it.next();
 						if (element.schemeLinks().length != 0 || element.schemeElements().length != 0)
-							vec.add(new StorableObjectTreeNode(element, element.name(), false));
+							vec.add(new SOMutableNode(this, element, true));
 						else
-							vec.add(new StorableObjectTreeNode(element, element.name(), true));
+							vec.add(new SOMutableNode(this, element, false));
 					}
 				}
 			}
 			else if (s.equals("SchemeLink"))
 			{
-				Object parent = ((StorableObjectTreeNode)node.getParent()).getUserObject();
+				Object parent = ((SONode)node.getParent()).getUserObject();
 				if (parent instanceof Scheme)
 				{
 					Scheme scheme = (Scheme)parent;
 					for(int i = 0; i < scheme.schemeLinks().length; i++)
 					{
 						SchemeLink link = scheme.schemeLinks()[i];
-						vec.add(new StorableObjectTreeNode(link, link.name(), true));
+						vec.add(new SOMutableNode(this, link, false));
 					}
 				}
 				else if (parent instanceof SchemeElement)
@@ -420,26 +407,26 @@ public class SchemeTreeModel implements TreeDataModel
 					for(int i = 0; i < el.schemeLinks().length; i++)
 					{
 						SchemeLink link = el.schemeLinks()[i];
-						vec.add(new StorableObjectTreeNode(link, link.name(), true));
+						vec.add(new SOMutableNode(this, link, false));
 					}
 				}
 			}
 			else if (s.equals("SchemeCableLink"))
 			{
-				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getUserObject();
+				Scheme parent = (Scheme)((SONode)node.getParent()).getUserObject();
 				for(int i = 0; i < parent.schemeCableLinks().length; i++)
 				{
 					SchemeCableLink link = parent.schemeCableLinks()[i];
-					vec.add(new StorableObjectTreeNode(link, link.name(), true));
+					vec.add(new SOMutableNode(this, link, false));
 				}
 			}
 			else if (s.equals("SchemePath"))
 			{
-				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getUserObject();
+				Scheme parent = (Scheme)((SONode)node.getParent()).getUserObject();
 				for(int i = 0; i < parent.schemeMonitoringSolution().schemePaths().length; i++)
 				{
 					SchemePath path = parent.schemeMonitoringSolution().schemePaths()[i];
-					vec.add(new StorableObjectTreeNode(path, path.name(), true));
+					vec.add(new SOMutableNode(this, path, false));
 				}
 			}
 		}
@@ -458,15 +445,13 @@ public class SchemeTreeModel implements TreeDataModel
 
 					for (Iterator it = schemes.iterator(); it.hasNext(); ) {
 						Scheme sc = (Scheme)it.next();
-						vec.add(new StorableObjectTreeNode(sc, sc.name(),
-								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif"))));
+						vec.add(new SOMutableNode(this, sc));
 					}
 				}
 				catch (ApplicationException ex1) {
 					ex1.printStackTrace();
 				}
 			}
-
 
 			if(node.getUserObject() instanceof SchemeProtoGroup)
 			{
@@ -481,16 +466,15 @@ public class SchemeTreeModel implements TreeDataModel
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(map_group.symbolImpl().getImage())
 																 .getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 
-					vec.add(new StorableObjectTreeNode(map_group, map_group.name(), icon,
-							map_group.schemeProtoGroups().length == 0 && map_group.schemeProtoElements().length == 0));
+					vec.add(new SOMutableNode(this, map_group, map_group.schemeProtoGroups().length != 0 || map_group.schemeProtoElements().length != 0));
 				}
 				if (vec.isEmpty())
 				{
 					for (int i = 0; i < parent_group.schemeProtoElements().length; i++)
 					{
 						SchemeProtoElement proto = parent_group.schemeProtoElements()[i];
-//						proto.scheme_proto_group = parent_group;
-						vec.add(new StorableObjectTreeNode(proto, proto.name().length() == 0 ? "Без названия" : proto.name(), true));
+//						proto.parent(parent_group);
+						vec.add(new SOMutableNode(this, proto, false));
 					}
 				}
 			}
@@ -520,16 +504,16 @@ public class SchemeTreeModel implements TreeDataModel
 						}
 					}
 					if (has_schemes)
-						vec.add(new StorableObjectTreeNode("Scheme", "Вложенные схемы", true));
+						vec.add(new SOMutableNode(this, "Scheme"));
 					if (has_elements)
-						vec.add(new StorableObjectTreeNode("SchemeElement", "Узлы", true));
+						vec.add(new SOMutableNode(this, "SchemeElement"));
 				}
 				if (s.schemeLinks().length != 0)
-					vec.add(new StorableObjectTreeNode("SchemeLink", "Линии", true));
+					vec.add(new SOMutableNode(this, "SchemeLink"));
 				if (s.schemeCableLinks().length != 0)
-					vec.add(new StorableObjectTreeNode("SchemeCableLink", "Кабели", true));
+					vec.add(new SOMutableNode(this, "SchemeCableLink"));
 				if (s.schemeMonitoringSolution().schemePaths().length != 0)
-					vec.add(new StorableObjectTreeNode("SchemePath", "Пути", true));
+					vec.add(new SOMutableNode(this, "SchemePath"));
 			}
 			else if(node.getUserObject() instanceof SchemeElement)
 			{
@@ -543,24 +527,26 @@ public class SchemeTreeModel implements TreeDataModel
 						if (element.internalScheme() == null)
 						{
 							if (element.schemeLinks().length != 0 || element.schemeElements().length != 0)
-								vec.add(new StorableObjectTreeNode(element, element.name(), false));
+								vec.add(new SOMutableNode(this, element, true));
 							else
-								vec.add(new StorableObjectTreeNode(element, element.name(), true));
+								vec.add(new SOMutableNode(this, element, false));
 						}
 						else
-							vec.add(new StorableObjectTreeNode(element, element.internalScheme().name(), 
-									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), false));
+							vec.add(new SOMutableNode(this, element));
 					}
 				}
 				else
 				{
 					if (schel.schemeElements().length != 0)
-						vec.add(new StorableObjectTreeNode("SchemeElement", "Вложенные элементы", true));
+						vec.add(new SOMutableNode(this, "SchemeElement"));
 				 if (schel.schemeLinks().length != 0)
-						vec.add(new StorableObjectTreeNode("SchemeLink", "Линии", true));
+						vec.add(new SOMutableNode(this, "SchemeLink"));
 				}
 			}
 		}
-		return vec;
+		node.removeAllChildren();
+		for (Iterator it = vec.iterator(); it.hasNext();) {
+			node.add((SONode)it.next());
+		}
 	}
 }

@@ -1,14 +1,16 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
+import java.awt.Dimension;
 import java.util.Arrays;
 
-import java.awt.Dimension;
 import javax.swing.BorderFactory;
 
-import com.syrus.AMFICOM.client_.general.ui_.*;
+import oracle.jdeveloper.layout.XYConstraints;
+
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.scheme.PathElementController;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
-import oracle.jdeveloper.layout.XYConstraints;
 
 public class TransmissionPathFibrePanel extends GeneralPanel
 {

@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.2 2005/03/11 16:10:46 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.3 2005/03/14 13:36:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,19 +13,18 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/11 16:10:46 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/14 13:36:18 $
  * @module schemeclient_v1
  */
 
-public class PortTypeGeneralPanel extends GeneralPanel {
+public class PortTypeGeneralPanel implements StorableObjectEditor {
 	protected PortType portType;
 	protected String[] sorts = new String[] {
 			Constants.PORTTYPESORT_OPTICAL,
@@ -190,10 +189,8 @@ public class PortTypeGeneralPanel extends GeneralPanel {
 		}
 	}
 
-	public boolean modify() {
-		if (!MiscUtil.validName(this.tfNameText.getText()))
-			return false;			
-		
+	public void commitChanges() {
+		if (MiscUtil.validName(this.tfNameText.getText())) {
 		portType.setName(this.tfNameText.getText());
 		portType.setDescription(this.taDescriptionArea.getText());
 
@@ -203,10 +200,6 @@ public class PortTypeGeneralPanel extends GeneralPanel {
 			portType.setSort(PortTypeSort.PORTTYPESORT_THERMAL);
 		else if (cmbSortCombo.getSelectedItem().equals(sorts[2]))
 			portType.setSort(PortTypeSort.PORTTYPESORT_ELECTRICAL);
-		return true;
-	}
-
-	public boolean delete() {
-		return true;
+		}
 	}
 }
