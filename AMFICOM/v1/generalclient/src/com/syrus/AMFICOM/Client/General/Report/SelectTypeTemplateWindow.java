@@ -187,7 +187,7 @@ public class SelectTypeTemplateWindow extends JDialog
 
 			dispose();
 
-			rtiWindow = new JDialog();
+			rtiWindow = new JDialog(Environment.getActiveWindow());
 			rtiWindow.setModal(true);
 			rtiWindow.setResizable(true);
 			rtiWindow.getContentPane().setLayout(new BorderLayout());
