@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbInterface.sqlj,v 1.1.2.6 2004/09/09 11:35:20 bass Exp $
+ * $Id: AMFICOMdbInterface.sqlj,v 1.1.2.7 2004/10/18 15:31:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import java.util.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2004/10/18 15:31:41 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -42,7 +42,7 @@ final class AMFICOMdbInterface {
 	static void saveMaps(final Connection conn, 
 			AccessIdentity_Transferable accessIdentity,
 			ImageResource_Transferable[] imageseq,
-			MapContext_Transferable[] mapseq,
+			Map_Transferable[] mapseq,
 			MapElement_Transferable[] equipmentseq,
 			MapElement_Transferable[] kisseq,
 			MapMarkElement_Transferable[] markseq,
@@ -67,28 +67,7 @@ final class AMFICOMdbInterface {
 		MapdbInterfaceSave.saveMapPaths(conn, pathseq);
 	}
 
-	static void saveJMaps(final Connection conn,
-			AccessIdentity_Transferable accessIdentity,
-			ImageResource_Transferable[] imageseq,
-			ISMMapContext_Transferable[] mapseq,
-			MapKISElement_Transferable[] kisseq,
-			MapPhysicalNodeElement_Transferable[] nodeseq,
-			MapNodeLinkElement_Transferable[] nodelinkseq,
-			MapPhysicalLinkElement_Transferable[] linkseq,
-			MapPathElement_Transferable[] pathseq)
-		throws SQLException, AMFICOMRemoteException
-	{
-		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
-		ResourcedbInterface.setImages(conn, imageseq);
-		MapdbInterfaceSave.saveJMaps(conn, mapseq);
-		MapdbInterfaceSave.saveJMapKISs(conn, kisseq);
-		MapdbInterfaceSave.saveJMapNodes(conn, nodeseq);
-		MapdbInterfaceSave.saveJMapNodeLinks(conn, nodelinkseq);
-		MapdbInterfaceSave.saveJMapLinks(conn, linkseq);
-		MapdbInterfaceSave.saveJMapPaths(conn, pathseq);
-	}
-
-	static void getMapProtoElements(final Connection conn, AccessIdentity_Transferable accessIdentity, ImageResourceSeq_TransferableHolder imageResourceSeq, MapProtoGroupSeq_TransferableHolder groupseq, MapProtoElementSeq_TransferableHolder protoseq, MapLinkProtoElementSeq_TransferableHolder linkseq, MapPathProtoElementSeq_TransferableHolder pathseq) throws SQLException, AMFICOMRemoteException {
+	static void getMapProtoElements(final Connection conn, AccessIdentity_Transferable accessIdentity, ImageResourceSeq_TransferableHolder imageResourceSeq, SchemeProtoGroupSeq_TransferableHolder groupseq, MapNodeProtoElementSeq_TransferableHolder protoseq, MapLinkProtoElementSeq_TransferableHolder linkseq, MapPathProtoElementSeq_TransferableHolder pathseq) throws SQLException, AMFICOMRemoteException {
 		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 		Collection imageResourceIds = new LinkedList();
 
@@ -101,7 +80,7 @@ final class AMFICOMdbInterface {
 		imageResourceSeq.value = (ImageResource_Transferable[]) (imageResources.toArray(new ImageResource_Transferable[imageResources.size()]));
 	}
 
-	static void getStatedMapProtoElements(final Connection conn, AccessIdentity_Transferable accessIdentity, String[] group_ids, String[] element_ids, String[] link_ids, String[] path_ids, ImageResourceSeq_TransferableHolder imageResourceSeq, MapProtoGroupSeq_TransferableHolder groupseq, MapProtoElementSeq_TransferableHolder protoseq, MapLinkProtoElementSeq_TransferableHolder linkseq, MapPathProtoElementSeq_TransferableHolder pathseq) throws SQLException, AMFICOMRemoteException {
+	static void getStatedMapProtoElements(final Connection conn, AccessIdentity_Transferable accessIdentity, String[] group_ids, String[] element_ids, String[] link_ids, String[] path_ids, ImageResourceSeq_TransferableHolder imageResourceSeq, SchemeProtoGroupSeq_TransferableHolder groupseq, MapNodeProtoElementSeq_TransferableHolder protoseq, MapLinkProtoElementSeq_TransferableHolder linkseq, MapPathProtoElementSeq_TransferableHolder pathseq) throws SQLException, AMFICOMRemoteException {
 		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 		Collection imageResourceIds = new LinkedList();
 
@@ -117,8 +96,8 @@ final class AMFICOMdbInterface {
 	static void saveMapProtoElements(final Connection conn, 
 			AccessIdentity_Transferable accessIdentity,
 			ImageResource_Transferable[] images,
-			MapProtoGroup_Transferable[] groups,
-			MapProtoElement_Transferable[] protos)
+			SchemeProtoGroup_Transferable[] groups,
+			MapNodeProtoElement_Transferable[] protos)
 		throws SQLException, AMFICOMRemoteException
 	{
 		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
@@ -250,25 +229,6 @@ final class AMFICOMdbInterface {
 		MapdbInterfaceRemove.removeElements(conn, equipmentseq);
 		MapdbInterfaceRemove.removeKISs(conn, kisseq);
 		MapdbInterfaceRemove.removeMarks(conn, markseq);
-		MapdbInterfaceRemove.removeNodes(conn, nodeseq);
-		MapdbInterfaceRemove.removeNodeLinks(conn, nodelinkseq);
-		MapdbInterfaceRemove.removeLinks(conn, linkseq);
-		MapdbInterfaceRemove.removePaths(conn, pathseq);
-	}
-
-	static void removeJMaps(final Connection conn, 
-			AccessIdentity_Transferable accessIdentity,
-			String[] mapseq,
-			String[] kisseq,
-			String[] nodeseq,
-			String[] nodelinkseq,
-			String[] linkseq,
-			String[] pathseq)
-		throws SQLException, AMFICOMRemoteException
-	{
-		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
-		MapdbInterfaceRemove.removeJMaps(conn, mapseq);
-		MapdbInterfaceRemove.removeKISs(conn, kisseq);
 		MapdbInterfaceRemove.removeNodes(conn, nodeseq);
 		MapdbInterfaceRemove.removeNodeLinks(conn, nodelinkseq);
 		MapdbInterfaceRemove.removeLinks(conn, linkseq);
@@ -2246,34 +2206,6 @@ final class AMFICOMdbInterface {
 		return id;
 	}
 
-	static void loadNetDirectory(final Connection conn, 
-			AccessIdentity_Transferable accessIdentity,
-			PortTypeSeq_TransferableHolder porttypes,
-			EquipmentTypeSeq_TransferableHolder equipmenttypes,
-			LinkTypeSeq_TransferableHolder linktypes,
-			TestPortTypeSeq_TransferableHolder tporttypes,
-			CharacteristicTypeSeq_TransferableHolder characteristictypes,
-			CablePortTypeSeq_TransferableHolder cableporttypes,
-			CableLinkTypeSeq_TransferableHolder cablelinktypes)
-		throws SQLException, AMFICOMRemoteException
-	{
-		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
-		porttypes.value = new PortType_Transferable[0];
-		equipmenttypes.value = new EquipmentType_Transferable[0];
-		linktypes.value = new LinkType_Transferable[0];
-		tporttypes.value = new TestPortType_Transferable[0];
-		characteristictypes.value = new CharacteristicType_Transferable[0];
-		cableporttypes.value = new CablePortType_Transferable[0];
-		cablelinktypes.value = new CableLinkType_Transferable[0];
-		NetDirectorydbInterfaceLoad.loadPortTypes(conn, porttypes);
-		NetDirectorydbInterfaceLoad.loadEquipmentTypes(conn, equipmenttypes);
-		NetDirectorydbInterfaceLoad.loadLinkTypes(conn, linktypes);
-		NetDirectorydbInterfaceLoad.loadTestPortTypes(conn, tporttypes);
-		NetDirectorydbInterfaceLoad.loadCharacteristicTypes(conn, characteristictypes);
-		NetDirectorydbInterfaceLoad.loadCablePortTypes(conn, cableporttypes);
-		NetDirectorydbInterfaceLoad.loadCableTypes(conn, cablelinktypes);
-	}
-
 	static void loadStatedNetDirectory(final Connection conn, 
 			AccessIdentity_Transferable accessIdentity,
 			String[] pt_ids,
@@ -2285,7 +2217,6 @@ final class AMFICOMdbInterface {
 			PortTypeSeq_TransferableHolder porttypes,
 			EquipmentTypeSeq_TransferableHolder equipmenttypes,
 			LinkTypeSeq_TransferableHolder linktypes,
-			TestPortTypeSeq_TransferableHolder tporttypes,
 			CharacteristicTypeSeq_TransferableHolder characteristictypes,
 			CablePortTypeSeq_TransferableHolder cableporttypes,
 			CableLinkTypeSeq_TransferableHolder cablelinktypes)
@@ -2295,7 +2226,6 @@ final class AMFICOMdbInterface {
 		porttypes.value = new PortType_Transferable[0];
 		equipmenttypes.value = new EquipmentType_Transferable[0];
 		linktypes.value = new LinkType_Transferable[0];
-		tporttypes.value = new TestPortType_Transferable[0];
 		characteristictypes.value = new CharacteristicType_Transferable[0];
 		cableporttypes.value = new CablePortType_Transferable[0];
 		cablelinktypes.value = new CableLinkType_Transferable[0];
@@ -2310,13 +2240,13 @@ final class AMFICOMdbInterface {
 	static void loadISMDirectory(final Connection conn, 
 			AccessIdentity_Transferable accessIdentity,
 			EquipmentTypeSeq_TransferableHolder kistypes,
-			AccessPortTypeSeq_TransferableHolder aporttypes,
+			MeasurementPortTypeSeq_TransferableHolder aporttypes,
 			TransmissionPathTypeSeq_TransferableHolder pathtypes)
 		throws SQLException, AMFICOMRemoteException
 	{
 		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 		kistypes.value = new EquipmentType_Transferable[0];
-		aporttypes.value = new AccessPortType_Transferable[0];
+		aporttypes.value = new MeasurementPortType_Transferable[0];
 		pathtypes.value = new TransmissionPathType_Transferable[0];
 		ISMDirectorydbInterfaceLoad.loadAccessPortTypes(conn, aporttypes);
 		ISMDirectorydbInterfaceLoad.loadPathTypes(conn, pathtypes);
@@ -2328,13 +2258,13 @@ final class AMFICOMdbInterface {
 			String[] aport_ids,
 			String[] path_ids,
 			EquipmentTypeSeq_TransferableHolder kistypes,
-			AccessPortTypeSeq_TransferableHolder aporttypes,
+			MeasurementPortTypeSeq_TransferableHolder aporttypes,
 			TransmissionPathTypeSeq_TransferableHolder pathtypes)
 		throws SQLException, AMFICOMRemoteException
 	{
 		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 		kistypes.value = new EquipmentType_Transferable[0];
-		aporttypes.value = new AccessPortType_Transferable[0];
+		aporttypes.value = new MeasurementPortType_Transferable[0];
 		pathtypes.value = new TransmissionPathType_Transferable[0];
 		ISMDirectorydbInterfaceLoad.loadAccessPortTypes(conn, aport_ids, aporttypes);
 		ISMDirectorydbInterfaceLoad.loadPathTypes(conn, path_ids, pathtypes);
@@ -2375,7 +2305,6 @@ final class AMFICOMdbInterface {
 			PortType_Transferable[] porttypes,
 			EquipmentType_Transferable[] equipmenttypes,
 			LinkType_Transferable[] linktypes,
-			TestPortType_Transferable[] tporttypes,
 			CharacteristicType_Transferable[] characteristictypes,
 			CablePortType_Transferable[] cableporttypes,
 			CableLinkType_Transferable[] cablelinktypes)
@@ -2393,7 +2322,7 @@ final class AMFICOMdbInterface {
 	static void saveISMDirectory(final Connection conn, 
 			AccessIdentity_Transferable accessIdentity,
 			EquipmentType_Transferable[] kistypes,
-			AccessPortType_Transferable[] aporttypes,
+			MeasurementPortType_Transferable[] aporttypes,
 			TransmissionPathType_Transferable[] pathtypes)
 		throws SQLException, AMFICOMRemoteException
 	{
@@ -2403,63 +2332,26 @@ final class AMFICOMdbInterface {
 		ISMDirectorydbInterfaceSave.savePathTypes(conn, pathtypes);
 	}
 
-	static void loadNet(final Connection conn, 
-			AccessIdentity_Transferable accessIdentity,
-			PortSeq_TransferableHolder ports,
-			CablePortSeq_TransferableHolder cports,
-			EquipmentSeq_TransferableHolder equipments,
-			LinkSeq_TransferableHolder links,
-			CableLinkSeq_TransferableHolder clinks,
-			TestPortSeq_TransferableHolder testports)
-		throws SQLException, AMFICOMRemoteException
-	{
+	static void loadStatedNet(final Connection conn, AccessIdentity_Transferable accessIdentity, String[] p_ids, String[] cp_ids, String[] eq_ids, String[] l_ids, String[] cl_ids, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder equipments, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks) throws SQLException, AMFICOMRemoteException {
 		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 		Vector port_vec = new Vector();
 		Vector cport_vec = new Vector();
-		Vector testport_vec = new Vector();
 
 		ports.value = new Port_Transferable[0];
 		cports.value = new CablePort_Transferable[0];
 		equipments.value = new Equipment_Transferable[0];
 		links.value = new Link_Transferable[0];
 		clinks.value = new CableLink_Transferable[0];
-		testports.value = new TestPort_Transferable[0];
-		NetdbInterfaceLoad.loadEquipments(conn, accessIdentity.domain_id, equipments, port_vec, cport_vec, testport_vec);
 
-		NetdbInterfaceLoad.loadLinks(conn, accessIdentity.domain_id, links);
-		NetdbInterfaceLoad.loadCableLinks(conn, accessIdentity.domain_id, clinks);
-
-		ports.value = new Port_Transferable[port_vec.size()];
-		port_vec.copyInto(ports.value);
-		cports.value = new CablePort_Transferable[cport_vec.size()];
-		cport_vec.copyInto(cports.value);
-		testports.value = new TestPort_Transferable[testport_vec.size()];
-		testport_vec.copyInto(testports.value);
-	}
-
-	static void loadStatedNet(final Connection conn, AccessIdentity_Transferable accessIdentity, String[] p_ids, String[] cp_ids, String[] eq_ids, String[] l_ids, String[] cl_ids, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder equipments, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, TestPortSeq_TransferableHolder testports) throws SQLException, AMFICOMRemoteException {
-		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
-		Vector port_vec = new Vector();
-		Vector cport_vec = new Vector();
-		Vector testport_vec = new Vector();
-
-		ports.value = new Port_Transferable[0];
-		cports.value = new CablePort_Transferable[0];
-		equipments.value = new Equipment_Transferable[0];
-		links.value = new Link_Transferable[0];
-		clinks.value = new CableLink_Transferable[0];
-		testports.value = new TestPort_Transferable[0];
-
-		NetdbInterfaceLoad.loadEquipments(conn, accessIdentity.domain_id, eq_ids, equipments, port_vec, cport_vec, testport_vec);
+		NetdbInterfaceLoad.loadEquipments(conn, accessIdentity.domain_id, eq_ids, equipments, port_vec, cport_vec);
 		NetdbInterfaceLoad.loadLinks(conn, accessIdentity.domain_id, l_ids, links);
 		NetdbInterfaceLoad.loadCableLinks(conn, accessIdentity.domain_id, cl_ids, clinks);
 
 		ports.value = (Port_Transferable[]) (port_vec.toArray(new Port_Transferable[port_vec.size()]));
 		cports.value = (CablePort_Transferable[]) (cport_vec.toArray(new CablePort_Transferable[cport_vec.size()]));
-		testports.value = (TestPort_Transferable[]) (testport_vec.toArray(new TestPort_Transferable[testport_vec.size()]));
 	}
 
-	static void loadISM(final Connection conn, AccessIdentity_Transferable accessIdentity, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder kiss, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, MonitoredElementSeq_TransferableHolder mes, TransmissionPathSeq_TransferableHolder paths, AccessPortSeq_TransferableHolder accessports) throws SQLException, AMFICOMRemoteException {
+	static void loadISM(final Connection conn, AccessIdentity_Transferable accessIdentity, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder kiss, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, MonitoredElementSeq_TransferableHolder mes, TransmissionPathSeq_TransferableHolder paths, MeasurementPortSeq_TransferableHolder accessports) throws SQLException, AMFICOMRemoteException {
 		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 		Vector port_vec = new Vector();
 		Vector cport_vec = new Vector();
@@ -2469,7 +2361,7 @@ final class AMFICOMdbInterface {
 		ISMdbInterfaceLoad.loadMonitoredElements(conn, accessIdentity.domain_id, mes);
 		ports.value = (Port_Transferable[]) (port_vec.toArray(new Port_Transferable[port_vec.size()]));
 		cports.value = (CablePort_Transferable[]) (cport_vec.toArray(new CablePort_Transferable[cport_vec.size()]));
-		accessports.value = (AccessPort_Transferable[]) (accessport_vec.toArray(new AccessPort_Transferable[accessport_vec.size()]));
+		accessports.value = (MeasurementPort_Transferable[]) (accessport_vec.toArray(new MeasurementPort_Transferable[accessport_vec.size()]));
 		kiss.value = new Equipment_Transferable[0];
 		links.value = new Link_Transferable[0];
 		clinks.value = new CableLink_Transferable[0];
@@ -2477,7 +2369,7 @@ final class AMFICOMdbInterface {
 		paths.value = new TransmissionPath_Transferable[0];
 	}
 
-	static void loadStatedISM(final Connection conn, AccessIdentity_Transferable accessIdentity, String[] p_ids, String[] cp_ids, String[] k_ids, String[] l_ids, String[] cl_ids, String[] me_ids, String[] t_ids, String[] ap_ids, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder kiss, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, MonitoredElementSeq_TransferableHolder mes, TransmissionPathSeq_TransferableHolder paths, AccessPortSeq_TransferableHolder accessports) throws SQLException, AMFICOMRemoteException {
+	static void loadStatedISM(final Connection conn, AccessIdentity_Transferable accessIdentity, String[] p_ids, String[] cp_ids, String[] k_ids, String[] l_ids, String[] cl_ids, String[] me_ids, String[] t_ids, String[] ap_ids, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder kiss, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, MonitoredElementSeq_TransferableHolder mes, TransmissionPathSeq_TransferableHolder paths, MeasurementPortSeq_TransferableHolder accessports) throws SQLException, AMFICOMRemoteException {
 		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 		Vector port_vec = new Vector();
 		Vector cport_vec = new Vector();
@@ -2487,7 +2379,7 @@ final class AMFICOMdbInterface {
 		ISMdbInterfaceLoad.loadMonitoredElements(conn, accessIdentity.domain_id, me_ids, mes);
 		ports.value = (Port_Transferable[]) (port_vec.toArray(new Port_Transferable[port_vec.size()]));
 		cports.value = (CablePort_Transferable[]) (cport_vec.toArray(new CablePort_Transferable[cport_vec.size()]));
-		accessports.value = (AccessPort_Transferable[]) (accessport_vec.toArray(new AccessPort_Transferable[accessport_vec.size()]));
+		accessports.value = (MeasurementPort_Transferable[]) (accessport_vec.toArray(new MeasurementPort_Transferable[accessport_vec.size()]));
 		kiss.value = new Equipment_Transferable[0];
 		links.value = new Link_Transferable[0];
 		clinks.value = new CableLink_Transferable[0];
@@ -2495,17 +2387,16 @@ final class AMFICOMdbInterface {
 		paths.value = new TransmissionPath_Transferable[0];
 	}
 
-	static void saveNet(final Connection conn, AccessIdentity_Transferable accessIdentity, Port_Transferable[] ports, CablePort_Transferable[] cports, Equipment_Transferable[] equipments, Link_Transferable[] links, CableLink_Transferable[] clinks, TestPort_Transferable[] testports) throws SQLException, AMFICOMRemoteException {
+	static void saveNet(final Connection conn, AccessIdentity_Transferable accessIdentity, Port_Transferable[] ports, CablePort_Transferable[] cports, Equipment_Transferable[] equipments, Link_Transferable[] links, CableLink_Transferable[] clinks) throws SQLException, AMFICOMRemoteException {
 		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 		NetdbInterfaceSave.saveEquipments(conn, equipments);
 		NetdbInterfaceSave.savePorts(conn, ports);
 		NetdbInterfaceSave.saveCablePorts(conn, cports);
-		NetdbInterfaceSave.saveTestPorts(conn, testports);
 		NetdbInterfaceSave.saveLinks(conn, links);
 		NetdbInterfaceSave.saveCableLinks(conn, clinks);
 	}
 
-	static void saveISM(final Connection conn, AccessIdentity_Transferable accessIdentity, Port_Transferable[] ports, CablePort_Transferable[] cports, Equipment_Transferable[] kiss, Link_Transferable[] links, CableLink_Transferable[] clinks, MonitoredElement_Transferable[] mes, TransmissionPath_Transferable[] paths, AccessPort_Transferable[] accessports) throws SQLException, AMFICOMRemoteException {
+	static void saveISM(final Connection conn, AccessIdentity_Transferable accessIdentity, Port_Transferable[] ports, CablePort_Transferable[] cports, Equipment_Transferable[] kiss, Link_Transferable[] links, CableLink_Transferable[] clinks, MonitoredElement_Transferable[] mes, TransmissionPath_Transferable[] paths, MeasurementPort_Transferable[] accessports) throws SQLException, AMFICOMRemoteException {
 		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 		ISMdbInterfaceSave.saveKISs(conn, kiss);
 		NetdbInterfaceSave.savePorts(conn, ports);

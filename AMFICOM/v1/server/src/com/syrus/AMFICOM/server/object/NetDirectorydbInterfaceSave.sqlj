@@ -1,5 +1,5 @@
 /*
- * $Id: NetDirectorydbInterfaceSave.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
+ * $Id: NetDirectorydbInterfaceSave.sqlj,v 1.1.2.5 2004/10/18 15:31:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,14 @@
 package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/10/18 15:31:42 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -199,8 +199,8 @@ final class NetDirectorydbInterfaceSave {
 								YEAR = :(porttypes[i].year),
 								BODY = :(porttypes[i].body),
 								STANDARD = :(porttypes[i].standard),
-								INTERFACE_ID = :(porttypes[i].interface_id),
-								P_CLASS = :(porttypes[i].p_class),
+								INTERFACE_ID = :(porttypes[i].interfaceId),
+								P_CLASS = :(porttypes[i].pClass),
 								MODIFIED = SYSDATE
 							where ID = :(porttypes[i].id)
 					};
@@ -238,8 +238,8 @@ final class NetDirectorydbInterfaceSave {
 								 :(porttypes[i].year),
 								 :(porttypes[i].body),
 								 :(porttypes[i].standard),
-								 :(porttypes[i].interface_id),
-								 :(porttypes[i].p_class),
+								 :(porttypes[i].interfaceId),
+								 :(porttypes[i].pClass),
 								 SYSDATE )
 					};
 					conn.commit();
@@ -293,7 +293,7 @@ final class NetDirectorydbInterfaceSave {
 								NAME = :(porttypes[i].name),
 								CODENAME = :(porttypes[i].codename),
 								DESCRIPTION = :(porttypes[i].description),
-								P_CLASS = :(porttypes[i].p_class),
+								P_CLASS = :(porttypes[i].pClass),
 								MODIFIED = SYSDATE
 							where ID = :(porttypes[i].id)
 					};
@@ -324,7 +324,7 @@ final class NetDirectorydbInterfaceSave {
 								 :(porttypes[i].name),
 								 :(porttypes[i].codename),
 								 :(porttypes[i].description),
-								 :(porttypes[i].p_class),
+								 :(porttypes[i].pClass),
 								 SYSDATE )
 					};
 					conn.commit();
@@ -379,12 +379,12 @@ final class NetDirectorydbInterfaceSave {
 								CODENAME = :(linktypes[i].codename),
 								DESCRIPTION = :(linktypes[i].description),
 								MANUFACTURER = :(linktypes[i].manufacturer),
-								MANUFACTURER_CODE = :(linktypes[i].manufacturer_code),
-								LINK_CLASS = :(linktypes[i].link_class),
+								MANUFACTURER_CODE = :(linktypes[i].manufacturerCode),
+								LINK_CLASS = :(linktypes[i].linkClass),
 								YEAR = :(linktypes[i].year),
 								STANDARD = :(linktypes[i].standard),
 								IS_SLOT = 0,
-								IMAGE_ID = :(linktypes[i].image_id),
+								IMAGE_ID = :(linktypes[i].imageId),
 								MODIFIED = SYSDATE
 							where ID = :(linktypes[i].id)
 					};
@@ -422,12 +422,12 @@ final class NetDirectorydbInterfaceSave {
 								 :(linktypes[i].codename),
 								 :(linktypes[i].description),
 								 :(linktypes[i].manufacturer),
-								 :(linktypes[i].manufacturer_code),
-								 :(linktypes[i].link_class),
+								 :(linktypes[i].manufacturerCode),
+								 :(linktypes[i].linkClass),
 								 :(linktypes[i].year),
 								 :(linktypes[i].standard),
 								 0,
-								 :(linktypes[i].image_id),
+								 :(linktypes[i].imageId),
 								 SYSDATE )
 					};
 					conn.commit();
@@ -469,7 +469,7 @@ final class NetDirectorydbInterfaceSave {
 							 :(threads[i].name),
 							 :(threads[i].color),
 							 :(threads[i].mark),
-							 :(threads[i].link_type_id),
+							 :(threads[i].linkTypeId),
 							 :cable_id )
 				};
 			}
@@ -519,11 +519,11 @@ final class NetDirectorydbInterfaceSave {
 						update AMFICOM.CABLETYPES
 							set
 								NAME = :(linktypes[i].name),
-								CODENAME = :(linktypes[i].codename),
+								CODENAME = :(linktypes[i].description),
 								MANUFACTURER = :(linktypes[i].manufacturer),
-								MANUFACTURER_CODE = :(linktypes[i].manufacturer_code),
-								LINK_CLASS = :(linktypes[i].link_class),
-								IMAGE_ID = :(linktypes[i].image_id),
+								MANUFACTURER_CODE = :(linktypes[i].manufacturerCode),
+								LINK_CLASS = :(linktypes[i].linkClass),
+								IMAGE_ID = :(linktypes[i].imageId),
 								MODIFIED = SYSDATE
 							where ID = :(linktypes[i].id)
 					};
@@ -554,11 +554,11 @@ final class NetDirectorydbInterfaceSave {
 							values(
 								 :(linktypes[i].id),
 								 :(linktypes[i].name),
-								 :(linktypes[i].codename),
+								 :(linktypes[i].description),
 								 :(linktypes[i].manufacturer),
-								 :(linktypes[i].manufacturer_code),
-								 :(linktypes[i].link_class),
-								 :(linktypes[i].image_id),
+								 :(linktypes[i].manufacturerCode),
+								 :(linktypes[i].linkClass),
+								 :(linktypes[i].imageId),
 								 SYSDATE )
 					};
 					conn.commit();
@@ -571,7 +571,7 @@ final class NetDirectorydbInterfaceSave {
 				}
 			}
 
-			saveCableTypeThreads(conn, linktypes[i].id, linktypes[i].cable_threads);
+			saveCableTypeThreads(conn, linktypes[i].id, linktypes[i].cableThreads);
 			saveCharacteristicLinks(conn, "CABLETYPECHARACTERISTICLINKS", "CABLE_TYPE_ID", linktypes[i].id, linktypes[i].characteristics);
 		}
 		return Constants.ERROR_NO_ERROR;
@@ -610,9 +610,9 @@ final class NetDirectorydbInterfaceSave {
 								CODENAME = :(equipmenttypes[i].codename),
 								DESCRIPTION = :(equipmenttypes[i].description),
 								MANUFACTURER = :(equipmenttypes[i].manufacturer),
-								EQ_CLASS = :(equipmenttypes[i].eq_class),
+								EQ_CLASS = :(equipmenttypes[i].eqClass),
 								IS_HOLDER = :(equipmenttypes[i].is_holder),
-								IMAGE_ID = :(equipmenttypes[i].image_id),
+								IMAGE_ID = :(equipmenttypes[i].imageId),
 								MODIFIED = SYSDATE
 							where ID = :(equipmenttypes[i].id)
 					};
@@ -647,9 +647,9 @@ final class NetDirectorydbInterfaceSave {
 								 :(equipmenttypes[i].codename),
 								 :(equipmenttypes[i].description),
 								 :(equipmenttypes[i].manufacturer),
-								 :(equipmenttypes[i].eq_class),
+								 :(equipmenttypes[i].eqClass),
 								 :(equipmenttypes[i].is_holder),
-								 :(equipmenttypes[i].image_id),
+								 :(equipmenttypes[i].imageId),
 								 SYSDATE )
 					};
 					conn.commit();

@@ -1,5 +1,5 @@
 /*
- * $Id: CatalogSchemeMapUpdater.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
+ * $Id: CatalogSchemeMapUpdater.sqlj,v 1.1.2.5 2004/10/18 15:31:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.sql.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/10/18 15:31:41 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -174,7 +174,8 @@ final class CatalogSchemeMapUpdater {
 
 		try
 		{
-			if(se.equipment_id == null || se.equipment_id.equals(""))
+			String equpmentId = se.equipmentId;
+			if ((equpmentId == null) || (equpmentId.length() == 0))
 				return;
 
 			#sql [connCtx] {
@@ -183,7 +184,7 @@ final class CatalogSchemeMapUpdater {
 					NAME = :(se.name),
 					DESCRIPTION = :(se.description),
 					MODIFIED = SYSDATE
-				where ID = :(se.equipment_id)
+				where ID = :(se.equipmentId)
 				and NAME != :(se.name)
 				and DESCRIPTION != :(se.description)
 			};
@@ -425,14 +426,14 @@ final class CatalogSchemeMapUpdater {
 
 		try
 		{
-			if(sp.path_id != null && !sp.path_id.equals(""))
+			if(sp.pathId != null && !sp.pathId.equals(""))
 			{
 				#sql [connCtx] {
 					update AMFICOM.TRANSMISSIONPATHS
 					set
 						NAME = :(sp.name),
 						MODIFIED = SYSDATE
-					where ID = :(sp.path_id)
+					where ID = :(sp.pathId)
 					and NAME != :(sp.name)
 				};
 				conn.commit();
@@ -442,7 +443,7 @@ final class CatalogSchemeMapUpdater {
 					update AMFICOM.MONITOREDELEMENTS
 					set
 						MODIFIED = SYSDATE
-					where PATH_ID = :(sp.path_id)
+					where PATH_ID = :(sp.pathId)
 				};
 				conn.commit();
 			}
@@ -488,58 +489,35 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
+	/**
+	 * Tables involved:<ul>
+	 * <li>MONITOREDELEMENTS;</li>
+	 * <li>SCHEMEPATHS;</li>
+	 * <li>TRANSMISSIONPATHS.</li>
+	 * </ul>
+	 */
 	static void mapPathUpdated(final Connection conn, MapPathElement_Transferable mp) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
-		String s1;
-
-		try
-		{
-			if(mp.path_id != null && !mp.path_id.equals(""))
-			{
+		String schemePathId = mp.pathId;
+		if ((schemePathId != null) && (schemePathId.length() != 0)) {
+			String name = mp.name;
+			#sql [connCtx] {
+				UPDATE amficom.schemepaths SET name = :name WHERE id = :schemePathId
+			};
+			String transmissionPathId;
+			#sql [connCtx] {
+				SELECT path_id INTO :transmissionPathId FROM amficom.schemepaths WHERE id = :schemePathId
+			};
+			if ((transmissionPathId != null) && (transmissionPathId.length() != 0)) {
 				#sql [connCtx] {
-					update AMFICOM.SCHEMEPATHS
-					set
-						NAME = :(mp.name)
-					where ID = :(mp.path_id)
-					and NAME != :(mp.name)
+					UPDATE amficom.transmissionpaths SET name = :name, modified = SYSDATE, description = :(mp.description) WHERE id = :transmissionPathId
 				};
-				conn.commit();
-
 				#sql [connCtx] {
-					select PATH_ID into :s1
-						from AMFICOM.SCHEMEPATHS
-						where ID = :(mp.path_id)
+					UPDATE amficom.monitoredelements SET modified = SYSDATE WHERE path_id = :transmissionPathId
 				};
-
-				if(s1 != null && !s1.equals(""))
-				{
-					#sql [connCtx] {
-						update AMFICOM.TRANSMISSIONPATHS
-						set
-							NAME = :(mp.name),
-							MODIFIED = SYSDATE,
-							DESCRIPTION = :(mp.description)
-						where ID = :s1
-						and NAME != :(mp.name)
-						and DESCRIPTION != :(mp.description)
-					};
-					conn.commit();
-
-					#sql [connCtx] {
-						update AMFICOM.MONITOREDELEMENTS
-						set
-							MODIFIED = SYSDATE
-						where PATH_ID = :s1
-					};
-					conn.commit();
-				}
 			}
-		}
-		catch(Exception ex)
-		{
-			System.out.println("error updated map path " + mp.id + "!!!");
-			ex.printStackTrace();
+			conn.commit();
 		}
 	}
 
@@ -758,12 +736,12 @@ final class CatalogSchemeMapUpdater {
 
 		try
 		{
-			if(sl.link_id != null && !sl.link_id.equals(""))
+			if(sl.linkId != null && !sl.linkId.equals(""))
 			{
-				String s_p_id = getPort(conn, sl.source_port_id);
+				String s_p_id = getPort(conn, sl.sourcePortId);
 				if(s_p_id == null)
 					s_p_id = "";
-				String t_p_id = getPort(conn, sl.target_port_id);
+				String t_p_id = getPort(conn, sl.targetPortId);
 				if(t_p_id == null)
 					t_p_id = "";
 				String s_e_id = getPortEquipment(conn, s_p_id);
@@ -778,12 +756,12 @@ final class CatalogSchemeMapUpdater {
 					set
 						NAME = :(sl.name),
 						MODIFIED = SYSDATE,
-						PHYSICAL_LENGTH = :(sl.physical_length),
-						OPTICAL_LENGTH = :(sl.optical_length)
-					where ID = :(sl.link_id)
+						PHYSICAL_LENGTH = :(sl.physicalLength),
+						OPTICAL_LENGTH = :(sl.opticalLength)
+					where ID = :(sl.linkId)
 					and NAME != :(sl.name)
-					and PHYSICAL_LENGTH != :(sl.physical_length)
-					and OPTICAL_LENGTH != :(sl.optical_length)
+					and PHYSICAL_LENGTH != :(sl.physicalLength)
+					and OPTICAL_LENGTH != :(sl.opticalLength)
 				};
 				conn.commit();
 			}
@@ -1034,12 +1012,12 @@ final class CatalogSchemeMapUpdater {
 
 		try
 		{
-			if(scl.cable_link_id != null && !scl.cable_link_id.equals(""))
+			if(scl.cableLinkId != null && !scl.cableLinkId.equals(""))
 			{
-				String s_p_id = getPort(conn, scl.source_port_id);
+				String s_p_id = getPort(conn, scl.sourcePortId);
 				if(s_p_id == null)
 					s_p_id = "";
-				String t_p_id = getPort(conn, scl.target_port_id);
+				String t_p_id = getPort(conn, scl.targetPortId);
 				if(t_p_id == null)
 					t_p_id = "";
 				String s_e_id = getPortEquipment(conn, s_p_id);
@@ -1054,12 +1032,12 @@ final class CatalogSchemeMapUpdater {
 					set
 						NAME = :(scl.name),
 						MODIFIED = SYSDATE,
-						PHYSICAL_LENGTH = :(scl.physical_length),
-						OPTICAL_LENGTH = :(scl.optical_length)
-					where ID = :(scl.cable_link_id)
+						PHYSICAL_LENGTH = :(scl.physicalLength),
+						OPTICAL_LENGTH = :(scl.opticalLength)
+					where ID = :(scl.cableLinkId)
 					and NAME != :(scl.name)
-					and PHYSICAL_LENGTH != :(scl.physical_length)
-					and OPTICAL_LENGTH != :(scl.optical_length)
+					and PHYSICAL_LENGTH != :(scl.physicalLength)
+					and OPTICAL_LENGTH != :(scl.opticalLength)
 				};
 				conn.commit();
 
@@ -1107,50 +1085,31 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
+	/**
+	 * Tables involved:<ul>
+	 * <li>CABLELINKS;</li>
+	 * <li>SCHEMECABLELINKS.</li>
+	 * </ul>
+	 */
 	static void mapLinkUpdated(final Connection conn, MapPhysicalLinkElement_Transferable ml) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
-		String s1;
-
-		try
-		{
-			if(ml.link_id != null && !ml.link_id.equals(""))
-			{
+		String schemeCableLinkId = ml.linkId; 
+		if ((schemeCableLinkId != null) && (schemeCableLinkId.length() != 0)) {
+			String name = ml.name;
+			#sql [connCtx] {
+				UPDATE amficom.schemecablelinks SET name = :name WHERE id = :schemeCableLinkId
+			};
+			String cableLinkId;
+			#sql [connCtx] {
+				SELECT cable_link_id INTO :cableLinkId FROM amficom.schemecablelinks WHERE id = :schemeCableLinkId
+			};
+			if ((cableLinkId != null) && (cableLinkId.length() != 0)) {
 				#sql [connCtx] {
-					update AMFICOM.SCHEMECABLELINKS
-					set
-						NAME = :(ml.name)
-					where ID = :(ml.link_id)
-					and NAME != :(ml.name)
+					UPDATE amficom.cablelinks SET name = :name, modified = SYSDATE, description = :(ml.description) where ID = :cableLinkId
 				};
-				conn.commit();
-
-				#sql [connCtx] {
-					select CABLE_LINK_ID into :s1
-						from AMFICOM.SCHEMECABLELINKS
-						where ID = :(ml.link_id)
-				};
-
-				if(s1 != null && !s1.equals(""))
-				{
-					#sql [connCtx] {
-						update AMFICOM.CABLELINKS
-						set
-							NAME = :(ml.name),
-							MODIFIED = SYSDATE,
-							DESCRIPTION = :(ml.description)
-						where ID = :s1
-						and NAME != :(ml.name)
-						and DESCRIPTION != :(ml.description)
-					};
-					conn.commit();
-				}
 			}
-		}
-		catch(Exception ex)
-		{
-			System.out.println("error updated map link " + ml.id + "!!!");
-			ex.printStackTrace();
+			conn.commit();
 		}
 	}
 
@@ -1211,7 +1170,7 @@ final class CatalogSchemeMapUpdater {
 				select count(*) into :count from AMFICOM.SCHEMECABLETHREADS
 				where THREAD_ID = :(t.id)
 				and NAME != :(t.name)
-				and LINK_TYPE_ID != :(t.link_type_id)
+				and LINK_TYPE_ID != :(t.linkTypeId)
 			};
 
 			if(count == 0)
@@ -1221,7 +1180,7 @@ final class CatalogSchemeMapUpdater {
 				update AMFICOM.SCHEMECABLETHREADS
 				set
 					NAME = :(t.name),
-					LINK_TYPE_ID = :(t.link_type_id)
+					LINK_TYPE_ID = :(t.linkTypeId)
 				where THREAD_ID = :(t.id)
 			};
 			conn.commit();
@@ -1267,15 +1226,15 @@ final class CatalogSchemeMapUpdater {
 
 		try
 		{
-			if(st.thread_id != null && !st.thread_id.equals(""))
+			if(st.threadId != null && !st.threadId.equals(""))
 			{
 				int count = 0;
 				
 				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.CABLELINKTHREADS
-					where ID = :(st.thread_id)
+					where ID = :(st.threadId)
 					and NAME != :(st.name)
-					and LINK_TYPE_ID != :(st.link_type_id)
+					and LINK_TYPE_ID != :(st.linkTypeId)
 				};
 
 				if(count == 0)
@@ -1285,12 +1244,12 @@ final class CatalogSchemeMapUpdater {
 					update AMFICOM.CABLELINKTHREADS
 					set
 						NAME = :(st.name),
-						LINK_TYPE_ID = :(st.link_type_id)
-					where ID = :(st.thread_id)
+						LINK_TYPE_ID = :(st.linkTypeId)
+					where ID = :(st.threadId)
 				};
 				conn.commit();
 
-				String s1 = getThreadCableLink(conn, st.thread_id);
+				String s1 = getThreadCableLink(conn, st.threadId);
 				if(s1 != null)
 				{
 					#sql [connCtx] {
@@ -1390,13 +1349,13 @@ final class CatalogSchemeMapUpdater {
 
 		try
 		{
-			if(sp.port_id != null && !sp.port_id.equals(""))
+			if(sp.portId != null && !sp.portId.equals(""))
 			{
 				int count = 0;
 				
 				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.PORTS
-					where ID = :(sp.port_id)
+					where ID = :(sp.portId)
 					and NAME != :(sp.name)
 				};
 
@@ -1406,12 +1365,12 @@ final class CatalogSchemeMapUpdater {
 				#sql [connCtx] {
 					update AMFICOM.PORTS
 					set NAME = :(sp.name)
-					where ID = :(sp.port_id)
+					where ID = :(sp.portId)
 					and NAME != :(sp.name)
 				};
 				conn.commit();
 
-				String s1 = getPortEquipment(conn, sp.port_id);
+				String s1 = getPortEquipment(conn, sp.portId);
 				if(s1 != null)
 				{
 					#sql [connCtx] {
@@ -1511,13 +1470,13 @@ final class CatalogSchemeMapUpdater {
 
 		try
 		{
-			if(sp.cable_port_id != null && !sp.cable_port_id.equals(""))
+			if(sp.cablePortId != null && !sp.cablePortId.equals(""))
 			{
 				int count = 0;
 				
 				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.CABLEPORTS
-					where ID = :(sp.cable_port_id)
+					where ID = :(sp.cablePortId)
 					and NAME != :(sp.name)
 				};
 
@@ -1527,12 +1486,12 @@ final class CatalogSchemeMapUpdater {
 				#sql [connCtx] {
 					update AMFICOM.CABLEPORTS
 					set NAME = :(sp.name)
-					where ID = :(sp.cable_port_id)
+					where ID = :(sp.cablePortId)
 					and NAME != :(sp.name)
 				};
 				conn.commit();
 
-				String s1 = getPortEquipment(conn, sp.cable_port_id);
+				String s1 = getPortEquipment(conn, sp.cablePortId);
 				if(s1 != null)
 				{
 					#sql [connCtx] {

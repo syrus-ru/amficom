@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbGeneral.sqlj,v 1.1.2.5 2004/09/09 11:35:20 bass Exp $
+ * $Id: AMFICOMdbGeneral.sqlj,v 1.1.2.6 2004/10/18 15:31:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,10 +16,11 @@ import com.syrus.io.Rewriter;
 import com.syrus.util.database.JdbcBlobManager;
 import java.sql.*;
 import java.util.*;
+import org.omg.CORBA.WStringSeqHolder;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2004/10/18 15:31:41 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -96,7 +97,7 @@ final class AMFICOMdbGeneral {
 		conn.commit();
 	}
 
-	static void getLoggedUserIds(final Connection conn, AccessIdentity_Transferable accessIdentity, wstringSeqHolder userids) throws SQLException {
+	static void getLoggedUserIds(final Connection conn, AccessIdentity_Transferable accessIdentity, WStringSeqHolder userids) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		UserIdIterator uIt = null;

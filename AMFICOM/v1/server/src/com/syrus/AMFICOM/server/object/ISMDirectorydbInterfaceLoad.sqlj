@@ -1,5 +1,5 @@
 /*
- * $Id: ISMDirectorydbInterfaceLoad.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
+ * $Id: ISMDirectorydbInterfaceLoad.sqlj,v 1.1.2.5 2004/10/18 15:31:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,15 +9,15 @@
 package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import java.sql.*;
 import java.util.Vector;
 import sqlj.runtime.SQLNullException;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/10/18 15:31:41 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -61,7 +61,7 @@ final class ISMDirectorydbInterfaceLoad {
 		return vector;
 	}
 
-	static int loadAccessPortTypes(final Connection conn, AccessPortTypeSeq_TransferableHolder aporttypeseq) throws SQLException {
+	static int loadAccessPortTypes(final Connection conn, MeasurementPortTypeSeq_TransferableHolder aporttypeseq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -76,9 +76,9 @@ final class ISMDirectorydbInterfaceLoad {
 
 		Vector vector = new Vector();
 
-		AccessPortType_Transferable apt_t;
-		AccessPortType_Transferable[] apt_ts;
-		AccessPortTypeIterator ptIt = null;
+		MeasurementPortType_Transferable apt_t;
+		MeasurementPortType_Transferable[] apt_ts;
+		MeasurementPortTypeIterator ptIt = null;
 		Vector vector2;
 
 		try
@@ -117,7 +117,7 @@ final class ISMDirectorydbInterfaceLoad {
 				test_type_ids = new String[vector2.size()];
 				vector2.copyInto(test_type_ids);
 
-				apt_t = new AccessPortType_Transferable(
+				apt_t = new MeasurementPortType_Transferable(
 					It_id,
 					It_name,
 					It_description,
@@ -129,7 +129,7 @@ final class ISMDirectorydbInterfaceLoad {
 				vector.add(apt_t);
 			}
 			ptIt.close();
-			apt_ts = new AccessPortType_Transferable[vector.size()];
+			apt_ts = new MeasurementPortType_Transferable[vector.size()];
 			vector.copyInto(apt_ts);
 			aporttypeseq.value = apt_ts;
 
@@ -227,7 +227,7 @@ final class ISMDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadAccessPortTypes(final Connection conn, String[] apt_ids, AccessPortTypeSeq_TransferableHolder aporttypeseq) throws SQLException {
+	static int loadAccessPortTypes(final Connection conn, String[] apt_ids, MeasurementPortTypeSeq_TransferableHolder aporttypeseq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -242,9 +242,9 @@ final class ISMDirectorydbInterfaceLoad {
 
 		Vector vector = new Vector();
 
-		AccessPortType_Transferable apt_t;
-		AccessPortType_Transferable[] apt_ts;
-		AccessPortTypeIterator ptIt = null;
+		MeasurementPortType_Transferable apt_t;
+		MeasurementPortType_Transferable[] apt_ts;
+		MeasurementPortTypeIterator ptIt = null;
 		Vector vector2;
 
 		Vector loadvec = new Vector();
@@ -289,7 +289,7 @@ final class ISMDirectorydbInterfaceLoad {
 				test_type_ids = new String[vector2.size()];
 				vector2.copyInto(test_type_ids);
 
-				apt_t = new AccessPortType_Transferable(
+				apt_t = new MeasurementPortType_Transferable(
 					It_id,
 					It_name,
 					It_description,
@@ -301,7 +301,7 @@ final class ISMDirectorydbInterfaceLoad {
 				vector.add(apt_t);
 			}
 			ptIt.close();
-			apt_ts = new AccessPortType_Transferable[vector.size()];
+			apt_ts = new MeasurementPortType_Transferable[vector.size()];
 			vector.copyInto(apt_ts);
 			aporttypeseq.value = apt_ts;
 
@@ -407,7 +407,7 @@ final class ISMDirectorydbInterfaceLoad {
 	#sql public static iterator TestTypeIdIterator (
 		String test_type_id);
 
-	#sql public static iterator AccessPortTypeIterator(
+	#sql public static iterator MeasurementPortTypeIterator(
 		String id,
 		String name,
 		String description,

@@ -1,5 +1,5 @@
 /*
- * $Id: ISMDirectorydbInterfaceSave.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
+ * $Id: ISMDirectorydbInterfaceSave.sqlj,v 1.1.2.5 2004/10/18 15:31:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.sql.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/10/18 15:31:41 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -24,7 +24,7 @@ final class ISMDirectorydbInterfaceSave {
 	private ISMDirectorydbInterfaceSave() {
 	}
 
-	static int saveAccessPortTypes(final Connection conn, AccessPortType_Transferable[] aporttypes) throws SQLException {
+	static int saveAccessPortTypes(final Connection conn, MeasurementPortType_Transferable[] aporttypes) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		int i;
@@ -54,7 +54,7 @@ final class ISMDirectorydbInterfaceSave {
 							set
 								NAME = :(aporttypes[i].name),
 								DESCRIPTION = :(aporttypes[i].description),
-								ACCESS_TYPE = :(aporttypes[i].access_type),
+								ACCESS_TYPE = :(aporttypes[i].accessType),
 								MODIFIED = :ts
 							where ID = :(aporttypes[i].id)
 					};
@@ -83,7 +83,7 @@ final class ISMDirectorydbInterfaceSave {
 								 :(aporttypes[i].id),
 								 :(aporttypes[i].name),
 								 :(aporttypes[i].description),
-								 :(aporttypes[i].access_type),
+								 :(aporttypes[i].accessType),
 								 :ts )
 					};
 					conn.commit();
@@ -107,11 +107,11 @@ final class ISMDirectorydbInterfaceSave {
 					where ACCESS_PORT_TYPE_ID = :(aporttypes[i].id)
 				};
 
-				for (j = 0; j < aporttypes[i].test_type_ids.length; j++)
+				for (j = 0; j < aporttypes[i].testTypeIds.length; j++)
 				{
 					String a_id = ResourcedbInterface.getUid(conn, "accessport");
 					#sql [connCtx] { insert into AMFICOM.ACCESSPORTTYPETESTTYPES(ID, ACCESS_PORT_TYPE_ID, TEST_TYPE_ID)
-						values(:a_id, :(aporttypes[i].id), :(aporttypes[i].test_type_ids[j]) )
+						values(:a_id, :(aporttypes[i].id), :(aporttypes[i].testTypeIds[j]) )
 					};
 				}
 			}
@@ -158,9 +158,9 @@ final class ISMDirectorydbInterfaceSave {
 								CODENAME = :(kistypes[i].codename),
 								DESCRIPTION = :(kistypes[i].description),
 								MANUFACTURER = :(kistypes[i].manufacturer),
-								EQ_CLASS = :(kistypes[i].eq_class),
+								EQ_CLASS = :(kistypes[i].eqClass),
 								IS_HOLDER = :(kistypes[i].is_holder),
-								IMAGE_ID = :(kistypes[i].image_id),
+								IMAGE_ID = :(kistypes[i].imageId),
 								MODIFIED = :ts
 							where ID = :(kistypes[i].id)
 					};
@@ -195,9 +195,9 @@ final class ISMDirectorydbInterfaceSave {
 								 :(kistypes[i].codename),
 								 :(kistypes[i].description),
 								 :(kistypes[i].manufacturer),
-								 :(kistypes[i].eq_class),
+								 :(kistypes[i].eqClass),
 								 :(kistypes[i].is_holder),
-								 :(kistypes[i].image_id),
+								 :(kistypes[i].imageId),
 								 :ts )
 					};
 					conn.commit();

@@ -1,5 +1,5 @@
 /*
- * $Id: AmficomImpl.java,v 1.1.2.2 2004/09/23 15:10:00 bass Exp $
+ * $Id: AmficomImpl.java,v 1.1.2.3 2004/10/18 15:31:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.*;
+import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
 import com.syrus.AMFICOM.CORBA.ISM.*;
 import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
 import com.syrus.AMFICOM.CORBA.Map.*;
@@ -22,6 +23,7 @@ import com.syrus.AMFICOM.CORBA.Report.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.AMFICOM.server.event.AlarmType;
 import com.syrus.AMFICOM.server.measurement.*;
@@ -32,7 +34,7 @@ import javax.sql.DataSource;
 import org.omg.CORBA.*;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/09/23 15:10:00 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/10/18 15:31:41 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -134,7 +136,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 	 * @return {@link Constants#ERROR_NO_ERROR}
 	 * @throws AMFICOMRemoteException
 	 */
-	public int GetLoggedUserIds(AccessIdentity_Transferable accessIdentity, wstringSeqHolder userIds) throws AMFICOMRemoteException {
+	public int GetLoggedUserIds(AccessIdentity_Transferable accessIdentity, WStringSeqHolder userIds) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -405,9 +407,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 				conn = DATA_SOURCE.getConnection();
 				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
-				AdmindbInterfaceLoad.loadServers(conn, serverSeq);
-				AdmindbInterfaceLoad.loadClients(conn, clientSeq);
-				AdmindbInterfaceLoad.loadAgents(conn, agentSeq);
+				AdminDbInterfaceLoad.loadServers(conn, serverSeq);
+				AdminDbInterfaceLoad.loadClients(conn, clientSeq);
+				AdminDbInterfaceLoad.loadAgents(conn, agentSeq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
 				if (conn != null)
@@ -439,9 +441,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 				conn = DATA_SOURCE.getConnection();
 				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
-				AdmindbInterfaceLoad.loadServers(conn, serverSeq, serverIdSeq);
-				AdmindbInterfaceLoad.loadClients(conn, clientSeq, clientIdSeq);
-				AdmindbInterfaceLoad.loadAgents(conn, agentSeq, agentIdSeq);
+				AdminDbInterfaceLoad.loadServers(conn, serverSeq, serverIdSeq);
+				AdminDbInterfaceLoad.loadClients(conn, clientSeq, clientIdSeq);
+				AdminDbInterfaceLoad.loadAgents(conn, agentSeq, agentIdSeq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
 				if (conn != null)
@@ -520,7 +522,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 	/**
 	 * @param accessIdentity
 	 * @param imageResourceSeq unused.
-	 * @param mapContextSeq
+	 * @param mapSeq
 	 * @param mapElementSeq
 	 * @param mapRtuElementSeq
 	 * @param mapMarkElementSeq
@@ -531,7 +533,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 	 * @return {@link Constants#ERROR_NO_ERROR}
 	 * @throws AMFICOMRemoteException
 	 */
-	public int GetMaps(AccessIdentity_Transferable accessIdentity, ImageResourceSeq_TransferableHolder imageResourceSeq, MapContextSeq_TransferableHolder mapContextSeq, MapElementSeq_TransferableHolder mapElementSeq, MapElementSeq_TransferableHolder mapRtuElementSeq, MapMarkElementSeq_TransferableHolder mapMarkElementSeq, MapPhysicalNodeElementSeq_TransferableHolder mapPhysicalNodeElementSeq, MapNodeLinkElementSeq_TransferableHolder mapNodeLinkElementSeq, MapPhysicalLinkElementSeq_TransferableHolder mapPhysicalLinkElementSeq, MapPathElementSeq_TransferableHolder mapPathElementSeq) throws AMFICOMRemoteException {
+	public int GetMaps(AccessIdentity_Transferable accessIdentity, ImageResourceSeq_TransferableHolder imageResourceSeq, MapSeq_TransferableHolder mapSeq, MapElementSeq_TransferableHolder mapElementSeq, MapElementSeq_TransferableHolder mapRtuElementSeq, MapMarkElementSeq_TransferableHolder mapMarkElementSeq, MapPhysicalNodeElementSeq_TransferableHolder mapPhysicalNodeElementSeq, MapNodeLinkElementSeq_TransferableHolder mapNodeLinkElementSeq, MapPhysicalLinkElementSeq_TransferableHolder mapPhysicalLinkElementSeq, MapPathElementSeq_TransferableHolder mapPathElementSeq) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -541,7 +543,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 				Vector mapIdList = new Vector();
 				Collection imageResourceIds = new LinkedList();
 				imageResourceSeq.value = new ImageResource_Transferable[0];
-				MapdbInterfaceLoad.loadMaps(conn, accessIdentity.domain_id, mapIdList, mapContextSeq);
+				MapdbInterfaceLoad.loadMaps(conn, accessIdentity.domain_id, mapIdList, mapSeq);
 				MapdbInterfaceLoad.loadMapElements(conn, mapIdList, mapElementSeq, imageResourceIds);
 				MapdbInterfaceLoad.loadMapKISs(conn, mapIdList, mapRtuElementSeq, imageResourceIds);
 				MapdbInterfaceLoad.loadMapMarks(conn, mapIdList, mapMarkElementSeq);
@@ -564,53 +566,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 
 	/**
 	 * @param accessIdentity
-	 * @param imageResourceSeq
-	 * @param ismMapContextSeq
-	 * @param mapRtuElementSeq unused.
-	 * @param mapPhysicalNodeElementSeq
-	 * @param mapNodeLinkElementSeq
-	 * @param mapPhysicalLinkElementSeq
-	 * @param mapPathElementSeq
-	 * @return {@link Constants#ERROR_NO_ERROR}
-	 * @throws AMFICOMRemoteException
-	 */
-	public int GetJMaps(AccessIdentity_Transferable accessIdentity, ImageResourceSeq_TransferableHolder imageResourceSeq, ISMMapContextSeq_TransferableHolder ismMapContextSeq, MapKISElementSeq_TransferableHolder mapRtuElementSeq, MapPhysicalNodeElementSeq_TransferableHolder mapPhysicalNodeElementSeq, MapNodeLinkElementSeq_TransferableHolder mapNodeLinkElementSeq, MapPhysicalLinkElementSeq_TransferableHolder mapPhysicalLinkElementSeq, MapPathElementSeq_TransferableHolder mapPathElementSeq) throws AMFICOMRemoteException {
-		try {
-			Connection conn = null;
-			try {
-				conn = DATA_SOURCE.getConnection();
-				conn.setAutoCommit(false);
-				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
-				Vector mapIdList = new Vector();
-				Collection imageResourceIds = new LinkedList();
-				mapRtuElementSeq.value = new MapKISElement_Transferable[0];
-				MapdbInterfaceLoad.loadJMaps(conn, mapIdList, ismMapContextSeq);
-				MapdbInterfaceLoad.loadJMapNodes(conn, mapIdList, mapPhysicalNodeElementSeq, imageResourceIds);
-				MapdbInterfaceLoad.loadJMapNodeLinks(conn, mapIdList, mapNodeLinkElementSeq);
-				MapdbInterfaceLoad.loadJMapLinks(conn, mapIdList, mapPhysicalLinkElementSeq);
-				MapdbInterfaceLoad.loadJMapPaths(conn, mapIdList, mapPathElementSeq);
-
-				Collection imageResources = ResourcedbInterface.getImages(conn, imageResourceIds);
-				imageResourceSeq.value = (ImageResource_Transferable[]) (imageResources.toArray(new ImageResource_Transferable[imageResources.size()]));
-
-				return Constants.ERROR_NO_ERROR;
-			} finally {
-				if (conn != null)
-					conn.close();
-			}
-		} catch (AMFICOMRemoteException are) {
-			throw are;
-		} catch (Throwable t) {
-			t.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
-		}
-	}
-
-	/**
-	 * @param accessIdentity
 	 * @param mapId
 	 * @param imageResourceSeq unused.
-	 * @param mapContextSeq
+	 * @param mapSeq
 	 * @param mapElementSeq
 	 * @param mapRtuElementSeq
 	 * @param mapMarkElementSeq
@@ -621,7 +579,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 	 * @return {@link Constants#ERROR_NO_ERROR}
 	 * @throws AMFICOMRemoteException
 	 */
-	public int GetMap(AccessIdentity_Transferable accessIdentity, String mapId, ImageResourceSeq_TransferableHolder imageResourceSeq, MapContextSeq_TransferableHolder mapContextSeq, MapElementSeq_TransferableHolder mapElementSeq, MapElementSeq_TransferableHolder mapRtuElementSeq, MapMarkElementSeq_TransferableHolder mapMarkElementSeq, MapPhysicalNodeElementSeq_TransferableHolder mapPhysicalNodeElementSeq, MapNodeLinkElementSeq_TransferableHolder mapNodeLinkElementSeq, MapPhysicalLinkElementSeq_TransferableHolder mapPhysicalLinkElementSeq, MapPathElementSeq_TransferableHolder mapPathElementSeq) throws AMFICOMRemoteException {
+	public int GetMap(AccessIdentity_Transferable accessIdentity, String mapId, ImageResourceSeq_TransferableHolder imageResourceSeq, MapSeq_TransferableHolder mapSeq, MapElementSeq_TransferableHolder mapElementSeq, MapElementSeq_TransferableHolder mapRtuElementSeq, MapMarkElementSeq_TransferableHolder mapMarkElementSeq, MapPhysicalNodeElementSeq_TransferableHolder mapPhysicalNodeElementSeq, MapNodeLinkElementSeq_TransferableHolder mapNodeLinkElementSeq, MapPhysicalLinkElementSeq_TransferableHolder mapPhysicalLinkElementSeq, MapPathElementSeq_TransferableHolder mapPathElementSeq) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -637,13 +595,13 @@ public final class AmficomImpl implements AMFICOMOperations {
 				 *       so ALL maps get loaded and a single one
 				 *       is selected.
 				 */
-				MapdbInterfaceLoad.loadMaps(conn, accessIdentity.domain_id, mapIds, mapContextSeq);
+				MapdbInterfaceLoad.loadMaps(conn, accessIdentity.domain_id, mapIds, mapSeq);
 				int i = mapIds.indexOf(mapId);
 				mapIds.clear();
 				mapIds.add(mapId);
-				MapContext_Transferable mapContext = mapContextSeq.value[i];
-				mapContextSeq.value = new MapContext_Transferable[1];
-				mapContextSeq.value[0] = mapContext;
+				Map_Transferable map = mapSeq.value[i];
+				mapSeq.value = new Map_Transferable[1];
+				mapSeq.value[0] = map;
 
 				MapdbInterfaceLoad.loadMapElements(conn, mapIds, mapElementSeq, imageResourceIds);
 				MapdbInterfaceLoad.loadMapKISs(conn, mapIds, mapRtuElementSeq, imageResourceIds);
@@ -665,65 +623,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	/**
-	 * @param accessIdentity
-	 * @param mapId
-	 * @param imageResourceSeq
-	 * @param imnMapContextSeq
-	 * @param mapRtuElementSeq unused.
-	 * @param mapPhysicalNodeElementSeq
-	 * @param mapNodeLinkElementSeq
-	 * @param mapPhysicalLinkElementSeq
-	 * @param mapPathElementSeq
-	 * @return {@link Constants#ERROR_NO_ERROR}
-	 * @throws AMFICOMRemoteException
-	 */
-	public int GetJMap(AccessIdentity_Transferable accessIdentity, String mapId, ImageResourceSeq_TransferableHolder imageResourceSeq, ISMMapContextSeq_TransferableHolder imnMapContextSeq, MapKISElementSeq_TransferableHolder mapRtuElementSeq, MapPhysicalNodeElementSeq_TransferableHolder mapPhysicalNodeElementSeq, MapNodeLinkElementSeq_TransferableHolder mapNodeLinkElementSeq, MapPhysicalLinkElementSeq_TransferableHolder mapPhysicalLinkElementSeq, MapPathElementSeq_TransferableHolder mapPathElementSeq) throws AMFICOMRemoteException {
-		try {
-			Connection conn = null;
-			try {
-				conn = DATA_SOURCE.getConnection();
-				conn.setAutoCommit(false);
-				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
-				Vector mapIds = new Vector();
-				Collection imageResourceIds = new LinkedList();
-				mapRtuElementSeq.value = new MapKISElement_Transferable[0];
-		
-				/**
-				 * @todo No separate method to load a single map,
-				 *       so ALL maps get loaded and a single one
-				 *       is selected.
-				 */
-				MapdbInterfaceLoad.loadJMaps(conn, mapIds, imnMapContextSeq);
-				int i = mapIds.indexOf(mapId);
-				mapIds.clear();
-				mapIds.add(mapId);
-				ISMMapContext_Transferable imnMapContext = imnMapContextSeq.value[i];
-				imnMapContextSeq.value = new ISMMapContext_Transferable[1];
-				imnMapContextSeq.value[0] = imnMapContext;
-		
-				MapdbInterfaceLoad.loadJMapNodes(conn, mapIds, mapPhysicalNodeElementSeq, imageResourceIds);
-				MapdbInterfaceLoad.loadJMapNodeLinks(conn, mapIds, mapNodeLinkElementSeq);
-				MapdbInterfaceLoad.loadJMapLinks(conn, mapIds, mapPhysicalLinkElementSeq);
-				MapdbInterfaceLoad.loadJMapPaths(conn, mapIds, mapPathElementSeq);
-
-				Collection imageResources = ResourcedbInterface.getImages(conn, imageResourceIds);
-				imageResourceSeq.value = (ImageResource_Transferable[]) (imageResources.toArray(new ImageResource_Transferable[imageResources.size()]));
-
-				return Constants.ERROR_NO_ERROR;
-			} finally {
-				if (conn != null)
-					conn.close();
-			}
-		} catch (AMFICOMRemoteException are) {
-			throw are;
-		} catch (Throwable t) {
-			t.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
-		}
-	}
-
-	public int SaveMaps(AccessIdentity_Transferable accessIdentity, ImageResource_Transferable[] imageseq, MapContext_Transferable[] mapseq, MapElement_Transferable[] equipmentseq, MapElement_Transferable[] kisseq, MapMarkElement_Transferable[] markseq, MapPhysicalNodeElement_Transferable[] nodeseq, MapNodeLinkElement_Transferable[] nodelinkseq, MapPhysicalLinkElement_Transferable[] linkseq, MapPathElement_Transferable[] pathseq) throws AMFICOMRemoteException {
+	public int SaveMaps(AccessIdentity_Transferable accessIdentity, ImageResource_Transferable[] imageseq, Map_Transferable[] mapseq, MapElement_Transferable[] equipmentseq, MapElement_Transferable[] kisseq, MapMarkElement_Transferable[] markseq, MapPhysicalNodeElement_Transferable[] nodeseq, MapNodeLinkElement_Transferable[] nodelinkseq, MapPhysicalLinkElement_Transferable[] linkseq, MapPathElement_Transferable[] pathseq) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -763,47 +663,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int SaveJMaps(AccessIdentity_Transferable accessIdentity, ImageResource_Transferable[] imageseq, ISMMapContext_Transferable[] mapseq, MapKISElement_Transferable[] kisseq, MapPhysicalNodeElement_Transferable[] nodeseq, MapNodeLinkElement_Transferable[] nodelinkseq, MapPhysicalLinkElement_Transferable[] linkseq, MapPathElement_Transferable[] pathseq) throws AMFICOMRemoteException {
-		try {
-			Connection conn = null;
-			try {
-				conn = DATA_SOURCE.getConnection();
-				conn.setAutoCommit(false);
-				AMFICOMdbInterface.saveJMaps(conn, accessIdentity, imageseq, mapseq, kisseq, nodeseq, nodelinkseq, linkseq, pathseq);
-				return Constants.ERROR_NO_ERROR;
-			} finally {
-				if (conn != null)
-					conn.close();
-			}
-		} catch (AMFICOMRemoteException are) {
-			throw are;
-		} catch (Throwable t) {
-			t.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
-		}
-	}
-
-	public int RemoveJMaps(AccessIdentity_Transferable accessIdentity, String[] mapseq, String[] kisseq, String[] nodeseq, String[] nodelinkseq, String[] linkseq, String[] pathseq) throws AMFICOMRemoteException {
-		try {
-			Connection conn = null;
-			try {
-				conn = DATA_SOURCE.getConnection();
-				conn.setAutoCommit(false);
-				AMFICOMdbInterface.removeJMaps(conn, accessIdentity, mapseq, kisseq, nodeseq, nodelinkseq, linkseq, pathseq);
-				return Constants.ERROR_NO_ERROR;
-			} finally {
-				if (conn != null)
-					conn.close();
-			}
-		} catch (AMFICOMRemoteException are) {
-			throw are;
-		} catch (Throwable t) {
-			t.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
-		}
-	}
-
-	public int GetMapProtoElements(AccessIdentity_Transferable accessIdentity, ImageResourceSeq_TransferableHolder imageseq, MapProtoGroupSeq_TransferableHolder groupseq, MapProtoElementSeq_TransferableHolder protoseq, MapLinkProtoElementSeq_TransferableHolder linkseq, MapPathProtoElementSeq_TransferableHolder pathseq) throws AMFICOMRemoteException {
+	public int GetMapProtoElements(AccessIdentity_Transferable accessIdentity, ImageResourceSeq_TransferableHolder imageseq, SchemeProtoGroupSeq_TransferableHolder groupseq, MapNodeProtoElementSeq_TransferableHolder protoseq, MapLinkProtoElementSeq_TransferableHolder linkseq, MapPathProtoElementSeq_TransferableHolder pathseq) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -823,7 +683,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int GetStatedMapProtoElements(AccessIdentity_Transferable accessIdentity, String[] group_ids, String[] element_ids, String[] link_ids, String[] path_ids, ImageResourceSeq_TransferableHolder imageseq, MapProtoGroupSeq_TransferableHolder groupseq, MapProtoElementSeq_TransferableHolder protoseq, MapLinkProtoElementSeq_TransferableHolder linkseq, MapPathProtoElementSeq_TransferableHolder pathseq) throws AMFICOMRemoteException {
+	public int GetStatedMapProtoElements(AccessIdentity_Transferable accessIdentity, String[] group_ids, String[] element_ids, String[] link_ids, String[] path_ids, ImageResourceSeq_TransferableHolder imageseq, SchemeProtoGroupSeq_TransferableHolder groupseq, MapNodeProtoElementSeq_TransferableHolder protoseq, MapLinkProtoElementSeq_TransferableHolder linkseq, MapPathProtoElementSeq_TransferableHolder pathseq) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -843,7 +703,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int SaveMapProtoElements(AccessIdentity_Transferable accessIdentity, ImageResource_Transferable[] images, MapProtoGroup_Transferable[] groups, MapProtoElement_Transferable[] protos) throws AMFICOMRemoteException {
+	public int SaveMapProtoElements(AccessIdentity_Transferable accessIdentity, ImageResource_Transferable[] images, SchemeProtoGroup_Transferable[] groups, MapNodeProtoElement_Transferable[] protos) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -1501,27 +1361,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int LoadNetDirectory(AccessIdentity_Transferable accessIdentity, PortTypeSeq_TransferableHolder porttypes, EquipmentTypeSeq_TransferableHolder equipmenttypes, LinkTypeSeq_TransferableHolder linktypes, TestPortTypeSeq_TransferableHolder tporttypes, CharacteristicTypeSeq_TransferableHolder characteristictypes, CablePortTypeSeq_TransferableHolder cableporttypes, CableLinkTypeSeq_TransferableHolder cablelinktypes) throws AMFICOMRemoteException {
-		try {
-			Connection conn = null;
-			try {
-				conn = DATA_SOURCE.getConnection();
-				conn.setAutoCommit(false);
-				AMFICOMdbInterface.loadNetDirectory(conn, accessIdentity, porttypes, equipmenttypes, linktypes, tporttypes, characteristictypes, cableporttypes, cablelinktypes);
-				return Constants.ERROR_NO_ERROR;
-			} finally {
-				if (conn != null)
-					conn.close();
-			}
-		} catch (AMFICOMRemoteException are) {
-			throw are;
-		} catch (Throwable t) {
-			t.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
-		}
-	}
-
-	public int LoadISMDirectory(AccessIdentity_Transferable accessIdentity, EquipmentTypeSeq_TransferableHolder kistypes, AccessPortTypeSeq_TransferableHolder aporttypes, TransmissionPathTypeSeq_TransferableHolder pathtypes) throws AMFICOMRemoteException {
+	public int LoadISMDirectory(AccessIdentity_Transferable accessIdentity, EquipmentTypeSeq_TransferableHolder kistypes, MeasurementPortTypeSeq_TransferableHolder aporttypes, TransmissionPathTypeSeq_TransferableHolder pathtypes) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -1541,13 +1381,13 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int LoadStatedNetDirectory(AccessIdentity_Transferable accessIdentity, String[] pt_ids, String[] eqt_ids, String[] lt_ids, String[] cht_ids, String[] cpt_ids, String[] clt_ids, PortTypeSeq_TransferableHolder porttypes, EquipmentTypeSeq_TransferableHolder equipmenttypes, LinkTypeSeq_TransferableHolder linktypes, TestPortTypeSeq_TransferableHolder tporttypes, CharacteristicTypeSeq_TransferableHolder characteristictypes, CablePortTypeSeq_TransferableHolder cableporttypes, CableLinkTypeSeq_TransferableHolder cablelinktypes) throws AMFICOMRemoteException {
+	public int LoadStatedNetDirectory(AccessIdentity_Transferable accessIdentity, String[] pt_ids, String[] eqt_ids, String[] lt_ids, String[] cht_ids, String[] cpt_ids, String[] clt_ids, PortTypeSeq_TransferableHolder porttypes, EquipmentTypeSeq_TransferableHolder equipmenttypes, LinkTypeSeq_TransferableHolder linktypes, CharacteristicTypeSeq_TransferableHolder characteristictypes, CablePortTypeSeq_TransferableHolder cableporttypes, CableLinkTypeSeq_TransferableHolder cablelinktypes) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
 				conn.setAutoCommit(false);
-				AMFICOMdbInterface.loadStatedNetDirectory(conn, accessIdentity, pt_ids, eqt_ids, lt_ids, cht_ids, cpt_ids, clt_ids, porttypes, equipmenttypes, linktypes, tporttypes, characteristictypes, cableporttypes, cablelinktypes);
+				AMFICOMdbInterface.loadStatedNetDirectory(conn, accessIdentity, pt_ids, eqt_ids, lt_ids, cht_ids, cpt_ids, clt_ids, porttypes, equipmenttypes, linktypes, characteristictypes, cableporttypes, cablelinktypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
 				if (conn != null)
@@ -1561,7 +1401,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int LoadStatedISMDirectory(AccessIdentity_Transferable accessIdentity, String[] kis_ids, String[] aport_ids, String[] path_ids, EquipmentTypeSeq_TransferableHolder kistypes, AccessPortTypeSeq_TransferableHolder aporttypes, TransmissionPathTypeSeq_TransferableHolder pathtypes) throws AMFICOMRemoteException {
+	public int LoadStatedISMDirectory(AccessIdentity_Transferable accessIdentity, String[] kis_ids, String[] aport_ids, String[] path_ids, EquipmentTypeSeq_TransferableHolder kistypes, MeasurementPortTypeSeq_TransferableHolder aporttypes, TransmissionPathTypeSeq_TransferableHolder pathtypes) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -1621,13 +1461,13 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int SaveNetDirectory(AccessIdentity_Transferable accessIdentity, PortType_Transferable[] porttypes, EquipmentType_Transferable[] equipmenttypes, LinkType_Transferable[] linktypes, TestPortType_Transferable[] tporttypes, CharacteristicType_Transferable[] characteristictypes, CablePortType_Transferable[] cableporttypes, CableLinkType_Transferable[] cablelinktypes) throws AMFICOMRemoteException {
+	public int SaveNetDirectory(AccessIdentity_Transferable accessIdentity, PortType_Transferable[] porttypes, EquipmentType_Transferable[] equipmenttypes, LinkType_Transferable[] linktypes, CharacteristicType_Transferable[] characteristictypes, CablePortType_Transferable[] cableporttypes, CableLinkType_Transferable[] cablelinktypes) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
 				conn.setAutoCommit(false);
-				AMFICOMdbInterface.saveNetDirectory(conn, accessIdentity, porttypes, equipmenttypes, linktypes, tporttypes, characteristictypes, cableporttypes, cablelinktypes);
+				AMFICOMdbInterface.saveNetDirectory(conn, accessIdentity, porttypes, equipmenttypes, linktypes, characteristictypes, cableporttypes, cablelinktypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
 				if (conn != null)
@@ -1641,7 +1481,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int SaveISMDirectory(AccessIdentity_Transferable accessIdentity, EquipmentType_Transferable[] kistypes, AccessPortType_Transferable[] aporttypes, TransmissionPathType_Transferable[] pathtypes) throws AMFICOMRemoteException {
+	public int SaveISMDirectory(AccessIdentity_Transferable accessIdentity, EquipmentType_Transferable[] kistypes, MeasurementPortType_Transferable[] aporttypes, TransmissionPathType_Transferable[] pathtypes) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -1661,13 +1501,13 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int LoadNet(AccessIdentity_Transferable accessIdentity, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder equipments, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, TestPortSeq_TransferableHolder testports) throws AMFICOMRemoteException {
+	public int LoadStatedNet(AccessIdentity_Transferable accessIdentity, String[] p_ids, String[] cp_ids, String[] eq_ids, String[] l_ids, String[] cl_ids, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder equipments, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
 				conn.setAutoCommit(false);
-				AMFICOMdbInterface.loadNet(conn, accessIdentity, ports, cports, equipments, links, clinks, testports);
+				AMFICOMdbInterface.loadStatedNet(conn, accessIdentity, p_ids, cp_ids, eq_ids, l_ids, cl_ids, ports, cports, equipments, links, clinks);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
 				if (conn != null)
@@ -1681,27 +1521,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int LoadStatedNet(AccessIdentity_Transferable accessIdentity, String[] p_ids, String[] cp_ids, String[] eq_ids, String[] l_ids, String[] cl_ids, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder equipments, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, TestPortSeq_TransferableHolder testports) throws AMFICOMRemoteException {
-		try {
-			Connection conn = null;
-			try {
-				conn = DATA_SOURCE.getConnection();
-				conn.setAutoCommit(false);
-				AMFICOMdbInterface.loadStatedNet(conn, accessIdentity, p_ids, cp_ids, eq_ids, l_ids, cl_ids, ports, cports, equipments, links, clinks, testports);
-				return Constants.ERROR_NO_ERROR;
-			} finally {
-				if (conn != null)
-					conn.close();
-			}
-		} catch (AMFICOMRemoteException are) {
-			throw are;
-		} catch (Throwable t) {
-			t.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
-		}
-	}
-
-	public int LoadISM(AccessIdentity_Transferable accessIdentity, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder kiss, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, MonitoredElementSeq_TransferableHolder mes, TransmissionPathSeq_TransferableHolder paths, AccessPortSeq_TransferableHolder accessports) throws AMFICOMRemoteException {
+	public int LoadISM(AccessIdentity_Transferable accessIdentity, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder kiss, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, MonitoredElementSeq_TransferableHolder mes, TransmissionPathSeq_TransferableHolder paths, MeasurementPortSeq_TransferableHolder accessports) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -1721,7 +1541,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int LoadStatedISM(AccessIdentity_Transferable accessIdentity, String[] p_ids, String[] cp_ids, String[] k_ids, String[] l_ids, String[] cl_ids, String[] me_ids, String[] t_ids, String[] ap_ids, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder kiss, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, MonitoredElementSeq_TransferableHolder mes, TransmissionPathSeq_TransferableHolder paths, AccessPortSeq_TransferableHolder accessports) throws AMFICOMRemoteException {
+	public int LoadStatedISM(AccessIdentity_Transferable accessIdentity, String[] p_ids, String[] cp_ids, String[] k_ids, String[] l_ids, String[] cl_ids, String[] me_ids, String[] t_ids, String[] ap_ids, PortSeq_TransferableHolder ports, CablePortSeq_TransferableHolder cports, EquipmentSeq_TransferableHolder kiss, LinkSeq_TransferableHolder links, CableLinkSeq_TransferableHolder clinks, MonitoredElementSeq_TransferableHolder mes, TransmissionPathSeq_TransferableHolder paths, MeasurementPortSeq_TransferableHolder accessports) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -1741,13 +1561,13 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int SaveNet(AccessIdentity_Transferable accessIdentity, Port_Transferable[] ports, CablePort_Transferable[] cports, Equipment_Transferable[] equipments, Link_Transferable[] links, CableLink_Transferable[] clinks, TestPort_Transferable[] testports) throws AMFICOMRemoteException {
+	public int SaveNet(AccessIdentity_Transferable accessIdentity, Port_Transferable[] ports, CablePort_Transferable[] cports, Equipment_Transferable[] equipments, Link_Transferable[] links, CableLink_Transferable[] clinks) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
 				conn.setAutoCommit(false);
-				AMFICOMdbInterface.saveNet(conn, accessIdentity, ports, cports, equipments, links, clinks, testports);
+				AMFICOMdbInterface.saveNet(conn, accessIdentity, ports, cports, equipments, links, clinks);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
 				if (conn != null)
@@ -1761,7 +1581,7 @@ public final class AmficomImpl implements AMFICOMOperations {
 		}
 	}
 
-	public int SaveISM(AccessIdentity_Transferable accessIdentity, Port_Transferable[] ports, CablePort_Transferable[] cports, Equipment_Transferable[] kiss, Link_Transferable[] links, CableLink_Transferable[] clinks, MonitoredElement_Transferable[] mes, TransmissionPath_Transferable[] paths, AccessPort_Transferable[] accessports) throws AMFICOMRemoteException {
+	public int SaveISM(AccessIdentity_Transferable accessIdentity, Port_Transferable[] ports, CablePort_Transferable[] cports, Equipment_Transferable[] kiss, Link_Transferable[] links, CableLink_Transferable[] clinks, MonitoredElement_Transferable[] mes, TransmissionPath_Transferable[] paths, MeasurementPort_Transferable[] accessports) throws AMFICOMRemoteException {
 		try {
 			Connection conn = null;
 			try {
@@ -3625,5 +3445,29 @@ public final class AmficomImpl implements AMFICOMOperations {
 			t.printStackTrace();
 			throw new AMFICOMRemoteException(Constants.ERROR_UPDATING, t.toString());
 		}
+	}
+
+	public String lookupDomainName(Identifier_Transferable id) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		throw new UnsupportedOperationException();
+	}
+
+	public String lookupUserLogin(Identifier_Transferable id) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		throw new UnsupportedOperationException();
+	}
+
+	public String lookupUserName(Identifier_Transferable id) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		throw new UnsupportedOperationException();
+	}
+
+	public Identifier_Transferable reverseLookupDomainName(String domainName) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		throw new UnsupportedOperationException();
+	}
+
+	public Identifier_Transferable reverseLookupUserLogin(String userLogin) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		throw new UnsupportedOperationException();
+	}
+
+	public Identifier_Transferable reverseLookupUserName(String userName) throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+		throw new UnsupportedOperationException();
 	}
 }

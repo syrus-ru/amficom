@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceRemove.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
+ * $Id: MapdbInterfaceRemove.sqlj,v 1.1.2.5 2004/10/18 15:31:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Vector;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/10/18 15:31:42 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -115,42 +115,6 @@ final class MapdbInterfaceRemove {
 			catch(SQLException e)
 			{
 				System.out.println("Error deleting map: " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	static int removeJMaps(final Connection conn, String[] mapseq) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		Vector vector2 = new Vector();
-		String kis_ids[] = new String[0];
-		String path_ids[] = new String[0];
-
-		int i;
-		for(i = mapseq.length - 1; i >= 0; i--)
-		{
-			vector2 = MapdbInterfaceLoad.loadISMMapElementIds(conn, "MAPKISELEMENTS", mapseq[i]);
-			kis_ids = new String[vector2.size()];
-			vector2.copyInto(kis_ids);
-			removeKISs(conn, kis_ids);
-			System.out.println("removing " + vector2.size() + " kiss for ism map " + mapseq[i]);
-
-			vector2 = MapdbInterfaceLoad.loadISMMapElementIds(conn, "MAPPATHELEMENTS", mapseq[i]);
-			path_ids = new String[vector2.size()];
-			vector2.copyInto(path_ids);
-			removePaths(conn, path_ids);
-			System.out.println("removing " + vector2.size() + " paths for ism map " + mapseq[i]);
-			try
-			{
-				#sql [connCtx] { delete from AMFICOM.ISMMAPCONTEXTS
-					where ID = :(mapseq[i]) };
-				conn.commit();
-			}
-			catch(SQLException e)
-			{
-				System.out.println("Error deleting ism map: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -307,29 +271,23 @@ final class MapdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removePaths(final Connection conn, String[] pathseq) throws SQLException {
+	static int removePaths(final Connection conn, String pathIdSeq[]) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
-		int i;
-		for(i = pathseq.length - 1; i >= 0; i--)
-		{
-			removeElementAttributes(conn, "MAPPATHELEMENTATTRIBUTES", "MAP_PATH_ELEMENT_ID", pathseq[i]);
-
-			try {
-				#sql [connCtx] { delete from AMFICOM.MAPPATHSLINKS
-					where MAP_PATH_ID = :(pathseq[i]) };
-				#sql [connCtx] { delete from AMFICOM.MAPPATHLINKS
-					where PATH_ID = :(pathseq[i]) };
-				#sql [connCtx] { delete from AMFICOM.MAPPATHELEMENTS
-					where ID = :(pathseq[i]) };
-				conn.commit();
-			}
-			catch(SQLException e)
-			{
-				System.out.println("Error deleting path: " + e.getMessage());
-				e.printStackTrace();
-			}
+		for (int i = pathIdSeq.length - 1; i >= 0; i--) {
+			String pathId = pathIdSeq[i];
+			removeElementAttributes(conn, "MAPPATHELEMENTATTRIBUTES", "MAP_PATH_ELEMENT_ID", pathId);
+			#sql [connCtx] {
+				DELETE FROM amficom.mappathslinks WHERE map_path_id = :pathId
+			};
+			#sql [connCtx] {
+				DELETE FROM amficom.mappathlinks WHERE path_id = :pathId
+			};
+			#sql [connCtx] {
+				DELETE FROM amficom.mappathelements WHERE id = :pathId
+			};
 		}
+		conn.commit();
 		return Constants.ERROR_NO_ERROR;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceProto.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
+ * $Id: MapdbInterfaceProto.sqlj,v 1.1.2.5 2004/10/18 15:31:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import java.sql.*;
@@ -17,7 +18,7 @@ import sqlj.runtime.SQLNullException;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/10/18 15:31:42 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -25,13 +26,13 @@ final class MapdbInterfaceProto {
 	private MapdbInterfaceProto() {
 	}
 
-	static int loadProtoElements(final Connection conn, String domain_id, MapProtoElementSeq_TransferableHolder protoseq, Collection imageResourceIds) throws SQLException {
+	static int loadProtoElements(final Connection conn, String domain_id, MapNodeProtoElementSeq_TransferableHolder protoseq, Collection imageResourceIds) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		int count;
-		MapProtoElement_Transferable pr_t;
+		MapNodeProtoElement_Transferable pr_t;
 		Vector vector = new Vector();
-		MapProtoElement_Transferable pr_ts[];
+		MapNodeProtoElement_Transferable pr_ts[];
 		MapProtoIterator prIt = null;
 
 		String It_id = "";
@@ -143,7 +144,7 @@ final class MapdbInterfaceProto {
 				pe_ids = new String[vector3.size()];
 				vector3.copyInto(pe_ids);
 
-				pr_t = new MapProtoElement_Transferable(
+				pr_t = new MapNodeProtoElement_Transferable(
 						It_id,
 						It_name,
 						It_codename,
@@ -163,7 +164,7 @@ final class MapdbInterfaceProto {
 				vector.addElement(pr_t);
 			}
 			prIt.close();
-			pr_ts = new MapProtoElement_Transferable[vector.size()];
+			pr_ts = new MapNodeProtoElement_Transferable[vector.size()];
 			vector.copyInto(pr_ts);
 			protoseq.value = pr_ts;
 
@@ -188,13 +189,13 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadProtoElements(final Connection conn, String domain_id, String[] ids, MapProtoElementSeq_TransferableHolder protoseq, Collection imageResourceIds) throws SQLException {
+	static int loadProtoElements(final Connection conn, String domain_id, String[] ids, MapNodeProtoElementSeq_TransferableHolder protoseq, Collection imageResourceIds) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		int count;
-		MapProtoElement_Transferable pr_t;
+		MapNodeProtoElement_Transferable pr_t;
 		Vector vector = new Vector();
-		MapProtoElement_Transferable pr_ts[];
+		MapNodeProtoElement_Transferable pr_ts[];
 		MapProtoIterator prIt = null;
 
 		String It_id = "";
@@ -314,7 +315,7 @@ final class MapdbInterfaceProto {
 				pe_ids = new String[vector3.size()];
 				vector3.copyInto(pe_ids);
 
-				pr_t = new MapProtoElement_Transferable(
+				pr_t = new MapNodeProtoElement_Transferable(
 						It_id,
 						It_name,
 						It_codename,
@@ -334,7 +335,7 @@ final class MapdbInterfaceProto {
 				vector.addElement(pr_t);
 			}
 			prIt.close();
-			pr_ts = new MapProtoElement_Transferable[vector.size()];
+			pr_ts = new MapNodeProtoElement_Transferable[vector.size()];
 			vector.copyInto(pr_ts);
 			protoseq.value = pr_ts;
 
@@ -359,14 +360,14 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveProtoElements(final Connection conn, String domain_id, MapProtoElement_Transferable[] protos) throws SQLException {
+	static int saveProtoElements(final Connection conn, String domain_id, MapNodeProtoElement_Transferable[] protos) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		for(int i = 0; i < protos.length; i++)
 		{
 			int is_kis = (protos[i].pe_is_kis) ? 1 : 0;
 			int is_visual = (protos[i].is_visual) ? 1 : 0;
-			int is_topological = (protos[i].is_topological) ? 1 : 0;
+			int is_topological = (protos[i].isTopological) ? 1 : 0;
 			try
 			{
 				#sql [connCtx] {
@@ -389,7 +390,7 @@ final class MapdbInterfaceProto {
 							:(protos[i].codename),
 							:(protos[i].description),
 							:(protos[i].owner_id),
-							:(protos[i].symbol_id),
+							:(protos[i].symbolId),
 							SYSDATE,
 							:(protos[i].pe_class),
 							:is_kis,
@@ -409,7 +410,7 @@ final class MapdbInterfaceProto {
 								CODENAME = :(protos[i].codename),
 								DESCRIPTION = :(protos[i].description),
 								OWNER_ID = :(protos[i].owner_id),
-								SYMBOL_ID = :(protos[i].symbol_id),
+								SYMBOL_ID = :(protos[i].symbolId),
 								MODIFIED = SYSDATE,
 								PE_CLASS = :(protos[i].pe_class),
 								PE_IS_KIS = :is_kis,
@@ -495,13 +496,13 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadProtoGroups(final Connection conn, String domain_id, MapProtoGroupSeq_TransferableHolder groupseq) throws SQLException {
+	static int loadProtoGroups(final Connection conn, String domain_id, SchemeProtoGroupSeq_TransferableHolder groupseq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		int count;
-		MapProtoGroup_Transferable pr_t;
+		SchemeProtoGroup_Transferable pr_t;
 		Vector vector = new Vector();
-		MapProtoGroup_Transferable pr_ts[];
+		SchemeProtoGroup_Transferable pr_ts[];
 		MapProtoGroupIterator prIt = null;
 
 		String It_id = "";
@@ -604,18 +605,18 @@ final class MapdbInterfaceProto {
 					It_parent_id = "";
 				}
 
-				pr_t = new MapProtoGroup_Transferable(
+				pr_t = new SchemeProtoGroup_Transferable(
 						It_id,
 						It_name,
 						It_parent_id,
+						It_modified,
 						ch_ids,
-						pe_ids,
-						It_modified);
+						pe_ids);
 
 				vector.addElement(pr_t);
 			}
 			prIt.close();
-			pr_ts = new MapProtoGroup_Transferable[vector.size()];
+			pr_ts = new SchemeProtoGroup_Transferable[vector.size()];
 			vector.copyInto(pr_ts);
 			groupseq.value = pr_ts;
 
@@ -640,13 +641,13 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadProtoGroups(final Connection conn, String domain_id, String[] group_ids, MapProtoGroupSeq_TransferableHolder groupseq) throws SQLException {
+	static int loadProtoGroups(final Connection conn, String domain_id, String[] group_ids, SchemeProtoGroupSeq_TransferableHolder groupseq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		int count;
-		MapProtoGroup_Transferable pr_t;
+		SchemeProtoGroup_Transferable pr_t;
 		Vector vector = new Vector();
-		MapProtoGroup_Transferable pr_ts[];
+		SchemeProtoGroup_Transferable pr_ts[];
 		MapProtoGroupIterator prIt = null;
 
 		String It_id = "";
@@ -763,18 +764,18 @@ final class MapdbInterfaceProto {
 
 				System.out.println("	mapproto size " + pe_ids.length);
 				System.out.println("	child groups size " + ch_ids.length);
-				pr_t = new MapProtoGroup_Transferable(
+				pr_t = new SchemeProtoGroup_Transferable(
 						It_id,
 						It_name,
 						It_parent_id,
+						It_modified,
 						ch_ids,
-						pe_ids,
-						It_modified);
+						pe_ids);
 
 				vector.addElement(pr_t);
 			}
 			prIt.close();
-			pr_ts = new MapProtoGroup_Transferable[vector.size()];
+			pr_ts = new SchemeProtoGroup_Transferable[vector.size()];
 			vector.copyInto(pr_ts);
 			groupseq.value = pr_ts;
 
@@ -799,7 +800,7 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveProtoGroups(final Connection conn, String domain_id, MapProtoGroup_Transferable[] groups) throws SQLException {
+	static int saveProtoGroups(final Connection conn, String domain_id, SchemeProtoGroup_Transferable[] groups) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		for(int i = 0; i < groups.length; i++)
@@ -850,20 +851,16 @@ final class MapdbInterfaceProto {
 				System.out.println("error removing protos for map proto group: " + ex.getMessage());
 			}
 
-			for(int j = 0; j < groups[i].mapproto_ids.length; j++)
+			for(int j = 0; j < groups[i].peIds.length; j++)
 			{
-				try
-				{
-					#sql [connCtx]
-					{
+				try {
+					#sql [connCtx] {
 						insert into AMFICOM.MAPPROTOGROUPLINKS(GROUP_ID, PROTO_ID)
-						values(:(groups[i].id), :(groups[i].mapproto_ids[j]))
+						values(:(groups[i].id), :(groups[i].peIds[j]))
 					};
 					conn.commit();
-				}
-				catch(SQLException ex)
-				{
-					System.out.println("error setting pe for map proto group: " + ex.getMessage());
+				} catch (SQLException sqle) {
+					sqle.printStackTrace();
 				}
 			}
 
@@ -882,31 +879,27 @@ final class MapdbInterfaceProto {
 				System.out.println("error removing nestings for map proto group: " + ex.getMessage());
 			}
 
-			if(groups[i].parent_id != null && !groups[i].parent_id.equals(""))
-			{
-				try
-				{
-					#sql [connCtx]
-					{
+			String parentId = groups[i].parentId;
+			if (!((parentId == null) || (parentId.length() == 0))) {
+				try {
+					#sql [connCtx] {
 						insert into AMFICOM.MAPPROTOGROUPNESTINGS(PARENT_ID, CHILD_ID)
-						values(:(groups[i].parent_id), :(groups[i].id))
+						values(:parentId, :(groups[i].id))
 					};
 					conn.commit();
-				}
-				catch(SQLException ex)
-				{
-					System.out.println("error setting parent for proto group: " + ex.getMessage());
+				} catch (SQLException sqle) {
+					sqle.printStackTrace();
 				}
 			}
 
-			for(int j = 0; j < groups[i].group_ids.length; j++)
+			for (int j = 0; j < groups[i].groupIds.length; j++)
 			{
 				try
 				{
 					#sql [connCtx]
 					{
 						insert into AMFICOM.MAPPROTOGROUPNESTINGS(PARENT_ID, CHILD_ID)
-						values(:(groups[i].id), :(groups[i].group_ids[j]))
+						values(:(groups[i].id), :(groups[i].groupIds[j]))
 					};
 					conn.commit();
 				}

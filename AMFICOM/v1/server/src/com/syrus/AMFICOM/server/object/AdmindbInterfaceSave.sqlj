@@ -1,5 +1,5 @@
 /*
- * $Id: AdmindbInterfaceSave.sqlj,v 1.1.2.3 2004/09/09 11:35:20 bass Exp $
+ * $Id: AdmindbInterfaceSave.sqlj,v 1.1.2.4 2004/10/18 15:31:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.sql.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/10/18 15:31:41 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -42,7 +42,7 @@ final class AdmindbInterfaceSave {
 							ID,
 							NAME,
 							CONTACT,
-							LICENCE_ID,
+							LICENSE_ID,
 							VERSION,
 							LOCATION,
 							HOSTNAME,
@@ -71,7 +71,7 @@ final class AdmindbInterfaceSave {
 						update AMFICOM.SERVERS set
 								NAME = :(serverseq[i].name),
 								CONTACT = :(serverseq[i].contact),
-								LICENCE_ID = :(serverseq[i].licence_id),
+								LICENSE_ID = :(serverseq[i].licence_id),
 								MODIFIED = SYSDATE,
 								VERSION = :(serverseq[i].version),
 								LOCATION = :(serverseq[i].location),
@@ -111,7 +111,7 @@ final class AdmindbInterfaceSave {
 							ID,
 							NAME,
 							CONTACT,
-							LICENCE_ID,
+							LICENSE_ID,
 							VERSION,
 							LOCATION,
 							HOSTNAME,
@@ -140,7 +140,7 @@ final class AdmindbInterfaceSave {
 						update AMFICOM.CLIENTS set
 								NAME = :(clientseq[i].name),
 								CONTACT = :(clientseq[i].contact),
-								LICENCE_ID = :(clientseq[i].licence_id),
+								LICENSE_ID = :(clientseq[i].licence_id),
 								MODIFIED = SYSDATE,
 								VERSION = :(clientseq[i].version),
 								LOCATION = :(clientseq[i].location),
@@ -180,7 +180,7 @@ final class AdmindbInterfaceSave {
 							ID,
 							NAME,
 							CONTACT,
-							LICENCE_ID,
+							LICENSE_ID,
 							VERSION,
 							LOCATION,
 							HOSTNAME,
@@ -209,7 +209,7 @@ final class AdmindbInterfaceSave {
 						update AMFICOM.AGENTS set
 								NAME = :(agentseq[i].name),
 								CONTACT = :(agentseq[i].contact),
-								LICENCE_ID = :(agentseq[i].licence_id),
+								LICENSE_ID = :(agentseq[i].licence_id),
 								MODIFIED = SYSDATE,
 								VERSION = :(agentseq[i].version),
 								LOCATION = :(agentseq[i].location),

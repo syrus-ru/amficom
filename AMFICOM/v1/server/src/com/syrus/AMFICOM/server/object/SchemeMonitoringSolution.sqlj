@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeMonitoringSolution.sqlj,v 1.1.2.3 2004/09/09 11:35:21 bass Exp $
+ * $Id: SchemeMonitoringSolution.sqlj,v 1.1.2.4 2004/10/18 15:31:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/09/09 11:35:21 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/10/18 15:31:42 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -36,7 +36,7 @@ final class SchemeMonitoringSolution {
     	this.sms = sms;
 
 		this.id = sms.id;
-		this.scheme_id = sms.scheme_id;
+		this.scheme_id = sms.schemeId;
     	this.name = sms.name;
 
 		this.price = sms.price;

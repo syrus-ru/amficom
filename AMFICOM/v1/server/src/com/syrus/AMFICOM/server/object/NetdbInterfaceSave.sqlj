@@ -1,5 +1,5 @@
 /*
- * $Id: NetdbInterfaceSave.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
+ * $Id: NetdbInterfaceSave.sqlj,v 1.1.2.5 2004/10/18 15:31:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/10/18 15:31:42 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -110,13 +111,13 @@ final class NetdbInterfaceSave {
 						update AMFICOM.PORTS
 							set
 								NAME = :(ports[i].name),
-								EQUIPMENT_ID = :(ports[i].equipment_id),
-								INTERFACE_ID = :(ports[i].interface_id),
+								EQUIPMENT_ID = :(ports[i].equipmentId),
+								INTERFACE_ID = :(ports[i].interfaceId),
 								DESCRIPTION = :(ports[i].description),
-								ADDRESS_ID = :(ports[i].address_id),
-								LOCAL_ID = :(ports[i].local_id),
-								TYPE_ID = :(ports[i].type_id),
-								DOMAIN_ID = :(ports[i].domain_id)
+								ADDRESS_ID = :(ports[i].addressId),
+								LOCAL_ID = :(ports[i].localId),
+								TYPE_ID = :(ports[i]._typeId),
+								DOMAIN_ID = :(ports[i].domainId)
 							where ID = :(ports[i].id)
 					};
 				}
@@ -147,13 +148,13 @@ final class NetdbInterfaceSave {
 							values(
 								 :(ports[i].id),
 								 :(ports[i].name),
-								 :(ports[i].equipment_id),
-								 :(ports[i].interface_id),
+								 :(ports[i].equipmentId),
+								 :(ports[i].interfaceId),
 								 :(ports[i].description),
-								 :(ports[i].address_id),
-								 :(ports[i].local_id),
-								 :(ports[i].type_id),
-								 :(ports[i].domain_id) )
+								 :(ports[i].addressId),
+								 :(ports[i].localId),
+								 :(ports[i]._typeId),
+								 :(ports[i].domainId) )
 					};
 					conn.commit();
 				}
@@ -205,13 +206,13 @@ final class NetdbInterfaceSave {
 						update AMFICOM.CABLEPORTS
 							set
 								NAME = :(cports[i].name),
-								EQUIPMENT_ID = :(cports[i].equipment_id),
-								INTERFACE_ID = :(cports[i].interface_id),
+								EQUIPMENT_ID = :(cports[i].equipmentId),
+								INTERFACE_ID = :(cports[i].interfaceId),
 								DESCRIPTION = :(cports[i].description),
-								ADDRESS_ID = :(cports[i].address_id),
-								LOCAL_ID = :(cports[i].local_id),
-								TYPE_ID = :(cports[i].type_id),
-								DOMAIN_ID = :(cports[i].domain_id)
+								ADDRESS_ID = :(cports[i].addressId),
+								LOCAL_ID = :(cports[i].localId),
+								TYPE_ID = :(cports[i]._typeId),
+								DOMAIN_ID = :(cports[i].domainId)
 							where ID = :(cports[i].id)
 					};
 				}
@@ -242,13 +243,13 @@ final class NetdbInterfaceSave {
 							values(
 								 :(cports[i].id),
 								 :(cports[i].name),
-								 :(cports[i].equipment_id),
-								 :(cports[i].interface_id),
+								 :(cports[i].equipmentId),
+								 :(cports[i].interfaceId),
 								 :(cports[i].description),
-								 :(cports[i].address_id),
-								 :(cports[i].local_id),
-								 :(cports[i].type_id),
-								 :(cports[i].domain_id) )
+								 :(cports[i].addressId),
+								 :(cports[i].localId),
+								 :(cports[i]._typeId),
+								 :(cports[i].domainId) )
 					};
 					conn.commit();
 				}
@@ -267,99 +268,6 @@ final class NetdbInterfaceSave {
 			saveCharacteristics(conn, "CABLEPORTCHARACTERISTICS", "CABLE_PORT_ID", cports[i].id, cports[i].characteristics);
 
 			CatalogSchemeMapUpdater.cablePortUpdated(conn, cports[i]);
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	static int saveTestPorts(final Connection conn, TestPort_Transferable[] testports) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		int i;
-		int j;
-		int len;
-		int count = 0;
-
-		String id = "";
-		len = testports.length;
-		for (i = 0; i < len; i++)
-		{
-			try
-			{
-				#sql [connCtx] {
-					select count(*) into :count from AMFICOM.TESTPORTS
-						where ID = :(testports[i].id)
-				};
-				if(count == 0)
-				{
-					throw new SQLException("do insert!");
-				}
-				System.out.println("update testport " + testports[i].id);
-				try
-				{
-					#sql [connCtx] {
-						update AMFICOM.TESTPORTS
-							set
-								NAME = :(testports[i].name),
-								EQUIPMENT_ID = :(testports[i].equipment_id),
-								PORT_ID = :(testports[i].port_id),
-								TYPE_ID = :(testports[i].type_id)
-							where ID = :(testports[i].id)
-					};
-				}
-				catch(SQLException e)
-				{
-					System.out.println("error saVing testport: " + e.getMessage());
-					e.printStackTrace();
-					return Constants.ERROR_UPDATING;
-				}
-				conn.commit();
-			}
-			catch(SQLException e)
-			{
-				System.out.println("insert new testport " + testports[i].id);
-				try
-				{
-					#sql [connCtx] {
-						insert into AMFICOM.TESTPORTS(
-								ID,
-								NAME,
-								EQUIPMENT_ID,
-								PORT_ID,
-								TYPE_ID)
-							values(
-								 :(testports[i].id),
-								 :(testports[i].name),
-								 :(testports[i].equipment_id),
-								 :(testports[i].port_id),
-								 :(testports[i].type_id) )
-					};
-
-					String at_s = ResourcedbInterface.getUid(conn, "testport");
-					#sql [connCtx] {
-						insert into AMFICOM.EQUIPMENTTESTPORTS(
-								ID,
-								EQUIPMENT_ID,
-								TEST_PORT_ID)
-							values(
-								:at_s,
-								:(testports[i].equipment_id),
-								:(testports[i].id) )
-					};
-					conn.commit();
-				}
-				catch(SQLException ex)
-				{
-					System.out.println("error saVing testport: " + ex.getMessage());
-					ex.printStackTrace();
-					return Constants.ERROR_SAVING;
-				}
-				catch(Exception exx)
-				{
-					System.out.println("error generating testport: " + exx.getMessage());
-					return Constants.ERROR_SAVING;
-				}
-			}
-			saveCharacteristics(conn, "TESTPORTCHARACTERISTICS", "TEST_PORT_ID", testports[i].id, testports[i].characteristics);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
@@ -393,13 +301,13 @@ final class NetdbInterfaceSave {
 						update AMFICOM.LINKS
 							set
 								NAME = :(links[i].name),
-								TYPE_ID = :(links[i].type_id),
+								TYPE_ID = :(links[i]._typeId),
 								DESCRIPTION = :(links[i].description),
-								INVENTORY_NR = :(links[i].inventory_nr),
+								INVENTORY_NR = :(links[i].inventoryNr),
 								MANUFACTURER = :(links[i].manufacturer),
-								MANUFACTURER_CODE = :(links[i].manufacturer_code),
+								MANUFACTURER_CODE = :(links[i].manufacturerCode),
 								SUPPLIER = :(links[i].supplier),
-								SUPPLIER_CODE = :(links[i].supplier_code),
+								SUPPLIER_CODE = :(links[i].supplierCode),
 								LINK_CLASS = :(links[i].link_class),
 								START_EQUIPMENT_ID = :(links[i].start_equipment_id),
 								START_PORT_ID = :(links[i].start_port_id),
@@ -407,7 +315,7 @@ final class NetdbInterfaceSave {
 								END_PORT_ID = :(links[i].end_port_id),
 								IMAGE_ID = :(links[i].image_id),
 								MODIFIED = SYSDATE,
-								DOMAIN_ID = :(links[i].domain_id),
+								DOMAIN_ID = :(links[i].domainId),
 								PHYSICAL_LENGTH = :(links[i].physical_length),
 								OPTICAL_LENGTH = :(links[i].optical_length)
 							where ID = :(links[i].id)
@@ -450,13 +358,13 @@ final class NetdbInterfaceSave {
 							values(
 								 :(links[i].id),
 								 :(links[i].name),
-								 :(links[i].type_id),
+								 :(links[i]._typeId),
 								 :(links[i].description),
-								 :(links[i].inventory_nr),
+								 :(links[i].inventoryNr),
 								 :(links[i].manufacturer),
-								 :(links[i].manufacturer_code),
+								 :(links[i].manufacturerCode),
 								 :(links[i].supplier),
-								 :(links[i].supplier_code),
+								 :(links[i].supplierCode),
 								 :(links[i].link_class),
 								 :(links[i].start_equipment_id),
 								 :(links[i].start_port_id),
@@ -464,7 +372,7 @@ final class NetdbInterfaceSave {
 								 :(links[i].end_port_id),
 								 :(links[i].image_id),
 								 SYSDATE,
-								 :(links[i].domain_id),
+								 :(links[i].domainId),
 								:(links[i].physical_length),
 								:(links[i].optical_length) )
 					};
@@ -509,7 +417,7 @@ final class NetdbInterfaceSave {
 							 :(threads[i].name),
 							 :(threads[i].color),
 							 :(threads[i].mark),
-							 :(threads[i].link_type_id),
+							 :(threads[i].linkTypeId),
 							 :cable_id )
 				};
 
@@ -561,21 +469,21 @@ final class NetdbInterfaceSave {
 						update AMFICOM.CABLELINKS
 							set
 								NAME = :(links[i].name),
-								TYPE_ID = :(links[i].type_id),
+								TYPE_ID = :(links[i]._typeId),
 								DESCRIPTION = :(links[i].description),
-								INVENTORY_NR = :(links[i].inventory_nr),
+								INVENTORY_NR = :(links[i].inventoryNr),
 								MANUFACTURER = :(links[i].manufacturer),
-								MANUFACTURER_CODE = :(links[i].manufacturer_code),
+								MANUFACTURER_CODE = :(links[i].manufacturerCode),
 								SUPPLIER = :(links[i].supplier),
-								SUPPLIER_CODE = :(links[i].supplier_code),
+								SUPPLIER_CODE = :(links[i].supplierCode),
 								LINK_CLASS = :(links[i].link_class),
 								START_EQUIPMENT_ID = :(links[i].start_equipment_id),
 								START_PORT_ID = :(links[i].start_port_id),
 								END_EQUIPMENT_ID = :(links[i].end_equipment_id),
 								END_PORT_ID = :(links[i].end_port_id),
-								IMAGE_ID = :(links[i].image_id),
+								IMAGE_ID = :(links[i].imageId),
 								MODIFIED = SYSDATE,
-								DOMAIN_ID = :(links[i].domain_id),
+								DOMAIN_ID = :(links[i].domainId),
 								PHYSICAL_LENGTH = :(links[i].physical_length),
 								OPTICAL_LENGTH = :(links[i].optical_length)
 							where ID = :(links[i].id)
@@ -618,21 +526,21 @@ final class NetdbInterfaceSave {
 							values(
 								 :(links[i].id),
 								 :(links[i].name),
-								 :(links[i].type_id),
+								 :(links[i]._typeId),
 								 :(links[i].description),
-								 :(links[i].inventory_nr),
+								 :(links[i].inventoryNr),
 								 :(links[i].manufacturer),
-								 :(links[i].manufacturer_code),
+								 :(links[i].manufacturerCode),
 								 :(links[i].supplier),
-								 :(links[i].supplier_code),
+								 :(links[i].supplierCode),
 								 :(links[i].link_class),
 								 :(links[i].start_equipment_id),
 								 :(links[i].start_port_id),
 								 :(links[i].end_equipment_id),
 								 :(links[i].end_port_id),
-								 :(links[i].image_id),
+								 :(links[i].imageId),
 								 SYSDATE,
-								 :(links[i].domain_id),
+								 :(links[i].domainId),
 								:(links[i].physical_length),
 								:(links[i].optical_length) )
 					};
@@ -683,23 +591,23 @@ final class NetdbInterfaceSave {
 							set
 								NAME = :(equipments[i].name),
 								DESCRIPTION = :(equipments[i].description),
-								TYPE_ID = :(equipments[i].type_id),
+								TYPE_ID = :(equipments[i]._typeId),
 								LONGITUDE = :(equipments[i].longitude),
 								LATITUDE = :(equipments[i].latitude),
-								HW_SERIAL = :(equipments[i].hw_serial),
-								SW_SERIAL = :(equipments[i].sw_serial),
-								HW_VERSION = :(equipments[i].hw_version),
-								SW_VERSION = :(equipments[i].sw_version),
-								INVENTORY_NR = :(equipments[i].inventory_nr),
+								HW_SERIAL = :(equipments[i].hwSerial),
+								SW_SERIAL = :(equipments[i].swSerial),
+								HW_VERSION = :(equipments[i].hwVersion),
+								SW_VERSION = :(equipments[i].swVersion),
+								INVENTORY_NR = :(equipments[i].inventoryNr),
 								MANUFACTURER = :(equipments[i].manufacturer),
-								MANUFACTURER_CODE = :(equipments[i].manufacturer_code),
+								MANUFACTURER_CODE = :(equipments[i].manufacturerCode),
 								SUPPLIER = :(equipments[i].supplier),
-								SUPPLIER_CODE = :(equipments[i].supplier_code),
-								EQ_CLASS = :(equipments[i].eq_class),
-								IMAGE_ID = :(equipments[i].image_id),
+								SUPPLIER_CODE = :(equipments[i].supplierCode),
+								EQ_CLASS = :(equipments[i].eqClass),
+								IMAGE_ID = :(equipments[i].imageId),
 								IS_KIS = :(equipments[i].is_kis),
-								AGENT_ID = :(equipments[i].agent_id),
-								DOMAIN_ID = :(equipments[i].domain_id),
+								AGENT_ID = :(equipments[i].agentId),
+								DOMAIN_ID = :(equipments[i].domainId),
 								MODIFIED = SYSDATE
 							where ID = :(equipments[i].id)
 					};
@@ -744,26 +652,26 @@ final class NetdbInterfaceSave {
 								 :(equipments[i].id),
 								 :(equipments[i].name),
 								 :(equipments[i].description),
-								 :(equipments[i].type_id),
+								 :(equipments[i]._typeId),
 
 								 :(equipments[i].longitude),
 								 :(equipments[i].latitude),
-								 :(equipments[i].hw_serial),
-								 :(equipments[i].sw_serial),
-								 :(equipments[i].hw_version),
-								 :(equipments[i].sw_version),
+								 :(equipments[i].hwSerial),
+								 :(equipments[i].swSerial),
+								 :(equipments[i].hwVersion),
+								 :(equipments[i].swVersion),
 
-								 :(equipments[i].inventory_nr),
+								 :(equipments[i].inventoryNr),
 								 :(equipments[i].manufacturer),
-								 :(equipments[i].manufacturer_code),
+								 :(equipments[i].manufacturerCode),
 								 :(equipments[i].supplier),
-								 :(equipments[i].supplier_code),
+								 :(equipments[i].supplierCode),
 
-								 :(equipments[i].eq_class),
-								 :(equipments[i].image_id),
+								 :(equipments[i].eqClass),
+								 :(equipments[i].imageId),
 								 :(equipments[i].is_kis),
-								 :(equipments[i].agent_id),
-								 :(equipments[i].domain_id),
+								 :(equipments[i].agentId),
+								 :(equipments[i].domainId),
 								 SYSDATE )
 					};
 					conn.commit();

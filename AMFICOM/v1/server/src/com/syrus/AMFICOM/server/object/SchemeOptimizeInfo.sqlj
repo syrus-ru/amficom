@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeOptimizeInfo.sqlj,v 1.1.2.5 2004/09/09 11:35:21 bass Exp $
+ * $Id: SchemeOptimizeInfo.sqlj,v 1.1.2.6 2004/10/18 15:31:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import java.util.Vector;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2004/09/09 11:35:21 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2004/10/18 15:31:42 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -44,7 +44,7 @@ final class SchemeOptimizeInfo {
 	private double survivor_rate = 0.0;
 
 	private double[] refl_prices = new double[0];
-	private double[] switch_prices = new double[0];
+	private double[] switchPrices = new double[0];
 
    	private String[] refl_names = new String[0];
 	private String[] switch_names = new String[0];
@@ -66,48 +66,48 @@ final class SchemeOptimizeInfo {
 
 		this.soi = soi;
 		this.id = soi.id;
-		this.scheme_id = soi.scheme_id;
-		this.solution_compact_id = soi.solution_compact_id;
+		this.scheme_id = soi.schemeId;
+		this.solution_compact_id = soi.solutionCompactId;
 	    	this.date = soi.date;
-		this.optimize_mode = soi.optimize_mode;
+		this.optimize_mode = soi.optimizeMode;
 		this.iterations = soi.iterations;
 		this.price = soi.price;
 		this.wavelength = soi.wavelength;
-		this.len_margin = soi.len_margin;
-		this.mutation_rate = soi.mutation_rate;
-		this.mutation_degree = soi.mutation_degree;
-		this.rtu_delete_prob = soi.rtu_delete_prob;
-		this.rtu_create_prob = soi.rtu_create_prob;
-		this.nodes_splice_prob = soi.nodes_splice_prob;
-		this.nodes_cut_prob = soi.nodes_cut_prob;
-		this.survivor_rate = soi.survivor_rate;
+		this.len_margin = soi.lenMargin;
+		this.mutation_rate = soi.mutationRate;
+		this.mutation_degree = soi.mutationDegree;
+		this.rtu_delete_prob = soi.rtuDeleteProb;
+		this.rtu_create_prob = soi.rtuCreateProb;
+		this.nodes_splice_prob = soi.nodesSpliceProb;
+		this.nodes_cut_prob = soi.nodesCutProb;
+		this.survivor_rate = soi.survivorRate;
 		this.price = soi.price;
 		this.iterations = soi.iterations;
-		this.refl_prices = new double[soi.refl_prices.length];
-		for (int i = 0; i < soi.refl_prices.length; i++)
-			this.refl_prices[i] = soi.refl_prices[i];
-		this.switch_prices = new double[soi.switch_prices.length];
-		for (int i = 0; i < soi.switch_prices.length; i++)
-			this.switch_prices[i] = soi.switch_prices[i];
-		this.refl_names = new String[soi.refl_names.length];
-		for (int i = 0; i < soi.refl_names.length; i++)
-			this.refl_names[i] = soi.refl_names[i];
-		this.switch_names = new String[soi.switch_names.length];
-		for (int i = 0; i < soi.switch_names.length; i++)
-			this.switch_names[i] = soi.switch_names[i];
-		this.refl_ranges = new double[soi.refl_ranges.length];
-		for (int i = 0; i < soi.refl_ranges.length; i++)
-			this.refl_ranges[i] = soi.refl_ranges[i];
-		this.switch_nports = new double[soi.switch_nports.length];
-		for (int i = 0; i < soi.switch_nports.length; i++)
-			this.switch_nports[i] = soi.switch_nports[i];
+		this.refl_prices = new double[soi.reflPrices.length];
+		for (int i = 0; i < soi.reflPrices.length; i++)
+			this.refl_prices[i] = soi.reflPrices[i];
+		this.switchPrices = new double[soi.switchPrices.length];
+		for (int i = 0; i < soi.switchPrices.length; i++)
+			this.switchPrices[i] = soi.switchPrices[i];
+		this.refl_names = new String[soi.reflNames.length];
+		for (int i = 0; i < soi.reflNames.length; i++)
+			this.refl_names[i] = soi.reflNames[i];
+		this.switch_names = new String[soi.switchNames.length];
+		for (int i = 0; i < soi.switchNames.length; i++)
+			this.switch_names[i] = soi.switchNames[i];
+		this.refl_ranges = new double[soi.reflRanges.length];
+		for (int i = 0; i < soi.reflRanges.length; i++)
+			this.refl_ranges[i] = soi.reflRanges[i];
+		this.switch_nports = new double[soi.switchNports.length];
+		for (int i = 0; i < soi.switchNports.length; i++)
+			this.switch_nports[i] = soi.switchNports[i];
 		#sql [connCtx] {
 			INSERT INTO amficom.schemeoptimizeinfo (id, scheme_id, solution_compact_id, opt_date, optimize_mode, iterations, price, wavelength, len_margin, mutation_rate, mutation_degree, rtu_delete_prob, rtu_create_prob, nodes_splice_prob, nodes_cut_prob, survivor_rate, refl_prices, refl_names, refl_ranges, switch_prices, switch_nports, switch_names) VALUES (:id, :scheme_id, :solution_compact_id, :date, :optimize_mode, :iterations, :price, :wavelength, :len_margin, :mutation_rate, :mutation_degree, :rtu_delete_prob, :rtu_create_prob, :nodes_splice_prob, :nodes_cut_prob, :survivor_rate, empty_blob(), empty_blob(), empty_blob(), empty_blob(), empty_blob(), empty_blob())
 		};
 		try {
 			refl_prices_b = ByteArray.toByteArray(refl_prices);
 			refl_ranges_b = ByteArray.toByteArray(refl_ranges);
-			switch_prices_b = ByteArray.toByteArray(switch_prices);
+			switch_prices_b = ByteArray.toByteArray(switchPrices);
 			switch_nports_b = ByteArray.toByteArray(switch_nports);
 		} catch (IOException ex) {
 			refl_prices_b = new byte[0];
@@ -125,7 +125,7 @@ final class SchemeOptimizeInfo {
 		JdbcBlobManager.setData(conn, "refl_prices", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, refl_prices_b);
 		JdbcBlobManager.setData(conn, "refl_names", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, refl_names_b);
 		JdbcBlobManager.setData(conn, "refl_ranges", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, refl_ranges_b);
-		JdbcBlobManager.setData(conn, "switch_prices", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, switch_prices_b);
+		JdbcBlobManager.setData(conn, "switchPrices", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, switch_prices_b);
 		JdbcBlobManager.setData(conn, "switch_nports", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, switch_nports_b);
 		JdbcBlobManager.setData(conn, "switch_names", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, switch_names_b);
 		conn.commit();
@@ -197,7 +197,7 @@ final class SchemeOptimizeInfo {
 		switch_prices_b = JdbcBlobManager.getData(switch_prices_blob);
 		
 		refl_prices = new ByteArray(refl_prices_b).toDoubleArray();
-		switch_prices = new ByteArray(switch_prices_b).toDoubleArray();
+		switchPrices = new ByteArray(switch_prices_b).toDoubleArray();
 		
 		refl_ranges_b = JdbcBlobManager.getData(refl_ranges_blob);
 		switch_nports_b = JdbcBlobManager.getData(switch_nports_blob);
@@ -267,7 +267,7 @@ final class SchemeOptimizeInfo {
 		refl_prices,
 		refl_names,
 		refl_ranges,
-		switch_prices,
+		switchPrices,
 		switch_nports,
 		switch_names);
 		return soi;

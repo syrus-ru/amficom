@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceLoad.sqlj,v 1.1.2.2 2004/09/09 11:35:20 bass Exp $
+ * $Id: MapdbInterfaceLoad.sqlj,v 1.1.2.3 2004/10/18 15:31:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,14 @@
 
 package com.syrus.AMFICOM.server.object;
 
+import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
 import java.sql.*;
 import java.util.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/10/18 15:31:41 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -23,12 +23,11 @@ final class MapdbInterfaceLoad {
 	private MapdbInterfaceLoad() {
 	}
 
-	static void loadMaps(final Connection conn, String domain_id, Collection mapIds, MapContextSeq_TransferableHolder mapContextSeq) throws SQLException {
+	static void loadMaps(final Connection conn, String domain_id, Collection mapIds, MapSeq_TransferableHolder mapSeq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		int count;
-		Collection mapContexts = new LinkedList();
-		MapContext_Transferable mc_ts[];
+		Collection maps = new LinkedList();
 
 		String It_name = "";
 		String It_codename = "";
@@ -50,9 +49,9 @@ final class MapdbInterfaceLoad {
 		String path_ids[] = new String[0];
 		String mark_ids[] = new String[0];
 
-		MapContextIterator mapContextIterator = null;
+		MapIterator mapIterator = null;
 		try {
-			#sql [connCtx] mapContextIterator = {
+			#sql [connCtx] mapIterator = {
 				select
 					ID,
 					NAME,
@@ -75,35 +74,35 @@ final class MapdbInterfaceLoad {
 			};
 
 		count = 0;
-		while (mapContextIterator.next()) {
+		while (mapIterator.next()) {
 			count ++;
 
-			String id = mapContextIterator.id();
+			String id = mapIterator.id();
 
-			try { It_name = mapContextIterator.name(); }
+			try { It_name = mapIterator.name(); }
 			catch(SQLException e) { }
 			if(It_name == null) It_name = "";
-			try { It_codename = mapContextIterator.codename(); }
+			try { It_codename = mapIterator.codename(); }
 			catch(SQLException e) { }
 			if(It_codename == null) It_codename = "";
-			try { It_description = mapContextIterator.description(); }
+			try { It_description = mapIterator.description(); }
 			catch(SQLException e) { }
 			if(It_description == null) It_description = "";
-			try { It_show_nodes = (mapContextIterator.show_nodes() == 0)? false:true; }
+			try { It_show_nodes = (mapIterator.show_nodes() == 0)? false:true; }
 			catch(SQLException e) { }
-			try { It_mouse_tolerancy = mapContextIterator.mouse_tolerancy(); }
+			try { It_mouse_tolerancy = mapIterator.mouse_tolerancy(); }
 			catch(SQLException e) { }
-			try { It_zoom_factor = Double.parseDouble(mapContextIterator.zoom_factor()); }
+			try { It_zoom_factor = Double.parseDouble(mapIterator.zoom_factor()); }
 			catch(SQLException e) { }
-			try { It_default_zoom_factor = Double.parseDouble(mapContextIterator.default_zoom_factor()); }
+			try { It_default_zoom_factor = Double.parseDouble(mapIterator.default_zoom_factor()); }
 			catch(SQLException e) { }
-			try { It_longitude = mapContextIterator.longitude(); }
+			try { It_longitude = mapIterator.longitude(); }
 			catch(SQLException e) { }
 			if(It_longitude == null) It_longitude = "";
-			try { It_latitude = mapContextIterator.latitude(); }
+			try { It_latitude = mapIterator.latitude(); }
 			catch(SQLException e) { }
 			if(It_latitude == null) It_latitude = "";
-			try { It_scheme_id = mapContextIterator.scheme_id(); }
+			try { It_scheme_id = mapIterator.scheme_id(); }
 			catch(SQLException e) { }
 			if(It_scheme_id == null) It_scheme_id = "";
 
@@ -135,18 +134,18 @@ final class MapdbInterfaceLoad {
 			mark_ids = new String[vector2.size()];
 			vector2.copyInto(mark_ids);
 
-			mapContexts.add(new MapContext_Transferable(
+			maps.add(new Map_Transferable(
 					id,
 					It_name,
 					It_codename,
-					mapContextIterator.user_id(),
+					mapIterator.user_id(),
 					It_description,
-					mapContextIterator.domain_id(),
+					mapIterator.domain_id(),
 
-					mapContextIterator.created().getTime(),
-					mapContextIterator.created_by(),
-					mapContextIterator.modified().getTime(),
-					mapContextIterator.modified_by(),
+					mapIterator.created().getTime(),
+					mapIterator.created_by(),
+					mapIterator.modified().getTime(),
+					mapIterator.modified_by(),
 
 					It_scheme_id,
 
@@ -166,10 +165,10 @@ final class MapdbInterfaceLoad {
 					It_mouse_tolerancy));
 				mapIds.add(id);
 			}
-			mapContextSeq.value = (MapContext_Transferable[]) (mapContexts.toArray(new MapContext_Transferable[mapContexts.size()]));
+			mapSeq.value = (Map_Transferable[]) (maps.toArray(new Map_Transferable[maps.size()]));
 		} finally {
-			if (mapContextIterator != null)
-				mapContextIterator.close();
+			if (mapIterator != null)
+				mapIterator.close();
 		}
 	}
 
@@ -321,7 +320,7 @@ final class MapdbInterfaceLoad {
 				while (midIt.next())
 				{
 					eq_t = loadMapElement(conn, midIt.map_element_id(), imageResourceIds);
-					eq_t.map_id = current_map_id;
+					eq_t.mapId = current_map_id;
 					vector.add(eq_t);
 				}
 				eq_ts = new MapElement_Transferable[vector.size()];
@@ -455,7 +454,7 @@ final class MapdbInterfaceLoad {
 				while (midIt.next())
 				{
 					eq_t = loadMapMark(conn, midIt.map_mark_id());
-					eq_t.map_id = current_map_id;
+					eq_t.mapId = current_map_id;
 					vector.add(eq_t);
 				}
 				eq_ts = new MapMarkElement_Transferable[vector.size()];
@@ -513,7 +512,7 @@ final class MapdbInterfaceLoad {
 			vector2.copyInto(attributes);
 
 			kis_t = loadMapElement(conn, It_map_element_id, imageResourceIds);
-			kis_t.map_id = It_map_id;
+			kis_t.mapId = It_map_id;
 			kis_t.ism_map_id = It_ism_map_id;
 			kis_t.map_kis_id = It_id;
 			kis_t.has_kis = true;
@@ -550,7 +549,7 @@ final class MapdbInterfaceLoad {
 				{
 					System.out.println("...loading KIS: " + kidIt.map_kis_id());
 					kis_t = loadMapKIS(conn, kidIt.map_kis_id(), imageResourceIds);
-					kis_t.map_id = current_map_id;
+					kis_t.mapId = current_map_id;
 					vector.add(kis_t);
 				}
 				kis_ts = new MapElement_Transferable[vector.size()];
@@ -686,7 +685,7 @@ final class MapdbInterfaceLoad {
 				while (nidIt.next())
 				{
 					node_t = loadMapNode(conn, nidIt.map_node_id(), imageResourceIds);
-					node_t.map_id = current_map_id;
+					node_t.mapId = current_map_id;
 					vector.add(node_t);
 				}
 				node_ts = new MapPhysicalNodeElement_Transferable[vector.size()];
@@ -807,7 +806,7 @@ final class MapdbInterfaceLoad {
 				while (nidIt.next())
 				{
 					nl_t = loadMapNodeLink(conn, nidIt.map_node_link_id());
-					nl_t.map_id = current_map_id;
+					nl_t.mapId = current_map_id;
 					vector.add(nl_t);
 				}
 
@@ -965,7 +964,7 @@ final class MapdbInterfaceLoad {
 				while (lidIt.next())
 				{
 					link_t = loadMapLink(conn, lidIt.map_link_id());
-					link_t.map_id = current_map_id;
+					link_t.mapId = current_map_id;
 					vector.add(link_t);
 				}
 				link_ts = new MapPhysicalLinkElement_Transferable[vector.size()];
@@ -1120,7 +1119,7 @@ final class MapdbInterfaceLoad {
 				while (pidIt.next())
 				{
 					path_t = loadMapPath(conn, pidIt.map_path_id());
-					path_t.map_id = current_map_id;
+					path_t.mapId = current_map_id;
 					vector.add(path_t);
 				}
 				path_ts = new MapPathElement_Transferable[vector.size()];
@@ -1130,275 +1129,6 @@ final class MapdbInterfaceLoad {
 			} finally {
 				if (pidIt != null)
 					pidIt.close();
-			}
-		}
-	}
-
-	static void loadJMaps(final Connection conn, Vector map_ids, ISMMapContextSeq_TransferableHolder mapseq) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		int count;
-		ISMMapContext_Transferable mc_t;
-		Vector vector = new Vector();
-		ISMMapContext_Transferable mc_ts[];
-		ISMMapContextIterator mcIt = null;
-
-		String It_id = "";
-		String It_name = "";
-		String It_codename = "";
-		String It_description = "";
-		long It_created = 0;
-		String It_created_by = "";
-		long It_modified = 0;
-		String It_modified_by = "";
-		String It_domain_id = "";
-		String It_user_id = "";
-		String It_map_id = "";
-
-		Vector vector2 = new Vector();
-		String kis_ids[] = new String[0];
-		String node_ids[] = new String[0];
-		String nodeLink_ids[] = new String[0];
-		String physicalLink_ids[] = new String[0];
-		String path_ids[] = new String[0];
-		String mark_ids[] = new String[0];
-		try
-		{
-			#sql [connCtx] mcIt = { select
-					ID,
-					NAME,
-					CODENAME,
-					DESCRIPTION,
-					CREATED,
-					CREATED_BY,
-					MODIFIED,
-					MODIFIED_BY,
-					DOMAIN_ID,
-					OWNER_ID,
-					MAP_ID
-				from AMFICOM.ISMMAPCONTEXTS };
-
-			count = 0;
-			while (mcIt.next())
-			{
-				count ++;
-				try { It_id = mcIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_name = mcIt.name(); }
-				catch(SQLException e) { }
-				if(It_name == null) It_name = "";
-				try { It_codename = mcIt.codename(); }
-				catch(SQLException e) { }
-				if(It_codename == null) It_codename = "";
-				try { It_description = mcIt.description(); }
-				catch(SQLException e) { }
-				if(It_description == null) It_description = "";
-				try { It_created = (mcIt.created()).getTime(); }
-				catch(Exception e) { }
-				try { It_created_by = mcIt.created_by(); }
-				catch(SQLException e) { }
-				if(It_created_by == null) It_created_by = "";
-				try { It_modified = (mcIt.modified()).getTime(); }
-				catch(Exception e) { }
-				try { It_modified_by = mcIt.modified_by(); }
-				catch(SQLException e) { }
-				if(It_modified_by == null) It_modified_by = "";
-				try { It_domain_id = mcIt.domain_id(); }
-				catch(SQLException e) { }
-				if(It_domain_id == null) It_domain_id = "";
-				try { It_user_id = mcIt.owner_id(); }
-				catch(SQLException e) { }
-				if(It_user_id == null) It_user_id = "";
-				try { It_map_id = mcIt.map_id(); }
-				catch(SQLException e) { }
-				if(It_map_id == null) It_map_id = "";
-	
-				vector2 = loadISMMapElementIds(conn, "MAPKISELEMENTS", It_id);
-				kis_ids = new String[vector2.size()];
-				vector2.copyInto(kis_ids);
-	
-				vector2 = loadISMMapElementIds(conn, "MAPPHYSICALNODEELEMENTS", It_id);
-				node_ids = new String[vector2.size()];
-				vector2.copyInto(node_ids);
-	
-				vector2 = loadISMMapElementIds(conn, "MAPNODELINKELEMENTS", It_id);
-				nodeLink_ids = new String[vector2.size()];
-				vector2.copyInto(nodeLink_ids);
-	
-				vector2 = loadISMMapElementIds(conn, "MAPPHYSICALLINKELEMENTS", It_id);
-				physicalLink_ids = new String[vector2.size()];
-				vector2.copyInto(physicalLink_ids);
-	
-				vector2 = loadISMMapElementIds(conn, "MAPPATHELEMENTS", It_id);
-				path_ids = new String[vector2.size()];
-				vector2.copyInto(path_ids);
-	
-				vector2 = loadISMMapElementIds(conn, "MAPMARKELEMENTS", It_id);
-				mark_ids = new String[vector2.size()];
-				vector2.copyInto(mark_ids);
-	
-				mc_t = new ISMMapContext_Transferable(
-					It_id,
-					It_name,
-					It_codename,
-					It_user_id,
-					It_description,
-					It_domain_id,
-
-					It_created,
-					It_created_by,
-					It_modified,
-					It_modified_by,
-
-					It_map_id,
-
-					kis_ids,
-					node_ids,
-					nodeLink_ids,
-					physicalLink_ids,
-					path_ids,
-					mark_ids);
-
-				vector.addElement(mc_t);
-				map_ids.addElement(It_id);
-			}
-			mc_ts = new ISMMapContext_Transferable[vector.size()];
-			vector.copyInto(mc_ts);
-			mapseq.value = mc_ts;
-		} finally {
-			if (mcIt != null)
-				mcIt.close();
-		}
-	}
-
-	static void loadJMapPaths(final Connection conn, Vector map_ids, MapPathElementSeq_TransferableHolder pathseq) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		int count;
-		int mapcount = map_ids.size();
-		MapPathElement_Transferable path_t;
-		Vector vector = new Vector();
-		MapPathElement_Transferable path_ts[];
-
-		String It_description = "";
-		String It_id = "";
-		String It_end_node_id = "";
-		String It_start_node_id = "";
-		String It_name = "";
-		String It_owner_id = "";
-		String It_type_id = "";
-		String It_map_id = "";
-		String It_ism_map_id = "";
-		String It_path_id = "";
-
-		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
-
-		String current_map_id = "";
-
-		Vector vector2 = new Vector();
-
-		String link_ids[] = new String[0];
-		for(int j = 0; j < mapcount; j++)
-		{
-			current_map_id = (String) map_ids.get(j);
-			MapPathIterator pathIt = null;
-			try {
-				#sql [connCtx] pathIt = { select
-						DESCRIPTION,
-						ID,
-						END_NODE_ID,
-						START_NODE_ID,
-						NAME,
-						OWNER_ID,
-						TYPE_ID,
-						MAP_ID,
-						ISM_MAP_ID,
-						PATH_ID
-					from AMFICOM.MAPPATHELEMENTS
-					where ISM_MAP_ID = :current_map_id
-					};
-
-				count = 0;
-				while (pathIt.next())
-				{
-					count ++;
-
-					try { It_description = pathIt.description(); }
-					catch(SQLException e) { }
-					if(It_description == null) It_description = "";
-					try { It_id = pathIt.id(); }
-					catch(SQLException e) { }
-					if(It_id == null) It_id = "";
-					try { It_end_node_id = pathIt.end_node_id(); }
-					catch(SQLException e) { }
-					if(It_end_node_id == null) It_end_node_id = "";
-					try { It_start_node_id = pathIt.start_node_id(); }
-					catch(SQLException e) { }
-					if(It_start_node_id == null) It_start_node_id = "";
-					try { It_name = pathIt.name(); }
-					catch(SQLException e) { }
-					if(It_name == null) It_name = "";
-					try { It_owner_id = pathIt.owner_id(); }
-					catch(SQLException e) { }
-					if(It_owner_id == null) It_owner_id = "";
-					try { It_type_id = pathIt.type_id(); }
-					catch(SQLException e) { }
-					if(It_type_id == null) It_type_id = "";
-					try { It_map_id = pathIt.map_id(); }
-					catch(SQLException e) { }
-					if(It_map_id == null) It_map_id = "";
-					try { It_ism_map_id = pathIt.ism_map_id(); }
-					catch(SQLException e) { }
-					if(It_ism_map_id == null) It_ism_map_id = "";
-					try { It_path_id = pathIt.path_id(); }
-					catch(SQLException e) { }
-					if(It_path_id == null) It_path_id = "";
-
-					vector2 = loadAttributes(conn, "MAPPATHELEMENTATTRIBUTES", "MAP_PATH_ELEMENT_ID", It_id);
-					attributes = new ElementAttribute_Transferable[vector2.size()];
-					vector2.copyInto(attributes);
-
-					vector2 = new Vector();
-
-					PathLinkIterator plIt = null;
-					try {
-						#sql [connCtx] plIt = {
-							select PHYSICAL_LINK_ID, PATH_ID
-							from AMFICOM.MAPPATHLINKS
-								where PATH_ID = :It_id };
-						while (plIt.next())
-							vector2.addElement(plIt.physical_link_id());
-					} finally {
-						if (plIt != null)
-							plIt.close();
-					}
-
-					link_ids = new String[vector2.size()];
-					vector2.copyInto(link_ids);
-
-					path_t = new MapPathElement_Transferable(
-							It_id,
-							It_name,
-							It_type_id,
-							It_description,
-							It_owner_id,
-							It_map_id,
-							It_ism_map_id,
-							It_start_node_id,
-							It_end_node_id,
-							attributes,
-							It_path_id,
-							link_ids);
-
-					vector.addElement(path_t);
-				}
-				path_ts = new MapPathElement_Transferable[vector.size()];
-				vector.copyInto(path_ts);
-				pathseq.value = path_ts;
-			} finally {
-				if (pathIt != null)
-					pathIt.close();
 			}
 		}
 	}
@@ -1811,395 +1541,6 @@ final class MapdbInterfaceLoad {
 		}
 	}
 
-	static void loadJMapNodes(final Connection conn, Vector map_ids, MapPhysicalNodeElementSeq_TransferableHolder nodeseq, Collection imageResourceIds) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		int count;
-		int mapcount = map_ids.size();
-		MapPhysicalNodeElement_Transferable node_t;
-		Vector vector = new Vector();
-		MapPhysicalNodeElement_Transferable node_ts[];
-
-		String It_symbol_id = "";
-		String It_latitude = "";
-		String It_owner_id = "";
-		String It_type_id = "";
-		String It_description = "";
-		String It_id = "";
-		String It_map_id = "";
-		String It_ism_map_id = "";
-		boolean It_active = false;
-		String It_name = "";
-		String It_physical_link_id = "";
-		String It_longitude = "";
-
-		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
-
-		String current_map_id = "";
-
-		String It_e_id = "";
-		String It_attribute_id = "";
-		String It_attribute_type_id = "";
-		String It_attribute_value = "";
-		String It_attribute_name = "";
-		Vector vector2 = new Vector();
-
-		for(int j = 0; j < mapcount; j++) {
-			current_map_id = (String) map_ids.get(j);
-			MapNodeIterator mapNodeIterator = null;
-			try {
-				#sql [connCtx] mapNodeIterator = {
-					select
-						SYMBOL_ID,
-						LATITUDE,
-						OWNER_ID,
-						DESCRIPTION,
-						ID,
-						MAP_ID,
-						ISM_MAP_ID,
-						ACTIVE,
-						NAME,
-						PHYSICAL_LINK_ID,
-						LONGITUDE
-					from AMFICOM.MAPPHYSICALNODEELEMENTS
-					where ISM_MAP_ID = :current_map_id
-					};
-
-				count = 0;
-				while (mapNodeIterator.next()) {
-					count ++;
-
-					try { It_symbol_id = mapNodeIterator.symbol_id(); }
-					catch(SQLException e) { }
-					if(It_symbol_id == null) It_symbol_id = "";
-					try { It_latitude = mapNodeIterator.latitude(); }
-					catch(SQLException e) { }
-					if(It_symbol_id == null) It_symbol_id = "";
-					try { It_owner_id = mapNodeIterator.owner_id(); }
-					catch(SQLException e) { }
-					if(It_owner_id == null) It_owner_id = "";
-					try { It_description = mapNodeIterator.description(); }
-					catch(SQLException e) { }
-					if(It_description == null) It_description = "";
-					try { It_id = mapNodeIterator.id(); }
-					catch(SQLException e) { }
-					if(It_id == null) It_id = "";
-					try { It_map_id = mapNodeIterator.map_id(); }
-					catch(SQLException e) { }
-					if(It_map_id == null) It_map_id = "";
-					try { It_active = (mapNodeIterator.active() == 0)? false:true; }
-					catch(SQLException e) { }
-					try { It_name = mapNodeIterator.name(); }
-					catch(SQLException e) { }
-					if(It_name == null) It_name = "";
-					try { It_physical_link_id = mapNodeIterator.physical_link_id(); }
-					catch(SQLException e) { }
-					if(It_physical_link_id == null) It_physical_link_id = "";
-					try { It_longitude = mapNodeIterator.longitude(); }
-					catch(SQLException e) { }
-					if(It_longitude == null) It_longitude = "";
-
-					vector2 = loadAttributes(conn, "MAPPHYSICALNODEELEMENTATTRIBUT", "MAP_PHYSICAL_NODE_ELEMENT_ID", It_id);
-					attributes = new ElementAttribute_Transferable[vector2.size()];
-					vector2.copyInto(attributes);
-
-					node_t = new MapPhysicalNodeElement_Transferable(
-							It_id,
-							It_name,
-							It_longitude,
-							It_latitude,
-							It_description,
-							It_owner_id,
-							It_map_id,
-							It_ism_map_id,
-							It_symbol_id,
-							It_physical_link_id,
-							It_active,
-							attributes);
-
-					imageResourceIds.add(It_symbol_id);
-					vector.addElement(node_t);
-				}
-				node_ts = new MapPhysicalNodeElement_Transferable[vector.size()];
-				vector.copyInto(node_ts);
-				nodeseq.value = node_ts;
-
-			} finally {
-				if (mapNodeIterator != null)
-					mapNodeIterator.close();
-			}
-		}
-	}
-
-	static void loadJMapNodeLinks(final Connection conn, Vector map_ids, MapNodeLinkElementSeq_TransferableHolder nodelinkseq) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		int count;
-		int mapcount = map_ids.size();
-		MapNodeLinkElement_Transferable nl_t;
-		Vector vector = new Vector();
-		MapNodeLinkElement_Transferable nl_ts[];
-		MapNodeLinkIterator nlIt = null;
-
-		int It_alarmed_line_size = 1;
-		String It_metric = "";
-		String It_physical_link_id = "";
-		int It_alarmed_color = 0;
-		String It_codename = "";
-		String It_description = "";
-		String It_id = "";
-		int It_color = 0;
-		String It_end_node_id = "";
-		String It_start_node_id = "";
-		String It_name = "";
-		boolean It_alarmed = false;
-		String It_style = "";
-		boolean It_show_alarmed = false;
-		String It_alarmed_style = "";
-		int It_line_size = 1;
-		String It_owner_id = "";
-		String It_type_id = "";
-		String It_font_id = "";
-		boolean It_show_metric = false;
-		String It_selected_style = "";
-		String It_map_id = "";
-		String It_ism_map_id = "";
-
-		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
-
-		String current_map_id = "";
-
-		String It_e_id = "";
-		String It_attribute_id = "";
-		String It_attribute_type_id = "";
-		String It_attribute_value = "";
-		String It_attribute_name = "";
-		Vector vector2 = new Vector();
-
-		for(int j = 0; j < mapcount; j++)
-		{
-			current_map_id = (String) map_ids.get(j);
-			try
-			{
-				#sql [connCtx] nlIt = { select
-						PHYSICAL_LINK_ID,
-						ID,
-						END_NODE_ID,
-						START_NODE_ID,
-						NAME,
-						OWNER_ID,
-						MAP_ID,
-						ISM_MAP_ID
-					from AMFICOM.MAPNODELINKELEMENTS
-					where ISM_MAP_ID = :current_map_id
-					};
-
-				count = 0;
-				while (nlIt.next())
-				{
-					count ++;
-
-					try { It_physical_link_id = nlIt.physical_link_id(); }
-					catch(SQLException e) { }
-					if(It_physical_link_id == null) It_physical_link_id = "";
-					try { It_id = nlIt.id(); }
-					catch(SQLException e) { }
-					if(It_id == null) It_id = "";
-					try { It_end_node_id = nlIt.end_node_id(); }
-					catch(SQLException e) { }
-					if(It_end_node_id == null) It_end_node_id = "";
-					try { It_start_node_id = nlIt.start_node_id(); }
-					catch(SQLException e) { }
-					if(It_start_node_id == null) It_start_node_id = "";
-					try { It_name = nlIt.name(); }
-					catch(SQLException e) { }
-					if(It_name == null) It_name = "";
-					try { It_owner_id = nlIt.owner_id(); }
-					catch(SQLException e) { }
-					if(It_owner_id == null) It_owner_id = "";
-					try { It_map_id = nlIt.map_id(); }
-					catch(SQLException e) { }
-					if(It_map_id == null) It_map_id = "";
-
-					vector2 = loadAttributes(conn, "MAPNODELINKELEMENTATTRIBUTES", "MAP_NODE_LINK_ID", It_id);
-					attributes = new ElementAttribute_Transferable[vector2.size()];
-					vector2.copyInto(attributes);
-
-					nl_t = new MapNodeLinkElement_Transferable(
-							It_id,
-							It_name,
-							It_owner_id,
-							It_map_id,
-							It_ism_map_id,
-							It_start_node_id,
-							It_end_node_id,
-							It_physical_link_id,
-							attributes);
-
-					vector.addElement(nl_t);
-				}
-				nl_ts = new MapNodeLinkElement_Transferable[vector.size()];
-				vector.copyInto(nl_ts);
-				nodelinkseq.value = nl_ts;
-			} finally {
-				if (nlIt != null)
-					nlIt.close();
-			}
-		}
-	}
-
-	static void loadJMapLinks(final Connection conn, Vector map_ids, MapPhysicalLinkElementSeq_TransferableHolder linkseq) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		int count;
-		int mapcount = map_ids.size();
-		MapPhysicalLinkElement_Transferable link_t;
-		Vector vector = new Vector();
-		MapPhysicalLinkElement_Transferable link_ts[];
-		MapPhysicalLinkIterator linkIt = null;
-
-		int It_alarmed_line_size = 1;
-		String It_metric = "";
-		int It_alarmed_color = 0;
-		String It_codename = "";
-		String It_description = "";
-		String It_id = "";
-		int It_color = 0;
-		String It_end_node_id = "";
-		String It_start_node_id = "";
-		String It_name = "";
-		boolean It_alarmed = false;
-		String It_style = "";
-		boolean It_show_alarmed = false;
-		String It_alarmed_style = "";
-		int It_line_size = 1;
-		String It_owner_id = "";
-		String It_type_id = "";
-		String It_font_id = "";
-		boolean It_show_metric = false;
-		String It_selected_style = "";
-		String It_map_id = "";
-		String It_ism_map_id = "";
-		String It_link_id = "";
-		String It_link_type_id = "";
-
-		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
-
-		String current_map_id = "";
-
-		String It_e_id = "";
-		String It_attribute_id = "";
-		String It_attribute_type_id = "";
-		String It_attribute_value = "";
-		String It_attribute_name = "";
-		Vector vector2 = new Vector();
-
-		String nodelink_ids[] = new String[0];
-
-		for(int j = 0; j < mapcount; j++)
-		{
-			current_map_id = (String) map_ids.get(j);
-			try
-			{
-				#sql [connCtx] linkIt = { select
-						DESCRIPTION,
-						ID,
-						END_NODE_ID,
-						START_NODE_ID,
-						NAME,
-						OWNER_ID,
-						TYPE_ID,
-						MAP_ID,
-						ISM_MAP_ID,
-						LINK_ID,
-						LINK_TYPE_ID
-					from AMFICOM.MAPPHYSICALLINKELEMENTS
-					where ISM_MAP_ID = :current_map_id
-					};
-
-				count = 0;
-				while (linkIt.next())
-				{
-					count ++;
-
-					try { It_description = linkIt.description(); }
-					catch(SQLException e) { }
-					if(It_description == null) It_description = "";
-					try { It_id = linkIt.id(); }
-					catch(SQLException e) { }
-					if(It_id == null) It_id = "";
-					try { It_end_node_id = linkIt.end_node_id(); }
-					catch(SQLException e) { }
-					if(It_end_node_id == null) It_end_node_id = "";
-					try { It_start_node_id = linkIt.start_node_id(); }
-					catch(SQLException e) { }
-					if(It_start_node_id == null) It_start_node_id = "";
-					try { It_name = linkIt.name(); }
-					catch(SQLException e) { }
-					if(It_name == null) It_name = "";
-					try { It_owner_id = linkIt.owner_id(); }
-					catch(SQLException e) { }
-					if(It_owner_id == null) It_owner_id = "";
-					try { It_type_id = linkIt.type_id(); }
-					catch(SQLException e) { }
-					if(It_type_id == null) It_type_id = "";
-					try { It_map_id = linkIt.map_id(); }
-					catch(SQLException e) { }
-					if(It_map_id == null) It_map_id = "";
-					try { It_link_id = linkIt.link_id(); }
-					catch(SQLException e) { }
-					if(It_link_id == null) It_link_id = "";
-					try { It_link_type_id = linkIt.link_type_id(); }
-					catch(SQLException e) { }
-					if(It_link_type_id == null) It_link_type_id = "";
-
-					vector2 = loadAttributes(conn, "MAPPHYSICALLINKELEMENTATTRIBUT", "MAP_PHYSICAL_LINK_ELEMENT_ID", It_id);
-					attributes = new ElementAttribute_Transferable[vector2.size()];
-					vector2.copyInto(attributes);
-
-					vector2 = new Vector();
-					IdIterator idIt = null;
-					try {
-						#sql [connCtx] idIt = {
-							select ID from AMFICOM.MAPNODELINKELEMENTS
-								where PHYSICAL_LINK_ID = :It_id
-						};
-						while (idIt.next())
-							vector2.addElement(idIt.id());
-					} finally {
-						if (idIt != null)
-							idIt.close();
-					}
-					nodelink_ids = new String[vector2.size()];
-					vector2.copyInto(nodelink_ids);
-
-					link_t = new MapPhysicalLinkElement_Transferable(
-							It_id,
-							It_name,
-							It_type_id,
-							It_description,
-							It_owner_id,
-							It_map_id,
-							It_ism_map_id,
-							It_start_node_id,
-							It_end_node_id,
-							attributes,
-							It_link_id,
-							It_link_type_id,
-							nodelink_ids);
-
-					vector.addElement(link_t);
-				}
-				link_ts = new MapPhysicalLinkElement_Transferable[vector.size()];
-				vector.copyInto(link_ts);
-				linkseq.value = link_ts;
-			} finally {
-				if (linkIt != null)
-					linkIt.close();
-			}
-		}
-	}
-
 	#sql public static iterator ElementAttributeIterator(
 		String id,
 		String attribute_type_id,
@@ -2219,20 +1560,7 @@ final class MapdbInterfaceLoad {
 	#sql public static iterator IdIterator(
 		String id);
 
-	#sql private static iterator ISMMapContextIterator(
-		String id,
-		String name,
-		String codename,
-		String description,
-		Timestamp created,
-		String created_by,
-		Timestamp modified,
-		String modified_by,
-		String domain_id,
-		String owner_id,
-		String map_id);
-
-	#sql private static iterator MapContextIterator(
+	#sql private static iterator MapIterator(
 		String id,
 		String name,
 		String codename,

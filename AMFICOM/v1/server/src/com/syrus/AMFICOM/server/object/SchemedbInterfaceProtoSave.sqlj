@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceProtoSave.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
+ * $Id: SchemedbInterfaceProtoSave.sqlj,v 1.1.2.5 2004/10/18 15:31:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/10/18 15:31:42 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -55,19 +55,18 @@ final class SchemedbInterfaceProtoSave {
 				{
 					index = id_vec.indexOf(idIt.scheme_port_id());
 					System.out.println("update port " + ports[index].id);
-					int is_a_p = (ports[index].is_access_port)? 1 : 0;
 					try
 					{
 						#sql [connCtx] {
 							update AMFICOM.SCHEMEPORTS
 								set
 									NAME = :(ports[index].name),
-									PORT_TYPE_ID = :(ports[index].port_type_id),
-									PORT_ID = :(ports[index].port_id),
-									IS_ACCESS_PORT = :is_a_p,
-									ACCESS_PORT_TYPE_ID = :(ports[index].access_port_type_id),
-									ACCESS_PORT_ID = :(ports[index].access_port_id),
-									DIRECTION_TYPE = :(ports[index].direction_type)
+									PORT_TYPE_ID = :(ports[index].portTypeId),
+									PORT_ID = :(ports[index].portId),
+									IS_ACCESS_PORT = :(ports[index].isMeasurementPort ? 1 : 0),
+									ACCESS_PORT_TYPE_ID = :(ports[index].measurementPortTypeId),
+									ACCESS_PORT_ID = :(ports[index].measurementPortId),
+									DIRECTION_TYPE = :(ports[index].directionType)
 								where ID = :(ports[index].id)
 						};
 						MapdbInterfaceSave.saveAttributes(conn, "SCHEMEPORTATTRIBUTES", "SCHEME_PORT_ID", ports[index].id, ports[index].attributes);
@@ -99,7 +98,6 @@ final class SchemedbInterfaceProtoSave {
 		{
 			SchemePort_Transferable port = (SchemePort_Transferable )vec.get(i);
 			System.out.println("insert new port " + port.id);
-			int is_a_p = (port.is_access_port)? 1 : 0;
 			try
 			{
 				#sql [connCtx] {
@@ -115,12 +113,12 @@ final class SchemedbInterfaceProtoSave {
 						values(
 							 :(port.id),
 							 :(port.name),
-							 :(port.port_type_id),
-							 :(port.port_id),
-							 :is_a_p,
-							 :(port.access_port_type_id),
-							 :(port.access_port_id),
-							 :(port.direction_type) )
+							 :(port.portTypeId),
+							 :(port.portId),
+							 :(port.isMeasurementPort ? 1 : 0),
+							 :(port.measurementPortTypeId),
+							 :(port.measurementPortId),
+							 :(port.directionType) )
 				};
 
 				MapdbInterfaceSave.saveAttributes(conn, "SCHEMEPORTATTRIBUTES", "SCHEME_PORT_ID", port.id, port.attributes);
@@ -207,19 +205,18 @@ final class SchemedbInterfaceProtoSave {
 				{
 					index = id_vec.indexOf(idIt.scheme_cable_port_id());
 					System.out.println("update port " + ports[index].id);
-					int is_a_p = (ports[index].is_access_port)? 1 : 0;
 					try
 					{
 						#sql [connCtx] {
 							update AMFICOM.SCHEMECABLEPORTS
 								set
 									NAME = :(ports[index].name),
-									CABLE_PORT_TYPE_ID = :(ports[index].cable_port_type_id),
-									CABLE_PORT_ID = :(ports[index].cable_port_id),
-									IS_ACCESS_PORT = :is_a_p,
-									ACCESS_PORT_TYPE_ID = :(ports[index].access_port_type_id),
-									ACCESS_PORT_ID = :(ports[index].access_port_id),
-									DIRECTION_TYPE = :(ports[index].direction_type)
+									CABLE_PORT_TYPE_ID = :(ports[index].cablePortTypeId),
+									CABLE_PORT_ID = :(ports[index].cablePortId),
+									IS_ACCESS_PORT = :(ports[index].isMeasurementPort ? 1 : 0),
+									ACCESS_PORT_TYPE_ID = :(ports[index].measurementPortTypeId),
+									ACCESS_PORT_ID = :(ports[index].measurementPortId),
+									DIRECTION_TYPE = :(ports[index].directionType)
 								where ID = :(ports[index].id)
 						};
 						MapdbInterfaceSave.saveAttributes(conn, "SCHEMECABLEPORTATTRIBUTES", "SCHEME_CABLE_PORT_ID", ports[index].id, ports[index].attributes);
@@ -251,7 +248,6 @@ final class SchemedbInterfaceProtoSave {
 		{
 			SchemeCablePort_Transferable port = (SchemeCablePort_Transferable )vec.get(i);
 			System.out.println("insert new cable port " + port.id);
-			int is_a_p = (port.is_access_port)? 1 : 0;
 			try
 			{
 				#sql [connCtx] {
@@ -267,12 +263,12 @@ final class SchemedbInterfaceProtoSave {
 						values(
 							 :(port.id),
 							 :(port.name),
-							 :(port.cable_port_type_id),
-							 :(port.cable_port_id),
-							 :is_a_p,
-							 :(port.access_port_type_id),
-							 :(port.access_port_id),
-							 :(port.direction_type) )
+							 :(port.cablePortTypeId),
+							 :(port.cablePortId),
+							 :(port.isMeasurementPort ? 1 : 0),
+							 :(port.measurementPortTypeId),
+							 :(port.measurementPortId),
+							 :(port.directionType) )
 				};
 
 				MapdbInterfaceSave.saveAttributes(conn, "SCHEMECABLEPORTATTRIBUTES", "SCHEME_CABLE_PORT_ID", port.id, port.attributes);
@@ -355,12 +351,12 @@ final class SchemedbInterfaceProtoSave {
 						update AMFICOM.SCHEMELINKS
 							set
 								NAME = :(links[i].name),
-								LINK_TYPE_ID = :(links[i].link_type_id),
-								LINK_ID = :(links[i].link_id),
-								SOURCe_PORT_ID = :(links[i].source_port_id),
-								TARGET_PORT_ID = :(links[i].target_port_id),
-								PHYSICAL_LENGTH = :(links[i].physical_length),
-								OPTICAL_LENGTH = :(links[i].optical_length)
+								LINK_TYPE_ID = :(links[i].linkTypeId),
+								LINK_ID = :(links[i].linkId),
+								SOURCe_PORT_ID = :(links[i].sourcePortId),
+								TARGET_PORT_ID = :(links[i].targetPortId),
+								PHYSICAL_LENGTH = :(links[i].physicalLength),
+								OPTICAL_LENGTH = :(links[i].opticalLength)
 							where ID = :(links[i].id)
 					};
 				}
@@ -390,12 +386,12 @@ final class SchemedbInterfaceProtoSave {
 							values(
 								:(links[i].id),
 								:(links[i].name),
-								:(links[i].link_type_id),
-								:(links[i].link_id),
-								:(links[i].source_port_id),
-								:(links[i].target_port_id),
-								:(links[i].physical_length),
-								:(links[i].optical_length) )
+								:(links[i].linkTypeId),
+								:(links[i].linkId),
+								:(links[i].sourcePortId),
+								:(links[i].targetPortId),
+								:(links[i].physicalLength),
+								:(links[i].opticalLength) )
 					};
 					conn.commit();
 				}
@@ -508,10 +504,10 @@ final class SchemedbInterfaceProtoSave {
 					update AMFICOM.SCHEMEPROTOELEMENTS
 						set
 							NAME = :(proto.name),
-							EQUIPMENT_TYPE_ID = :(proto.equipment_type_id),
+							EQUIPMENT_TYPE_ID = :(proto.equipmentTypeId),
 							IS_TOP_LEVEL = 1,
 							MODIFIED = :ts,
-							SYMBOL_ID = :(proto.symbol_id),
+							SYMBOL_ID = :(proto.symbolId),
 							LABEL = :(proto.label),
 							DOMAIN_ID = :domain_id
 						where ID = :(proto.id)
@@ -569,11 +565,11 @@ final class SchemedbInterfaceProtoSave {
 						values(
 							:(proto.id),
 							:(proto.name),
-							:(proto.equipment_type_id),
+							:(proto.equipmentTypeId),
 							1,
 							:scheme_cell_id,
 							:ugo_cell_id,
-							:(proto.symbol_id),
+							:(proto.symbolId),
 							:(proto.label),
 							SYSDATE,
 							:domain_id )
@@ -640,11 +636,11 @@ final class SchemedbInterfaceProtoSave {
 				where SCHEME_PROTO_ELEMENT_ID = :(proto.id)
 			};
 
-			for (i = 0; i < proto.proto_element_ids.length; i++)
+			for (i = 0; i < proto.protoElementIds.length; i++)
 			{
 				String a_id = ResourcedbInterface.getUid(conn, "proto");
 				#sql [connCtx] { insert into SCHEMEPROTOELEMENTPES(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_PE_ID)
-					values(:a_id, :(proto.id), :(proto.proto_element_ids[i]) )
+					values(:a_id, :(proto.id), :(proto.protoElementIds[i]) )
 				};
 			}
 			conn.commit();

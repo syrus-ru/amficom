@@ -1,5 +1,5 @@
 /*
- * $Id: ISMdbInterfaceLoad.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
+ * $Id: ISMdbInterfaceLoad.sqlj,v 1.1.2.5 2004/10/18 15:31:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,15 +9,15 @@
 package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.ISM.*;
 import com.syrus.AMFICOM.CORBA.Network.*;
 import java.sql.*;
-import java.util.Vector;
-import sqlj.runtime.SQLNullException;
+import java.util.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/10/18 15:31:41 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -25,36 +25,23 @@ final class ISMdbInterfaceLoad {
 	private ISMdbInterfaceLoad() {
 	}
 
-	private static Vector loadKISAccessPorts(final Connection conn, String element_id) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
+	private static String[] loadRtuMeasurementPorts(final Connection conn, final String elementId) throws SQLException {
 		IdIterator idIt = null;
-		Vector vector = new Vector();
-		try
-		{
-			#sql [connCtx] idIt = { select ID
-				from AMFICOM.ACCESSPORTS
-					where KIS_ID = :element_id };
-
+		try {
+			#sql [new DefaultContext(conn)] idIt = {
+				SELECT id FROM amficom.accessports WHERE kis_id = :elementId
+			};
+			Collection ids = new LinkedList();
 			while (idIt.next())
-			{
-				try { vector.addElement(idIt.id()); }
-				catch(SQLNullException e) { }
-			}
-			idIt.close();
+				ids.add(idIt.id());
+			return (String[]) (ids.toArray(new String[ids.size()]));
+		} finally {
+			if (idIt != null)
+				idIt.close();
 		}
-		catch(Exception e)
-		{
-			if(idIt != null) try {
-			idIt.close();
-			}catch(Exception exe) {}
-			System.out.println("could not get access ports for kis " + element_id + ": " + e.getMessage());
-			e.printStackTrace();
-		}
-		return vector;
 	}
 
-	private static Object loadAccessPort(final Connection conn, String aport_id) throws SQLException {
+	private static Object loadMeasurementPort(final Connection conn, String aport_id) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -69,8 +56,8 @@ final class ISMdbInterfaceLoad {
 
 		Vector vector = new Vector();
 
-		AccessPort_Transferable apt_t;
-		AccessPortIterator ptIt = null;
+		MeasurementPort_Transferable apt_t;
+		MeasurementPortIterator ptIt = null;
 		Vector vector2;
 
 		try
@@ -117,7 +104,7 @@ final class ISMdbInterfaceLoad {
 			characteristics = new Characteristic_Transferable[vector2.size()];
 			vector2.copyInto(characteristics);
 
-			apt_t = new AccessPort_Transferable(
+			apt_t = new MeasurementPort_Transferable(
 				It_id,
 				It_name,
 				It_type_id,
@@ -134,13 +121,12 @@ final class ISMdbInterfaceLoad {
 			if(ptIt != null) try {
 			ptIt.close();
 			}catch(Exception exe) {}
-			System.out.println("error loading Access port: " + e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	static int loadKISs(final Connection conn, String domain_id, EquipmentSeq_TransferableHolder kiss, Vector port_vec, Vector cport_vec, Vector access_port_vec) throws SQLException {
+	static int loadKISs(final Connection conn, String domain_id, EquipmentSeq_TransferableHolder kiss, Vector port_vec, Vector cport_vec, Vector measurementPorts) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		int k;
@@ -173,7 +159,6 @@ final class ISMdbInterfaceLoad {
 		Characteristic_Transferable characteristics[];
 		String[] port_ids;
 		String[] cport_ids;
-		String[] access_port_ids;
 
 		Vector vector = new Vector();
 
@@ -291,11 +276,9 @@ final class ISMdbInterfaceLoad {
 				for(k = 0; k < cport_ids.length; k++)
 					cport_vec.add(NetdbInterfaceLoad.loadCablePort(conn, cport_ids[k]));
 
-				vector2 = loadKISAccessPorts(conn, It_id);
-				access_port_ids = new String[vector2.size()];
-				vector2.copyInto(access_port_ids);
-				for(k = 0; k < access_port_ids.length; k++)
-					access_port_vec.add(loadAccessPort(conn, access_port_ids[k]));
+				String measurementPortIds[] = loadRtuMeasurementPorts(conn, It_id);
+				for (int i = 0; i < measurementPortIds.length; i++)
+					measurementPorts.add(loadMeasurementPort(conn, measurementPortIds[i]));
 
 				e_t = new Equipment_Transferable(
 					It_id,
@@ -316,17 +299,17 @@ final class ISMdbInterfaceLoad {
 					It_supplier_code,
 
 					It_eq_class,
+					It_domain_id,
 					It_image_id,
 
 					It_agent_id,
-					It_domain_id,
 					It_is_kis,
 
 					It_modified,
 
 					port_ids,
 					cport_ids,
-					access_port_ids,
+					measurementPortIds,
 					characteristics);
 
 				vector.add(e_t);
@@ -342,7 +325,6 @@ final class ISMdbInterfaceLoad {
 			if(eIt != null) try {
 			eIt.close();
 			}catch(Exception exe) {}
-			System.out.println("error loading equipments: " + e.getMessage());
 			e.printStackTrace();
 			return Constants.ERROR_LOADING;
 		}
@@ -359,7 +341,7 @@ final class ISMdbInterfaceLoad {
 		String It_kis_id = "";
 		String It_local_address = "";
 
-		String It_access_port_id = "";
+		String measurementPortId = "";
 		String It_me_id = "";
 		String It_domain_id = "";
 
@@ -372,14 +354,6 @@ final class ISMdbInterfaceLoad {
 		TransmissionPath_Transferable tp_t;
 		TransmissionPath_Transferable[] tp_ts;
 		TransmissionPathIterator tpIt = null;
-
-		int It_pl_n = 0;
-		boolean It_pl_is_cable = false;
-		String It_pl_link_id = "";
-		String It_pl_thread_id = "";
-		TransmissionPathLinkIterator lidIt = null;
-		TransmissionPathElement_Transferable[] links = new TransmissionPathElement_Transferable[0];
-		TransmissionPathElement_Transferable pathlink;
 
 		IdIterator idIt = null;
 		Vector vector2;
@@ -421,43 +395,6 @@ final class ISMdbInterfaceLoad {
 				try
 				{
 
-					vector2 = new Vector();
-					try
-					{
-						#sql [connCtx] lidIt = { select N, IS_CABLE, LINK_ID, THREAD_ID
-								from AMFICOM.PATHLINKS
-								where PATH_ID = :It_id
-						};
-						while(lidIt.next())
-						{
-							try { It_pl_n = lidIt.n(); }
-							catch(SQLException e) { }
-							try { It_pl_is_cable = (lidIt.is_cable() == 0)?false : true; }
-							catch(SQLException e) { }
-							try { It_pl_link_id = lidIt.link_id(); }
-							catch(SQLException e) { }
-							if(It_pl_link_id == null) It_pl_link_id = "";
-							try { It_pl_thread_id = lidIt.thread_id(); }
-							catch(SQLException e) { }
-							if(It_pl_thread_id == null) It_pl_thread_id = "";
-
-							pathlink = new TransmissionPathElement_Transferable(
-									It_pl_n,
-									It_pl_is_cable,
-									It_pl_link_id,
-									It_pl_thread_id);
-							vector2.add(pathlink);
-						}
-						lidIt.close();
-					}
-					catch (Exception e)
-					{
-						lidIt.close();
-						System.out.println("Oblazhalis' - " + e.getMessage());
-						e.printStackTrace();
-					}
-					links = new TransmissionPathElement_Transferable[vector2.size()];
-					vector2.copyInto(links);
 					try
 					{
 						#sql [connCtx] { select ID, LOCAL_ADDRESS
@@ -475,47 +412,34 @@ final class ISMdbInterfaceLoad {
 
 					try
 					{
-						#sql [connCtx] {select ACCESS_PORT_ID into :It_access_port_id
+						#sql [connCtx] {select ACCESS_PORT_ID into :measurementPortId
 								from AMFICOM.MONITOREDELEMENTATTACHMENTS
 								where MONITORED_ELEMENT_ID = :It_me_id };
 					}
 					catch(Exception ee)
 					{
-						It_access_port_id = "";
+						measurementPortId = "";
 					}
-					if(It_access_port_id == null) It_access_port_id = "";
+					if(measurementPortId == null) measurementPortId = "";
 
 					vector2 = NetdbInterfaceLoad.loadCharacteristics(conn, "TRANSMISSIONPATHCHARS", "PATH_ID", It_id);
 					characteristics = new Characteristic_Transferable[vector2.size()];
 					vector2.copyInto(characteristics);
-
-					System.out.println("return TP: id " +
-						" " + It_id +
-						" name " + It_name +
-						" descr " + It_description +
-						" kis " + It_kis_id +
-						" ap " + It_access_port_id +
-						" localaddress " + It_local_address +
-						" me " + It_me_id);
 
 					tp_t = new TransmissionPath_Transferable(
 						It_id,
 						It_name,
 						It_description,
 						It_kis_id,
-						It_access_port_id,
+						measurementPortId,
 						It_local_address,
 						It_me_id,
 						It_domain_id,
 						It_modified,
-						links,
 						characteristics);
 
 					vector.add(tp_t);
-				}
-				catch(Exception e)
-				{
-					System.out.println("Transmission path  " + It_id + " could not be loaded: " + e.getMessage());
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -529,7 +453,6 @@ final class ISMdbInterfaceLoad {
 			if(tpIt != null) try {
 			tpIt.close();
 			}catch(Exception exe) {}
-			System.out.println("error loading Transmission paths: " + e.getMessage());
 			e.printStackTrace();
 			return Constants.ERROR_LOADING;
 		}
@@ -544,7 +467,6 @@ final class ISMdbInterfaceLoad {
 		String It_element_name = "";
 		String It_element_type = "";
 		String It_local_address = "";
-		String It_access_port_id = "";
 		String It_domain_id = "";
 		long It_modified = 0;
 
@@ -619,25 +541,21 @@ final class ISMdbInterfaceLoad {
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				try
-				{
-					#sql [connCtx] {select ACCESS_PORT_ID into :It_access_port_id
+				String measurementPortId;
+				#sql [connCtx] {
+					select ACCESS_PORT_ID into :measurementPortId
 							from AMFICOM.MONITOREDELEMENTATTACHMENTS
-							where MONITORED_ELEMENT_ID = :It_id };
-				}
-				catch(Exception ee)
-				{
-					It_access_port_id = "";
-				}
-				if(It_access_port_id == null) It_access_port_id = "";
+							where MONITORED_ELEMENT_ID = :It_id
+				};
+				if(measurementPortId == null) measurementPortId = "";
 
 				me_t = new MonitoredElement_Transferable(
 						It_id,
 						It_element_name,
 						It_element_id,
 						It_element_type,
+						measurementPortId,
 						It_local_address,
-						It_access_port_id,
 						It_domain_id,
 						It_modified);
 
@@ -653,14 +571,13 @@ final class ISMdbInterfaceLoad {
 			if(meIt != null) try {
 			meIt.close();
 			}catch(Exception exe) {}
-			System.out.println("error loading MonitoredElements: " + e.getMessage());
 			e.printStackTrace();
 			return Constants.ERROR_LOADING;
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadKISs(final Connection conn, String domain_id, String ids[], EquipmentSeq_TransferableHolder kiss, Vector port_vec, Vector cport_vec, Vector access_port_vec) throws SQLException {
+	static int loadKISs(final Connection conn, String domain_id, String ids[], EquipmentSeq_TransferableHolder kiss, Vector port_vec, Vector cport_vec, Vector measurementPorts) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		int k;
@@ -693,7 +610,6 @@ final class ISMdbInterfaceLoad {
 		Characteristic_Transferable characteristics[];
 		String[] port_ids;
 		String[] cport_ids;
-		String[] access_port_ids;
 
 		Vector vector = new Vector();
 
@@ -817,11 +733,9 @@ final class ISMdbInterfaceLoad {
 				for(k = 0; k < cport_ids.length; k++)
 					cport_vec.add(NetdbInterfaceLoad.loadCablePort(conn, cport_ids[k]));
 
-				vector2 = loadKISAccessPorts(conn, It_id);
-				access_port_ids = new String[vector2.size()];
-				vector2.copyInto(access_port_ids);
-				for(k = 0; k < access_port_ids.length; k++)
-					access_port_vec.add(loadAccessPort(conn, access_port_ids[k]));
+				String measurementPortIds[] = loadRtuMeasurementPorts(conn, It_id);
+				for (int i = 0; i < measurementPortIds.length; i++)
+					measurementPorts.add(loadMeasurementPort(conn, measurementPortIds[i]));
 
 				e_t = new Equipment_Transferable(
 					It_id,
@@ -842,16 +756,16 @@ final class ISMdbInterfaceLoad {
 					It_supplier_code,
 
 					It_eq_class,
+					It_domain_id,
 					It_image_id,
 
 					It_agent_id,
-					It_domain_id,
 					It_is_kis,
 					It_modified,
 
 					port_ids,
 					cport_ids,
-					access_port_ids,
+					measurementPortIds,
 					characteristics);
 
 				vector.add(e_t);
@@ -867,7 +781,6 @@ final class ISMdbInterfaceLoad {
 			if(eIt != null) try {
 			eIt.close();
 			}catch(Exception exe) {}
-			System.out.println("error loading equipments: " + e.getMessage());
 			e.printStackTrace();
 			return Constants.ERROR_LOADING;
 		}
@@ -884,7 +797,7 @@ final class ISMdbInterfaceLoad {
 		String It_kis_id = "";
 		String It_local_address = "";
 
-		String It_access_port_id = "";
+		String measurementPortId = "";
 		String It_me_id = "";
 		String It_domain_id = "";
 
@@ -898,16 +811,7 @@ final class ISMdbInterfaceLoad {
 		TransmissionPath_Transferable[] tp_ts;
 		TransmissionPathIterator tpIt = null;
 
-		int It_pl_n = 0;
-		boolean It_pl_is_cable = false;
-		String It_pl_link_id = "";
-		String It_pl_thread_id = "";
-		TransmissionPathLinkIterator lidIt = null;
-		TransmissionPathElement_Transferable[] links = new TransmissionPathElement_Transferable[0];
-		TransmissionPathElement_Transferable pathlink;
-
 		IdIterator idIt = null;
-		Vector vector2;
 		String[] link_ids = new String[0];
 
 		Vector loadvec = new Vector();
@@ -951,44 +855,6 @@ final class ISMdbInterfaceLoad {
 
 				try
 				{
-
-					vector2 = new Vector();
-					try
-					{
-						#sql [connCtx] lidIt = { select N, IS_CABLE, LINK_ID, THREAD_ID
-								from AMFICOM.PATHLINKS
-								where PATH_ID = :It_id
-						};
-						while(lidIt.next())
-						{
-							try { It_pl_n = lidIt.n(); }
-							catch(SQLException e) { }
-							try { It_pl_is_cable = (lidIt.is_cable() == 0)?false : true; }
-							catch(SQLException e) { }
-							try { It_pl_link_id = lidIt.link_id(); }
-							catch(SQLException e) { }
-							if(It_pl_link_id == null) It_pl_link_id = "";
-							try { It_pl_thread_id = lidIt.thread_id(); }
-							catch(SQLException e) { }
-							if(It_pl_thread_id == null) It_pl_thread_id = "";
-
-							pathlink = new TransmissionPathElement_Transferable(
-									It_pl_n,
-									It_pl_is_cable,
-									It_pl_link_id,
-									It_pl_thread_id);
-							vector2.add(pathlink);
-						}
-						lidIt.close();
-					}
-					catch (Exception e)
-					{
-						lidIt.close();
-						System.out.println("Oblazhalis' - " + e.getMessage());
-						e.printStackTrace();
-					}
-					links = new TransmissionPathElement_Transferable[vector2.size()];
-					vector2.copyInto(links);
 					try
 					{
 						#sql [connCtx] { select ID, LOCAL_ADDRESS
@@ -1006,47 +872,34 @@ final class ISMdbInterfaceLoad {
 
 					try
 					{
-						#sql [connCtx] {select ACCESS_PORT_ID into :It_access_port_id
+						#sql [connCtx] {select ACCESS_PORT_ID into :measurementPortId
 								from AMFICOM.MONITOREDELEMENTATTACHMENTS
 								where MONITORED_ELEMENT_ID = :It_me_id };
 					}
 					catch(Exception ee)
 					{
-						It_access_port_id = "";
+						measurementPortId = "";
 					}
-					if(It_access_port_id == null) It_access_port_id = "";
+					if(measurementPortId == null) measurementPortId = "";
 
-					vector2 = NetdbInterfaceLoad.loadCharacteristics(conn, "TRANSMISSIONPATHCHARS", "PATH_ID", It_id);
+					Vector vector2 = NetdbInterfaceLoad.loadCharacteristics(conn, "TRANSMISSIONPATHCHARS", "PATH_ID", It_id);
 					characteristics = new Characteristic_Transferable[vector2.size()];
 					vector2.copyInto(characteristics);
-
-					System.out.println("return TP: id " +
-						" " + It_id +
-						" name " + It_name +
-						" descr " + It_description +
-						" kis " + It_kis_id +
-						" ap " + It_access_port_id +
-						" localaddress " + It_local_address +
-						" me " + It_me_id);
 
 					tp_t = new TransmissionPath_Transferable(
 						It_id,
 						It_name,
 						It_description,
 						It_kis_id,
-						It_access_port_id,
+						measurementPortId,
 						It_local_address,
 						It_me_id,
 						It_domain_id,
 						It_modified,
-						links,
 						characteristics);
 
 					vector.add(tp_t);
-				}
-				catch(Exception e)
-				{
-					System.out.println("Transmission path  " + It_id + " could not be loaded: " + e.getMessage());
+				} catch(Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -1060,7 +913,6 @@ final class ISMdbInterfaceLoad {
 			if(tpIt != null) try {
 			tpIt.close();
 			}catch(Exception exe) {}
-			System.out.println("error loading Transmission paths: " + e.getMessage());
 			e.printStackTrace();
 			return Constants.ERROR_LOADING;
 		}
@@ -1075,7 +927,6 @@ final class ISMdbInterfaceLoad {
 		String It_element_name = "";
 		String It_element_type = "";
 		String It_local_address = "";
-		String It_access_port_id = "";
 		String It_domain_id = "";
 
 		long It_modified = 0;
@@ -1157,25 +1008,21 @@ final class ISMdbInterfaceLoad {
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				try
-				{
-					#sql [connCtx] {select ACCESS_PORT_ID into :It_access_port_id
+				String measurementPortId;
+				#sql [connCtx] {
+					select ACCESS_PORT_ID into :measurementPortId
 							from AMFICOM.MONITOREDELEMENTATTACHMENTS
-							where MONITORED_ELEMENT_ID = :It_id };
-				}
-				catch(Exception ee)
-				{
-					It_access_port_id = "";
-				}
-				if(It_access_port_id == null) It_access_port_id = "";
+							where MONITORED_ELEMENT_ID = :It_id
+				};
+				if(measurementPortId == null) measurementPortId = "";
 
 				me_t = new MonitoredElement_Transferable(
 						It_id,
 						It_element_name,
 						It_element_id,
 						It_element_type,
+						measurementPortId,
 						It_local_address,
-						It_access_port_id,
 						It_domain_id,
 						It_modified);
 
@@ -1191,7 +1038,6 @@ final class ISMdbInterfaceLoad {
 			if(meIt != null) try {
 			meIt.close();
 			}catch(Exception exe) {}
-			System.out.println("error loading MonitoredElements: " + e.getMessage());
 			e.printStackTrace();
 			return Constants.ERROR_LOADING;
 		}
@@ -1207,7 +1053,7 @@ final class ISMdbInterfaceLoad {
 	#sql public static iterator IdIterator (
 		String id);
 
-	#sql public static iterator AccessPortIterator(
+	#sql public static iterator MeasurementPortIterator(
 		String id,
 		String name,
 		String type_id,
@@ -1238,12 +1084,6 @@ final class ISMdbInterfaceLoad {
 		String domain_id,
 		int is_kis,
 		Timestamp modified);
-
-	#sql public static iterator TransmissionPathLinkIterator(
-		int n,
-		int is_cable,
-		String link_id,
-		String thread_id);
 
 	#sql public static iterator TransmissionPathIterator(
 		String id,
