@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.24 2004/09/13 11:06:32 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.25 2004/09/16 06:59:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/13 11:06:32 $
+ * @version $Revision: 1.25 $, $Date: 2004/09/16 06:59:50 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -41,6 +41,8 @@ public abstract class StorableObjectDatabase {
 	public static final String	COLUMN_MODIFIER_ID		= "modifier_id";
 	public static final String	COMMA				= " , ";
 	public static final String	EQUALS				= " = ";
+	public static final String	NOT_EQUALS			= " <> ";
+	public static final String	NOT					= " NOT ";
 	public static final String	LINK_COLUMN_PARAMETER_MODE	= "parameter_mode";
 
 	public static final String	LINK_COLUMN_PARAMETER_TYPE_ID	= "parameter_type_id";
@@ -465,7 +467,84 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException;
+	
+	/**
+	 * retrive storable objects by additional condition and identifiers not in ids  
+	 * @param ids
+	 * @param condition
+	 * @return
+	 * @throws IllegalDataException
+	 * @throws RetrieveObjectException
+	 */
+	protected List retriveButIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer("1=1");
+			if (ids != null) {
+				int idsLength = ids.size();
+				buffer.append(SQL_AND);
+				buffer.append(COLUMN_ID);				
+				buffer.append(NOT);
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
 
+				int i = 1;
+				for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+					Identifier id = (Identifier) it.next();
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+				buffer.append(CLOSE_BRACKET);
+			}
+			if ((condition != null) && (condition.length() > 0)) {
+				buffer.append(SQL_AND);
+				buffer.append(condition);
+			}
+
+			sql = retrieveQuery(buffer.toString());
+		}
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage(this.getEnityName() + "Database.retriveButIds | Trying: " + sql,
+						Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				StorableObject storableObject = updateEntityFromResultSet(null, resultSet);
+				result.add(storableObject);
+			}
+		} catch (SQLException sqle) {
+			String mesg = this.getEnityName() + "Database.retriveButIds | Cannot execute query "
+					+ sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		} finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+
+
+	/**
+	 * retrive storable objects by identifiers and additional condition
+	 * @param ids
+	 * @param condition
+	 * @return
+	 * @throws IllegalDataException
+	 * @throws RetrieveObjectException
+	 */
 	protected List retriveByIdsOneQuery(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List result = new LinkedList();
 		String sql;
