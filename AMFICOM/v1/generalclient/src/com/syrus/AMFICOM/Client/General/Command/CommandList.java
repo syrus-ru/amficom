@@ -1,44 +1,21 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: исполняемый список команд                                  * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 16 jul 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMMain\com\syrus\AMFICOM\Client\    * //
-// *        General\Command\CommandBundle.java                            * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: CommandList.java,v 1.6 2004/09/27 11:35:43 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
 package com.syrus.AMFICOM.Client.General.Command;
 
 import java.util.LinkedList;
-import java.util.Vector;
 
-public class CommandList extends VoidCommand implements Command
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 11:35:43 $
+ * @module generalclient_v1
+ */
+public class CommandList extends VoidCommand
 {
 	/** список команд */
 	protected Command top = null;
@@ -248,14 +225,11 @@ public class CommandList extends VoidCommand implements Command
 	 */
 	 public Command getBottom()
 	 {
-		Command com;
-		
-		if(top == null)
+		if (top == null)
 			return null;
-		LinkedList commands = new LinkedList();
-		
-		for(com = top; com.getNext() != null; com = com.getNext())
-			;
+		Command com = top;
+		while (com.getNext() != null)
+			com = com.getNext();
 		return com;
 	 }
 
