@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceSorter.java,v 1.8 2004/08/19 08:20:48 bob Exp $
+ * $Id: ObjectResourceSorter.java,v 1.9 2004/08/31 10:33:03 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.Client.Resource;
 import java.util.*;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/19 08:20:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/08/31 10:33:03 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public abstract class ObjectResourceSorter {
@@ -69,6 +69,8 @@ public abstract class ObjectResourceSorter {
 		List sorted_dataSet = new LinkedList();
 
 		int size = list.size();
+		List listToBeSorted = new LinkedList();
+		listToBeSorted.addAll(list);
 		String sort_type = "";
 		ObjectResource temp_or = null;
 		long long_obj_sorter = 0;
