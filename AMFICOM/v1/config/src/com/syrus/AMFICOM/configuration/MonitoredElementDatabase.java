@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.33 2004/12/10 16:07:30 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.34 2004/12/29 15:25:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2004/12/29 15:25:47 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -98,7 +98,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		MonitoredElement monitoredElement = fromStorableObject(storableObject);
+		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
@@ -111,7 +111,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
-		MonitoredElement monitoredElement = fromStorableObject(storableObject);
+		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -137,7 +137,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		MonitoredElement monitoredElement = storableObject == null ? null : fromStorableObject(storableObject);
+		MonitoredElement monitoredElement = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (monitoredElement == null){
 			monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, 0, null, null);			
 		}
@@ -549,7 +549,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("MonitoredElementDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
@@ -558,7 +558,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
     }
 
 	public void delete(StorableObject storableObject) throws IllegalDataException {
-		MonitoredElement monitoredElement = fromStorableObject(storableObject);
+		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
 		int meSort = monitoredElement.getSort().value();
 		
@@ -617,8 +617,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = super.retrieveByIdsOneQuery(null, condition);
-		else list = super.retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
+		else list = this.retrieveByIdsOneQuery(ids, condition);
 		for (Iterator iter = list.iterator(); iter.hasNext();) {
 			MonitoredElement monitoredElement = (MonitoredElement) iter.next();
 			this.retrieveMonitoredDomainMemberIds(monitoredElement);

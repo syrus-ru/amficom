@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.29 2004/12/29 09:18:21 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.30 2004/12/29 15:25:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/12/29 09:18:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2004/12/29 15:25:46 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -73,7 +73,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		CharacteristicType characteristicType = fromStorableObject(storableObject); 
+		CharacteristicType characteristicType = this.fromStorableObject(storableObject); 
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
@@ -85,7 +85,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
-		CharacteristicType characteristicType = fromStorableObject(storableObject); 
+		CharacteristicType characteristicType = this.fromStorableObject(storableObject); 
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -114,7 +114,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		CharacteristicType characteristicType = storableObject == null ? null : fromStorableObject(storableObject);
+		CharacteristicType characteristicType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		
 		if (characteristicType == null){
 			characteristicType = new CharacteristicType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, 0,
@@ -184,7 +184,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("CharacteristicTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
@@ -194,8 +194,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return super.retrieveByIdsOneQuery(null, condition);
-		return super.retrieveByIdsOneQuery(ids, condition);	
+			return this.retrieveByIdsOneQuery(null, condition);
+		return this.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids, condition);
 	}	
 
@@ -208,7 +208,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		List list = null;
 		
 		try {
-			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}  catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.35 2004/12/10 16:07:30 bob Exp $
+ * $Id: ServerDatabase.java,v 1.36 2004/12/29 15:25:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.36 $, $Date: 2004/12/29 15:25:47 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -90,7 +90,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
-		Server server = fromStorableObject(storableObject);
+		Server server = this.fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(server.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
@@ -110,7 +110,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Server server = (storableObject==null)?
 				new Server(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null) :
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		server.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -124,7 +124,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 		throws IllegalDataException, UpdateObjectException {
-		Server server = fromStorableObject(storableObject);
+		Server server = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getDomainId());
@@ -246,8 +246,8 @@ public class ServerDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
-		else list = retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
+		else list = this.retrieveByIdsOneQuery(ids, condition);
 		
 		if (list != null) {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.7 2004/12/15 12:36:51 max Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.8 2004/12/29 15:25:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/15 12:36:51 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2004/12/29 15:25:46 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -80,7 +80,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		CableThreadType cableThreadType = fromStorableObject(storableObject);
+		CableThreadType cableThreadType = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE
@@ -104,7 +104,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
-		CableThreadType cableThreadType = fromStorableObject(storableObject);
+		CableThreadType cableThreadType = this.fromStorableObject(storableObject);
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -123,7 +123,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		CableThreadType cableThreadType = storableObject == null ? null : fromStorableObject(storableObject);
+		CableThreadType cableThreadType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (cableThreadType == null){
 			cableThreadType = new CableThreadType(DatabaseIdentifier.getIdentifier(resultSet,COLUMN_ID), null, null, null, 
 												  null, 0, null);			
@@ -198,7 +198,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("CableThreadTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
@@ -209,8 +209,8 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) 
 			throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return super.retrieveByIdsOneQuery(null, condition);
-		return super.retrieveByIdsOneQuery(ids, condition);	
+			return this.retrieveByIdsOneQuery(null, condition);
+		return this.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
 	

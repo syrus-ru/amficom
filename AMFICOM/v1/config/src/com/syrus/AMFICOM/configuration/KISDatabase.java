@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.49 2004/12/16 13:19:16 bob Exp $
+ * $Id: KISDatabase.java,v 1.50 2004/12/29 15:25:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/12/16 13:19:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.50 $, $Date: 2004/12/29 15:25:46 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -106,7 +106,7 @@ public class KISDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		KIS kis = fromStorableObject(storableObject);
+		KIS kis = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(kis.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
@@ -128,7 +128,7 @@ public class KISDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		KIS kis = fromStorableObject(storableObject);
+		KIS kis = this.fromStorableObject(storableObject);
 		int i;
 		try {
 			Identifier equipmentId = kis.getEquipmentId();
@@ -150,7 +150,7 @@ public class KISDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		KIS kis = storableObject == null ? null : fromStorableObject(storableObject);
+		KIS kis = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (kis == null) {
 			kis = new KIS(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 										null,
@@ -517,7 +517,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
 		List list = null;
 		try {
-			list = retrieveByIds(null, null);
+			list = this.retrieveByIds(null, null);
 		}
 		catch (IllegalDataException ide) {
 			Log.debugMessage("KISDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
@@ -529,9 +529,9 @@ public class KISDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = super.retrieveByIdsOneQuery(null, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = super.retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(ids, condition);
 
 		if (list != null && !list.isEmpty()) {
 			retrieveKISMeasurementPortIdsByOneQuery(list);

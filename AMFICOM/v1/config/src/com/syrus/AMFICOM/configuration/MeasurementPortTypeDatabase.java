@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.22 2004/12/10 16:07:30 bob Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.23 2004/12/29 15:25:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2004/12/29 15:25:47 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -79,7 +79,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		MeasurementPortType measurementPortType = fromStorableObject(storableObject);
+		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
@@ -90,7 +90,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
-		MeasurementPortType measurementPortType = fromStorableObject(storableObject);
+		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -114,7 +114,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		MeasurementPortType measurementPortType = storableObject == null ? null : fromStorableObject(storableObject);
+		MeasurementPortType measurementPortType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (measurementPortType == null){			
 			measurementPortType = new MeasurementPortType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null);			
 		}
@@ -160,7 +160,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		MeasurementPortType measurementPortType = fromStorableObject(storableObject);
+		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 		case UPDATE_FORCE:
 			super.checkAndUpdateEntity(measurementPortType, true);
@@ -192,7 +192,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("MeasurementPortTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
@@ -204,9 +204,9 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
         if ((ids == null) || (ids.isEmpty()))
-            list = retrieveByIdsOneQuery(null, condition);
+            list = this.retrieveByIdsOneQuery(null, condition);
         else 
-            list = retrieveByIdsOneQuery(ids, condition);
+            list = this.retrieveByIdsOneQuery(ids, condition);
         
         if (list != null) {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);

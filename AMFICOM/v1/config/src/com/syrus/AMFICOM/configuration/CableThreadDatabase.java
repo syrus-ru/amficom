@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.3 2004/12/14 10:20:45 max Exp $
+ * $Id: CableThreadDatabase.java,v 1.4 2004/12/29 15:25:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/14 10:20:45 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2004/12/29 15:25:46 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableThreadDatabase extends StorableObjectDatabase  {
@@ -79,7 +79,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
     
     protected String getUpdateSingleSQLValues(StorableObject storableObject)
     throws IllegalDataException, UpdateObjectException {
-        CableThread cableThread = fromStorableObject(storableObject);
+        CableThread cableThread = this.fromStorableObject(storableObject);
 		
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ DatabaseIdentifier.toSQLString(cableThread.getDomainId()) + COMMA
@@ -92,7 +92,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
     protected int setEntityForPreparedStatement(StorableObject storableObject,
             PreparedStatement preparedStatement, int mode) throws IllegalDataException,
             UpdateObjectException {
-        CableThread cableThread = fromStorableObject(storableObject);
+        CableThread cableThread = this.fromStorableObject(storableObject);
         int i;
         try {
             i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -110,7 +110,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
     protected StorableObject updateEntityFromResultSet(
             StorableObject storableObject, ResultSet resultSet)
             throws IllegalDataException, RetrieveObjectException, SQLException {
-        CableThread cableThread = fromStorableObject(storableObject);
+        CableThread cableThread = this.fromStorableObject(storableObject);
         if (cableThread == null){          
             cableThread = new CableThread(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null,
                                        null, null);            
@@ -138,7 +138,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
     }
     
     public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-        CableThread cableThread = fromStorableObject(storableObject);
+        CableThread cableThread = this.fromStorableObject(storableObject);
         super.retrieveEntity(cableThread);        
     }
     
@@ -151,7 +151,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
     }
     
     public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-        CableThread cableThread = fromStorableObject(storableObject);
+        CableThread cableThread = this.fromStorableObject(storableObject);
         super.insertEntity(cableThread);               
     }
     
@@ -191,7 +191,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
     public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("CableThreadDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
@@ -203,9 +203,9 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = super.retrieveByIdsOneQuery(null, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = super.retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(ids, condition);
 		
 		return list;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.13 2004/12/10 16:07:30 bob Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.14 2004/12/29 15:25:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2004/12/29 15:25:47 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 
@@ -83,7 +83,7 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
     
     protected String getUpdateSingleSQLValues(StorableObject storableObject)
             throws IllegalDataException, UpdateObjectException {
-        TransmissionPathType transmissionPathType = fromStorableObject(storableObject);
+        TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
         String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
             + APOSTOPHE + DatabaseString.toQuerySubString(transmissionPathType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
             + APOSTOPHE + DatabaseString.toQuerySubString(transmissionPathType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
@@ -94,7 +94,7 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
     protected int setEntityForPreparedStatement(StorableObject storableObject,
             PreparedStatement preparedStatement, int mode) throws IllegalDataException,
             UpdateObjectException {
-        TransmissionPathType transmissionPathType = fromStorableObject(storableObject);
+        TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
         int i;
         try {
             i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -111,7 +111,7 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
     protected StorableObject updateEntityFromResultSet(
             StorableObject storableObject, ResultSet resultSet)
             throws IllegalDataException, RetrieveObjectException, SQLException {
-        TransmissionPathType transmissionPathType = storableObject == null ? null : fromStorableObject(storableObject);
+        TransmissionPathType transmissionPathType = storableObject == null ? null : this.fromStorableObject(storableObject);
         if (transmissionPathType == null){            
             transmissionPathType = new TransmissionPathType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null);            
         }
@@ -191,7 +191,7 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
     public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("TransmissionPathTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
@@ -203,9 +203,9 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
             throws IllegalDataException, RetrieveObjectException {
         List list = null; 
         if ((ids == null) || (ids.isEmpty()))
-            list = retrieveByIdsOneQuery(null, condition);
+            list = this.retrieveByIdsOneQuery(null, condition);
         else 
-            list = retrieveByIdsOneQuery(ids, condition);
+            list = this.retrieveByIdsOneQuery(ids, condition);
         
         if (list != null) {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());

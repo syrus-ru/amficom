@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.27 2004/12/10 16:07:30 bob Exp $
+ * $Id: UserDatabase.java,v 1.28 2004/12/29 15:25:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2004/12/29 15:25:47 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -84,7 +84,7 @@ public class UserDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
-		User user = fromStorableObject(storableObject);
+		User user = this.fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTOPHE + COMMA
 			+ Integer.toString(user.getSort().value()) + COMMA
@@ -101,7 +101,7 @@ public class UserDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		User user = (storableObject == null)?
 				new User(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, 0, null, null) :
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		user.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 							DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -125,7 +125,7 @@ public class UserDatabase extends StorableObjectDatabase {
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement,int mode)
 			throws IllegalDataException, UpdateObjectException {
-		User user = fromStorableObject(storableObject);
+		User user = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
 			DatabaseString.setString(preparedStatement, ++i, user.getLogin(), SIZE_LOGIN_COLUMN);
@@ -177,22 +177,22 @@ public class UserDatabase extends StorableObjectDatabase {
 
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retrieveByIdsOneQuery(null, condition);
-		return retrieveByIdsOneQuery(ids, condition);
+			return this.retrieveByIdsOneQuery(null, condition);
+		return this.retrieveByIdsOneQuery(ids, condition);
 	}
 	
 	private List retrieveByLogin(String login) throws RetrieveObjectException, IllegalDataException{
 		String condition = COLUMN_LOGIN + EQUALS 
 						+ APOSTOPHE + login + APOSTOPHE;
 		
-		return retrieveByIdsOneQuery(null, condition);
+		return this.retrieveByIdsOneQuery(null, condition);
 	}
 	
 	private List retrieveByName(String name) throws RetrieveObjectException, IllegalDataException{
 		String condition = COLUMN_NAME + EQUALS 
 						+ APOSTOPHE + name + APOSTOPHE;
 		
-		return retrieveByIdsOneQuery(null, condition);
+		return this.retrieveByIdsOneQuery(null, condition);
 	}
 	
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,

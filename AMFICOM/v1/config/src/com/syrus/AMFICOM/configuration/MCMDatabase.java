@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.41 2004/12/24 12:55:16 bob Exp $
+ * $Id: MCMDatabase.java,v 1.42 2004/12/29 15:25:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/12/24 12:55:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.42 $, $Date: 2004/12/29 15:25:47 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -99,7 +99,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
-		MCM mcm = fromStorableObject(storableObject);
+		MCM mcm = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
@@ -111,7 +111,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		MCM mcm = fromStorableObject(storableObject);
+		MCM mcm = this.fromStorableObject(storableObject);
 		int i;
 		try {
 			i  = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -137,7 +137,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		MCM mcm = storableObject == null ? null : fromStorableObject(storableObject);
+		MCM mcm = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (mcm == null){
 			mcm = new MCM(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 																	 null,
@@ -377,9 +377,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = super.retrieveByIdsOneQuery(null, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
 		else 
-			list = super.retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(ids, condition);
 		
         if (list != null) {
             retrieveKISIdsByOneQuery(list);

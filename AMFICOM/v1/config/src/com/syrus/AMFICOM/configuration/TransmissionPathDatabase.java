@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.35 2004/12/10 16:07:30 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.36 2004/12/29 15:25:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.36 $, $Date: 2004/12/29 15:25:47 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -107,7 +107,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
-		TransmissionPath transmissionPath = fromStorableObject(storableObject);
+		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(transmissionPath.getDomainId()) + COMMA
             + DatabaseIdentifier.toSQLString(transmissionPath.getType().getId()) + COMMA
@@ -120,7 +120,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
     protected int setEntityForPreparedStatement(StorableObject storableObject,
             PreparedStatement preparedStatement, int mode) throws IllegalDataException,
             UpdateObjectException {
-        TransmissionPath transmissionPath = fromStorableObject(storableObject);
+        TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
         int i;
         try {
             i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -149,7 +149,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TransmissionPath transmissionPath = (storableObject == null) ?
 				new TransmissionPath(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null, null, null) :
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		
@@ -399,7 +399,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
 		List list = null;
 		try {
-			list = retrieveByIds(null, null);
+			list = this.retrieveByIds(null, null);
 		}  catch (IllegalDataException ide) {			
 			throw new RetrieveObjectException(ide);
 		}
@@ -409,9 +409,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
 		else 
-            list = retrieveByIdsOneQuery(ids, condition);
+            list = this.retrieveByIdsOneQuery(ids, condition);
 		
         if (list != null){
 			retrieveTransmissionPathMELinkByOneQuery(list);

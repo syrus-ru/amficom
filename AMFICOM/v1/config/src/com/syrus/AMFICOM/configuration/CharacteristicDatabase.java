@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.52 2004/12/24 12:55:16 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.53 2004/12/29 15:25:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2004/12/24 12:55:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.53 $, $Date: 2004/12/29 15:25:46 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -104,7 +104,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
-		Characteristic characteristic = fromStorableObject(storableObject);
+		Characteristic characteristic = this.fromStorableObject(storableObject);
 		int sort = characteristic.getSort().value();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(characteristic.getType().getId()) + COMMA
@@ -123,7 +123,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode) throws IllegalDataException, UpdateObjectException{
-		Characteristic characteristic = fromStorableObject(storableObject);
+		Characteristic characteristic = this.fromStorableObject(storableObject);
 		int sort = characteristic.getSort().value();
 		int i;
 		try {
@@ -156,7 +156,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException, IllegalDataException {
-		Characteristic characteristic = storableObject == null ? null : fromStorableObject(storableObject); 
+		Characteristic characteristic = storableObject == null ? null : this.fromStorableObject(storableObject); 
 		if (characteristic == null){
 			characteristic = new Characteristic(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null,
 										   0, null, null, false, false);			
@@ -372,8 +372,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return super.retrieveByIdsOneQuery(null, condition);
-		return super.retrieveByIdsOneQuery(ids, condition);	
+			return this.retrieveByIdsOneQuery(null, condition);
+		return this.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
 	

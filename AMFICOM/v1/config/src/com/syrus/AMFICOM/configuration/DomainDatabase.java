@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.26 2004/12/10 16:07:30 bob Exp $
+ * $Id: DomainDatabase.java,v 1.27 2004/12/29 15:25:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2004/12/29 15:25:46 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -78,7 +78,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		Domain domain = fromStorableObject(storableObject);
+		Domain domain = this.fromStorableObject(storableObject);
 		Identifier domainId = domain.getDomainId();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(domainId) + COMMA
@@ -97,7 +97,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Domain domain = storableObject == null ? null : fromStorableObject(storableObject);
+		Domain domain = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (domain == null){
 			domain = new Domain(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null);			
 		}
@@ -116,7 +116,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
-		Domain domain = fromStorableObject(storableObject);
+		Domain domain = this.fromStorableObject(storableObject);
 		Identifier domainId = domain.getDomainId();
 		int i;
 		try {
@@ -198,20 +198,20 @@ public class DomainDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids ,String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return super.retrieveByIdsOneQuery(null, condition);
+			return this.retrieveByIdsOneQuery(null, condition);
 		
-        List retrivedDomains = super.retrieveByIdsOneQuery(ids, condition);
+    List retrivedDomains = this.retrieveByIdsOneQuery(ids, condition);
         
-        if (retrivedDomains != null && !retrivedDomains.isEmpty()) {
-            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-            Map storableObjectCharacteristics = characteristicDatabase.retrieveCharacteristicsByOneQuery(retrivedDomains, CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN);
-            for (Iterator iter = storableObjectCharacteristics.keySet().iterator(); iter.hasNext();) {
+    if (retrivedDomains != null && !retrivedDomains.isEmpty()) {
+			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+			Map storableObjectCharacteristics = characteristicDatabase.retrieveCharacteristicsByOneQuery(retrivedDomains, CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN);
+			for (Iterator iter = storableObjectCharacteristics.keySet().iterator(); iter.hasNext();) {
 				Domain domain = (Domain) iter.next();
-                domain.setCharacteristics0((List)storableObjectCharacteristics.get(domain));				
+				domain.setCharacteristics0((List)storableObjectCharacteristics.get(domain));				
 			}
-        }
-        return retrivedDomains;
-		
+		}
+		return retrivedDomains;
+
         //return retriveByIdsPreparedStatement(ids);
 	}
 	

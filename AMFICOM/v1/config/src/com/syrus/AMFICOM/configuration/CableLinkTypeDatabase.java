@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.4 2004/12/28 13:16:46 bob Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.5 2004/12/29 15:25:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/28 13:16:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2004/12/29 15:25:46 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableLinkTypeDatabase extends StorableObjectDatabase {
@@ -98,7 +98,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
     
     protected String getUpdateSingleSQLValues(StorableObject storableObject)
             throws IllegalDataException, UpdateObjectException {
-        CableLinkType cableLinkType = fromStorableObject(storableObject);
+        CableLinkType cableLinkType = this.fromStorableObject(storableObject);
         String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
             + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
             + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE 
@@ -163,7 +163,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
     protected int setEntityForPreparedStatement(StorableObject storableObject,
             PreparedStatement preparedStatement, int mode) throws IllegalDataException,
             UpdateObjectException {
-        CableLinkType cableLinkType = fromStorableObject(storableObject);
+        CableLinkType cableLinkType = this.fromStorableObject(storableObject);
         int i;
         try {
             i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -184,7 +184,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
     protected StorableObject updateEntityFromResultSet(
             StorableObject storableObject, ResultSet resultSet)
             throws IllegalDataException, RetrieveObjectException, SQLException {
-        CableLinkType cableLinkType = storableObject == null ? null : fromStorableObject(storableObject);
+        CableLinkType cableLinkType = storableObject == null ? null : this.fromStorableObject(storableObject);
         if (cableLinkType == null){
             cableLinkType = new CableLinkType(DatabaseIdentifier.getIdentifier(resultSet,COLUMN_ID), null, null, null, null, 0,
                                          null, null, null);         
@@ -273,7 +273,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
     public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("CableLinkTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
@@ -285,9 +285,9 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
             throws IllegalDataException, RetrieveObjectException {
         List list = null; 
         if ((ids == null) || (ids.isEmpty()))
-            list = retrieveByIdsOneQuery(null, condition);
+            list = this.retrieveByIdsOneQuery(null, condition);
         else 
-            list = retrieveByIdsOneQuery(ids, condition);
+            list = this.retrieveByIdsOneQuery(ids, condition);
         
         if (list != null) {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.29 2004/12/10 16:07:30 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.30 2004/12/29 15:25:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2004/12/29 15:25:47 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -88,7 +88,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		MeasurementPort measurementPort = fromStorableObject(storableObject);
+		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		Identifier typeId = measurementPort.getType().getId();
 		Identifier kisId = measurementPort.getKISId();
 		Identifier portId = measurementPort.getPortId();
@@ -104,7 +104,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
-		MeasurementPort measurementPort = fromStorableObject(storableObject);
+		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		Identifier typeId = measurementPort.getType().getId();
 		Identifier kisId = measurementPort.getKISId();
 		Identifier portId = measurementPort.getPortId();
@@ -140,9 +140,9 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
         if ((ids == null) || (ids.isEmpty()))
-            list = super.retrieveByIdsOneQuery(null, condition);
+            list = this.retrieveByIdsOneQuery(null, condition);
         else
-            list = super.retrieveByIdsOneQuery(ids, condition);
+            list = this.retrieveByIdsOneQuery(ids, condition);
 
         if (list != null) {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
@@ -160,7 +160,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		MeasurementPort measurementPort = storableObject == null ? null : fromStorableObject(storableObject);
+		MeasurementPort measurementPort = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (measurementPort == null){			
 			measurementPort = new MeasurementPort(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null, null);			
 		}
@@ -254,7 +254,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("MeasurementPortDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);

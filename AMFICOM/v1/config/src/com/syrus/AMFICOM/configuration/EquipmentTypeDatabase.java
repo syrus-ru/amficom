@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.26 2004/12/14 13:43:34 max Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.27 2004/12/29 15:25:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/14 13:43:34 $
- * @author $Author: max $
+ * @version $Revision: 1.27 $, $Date: 2004/12/29 15:25:46 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -83,7 +83,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		EquipmentType equipmentType = fromStorableObject(storableObject);
+		EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
@@ -109,7 +109,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
-		EquipmentType equipmentType = fromStorableObject(storableObject);
+		EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -128,7 +128,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		EquipmentType equipmentType = storableObject == null ? null : fromStorableObject(storableObject);
+		EquipmentType equipmentType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (equipmentType == null){
 			equipmentType = new EquipmentType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null, null);			
 		}
@@ -212,7 +212,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("EquipmentTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
@@ -224,8 +224,8 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
         if ((ids == null) || (ids.isEmpty()))
-            list = super.retrieveByIdsOneQuery(null, condition);
-        list = super.retrieveByIdsOneQuery(ids, condition);	
+            list = this.retrieveByIdsOneQuery(null, condition);
+        list = this.retrieveByIdsOneQuery(ids, condition);	
         if (list != null) {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
             Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE);

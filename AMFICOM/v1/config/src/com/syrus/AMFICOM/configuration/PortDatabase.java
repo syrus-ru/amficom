@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.34 2004/12/10 16:07:30 bob Exp $
+ * $Id: PortDatabase.java,v 1.35 2004/12/29 15:25:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.35 $, $Date: 2004/12/29 15:25:47 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
@@ -90,7 +90,7 @@ public class PortDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
-		Port port = fromStorableObject(storableObject);
+		Port port = this.fromStorableObject(storableObject);
 		Identifier typeId = port.getType().getId();
 		Identifier equipmentId = port.getEquipmentId();
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
@@ -112,7 +112,7 @@ public class PortDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Port port = (storableObject==null)?
 				new Port(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, 0) :
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		PortType portType;
 		try {			
 			Identifier portTypeId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID);
@@ -198,8 +198,9 @@ public class PortDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
-        }  catch (IllegalDataException ide) {           
+            list = this.retrieveByIds(null, null);
+        }
+				catch (IllegalDataException ide) {           
             Log.debugMessage("PortDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
         }
@@ -209,9 +210,9 @@ public class PortDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retrieveByIdsOneQuery(null, condition);
-		else 
-            list = retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
+		else
+			list = this.retrieveByIdsOneQuery(ids, condition);
 		
         if (list != null) {
     		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
@@ -227,7 +228,7 @@ public class PortDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 		throws IllegalDataException, UpdateObjectException {
-		Port port = fromStorableObject(storableObject);
+		Port port = this.fromStorableObject(storableObject);
 		Identifier typeId = port.getType().getId();
 		Identifier equipmentId = port.getEquipmentId();
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.55 2004/12/15 12:06:50 max Exp $
+ * $Id: EquipmentDatabase.java,v 1.56 2004/12/29 15:25:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2004/12/15 12:06:50 $
- * @author $Author: max $
+ * @version $Revision: 1.56 $, $Date: 2004/12/29 15:25:46 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -147,7 +147,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		Equipment equipment = fromStorableObject(storableObject);
+		Equipment equipment = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(equipment.getDomainId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(equipment.getType().getId()) + COMMA
@@ -169,7 +169,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
-		Equipment equipment = fromStorableObject(storableObject);
+		Equipment equipment = this.fromStorableObject(storableObject);
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -197,7 +197,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Equipment equipment = storableObject == null ? null : fromStorableObject(storableObject);
+		Equipment equipment = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (equipment == null){
 			equipment = new Equipment(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null,
 									   null, null, "", null, 0, 0 , null ,null ,null ,null,null);			
@@ -496,7 +496,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("EquipmentDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
@@ -509,8 +509,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = super.retrieveByIdsOneQuery(null, condition);
-		else list = super.retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
+		else list = this.retrieveByIdsOneQuery(ids, condition);
 		
         if (list != null) {
             retrieveEquipmentPortIdsByOneQuery(list);

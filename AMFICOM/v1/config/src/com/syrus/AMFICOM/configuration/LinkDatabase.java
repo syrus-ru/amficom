@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.18 2004/12/15 17:16:43 max Exp $
+ * $Id: LinkDatabase.java,v 1.19 2004/12/29 15:25:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/15 17:16:43 $
- * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2004/12/29 15:25:47 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -113,7 +113,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		Link link = fromStorableObject(storableObject);
+		Link link = this.fromStorableObject(storableObject);
 		String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo(), SIZE_INVENTORY_NO_COLUMN);
 		String supplier = DatabaseString.toQuerySubString(link.getSupplier(), SIZE_SUPPLIER_COLUMN);
 		String supplierCode = DatabaseString.toQuerySubString(link.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
@@ -135,7 +135,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
 			UpdateObjectException {
-		Link link = fromStorableObject(storableObject);
+		Link link = this.fromStorableObject(storableObject);
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
@@ -159,7 +159,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Link link = storableObject == null ? null : fromStorableObject(storableObject);
+		Link link = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (link == null){			
 			link = new Link(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null,
 									   null, null, null, null, null, 0, 0, null);			
@@ -270,7 +270,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 	public List retrieveAll() throws RetrieveObjectException {
         List list = null;
         try {
-            list = retrieveByIds(null, null);
+            list = this.retrieveByIds(null, null);
         }  catch (IllegalDataException ide) {           
             Log.debugMessage("LinkDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
             throw new RetrieveObjectException(ide);
@@ -283,8 +283,8 @@ public class LinkDatabase extends StorableObjectDatabase {
 			RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = super.retrieveByIdsOneQuery(null, condition);
-		else list = super.retrieveByIdsOneQuery(ids, condition);
+			list = this.retrieveByIdsOneQuery(null, condition);
+		else list = this.retrieveByIdsOneQuery(ids, condition);
 		
 		if(list != null) {
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
