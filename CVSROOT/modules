@@ -52,6 +52,7 @@ AMFICOM_v1	&idl_v1\
 		&main_v1\
 		&map_v1\
 		&survey_v1\
+		&analysis_v1\
 		&filter_v1\
 		&reportbuilder_v1\
 		&server_v1\
@@ -76,6 +77,8 @@ main_v1		AMFICOM/v1/main
 map_v1		AMFICOM/v1/map
 #M	survey_v1	Survey module
 survey_v1	AMFICOM/v1/survey
+#M	analysis_v1	Analysis module
+analysis_v1	AMFICOM/v1/analysis
 #M	filter_v1	Files common for client-side and server-side filtering
 filter_v1	AMFICOM/v1/filter
 #M	reportbuilder_v1	Report builder module
