@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.20 2004/09/08 10:59:12 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.21 2004/09/09 06:42:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/08 10:59:12 $
+ * @version $Revision: 1.21 $, $Date: 2004/09/09 06:42:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -112,7 +112,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		Analysis analysis = fromStorableObject(storableObject);
-		String values = super.getUpdateSingleSQLValues(storableObject)
+		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ analysis.getType().getId().toSQLString() + COMMA
 			+ analysis.getMonitoredElementId().toSQLString() + COMMA
 			+ analysis.getCriteriaSet().getId().toSQLString();

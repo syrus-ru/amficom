@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.26 2004/09/08 10:59:12 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.27 2004/09/09 06:42:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/09/08 10:59:12 $
+ * @version $Revision: 1.27 $, $Date: 2004/09/09 06:42:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -70,7 +70,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns()
+			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA 
 				+ COLUMN_DESCRIPTION;
 		}
@@ -79,8 +79,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() 
-				+ COMMA
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA 
 				+ QUESTION;
 		}
