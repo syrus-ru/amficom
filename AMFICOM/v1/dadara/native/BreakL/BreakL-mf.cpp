@@ -2,6 +2,7 @@
 #include "BreakL-mf.h"
 #include "BreakL-enh.h"
 #include "../JNI/ThreshArray.h"
+#include "../common/prf.h"
 
 static int bsearchmh(double *pars, int npairs, double key)
 {
@@ -82,12 +83,52 @@ void farr_BREAKL(double *pars, int npars, double x_s, double step, int N, double
 	}
 	else // step == 1
 	{
-		int k = -1;
-		int j;
-		for (j = 0; j < N; j++, x_s += step)
+		int xi = (int )x_s;
+		if (x_s != xi)
 		{
-			k = f_BREAKL_GETPOS(nEv, pars, x_s, k);
-			output[j] = f_BREAKL_GETY(k, nEv, pars, x_s);
+			int k = -1;
+			int j;
+			for (j = 0; j < N; j++, x_s += step)
+			{
+				k = f_BREAKL_GETPOS(nEv, pars, x_s, k);
+				output[j] = f_BREAKL_GETY(k, nEv, pars, x_s);
+			}
+		}
+		else // самый быстрый алгоритм - для самого распространенного случая: шаг=1, координаты целые
+		{
+			//prf_b("farr_BREAKL: fast: #1");
+			int j = 0;
+			// участок до начала ломаной
+			while (j < N && xi + j < pars[0])
+				output[j++] = pars[1];
+
+			//prf_b("farr_BREAKL: fast: #2");
+			// сама ломаная
+			int k = 0;
+			while (j < N && k < nEv - 1)
+			{
+				//assert(xi + j >= pars[k * 2]);
+				// берем параметры текущего звена
+				int x0 = (int )pars[k * 2];
+				int x1 = (int )pars[k * 2 + 2];
+				double y0 = pars[k * 2 + 1];
+				double a = x1 > x0 ? (pars[k * 2 + 3] - y0) / (x1 - x0) : 0;
+				// строим текущее звено
+				int jN = N < x1 - xi ? N : x1 - xi;
+				while (j < jN) // 2
+					output[j++] = y0 + a * (xi + j - x0);
+				// ищем новое звено
+				if (j < N)
+				{
+					do k++;
+					while (k < nEv - 1 && xi + j >= pars[k * 2 + 2]);
+				}
+			}
+			//prf_b("farr_BREAKL: fast: #3");
+			// участок после ломаной
+			while (j < N && xi + j <= pars[nEv * 2 - 2])
+				output[j++] = pars[nEv * 2 - 1];
+			//prf_b("farr_BREAKL: fast: done");
 		}
 	}
 }

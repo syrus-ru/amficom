@@ -694,26 +694,22 @@ void BreakL_Fit_maxSpeed (ModelF &mf, double *data, int x_begin, int length)
 	int i;
 	int nPts;
 
-	//prf_b("BreakL_Fit_max: prep. acc");
+	//prf_b("BreakL_Fit_max: empty");
+	//prf_b("BreakL_Fit_max: calc error");
 
-	ACC_Y acc;
-	acc.allocate(size + 1);
-	prepare_acc_stats(data, size, acc);
-
-	//prf_b("calc error");
-
-	// определяем уровень погрешности (машинная погрешность)
+	// оцениваем уровень погрешности (машинная погрешность)
 	double error = 0;
 	for (i = 0; i < length; i++)
 	{
 		if (error < fabs(data[i]))
-			error = fabs(data[i]);
+			error = error + fabs(data[i]); // результат может быть завышен вдвое, но зато так чуть быстрее
 	}
 	error = error * 1e-14 * 10 + 1e-300; // XXX
 
 	//prf_b("BreakL_Fit_max: draw BreakL");
 	{
 		int i_prev = 0;
+		int i_check = 0; // алгоритм ускорения
 		double y0 = data[0]; // XXX
 		double aMax = data[1] - y0 + error;
 		double aMin = data[1] - y0 - error;
@@ -726,14 +722,24 @@ void BreakL_Fit_maxSpeed (ModelF &mf, double *data, int x_begin, int length)
 			if (i < size)
 			{
 				// проверяем, можно ли провести общую прямую через все точки i_prev..i
-				double aTMax = (data[i] - y0 + error) / (i - i_prev);
-				double aTMin = (data[i] - y0 - error) / (i - i_prev);
-				if (aMax > aTMax)
-					aMax = aTMax;
-				if (aMin < aTMin)
-					aMin = aTMin;
-				if (aMin <= aMax)
-					continue;
+				if (i < i_check) // обычно делается грубая проверка
+				{
+					double aT = (data[i] - y0) / (i - i_prev);
+					if (aT <= aMax && aT >= aMin)
+						continue;
+				}
+				else // но иногда - с уточнением aMin/aMax
+				{
+					i_check = i + i - i_prev;
+					double aTMax = (data[i] - y0 + error) / (i - i_prev);
+					if (aMax > aTMax)
+						aMax = aTMax;
+					double aTMin = (data[i] - y0 - error) / (i - i_prev);
+					if (aMin < aTMin)
+						aMin = aTMin;
+					if (aMin <= aMax)
+						continue;
+				}
 			}
 
 			// прямую "продолжить" не удалось - заканчиваем предыдущую на i-1
@@ -762,8 +768,6 @@ void BreakL_Fit_maxSpeed (ModelF &mf, double *data, int x_begin, int length)
 		mf[k * 2] = ax[k] + x_begin;
 		mf[k * 2 + 1] = ay[k];
 	}
-
-	acc.dispose();
 
 	//prf_b("BreakL_Fit_max: leaving");
 
