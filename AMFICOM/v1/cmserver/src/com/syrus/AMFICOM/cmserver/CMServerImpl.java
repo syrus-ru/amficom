@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.6 2004/09/16 12:54:17 bob Exp $
+ * $Id: CMServerImpl.java,v 1.7 2004/09/17 12:16:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,9 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationType;
+import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -53,7 +55,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/09/16 12:54:17 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/17 12:16:40 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -314,19 +316,44 @@ public class CMServerImpl implements CMServerOperations {
 
 	public AnalysisType_Transferable[] transmitAnalysisTypes(	Identifier_Transferable[] identifier_Transferables,
 									AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
-		List idsList = new ArrayList(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			idsList.add(new Identifier(identifier_Transferables[i]));
+			throws AMFICOMRemoteException {	
 
 		try {
-			List list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+			Identifier domainId = new Identifier(accessIdentifier.domain_id);
+			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+			
+			AnalysisType_Transferable[] transferables = null;
+			
+			if (identifier_Transferables.length > 0) {
+				List idsList = new ArrayList(identifier_Transferables.length);
+				for (int i = 0; i < identifier_Transferables.length; i++)
+					idsList.add(new Identifier(identifier_Transferables[i]));
 
-			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[list.size()];
-			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
-				AnalysisType analysisType = (AnalysisType) it.next();
-				transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+				List list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+
+				transferables = new AnalysisType_Transferable[list.size()];
+				int i = 0;
+				for (Iterator it = list.iterator(); it.hasNext(); i++) {
+					AnalysisType analysisType = (AnalysisType) it.next();
+					transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+				}
+			} else {
+				List list = MeasurementStorableObjectPool
+						.getStorableObjectsByDomain(ObjectEntities.ANALYSISTYPE_ENTITY_CODE,
+										domain);
+				
+				AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
+				
+				List listFromDatabase = database.retrieveButIds(list);
+				
+				list.addAll(listFromDatabase);
+
+				transferables = new AnalysisType_Transferable[list.size()];
+				int i = 0;
+				for (Iterator it = list.iterator(); it.hasNext(); i++) {
+					AnalysisType analysisType = (AnalysisType) it.next();
+					transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+				}
 			}
 			return transferables;
 
@@ -341,6 +368,10 @@ public class CMServerImpl implements CMServerOperations {
 		} catch (DatabaseException de) {
 			Log.errorException(de);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+					.getMessage());
+		} catch (IllegalDataException ide){
+			Log.errorException(ide);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
 					.getMessage());
 		}
 
@@ -349,20 +380,49 @@ public class CMServerImpl implements CMServerOperations {
 	public EvaluationType_Transferable[] transmitEvaluationTypes(	Identifier_Transferable[] identifier_Transferables,
 									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		List idsList = new ArrayList(identifier_Transferables.length);
-		for (int i = 0; i < identifier_Transferables.length; i++)
-			idsList.add(new Identifier(identifier_Transferables[i]));
 
 		try {
-			List list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+			Identifier domainId = new Identifier(accessIdentifier.domain_id);
+			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
 
-			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[list.size()];
-			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
-				EvaluationType evaluationType = (EvaluationType) it.next();
-				transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
+			EvaluationType_Transferable[] transferables = null;
+			if (identifier_Transferables.length > 0) {
+				List idsList = new ArrayList(identifier_Transferables.length);
+				for (int i = 0; i < identifier_Transferables.length; i++)
+					idsList.add(new Identifier(identifier_Transferables[i]));
+
+				List list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);				
+
+				transferables = new EvaluationType_Transferable[list.size()];
+				int i = 0;
+				for (Iterator it = list.iterator(); it.hasNext(); i++) {
+					EvaluationType evaluationType = (EvaluationType) it.next();
+					transferables[i] = (EvaluationType_Transferable) evaluationType
+							.getTransferable();
+				}
+			} else {
+				List list = MeasurementStorableObjectPool
+						.getStorableObjectsByDomain(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE,
+										domain);
+				
+				EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase();
+				
+				List listFromDatabase = database.retrieveButIds(list);
+				
+				list.addAll(listFromDatabase);
+
+				transferables = new EvaluationType_Transferable[list.size()];
+				int i = 0;
+				for (Iterator it = list.iterator(); it.hasNext(); i++) {
+					EvaluationType evaluationType = (EvaluationType) it.next();
+					transferables[i] = (EvaluationType_Transferable) evaluationType
+							.getTransferable();
+				}
+
 			}
+
 			return transferables;
+
 		} catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
@@ -374,6 +434,10 @@ public class CMServerImpl implements CMServerOperations {
 		} catch (DatabaseException de) {
 			Log.errorException(de);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+					.getMessage());
+		} catch (IllegalDataException ide){
+			Log.errorException(ide);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
 					.getMessage());
 		}
 
@@ -515,24 +579,24 @@ public class CMServerImpl implements CMServerOperations {
 							AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		List list = null;
-		
+
 		Test_Transferable[] transferables = null;
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
-			
+
 			Date start = new Date(startTime);
 			Date end = new Date(endTime);
-			// List<Identifier> that get from cache			
-			List ids = MeasurementStorableObjectPool.getTestsByTimeRange(domain, start, end);		
+			// List<Identifier> that get from cache
+			List ids = MeasurementStorableObjectPool.getTestsByTimeRange(domain, start, end);
 
 			try {
 				TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
 				list = database.retrieveButIdsByTimeRange(ids, domain, start, end);
 			} catch (RetrieveObjectException roe) {
 				Log.errorException(roe);
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-						.getMessage());
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
+									CompletionStatus.COMPLETED_NO, roe.getMessage());
 			}
 
 			transferables = new Test_Transferable[list.size()];
@@ -543,11 +607,13 @@ public class CMServerImpl implements CMServerOperations {
 			}
 		} catch (DatabaseException e) {
 			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
 		} catch (CommunicationException e) {
 			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} 
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		}
 		return transferables;
 	}
 
