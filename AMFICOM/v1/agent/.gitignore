@@ -1,0 +1,12 @@
+agent
+*.jar
+*.jpr*
+*.jpx*
+*.trc
+*.tar
+*.gz
+*.swp
+*.log
+*.sor
+classes
+logs
