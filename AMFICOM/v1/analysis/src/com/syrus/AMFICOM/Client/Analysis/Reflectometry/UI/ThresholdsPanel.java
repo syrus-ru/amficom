@@ -107,10 +107,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			if (c_event < 0 || !c_TH.isRelevantToNEvent(c_event))
 				c_TH = null;
 		}
-		// проверяем также, чтоб клик сделан в области данного события
-		if (c_TH != null && !allThresholds)
-		{
-		}
 
 		if (this.c_TH != null) {
 
