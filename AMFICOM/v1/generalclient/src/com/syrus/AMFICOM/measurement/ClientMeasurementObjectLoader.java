@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.26 2005/03/31 07:40:40 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.27 2005/04/04 13:07:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -44,7 +42,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/03/31 07:40:40 $
+ * @version $Revision: 1.27 $, $Date: 2005/04/04 13:07:46 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -73,7 +71,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(java.util.Set ids) throws IllegalDataException {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
@@ -255,7 +253,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadAnalyses(Collection ids) throws ApplicationException {
+	public java.util.Set loadAnalyses(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -265,11 +263,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			Analysis_Transferable[] transferables = this.server.transmitAnalyses(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Analysis(transferables[j]));
+				set.add(new Analysis(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -277,7 +275,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadAnalysesButIds(StorableObjectCondition storableObjectCondition, Collection ids) throws ApplicationException {
+	public java.util.Set loadAnalysesButIds(StorableObjectCondition storableObjectCondition, java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Analysis_Transferable[] transferables;
@@ -288,11 +286,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			transferables = this.server.transmitAnalysesButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Analysis(transferables[j]));
+				set.add(new Analysis(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -300,7 +298,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadAnalysisTypes(Collection ids) throws ApplicationException {
+	public java.util.Set loadAnalysisTypes(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -310,11 +308,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			AnalysisType_Transferable[] transferables = this.server.transmitAnalysisTypes(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new AnalysisType(transferables[j]));
+				set.add(new AnalysisType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -322,7 +320,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadAnalysisTypesButIds(StorableObjectCondition storableObjectCondition, Collection ids)
+	public java.util.Set loadAnalysisTypesButIds(StorableObjectCondition storableObjectCondition, java.util.Set ids)
 			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -334,11 +332,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			transferables = this.server.transmitAnalysisTypesButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new AnalysisType(transferables[j]));
+				set.add(new AnalysisType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -346,7 +344,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadEvaluations(Collection ids) throws ApplicationException {
+	public java.util.Set loadEvaluations(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -356,11 +354,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			Evaluation_Transferable[] transferables = this.server.transmitEvaluations(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Evaluation(transferables[j]));
+				set.add(new Evaluation(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -368,7 +366,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadEvaluationsButIds(StorableObjectCondition storableObjectCondition, Collection ids)
+	public java.util.Set loadEvaluationsButIds(StorableObjectCondition storableObjectCondition, java.util.Set ids)
 			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -380,11 +378,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			transferables = this.server.transmitEvaluationsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Evaluation(transferables[j]));
+				set.add(new Evaluation(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -392,7 +390,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadEvaluationTypes(Collection ids) throws ApplicationException {
+	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -402,11 +400,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			EvaluationType_Transferable[] transferables = this.server.transmitEvaluationTypes(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new EvaluationType(transferables[j]));
+				set.add(new EvaluationType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -414,7 +412,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadEvaluationTypesButIds(StorableObjectCondition storableObjectCondition, Collection ids)
+	public java.util.Set loadEvaluationTypesButIds(StorableObjectCondition storableObjectCondition, java.util.Set ids)
 			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -426,11 +424,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			transferables = this.server.transmitEvaluationTypesButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new EvaluationType(transferables[j]));
+				set.add(new EvaluationType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -438,7 +436,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadMeasurements(Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurements(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -449,11 +447,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 			Measurement_Transferable[] transferables = this.server.transmitMeasurements(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Measurement(transferables[j]));
+				set.add(new Measurement(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -461,7 +459,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadMeasurementsButIds(StorableObjectCondition storableObjectCondition, Collection ids)
+	public java.util.Set loadMeasurementsButIds(StorableObjectCondition storableObjectCondition, java.util.Set ids)
 			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -474,11 +472,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 
 			transferables = this.server.transmitMeasurementsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Measurement(transferables[j]));
+				set.add(new Measurement(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -486,7 +484,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadModelings(Collection ids) throws ApplicationException {
+	public java.util.Set loadModelings(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -496,11 +494,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			Modeling_Transferable[] transferables = this.server.transmitModelings(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Modeling(transferables[j]));
+				set.add(new Modeling(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -508,7 +506,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadModelingTypes(Collection ids) throws ApplicationException {
+	public java.util.Set loadModelingTypes(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -518,11 +516,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			ModelingType_Transferable[] transferables = this.server.transmitModelingTypes(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new ModelingType(transferables[j]));
+				set.add(new ModelingType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -530,7 +528,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadModelingsButIds(StorableObjectCondition storableObjectCondition, Collection ids)
+	public java.util.Set loadModelingsButIds(StorableObjectCondition storableObjectCondition, java.util.Set ids)
 			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -543,11 +541,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables = this.server.transmitModelingsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
 
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Modeling(transferables[j]));
+				set.add(new Modeling(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -555,7 +553,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadModelingTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadModelingTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			ModelingType_Transferable[] transferables;
@@ -567,11 +565,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables = this.server.transmitModelingTypesButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new ModelingType(transferables[j]));
+				set.add(new ModelingType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -579,7 +577,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadMeasurementSetups(Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -589,11 +587,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			MeasurementSetup_Transferable[] transferables = this.server.transmitMeasurementSetups(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MeasurementSetup(transferables[j]));
+				set.add(new MeasurementSetup(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -601,7 +599,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadMeasurementSetupsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurementSetupsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			MeasurementSetup_Transferable[] transferables = null;
@@ -613,15 +611,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables = this.server.transmitMeasurementSetupsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 
-			Collection list = null;
+			java.util.Set set = null;
 			if (transferables != null) {
-				list = new ArrayList(transferables.length);
+				set = new HashSet(transferables.length);
 				for (int j = 0; j < transferables.length; j++) {
-					list.add(new MeasurementSetup(transferables[j]));
+					set.add(new MeasurementSetup(transferables[j]));
 				}
 
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -629,7 +627,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadMeasurementTypes(Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -639,11 +637,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			MeasurementType_Transferable[] transferables = this.server.transmitMeasurementTypes(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MeasurementType(transferables[j]));
+				set.add(new MeasurementType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -651,7 +649,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadMeasurementTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadMeasurementTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -662,11 +660,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			MeasurementType_Transferable[] transferables;
 			transferables = this.server.transmitMeasurementTypesButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MeasurementType(transferables[j]));
+				set.add(new MeasurementType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -674,7 +672,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadResults(Collection ids) throws ApplicationException {
+	public java.util.Set loadResults(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -684,11 +682,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			Result_Transferable[] transferables = this.server.transmitResults(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Result(transferables[j]));
+				set.add(new Result(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -696,7 +694,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadResultsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadResultsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Result_Transferable[] transferables;
@@ -708,11 +706,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables = this.server.transmitResultsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Result(transferables[j]));
+				set.add(new Result(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -720,7 +718,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadSets(Collection ids) throws ApplicationException {
+	public java.util.Set loadSets(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -730,11 +728,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			Set_Transferable[] transferables = this.server.transmitSets(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Set(transferables[j]));
+				set.add(new Set(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -742,7 +740,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadSetsButIds(StorableObjectCondition storableObjectCondition, Collection ids) throws ApplicationException {
+	public java.util.Set loadSetsButIds(StorableObjectCondition storableObjectCondition, java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Set_Transferable[] transferables;
@@ -753,11 +751,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			transferables = this.server.transmitSetsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(storableObjectCondition));
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Set(transferables[j]));
+				set.add(new Set(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -765,7 +763,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadTemporalPatterns(Collection ids) throws ApplicationException {
+	public java.util.Set loadTemporalPatterns(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -775,11 +773,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			TemporalPattern_Transferable[] transferables = this.server.transmitTemporalPatterns(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new TemporalPattern(transferables[j]));
+				set.add(new TemporalPattern(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -787,7 +785,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadTemporalPatternsButIds(StorableObjectCondition storableObjectCondition, Collection ids)
+	public java.util.Set loadTemporalPatternsButIds(StorableObjectCondition storableObjectCondition, java.util.Set ids)
 			throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -798,11 +796,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			TemporalPattern_Transferable[] transferables = this.server.transmitTemporalPatternsButIds(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new TemporalPattern(transferables[j]));
+				set.add(new TemporalPattern(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -810,7 +808,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadTests(Collection ids) throws ApplicationException {
+	public java.util.Set loadTests(java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -820,11 +818,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			Test_Transferable[] transferables = this.server.transmitTests(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Test(transferables[j]));
+				set.add(new Test(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -832,7 +830,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Collection loadTestsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public java.util.Set loadTestsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			Test_Transferable[] transferables;
@@ -843,11 +841,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			}
 			transferables = this.server.transmitTestsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			java.util.Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Test(transferables[j]));
+				set.add(new Test(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new ApplicationException(e);
 		} catch (SystemException e) {
@@ -855,7 +853,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 	
-	private void updateStorableObjectHeader(Collection storableObjects, StorableObject_Transferable[] transferables) {
+	private void updateStorableObjectHeader(java.util.Set storableObjects, StorableObject_Transferable[] transferables) {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			Identifier_Transferable id = (Identifier_Transferable) storableObject.getId().getTransferable();
@@ -1085,7 +1083,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveMeasurementTypes(Collection measurementTypes, boolean force) throws VersionCollisionException,
+	public void saveMeasurementTypes(java.util.Set measurementTypes, boolean force) throws VersionCollisionException,
 			ApplicationException {
 		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[measurementTypes.size()];
 		int i = 0;
@@ -1107,7 +1105,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveAnalysisTypes(Collection analysisTypes, boolean force) throws VersionCollisionException,
+	public void saveAnalysisTypes(java.util.Set analysisTypes, boolean force) throws VersionCollisionException,
 			ApplicationException {
 		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[analysisTypes.size()];
 		int i = 0;
@@ -1128,7 +1126,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveEvaluationTypes(Collection evaluationTypes, boolean force) throws VersionCollisionException,
+	public void saveEvaluationTypes(java.util.Set evaluationTypes, boolean force) throws VersionCollisionException,
 			ApplicationException {
 		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[evaluationTypes.size()];
 		int i = 0;
@@ -1149,7 +1147,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveSets(Collection sets, boolean force) throws ApplicationException,
+	public void saveSets(java.util.Set sets, boolean force) throws ApplicationException,
 			VersionCollisionException {
 		Set_Transferable[] transferables = new Set_Transferable[sets.size()];
 		int i = 0;
@@ -1170,7 +1168,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveModelings(Collection modelings, boolean force) throws VersionCollisionException, ApplicationException {
+	public void saveModelings(java.util.Set modelings, boolean force) throws VersionCollisionException, ApplicationException {
 		Modeling_Transferable[] transferables = new Modeling_Transferable[modelings.size()];
 		int i = 0;
 		for (Iterator it = modelings.iterator(); it.hasNext(); i++) {
@@ -1190,7 +1188,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveModelingTypes(Collection modelingTypes, boolean force) throws VersionCollisionException, ApplicationException {
+	public void saveModelingTypes(java.util.Set modelingTypes, boolean force) throws VersionCollisionException, ApplicationException {
 		ModelingType_Transferable[] transferables = new ModelingType_Transferable[modelingTypes.size()];
 		int i = 0;
 		for (Iterator it = modelingTypes.iterator(); it.hasNext(); i++) {
@@ -1210,7 +1208,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveMeasurementSetups(Collection measurementSetups, boolean force) throws VersionCollisionException,
+	public void saveMeasurementSetups(java.util.Set measurementSetups, boolean force) throws VersionCollisionException,
 			ApplicationException {
 		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[measurementSetups.size()];
 		int i = 0;
@@ -1231,7 +1229,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveMeasurements(Collection measurements, boolean force) throws VersionCollisionException, ApplicationException {
+	public void saveMeasurements(java.util.Set measurements, boolean force) throws VersionCollisionException, ApplicationException {
 		Measurement_Transferable[] transferables = new Measurement_Transferable[measurements.size()];
 		int i = 0;
 		for (Iterator it = measurements.iterator(); it.hasNext(); i++) {
@@ -1251,7 +1249,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveAnalyses(Collection analyses, boolean force) throws VersionCollisionException, ApplicationException {
+	public void saveAnalyses(java.util.Set analyses, boolean force) throws VersionCollisionException, ApplicationException {
 		Analysis_Transferable[] transferables = new Analysis_Transferable[analyses.size()];
 		int i = 0;
 		for (Iterator it = analyses.iterator(); it.hasNext(); i++) {
@@ -1271,7 +1269,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveEvaluations(Collection evaluations, boolean force) throws VersionCollisionException, ApplicationException {
+	public void saveEvaluations(java.util.Set evaluations, boolean force) throws VersionCollisionException, ApplicationException {
 		Evaluation_Transferable[] transferables = new Evaluation_Transferable[evaluations.size()];
 		int i = 0;
 		for (Iterator it = evaluations.iterator(); it.hasNext(); i++) {
@@ -1291,7 +1289,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveTests(Collection tests, boolean force) throws ApplicationException,
+	public void saveTests(java.util.Set tests, boolean force) throws ApplicationException,
 			VersionCollisionException {
 		Test_Transferable[] transferables = new Test_Transferable[tests.size()];
 		int i = 0;
@@ -1312,7 +1310,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveResults(Collection results, boolean force) throws VersionCollisionException, ApplicationException {
+	public void saveResults(java.util.Set results, boolean force) throws VersionCollisionException, ApplicationException {
 		Result_Transferable[] transferables = new Result_Transferable[results.size()];
 		int i = 0;
 		for (Iterator it = results.iterator(); it.hasNext(); i++) {
@@ -1332,7 +1330,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveTemporalPatterns(Collection temporalPatterns, boolean force) throws VersionCollisionException,
+	public void saveTemporalPatterns(java.util.Set temporalPatterns, boolean force) throws VersionCollisionException,
 			ApplicationException {
 		TemporalPattern_Transferable[] transferables = new TemporalPattern_Transferable[temporalPatterns.size()];
 		int i = 0;
