@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.33 2004/10/22 13:54:26 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.34 2004/10/29 12:48:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/10/22 13:54:26 $
+ * @version $Revision: 1.34 $, $Date: 2004/10/29 12:48:49 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -42,32 +42,19 @@ import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 public class CharacteristicDatabase extends StorableObjectDatabase {
 	// table :: Characteristic
     // type_id VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_TYPE_ID       = "type_id";
+    public static final String COLUMN_TYPE_ID       	= "type_id";
     // name VARCHAR2(64) NOT NULL,
-    public static final String COLUMN_NAME  = "name";
+    public static final String COLUMN_NAME 				 = "name";
 	// description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
+    public static final String COLUMN_DESCRIPTION		= "description";
     // value VARCHAR2(256),
-    public static final String COLUMN_VALUE = "value";
-    public static final String COLUMN_IS_EDITABLE			= "is_editable";
-	public static final String COLUMN_IS_VISIBLE			= "is_visible";
+    public static final String COLUMN_VALUE 			= "value";
+    public static final String COLUMN_IS_EDITABLE		= "is_editable";
+	public static final String COLUMN_IS_VISIBLE		= "is_visible";
     // sort NUMBER(2) NOT NULL,
-    public static final String COLUMN_SORT  = "sort";
-		// domain_id VARCHAR2(32),
-    public static final String COLUMN_DOMAIN_ID        = "domain_id";
-    // mcm_id VARCHAR2(32),
-    public static final String COLUMN_MCM_ID        = "mcm_id";
-    // equipment_id VARCHAR2(32),
-    public static final String COLUMN_EQUIPMENT_ID  = "equipment_id";
-    // server_id VARCHAR2(32),
-    public static final String COLUMN_SERVER_ID     = "server_id";
-    // transmission_path_id VARCHAR2(32),
-    public static final String COLUMN_TRANSMISSION_PATH_ID  = "transmission_path_id";
-    // port_id VARCHAR2(32),
-    public static final String COLUMN_PORT_ID  = "port_id";
-    // kis_id VARCHAR2(32),
-    public static final String COLUMN_KIS_ID  = "kis_id";
-
+    public static final String COLUMN_SORT  			= "sort";
+    //  characterized_id VARCHAR2(32),
+    public static final String COLUMN_CHARACTERIZED_ID	= "characterized_id";
     
     
     private String updateColumns;
@@ -91,13 +78,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				+ COLUMN_IS_EDITABLE + COMMA
 				+ COLUMN_IS_VISIBLE + COMMA
 				+ COLUMN_SORT +	COMMA
-				+ COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_SERVER_ID + COMMA
-				+ COLUMN_MCM_ID + COMMA
-				+ COLUMN_EQUIPMENT_ID + COMMA
-				+ COLUMN_TRANSMISSION_PATH_ID + COMMA
-				+ COLUMN_PORT_ID + COMMA
-				+ COLUMN_KIS_ID;
+				+ COLUMN_CHARACTERIZED_ID;
 		}
 		return this.updateColumns;
 	}
@@ -112,12 +93,6 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION;
     	}
 		return this.updateMultiplySQLValues;
@@ -125,7 +100,6 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		Characteristic characteristic = fromStorableObject(storableObject);
-		String cIdStr = characteristic.getId().toSQLString();
 		int sort = characteristic.getSort().value();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ characteristic.getType().getId().toSQLString() + COMMA
@@ -134,82 +108,17 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + characteristic.getValue() + APOSTOPHE + COMMA
 			+ (characteristic.isEditable()?"1":"0") + COMMA
 			+ (characteristic.isVisible()?"1":"0") + COMMA
-			+ sort + COMMA;
-		String characterizedIdStr = characteristic.getCharacterizedId().toSQLString();
-		switch (sort) {
-			case CharacteristicSort._CHARACTERISTIC_SORT_DOMAIN:
-				sql = sql + characterizedIdStr + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString();
-				break;
-			case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
-				sql = sql + Identifier.getNullSQLString() + COMMA
-					+ characterizedIdStr + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString();
-				break;
-			case CharacteristicSort._CHARACTERISTIC_SORT_MCM:
-				sql = sql + Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ characterizedIdStr + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString();
-				break;
-			case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
-				sql = sql + Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ characterizedIdStr + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString();
-				break;
-			case CharacteristicSort._CHARACTERISTIC_SORT_TRANSMISSIONPATH:
-				sql = sql + Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA					
-					+ characterizedIdStr + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString();
-				break;
-			case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
-				sql = sql + Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
-					+ characterizedIdStr + COMMA
-					+ Identifier.getNullSQLString();
-				break;
-			case CharacteristicSort._CHARACTERISTIC_SORT_KIS:
-				sql = sql + Identifier.getNullSQLString() + COMMA
-				+ Identifier.getNullSQLString() + COMMA
-				+ Identifier.getNullSQLString() + COMMA
-				+ Identifier.getNullSQLString() + COMMA
-				+ Identifier.getNullSQLString() + COMMA
-				+ Identifier.getNullSQLString() + COMMA
-				+ characterizedIdStr;				
-				break;
-			default:
-				throw new UpdateObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
-		}
+			+ sort + COMMA
+			+ characteristic.getCharacterizedId().toSQLString();
+			/**
+			 * check sort support
+			 */
 		return sql;
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement) throws IllegalDataException, UpdateObjectException{
 		Characteristic characteristic = fromStorableObject(storableObject);
-		String cIdStr = characteristic.getId().getCode();
 		int sort = characteristic.getSort().value();
 		int i;
 		try {
@@ -221,74 +130,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			preparedStatement.setInt( ++i, characteristic.isEditable()?'1':'0');
 			preparedStatement.setInt( ++i, characteristic.isVisible()?'1':'0');
 			preparedStatement.setInt( ++i, sort);
-			String characterizedIdStr = characteristic.getCharacterizedId().toSQLString();
-			switch (sort) {
-				case CharacteristicSort._CHARACTERISTIC_SORT_DOMAIN:
-					preparedStatement.setString( ++i, characterizedIdStr);
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, characterizedIdStr);
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_MCM:
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, characterizedIdStr);
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, characterizedIdStr);
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_TRANSMISSIONPATH:
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, characterizedIdStr);
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, characterizedIdStr);
-					preparedStatement.setString( ++i, "");
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_KIS:
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, "");
-					preparedStatement.setString( ++i, characterizedIdStr);
-					break;
-				default:
-					throw new UpdateObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
-			}
+			preparedStatement.setString( ++i, characteristic.getCharacterizedId().toSQLString());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("CharacteristicDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -317,12 +159,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		+ COLUMN_IS_EDITABLE + COMMA
 		+ COLUMN_IS_VISIBLE + COMMA
 		+ COLUMN_SORT + COMMA
-		+ COLUMN_SERVER_ID + COMMA 
-		+ COLUMN_MCM_ID + COMMA			
-		+ COLUMN_EQUIPMENT_ID + COMMA
-		+ COLUMN_TRANSMISSION_PATH_ID + COMMA
-		+ COLUMN_PORT_ID + COMMA
-		+ COLUMN_KIS_ID
+		+ COLUMN_CHARACTERIZED_ID
 		+ SQL_FROM + ObjectEntities.CHARACTERISTIC_ENTITY
 		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
@@ -339,63 +176,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 		
 		int sort = resultSet.getInt(COLUMN_SORT);
-		Identifier characterizedId;
-		
-		switch (sort) {
-			case CharacteristicSort._CHARACTERISTIC_SORT_DOMAIN:
-				/**
-				* @todo when change DB Identifier model ,change getString() to
-				*       getLong()
-				*/
-			characterizedId = new Identifier(resultSet.getString(COLUMN_DOMAIN_ID));
-			break;
-			case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
-				/**
-				* @todo when change DB Identifier model ,change getString() to
-				*       getLong()
-				*/
-			characterizedId = new Identifier(resultSet.getString(COLUMN_SERVER_ID));
-			break;
-			
-			case CharacteristicSort._CHARACTERISTIC_SORT_MCM:
-				/**
-				* @todo when change DB Identifier model ,change getString() to
-				*       getLong()
-				*/
-			characterizedId = new Identifier(resultSet.getString(COLUMN_SERVER_ID));
-			break;
-			
-			case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
-				/**
-					* @todo when change DB Identifier model ,change getString() to
-					*       getLong()
-					*/
-				characterizedId = new Identifier(resultSet.getString(COLUMN_EQUIPMENT_ID));
-				break;
-			case CharacteristicSort._CHARACTERISTIC_SORT_TRANSMISSIONPATH:
-				/**
-					* @todo when change DB Identifier model ,change getString() to
-					*       getLong()
-					*/
-				characterizedId = new Identifier(resultSet.getString(COLUMN_TRANSMISSION_PATH_ID));
-				break;
-			case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
-				/**
-					* @todo when change DB Identifier model ,change getString() to
-					*       getLong()
-					*/
-				characterizedId = new Identifier(resultSet.getString(COLUMN_PORT_ID));
-				break;				
-			case CharacteristicSort._CHARACTERISTIC_SORT_KIS:
-				/**
-					* @todo when change DB Identifier model ,change getString() to
-					*       getLong()
-					*/
-				characterizedId = new Identifier(resultSet.getString(COLUMN_KIS_ID));
-				break;
-			default:
-				throw new RetrieveObjectException("Unknown sort: " + sort + " for characteristic: " + characteristic.getId().toString());
-		}
+		Identifier characterizedId = new Identifier(resultSet.getString(COLUMN_CHARACTERIZED_ID));
 
 		CharacteristicType characteristicType;
 		try {
@@ -405,29 +186,23 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 		characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																 /**
-																	* @todo when change DB Identifier model ,change getString() to
-																	*       getLong()
-																	*/
-																 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																 /**
-																	* @todo when change DB Identifier model ,change getString() to
-																	*       getLong()
-																	*/
-																 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																 /**
-																	* @todo when change DB Identifier model ,change getString() to
-																	*       getLong()
-																	*/
-																 characteristicType,
-																 resultSet.getString(COLUMN_NAME),
-																 resultSet.getString(COLUMN_DESCRIPTION),
-																 sort,
-																 resultSet.getString(COLUMN_VALUE),
-																 characterizedId,										 
-																 (resultSet.getInt(COLUMN_IS_EDITABLE) == 0) ? false : true,
-																 (resultSet.getInt(COLUMN_IS_VISIBLE) == 0) ? false : true);
+									 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+									 /**
+									  * @todo when change DB Identifier model ,change getString() to getLong()
+									  */
+									 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+									 /**
+									  * @todo when change DB Identifier model ,change getString() to getLong()
+									  */
+									 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+									 characteristicType,
+									 resultSet.getString(COLUMN_NAME),
+									 resultSet.getString(COLUMN_DESCRIPTION),
+									 sort,
+									 resultSet.getString(COLUMN_VALUE),
+									 characterizedId,
+									 (resultSet.getInt(COLUMN_IS_EDITABLE) == 0) ? false : true,
+									 (resultSet.getInt(COLUMN_IS_VISIBLE) == 0) ? false : true);
 		return characteristic;
 	}
 	
@@ -486,33 +261,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			buffer.append(EQUALS);
 			buffer.append(sortValue);
 			buffer.append(SQL_AND);
-			switch (sortValue) {
-				case CharacteristicSort._CHARACTERISTIC_SORT_DOMAIN:
-					buffer.append(COLUMN_DOMAIN_ID);
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
-					buffer.append(COLUMN_SERVER_ID);
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_MCM:
-					buffer.append(COLUMN_MCM_ID);
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
-					buffer.append(COLUMN_EQUIPMENT_ID);
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_TRANSMISSIONPATH:
-					buffer.append(COLUMN_TRANSMISSION_PATH_ID);
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_MONITORINGPORT:
-				case CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORT:
-				case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
-					buffer.append(COLUMN_PORT_ID);
-					break;
-				case CharacteristicSort._CHARACTERISTIC_SORT_KIS:
-					buffer.append(COLUMN_KIS_ID);
-					break;
-				default:
-					throw new RetrieveObjectException("Unknown sort: " + sort + " for characterized: " + cdIdStr);
-			}
+			buffer.append(COLUMN_CHARACTERIZED_ID);
 			buffer.append(EQUALS);
 			buffer.append(cdIdStr);
 			sql = retrieveQuery(buffer.toString());
@@ -563,37 +312,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		if (condition instanceof LinkedIdsCondition){
 			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
 			Identifier id = linkedIdsCondition.getIdentifier();
-			CharacteristicSort sort = null;
-			switch(id.getMajor()){
-				case ObjectEntities.DOMAIN_ENTITY_CODE:
-					sort = CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN;
-					break;
-				case ObjectEntities.SERVER_ENTITY_CODE: 
-					sort = CharacteristicSort.CHARACTERISTIC_SORT_SERVER;
-					break;
-				case ObjectEntities.MCM_ENTITY_CODE:
-					sort = CharacteristicSort.CHARACTERISTIC_SORT_MCM;
-					break;
-				case ObjectEntities.TRANSPATH_ENTITY_CODE:
-					sort = CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH;
-					break;
-				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-					sort = CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT;
-					break;
-				case ObjectEntities.PORT_ENTITY_CODE:
-					sort = CharacteristicSort.CHARACTERISTIC_SORT_PORT;
-					break;
-					/**
-					 * FIXME how use links ???
-					 */
-//				sort = CharacteristicSort.CHARACTERISTIC_SORT_LINK;
-//					break;
-//				sort = CharacteristicSort.CHARACTERISTIC_SORT_CABLELINK;
-//					break;
-				case ObjectEntities.KIS_ENTITY_CODE:
-					sort = CharacteristicSort.CHARACTERISTIC_SORT_KIS;
-					break;
-			}
+			CharacteristicSort sort = Characteristic.getSortForId(id);
+			
 			if (sort != null){
 				list = retrieveCharacteristics(id, sort);
 			}
