@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.6 2005/03/28 12:01:28 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.7 2005/04/01 13:59:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.*;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/28 12:01:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 13:59:08 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -30,7 +30,7 @@ public abstract class AbstractSchemeElement extends
 	 */
 	private transient boolean alarmed;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private String description;
 
@@ -78,8 +78,8 @@ public abstract class AbstractSchemeElement extends
 	/**
 	 * @see Characterizable#getCharacteristics()
 	 */
-	public final Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public final Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	/**
@@ -135,18 +135,18 @@ public abstract class AbstractSchemeElement extends
 
 	/**
 	 * @param characteristics
-	 * @see Characterizable#setCharacteristics(Collection)
+	 * @see Characterizable#setCharacteristics(Set)
 	 */
-	public final void setCharacteristics(final Collection characteristics) {
+	public final void setCharacteristics(final Set characteristics) {
 		setCharacteristics0(characteristics);
 		this.changed = true;
 	}
 
 	/**
 	 * @param characteristics
-	 * @see Characterizable#setCharacteristics0(Collection)
+	 * @see Characterizable#setCharacteristics0(Set)
 	 */
-	public final void setCharacteristics0(final Collection characteristics) {
+	public final void setCharacteristics0(final Set characteristics) {
 		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.characteristics.clear();
 		this.characteristics.addAll(characteristics);

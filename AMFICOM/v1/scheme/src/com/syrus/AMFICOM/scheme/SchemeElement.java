@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.8 2005/03/28 12:01:28 bass Exp $
+ * $Id: SchemeElement.java,v 1.9 2005/04/01 13:59:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.*;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/28 12:01:28 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/01 13:59:08 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -144,7 +144,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -187,7 +187,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getSchemeDevices() {
+	public Set getSchemeDevices() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -198,7 +198,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getSchemeElements() {
+	public Set getSchemeElements() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -209,7 +209,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getSchemeLinks() {
+	public Set getSchemeLinks() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -220,7 +220,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getSchemes() {
+	public Set getSchemes() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -304,8 +304,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public void setScheme(final Scheme scheme) {
 		setSchemes(scheme == null 
-				? Collections.EMPTY_LIST
-				: Collections.singletonList(scheme));
+				? Collections.EMPTY_SET
+				: Collections.singleton(scheme));
 	}
 
 	/**
@@ -316,19 +316,19 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeDevices(final Collection schemeDevices) {
+	public void setSchemeDevices(final Set schemeDevices) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeElements(final Collection schemeElements) {
+	public void setSchemeElements(final Set schemeElements) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeLinks(final Collection schemeLinks) {
+	public void setSchemeLinks(final Set schemeLinks) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemes(final Collection schemes) {
+	public void setSchemes(final Set schemes) {
 		/**
 		 * @todo Check for circualr deps.
 		 */
@@ -353,5 +353,23 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCellImpl) {
 		throw new UnsupportedOperationException();
+	}
+
+	/* ********************************************************************
+	 * Non-model methods.                                                 *
+	 **********************************************************************/
+
+	public Set getSchemeCablePorts() {
+		final Set schemeCablePorts = new HashSet();
+		for (final Iterator schemeDeviceIterator = getSchemeDevices().iterator(); schemeDeviceIterator.hasNext();)
+			schemeCablePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts());
+		return Collections.unmodifiableSet(schemeCablePorts);
+	}
+
+	public Set getSchemePorts() {
+		final Set schemePorts = new HashSet();
+		for (final Iterator schemeDeviceIterator = getSchemeDevices().iterator(); schemeDeviceIterator.hasNext();)
+			schemePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts());
+		return Collections.unmodifiableSet(schemePorts);
 	}
 }

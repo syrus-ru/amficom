@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.8 2005/03/24 16:58:52 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.9 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.*;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/24 16:58:52 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/01 13:59:07 $
  * @module scheme_v1
  */
 public final class SchemeProtoGroup extends AbstractCloneableStorableObject
@@ -44,7 +44,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	SchemeProtoGroup(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeProtoGroupDatabase = SchemeDatabaseContext.schemeProtoGroupDatabase;
+		this.schemeProtoGroupDatabase = SchemeDatabaseContext.getSchemeProtoGroupDatabase();
 		try {
 			this.schemeProtoGroupDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -83,7 +83,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 				? Identifier.VOID_IDENTIFIER
 				: parentSchemeProtoGroup.id;
 
-		this.schemeProtoGroupDatabase = SchemeDatabaseContext.schemeProtoGroupDatabase;
+		this.schemeProtoGroupDatabase = SchemeDatabaseContext.getSchemeProtoGroupDatabase();
 	}
 
 	/**
@@ -224,8 +224,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see Item#getChildren()
 	 */
 	public List getChildren() {
-		final Collection schemeProtoGroups = getSchemeProtoGroups();
-		final Collection schemeProtoElements = getSchemeProtoElements();
+		final Set schemeProtoGroups = getSchemeProtoGroups();
+		final Set schemeProtoElements = getSchemeProtoElements();
 		final List children = new ArrayList(schemeProtoGroups.size() + schemeProtoElements.size());
 		children.addAll(schemeProtoGroups);
 		children.addAll(schemeProtoElements);
@@ -235,23 +235,23 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		assert this.symbolId != null
 				&& this.parentSchemeProtoGroupId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		if (this.symbolId.equals(Identifier.VOID_IDENTIFIER)) {
 			if (this.parentSchemeProtoGroupId
 					.equals(Identifier.VOID_IDENTIFIER))
-				return Collections.EMPTY_LIST;
+				return Collections.EMPTY_SET;
 			return Collections
-					.singletonList(this.parentSchemeProtoGroupId);
+					.singleton(this.parentSchemeProtoGroupId);
 		}
 		if (this.parentSchemeProtoGroupId
 				.equals(Identifier.VOID_IDENTIFIER))
-			return Collections.singletonList(this.symbolId);
-		final List dependencies = new ArrayList(2);
+			return Collections.singleton(this.symbolId);
+		final Set dependencies = new HashSet(2);
 		dependencies.add(this.symbolId);
 		dependencies.add(this.parentSchemeProtoGroupId);
-		return Collections.unmodifiableList(dependencies);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**
@@ -312,24 +312,24 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	/**
 	 * @return an immutable collection.
 	 */
-	public Collection getSchemeProtoElements() {
+	public Set getSchemeProtoElements() {
 		try {
-			return Collections.unmodifiableList(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
-			return Collections.EMPTY_LIST;
+			return Collections.EMPTY_SET;
 		}
 	}
 
 	/**
 	 * @return an immutable collection.
 	 */
-	public Collection getSchemeProtoGroups() {
+	public Set getSchemeProtoGroups() {
 		try {
-			return Collections.unmodifiableList(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
-			return Collections.EMPTY_LIST;
+			return Collections.EMPTY_SET;
 		}
 	}
 
@@ -505,7 +505,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * 
 	 * @param schemeProtoElements
 	 */
-	public void setSchemeProtoElements(final Collection schemeProtoElements) {
+	public void setSchemeProtoElements(final Set schemeProtoElements) {
 		assert schemeProtoElements != null: ErrorMessages.NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeProtoElementIterator = getSchemeProtoElements().iterator(); oldSchemeProtoElementIterator.hasNext();) {
 			final SchemeProtoElement oldSchemeProtoElement = (SchemeProtoElement) oldSchemeProtoElementIterator.next();
@@ -526,7 +526,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * 
 	 * @param schemeProtoGroups
 	 */
-	public void setSchemeProtoGroups(final Collection schemeProtoGroups) {
+	public void setSchemeProtoGroups(final Set schemeProtoGroups) {
 		assert schemeProtoGroups != null: ErrorMessages.NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeProtoGroupIterator = getSchemeProtoGroups().iterator(); oldSchemeProtoGroupIterator.hasNext();)
 			removeSchemeProtoGroup((SchemeProtoGroup) oldSchemeProtoGroupIterator.next());

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.5 2005/03/28 08:24:52 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.6 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/28 08:24:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 13:59:07 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject
@@ -45,11 +45,22 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 
 	private double startSpare;
 
+	private StorableObjectDatabase cableChannelingItemDatabase; 
+
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException 
+	 * @throws ObjectNotFoundException 
 	 */
-	protected CableChannelingItem(Identifier id) {
+	protected CableChannelingItem(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+	
+		this.cableChannelingItemDatabase = SchemeDatabaseContext.getCableChannelingItemDatabase();
+		try {
+			this.cableChannelingItemDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -104,7 +115,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 

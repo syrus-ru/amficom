@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.9 2005/03/30 10:19:51 bass Exp $
+ * $Id: PathElement.java,v 1.10 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import java.util.*;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/30 10:19:51 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 13:59:07 $
  * @module scheme_v1
  */
 public final class PathElement extends AbstractCloneableStorableObject implements Describable, Comparable {
@@ -145,7 +145,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -382,7 +382,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		this.changed = true;
 	}
 
-	/**********************************************************************
+	/* ********************************************************************
 	 * Non-model methods.                                                 *
 	 **********************************************************************/
 

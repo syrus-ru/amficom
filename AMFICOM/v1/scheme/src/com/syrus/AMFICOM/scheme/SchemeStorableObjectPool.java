@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.10 2005/03/25 13:24:52 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.11 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/03/25 13:24:52 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/01 13:59:07 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -40,7 +40,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(final List ids) throws DatabaseException, CommunicationException {
+	public static void delete(final Set ids) throws DatabaseException, CommunicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -53,17 +53,17 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		throw new UnsupportedOperationException();
 	}
 
-	public static List getStorableObjects(final List objectIds, final boolean useLoader)
+	public static Set getStorableObjects(final Set objectIds, final boolean useLoader)
 			throws DatabaseException, CommunicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public static List getStorableObjectsByCondition(final StorableObjectCondition condition, final boolean useLoader)
+	public static Set getStorableObjectsByCondition(final StorableObjectCondition condition, final boolean useLoader)
 			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public static List getStorableObjectsByConditionButIds(final List ids, final StorableObjectCondition condition, final boolean useLoader)
+	public static Set getStorableObjectsByConditionButIds(final Set ids, final StorableObjectCondition condition, final boolean useLoader)
 			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
@@ -103,18 +103,9 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	/**
 	 * @param objects
 	 * @throws IllegalDataException
-	 * @see com.syrus.AMFICOM.general.StorableObjectPool#deleteStorableObjects(java.util.Collection)
+	 * @see StorableObjectPool#deleteStorableObjects(Set)
 	 */
-	protected void deleteStorableObjects(Collection objects) throws IllegalDataException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param ids
-	 * @throws DatabaseException
-	 * @throws CommunicationException
-	 */
-	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObjects(final Set objects) throws IllegalDataException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -123,7 +114,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @throws DatabaseException
 	 * @throws CommunicationException
 	 */
-	protected com.syrus.AMFICOM.general.StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
+	protected StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -131,29 +122,9 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param entityCode
 	 * @param ids
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.StorableObjectPool#loadStorableObjects(java.lang.Short, java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.StorableObjectPool#loadStorableObjects(Short, Set)
 	 */
-	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param entityCode
-	 * @param ids
-	 * @throws DatabaseException
-	 * @throws CommunicationException
-	 */
-	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param condition
-	 * @param ids
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.StorableObjectPool#loadStorableObjectsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Collection)
-	 */
-	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	protected Set loadStorableObjects(Short entityCode, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -163,7 +134,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @throws DatabaseException
 	 * @throws CommunicationException
 	 */
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws DatabaseException, CommunicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -177,26 +148,13 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	}
 
 	/**
-	 * @param storableObjects
-	 * @param force
-	 * @throws VersionCollisionException
-	 * @throws DatabaseException
-	 * @throws CommunicationException
-	 * @throws IllegalDataException
-	 * @see com.syrus.AMFICOM.general.StorableObjectPool#saveStorableObjects(short, Collection, boolean)
-	 */
-	protected void saveStorableObjects(List storableObjects, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param entityCode
 	 * @param storableObjects
 	 * @param force
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.StorableObjectPool#saveStorableObjects(short, java.util.Collection, boolean)
+	 * @see com.syrus.AMFICOM.general.StorableObjectPool#saveStorableObjects(short, Set, boolean)
 	 */
-	protected void saveStorableObjects(short entityCode, Collection storableObjects, boolean force) throws ApplicationException {
+	protected void saveStorableObjects(final short entityCode, final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 }

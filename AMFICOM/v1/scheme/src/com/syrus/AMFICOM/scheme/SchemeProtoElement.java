@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.11 2005/03/25 10:15:12 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.12 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import java.util.*;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/25 10:15:12 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/01 13:59:07 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -29,7 +29,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		LibraryEntry {
 	private static final long serialVersionUID = 3689348806202569782L;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private String description;
 
@@ -59,8 +59,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	SchemeProtoElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.characteristics = new ArrayList();
-		this.schemeProtoElementDatabase = SchemeDatabaseContext.schemeProtoElementDatabase;
+		this.characteristics = new HashSet();
+		this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
 		try {
 			this.schemeProtoElementDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -125,9 +125,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				? Identifier.VOID_IDENTIFIER
 				: parentSchemeProtoElement.id;
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
-		this.schemeProtoElementDatabase = SchemeDatabaseContext.schemeProtoElementDatabase;
+		this.schemeProtoElementDatabase = SchemeDatabaseContext.getSchemeProtoElementDatabase();
 	}
 
 	/**
@@ -348,8 +348,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * @see Characterizable#getCharacteristics()
 	 */
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	/**
@@ -369,14 +369,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		assert this.equipmentTypeId != null
 				&& this.symbolId != null
 				&& this.ugoCellId != null
 				&& this.schemeCellId != null
 				&& this.parentSchemeProtoGroupId != null
 				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		final List dependencies = new ArrayList(5);
+		final Set dependencies = new HashSet(5);
 		if (!this.equipmentTypeId.equals(Identifier.VOID_IDENTIFIER))
 			dependencies.add(this.equipmentTypeId);
 		if (!this.symbolId.equals(Identifier.VOID_IDENTIFIER))
@@ -392,7 +392,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			assert !this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			dependencies.add(this.parentSchemeProtoElementId);
 		}
-		return Collections.unmodifiableList(dependencies);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**
@@ -484,15 +484,15 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * Returns <code>schemeCablePort</code> s (as an unmodifiable
 	 * collection) for this <code>schemeProtoElement</code>, recursively.
 	 */
-	public Collection getSchemeCablePortsRecursively() {
-		final Collection schemeDevices = getSchemeDevices();
+	public Set getSchemeCablePortsRecursively() {
+		final Set schemeDevices = getSchemeDevices();
 		final Iterator schemeDeviceIterator = schemeDevices.iterator();
 		if (schemeDevices.size() == 1)
 			return ((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts();
-		final Collection schemeCablePorts = new LinkedList();
+		final Set schemeCablePorts = new HashSet();
 		for (; schemeDeviceIterator.hasNext();)
 			schemeCablePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts());
-		return Collections.unmodifiableCollection(schemeCablePorts);
+		return Collections.unmodifiableSet(schemeCablePorts);
 	}
 
 	/**
@@ -511,11 +511,11 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 	}
 
-	public Collection getSchemeDevices() {
+	public Set getSchemeDevices() {
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getSchemeLinks() {
+	public Set getSchemeLinks() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -523,18 +523,18 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * Returns <code>schemePort</code> s (as an unmodifiable collection)
 	 * for this <code>schemeProtoElement</code>, recursively.
 	 */
-	public Collection getSchemePortsRecursively() {
-		final Collection schemeDevices = getSchemeDevices();
+	public Set getSchemePortsRecursively() {
+		final Set schemeDevices = getSchemeDevices();
 		final Iterator schemeDeviceIterator = schemeDevices.iterator();
 		if (schemeDevices.size() == 1)
 			return ((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts();
-		final Collection schemePorts = new LinkedList();
+		final Set schemePorts = new HashSet();
 		for (; schemeDeviceIterator.hasNext();)
 			schemePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts());
-		return Collections.unmodifiableCollection(schemePorts);
+		return Collections.unmodifiableSet(schemePorts);
 	}
 
-	public Collection getSchemeProtoElements() {
+	public Set getSchemeProtoElements() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -618,18 +618,18 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * @param characteristics
-	 * @see Characterizable#setCharacteristics(Collection)
+	 * @see Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		setCharacteristics0(characteristics);
 		this.changed = true;
 	}
 
 	/**
 	 * @param characteristics
-	 * @see Characterizable#setCharacteristics0(Collection)
+	 * @see Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.characteristics.clear();
 		this.characteristics.addAll(characteristics);
@@ -821,15 +821,15 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
-	public void setSchemeDevices(final Collection schemeDevices) {
+	public void setSchemeDevices(final Set schemeDevices) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeLinks(final Collection schemeLinks) {
+	public void setSchemeLinks(final Set schemeLinks) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeProtoElements(final Collection schemeProtoElements) {
+	public void setSchemeProtoElements(final Set schemeProtoElements) {
 		throw new UnsupportedOperationException();
 	}
 

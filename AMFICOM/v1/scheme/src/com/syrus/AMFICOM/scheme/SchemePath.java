@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.9 2005/03/30 10:19:50 bass Exp $
+ * $Id: SchemePath.java,v 1.10 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,14 @@ import java.util.*;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/30 10:19:50 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 13:59:07 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
 		Describable, Characterizable {
 	private static final long serialVersionUID = 3257567312831132469L;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private String description;
 
@@ -115,7 +115,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Collection getCharacteristics() {
+	public Set getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -129,7 +129,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -212,17 +212,17 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -280,7 +280,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		throw new UnsupportedOperationException();
 	}
 
-	/**********************************************************************
+	/* ********************************************************************
 	 * Non-model methods.                                                 *
 	 **********************************************************************/
 

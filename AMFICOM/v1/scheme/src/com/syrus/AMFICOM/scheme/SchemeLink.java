@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.7 2005/03/28 12:01:28 bass Exp $
+ * $Id: SchemeLink.java,v 1.8 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.*;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/28 12:01:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 13:59:07 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -102,7 +102,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 

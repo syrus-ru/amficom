@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.7 2005/03/28 12:01:27 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.8 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.*;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/28 12:01:27 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 13:59:07 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -94,7 +94,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		return getCableLinkType();
 	}
 
-	public Collection getCableChannelingItems() {
+	public Set getCableChannelingItems() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -119,7 +119,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -132,7 +132,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		return link;
 	}
 
-	public Collection getSchemeCableThreads() {
+	public Set getSchemeCableThreads() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -188,7 +188,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		setCableLinkType((CableLinkType) abstractLinkType);
 	}
 
-	public void setCableChannelingItems(final Collection cableChannelingItems) {
+	public void setCableChannelingItems(final Set cableChannelingItems) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -212,7 +212,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		super.setLink(link);
 	}
 
-	public void setSchemeCableThreads(final Collection schemeCableThreads) {
+	public void setSchemeCableThreads(final Set schemeCableThreads) {
 		throw new UnsupportedOperationException();
 	}
 

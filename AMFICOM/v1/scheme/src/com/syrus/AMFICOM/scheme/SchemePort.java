@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.6 2005/03/28 12:01:28 bass Exp $
+ * $Id: SchemePort.java,v 1.7 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.*;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/28 12:01:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 13:59:07 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -95,7 +95,7 @@ public final class SchemePort extends AbstractSchemePort {
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 

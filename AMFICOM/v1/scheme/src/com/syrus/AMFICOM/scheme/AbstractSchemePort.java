@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.6 2005/03/28 12:01:28 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.7 2005/04/01 13:59:07 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.*;
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/28 12:01:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 13:59:07 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -29,7 +29,7 @@ public abstract class AbstractSchemePort extends
 
 	private AbstractSchemePortDirectionType abstractSchemePortDirectionType;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private String description;
 
@@ -84,14 +84,14 @@ public abstract class AbstractSchemePort extends
 		throw new UnsupportedOperationException();
 	}
 
-	public final Collection getCharacteristics() {
+	public final Set getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -154,11 +154,11 @@ public abstract class AbstractSchemePort extends
 		throw new UnsupportedOperationException();
 	}
 
-	public final void setCharacteristics(final Collection characteristics) {
+	public final void setCharacteristics(final Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
-	public final void setCharacteristics0(final Collection characteristics) {
+	public final void setCharacteristics0(final Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.5 2005/03/23 14:55:35 bass Exp $
+ * $Id: Scheme.java,v 1.6 2005/04/01 13:59:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.*;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/23 14:55:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 13:59:08 $
  * @module scheme_v1
  */
 public final class Scheme extends AbstractCloneableDomainMember implements Describable, SchemeCellContainer {
@@ -130,7 +130,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -166,7 +166,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getSchemeCableLinks() {
+	public Set getSchemeCableLinks() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -174,7 +174,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @deprecated
 	 */
 	public SchemeCableLink[] getSchemeCableLinksAsArray() {
-		final Collection schemeCableLinks = getSchemeCableLinks();
+		final Set schemeCableLinks = getSchemeCableLinks();
 		return (SchemeCableLink[]) schemeCableLinks.toArray(new SchemeCableLink[schemeCableLinks.size()]);
 	}
 
@@ -185,7 +185,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getSchemeElements() {
+	public Set getSchemeElements() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -193,7 +193,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @deprecated
 	 */
 	public SchemeElement[] getSchemeElementsAsArray() {
-		final Collection schemeElements = getSchemeElements();
+		final Set schemeElements = getSchemeElements();
 		return (SchemeElement[]) schemeElements.toArray(new SchemeElement[schemeElements.size()]);
 	}
 
@@ -201,7 +201,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getSchemeLinks() {
+	public Set getSchemeLinks() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -209,11 +209,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @deprecated
 	 */
 	public SchemeLink[] getSchemeLinksAsArray() {
-		final Collection schemeLinks = getSchemeLinks();
+		final Set schemeLinks = getSchemeLinks();
 		return (SchemeLink[]) schemeLinks.toArray(new SchemeLink[schemeLinks.size()]);
 	}
 
-	public Collection getSchemeOptimizeInfos() {
+	public Set getSchemeOptimizeInfos() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -302,7 +302,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeCableLinks(final Collection schemeCableLinks) {
+	public void setSchemeCableLinks(final Set schemeCableLinks) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -313,7 +313,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeElements(final Collection schemeElements) {
+	public void setSchemeElements(final Set schemeElements) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -321,11 +321,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeLinks(final Collection schemeLinks) {
+	public void setSchemeLinks(final Set schemeLinks) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeOptimizeInfos(final Collection schemeOptimizeInfos) {
+	public void setSchemeOptimizeInfos(final Set schemeOptimizeInfos) {
 		throw new UnsupportedOperationException();
 	}
 

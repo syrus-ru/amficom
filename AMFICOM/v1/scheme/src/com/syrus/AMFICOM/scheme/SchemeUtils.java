@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.19 2005/03/28 12:01:27 bass Exp $
+ * $Id: SchemeUtils.java,v 1.20 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
  * Functionality will be partially moved to {@link PathElement}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/03/28 12:01:27 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/01 13:59:07 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -25,44 +25,6 @@ public class SchemeUtils {
 
 	private SchemeUtils() {
 		assert false;
-	}
-
-	/**
-	 * returns cableports for certain schemeelement
-	 * @param se SchemeElement
-	 * @return List of SchemeCablePort
-	 */
-	public static List getCablePorts(SchemeElement se)
-	{
-		if (se.getSchemeDevicesAsArray().length == 1) {
-			return Collections.unmodifiableList(Arrays.asList(se.getSchemeDevicesAsArray()[0].getSchemeCablePortsAsArray()));
-		}
-
-		List ports = new LinkedList();
-		SchemeDevice[] devices = se.getSchemeDevicesAsArray();
-		for (int i = 0; i < devices.length; i++) {
-			ports.addAll(Arrays.asList(devices[i].getSchemeCablePortsAsArray()));
-		}
-		return Collections.unmodifiableList(ports);
-	}
-
-	/**
-	 * returns ports for certain schemeelement
-	 * @param se SchemeElement
-	 * @return List of SchemePort
-	 */
-	public static List getPorts(SchemeElement se)
-	{
-		if (se.getSchemeDevicesAsArray().length == 1) {
-			return Collections.unmodifiableList(Arrays.asList(se.getSchemeDevicesAsArray()[0].getSchemePortsAsArray()));
-		}
-
-		List ports = new LinkedList();
-		SchemeDevice[] devices = se.getSchemeDevicesAsArray();
-		for (int i = 0; i < devices.length; i++) {
-			ports.addAll(Arrays.asList(devices[i].getSchemePortsAsArray()));
-		}
-		return Collections.unmodifiableList(ports);
 	}
 
 	public static PathElement getPathElement(SchemePath path, Identifier pathElementId)
@@ -74,7 +36,7 @@ public class SchemeUtils {
 		return null;
 	}
 
-	public static double getKu(PathElement pe)
+	static double getKu(PathElement pe)
 	{
 		switch (pe.getPathElementKind().value())
 		{
@@ -109,7 +71,7 @@ public class SchemeUtils {
 	}
 
 	// return all top level elements at scheme and at inner schemes
-	public static Collection getTopologicalElements(Scheme scheme)
+	public static Set getTopologicalElements(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
 		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
@@ -131,7 +93,7 @@ public class SchemeUtils {
 	}
 
 	// return all top level elements at scheme and at inner cable links
-	public static Collection getTopologicalCableLinks(Scheme scheme)
+	public static Set getTopologicalCableLinks(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
 		ht.addAll(Arrays.asList(scheme.getSchemeCableLinksAsArray()));
@@ -151,7 +113,7 @@ public class SchemeUtils {
 	}
 
 	// return all cablelinks at scheme including inner schemes
-	public static Collection getAllCableLinks(Scheme scheme)
+	public static Set getAllCableLinks(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
 		ht.addAll(Arrays.asList(scheme.getSchemeCableLinksAsArray()));
@@ -168,7 +130,7 @@ public class SchemeUtils {
 		return ht;
 	}
 
-	public static Collection getTopologicalPaths(Scheme scheme)
+	public static Set getTopologicalPaths(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
 		ht.addAll(Arrays.asList(scheme.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray()));
@@ -220,7 +182,7 @@ public class SchemeUtils {
 		return null;
 	}
 
-	public static Collection getAllChildElements(SchemeElement element)
+	static Set getAllChildElements(SchemeElement element)
 	{
 		if (element.getScheme() == null) {
 			HashSet v = new HashSet();
@@ -236,12 +198,7 @@ public class SchemeUtils {
 		return getAllTopLevelElements(scheme);
 	}
 
-	public static Collection getTopLevelElements(Scheme scheme)
-	{
-		return Arrays.asList(scheme.getSchemeElementsAsArray());
-	}
-
-	public static Collection getAllTopLevelElements(Scheme scheme)
+	public static Set getAllTopLevelElements(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
 		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
@@ -411,7 +368,7 @@ public class SchemeUtils {
 		return length;
 	}
 
-	public static double getOpticalLength(PathElement pe)
+	static double getOpticalLength(PathElement pe)
 	{
 		switch (pe.getPathElementKind().value()) {
 			case PathElementKind._SCHEME_CABLE_LINK:
@@ -422,7 +379,7 @@ public class SchemeUtils {
 		}
 	}
 
-	public static void setOpticalLength(PathElement pe, double d)
+	static void setOpticalLength(PathElement pe, double d)
 	{
 		switch (pe.getPathElementKind().value()) {
 			case PathElementKind._SCHEME_CABLE_LINK:
@@ -452,6 +409,9 @@ public class SchemeUtils {
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public static void setPhysicalLength(PathElement pe, double d)
 	{
 		switch (pe.getPathElementKind().value()) {

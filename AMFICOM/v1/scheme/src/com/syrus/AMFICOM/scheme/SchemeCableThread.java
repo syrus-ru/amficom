@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.9 2005/03/28 12:01:28 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.10 2005/04/01 13:59:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.*;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/28 12:01:28 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 13:59:08 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -26,7 +26,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	private Identifier cableThreadTypeId;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private String description;
 
@@ -111,7 +111,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Collection getCharacteristics() {
+	public Set getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -125,7 +125,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -206,17 +206,17 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 

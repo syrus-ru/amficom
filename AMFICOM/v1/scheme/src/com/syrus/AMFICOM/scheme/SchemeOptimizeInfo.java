@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.5 2005/03/24 16:58:52 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.6 2005/04/01 13:59:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.*;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/24 16:58:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 13:59:07 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -116,7 +116,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	/**
 	 * @see StorableObject#getDependencies()
 	 */
-	public List getDependencies() {
+	public Set getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -180,15 +180,15 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		return this.rtuDeleteProb;
 	}
 
-	public Collection getSchemeMonitoringSolutions() {
+	public Set getSchemeMonitoringSolutions() {
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getSchemeOptimizeInfoRtus() {
+	public Set getSchemeOptimizeInfoRtus() {
 		throw new UnsupportedOperationException();
 	}
 
-	public Collection getSchemeOptimizeInfoSwitches() {
+	public Set getSchemeOptimizeInfoSwitches() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -320,15 +320,15 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
-	public void setSchemeMonitoringSolutions(final Collection schemeMonitoringSolutions) {
+	public void setSchemeMonitoringSolutions(final Set schemeMonitoringSolutions) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeOptimizeInfoRtus(final Collection schemeOptimizeInfoRtus) {
+	public void setSchemeOptimizeInfoRtus(final Set schemeOptimizeInfoRtus) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setSchemeOptimizeInfoSwitches(final Collection schemeOptimizeInfoSwitches) {
+	public void setSchemeOptimizeInfoSwitches(final Set schemeOptimizeInfoSwitches) {
 		throw new UnsupportedOperationException();
 	}
 
