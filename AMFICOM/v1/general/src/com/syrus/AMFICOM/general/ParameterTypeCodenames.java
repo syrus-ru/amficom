@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.2 2005/02/07 15:25:00 arseniy Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.3 2005/02/08 10:47:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/07 15:25:00 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 10:47:09 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -49,6 +49,9 @@ public class ParameterTypeCodenames {
 	public static final String	MIN_CONNECTOR				= "ref_min_connector";
 
 	public static final String ALARM_STATUS = "alarm_status";
+
+	public static final String HZ_CHO = "hz_cho";
+
 	private ParameterTypeCodenames() {
 		//singleton
 	}
