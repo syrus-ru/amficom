@@ -290,6 +290,8 @@ module corba {
 
     com::syrus::AMFICOM::general::corba::Identifier_Transferable threshold_set_id;
   };
+  
+  typedef sequence <Evaluation_Transferable> EvaluationSeq_Transferable;
 
 ////////////////////// Result ///////////////////////
 
