@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.9 2005/02/03 20:16:19 arseniy Exp $
+ * $Id: CableThreadDatabase.java,v 1.10 2005/02/10 08:29:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -20,19 +21,17 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/03 20:16:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/02/10 08:29:18 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableThreadDatabase extends StorableObjectDatabase  {
@@ -204,16 +203,5 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 		
 		return list;
 	}
-    
-    public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		List list;
-		{
-			Log
-					.errorMessage("CableThreadDatabase.retrieveByCondition | Unknown condition class: "
-							+ condition.getClass().getName());
-			list = this.retrieveButIds(ids);
-		}
-		return list;
-	}
+
 }

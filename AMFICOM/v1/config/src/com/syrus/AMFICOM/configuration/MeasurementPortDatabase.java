@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.35 2005/02/03 14:38:06 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.36 2005/02/10 08:29:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,33 +16,29 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/02/03 14:38:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/02/10 08:29:19 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -261,39 +257,6 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		catch (IllegalDataException ide) {           
 			Log.debugMessage("MeasurementPortDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
 			throw new RetrieveObjectException(ide);
-		}
-		return list;
-	}
-
-	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-		List list = null;
-
-		String condition = MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
-			+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.KIS_ENTITY
-			+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
-			+ CLOSE_BRACKET;
-
-		try {
-			list = retrieveButIds(ids, condition);
-		}
-		catch (IllegalDataException ide) {
-			Log.debugMessage("MeasurementPortDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-
-		return list;
-	}
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		List list;
-		if (condition instanceof DomainCondition) {
-			DomainCondition domainCondition = (DomainCondition)condition;
-			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-		}
-		else {
-			Log.errorMessage("MeasurementPortDatabase.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
-			list = this.retrieveButIds(ids);
 		}
 		return list;
 	}

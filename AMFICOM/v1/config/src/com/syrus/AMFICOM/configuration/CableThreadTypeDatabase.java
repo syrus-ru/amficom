@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.13 2005/02/03 14:38:06 arseniy Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.14 2005/02/10 08:29:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -31,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/03 14:38:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/02/10 08:29:18 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -202,11 +201,6 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 			return this.retrieveByIdsOneQuery(null, condition);
 		return this.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids);
-	}
-	
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
-		return this.retrieveButIds(ids);
-	}
-	
+	}	
+
 }

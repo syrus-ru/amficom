@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.16 2005/02/09 12:49:56 bob Exp $
+ * $Id: CableLinkType.java,v 1.17 2005/02/10 08:29:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,18 +11,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -32,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/09 12:49:56 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/10 08:29:18 $
  * @author $Author: bob $
  * @module config_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.33 2005/02/03 14:38:06 arseniy Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.34 2005/02/10 08:29:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,16 +15,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -35,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/02/03 14:38:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/02/10 08:29:18 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -242,10 +241,4 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		}
 		return list;
 	}
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		return this.retrieveButIds(ids);
-	}
-
 }
