@@ -1,5 +1,5 @@
 /*
- * $Id: PreferencesManager.java,v 1.1 2004/05/06 11:48:10 bass Exp $
+ * $Id: PreferencesManager.java,v 1.2 2004/05/26 13:22:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import javax.swing.tree.*;
 /**
  * @todo PREFS LOCATION: local or db
  *
- * @version $Revision: 1.1 $, $Date: 2004/05/06 11:48:10 $
+ * @version $Revision: 1.2 $, $Date: 2004/05/26 13:22:50 $
  * @author $Author: bass $
  * @module util
  */
@@ -28,8 +28,11 @@ public final class PreferencesManager {
 	}
 
 	static {
-		Class clazz1 = IIOPConnectionManager.class;
-		Class clazz2 = SMTPConnectionManager.class;
+		try {
+			Class.forName(IIOPConnectionManager.class.getName());
+		} catch (ClassNotFoundException cnfe) {
+			;
+		}
 	}
 
 	static {
