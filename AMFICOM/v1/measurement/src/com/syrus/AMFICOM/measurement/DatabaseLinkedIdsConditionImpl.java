@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.2 2005/02/08 12:06:36 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.3 2005/02/08 13:56:53 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,14 +9,13 @@
 package com.syrus.AMFICOM.measurement;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
-import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/08 12:06:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 13:56:53 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -26,9 +25,10 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 		super(condition);
 	}
 
-	protected String getColumnName(){
+	protected String getColumnName(short entityCode){
 		String columnName = null;
-		switch (super.condition.getEntityCode().shortValue()) {
+		short code = super.condition.getEntityCode().shortValue();
+		switch (code) {
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 				columnName = MeasurementWrapper.COLUMN_TEST_ID;
 				break;
@@ -42,64 +42,72 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 				columnName = MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID;
 				break;
 			case ObjectEntities.MS_ENTITY_CODE:
-				columnName = MeasurementSetupWrapper.LINK_COLUMN_ME_ID;
-				columnName = MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID;
+				switch(entityCode) {
+					case ObjectEntities.ME_ENTITY_CODE: 
+						columnName = MeasurementSetupWrapper.LINK_COLUMN_ME_ID;
+					break;
+//					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+//						columnName = StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID;
+//					break;
+					default:
+						throw new UnsupportedOperationException("Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity type");
+						
+				}
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				columnName = ResultWrapper.COLUMN_ACTION_ID;
-				break;
+				switch(entityCode) {
+				case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+					columnName = ResultWrapper.COLUMN_MEASUREMENT_ID;
+					break;					
+				case ObjectEntities.ANALYSIS_ENTITY_CODE:
+					columnName = ResultWrapper.COLUMN_ANALYSIS_ID;
+					break;
+				case ObjectEntities.EVALUATION_ENTITY_CODE:
+					columnName = ResultWrapper.COLUMN_EVALUATION_ID;
+					break;
+				case ObjectEntities.MODELING_ENTITY_CODE:
+					columnName = ResultWrapper.COLUMN_MODELING_ID;
+					break;
+				default:
+					throw new UnsupportedOperationException("Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity type");
+				}
 			default:
-				throw new UnsupportedOperationException("Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity type");
+				throw new UnsupportedOperationException("Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity " + ObjectEntities.codeToString(code));
 		}
 		return columnName;	
 	}
 	
-	public String getSQLQuery() {
-		StringBuffer buffer = new StringBuffer();
+	public String getSQLQuery() throws IllegalDataException {
+		String query;
 		switch (super.condition.getEntityCode().shortValue()) {
 		case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-			buffer.append(StorableObjectWrapper.COLUMN_ID);
-			buffer.append(StorableObjectDatabase.SQL_IN);
-			buffer.append(StorableObjectDatabase.OPEN_BRACKET);
-			buffer.append(StorableObjectDatabase.SQL_SELECT);
-			buffer.append(AnalysisTypeDatabase.LINK_COLUMN_ANALYSIS_TYPE_ID);
-			buffer.append(StorableObjectDatabase.SQL_FROM);
-			buffer.append(ObjectEntities.ANATYPPARTYPLINK_ENTITY);
-			buffer.append(StorableObjectDatabase.SQL_WHERE);
-			buffer.append(super.getSQLQuery());
+			query = super.getLinkedQuery(
+					AnalysisTypeDatabase.LINK_COLUMN_ANALYSIS_TYPE_ID,
+					ObjectEntities.ANATYPPARTYPLINK_ENTITY);
 			break;
 		case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-			buffer.append(StorableObjectWrapper.COLUMN_ID);
-			buffer.append(StorableObjectDatabase.SQL_IN);
-			buffer.append(StorableObjectDatabase.OPEN_BRACKET);
-			buffer.append(StorableObjectDatabase.SQL_SELECT);
-			buffer.append(EvaluationTypeDatabase.LINK_COLUMN_EVALUATION_TYPE_ID);
-			buffer.append(StorableObjectDatabase.SQL_FROM);
-			buffer.append(ObjectEntities.EVATYPPARTYPLINK_ENTITY);
-			buffer.append(StorableObjectDatabase.SQL_WHERE);
-			buffer.append(super.getSQLQuery());
+			query = super.getLinkedQuery(
+					EvaluationTypeDatabase.LINK_COLUMN_EVALUATION_TYPE_ID,
+					ObjectEntities.EVATYPPARTYPLINK_ENTITY);
 			break;
 		case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-			buffer.append(StorableObjectWrapper.COLUMN_ID);
-			buffer.append(StorableObjectDatabase.SQL_IN);
-			buffer.append(StorableObjectDatabase.OPEN_BRACKET);
-			buffer.append(StorableObjectDatabase.SQL_SELECT);
-			buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-			buffer.append(StorableObjectDatabase.SQL_FROM);
-			buffer.append(ObjectEntities.m);
-			buffer.append(StorableObjectDatabase.SQL_WHERE);
-			buffer.append(super.getSQLQuery());
+			query = super.getLinkedQuery(
+					MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
+					ObjectEntities.MNTTYPPARTYPLINK_ENTITY);
 			break;
 		case ObjectEntities.MS_ENTITY_CODE:
-			columnName = MeasurementSetupWrapper.LINK_COLUMN_ME_ID;
-			columnName = MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID;
+			query = super.getLinkedQuery(
+					MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
+					ObjectEntities.MSMELINK_ENTITY);
 			break;
 		case ObjectEntities.RESULT_ENTITY_CODE:
-			columnName = ResultWrapper.COLUMN_ACTION_ID;
+			query = super.getSQLQuery();
 			break;
 		default:
-			throw new ApplicationException("Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity type");
-	}
+			throw new IllegalDataException(
+					"Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity type");
+		}
+		return query;
 	}
 	
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.5 2005/02/08 11:47:39 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.6 2005/02/08 13:56:53 max Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/08 11:47:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/08 13:56:53 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -63,11 +63,11 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 */
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
-		List params;
+		List params = new LinkedList();
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
 				AnalysisType analysisType = (AnalysisType) object;
-				params = analysisType.getCriteriaParameterTypes();
+				params.addAll(analysisType.getCriteriaParameterTypes());
 				params.addAll(analysisType.getInParameterTypes());
 				params.addAll(analysisType.getOutParameterTypes());
 				params.addAll(analysisType.getEtalonParameterTypes());
@@ -75,7 +75,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				break;
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 				EvaluationType evaluationType = (EvaluationType) object;
-				params = evaluationType.getThresholdParameterTypes();
+				params.addAll(evaluationType.getThresholdParameterTypes());
 				params.addAll(evaluationType.getInParameterTypes());
 				params.addAll(evaluationType.getOutParameterTypes());
 				params.addAll(evaluationType.getEtalonParameterTypes());
@@ -87,13 +87,12 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 				MeasurementType measurementType = (MeasurementType) object;
-				params = measurementType.getMeasurementPortTypes();
+				params.addAll(measurementType.getMeasurementPortTypes());
 				params.addAll(measurementType.getInParameterTypes());
 				params.addAll(measurementType.getOutParameterTypes());
 				return super.conditionTest(params);									
 			case ObjectEntities.MS_ENTITY_CODE:
 				MeasurementSetup measurementSetup = (MeasurementSetup) object;
-				params = new LinkedList();
 				params.addAll((Collection)measurementSetup.getParameterSet());
 				params.addAll((Collection)measurementSetup.getThresholdSet());
 				params.addAll((Collection)measurementSetup.getCriteriaSet());
