@@ -10,6 +10,7 @@ import java.util.*;
 
 public class AlarmFilter extends ObjectResourceFilter
 {
+	private Vector filterColumns;
 
 	public AlarmFilter()
 	{
@@ -18,25 +19,27 @@ public class AlarmFilter extends ObjectResourceFilter
 
 	public Vector getFilterColumns()
 	{
-		Vector vec = new Vector();
-		vec.add("alarm_Source");
-		vec.add("alarm_Monitoredelement");
-		vec.add("alarm_Type");
-		vec.add("alarm_Status");
-		vec.add("alarm_Time");
+		if (this.filterColumns==null){
+		this.filterColumns = new Vector();
+		this.filterColumns.add("alarm_Source");
+		this.filterColumns.add("alarm_Monitoredelement");
+		this.filterColumns.add("alarm_Type");
+		this.filterColumns.add("alarm_Status");
+		this.filterColumns.add("alarm_Time");
 
-		vec.add("alarm_Assigned");
-		vec.add("alarm_Fixed_when");
-		vec.add("alarm_Assigned_to");
-		vec.add("alarm_Fixed_by");
+		this.filterColumns.add("alarm_Assigned");
+		this.filterColumns.add("alarm_Fixed_when");
+		this.filterColumns.add("alarm_Assigned_to");
+		this.filterColumns.add("alarm_Fixed_by");
+		}
 
-/*		vec.add("source");
-		vec.add("time");
-		vec.add("type");
-		vec.add("status");
-		vec.add("monitoredelement");*/
+//		vec.add("source");
+//		vec.add("time");
+//		vec.add("type");
+//		vec.add("status");
+//		vec.add("monitoredelement");
 
-		return vec;
+		return this.filterColumns;
 	}
 
 	public String getFilterColumnName(String colId)
