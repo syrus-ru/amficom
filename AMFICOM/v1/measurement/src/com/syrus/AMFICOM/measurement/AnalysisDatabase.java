@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.22 2004/09/09 09:21:47 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.23 2004/09/16 07:36:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,10 +11,13 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -28,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/09/09 09:21:47 $
+ * @version $Revision: 1.23 $, $Date: 2004/09/16 07:36:13 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -237,6 +240,23 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 			return retriveByIdsOneQuery(null, conditions);
 		return retriveByIdsOneQuery(ids, conditions);	
 		//return retriveByIdsPreparedStatement(ids, conditions);
+	}
+	
+	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+		List list = null;
+		
+		String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString()
+			+ CLOSE_BRACKET;
+		
+		try {
+			list = retriveButIds(ids, condition);
+		}  catch (IllegalDataException ide) {			
+			Log.debugMessage("AnalysisDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+		}
+		
+		return list;
 	}
 
 }
