@@ -1,7 +1,7 @@
 OUT=akp.a
 OUTSO=libakp.so
 CPP=g++#-3.4.1
-CFLAGS=-O -Wall -W -finline-functions
+CFLAGS=-O3 -Wall -W
 AR=ar
 ARFLAGS=rcsv
 OBJS=ByteArray.o \
@@ -13,7 +13,7 @@ ARCHFILE=akp.tar.gz
 
 .PHONY:	clean arch
 
-$(OUT):		$(OBJS)
+$(OUT):	$(OBJS)
 	$(AR) $(ARFLAGS) $(OUT) $(OBJS)
 
 $(OUTSO):	$(OBJS)
