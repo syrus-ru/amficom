@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectTreeNode.java,v 1.3 2005/03/10 09:11:37 krupenn Exp $
+ * $Id: StorableObjectTreeNode.java,v 1.4 2005/03/10 09:21:16 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/03/10 09:11:37 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/03/10 09:21:16 $
  * @module generalclient_v1
  */
 
@@ -47,13 +47,6 @@ public class StorableObjectTreeNode extends DefaultMutableTreeNode implements Mo
 	
 	public String getName() {
 		return name;
-	}
-	
-	/**
-	 * @deprecated use getUserObject()
-	 */
-	public Object getObject() {
-		return super.getUserObject();
 	}
 	
 	public Icon getIcon() {

@@ -48,9 +48,9 @@ public class SchemeTreeModel implements TreeDataModel
 
 	public Class getNodeChildClass(StorableObjectTreeNode node)
 	{
-		if(node.getObject() instanceof String)
+		if(node.getUserObject() instanceof String)
 		{
-			String s = (String )node.getObject();
+			String s = (String )node.getUserObject();
 			if(s.equals("SchemeProtoGroup"))
 				return SchemeProtoGroup.class;
 			if(s.equals("Scheme"))
@@ -80,26 +80,26 @@ public class SchemeTreeModel implements TreeDataModel
 			if(s.equals("MeasurementType"))
 				return MeasurementType.class;
 		}
-		else if (node.getObject() instanceof Type)
+		else if (node.getUserObject() instanceof Type)
 			return Scheme.class;
-		else if (node.getObject() instanceof SchemeProtoGroup)
+		else if (node.getUserObject() instanceof SchemeProtoGroup)
 		{
-			if (((SchemeProtoGroup)node.getObject()).schemeProtoGroups().length != 0)
+			if (((SchemeProtoGroup)node.getUserObject()).schemeProtoGroups().length != 0)
 				return SchemeProtoGroup.class;
 			return SchemeProtoElement.class;
 		}
-		else if (node.getObject() instanceof Scheme)
+		else if (node.getUserObject() instanceof Scheme)
 			return Scheme.class;
-		else if (node.getObject() instanceof SchemeElement)
+		else if (node.getUserObject() instanceof SchemeElement)
 			return SchemeElement.class;
 		return null;
 	}
 
 	public ObjectResourceController getNodeChildController(StorableObjectTreeNode node)
 	{
-		if(node.getObject() instanceof String)
+		if(node.getUserObject() instanceof String)
 		{
-			String s = (String )node.getObject();
+			String s = (String )node.getUserObject();
 			if(s.equals("SchemeProtoGroup"))
 				return null;
 			/**
@@ -153,11 +153,11 @@ public class SchemeTreeModel implements TreeDataModel
 			if(s.equals("schemeTypes"))
 				return null;
 		}
-		else if (node.getObject() instanceof Type)
+		else if (node.getUserObject() instanceof Type)
 			return SchemeController.getInstance();
-		else if (node.getObject() instanceof SchemeProtoGroup)
+		else if (node.getUserObject() instanceof SchemeProtoGroup)
 		{
-			if (((SchemeProtoGroup)node.getObject()).schemeProtoGroups().length != 0)
+			if (((SchemeProtoGroup)node.getUserObject()).schemeProtoGroups().length != 0)
 				return null;
 			/**
 			 * @todo write SchemeProtoGroupController
@@ -170,9 +170,9 @@ public class SchemeTreeModel implements TreeDataModel
 			 * return SchemeProtoElementController.getInstance();
 			 */
 		}
-		else if (node.getObject() instanceof Scheme)
+		else if (node.getUserObject() instanceof Scheme)
 			return SchemeController.getInstance();
-		else if (node.getObject() instanceof SchemeElement)
+		else if (node.getUserObject() instanceof SchemeElement)
 			return null;
 			/**
 			 * @todo write SchemeElementController
@@ -184,9 +184,9 @@ public class SchemeTreeModel implements TreeDataModel
 	public List getChildNodes(StorableObjectTreeNode node)
 	{
 		List vec = new ArrayList();
-		if(node.getObject() instanceof String)
+		if(node.getUserObject() instanceof String)
 		{
-			String s = (String )node.getObject();
+			String s = (String )node.getUserObject();
 			if(s.equals("root"))
 			{
 				vec.add(new StorableObjectTreeNode("configure", LangModelConfig.getString("label_configuration"),
@@ -355,7 +355,7 @@ public class SchemeTreeModel implements TreeDataModel
 			}
 			else if (s.equals("Scheme"))
 			{
-				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getObject();
+				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getUserObject();
 				List ds = new LinkedList();
 				for (int i = 0; i < parent.schemeElements().length; i++)
 				{
@@ -375,7 +375,7 @@ public class SchemeTreeModel implements TreeDataModel
 			}
 			else if (s.equals("SchemeElement"))
 			{
-				Object parent = ((StorableObjectTreeNode)node.getParent()).getObject();
+				Object parent = ((StorableObjectTreeNode)node.getParent()).getUserObject();
 				List ds = new LinkedList();
 				if (parent instanceof Scheme)
 				{
@@ -406,7 +406,7 @@ public class SchemeTreeModel implements TreeDataModel
 			}
 			else if (s.equals("SchemeLink"))
 			{
-				Object parent = ((StorableObjectTreeNode)node.getParent()).getObject();
+				Object parent = ((StorableObjectTreeNode)node.getParent()).getUserObject();
 				if (parent instanceof Scheme)
 				{
 					Scheme scheme = (Scheme)parent;
@@ -428,7 +428,7 @@ public class SchemeTreeModel implements TreeDataModel
 			}
 			else if (s.equals("SchemeCableLink"))
 			{
-				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getObject();
+				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getUserObject();
 				for(int i = 0; i < parent.schemeCableLinks().length; i++)
 				{
 					SchemeCableLink link = parent.schemeCableLinks()[i];
@@ -437,7 +437,7 @@ public class SchemeTreeModel implements TreeDataModel
 			}
 			else if (s.equals("SchemePath"))
 			{
-				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getObject();
+				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getUserObject();
 				for(int i = 0; i < parent.schemeMonitoringSolution().schemePaths().length; i++)
 				{
 					SchemePath path = parent.schemeMonitoringSolution().schemePaths()[i];
@@ -447,9 +447,9 @@ public class SchemeTreeModel implements TreeDataModel
 		}
 		else
 		{
-			if(node.getObject() instanceof Type)
+			if(node.getUserObject() instanceof Type)
 			{
-				Type type = (Type)node.getObject();
+				Type type = (Type)node.getUserObject();
 				StringFieldCondition condition = new StringFieldCondition(
 						String.valueOf(type.value()),
 						ObjectEntities.SCHEME_ENTITY_CODE,
@@ -469,9 +469,9 @@ public class SchemeTreeModel implements TreeDataModel
 			}
 
 
-			if(node.getObject() instanceof SchemeProtoGroup)
+			if(node.getUserObject() instanceof SchemeProtoGroup)
 			{
-				SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
+				SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getUserObject();
 				for (int i = 0; i < parent_group.schemeProtoGroups().length; i++)
 				{
 					SchemeProtoGroup map_group = parent_group.schemeProtoGroups()[i];
@@ -495,9 +495,9 @@ public class SchemeTreeModel implements TreeDataModel
 					}
 				}
 			}
-			else if(node.getObject() instanceof Scheme)
+			else if(node.getUserObject() instanceof Scheme)
 			{
-				Scheme s = (Scheme)node.getObject();
+				Scheme s = (Scheme)node.getUserObject();
 				if (s.schemeElements().length != 0)
 				{
 					boolean has_schemes = false;
@@ -532,9 +532,9 @@ public class SchemeTreeModel implements TreeDataModel
 				if (s.schemeMonitoringSolution().schemePaths().length != 0)
 					vec.add(new StorableObjectTreeNode("SchemePath", "Пути", true));
 			}
-			else if(node.getObject() instanceof SchemeElement)
+			else if(node.getUserObject() instanceof SchemeElement)
 			{
-				SchemeElement schel = (SchemeElement)node.getObject();
+				SchemeElement schel = (SchemeElement)node.getUserObject();
 				if (schel.internalScheme() != null)
 				{
 					Scheme scheme = schel.internalScheme();

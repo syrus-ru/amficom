@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.1 2005/03/10 08:09:08 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.2 2005/03/10 09:25:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/10 08:09:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/10 09:25:06 $
  * @module schemeclient_v1
  */
 
@@ -167,7 +167,7 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 				getMeasurementTypes(types, model.getRoot());
 				for (Iterator it = types.iterator(); it.hasNext();) {
 					CheckableTreeNode node = (CheckableTreeNode)it.next();
-					node.setChecked(mPTypes.contains(node.getObject()));
+					node.setChecked(mPTypes.contains(node.getUserObject()));
 				}
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
@@ -197,7 +197,7 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 		getMeasurementTypes(types, model.getRoot());
 		for (Iterator it = types.iterator(); it.hasNext();) {
 			CheckableTreeNode node = (CheckableTreeNode) it.next();
-			MeasurementType mtype = (MeasurementType)node.getObject(); 
+			MeasurementType mtype = (MeasurementType)node.getUserObject(); 
 			if (node.isChecked()) {
 				Collection pTypes = mtype.getMeasurementPortTypes();
 				if (!pTypes.contains(type)) {
@@ -225,8 +225,7 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 	}
 
 	class MeasurementTypeModel implements TreeDataModel {
-		StorableObjectTreeNode root = new StorableObjectTreeNode("root", "root", new ImageIcon(Toolkit
-					.getDefaultToolkit().getImage("images/folder.gif")));
+		StorableObjectTreeNode root = new StorableObjectTreeNode("root", "root");
 		public MeasurementTypeModel() {
 		}
 
@@ -239,8 +238,8 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 		}
 
 		public Class getNodeChildClass(StorableObjectTreeNode node) {
-			if (node.getObject() instanceof String) {
-				String s = (String) node.getObject();
+			if (node.getUserObject() instanceof String) {
+				String s = (String) node.getUserObject();
 				if (s.equals("root"))
 					return MeasurementType.class;
 			}
@@ -249,8 +248,8 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 
 		public ObjectResourceController getNodeChildController(
 				StorableObjectTreeNode node) {
-			if (node.getObject() instanceof String) {
-				String s = (String) node.getObject();
+			if (node.getUserObject() instanceof String) {
+				String s = (String) node.getUserObject();
 				if (s.equals("root"))
 					return MeasurementTypeController.getInstance();
 			}
@@ -259,8 +258,8 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 
 		public List getChildNodes(StorableObjectTreeNode node) {
 			List vec = new ArrayList();
-			if (node.getObject() instanceof String) {
-				String s = (String) node.getObject();
+			if (node.getUserObject() instanceof String) {
+				String s = (String) node.getUserObject();
 				if (s.equals("root")) {
 					EquivalentCondition condition = new EquivalentCondition(
 							ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);

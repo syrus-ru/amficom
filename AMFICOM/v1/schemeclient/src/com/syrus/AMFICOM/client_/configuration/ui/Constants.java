@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.1 2005/03/10 08:09:08 stas Exp $
+ * $Id: Constants.java,v 1.2 2005/03/10 09:25:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.awt.Dimension;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/10 08:09:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/10 09:25:06 $
  * @module schemeclient_v1
  */
 
@@ -40,8 +40,8 @@ public class Constants {
 	public static final String TEXT_PORTS = Messages.getString("Constants.ports"); //$NON-NLS-1$
 	public static final String TEXT_TYPE = Messages.getString("Constants.type"); //$NON-NLS-1$
 	public static final String TEXT_TEST_TYPES = Messages.getString("Constants.test_types"); //$NON-NLS-1$
-	public static final String TEXT_INPUT = "Input";
-	public static final String TEXT_OUTPUT = "Output";
+	public static final String TEXT_INPUT = Messages.getString("Constants.input"); //$NON-NLS-1$
+	public static final String TEXT_OUTPUT = Messages.getString("Constants.output"); //$NON-NLS-1$
 	public static final String CHARACTERISTICTYPESORT_OPTICAL = Messages.getString("Constants.optical_characteristics"); //$NON-NLS-1$
 	public static final String CHARACTERISTICTYPESORT_ELECTRICAL = Messages.getString("Constants.electrical_characteristics"); //$NON-NLS-1$
 	public static final String CHARACTERISTICTYPESORT_OPERATIONAL = Messages.getString("Constants.operational_characteristics"); //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicsPanel.java,v 1.2 2005/03/10 08:33:01 bass Exp $
+ * $Id: CharacteristicsPanel.java,v 1.3 2005/03/10 09:25:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/10 08:33:01 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2005/03/10 09:25:06 $
  * @module schemeclient_v1
  */
 
@@ -555,8 +555,8 @@ class PropsTreeModel implements TreeDataModel {
 	public List getChildNodes(StorableObjectTreeNode node) {
 		List vec = new ArrayList(5);
 
-		if (node.getObject() instanceof String) {
-			String s = (String) node.getObject();
+		if (node.getUserObject() instanceof String) {
+			String s = (String) node.getUserObject();
 
 			if (s.equals("root")) {
 				vec.add(new StorableObjectTreeNode(

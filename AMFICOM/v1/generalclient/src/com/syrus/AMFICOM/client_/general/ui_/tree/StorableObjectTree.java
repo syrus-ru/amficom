@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectTree.java,v 1.2 2005/03/10 07:54:59 stas Exp $
+ * $Id: StorableObjectTree.java,v 1.3 2005/03/10 09:21:16 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/10 07:54:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/10 09:21:16 $
  * @module generalclient_v1
  */
 
@@ -191,7 +191,7 @@ public class StorableObjectTree extends JTree implements OperationListener,
 		Class cl = null;
 		ObjectResourceController controller = null;
 		int n = -1;
-		Object selectedObject = node.getObject();
+		Object selectedObject = node.getUserObject();
 
 		if (selectedObject instanceof String) {
 			if (node.getAllowsChildren()) {
@@ -199,7 +199,7 @@ public class StorableObjectTree extends JTree implements OperationListener,
 				controller = otm.getNodeChildController(node);
 				
 				for (Enumeration enumeration = node.children(); enumeration.hasMoreElements();) {
-					Object childObj = ((StorableObjectTreeNode)enumeration.nextElement()).getObject();
+					Object childObj = ((StorableObjectTreeNode)enumeration.nextElement()).getUserObject();
 					if (!(childObj instanceof String))
 						res.add(childObj);
 				}
@@ -213,7 +213,7 @@ public class StorableObjectTree extends JTree implements OperationListener,
 			controller = otm.getNodeChildController(parentNode);
 						
 			for (Enumeration enumeration = parentNode.children(); enumeration.hasMoreElements();) {
-				Object childObj = ((StorableObjectTreeNode)enumeration.nextElement()).getObject();
+				Object childObj = ((StorableObjectTreeNode)enumeration.nextElement()).getUserObject();
 				if (!(childObj instanceof String))
 					res.add(childObj);
 			}
@@ -236,7 +236,7 @@ public class StorableObjectTree extends JTree implements OperationListener,
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 	
-	void expandNode(StorableObjectTreeNode node) {
+	public void expandNode(StorableObjectTreeNode node) {
 		if (!node.isExpanded()) {
 			node.removeAllChildren();	
 			List vec = otm.getChildNodes(node);
@@ -248,13 +248,13 @@ public class StorableObjectTree extends JTree implements OperationListener,
 	}
 	
 	StorableObjectTreeNode getNodeForObject (StorableObjectTreeNode startNode, Object obj, boolean forceExpansion) {
-		if (startNode.getObject().equals(obj))
+		if (startNode.getUserObject().equals(obj))
 			return startNode;
 		if (forceExpansion)
 			expandNode(startNode);
 		for (Enumeration en = startNode.children(); en.hasMoreElements();) {
 			StorableObjectTreeNode child = (StorableObjectTreeNode)en.nextElement();
-			if (child.getObject().equals(obj))
+			if (child.getUserObject().equals(obj))
 				return child;
 		}
 		for (Enumeration en = startNode.children(); en.hasMoreElements();) {
@@ -271,7 +271,7 @@ public class StorableObjectTree extends JTree implements OperationListener,
 		TreePath tp = getClosestPathForLocation(origin.x, origin.y);
 		StorableObjectTreeNode node = (StorableObjectTreeNode) tp.getLastPathComponent();
 		if (this.isDragDropEnabled) {
-			Object obj = node.getObject();
+			Object obj = node.getUserObject();
 			if (obj instanceof DragGestureListener)
 				((DragGestureListener)obj).dragGestureRecognized(event);
 		}
