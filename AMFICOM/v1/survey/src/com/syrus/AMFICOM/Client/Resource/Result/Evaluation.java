@@ -351,8 +351,8 @@ public class Evaluation extends ObjectResource implements Serializable {
 				Object obj = this.arguments.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < this.argumentList.size(); i++) {
-				Object obj = this.argumentList.get(i);
+			for (Iterator it=this.argumentList.iterator();it.hasNext();) {
+				Object obj = it.next();
 				map.put(obj, obj);
 			}
 

@@ -295,8 +295,8 @@ public class Modeling extends ObjectResource implements Serializable {
 				Object obj = arguments.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < argumentList.size(); i++) {
-				Object obj = argumentList.get(i);
+			for (Iterator it = this.argumentList.iterator(); it.hasNext();) {
+				Object obj = it.next();
 				map.put(obj, obj);
 			}
 

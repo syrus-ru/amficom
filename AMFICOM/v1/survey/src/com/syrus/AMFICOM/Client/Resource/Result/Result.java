@@ -420,8 +420,8 @@ public class Result extends ObjectResource implements Serializable {
 				Object obj = parameters.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < parameterList.size(); i++) {
-				Object obj = parameterList.get(i);
+			for (Iterator it = this.parameterList.iterator(); it.hasNext();) {
+				Object obj = it.next();
 				map.put(obj, obj);
 			}
 
@@ -452,26 +452,26 @@ public class Result extends ObjectResource implements Serializable {
 			if (result_type.equals(Analysis.typ)) {
 				analysis_id = action_id;
 				Analysis a = (Analysis) Pool.get(Analysis.typ, action_id);
-				AnalysisType at = (AnalysisType) Pool.get(AnalysisType.typ,
-						a.getTypeId());
-				ht = at.sorted_parameters;
+				AnalysisType at = (AnalysisType) Pool.get(AnalysisType.typ, a
+						.getTypeId());
+				ht = at.getSortedParameters();
 			} else if (result_type.equals(Modeling.typ)) {
 				modeling_id = action_id;
 				Modeling m = (Modeling) Pool.get(Modeling.typ, action_id);
 				ModelingType mt = (ModelingType) Pool.get(ModelingType.typ, m
 						.getTypeId());
-				ht = mt.sorted_parameters;
+				ht = mt.getSortedParameters();
 			} else if (result_type.equals(Evaluation.typ)) {
 				evaluation_id = action_id;
 				Evaluation e = (Evaluation) Pool.get(Evaluation.typ, action_id);
 				EvaluationType et = (EvaluationType) Pool.get(
 						EvaluationType.typ, e.getTypeId());
-				ht = et.sorted_parameters;
+				ht = et.getSortedParameters();
 			} else if (result_type.equals(Test.typ)) {
 				test_id = action_id;
 				Test t = (Test) Pool.get(Test.typ, action_id);
 				TestType tt = (TestType) Pool.get(TestType.typ, t.test_type_id);
-				ht = tt.sorted_parameters;
+				ht = tt.getSortedParameters();
 			}
 		} catch (Exception ex) {
 			// nothing to do
@@ -489,8 +489,8 @@ public class Result extends ObjectResource implements Serializable {
 		if (parameters.size() == 0) {
 			transferable.parameters = new ClientParameter_Transferable[parameterList
 					.size()];
-			for (int i = 0; i < parameterList.size(); i++) {
-				Parameter param = (Parameter) parameterList.get(i);
+			for (Iterator it = this.parameterList.iterator(); it.hasNext();) {
+				Parameter param = (Parameter) it.next();
 				param.updateLocalFromTransferable();
 				param.setApt((ActionParameterType) ht.get(param.getCodename()));
 			}
@@ -500,8 +500,8 @@ public class Result extends ObjectResource implements Serializable {
 				Object obj = parameters.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < parameterList.size(); i++) {
-				Object obj = parameterList.get(i);
+			for (Iterator it = this.parameterList.iterator(); it.hasNext();) {
+				Object obj = it.next();
 				map.put(obj, obj);
 			}
 

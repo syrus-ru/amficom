@@ -208,8 +208,8 @@ public class Etalon extends ObjectResource implements Serializable {
 				Object obj = this.etalon_parameters.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < this.ethalonParameterList.size(); i++) {
-				Object obj = this.ethalonParameterList.get(i);
+			for (Iterator it=ethalonParameterList.iterator();it.hasNext();) {
+				Object obj = it.next();
 				map.put(obj, obj);
 			}
 

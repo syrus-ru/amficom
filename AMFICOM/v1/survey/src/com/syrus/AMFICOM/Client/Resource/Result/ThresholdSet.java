@@ -176,10 +176,11 @@ public class ThresholdSet extends ObjectResource implements Serializable {
 		if (thresholds.size() == 0) {
 			transferable.thresholds = new ClientParameter_Transferable[thresholdList
 					.size()];
-			for (int i = 0; i < thresholdList.size(); i++) {
-				Parameter criteria = (Parameter) thresholdList.get(i);
+			int i=0;
+			for (Iterator it = this.thresholdList.iterator(); it.hasNext();) {
+				Parameter criteria = (Parameter) it.next();
 				criteria.setTransferableFromLocal();
-				transferable.thresholds[i] = (ClientParameter_Transferable) criteria
+				transferable.thresholds[i++] = (ClientParameter_Transferable) criteria
 						.getTransferable();
 			}
 		} else {
@@ -188,8 +189,8 @@ public class ThresholdSet extends ObjectResource implements Serializable {
 				Object obj = thresholds.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < thresholdList.size(); i++) {
-				Object obj = thresholdList.get(i);
+			for (Iterator it = this.thresholdList.iterator(); it.hasNext();) {
+				Object obj = it.next();
 				map.put(obj, obj);
 			}
 

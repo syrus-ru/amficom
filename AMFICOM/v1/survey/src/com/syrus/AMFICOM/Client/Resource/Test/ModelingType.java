@@ -88,16 +88,16 @@ public class ModelingType extends ObjectResource implements Serializable {
 	}
 
 	/**
-	 * @return Returns the sorted_arguments.
+	 * @return Returns the sortedArguments.
 	 */
-	public Hashtable getSorted_arguments() {
+	public Hashtable getSortedArguments() {
 		return sorted_arguments;
 	}
 
 	/**
-	 * @return Returns the sorted_parameters.
+	 * @return Returns the sortedParameters.
 	 */
-	public Hashtable getSorted_parameters() {
+	public Hashtable getSortedParameters() {
 		return sorted_parameters;
 	}
 
@@ -212,8 +212,8 @@ public class ModelingType extends ObjectResource implements Serializable {
 				Object obj = parameters.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < parameterList.size(); i++) {
-				Object obj = parameterList.get(i);
+			for (Iterator it = this.parameterList.iterator(); it.hasNext();) {
+				Object obj = it.next();
 				map.put(obj, obj);
 			}
 
@@ -255,8 +255,8 @@ public class ModelingType extends ObjectResource implements Serializable {
 				Object obj = arguments.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < argumentList.size(); i++) {
-				Object obj = argumentList.get(i);
+			for (Iterator it = this.argumentList.iterator(); it.hasNext();) {
+				Object obj = it.next();
 				map.put(obj, obj);
 			}
 
@@ -282,9 +282,8 @@ public class ModelingType extends ObjectResource implements Serializable {
 					.get(i);
 			sorted_parameters.put(parameter.getCodename(), parameter);
 		}
-		for (int i = 0; i < parameterList.size(); i++) {
-			ActionParameterType parameter = (ActionParameterType) parameterList
-					.get(i);
+		for (Iterator it = this.parameterList.iterator(); it.hasNext();) {
+			ActionParameterType parameter = (ActionParameterType) it.next();
 			sorted_parameters.put(parameter.getCodename(), parameter);
 		}
 
@@ -293,9 +292,8 @@ public class ModelingType extends ObjectResource implements Serializable {
 					.get(i);
 			sorted_arguments.put(argument.getCodename(), argument);
 		}
-		for (int i = 0; i < argumentList.size(); i++) {
-			ActionParameterType argument = (ActionParameterType) argumentList
-					.get(i);
+		for (Iterator it = this.argumentList.iterator(); it.hasNext();) {
+			ActionParameterType argument = (ActionParameterType) it.next();
 			sorted_arguments.put(argument.getCodename(), argument);
 		}
 	}

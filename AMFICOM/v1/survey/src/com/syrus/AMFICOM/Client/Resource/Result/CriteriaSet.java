@@ -190,8 +190,8 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 				Object obj = this.criterias.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < this.criteriaList.size(); i++) {
-				Object obj = this.criteriaList.get(i);
+			for (Iterator it=criteriaList.iterator(); it.hasNext();) {
+				Object obj = it.next();
 				map.put(obj, obj);
 			}
 

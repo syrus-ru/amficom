@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Resource.Result;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.CORBA.General.TestTemporalType;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
@@ -11,6 +10,7 @@ import com.syrus.AMFICOM.Client.Resource.Test.TestType;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
+import com.syrus.AMFICOM.Client.Survey.General.I18N;
 
 import java.awt.Component;
 import java.util.Date;
@@ -30,13 +30,13 @@ public class TestModel extends ObjectResourceModel {
 			if (colId.equals(ConstStorage.COLUMN_NAME_STATUS)) {
 				switch (test.status.value()) {
 					case TestStatus._TEST_STATUS_PROCESSING:
-						s = LangModelSurvey.String("labelDoing");
+						s = I18N.getString("labelDoing");
 						break;
 					case TestStatus._TEST_STATUS_COMPLETED:
-						s = LangModelSurvey.String("labelDone");
+						s = I18N.getString("labelDone");
 						break;
 					case TestStatus._TEST_STATUS_SCHEDULED:
-						s = LangModelSurvey.String("labelReadyToDo");
+						s = I18N.getString("labelReadyToDo");
 						break;
 				}
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_LOCAL_ID)) {
@@ -71,13 +71,13 @@ public class TestModel extends ObjectResourceModel {
 			else if (colId.equals(ConstStorage.COLUMN_NAME_TEMPORAL_TYPE)) {
 				switch (test.temporal_type.value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-						s = LangModelSurvey.String("labelOnetime");
+						s = I18N.getString("labelOnetime");
 						break;
 					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-						s = LangModelSurvey.String("labelPeriod");
+						s = I18N.getString("labelPeriod");
 						break;
 					case TestTemporalType._TEST_TEMPORAL_TYPE_TIMETABLE:
-						s = LangModelSurvey.String("labelTimeTable");
+						s = I18N.getString("labelTimeTable");
 						break;
 				}
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_TEST_TYPE_ID))
