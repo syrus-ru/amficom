@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.9 2005/03/01 15:43:58 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.10 2005/03/10 17:45:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/03/01 15:43:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/10 17:45:37 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -171,7 +171,7 @@ public class MapElementLabel extends JLabel
 		if (flavor.getHumanPresentableName().equals(DATA_FLAVOUR))
 		{
 //			System.out.println("The type is " + sElement.getType());
-			return this.proto;
+			return this.proto.getId();
 		}
 		return null;
 	}

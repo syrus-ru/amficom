@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.16 2005/02/28 16:18:18 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.17 2005/03/10 17:45:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -43,7 +45,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2005/02/28 16:18:18 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/10 17:45:37 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -71,7 +73,9 @@ public final class MapDropTargetListener implements DropTargetListener
 			{
 				if (df[0].getHumanPresentableName().equals("ElementLabel"))
 				{
-					SiteNodeType mpe = (SiteNodeType)transferable.getTransferData(df[(0)]);
+//					SiteNodeType mpe = (SiteNodeType)transferable.getTransferData(df[(0)]);
+					Identifier id = (Identifier )transferable.getTransferData(df[(0)]);
+					SiteNodeType mpe = (SiteNodeType)MapStorableObjectPool.getStorableObject(id, false);
 
 					mapElementDropped(mpe, point);
 				}
@@ -103,7 +107,7 @@ public final class MapDropTargetListener implements DropTargetListener
 				dtde.getDropTargetContext().dropComplete(true);
 				this.logicalNetLayer.repaint(false);
 
-				this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+//				this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 			}
 			catch(Exception e)
 			{
