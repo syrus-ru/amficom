@@ -9,6 +9,7 @@ import javax.swing.table.*;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
@@ -53,10 +54,6 @@ public class DetailedEventsFrame extends JInternalFrame
 	JScrollPane scrollPaneComp = new JScrollPane();
 	JViewport viewportComp = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
-
-	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
-	private static StringBuffer mt = new StringBuffer(" ").append(LangModelAnalyse.getString("mt"));
-	private static StringBuffer db = new StringBuffer(" ").append(LangModelAnalyse.getString("dB"));
 
 	private static String linear = EventsFrame.linear;
 	private static String connector = EventsFrame.connector; 
@@ -479,103 +476,91 @@ public class DetailedEventsFrame extends JInternalFrame
 		switch (ev.getType())
 		{
 			case TraceEvent.LINEAR:
-				tModel = (FixedSizeEditableTableModel)tModels.get(linear);
-				tModel.setValueAt(linear,	0, 0);
-				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
-								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[0]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[1]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_3(ev.data[3]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_3(ev.data[4]))
-								.append(db).toString()
-				}, 1);
+				tModel = (FixedSizeEditableTableModel) tModels.get(linear);
+				tModel.setValueAt(linear, 0, 0);
+				tModel.updateColumn(new Object[] {
+						String.valueOf(num + 1),
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
+						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.data[3]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.data[4]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+					1);
 				break;
 			case TraceEvent.INITIATE:
-				tModel = (FixedSizeEditableTableModel)tModels.get(initiate);
-				tModel.setValueAt(initiate,	0, 0);
-				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
-								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[0]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[1]))
-								.append(db).toString(),
-						new StringBuffer().append(Math.round(ev.data[2] * res_km * 1000d))
-								.append(mt).toString(),
-						new StringBuffer().append(Math.round(ev.data[3] * res_km * 1000d))
-								.append(mt).toString()
-					}, 1);
-					break;
+				tModel = (FixedSizeEditableTableModel) tModels.get(initiate);
+				tModel.setValueAt(initiate, 0, 0);
+				tModel.updateColumn(new Object[] {
+						String.valueOf(num + 1),
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
+						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						Math.round(ev.data[2] * res_km * 1000d) + ' '
+								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT),
+						Math.round(ev.data[3] * res_km * 1000d) + ' '
+								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT)}, 1);
+				break;
 			case TraceEvent.NON_IDENTIFIED:
-				tModel = (FixedSizeEditableTableModel)tModels.get(noid);
-				tModel.setValueAt(noid,	0, 0);
-				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
-								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_3(ev.data[0]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_3(ev.data[1]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_3(ev.data[2]))
-								.append(db).toString()
-					}, 1);
-					break;
+				tModel = (FixedSizeEditableTableModel) tModels.get(noid);
+				tModel.setValueAt(noid, 0, 0);
+				tModel.updateColumn(new Object[] {
+						String.valueOf(num + 1),
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
+						MathRef.round_3(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.data[2]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+					1);
+				break;
 			case TraceEvent.CONNECTOR:
-				tModel = (FixedSizeEditableTableModel)tModels.get(connector);
+				tModel = (FixedSizeEditableTableModel) tModels.get(connector);
 				tModel.setValueAt(connector, 0, 0);
-				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
-								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[0]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[1]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[2]))
-								.append(db).toString()
-						//String.valueOf(MathRef.round_3(ev.data[3])) // removed by saa
+				tModel.updateColumn(new Object[] {
+						String.valueOf(num + 1),
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
+						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[2]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
+				// String.valueOf(MathRef.round_3(ev.data[3])) // removed by saa
 					}, 1);
-					break;
+				break;
 			case TraceEvent.LOSS:
-				tModel = (FixedSizeEditableTableModel)tModels.get(loss);
-				tModel.setValueAt(loss,	0, 0);
-				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
-								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[0]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[1]))
-								.append(db).toString()
-					}, 1);
-					break;
+				tModel = (FixedSizeEditableTableModel) tModels.get(loss);
+				tModel.setValueAt(loss, 0, 0);
+				tModel.updateColumn(new Object[] {
+						String.valueOf(num + 1),
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
+						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+					1);
+				break;
 			case TraceEvent.GAIN:
-				tModel = (FixedSizeEditableTableModel)tModels.get(gain);
-				tModel.setValueAt(gain,	0, 0);
-				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
-								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[0]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[1]))
-								.append(db).toString()
-					}, 1);
-					break;
+				tModel = (FixedSizeEditableTableModel) tModels.get(gain);
+				tModel.setValueAt(gain, 0, 0);
+				tModel.updateColumn(new Object[] {
+						String.valueOf(num + 1),
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
+						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+					1);
+				break;
 			case TraceEvent.TERMINATE:
-				tModel = (FixedSizeEditableTableModel)tModels.get(terminate);
+				tModel = (FixedSizeEditableTableModel) tModels.get(terminate);
 				tModel.setValueAt(terminate, 0, 0);
-				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
-								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[0]))
-								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_2(ev.data[1]))
-								.append(db).toString()
-						//String.valueOf(MathRef.round_3(ev.data[2])) // removed by saa
+				tModel.updateColumn(new Object[] {
+						String.valueOf(num + 1),
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
+						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
+				// String.valueOf(MathRef.round_3(ev.data[2])) // removed by saa
 					}, 1);
-				 break;
+				break;
 			}
 		jTable.setModel(tModel);
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(120);

@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 
 public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
@@ -180,7 +181,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				FIT_EVENT,
 				createToolButton(
 				fitEvButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("fittoevent"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_ZOOM_BOX),
@@ -196,7 +197,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				ALL_TRESHOLDS,
 				createToolButton(
 				showThresholdButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("allThresholds"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD),

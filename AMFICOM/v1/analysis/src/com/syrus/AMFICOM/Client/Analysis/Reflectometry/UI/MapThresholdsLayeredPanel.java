@@ -10,6 +10,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 public class MapThresholdsLayeredPanel extends MapMarkersLayeredPanel
 {
@@ -74,7 +75,7 @@ class MapThresholdsToolBar extends MapMarkersToolBar
 				thresholds,
 				createToolButton(
 				showThresholdsButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				"",
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD),

@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements OperationListener
 {
@@ -161,7 +162,7 @@ class TraceEventsToolBar extends ScalableToolBar
 				events,
 				createToolButton(
 				eventsTButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("showevents"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_EVENTS),
@@ -177,7 +178,7 @@ class TraceEventsToolBar extends ScalableToolBar
 				modeled,
 				createToolButton(
 				modeledTButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("showmodel"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MODELED),

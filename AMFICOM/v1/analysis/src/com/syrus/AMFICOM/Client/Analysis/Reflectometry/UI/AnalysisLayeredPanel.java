@@ -1,15 +1,22 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 
 public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
@@ -174,7 +181,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				loss,
 				createToolButton(
 				lossTButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("lossanalyse"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_LOSS),
@@ -190,7 +197,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				ref,
 				createToolButton(
 				reflectionTButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("reflectionanalyse"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_REFLECT),
@@ -206,7 +213,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				noana,
 				createToolButton(
 				noAnalysisTButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("noanalyse"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_NOANALYSIS),
@@ -222,7 +229,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				cA,
 				createToolButton(
 				centerAButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("centerA"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_CENTER_A),
@@ -238,7 +245,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				cB,
 				createToolButton(
 				centerBButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("centerB"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_CENTER_B),

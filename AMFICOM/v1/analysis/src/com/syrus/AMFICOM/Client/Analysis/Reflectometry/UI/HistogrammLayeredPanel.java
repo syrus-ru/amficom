@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 public class HistogrammLayeredPanel extends ScalableLayeredPanel implements OperationListener
 {
@@ -113,7 +114,7 @@ class HistogrammToolBar extends ScalableToolBar
 				BIND_MARK,
 				createToolButton(
 				markersTButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("bindToMarker"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MARKER),

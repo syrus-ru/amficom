@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementsLayeredPanel.java,v 1.2 2005/03/22 09:36:15 bob Exp $
+ * $Id: PathElementsLayeredPanel.java,v 1.3 2005/03/23 10:47:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/22 09:36:15 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/23 10:47:33 $
  * @author $Author: bob $
  * @module analysis_v1
  */
@@ -23,6 +23,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 public class PathElementsLayeredPanel extends AnalysisLayeredPanel
 {
@@ -93,7 +94,7 @@ class PathElementsToolBar extends AnalysisToolBar
 				pe,
 				createToolButton(
 				pathElementsTButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("lossanalyse"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_LOSS),

@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
 {
@@ -205,7 +206,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				createMarker,
 				createToolButton(
 				createMarkerTButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("addmarker"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MARKER),
@@ -221,7 +222,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				deleteMarker,
 				createToolButton(
 				deleteMarkerButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("removemarker"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DELETE_MARKER),
