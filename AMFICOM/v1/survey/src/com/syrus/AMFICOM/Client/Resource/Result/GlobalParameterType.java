@@ -69,12 +69,14 @@ public class GlobalParameterType extends ObjectResource implements Serializable 
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
+
 	/**
 	 * @return Returns the codename.
 	 */
 	public String getCodename() {
 		return codename;
 	}
+
 	/**
 	 * @return Returns the description.
 	 */
@@ -85,12 +87,14 @@ public class GlobalParameterType extends ObjectResource implements Serializable 
 	public String getDomainId() {
 		return ConstStorage.SYS_DOMAIN;
 	}
+
 	/**
 	 * @return Returns the formula.
 	 */
 	public String getFormula() {
 		return formula;
 	}
+
 	/**
 	 * @return Returns the granularity.
 	 */
@@ -109,18 +113,21 @@ public class GlobalParameterType extends ObjectResource implements Serializable 
 	public String getName() {
 		return name;
 	}
+
 	/**
 	 * @return Returns the norm.
 	 */
 	public String getNorm() {
 		return norm;
 	}
+
 	/**
 	 * @return Returns the rangehi.
 	 */
 	public String getRangehi() {
 		return rangehi;
 	}
+
 	/**
 	 * @return Returns the rangelo.
 	 */
@@ -135,46 +142,63 @@ public class GlobalParameterType extends ObjectResource implements Serializable 
 	public String getTyp() {
 		return typ;
 	}
+
 	/**
 	 * @return Returns the unit.
 	 */
 	public String getUnit() {
 		return unit;
 	}
+
 	/**
 	 * @return Returns the valueType.
 	 */
 	public String getValueType() {
 		return value_type;
 	}
+
 	/**
-	 * @param codename The codename to set.
+	 * @param codename
+	 *            The codename to set.
 	 */
 	public void setCodename(String codename) {
+		this.changed = true;
 		this.codename = codename;
 	}
+
 	/**
-	 * @param description The description to set.
+	 * @param description
+	 *            The description to set.
 	 */
 	public void setDescription(String description) {
+		this.changed = true;
 		this.description = description;
 	}
+
 	/**
-	 * @param formula The formula to set.
+	 * @param formula
+	 *            The formula to set.
 	 */
 	public void setFormula(String formula) {
+		this.changed = true;
 		this.formula = formula;
 	}
+
 	/**
-	 * @param granularity The granularity to set.
+	 * @param granularity
+	 *            The granularity to set.
 	 */
 	public void setGranularity(String granularity) {
+		this.changed = true;
 		this.granularity = granularity;
 	}
+
 	/**
-	 * @param id The id to set.
+	 * @param id
+	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
@@ -192,35 +216,51 @@ public class GlobalParameterType extends ObjectResource implements Serializable 
 		formula = transferable.formula;
 
 		modified = transferable.modified;
+		this.changed = false;
 	}
+
 	/**
-	 * @param modified The modified to set.
+	 * @param modified
+	 *            The modified to set.
 	 */
 	public void setModified(long modified) {
+		this.changed = true;
 		this.modified = modified;
 	}
+
 	/**
-	 * @param name The name to set.
+	 * @param name
+	 *            The name to set.
 	 */
 	public void setName(String name) {
+		this.changed = true;
 		this.name = name;
 	}
+
 	/**
-	 * @param norm The norm to set.
+	 * @param norm
+	 *            The norm to set.
 	 */
 	public void setNorm(String norm) {
+		this.changed = true;
 		this.norm = norm;
 	}
+
 	/**
-	 * @param rangehi The rangehi to set.
+	 * @param rangehi
+	 *            The rangehi to set.
 	 */
 	public void setRangehi(String rangehi) {
+		this.changed = true;
 		this.rangehi = rangehi;
 	}
+
 	/**
-	 * @param rangelo The rangelo to set.
+	 * @param rangelo
+	 *            The rangelo to set.
 	 */
 	public void setRangelo(String rangelo) {
+		this.changed = true;
 		this.rangelo = rangelo;
 	}
 
@@ -238,17 +278,24 @@ public class GlobalParameterType extends ObjectResource implements Serializable 
 		transferable.formula = formula;
 
 		transferable.modified = modified;
+		this.changed = false;
 	}
+
 	/**
-	 * @param unit The unit to set.
+	 * @param unit
+	 *            The unit to set.
 	 */
 	public void setUnit(String unit) {
+		this.changed = true;
 		this.unit = unit;
 	}
+
 	/**
-	 * @param valueType The valueType to set.
+	 * @param valueType
+	 *            The valueType to set.
 	 */
 	public void setValueType(String valueType) {
+		this.changed = true;
 		this.value_type = valueType;
 	}
 
@@ -272,6 +319,7 @@ public class GlobalParameterType extends ObjectResource implements Serializable 
 		modified = in.readLong();
 
 		transferable = new GlobalParameterType_Transferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -287,5 +335,6 @@ public class GlobalParameterType extends ObjectResource implements Serializable 
 		out.writeObject(rangelo);
 		out.writeObject(formula);
 		out.writeLong(modified);
+		this.changed = false;
 	}
 }

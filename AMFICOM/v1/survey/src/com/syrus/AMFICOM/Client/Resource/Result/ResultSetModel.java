@@ -21,15 +21,15 @@ public class ResultSetModel extends ObjectResourceModel {
 		String s = null;
 		try {
 			if (colId.equals(ConstStorage.COLUMN_NAME_DOMAIN_ID))
-					s = Pool.getName(Domain.typ, resultSet.getDomainId());
+					s = Pool.getName(Domain.typ, this.resultSet.getDomainId());
 			if (colId.equals(ConstStorage.COLUMN_NAME_START_TIME))
-					s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(resultSet
-							.getStartTime()));
+					s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(
+							this.resultSet.getStartTime()));
 			if (colId.equals(ConstStorage.COLUMN_NAME_END_TIME))
-					s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(resultSet
-							.getEndTime()));
+					s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(
+							this.resultSet.getEndTime()));
 			if (colId.equals(ConstStorage.COLUMN_NAME_ACTIVE)) {
-				if (resultSet.isActive())
+				if (this.resultSet.isActive())
 					s = I18N.getString("Yes"); //$NON-NLS-1$
 				else
 					s = ""; //$NON-NLS-1$
@@ -43,14 +43,14 @@ public class ResultSetModel extends ObjectResourceModel {
 
 	public Component getColumnRenderer(String colId) {
 		if (colId.equals(ConstStorage.COLUMN_NAME_DOMAIN_ID))
-				return new ObjectResourceComboBox(Pool.getHash(Domain.typ), resultSet
-						.getDomainId());
+				return new ObjectResourceComboBox(Pool.getHash(Domain.typ),
+						this.resultSet.getDomainId());
 		if (colId.equals(ConstStorage.COLUMN_NAME_START_TIME))
 				return new TextFieldEditor(ConstStorage.SIMPLE_DATE_FORMAT
-						.format(new Date(resultSet.getStartTime())));
+						.format(new Date(this.resultSet.getStartTime())));
 		if (colId.equals(ConstStorage.COLUMN_NAME_END_TIME))
 				return new TextFieldEditor(ConstStorage.SIMPLE_DATE_FORMAT
-						.format(new Date(resultSet.getEndTime())));
+						.format(new Date(this.resultSet.getEndTime())));
 		if (colId.equals(ConstStorage.COLUMN_NAME_ACTIVE))
 				return new TextFieldEditor(getColumnValue(colId));
 		return null;

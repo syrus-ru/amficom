@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import java.io.IOException;
 import java.io.Serializable;
 
-
 import java.util.Date;
 
 public class ResultSet extends ObjectResource implements Serializable {
@@ -56,7 +55,7 @@ public class ResultSet extends ObjectResource implements Serializable {
 	private ResultSet_Transferable	transferable;
 
 	public ResultSet() {
-		transferable = new ResultSet_Transferable();
+		this.transferable = new ResultSet_Transferable();
 	}
 
 	public ResultSet(ResultSet_Transferable transferable) {
@@ -76,32 +75,32 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 * @return Returns the comments.
 	 */
 	public String getComments() {
-		return comments;
+		return this.comments;
 	}
 
 	/**
 	 * @return Returns the created.
 	 */
 	public long getCreated() {
-		return created;
+		return this.created;
 	}
 
 	/**
 	 * @return Returns the domainId.
 	 */
 	public String getDomainId() {
-		return domain_id;
+		return this.domain_id;
 	}
 
 	/**
 	 * @return Returns the endTime.
 	 */
 	public long getEndTime() {
-		return end_time;
+		return this.end_time;
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public ObjectResourceModel getModel() {
@@ -112,22 +111,22 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 * @return Returns the modified.
 	 */
 	public long getModified() {
-		return modified;
+		return this.modified;
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	/**
-	 * @return Returns the start_time.
+	 * @return Returns the startTime.
 	 */
 	public long getStartTime() {
-		return start_time;
+		return this.start_time;
 	}
 
 	public Object getTransferable() {
-		return transferable;
+		return this.transferable;
 	}
 
 	public String getTyp() {
@@ -138,7 +137,7 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 * @return Returns the active.
 	 */
 	public boolean isActive() {
-		return active;
+		return this.active;
 	}
 
 	/**
@@ -146,6 +145,7 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 *            The active to set.
 	 */
 	public void setActive(boolean active) {
+		this.changed = true;
 		this.active = active;
 	}
 
@@ -154,6 +154,7 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 *            The comments to set.
 	 */
 	public void setComments(String comments) {
+		this.changed = true;
 		this.comments = comments;
 	}
 
@@ -162,6 +163,7 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 *            The created to set.
 	 */
 	public void setCreated(long created) {
+		this.changed = true;
 		this.created = created;
 	}
 
@@ -170,6 +172,7 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 *            The domainId to set.
 	 */
 	public void setDomainId(String domainId) {
+		this.changed = true;
 		this.domain_id = domainId;
 	}
 
@@ -178,6 +181,7 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 *            The endTime to set.
 	 */
 	public void setEndTime(long endTime) {
+		this.changed = true;
 		this.end_time = endTime;
 	}
 
@@ -186,24 +190,29 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
 	public void setLocalFromTransferable() {
-		id = transferable.id;
-		name = transferable.name;
+		this.id = this.transferable.id;
+		this.name = this.transferable.name;
 
-		domain_id = transferable.domain_id;
-		comments = transferable.comments;
-		active = transferable.active;
+		this.domain_id = this.transferable.domain_id;
+		this.comments = this.transferable.comments;
+		this.active = this.transferable.active;
 
-		created = transferable.created;
-		modified = transferable.modified;
-		start_time = transferable.start_time;
-		end_time = transferable.end_time;
+		this.created = this.transferable.created;
+		this.modified = this.transferable.modified;
+		this.start_time = this.transferable.start_time;
+		this.end_time = this.transferable.end_time;
 
-		name = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(start_time)) + " - "
-				+ ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(end_time));
+		this.name = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(
+				this.start_time))
+				+ " - "
+				+ ConstStorage.SIMPLE_DATE_FORMAT
+						.format(new Date(this.end_time));
+		this.changed = false;
 	}
 
 	/**
@@ -211,6 +220,7 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 *            The modified to set.
 	 */
 	public void setModified(long modified) {
+		this.changed = true;
 		this.modified = modified;
 	}
 
@@ -219,64 +229,69 @@ public class ResultSet extends ObjectResource implements Serializable {
 	 *            The name to set.
 	 */
 	public void setName(String name) {
+		this.changed = true;
 		this.name = name;
 	}
 
 	/**
-	 * @param start_time
-	 *            The start_time to set.
+	 * @param startTime
+	 *            The startTime to set.
 	 */
-	public void setStartTime(long start_time) {
-		this.start_time = start_time;
+	public void setStartTime(long startTime) {
+		this.changed = true;
+		this.start_time = startTime;
 	}
 
 	public void setTransferableFromLocal() {
-		transferable.id = id;
-		transferable.name = name;
+		this.transferable.id = this.id;
+		this.transferable.name = this.name;
 
-		transferable.domain_id = domain_id;
-		transferable.comments = comments;
-		transferable.active = active;
+		this.transferable.domain_id = this.domain_id;
+		this.transferable.comments = this.comments;
+		this.transferable.active = this.active;
 
-		transferable.created = created;
-		transferable.modified = modified;
-		transferable.start_time = start_time;
-		transferable.end_time = end_time;
+		this.transferable.created = this.created;
+		this.transferable.modified = this.modified;
+		this.transferable.start_time = this.start_time;
+		this.transferable.end_time = this.end_time;
+		this.changed = false;
 
 	}
 
 	public void updateLocalFromTransferable() {
-		// nothing to do
+		this.changed = false;
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
-		id = (String) in.readObject();
-		name = (String) in.readObject();
-		domain_id = (String) in.readObject();
-		comments = (String) in.readObject();
-		active = in.readBoolean();
+		this.id = (String) in.readObject();
+		this.name = (String) in.readObject();
+		this.domain_id = (String) in.readObject();
+		this.comments = (String) in.readObject();
+		this.active = in.readBoolean();
 
-		created = in.readLong();
-		modified = in.readLong();
-		start_time = in.readLong();
-		end_time = in.readLong();
+		this.created = in.readLong();
+		this.modified = in.readLong();
+		this.start_time = in.readLong();
+		this.end_time = in.readLong();
 
-		transferable = new ResultSet_Transferable();
+		this.transferable = new ResultSet_Transferable();
 		updateLocalFromTransferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(id);
-		out.writeObject(name);
-		out.writeObject(domain_id);
-		out.writeObject(comments);
-		out.writeBoolean(active);
+		out.writeObject(this.id);
+		out.writeObject(this.name);
+		out.writeObject(this.domain_id);
+		out.writeObject(this.comments);
+		out.writeBoolean(this.active);
 
-		out.writeLong(created);
-		out.writeLong(modified);
-		out.writeLong(start_time);
-		out.writeLong(end_time);
+		out.writeLong(this.created);
+		out.writeLong(this.modified);
+		out.writeLong(this.start_time);
+		out.writeLong(this.end_time);
+		this.changed = false;
 	}
 }
 
@@ -290,7 +305,7 @@ class ResultSetTimeSorter extends ObjectResourceSorter {
 	}
 
 	public String[][] getSortedColumns() {
-		return sorted_columns;
+		return this.sorted_columns;
 	}
 
 	public String getString(ObjectResource or, String column) {

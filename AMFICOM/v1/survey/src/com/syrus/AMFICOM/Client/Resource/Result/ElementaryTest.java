@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Resource.Result;
 
 import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.CORBA.General.*;
 
 /**

@@ -176,6 +176,7 @@ public class Modeling extends ObjectResource implements Serializable {
 	 *            The argumentList to set.
 	 */
 	public void setArgumentList(List argumentList) {
+		this.changed = true;
 		this.argumentList = argumentList;
 	}
 
@@ -184,6 +185,7 @@ public class Modeling extends ObjectResource implements Serializable {
 	 *            The deleted to set.
 	 */
 	public void setDeleted(long deleted) {
+		this.changed = true;
 		this.deleted = deleted;
 	}
 
@@ -192,6 +194,7 @@ public class Modeling extends ObjectResource implements Serializable {
 	 *            The domainId to set.
 	 */
 	public void setDomainId(String domainId) {
+		this.changed = true;
 		this.domain_id = domainId;
 	}
 
@@ -200,6 +203,7 @@ public class Modeling extends ObjectResource implements Serializable {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
@@ -214,8 +218,8 @@ public class Modeling extends ObjectResource implements Serializable {
 		domain_id = transferable.domain_id;
 
 		//arguments = new Vector();
-		arguments.clear();
-		argumentList.clear();
+		this.arguments.clear();
+		this.argumentList.clear();
 
 		ModelingType mt = (ModelingType) Pool.get(ModelingType.typ, type_id);
 
@@ -226,6 +230,7 @@ public class Modeling extends ObjectResource implements Serializable {
 					param.getCodename()));
 			this.addArgument(param);
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -233,6 +238,7 @@ public class Modeling extends ObjectResource implements Serializable {
 	 *            The modified to set.
 	 */
 	public void setModified(long modified) {
+		this.changed = true;
 		this.modified = modified;
 	}
 
@@ -241,6 +247,7 @@ public class Modeling extends ObjectResource implements Serializable {
 	 *            The name to set.
 	 */
 	public void setName(String name) {
+		this.changed = true;
 		this.name = name;
 	}
 
@@ -249,26 +256,27 @@ public class Modeling extends ObjectResource implements Serializable {
 	 *            The schemePathId to set.
 	 */
 	public void setSchemePathId(String schemePathId) {
+		this.changed = true;
 		this.scheme_path_id = schemePathId;
 	}
 
-	/**
-	 * @param transferable
-	 *            The transferable to set.
-	 */
-	public void setTransferable(ClientModeling_Transferable transferable) {
-		this.transferable = transferable;
-	}
+	//	/**
+	//	 * @param transferable
+	//	 * The transferable to set.
+	//	 */
+	//	public void setTransferable(ClientModeling_Transferable transferable) {
+	//		this.transferable = transferable;
+	//	}
 
 	public void setTransferableFromLocal() {
-		transferable.modified = modified;
-		transferable.deleted = deleted;
-		transferable.id = id;
-		transferable.name = name;
-		transferable.type_id = type_id;
-		transferable.user_id = user_id;
-		transferable.scheme_path_id = scheme_path_id;
-		transferable.domain_id = domain_id;
+		this.transferable.modified = modified;
+		this.transferable.deleted = deleted;
+		this.transferable.id = id;
+		this.transferable.name = name;
+		this.transferable.type_id = type_id;
+		this.transferable.user_id = user_id;
+		this.transferable.scheme_path_id = scheme_path_id;
+		this.transferable.domain_id = domain_id;
 
 		//		transferable.arguments = new ClientParameter_Transferable[arguments
 		//				.size()];
@@ -281,18 +289,18 @@ public class Modeling extends ObjectResource implements Serializable {
 		//		}
 
 		if (this.argumentList.isEmpty()) {
-			transferable.arguments = new ClientParameter_Transferable[arguments
+			this.transferable.arguments = new ClientParameter_Transferable[this.arguments
 					.size()];
-			for (int i = 0; i < transferable.arguments.length; i++) {
-				Parameter argument = (Parameter) arguments.get(i);
+			for (int i = 0; i < this.transferable.arguments.length; i++) {
+				Parameter argument = (Parameter) this.arguments.get(i);
 				argument.setTransferableFromLocal();
-				transferable.arguments[i] = (ClientParameter_Transferable) argument
+				this.transferable.arguments[i] = (ClientParameter_Transferable) argument
 						.getTransferable();
 			}
 		} else {
 			HashMap map = new HashMap();
-			for (int i = 0; i < arguments.size(); i++) {
-				Object obj = arguments.get(i);
+			for (int i = 0; i < this.arguments.size(); i++) {
+				Object obj = this.arguments.get(i);
 				map.put(obj, obj);
 			}
 			for (Iterator it = this.argumentList.iterator(); it.hasNext();) {
@@ -301,16 +309,17 @@ public class Modeling extends ObjectResource implements Serializable {
 			}
 
 			Set keySet = map.keySet();
-			transferable.arguments = new ClientParameter_Transferable[keySet
+			this.transferable.arguments = new ClientParameter_Transferable[keySet
 					.size()];
 			int i = 0;
 			for (Iterator it = keySet.iterator(); it.hasNext();) {
 				Parameter argument = (Parameter) it.next();
 				argument.setTransferableFromLocal();
-				transferable.arguments[i++] = (ClientParameter_Transferable) argument
+				this.transferable.arguments[i++] = (ClientParameter_Transferable) argument
 						.getTransferable();
 			}
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -318,6 +327,7 @@ public class Modeling extends ObjectResource implements Serializable {
 	 *            The typeId to set.
 	 */
 	public void setTypeId(String typeId) {
+		this.changed = true;
 		this.type_id = typeId;
 	}
 
@@ -326,39 +336,42 @@ public class Modeling extends ObjectResource implements Serializable {
 	 *            The userId to set.
 	 */
 	public void setUserId(String userId) {
+		this.changed = true;
 		this.user_id = userId;
 	}
 
 	public void updateLocalFromTransferable() {
-		// nothing to do
+		this.changed = false;
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
-		id = (String) in.readObject();
-		name = (String) in.readObject();
-		modified = in.readLong();
-		user_id = (String) in.readObject();
-		deleted = in.readLong();
-		type_id = (String) in.readObject();
-		scheme_path_id = (String) in.readObject();
-		domain_id = (String) in.readObject();
-		arguments = (Vector) in.readObject();
-		argumentList = (List) in.readObject();
-		transferable = new ClientModeling_Transferable();
+		this.id = (String) in.readObject();
+		this.name = (String) in.readObject();
+		this.modified = in.readLong();
+		this.user_id = (String) in.readObject();
+		this.deleted = in.readLong();
+		this.type_id = (String) in.readObject();
+		this.scheme_path_id = (String) in.readObject();
+		this.domain_id = (String) in.readObject();
+		this.arguments = (Vector) in.readObject();
+		this.argumentList = (List) in.readObject();
+		this.transferable = new ClientModeling_Transferable();
 		updateLocalFromTransferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(id);
-		out.writeObject(name);
-		out.writeLong(modified);
-		out.writeObject(user_id);
-		out.writeLong(deleted);
-		out.writeObject(type_id);
-		out.writeObject(scheme_path_id);
-		out.writeObject(domain_id);
-		out.writeObject(arguments);
-		out.writeObject(argumentList);
+		out.writeObject(this.id);
+		out.writeObject(this.name);
+		out.writeLong(this.modified);
+		out.writeObject(this.user_id);
+		out.writeLong(this.deleted);
+		out.writeObject(this.type_id);
+		out.writeObject(this.scheme_path_id);
+		out.writeObject(this.domain_id);
+		out.writeObject(this.arguments);
+		out.writeObject(this.argumentList);
+		this.changed = false;
 	}
 }

@@ -241,6 +241,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The argumentList to set.
 	 */
 	public void setArgumentList(List argumentList) {
+		this.changed = true;
 		this.argumentList = argumentList;
 	}
 
@@ -249,6 +250,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The criteriaSetId to set.
 	 */
 	public void setCriteriaSetId(String criteriaSetId) {
+		this.changed = true;
 		this.criteria_set_id = criteriaSetId;
 	}
 
@@ -257,6 +259,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The deleted to set.
 	 */
 	public void setDeleted(long deleted) {
+		this.changed = true;
 		this.deleted = deleted;
 	}
 
@@ -265,6 +268,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The description to set.
 	 */
 	public void setDescription(String description) {
+		this.changed = true;
 		this.description = description;
 	}
 
@@ -273,6 +277,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
@@ -301,6 +306,7 @@ public class Analysis extends ObjectResource implements Serializable {
 					param.getCodename()));
 			this.addArgument(param);
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -308,6 +314,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The modified to set.
 	 */
 	public void setModified(long modified) {
+		this.changed = true;
 		this.modified = modified;
 	}
 
@@ -316,6 +323,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The monitoredElementId to set.
 	 */
 	public void setMonitoredElementId(String monitoredElementId) {
+		this.changed = true;
 		this.monitored_element_id = monitoredElementId;
 	}
 
@@ -324,6 +332,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The name to set.
 	 */
 	public void setName(String name) {
+		this.changed = true;
 		this.name = name;
 	}
 
@@ -332,6 +341,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The parameterList to set.
 	 */
 	public void setParameterList(List parameterList) {
+		this.changed = true;
 		this.parameterList = parameterList;
 	}
 
@@ -340,6 +350,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The resultId to set.
 	 */
 	public void setResultId(String resultId) {
+		this.changed = true;
 		this.result_id = resultId;
 	}
 
@@ -348,6 +359,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The resultIds to set.
 	 */
 	public void setResultIds(String[] resultIds) {
+		this.changed = true;
 		this.result_ids = resultIds;
 	}
 
@@ -404,6 +416,7 @@ public class Analysis extends ObjectResource implements Serializable {
 						.getTransferable();
 			}
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -411,6 +424,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The typeId to set.
 	 */
 	public void setTypeId(String typeId) {
+		this.changed = true;
 		this.type_id = typeId;
 	}
 
@@ -419,6 +433,7 @@ public class Analysis extends ObjectResource implements Serializable {
 	 *            The userId to set.
 	 */
 	public void setUserId(String userId) {
+		this.changed = true;
 		this.user_id = userId;
 	}
 
@@ -444,6 +459,7 @@ public class Analysis extends ObjectResource implements Serializable {
 
 		this.transferable = new ClientAnalysis_Transferable();
 		updateLocalFromTransferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -460,5 +476,6 @@ public class Analysis extends ObjectResource implements Serializable {
 		out.writeObject(this.result_ids);
 		out.writeObject(this.parameters);
 		out.writeObject(this.arguments);
+		this.changed = false;
 	}
 }

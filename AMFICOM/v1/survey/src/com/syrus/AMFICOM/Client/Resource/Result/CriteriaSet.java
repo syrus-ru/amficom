@@ -101,6 +101,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 	 *            The analysisTypeId to set.
 	 */
 	public void setAnalysisTypeId(String analysisTypeId) {
+		this.changed = true;
 		this.analysis_type_id = analysisTypeId;
 	}
 
@@ -109,6 +110,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 	 *            The created to set.
 	 */
 	public void setCreated(long created) {
+		this.changed = true;
 		this.created = created;
 	}
 
@@ -117,6 +119,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 	 *            The createdBy to set.
 	 */
 	public void setCreatedBy(String createdBy) {
+		this.changed = true;
 		this.created_by = createdBy;
 	}
 
@@ -125,6 +128,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 	 *            The criteriaList to set.
 	 */
 	public void setCriteriaList(List criteriaList) {
+		this.changed = true;
 		this.criteriaList = criteriaList;
 	}
 
@@ -133,6 +137,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
@@ -150,6 +155,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 			this.criterias.add(parameter);
 			this.criteriaList.add(parameter);
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -157,6 +163,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 	 *            The name to set.
 	 */
 	public void setName(String name) {
+		this.changed = true;
 		this.name = name;
 	}
 
@@ -190,7 +197,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 				Object obj = this.criterias.get(i);
 				map.put(obj, obj);
 			}
-			for (Iterator it = criteriaList.iterator(); it.hasNext();) {
+			for (Iterator it = this.criteriaList.iterator(); it.hasNext();) {
 				Object obj = it.next();
 				map.put(obj, obj);
 			}
@@ -206,10 +213,11 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 						.getTransferable();
 			}
 		}
+		this.changed = false;
 	}
 
 	public void updateLocalFromTransferable() {
-		// nothing to do
+		this.changed = false;
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
@@ -223,6 +231,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 		this.criteriaList = (List) in.readObject();
 		this.transferable = new ClientCriteriaSet_Transferable();
 		updateLocalFromTransferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -233,6 +242,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 		out.writeObject(this.analysis_type_id);
 		out.writeObject(this.criterias);
 		out.writeObject(this.criteriaList);
+		this.changed = false;
 	}
 }
 

@@ -109,6 +109,7 @@ public class TestArgumentSet extends ObjectResource implements Serializable {
 	 *            The argumentList to set.
 	 */
 	public void setArgumentList(List argumentsList) {
+		this.changed = true;
 		this.argumentList = argumentsList;
 	}
 
@@ -117,6 +118,7 @@ public class TestArgumentSet extends ObjectResource implements Serializable {
 	 *            The created to set.
 	 */
 	public void setCreated(long created) {
+		this.changed = true;
 		this.created = created;
 	}
 
@@ -125,6 +127,7 @@ public class TestArgumentSet extends ObjectResource implements Serializable {
 	 *            The createdBy to set.
 	 */
 	public void setCreatedBy(String createdBy) {
+		this.changed = true;
 		this.created_by = createdBy;
 	}
 
@@ -133,25 +136,27 @@ public class TestArgumentSet extends ObjectResource implements Serializable {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
 	public void setLocalFromTransferable() {
-		id = transferable.id;
-		name = transferable.name;
-		created = transferable.created;
-		created_by = transferable.created_by;
-		test_type_id = transferable.test_type_id;
+		this.id = this.transferable.id;
+		this.name = this.transferable.name;
+		this.created = this.transferable.created;
+		this.created_by = this.transferable.created_by;
+		this.test_type_id = this.transferable.test_type_id;
 
 		//arguments = new Vector();
-		arguments.clear();
-		argumentList.clear();
-		for (int i = 0; i < transferable.arguments.length; i++) {
-			Parameter param = new Parameter(transferable.arguments[i]);
+		this.arguments.clear();
+		this.argumentList.clear();
+		for (int i = 0; i < this.transferable.arguments.length; i++) {
+			Parameter param = new Parameter(this.transferable.arguments[i]);
 			param.updateLocalFromTransferable();
-			argumentList.add(param);
-			arguments.add(param);
+			this.argumentList.add(param);
+			this.arguments.add(param);
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -159,6 +164,7 @@ public class TestArgumentSet extends ObjectResource implements Serializable {
 	 *            The name to set.
 	 */
 	public void setName(String name) {
+		this.changed = true;
 		this.name = name;
 	}
 
@@ -167,15 +173,16 @@ public class TestArgumentSet extends ObjectResource implements Serializable {
 	 *            The testTypeId to set.
 	 */
 	public void setTestTypeId(String testTypeId) {
+		this.changed = true;
 		this.test_type_id = testTypeId;
 	}
 
 	public void setTransferableFromLocal() {
-		transferable.id = id;
-		transferable.name = name;
-		transferable.created = created;
-		transferable.created_by = created_by;
-		transferable.test_type_id = test_type_id;
+		this.transferable.id = this.id;
+		this.transferable.name = this.name;
+		this.transferable.created = this.created;
+		this.transferable.created_by = this.created_by;
+		this.transferable.test_type_id = this.test_type_id;
 
 		//		transferable.arguments = new
 		// ClientParameter_Transferable[arguments.size()];
@@ -189,73 +196,96 @@ public class TestArgumentSet extends ObjectResource implements Serializable {
 		/**
 		 * @todo only for backward arguments Vector implementation
 		 */
-		if (arguments.size() == 0) {
-			transferable.arguments = new ClientParameter_Transferable[argumentList
+		if (this.arguments.isEmpty()) {
+			this.transferable.arguments = new ClientParameter_Transferable[this.argumentList
 					.size()];
-			for (int i = 0; i < argumentList.size(); i++) {
-				Parameter argument = (Parameter) argumentList.get(i);
+			int i = 0;
+			for (Iterator it = this.argumentList.iterator(); it.hasNext();) {
+				Parameter argument = (Parameter) it.next();
 				argument.setTransferableFromLocal();
-				transferable.arguments[i] = (ClientParameter_Transferable) argument
+				this.transferable.arguments[i++] = (ClientParameter_Transferable) argument
 						.getTransferable();
 			}
 		} else {
 			HashMap map = new HashMap();
-			for (int i = 0; i < arguments.size(); i++) {
-				Object obj = arguments.get(i);
+			for (int i = 0; i < this.arguments.size(); i++) {
+				Object obj = this.arguments.get(i);
 				map.put(obj, obj);
 			}
-			for (int i = 0; i < argumentList.size(); i++) {
-				Object obj = argumentList.get(i);
+			for (Iterator it = this.argumentList.iterator(); it.hasNext();) {
+				Object obj = it.next();
 				map.put(obj, obj);
 			}
 
 			Set keySet = map.keySet();
-			transferable.arguments = new ClientParameter_Transferable[keySet
+			this.transferable.arguments = new ClientParameter_Transferable[keySet
 					.size()];
 			int i = 0;
 			for (Iterator it = keySet.iterator(); it.hasNext();) {
 				Parameter argument = (Parameter) it.next();
 				argument.setTransferableFromLocal();
-				transferable.arguments[i++] = (ClientParameter_Transferable) argument
+				this.transferable.arguments[i++] = (ClientParameter_Transferable) argument
 						.getTransferable();
 			}
 		}
+		this.changed = false;
 	}
 
 	public void updateLocalFromTransferable() {
-		// nothing to do
+		this.changed = false;
 	}
 
 	public void updateTestArgumentSet(String test_type_id) {
 		TestType tt = (TestType) Pool.get(TestType.typ, test_type_id);
 
-		for (int i = 0; i < argumentList.size(); i++) {
-			Parameter param = (Parameter) argumentList.get(i);
-			param.setApt((ActionParameterType) tt.sorted_arguments.get(param
-					.getCodename()));
+		//		for (int i = 0; i < this.argumentList.size(); i++) {
+		//			Parameter param = (Parameter) argumentList.get(i);
+		//			param.setApt((ActionParameterType) tt.sorted_arguments.get(param
+		//					.getCodename()));
+		//		}
+		HashMap map = new HashMap();
+		for (int i = 0; i < this.arguments.size(); i++) {
+			Object obj = this.arguments.get(i);
+			map.put(obj, obj);
 		}
+		for (Iterator it = this.argumentList.iterator(); it.hasNext();) {
+			Object obj = it.next();
+			map.put(obj, obj);
+		}
+
+		Set keySet = map.keySet();
+		this.transferable.arguments = new ClientParameter_Transferable[keySet
+				.size()];
+		for (Iterator it = keySet.iterator(); it.hasNext();) {
+			Parameter param = (Parameter) it.next();
+			param.setApt((ActionParameterType) tt.getSortedArguments().get(
+					param.getCodename()));
+		}
+		this.changed = true;
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
-		id = (String) in.readObject();
-		name = (String) in.readObject();
-		created = in.readLong();
-		created_by = (String) in.readObject();
-		test_type_id = (String) in.readObject();
-		arguments = (Vector) in.readObject();
+		this.id = (String) in.readObject();
+		this.name = (String) in.readObject();
+		this.created = in.readLong();
+		this.created_by = (String) in.readObject();
+		this.test_type_id = (String) in.readObject();
+		this.arguments = (Vector) in.readObject();
 
-		transferable = new ClientTestArgumentSet_Transferable();
+		this.transferable = new ClientTestArgumentSet_Transferable();
 		updateLocalFromTransferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(id);
-		out.writeObject(name);
-		out.writeLong(created);
-		out.writeObject(created_by);
-		out.writeObject(test_type_id);
-		out.writeObject(arguments);
+		out.writeObject(this.id);
+		out.writeObject(this.name);
+		out.writeLong(this.created);
+		out.writeObject(this.created_by);
+		out.writeObject(this.test_type_id);
+		out.writeObject(this.arguments);
+		this.changed = false;
 	}
 }
 

@@ -21,16 +21,16 @@ public class ResultModel extends ObjectResourceModel {
 
 	public Component getColumnRenderer(String colId) {
 		if (colId.equals(ConstStorage.COLUMN_NAME_ID))
-			return new TextFieldEditor(result.getId());
+			return new TextFieldEditor(this.result.getId());
 		else if (colId.equals(ConstStorage.COLUMN_NAME_RESULT_TYPE))
-			return new TextFieldEditor(result.getResultType());
+			return new TextFieldEditor(this.result.getResultType());
 		else if (colId.equals(ConstStorage.COLUMN_NAME_CREATED))
 			return new TextFieldEditor(ConstStorage.SIMPLE_DATE_FORMAT
-					.format(new Date(result.getModified())));
+					.format(new Date(this.result.getModified())));
 		else if (colId.equals(ConstStorage.COLUMN_NAME_USER_ID))
-			return new TextFieldEditor(result.getUserId());
+			return new TextFieldEditor(this.result.getUserId());
 		else if (colId.equals(ConstStorage.COLUMN_NAME_ACTION_ID))
-				return new TextFieldEditor(result.getActionId());
+				return new TextFieldEditor(this.result.getActionId());
 		return null;
 	}
 
@@ -38,7 +38,7 @@ public class ResultModel extends ObjectResourceModel {
 		String s = null;
 		try {
 			if (colId.equals(ConstStorage.COLUMN_NAME_ID))
-				s = result.getId();
+				s = this.result.getId();
 			else if (colId.equals(ConstStorage.COLUMN_NAME_RESULT_TYPE)) {
 
 				Hashtable actions = new Hashtable();
@@ -47,15 +47,15 @@ public class ResultModel extends ObjectResourceModel {
 				actions.put(Evaluation.typ, I18N.getString("Evaluation")); //$NON-NLS-1$
 				actions.put(Test.typ, I18N.getString("Testing")); //$NON-NLS-1$
 				actions.put(TestRequest.typ, I18N.getString("TestRequest")); //$NON-NLS-1$
-				s = (String) actions.get(result.getResultType());
+				s = (String) actions.get(this.result.getResultType());
 				if (s == null) s = ""; //$NON-NLS-1$
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_CREATED))
-				s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(result
+				s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(this.result
 						.getModified()));
 			else if (colId.equals(ConstStorage.COLUMN_NAME_USER_ID))
-				s = result.getUserId();
+				s = this.result.getUserId();
 			else if (colId.equals(ConstStorage.COLUMN_NAME_ACTION_ID)) {
-				s = result.getActionId();
+				s = this.result.getActionId();
 			}
 		} catch (Exception e) {
 			//			System.out.println("error gettin field value - Result");

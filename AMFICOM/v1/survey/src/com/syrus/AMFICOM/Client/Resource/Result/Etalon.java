@@ -113,6 +113,7 @@ public class Etalon extends ObjectResource implements Serializable {
 	 *            The created to set.
 	 */
 	public void setCreated(long created) {
+		this.changed = true;
 		this.created = created;
 	}
 
@@ -121,6 +122,7 @@ public class Etalon extends ObjectResource implements Serializable {
 	 *            The description to set.
 	 */
 	public void setDescription(String description) {
+		this.changed = true;
 		this.description = description;
 	}
 
@@ -129,6 +131,7 @@ public class Etalon extends ObjectResource implements Serializable {
 	 *            The ethalonParameterList to set.
 	 */
 	public void setEthalonParameterList(List ethalonParameterList) {
+		this.changed = true;
 		this.ethalonParameterList = ethalonParameterList;
 	}
 
@@ -137,6 +140,7 @@ public class Etalon extends ObjectResource implements Serializable {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
@@ -157,6 +161,7 @@ public class Etalon extends ObjectResource implements Serializable {
 			this.ethalonParameterList.add(parameter);
 
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -164,6 +169,7 @@ public class Etalon extends ObjectResource implements Serializable {
 	 *            The modified to set.
 	 */
 	public void setModified(long modified) {
+		this.changed = true;
 		this.modified = modified;
 	}
 
@@ -172,6 +178,7 @@ public class Etalon extends ObjectResource implements Serializable {
 	 *            The name to set.
 	 */
 	public void setName(String name) {
+		this.changed = true;
 		this.name = name;
 	}
 
@@ -208,7 +215,8 @@ public class Etalon extends ObjectResource implements Serializable {
 				Object obj = this.etalon_parameters.get(i);
 				map.put(obj, obj);
 			}
-			for (Iterator it=ethalonParameterList.iterator();it.hasNext();) {
+			for (Iterator it = this.ethalonParameterList.iterator(); it
+					.hasNext();) {
 				Object obj = it.next();
 				map.put(obj, obj);
 			}
@@ -224,6 +232,7 @@ public class Etalon extends ObjectResource implements Serializable {
 						.getTransferable();
 			}
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -231,11 +240,12 @@ public class Etalon extends ObjectResource implements Serializable {
 	 *            The typeId to set.
 	 */
 	public void setTypeId(String typeId) {
+		this.changed = true;
 		this.type_id = typeId;
 	}
 
 	public void updateLocalFromTransferable() {
-		// nothing to do
+		this.changed = false;
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
@@ -251,6 +261,7 @@ public class Etalon extends ObjectResource implements Serializable {
 
 		this.transferable = new ClientEtalon_Transferable();
 		updateLocalFromTransferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {

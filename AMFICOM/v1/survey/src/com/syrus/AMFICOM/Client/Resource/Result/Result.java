@@ -39,6 +39,7 @@ public class Result extends ObjectResource implements Serializable {
 	 * @deprecated use setter/getter pair to access this field
 	 */
 	public String								id						= "";
+	private ObjectResourceModel					model;
 	/**
 	 * @deprecated use setter/getter pair to access this field
 	 */
@@ -79,8 +80,8 @@ public class Result extends ObjectResource implements Serializable {
 		this.transferable = transferable;
 		setLocalFromTransferable();
 
-		name = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(
-				elementary_start_time));
+		this.name = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(
+				this.elementary_start_time));
 	}
 
 	//	public Result()
@@ -110,11 +111,11 @@ public class Result extends ObjectResource implements Serializable {
 		//		if (type.equals("test"))
 		//			test_id = action_id;
 		//
-		transferable = new ClientResult_Transferable();
+		this.transferable = new ClientResult_Transferable();
 		//parameters = new Vector();
 
-		name = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(
-				elementary_start_time));
+		this.name = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(
+				this.elementary_start_time));
 	}
 
 	public static ObjectResourceDisplayModel getDefaultDisplayModel() {
@@ -126,29 +127,29 @@ public class Result extends ObjectResource implements Serializable {
 	}
 
 	public void addParameter(Parameter parameter) {
-		parameters.add(parameter);
-		parameterList.add(parameter);
+		this.parameters.add(parameter);
+		this.parameterList.add(parameter);
 	}
 
 	/**
 	 * @return Returns the actionId.
 	 */
 	public String getActionId() {
-		return action_id;
+		return this.action_id;
 	}
 
 	/**
 	 * @return Returns the analysisId.
 	 */
 	public String getAnalysisId() {
-		return analysis_id;
+		return this.analysis_id;
 	}
 
 	/**
 	 * @return Returns the deleted.
 	 */
 	public long getDeleted() {
-		return deleted;
+		return this.deleted;
 	}
 
 	public String getDomainId() {
@@ -159,30 +160,31 @@ public class Result extends ObjectResource implements Serializable {
 	 * @return Returns the evaluationId.
 	 */
 	public String getEvaluationId() {
-		return evaluation_id;
+		return this.evaluation_id;
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public ObjectResourceModel getModel() {
-		return new ResultModel(this);
+		if (this.model == null) this.model = new ResultModel(this);
+		return this.model;
 	}
 
 	/**
 	 * @return Returns the modelingId.
 	 */
 	public String getModelingId() {
-		return modeling_id;
+		return this.modeling_id;
 	}
 
 	public long getModified() {
-		return elementary_start_time;
+		return this.elementary_start_time;
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 		//		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
 		//		return sdf.format(new Date(elementary_start_time));
 	}
@@ -191,39 +193,39 @@ public class Result extends ObjectResource implements Serializable {
 	 * @return Returns the parameterList.
 	 */
 	public List getParameterList() {
-		return parameterList;
+		return this.parameterList;
 	}
 
 	/**
 	 * @return Returns the resultSetId.
 	 */
 	public String getResultSetId() {
-		return result_set_id;
+		return this.result_set_id;
 	}
 
 	/**
 	 * @return Returns the resultType.
 	 */
 	public String getResultType() {
-		return result_type;
+		return this.result_type;
 	}
 
 	/**
 	 * @return Returns the testId.
 	 */
 	public String getTestId() {
-		return test_id;
+		return this.test_id;
 	}
 
 	/**
 	 * @return Returns the testRequestId.
 	 */
 	public String getTestRequestId() {
-		return test_request_id;
+		return this.test_request_id;
 	}
 
 	public Object getTransferable() {
-		return transferable;
+		return this.transferable;
 	}
 
 	public String getTyp() {
@@ -234,7 +236,7 @@ public class Result extends ObjectResource implements Serializable {
 	 * @return Returns the userId.
 	 */
 	public String getUserId() {
-		return user_id;
+		return this.user_id;
 	}
 
 	/**
@@ -242,6 +244,7 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The actionId to set.
 	 */
 	public void setActionId(String actionId) {
+		this.changed = true;
 		this.action_id = actionId;
 	}
 
@@ -249,7 +252,8 @@ public class Result extends ObjectResource implements Serializable {
 	 * @param analysisId
 	 *            The analysisId to set.
 	 */
-	public void setAnalysis_id(String analysisId) {
+	public void setAnalysisId(String analysisId) {
+		this.changed = true;
 		this.analysis_id = analysisId;
 	}
 
@@ -258,6 +262,7 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The deleted to set.
 	 */
 	public void setDeleted(long deleted) {
+		this.changed = true;
 		this.deleted = deleted;
 	}
 
@@ -266,6 +271,7 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The evaluationId to set.
 	 */
 	public void setEvaluationId(String evaluationId) {
+		this.changed = true;
 		this.evaluation_id = evaluationId;
 	}
 
@@ -274,19 +280,20 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
 	public void setLocalFromTransferable() {
-		action_id = transferable.action_id;
-		id = transferable.id;
-		result_set_id = transferable.result_set_id;
-		result_type = transferable.result_type;
-		user_id = transferable.user_id;
-		elementary_start_time = transferable.elementary_start_time;
+		this.action_id = this.transferable.action_id;
+		this.id = this.transferable.id;
+		this.result_set_id = this.transferable.result_set_id;
+		this.result_type = this.transferable.result_type;
+		this.user_id = this.transferable.user_id;
+		this.elementary_start_time = this.transferable.elementary_start_time;
 
-		parameters.clear();
-		parameterList.clear();
+		this.parameters.clear();
+		this.parameterList.clear();
 		//
 		//		Hashtable ht = new Hashtable();
 		//		try
@@ -330,13 +337,14 @@ public class Result extends ObjectResource implements Serializable {
 		//		{
 		//		}
 
-		for (int i = 0; i < transferable.parameters.length; i++) {
-			Parameter param = new Parameter(transferable.parameters[i]);
+		for (int i = 0; i < this.transferable.parameters.length; i++) {
+			Parameter param = new Parameter(this.transferable.parameters[i]);
 			param.updateLocalFromTransferable();
 			this.addParameter(param);
 			//			parameters.add(param);
 			//			parameterList.add(param);
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -344,15 +352,18 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The modelingId to set.
 	 */
 	public void setModelingId(String modelingId) {
+		this.changed = true;
 		this.modeling_id = modelingId;
 	}
 
 	public void setModified(long modified) {
+		this.changed = true;
 		this.elementary_start_time = modified;
 	}
 
-	public void setName(String n) {
-		name = n;
+	public void setName(String name) {
+		this.changed = true;
+		this.name = name;
 	}
 
 	/**
@@ -360,6 +371,7 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The parameterList to set.
 	 */
 	public void setParameterList(List parameterList) {
+		this.changed = true;
 		this.parameterList = parameterList;
 	}
 
@@ -368,6 +380,7 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The resultSetId to set.
 	 */
 	public void setResultSetId(String resultSetId) {
+		this.changed = true;
 		this.result_set_id = resultSetId;
 	}
 
@@ -376,6 +389,7 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The resultType to set.
 	 */
 	public void setResultType(String resultType) {
+		this.changed = true;
 		this.result_type = resultType;
 	}
 
@@ -384,6 +398,7 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The testId to set.
 	 */
 	public void setTestId(String testId) {
+		this.changed = true;
 		this.test_id = testId;
 	}
 
@@ -392,32 +407,33 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The testRequestId to set.
 	 */
 	public void setTestRequestId(String testRequestId) {
+		this.changed = true;
 		this.test_request_id = testRequestId;
 	}
 
 	public void setTransferableFromLocal() {
-		transferable.action_id = action_id;
-		transferable.id = id;
-		transferable.result_set_id = result_set_id;
-		transferable.result_type = result_type;
-		transferable.user_id = user_id;
-		transferable.elementary_start_time = elementary_start_time;
+		this.transferable.action_id = this.action_id;
+		this.transferable.id = this.id;
+		this.transferable.result_set_id = this.result_set_id;
+		this.transferable.result_type = this.result_type;
+		this.transferable.user_id = this.user_id;
+		this.transferable.elementary_start_time = this.elementary_start_time;
 
-		if (parameterList.isEmpty()) {
-			transferable.parameters = new ClientParameter_Transferable[parameters
+		if (this.parameterList.isEmpty()) {
+			this.transferable.parameters = new ClientParameter_Transferable[this.parameters
 					.size()];
-			for (int i = 0; i < transferable.parameters.length; i++) {
-				Parameter parameter = (Parameter) parameters.get(i);
+			for (int i = 0; i < this.transferable.parameters.length; i++) {
+				Parameter parameter = (Parameter) this.parameters.get(i);
 				parameter.setTransferableFromLocal();
 				//				transferable.parameters[i] =
 				// (ClientParameter_Transferable)((Parameter)parameters.get(i)).getTransferable();
-				transferable.parameters[i] = (ClientParameter_Transferable) parameter
+				this.transferable.parameters[i] = (ClientParameter_Transferable) parameter
 						.getTransferable();
 			}
 		} else {
 			HashMap map = new HashMap();
-			for (int i = 0; i < parameters.size(); i++) {
-				Object obj = parameters.get(i);
+			for (int i = 0; i < this.parameters.size(); i++) {
+				Object obj = this.parameters.get(i);
 				map.put(obj, obj);
 			}
 			for (Iterator it = this.parameterList.iterator(); it.hasNext();) {
@@ -426,16 +442,17 @@ public class Result extends ObjectResource implements Serializable {
 			}
 
 			Set keySet = map.keySet();
-			transferable.parameters = new ClientParameter_Transferable[keySet
+			this.transferable.parameters = new ClientParameter_Transferable[keySet
 					.size()];
 			int i = 0;
 			for (Iterator it = keySet.iterator(); it.hasNext();) {
 				Parameter parameter = (Parameter) it.next();
 				parameter.setTransferableFromLocal();
-				transferable.parameters[i++] = (ClientParameter_Transferable) parameter
+				this.transferable.parameters[i++] = (ClientParameter_Transferable) parameter
 						.getTransferable();
 			}
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -443,33 +460,35 @@ public class Result extends ObjectResource implements Serializable {
 	 *            The userId to set.
 	 */
 	public void setUserId(String userId) {
+		this.changed = true;
 		this.user_id = userId;
 	}
 
 	public void updateLocalFromTransferable() {
 		Hashtable ht = new Hashtable();
 		try {
-			if (result_type.equals(Analysis.typ)) {
-				analysis_id = action_id;
-				Analysis a = (Analysis) Pool.get(Analysis.typ, action_id);
+			if (this.result_type.equals(Analysis.typ)) {
+				this.analysis_id = this.action_id;
+				Analysis a = (Analysis) Pool.get(Analysis.typ, this.action_id);
 				AnalysisType at = (AnalysisType) Pool.get(AnalysisType.typ, a
 						.getTypeId());
 				ht = at.getSortedParameters();
-			} else if (result_type.equals(Modeling.typ)) {
-				modeling_id = action_id;
-				Modeling m = (Modeling) Pool.get(Modeling.typ, action_id);
+			} else if (this.result_type.equals(Modeling.typ)) {
+				this.modeling_id = this.action_id;
+				Modeling m = (Modeling) Pool.get(Modeling.typ, this.action_id);
 				ModelingType mt = (ModelingType) Pool.get(ModelingType.typ, m
 						.getTypeId());
 				ht = mt.getSortedParameters();
-			} else if (result_type.equals(Evaluation.typ)) {
-				evaluation_id = action_id;
-				Evaluation e = (Evaluation) Pool.get(Evaluation.typ, action_id);
+			} else if (this.result_type.equals(Evaluation.typ)) {
+				this.evaluation_id = this.action_id;
+				Evaluation e = (Evaluation) Pool.get(Evaluation.typ,
+						this.action_id);
 				EvaluationType et = (EvaluationType) Pool.get(
 						EvaluationType.typ, e.getTypeId());
 				ht = et.getSortedParameters();
-			} else if (result_type.equals(Test.typ)) {
-				test_id = action_id;
-				Test t = (Test) Pool.get(Test.typ, action_id);
+			} else if (this.result_type.equals(Test.typ)) {
+				this.test_id = this.action_id;
+				Test t = (Test) Pool.get(Test.typ, this.action_id);
 				TestType tt = (TestType) Pool.get(TestType.typ, t.test_type_id);
 				ht = tt.getSortedParameters();
 			}
@@ -486,8 +505,8 @@ public class Result extends ObjectResource implements Serializable {
 		/**
 		 * @todo only for backward parameters Vector implementation
 		 */
-		if (parameters.isEmpty()) {
-			transferable.parameters = new ClientParameter_Transferable[parameterList
+		if (this.parameters.isEmpty()) {
+			this.transferable.parameters = new ClientParameter_Transferable[this.parameterList
 					.size()];
 			for (Iterator it = this.parameterList.iterator(); it.hasNext();) {
 				Parameter param = (Parameter) it.next();
@@ -496,8 +515,8 @@ public class Result extends ObjectResource implements Serializable {
 			}
 		} else {
 			HashMap map = new HashMap();
-			for (int i = 0; i < parameters.size(); i++) {
-				Object obj = parameters.get(i);
+			for (int i = 0; i < this.parameters.size(); i++) {
+				Object obj = this.parameters.get(i);
 				map.put(obj, obj);
 			}
 			for (Iterator it = this.parameterList.iterator(); it.hasNext();) {
@@ -506,7 +525,7 @@ public class Result extends ObjectResource implements Serializable {
 			}
 
 			Set keySet = map.keySet();
-			transferable.parameters = new ClientParameter_Transferable[keySet
+			this.transferable.parameters = new ClientParameter_Transferable[keySet
 					.size()];
 			for (Iterator it = keySet.iterator(); it.hasNext();) {
 				Parameter param = (Parameter) it.next();
@@ -514,46 +533,49 @@ public class Result extends ObjectResource implements Serializable {
 				param.setApt((ActionParameterType) ht.get(param.getCodename()));
 			}
 		}
+		this.changed = false;
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
-		test_request_id = (String) in.readObject();
-		deleted = in.readLong();
-		modeling_id = (String) in.readObject();
-		analysis_id = (String) in.readObject();
-		result_type = (String) in.readObject();
-		id = (String) in.readObject();
-		user_id = (String) in.readObject();
-		result_set_id = (String) in.readObject();
-		evaluation_id = (String) in.readObject();
-		test_id = (String) in.readObject();
-		action_id = (String) in.readObject();
-		name = (String) in.readObject();
-		elementary_start_time = in.readLong();
-		parameters = (Vector) in.readObject();
-		parameterList = (List) in.readObject();
+		this.test_request_id = (String) in.readObject();
+		this.deleted = in.readLong();
+		this.modeling_id = (String) in.readObject();
+		this.analysis_id = (String) in.readObject();
+		this.result_type = (String) in.readObject();
+		this.id = (String) in.readObject();
+		this.user_id = (String) in.readObject();
+		this.result_set_id = (String) in.readObject();
+		this.evaluation_id = (String) in.readObject();
+		this.test_id = (String) in.readObject();
+		this.action_id = (String) in.readObject();
+		this.name = (String) in.readObject();
+		this.elementary_start_time = in.readLong();
+		this.parameters = (Vector) in.readObject();
+		this.parameterList = (List) in.readObject();
 
-		transferable = new ClientResult_Transferable();
+		this.transferable = new ClientResult_Transferable();
 		updateLocalFromTransferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(test_request_id);
-		out.writeLong(deleted);
-		out.writeObject(modeling_id);
-		out.writeObject(analysis_id);
-		out.writeObject(result_type);
-		out.writeObject(id);
-		out.writeObject(user_id);
-		out.writeObject(result_set_id);
-		out.writeObject(evaluation_id);
-		out.writeObject(test_id);
-		out.writeObject(action_id);
-		out.writeObject(name);
-		out.writeLong(elementary_start_time);
-		out.writeObject(parameters);
-		out.writeObject(parameterList);
+		out.writeObject(this.test_request_id);
+		out.writeLong(this.deleted);
+		out.writeObject(this.modeling_id);
+		out.writeObject(this.analysis_id);
+		out.writeObject(this.result_type);
+		out.writeObject(this.id);
+		out.writeObject(this.user_id);
+		out.writeObject(this.result_set_id);
+		out.writeObject(this.evaluation_id);
+		out.writeObject(this.test_id);
+		out.writeObject(this.action_id);
+		out.writeObject(this.name);
+		out.writeLong(this.elementary_start_time);
+		out.writeObject(this.parameters);
+		out.writeObject(this.parameterList);
+		this.changed = false;
 	}
 
 }
@@ -568,7 +590,7 @@ class ResultTimeSorter extends ObjectResourceSorter {
 	}
 
 	public String[][] getSortedColumns() {
-		return sorted_columns;
+		return this.sorted_columns;
 	}
 
 	public String getString(ObjectResource or, String column) {

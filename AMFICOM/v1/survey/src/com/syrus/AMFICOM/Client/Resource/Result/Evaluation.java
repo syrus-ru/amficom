@@ -192,6 +192,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The argumentList to set.
 	 */
 	public void setArgumentList(List argumentList) {
+		this.changed = true;
 		this.argumentList = argumentList;
 	}
 
@@ -200,6 +201,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The deleted to set.
 	 */
 	public void setDeleted(long deleted) {
+		this.changed = true;
 		this.deleted = deleted;
 	}
 
@@ -208,6 +210,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The description to set.
 	 */
 	public void setDescription(String description) {
+		this.changed = true;
 		this.description = description;
 	}
 
@@ -216,6 +219,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The ethalonId to set.
 	 */
 	public void setEthalonId(String ethalonId) {
+		this.changed = true;
 		this.etalon_id = ethalonId;
 	}
 
@@ -224,6 +228,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
@@ -255,6 +260,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 			//arguments.add(param);
 			this.addArgument(param);
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -262,6 +268,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The modified to set.
 	 */
 	public void setModified(long modified) {
+		this.changed = true;
 		this.modified = modified;
 	}
 
@@ -270,6 +277,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The monitoredElementId to set.
 	 */
 	public void setMonitoredElementId(String monitoredElementId) {
+		this.changed = true;
 		this.monitored_element_id = monitoredElementId;
 	}
 
@@ -278,6 +286,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The name to set.
 	 */
 	public void setName(String name) {
+		this.changed = true;
 		this.name = name;
 	}
 
@@ -286,6 +295,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The parameterList to set.
 	 */
 	public void setParameterList(List parameterList) {
+		this.changed = true;
 		this.parameterList = parameterList;
 	}
 
@@ -294,6 +304,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The resultIds to set.
 	 */
 	public void setResultIds(String[] resultIds) {
+		this.changed = true;
 		this.result_ids = resultIds;
 	}
 
@@ -302,16 +313,17 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The thresholdSetId to set.
 	 */
 	public void setThresholdSetId(String thresholdSetId) {
+		this.changed = true;
 		this.threshold_set_id = thresholdSetId;
 	}
 
-	/**
-	 * @param transferable
-	 *            The transferable to set.
-	 */
-	public void setTransferable(ClientEvaluation_Transferable transferable) {
-		this.transferable = transferable;
-	}
+	//	/**
+	//	 * @param transferable
+	//	 * The transferable to set.
+	//	 */
+	//	public void setTransferable(ClientEvaluation_Transferable transferable) {
+	//		this.transferable = transferable;
+	//	}
 
 	public void setTransferableFromLocal() {
 		this.transferable.description = this.description;
@@ -367,6 +379,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 						.getTransferable();
 			}
 		}
+		this.changed = false;
 	}
 
 	/**
@@ -374,6 +387,7 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The typeId to set.
 	 */
 	public void setTypeId(String typeId) {
+		this.changed = true;
 		this.type_id = typeId;
 	}
 
@@ -382,11 +396,12 @@ public class Evaluation extends ObjectResource implements Serializable {
 	 *            The userId to set.
 	 */
 	public void setUserId(String userId) {
+		this.changed = true;
 		this.user_id = userId;
 	}
 
 	public void updateLocalFromTransferable() {
-		// nothing to do
+		this.changed = false;
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,

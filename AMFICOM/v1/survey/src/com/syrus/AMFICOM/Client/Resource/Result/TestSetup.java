@@ -189,6 +189,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The analysisTypeId to set.
 	 */
 	public void setAnalysisTypeId(String analysisTypeId) {
+		this.changed = true;
 		this.analysis_type_id = analysisTypeId;
 	}
 
@@ -197,6 +198,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The created to set.
 	 */
 	public void setCreated(long created) {
+		this.changed = true;
 		this.created = created;
 	}
 
@@ -205,6 +207,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The createdBy to set.
 	 */
 	public void setCreatedBy(String createdBy) {
+		this.changed = true;
 		this.created_by = createdBy;
 	}
 
@@ -213,6 +216,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The criteriaSetId to set.
 	 */
 	public void setCriteriaSetId(String criteriaSetId) {
+		this.changed = true;
 		this.criteria_set_id = criteriaSetId;
 	}
 
@@ -221,6 +225,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The description to set.
 	 */
 	public void setDescription(String description) {
+		this.changed = true;
 		this.description = description;
 	}
 
@@ -229,6 +234,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The ethalonId to set.
 	 */
 	public void setEthalonId(String ethalonId) {
+		this.changed = true;
 		this.etalon_id = ethalonId;
 	}
 
@@ -237,6 +243,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The evaluationTypeId to set.
 	 */
 	public void setEvaluationTypeId(String evaluationTypeId) {
+		this.changed = true;
 		this.evaluation_type_id = evaluationTypeId;
 	}
 
@@ -245,28 +252,30 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
 	public void setLocalFromTransferable() {
-		id = transferable.id;
-		name = transferable.name;
-		created = transferable.created;
-		modified = transferable.modified;
-		created_by = transferable.created_by;
-		description = transferable.description;
+		this.id = this.transferable.id;
+		this.name = this.transferable.name;
+		this.created = this.transferable.created;
+		this.modified = this.transferable.modified;
+		this.created_by = this.transferable.created_by;
+		this.description = this.transferable.description;
 
-		test_type_id = transferable.test_type_id;
-		test_argument_set_id = transferable.test_argument_set_id;
+		this.test_type_id = this.transferable.test_type_id;
+		this.test_argument_set_id = this.transferable.test_argument_set_id;
 
-		analysis_type_id = transferable.analysis_type_id;
-		criteria_set_id = transferable.criteria_set_id;
+		this.analysis_type_id = this.transferable.analysis_type_id;
+		this.criteria_set_id = this.transferable.criteria_set_id;
 
-		evaluation_type_id = transferable.evaluation_type_id;
-		threshold_set_id = transferable.threshold_set_id;
-		etalon_id = transferable.etalon_id;
+		this.evaluation_type_id = this.transferable.evaluation_type_id;
+		this.threshold_set_id = this.transferable.threshold_set_id;
+		this.etalon_id = this.transferable.etalon_id;
 
-		monitored_element_ids = transferable.monitored_element_ids;
+		this.monitored_element_ids = this.transferable.monitored_element_ids;
+		this.changed = false;
 	}
 
 	/**
@@ -274,6 +283,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The modified to set.
 	 */
 	public void setModified(long modified) {
+		this.changed = true;
 		this.modified = modified;
 	}
 
@@ -282,6 +292,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The monitoredElementIds to set.
 	 */
 	public void setMonitoredElementIds(String[] monitoredElementIds) {
+		this.changed = true;
 		this.monitored_element_ids = monitoredElementIds;
 	}
 
@@ -290,6 +301,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The name to set.
 	 */
 	public void setName(String name) {
+		this.changed = true;
 		this.name = name;
 	}
 
@@ -298,6 +310,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The testArgumentSetId to set.
 	 */
 	public void setTestArgumentSetId(String testArgumentSetId) {
+		this.changed = true;
 		this.test_argument_set_id = testArgumentSetId;
 	}
 
@@ -306,6 +319,7 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The testTypeId to set.
 	 */
 	public void settestTypeId(String testTypeId) {
+		this.changed = true;
 		this.test_type_id = testTypeId;
 	}
 
@@ -314,79 +328,83 @@ public class TestSetup extends ObjectResource implements Serializable {
 	 *            The thresholdSetId to set.
 	 */
 	public void setThresholdSetId(String thresholdSetId) {
+		this.changed = true;
 		this.threshold_set_id = thresholdSetId;
 	}
 
 	public void setTransferableFromLocal() {
-		transferable.id = id;
-		transferable.name = name;
-		transferable.created = created;
-		transferable.modified = modified;
-		transferable.created_by = created_by;
-		transferable.description = description;
+		this.transferable.id = this.id;
+		this.transferable.name = this.name;
+		this.transferable.created = this.created;
+		this.transferable.modified = this.modified;
+		this.transferable.created_by = this.created_by;
+		this.transferable.description = this.description;
 
-		transferable.test_type_id = test_type_id;
-		transferable.test_argument_set_id = test_argument_set_id;
+		this.transferable.test_type_id = this.test_type_id;
+		this.transferable.test_argument_set_id = this.test_argument_set_id;
 
-		transferable.analysis_type_id = analysis_type_id;
-		transferable.criteria_set_id = criteria_set_id;
+		this.transferable.analysis_type_id = this.analysis_type_id;
+		this.transferable.criteria_set_id = this.criteria_set_id;
 
-		transferable.evaluation_type_id = evaluation_type_id;
-		transferable.threshold_set_id = threshold_set_id;
-		transferable.etalon_id = etalon_id;
+		this.transferable.evaluation_type_id = this.evaluation_type_id;
+		this.transferable.threshold_set_id = this.threshold_set_id;
+		this.transferable.etalon_id = this.etalon_id;
 
-		transferable.monitored_element_ids = new String[0];
+		this.transferable.monitored_element_ids = new String[0];
+		this.changed = false;
 	}
 
 	public void updateLocalFromTransferable() {
-		// nothing to do
+		this.changed = false;
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
-		id = (String) in.readObject();
-		name = (String) in.readObject();
-		created = in.readLong();
-		modified = in.readLong();
-		created_by = (String) in.readObject();
-		description = (String) in.readObject();
+		this.id = (String) in.readObject();
+		this.name = (String) in.readObject();
+		this.created = in.readLong();
+		this.modified = in.readLong();
+		this.created_by = (String) in.readObject();
+		this.description = (String) in.readObject();
 
-		test_type_id = (String) in.readObject();
-		test_argument_set_id = (String) in.readObject();
+		this.test_type_id = (String) in.readObject();
+		this.test_argument_set_id = (String) in.readObject();
 
-		analysis_type_id = (String) in.readObject();
-		criteria_set_id = (String) in.readObject();
+		this.analysis_type_id = (String) in.readObject();
+		this.criteria_set_id = (String) in.readObject();
 
-		evaluation_type_id = (String) in.readObject();
-		threshold_set_id = (String) in.readObject();
-		etalon_id = (String) in.readObject();
+		this.evaluation_type_id = (String) in.readObject();
+		this.threshold_set_id = (String) in.readObject();
+		this.etalon_id = (String) in.readObject();
 
 		Object o = in.readObject();
-		monitored_element_ids = (String[]) o;
+		this.monitored_element_ids = (String[]) o;
 
-		transferable = new TestSetup_Transferable();
+		this.transferable = new TestSetup_Transferable();
 		updateLocalFromTransferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(id);
-		out.writeObject(name);
-		out.writeLong(created);
-		out.writeLong(modified);
-		out.writeObject(created_by);
-		out.writeObject(description);
+		out.writeObject(this.id);
+		out.writeObject(this.name);
+		out.writeLong(this.created);
+		out.writeLong(this.modified);
+		out.writeObject(this.created_by);
+		out.writeObject(this.description);
 
-		out.writeObject(test_type_id);
-		out.writeObject(test_argument_set_id);
+		out.writeObject(this.test_type_id);
+		out.writeObject(this.test_argument_set_id);
 
-		out.writeObject(analysis_type_id);
-		out.writeObject(criteria_set_id);
+		out.writeObject(this.analysis_type_id);
+		out.writeObject(this.criteria_set_id);
 
-		out.writeObject(evaluation_type_id);
-		out.writeObject(threshold_set_id);
-		out.writeObject(etalon_id);
-		Object o = monitored_element_ids;
+		out.writeObject(this.evaluation_type_id);
+		out.writeObject(this.threshold_set_id);
+		out.writeObject(this.etalon_id);
+		Object o = this.monitored_element_ids;
 		out.writeObject(o);
+		this.changed = false;
 	}
 }
 

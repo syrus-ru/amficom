@@ -129,6 +129,7 @@ public class Parameter extends ObjectResource implements Serializable {
 	 *            The apt to set.
 	 */
 	public void setApt(ActionParameterType apt) {
+		this.changed = true;
 		this.apt = apt;
 	}
 
@@ -137,6 +138,7 @@ public class Parameter extends ObjectResource implements Serializable {
 	 *            The codename to set.
 	 */
 	public void setCodename(String codename) {
+		this.changed = true;
 		this.codename = codename;
 	}
 
@@ -145,6 +147,7 @@ public class Parameter extends ObjectResource implements Serializable {
 	 *            The gpt to set.
 	 */
 	public void setGpt(GlobalParameterType gpt) {
+		this.changed = true;
 		this.gpt = gpt;
 	}
 
@@ -153,15 +156,17 @@ public class Parameter extends ObjectResource implements Serializable {
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
 	public void setLocalFromTransferable() {
-		id = transferable.id;
-		type_id = transferable.type_id;
-		value = transferable.value;
-		codename = transferable.codename;
-		parameter_type_id = transferable.parameter_type_id;
+		this.id = this.transferable.id;
+		this.type_id = this.transferable.type_id;
+		this.value = this.transferable.value;
+		this.codename = this.transferable.codename;
+		this.parameter_type_id = this.transferable.parameter_type_id;
+		this.changed = false;
 	}
 
 	/**
@@ -169,15 +174,17 @@ public class Parameter extends ObjectResource implements Serializable {
 	 *            The parameterTypeId to set.
 	 */
 	public void setParameterTypeId(String parameterTypeId) {
+		this.changed = true;
 		this.parameter_type_id = parameterTypeId;
 	}
 
 	public void setTransferableFromLocal() {
-		transferable.id = id;
-		transferable.type_id = type_id;
-		transferable.value = value;
-		transferable.codename = codename;
-		transferable.parameter_type_id = parameter_type_id;
+		this.transferable.id = this.id;
+		this.transferable.type_id = this.type_id;
+		this.transferable.value = this.value;
+		this.transferable.codename = this.codename;
+		this.transferable.parameter_type_id = this.parameter_type_id;
+		this.changed = false;
 	}
 
 	/**
@@ -185,6 +192,7 @@ public class Parameter extends ObjectResource implements Serializable {
 	 *            The typeId to set.
 	 */
 	public void setTypeId(String typeId) {
+		this.changed = true;
 		this.type_id = typeId;
 	}
 
@@ -193,35 +201,40 @@ public class Parameter extends ObjectResource implements Serializable {
 	 *            The value to set.
 	 */
 	public void setValue(byte[] value) {
+		this.changed = true;
 		this.value = value;
 	}
 
 	public void updateLocalFromTransferable() {
-		gpt = (GlobalParameterType) Pool.get(GlobalParameterType.typ,
-				parameter_type_id);
-		apt = (ActionParameterType) Pool.get(ActionParameterType.typ, type_id);
+		this.gpt = (GlobalParameterType) Pool.get(GlobalParameterType.typ,
+				this.parameter_type_id);
+		this.apt = (ActionParameterType) Pool.get(ActionParameterType.typ,
+				this.type_id);
+		this.changed = false;
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
-		id = (String) in.readObject();
-		type_id = (String) in.readObject();
-		codename = (String) in.readObject();
-		parameter_type_id = (String) in.readObject();
+		this.id = (String) in.readObject();
+		this.type_id = (String) in.readObject();
+		this.codename = (String) in.readObject();
+		this.parameter_type_id = (String) in.readObject();
 
 		Object obj = in.readObject();
-		value = (byte[]) obj;
+		this.value = (byte[]) obj;
 
-		transferable = new ClientParameter_Transferable();
+		this.transferable = new ClientParameter_Transferable();
 		updateLocalFromTransferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(id);
-		out.writeObject(type_id);
-		out.writeObject(codename);
-		out.writeObject(parameter_type_id);
-		Object obj = value;
+		out.writeObject(this.id);
+		out.writeObject(this.type_id);
+		out.writeObject(this.codename);
+		out.writeObject(this.parameter_type_id);
+		Object obj = this.value;
 		out.writeObject(obj);
+		this.changed = false;
 	}
 }

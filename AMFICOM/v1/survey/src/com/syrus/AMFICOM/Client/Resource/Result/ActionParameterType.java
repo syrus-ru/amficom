@@ -88,6 +88,7 @@ public class ActionParameterType extends ObjectResource implements Serializable 
 	 *            The codename to set.
 	 */
 	public void setCodename(String codename) {
+		this.changed = true;
 		this.codename = codename;
 	}
 
@@ -96,6 +97,7 @@ public class ActionParameterType extends ObjectResource implements Serializable 
 	 *            The holderTypeId to set.
 	 */
 	public void setHolderTypeId(String holderTypeId) {
+		this.changed = true;
 		this.holder_type_id = holderTypeId;
 	}
 
@@ -104,6 +106,7 @@ public class ActionParameterType extends ObjectResource implements Serializable 
 	 *            The id to set.
 	 */
 	public void setId(String id) {
+		this.changed = true;
 		this.id = id;
 	}
 
@@ -113,6 +116,7 @@ public class ActionParameterType extends ObjectResource implements Serializable 
 		this.codename = this.transferable.codename;
 		this.parameter_type_id = this.transferable.parameter_type_id;
 		this.holder_type_id = this.transferable.holder_type_id;
+		this.changed = false;
 	}
 
 	/**
@@ -120,6 +124,7 @@ public class ActionParameterType extends ObjectResource implements Serializable 
 	 *            The name to set.
 	 */
 	public void setName(String name) {
+		this.changed = true;
 		this.name = name;
 	}
 
@@ -128,6 +133,7 @@ public class ActionParameterType extends ObjectResource implements Serializable 
 	 *            The parameterTypeId to set.
 	 */
 	public void setParameterTypeId(String parameterTypeId) {
+		this.changed = true;
 		this.parameter_type_id = parameterTypeId;
 	}
 
@@ -137,10 +143,11 @@ public class ActionParameterType extends ObjectResource implements Serializable 
 		this.transferable.codename = this.codename;
 		this.transferable.parameter_type_id = this.parameter_type_id;
 		this.transferable.holder_type_id = this.holder_type_id;
+		this.changed = false;
 	}
 
 	public void updateLocalFromTransferable() {
-		// nothing to do
+		this.changed = false;
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
@@ -150,8 +157,8 @@ public class ActionParameterType extends ObjectResource implements Serializable 
 		this.codename = (String) in.readObject();
 		this.parameter_type_id = (String) in.readObject();
 		this.holder_type_id = (String) in.readObject();
-
 		this.transferable = new ActionParameterType_Transferable();
+		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
@@ -160,5 +167,6 @@ public class ActionParameterType extends ObjectResource implements Serializable 
 		out.writeObject(this.codename);
 		out.writeObject(this.parameter_type_id);
 		out.writeObject(this.holder_type_id);
+		this.changed = false;
 	}
 }
