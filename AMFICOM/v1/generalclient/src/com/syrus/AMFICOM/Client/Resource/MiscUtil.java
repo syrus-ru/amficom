@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Resource;
 import java.util.Collection;
 import java.util.Vector;
 
-public class MyUtil 
+public class MiscUtil 
 {
 
 	static public void addToCollection(Collection vec, Object []objs)
