@@ -6,9 +6,9 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * Simple stub of AbstractLabelCellRenderer. see
- * {@link com.syrus.AMFICOM.client.general.ui_.AbstractLabelCellRenderer}
+ * {@link com.syrus.AMFICOM.client_.general.ui_.AbstractLabelCellRenderer}
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/07 11:31:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/22 10:40:04 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
