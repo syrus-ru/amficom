@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.137 2005/04/06 12:53:41 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.138 2005/04/06 13:53:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.137 $, $Date: 2005/04/06 12:53:41 $
+ * @version $Revision: 1.138 $, $Date: 2005/04/06 13:53:40 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -440,7 +440,9 @@ public abstract class StorableObjectDatabase {
 
 		if (condition != null) {
 			stringBuffer.append(SQL_AND);
+			stringBuffer.append(OPEN_BRACKET);
 			stringBuffer.append(this.getConditionQuery(condition));
+			stringBuffer.append(CLOSE_BRACKET);
 		}
 
 		return this.retrieveByCondition(stringBuffer.toString());
