@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapSetupCommand.java,v 1.5 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: ViewMapSetupCommand.java,v 1.6 2005/03/02 12:33:29 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.Setup.ControlsFrame;
+import com.syrus.AMFICOM.Client.Map.Operations.ControlsFrame;
 
 import java.awt.Dimension;
 
@@ -24,7 +24,7 @@ import javax.swing.JDesktopPane;
 /**
  *  оманда отображает окно управлени€ сло€ми и поиска 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/02 12:33:29 $
  * @module mapviewclient_v1
  */
 public class ViewMapSetupCommand extends VoidCommand

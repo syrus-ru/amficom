@@ -1,12 +1,12 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.8 2005/02/10 11:48:39 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.1 2005/03/02 12:30:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
 */
 
-package com.syrus.AMFICOM.Client.Map.Setup;
+package com.syrus.AMFICOM.Client.Map.Operations;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -32,7 +32,7 @@ import javax.swing.JTabbedPane;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.1 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -74,7 +74,7 @@ import javax.swing.JTabbedPane;
 	/**
 	 * По умолчанию
 	 */
-	public ControlsFrame(MapFrame mmf, ApplicationContext aContext)
+	public ControlsFrame(MapFrame mapFrame, ApplicationContext aContext)
 	{
 		try
 		{
@@ -85,7 +85,7 @@ import javax.swing.JTabbedPane;
 			e.printStackTrace();
 		}
 		setContext(aContext);
-		setMapFrame(mmf);
+		setMapFrame(mapFrame);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -112,21 +112,6 @@ import javax.swing.JTabbedPane;
 			disp.register(this, MapEvent.MAP_VIEW_DESELECTED);
 		}
 	}
-
-//	public void setVisible(boolean isVisible)
-//	{
-//		super.setVisible(isVisible);
-//		if(!isVisible)
-//			return;
-//		
-//		//Когда окно становится видимым, проверить, есть ли видимое окно карты,
-//		//и прицепиться к нему
-//		MapFrame mmf = MapFrame.getMapMainFrame();
-//		if(mmf != null)
-//			if(mmf.isVisible())
-//				if(mmf.getParent().equals(this.getParent()))
-//					setMapFrame(mmf);
-//	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
@@ -170,11 +155,6 @@ import javax.swing.JTabbedPane;
 		
 		this.tabbedPane.addTab(
 				"", 
-				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_prop.gif")
-					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
-					this.mapChooserPanel);
-		this.tabbedPane.addTab(
-				"", 
 				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/search.gif")
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
 					this.searchPanel);
@@ -188,6 +168,11 @@ import javax.swing.JTabbedPane;
 				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_layers.gif")
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
 					this.layersPanel);
+		this.tabbedPane.addTab(
+				"", 
+				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_prop.gif")
+					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
+					this.mapChooserPanel);
 		
 		this.getContentPane().add(this.tabbedPane, BorderLayout.CENTER);
 	}

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.7 2005/02/22 11:00:15 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.1 2005/03/02 12:30:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,7 +8,7 @@
  * Платформа: java 1.4.1
 */
 
-package com.syrus.AMFICOM.Client.Map.Setup;
+package com.syrus.AMFICOM.Client.Map.Operations;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.7 $, $Date: 2005/02/22 11:00:15 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/02 12:30:40 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -91,6 +91,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 	private void jbInit()
 	{
+		this.setToolTipText(LangModelMap.getString("SearchTopologicalObjects"));
 		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
 		this.searchButton.setText(LangModelMap.getString("Search"));

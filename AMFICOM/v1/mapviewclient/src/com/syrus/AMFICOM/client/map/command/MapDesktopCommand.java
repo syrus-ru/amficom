@@ -4,7 +4,7 @@ import java.awt.Component;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.Map.Setup.ControlsFrame;
+import com.syrus.AMFICOM.Client.Map.Operations.ControlsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsBarFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;

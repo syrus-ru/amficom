@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.4 2005/02/18 12:19:46 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.1 2005/03/02 12:30:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,7 +8,7 @@
  * Платформа: java 1.4.1
 */
 
-package com.syrus.AMFICOM.Client.Map.Setup;
+package com.syrus.AMFICOM.Client.Map.Operations;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
@@ -38,7 +38,7 @@ import javax.swing.JSeparator;
 
 /**
  * панель управления отображением слоев
- * @version $Revision: 1.4 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/02 12:30:40 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -96,6 +96,8 @@ public class LayersPanel extends JPanel
 
 	private void jbInit()
 	{
+		this.setToolTipText(LangModelMap.getString("ConfigureTopologicalLayers"));
+
 		this.setLayout(new BorderLayout());
 
 		this.setSize(new Dimension(370, 629));
