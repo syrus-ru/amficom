@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.12 2004/07/30 14:11:49 bob Exp $
+ * $Id: Transceiver.java,v 1.13 2004/07/30 14:31:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/07/30 14:11:49 $
+ * @version $Revision: 1.13 $, $Date: 2004/07/30 14:31:21 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -68,6 +68,10 @@ public class Transceiver extends SleepButWorkThread {
 		}
 		else
 			Log.errorMessage("Status: " + measurement.getStatus().value() + " of measurement '" + measurementId.toString() + "' not SCHEDULED -- cannot add to queue");
+	}
+	
+	protected KISReport getKISPreport(Measurement measurement){
+		return (KISReport) this.measurementQueue.get(measurement);		
 	}
 
 	public void run() {
