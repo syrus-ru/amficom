@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.5 2004/12/06 17:51:31 bass Exp $
+ * $Id: ObjectGroupEntities.java,v 1.6 2004/12/07 17:08:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/06 17:51:31 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/07 17:08:10 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -24,8 +24,8 @@ public final class ObjectGroupEntities {
 	//  Group Codes
 	public static final short UNKNOWN_GROUP_CODE = 0x0000;
 	public static final short ADMINISTRATION_GROUP_CODE = 0x0001;
-	public static final short CONFIGURATION_GROUP_CODE = 0x0003;
-	public static final short MEASUREMENT_GROUP_CODE = 0x0002;
+	public static final short CONFIGURATION_GROUP_CODE = 0x0002;
+	public static final short MEASUREMENT_GROUP_CODE = 0x0003;
 	public static final short SCHEME_GROUP_CODE = 0x0004;
 	public static final short MAP_GROUP_CODE = 0x0005;
 	public static final short RESOURCE_GROUP_CODE = 0x0006;
@@ -79,7 +79,7 @@ public final class ObjectGroupEntities {
 	public static boolean isInAdministrationGroup(final short entityCode) {
 		assert ObjectEntities.codeToString(entityCode) != null;
 		return entityCode >= ObjectEntities.ADMINISTRATION_MIN_ENTITY_CODE
-			|| entityCode <= ObjectEntities.ADMINISTRATION_MAX_ENTITY_CODE;
+			&& entityCode <= ObjectEntities.ADMINISTRATION_MAX_ENTITY_CODE;
 	}
 
 	public static boolean isInAdministrationGroup(final String entityName) {
@@ -89,7 +89,7 @@ public final class ObjectGroupEntities {
 	public static boolean isInConfigurationGroup(final short entityCode) {
 		assert ObjectEntities.codeToString(entityCode) != null;
 		return entityCode >= ObjectEntities.CONFIGURATION_MIN_ENTITY_CODE
-			|| entityCode <= ObjectEntities.CONFIGURATION_MAX_ENTITY_CODE;
+			&& entityCode <= ObjectEntities.CONFIGURATION_MAX_ENTITY_CODE;
 	}
 
 	public static boolean isInConfigurationGroup(final String entityName) {
@@ -99,7 +99,7 @@ public final class ObjectGroupEntities {
 	public static boolean isInMeasurementGroup(final short entityCode) {
 		assert ObjectEntities.codeToString(entityCode) != null;
 		return entityCode >= ObjectEntities.MEASUREMENT_MIN_ENTITY_CODE
-			|| entityCode <= ObjectEntities.MEASUREMENT_MAX_ENTITY_CODE;
+			&& entityCode <= ObjectEntities.MEASUREMENT_MAX_ENTITY_CODE;
 	}
     
 	public static boolean isInMeasurementGroup(final String entityName) {
@@ -109,7 +109,7 @@ public final class ObjectGroupEntities {
 	public static boolean isInSchemeGroup(final short entityCode) {
 		assert ObjectEntities.codeToString(entityCode) != null;
 		return entityCode >= ObjectEntities.SCHEME_MIN_ENTITY_CODE
-			|| entityCode <= ObjectEntities.SCHEME_MAX_ENTITY_CODE;
+			&& entityCode <= ObjectEntities.SCHEME_MAX_ENTITY_CODE;
 	}
 
 	public static boolean isInSchemeGroup(final String entityName) {
@@ -119,7 +119,7 @@ public final class ObjectGroupEntities {
 	public static boolean isInMapGroup(final short entityCode) {
 		assert ObjectEntities.codeToString(entityCode) != null;
 		return entityCode >= ObjectEntities.MAP_MIN_ENTITY_CODE
-			|| entityCode <= ObjectEntities.MAP_MAX_ENTITY_CODE;
+			&& entityCode <= ObjectEntities.MAP_MAX_ENTITY_CODE;
 	}
 
 	public static boolean isInMapGroup(final String entityName) {
@@ -129,7 +129,7 @@ public final class ObjectGroupEntities {
 	public static boolean isInResourceGroup(final short entityCode) {
 		assert ObjectEntities.codeToString(entityCode) != null;
 		return entityCode >= ObjectEntities.RESOURCE_MIN_ENTITY_CODE
-			|| entityCode <= ObjectEntities.RESOURCE_MAX_ENTITY_CODE;
+			&& entityCode <= ObjectEntities.RESOURCE_MAX_ENTITY_CODE;
 	}
 
 	public static boolean isInResourceGroup(final String entityName) {
@@ -150,5 +150,9 @@ public final class ObjectGroupEntities {
 		else if (isInResourceGroup(entityCode))
 			return RESOURCE_GROUP_CODE;
 		return UNKNOWN_GROUP_CODE;        
+	}
+
+	public static String getGroupName(final short entityCode) {
+		return codeToString(getGroupCode(entityCode));
 	}
 }
