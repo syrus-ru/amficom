@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.1 2004/11/12 12:27:01 max Exp $
+ * $Id: LRUMapSaver.java,v 1.2 2004/11/17 12:56:25 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/12 12:27:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/17 12:56:25 $
  * @author $Author: max $
  * @module module_name
  */
@@ -42,7 +42,7 @@ public class LRUMapSaver {
         try {
             if (pathNameOfSaveDir == null)
             	pathNameOfSaveDir = ApplicationProperties.getString("lrumapsavedir", "SerializedLRUMaps");
-            if (saveDir == null || saveDir.exists()) {
+            if (saveDir == null || !saveDir.exists()) {
             	saveDir = new File(pathNameOfSaveDir);
                	saveDir.mkdir(); 
             }
@@ -83,10 +83,10 @@ public class LRUMapSaver {
         try {
             if (pathNameOfSaveDir == null)
             	pathNameOfSaveDir = ApplicationProperties.getString("lrumapsavedir", "SerializedLRUMaps");
-            if (!saveDir.isDirectory()) {
-            	Log.errorMessage("LRUMapSaver.load | Could not find save dir. Loading failed");
-                return null;
-            }            
+            if (saveDir == null || !saveDir.exists()) {
+                saveDir = new File(pathNameOfSaveDir);
+                saveDir.mkdir(); 
+            }           
             Log.debugMessage("Trying to load LRUMap with " + objectEntityName + " | LRUMapSaver.load ", Log.DEBUGLEVEL10);
             File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + "LRUMap.serialized");
             ObjectInputStream in = new ObjectInputStream(
