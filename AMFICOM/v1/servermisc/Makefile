@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2004/06/07 15:36:09 bass Exp $
+# $Id: Makefile,v 1.2 2004/06/07 15:39:25 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -64,7 +64,7 @@ $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
 .PHONY: export
-export: $(MODULE_NAME).jar
+export: $(LIBNAME)
 
 .PHONY: all
 all: .all
@@ -109,7 +109,7 @@ clean: sqljclean
 		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.all
 
-$(MODULE_NAME).jar: .all
+$(LIBNAME): .all
 	$(JAR) cf $@ \
 		-C $(CLASSDIR) com
 
