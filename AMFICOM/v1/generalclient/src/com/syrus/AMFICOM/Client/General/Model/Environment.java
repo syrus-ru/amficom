@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.20 2005/03/24 12:16:58 bob Exp $
+ * $Id: Environment.java,v 1.21 2005/03/31 14:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,7 +56,7 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.20 $, $Date: 2005/03/24 12:16:58 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/31 14:25:32 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -257,6 +257,21 @@ public final class Environment
 		UIManager.put(ResourceKeys.ICON_ADD_FILE , new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addfile.gif")));
 		UIManager.put(ResourceKeys.ICON_REMOVE_FILE , new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefile.gif")));
 		
+		UIManager.put(ResourceKeys.ICON_MINI_PATHMODE , new ImageIcon(Toolkit
+			 .getDefaultToolkit().getImage(
+			 "images/pathmode.gif")
+			 .getScaledInstance(15, 15,
+			 Image.SCALE_SMOOTH)));
+		
+		UIManager.put(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP, 
+		new ImageIcon(Toolkit
+			 .getDefaultToolkit().getImage(
+			 "images/testsetup.gif")
+			 .getScaledInstance(15, 15,
+			 Image.SCALE_SMOOTH)));
+		
+		UIManager.put(ResourceKeys.ICON_MINI_RESULT, new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/result.gif")
+										.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 		
 		UIManager.put(ResourceKeys.INSETS_NULL, new UIDefaults.LazyValue() {
 
