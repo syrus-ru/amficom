@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.35 2005/02/07 12:16:22 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.36 2005/02/08 09:28:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/02/07 12:16:22 $
+ * @version $Revision: 1.36 $, $Date: 2005/02/08 09:28:51 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -1111,8 +1111,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		delete(id, null);
 	}
 
-	public void delete(List ids) throws DatabaseException, CommunicationException {
-		if (ids == null || ids.isEmpty())
+	public void delete(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+		if (objects == null || objects.isEmpty())
 			return;
 		/**
 		 * TODO: use Trove collection instead java.util.Map
@@ -1122,7 +1122,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		/**
 		 * separate objects by kind of entity
 		 */
-		for (Iterator it = ids.iterator(); it.hasNext();) {
+		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
 			Identifier identifier = null;
 			if (object instanceof Identifier)
@@ -1131,7 +1131,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 				if (object instanceof Identified)
 					identifier = ((Identified) object).getId();
 				else
-					throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | Object "
+					throw new IllegalDataException("DatabaseMeasumentObjectLoader.delete | Object "
 							+ object.getClass().getName()
 							+ " isn't Identifier or Identified");
 			Short entityCode = new Short(identifier.getMajor());
@@ -1154,15 +1154,15 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	 * delete storable objects of one kind of entity
 	 * 
 	 * @param id
-	 * @param ids
+	 * @param objects
 	 * @throws DatabaseException
 	 */
-	private void delete(Identifier id, List ids) throws DatabaseException {
+	private void delete(Identifier id, List objects) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
-			if (ids.isEmpty())
+			if (objects.isEmpty())
 				return;
-			Object obj = ids.iterator().next();
+			Object obj = objects.iterator().next();
 			if (obj instanceof Identifier)
 				entityCode = ((Identifier) obj).getMajor();
 			else
@@ -1175,8 +1175,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 				if (id != null)
 					database.delete(id);
 				else
-					if (ids != null && !ids.isEmpty()) {
-						database.delete(ids);
+					if (objects != null && !objects.isEmpty()) {
+						database.delete(objects);
 					}
 			}
 		}

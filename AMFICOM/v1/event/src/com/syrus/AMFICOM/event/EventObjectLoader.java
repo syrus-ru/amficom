@@ -1,5 +1,5 @@
 /*
- * $Id: EventObjectLoader.java,v 1.2 2005/02/02 15:09:13 arseniy Exp $
+ * $Id: EventObjectLoader.java,v 1.3 2005/02/08 09:33:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,11 +13,12 @@ import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/02 15:09:13 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 09:33:06 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -74,5 +75,5 @@ public interface EventObjectLoader {
 
 	void delete(Identifier id) throws CommunicationException, DatabaseException;
 
-	void delete(List ids) throws CommunicationException, DatabaseException;
+	void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException;
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.2 2005/02/07 12:13:01 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.3 2005/02/08 09:33:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/07 12:13:01 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 09:33:06 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -233,8 +233,8 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		this.delete(id, null);
 	}
 
-	public void delete(List ids) throws CommunicationException, DatabaseException {
-		if (ids == null || ids.isEmpty())
+	public void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException {
+		if (objects == null || objects.isEmpty())
 			return;
 		/**
 		 * TODO: use Trove collection instead java.util.Map
@@ -244,7 +244,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		/**
 		 * separate objects by kind of entity
 		 */
-		for (Iterator it = ids.iterator(); it.hasNext();) {
+		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
 			Identifier identifier = null;
 			if (object instanceof Identifier)
@@ -253,7 +253,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 				if (object instanceof Identified)
 					identifier = ((Identified) object).getId();
 				else
-					throw new DatabaseException("DatabaseEventObjectLoader.delete | Object "
+					throw new IllegalDataException("DatabaseEventObjectLoader.delete | Object "
 							+ object.getClass().getName()
 							+ " isn't Identifier or Identified");
 			Short entityCode = new Short(identifier.getMajor());
@@ -272,12 +272,12 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		}
 	}
 
-	private void delete(Identifier id, List ids) throws DatabaseException {
+	private void delete(Identifier id, List objects) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
-			if (ids.isEmpty())
+			if (objects.isEmpty())
 				return;
-			Object obj = ids.iterator().next();
+			Object obj = objects.iterator().next();
 			if (obj instanceof Identifier)
 				entityCode = ((Identifier) obj).getMajor();
 			else
@@ -290,8 +290,8 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 				if (id != null)
 					database.delete(id);
 				else
-					if (ids != null && !ids.isEmpty()) {
-						database.delete(ids);
+					if (objects != null && !objects.isEmpty()) {
+						database.delete(objects);
 					}
 			}
 		}
