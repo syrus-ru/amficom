@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.16 2004/11/17 09:42:48 max Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.17 2004/11/17 11:12:26 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/11/17 09:42:48 $
+ * @version $Revision: 1.17 $, $Date: 2004/11/17 11:12:26 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -1287,7 +1287,8 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
                     Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | Unknown entity: "
                             + entityCode);                
             }
-            return (Set)loadedSo;
+                        
+            return new HashSet(loadedSo);
         } catch (DatabaseException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
