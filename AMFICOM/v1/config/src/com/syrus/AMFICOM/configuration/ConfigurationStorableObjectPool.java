@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.12 2004/09/29 06:14:24 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.13 2004/09/30 10:06:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/09/29 06:14:24 $
+ * @version $Revision: 1.13 $, $Date: 2004/09/30 10:06:34 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -623,6 +623,24 @@ public class ConfigurationStorableObjectPool {
 
 				}
 			}
+		}
+	}
+	
+	public static void cleanChangedStorableObject(Short entityCode){
+		LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		if (objectPool != null){
+			for(Iterator poolIt = objectPool.iterator();poolIt.hasNext();){
+				StorableObject storableObject = (StorableObject)poolIt.next();
+				if (storableObject.isChanged())
+					poolIt.remove();				
+			}
+		}
+	}
+	
+	public static void cleanChangedStorableObjects(){
+		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
+			Short entityCode = (Short) it.next();
+			cleanChangedStorableObject(entityCode);
 		}
 	}
 
