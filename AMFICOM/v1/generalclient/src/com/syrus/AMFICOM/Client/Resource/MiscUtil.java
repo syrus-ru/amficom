@@ -1,13 +1,22 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StringFieldCondition;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
 
 public class MiscUtil
 {
@@ -20,7 +29,7 @@ public class MiscUtil
 				StringFieldSort.STRINGSORT_BASE);
 
 		try {
-			List pTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			List pTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext(); ) {
 				CharacteristicType type = (CharacteristicType)it.next();
 				if (type.getCodename().equals(codename))

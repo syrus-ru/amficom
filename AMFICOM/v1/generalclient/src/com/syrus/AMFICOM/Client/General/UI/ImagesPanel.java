@@ -1,5 +1,29 @@
 package com.syrus.AMFICOM.Client.General.UI;
-import com.syrus.AMFICOM.configuration.DomainCondition;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.BevelBorder;
+
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -7,30 +31,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
+import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
-import java.util.List;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import javax.swing.JButton;
-import javax.swing.BorderFactory;
-import java.awt.Color;
-import javax.swing.border.BevelBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
-
-import javax.swing.ImageIcon;
-import java.awt.Image;
-
-import javax.swing.JFileChooser;
-import java.util.Enumeration;
-
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import javax.swing.JScrollPane;
-import java.util.Iterator;
 
 public class ImagesPanel extends JPanel
 		implements OperationListener
@@ -70,27 +73,27 @@ public class ImagesPanel extends JPanel
 
 	private void jbInit() throws Exception
 	{
-		this.setLayout(borderLayout1);
+		this.setLayout(this.borderLayout1);
 
-		flowLayout1.setAlignment(FlowLayout.LEFT);
-		imagesPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-		imagesPanel.setBackground(Color.white);
-		imagesPanel.setLayout(flowLayout1);
-		imagesPanel.setAutoscrolls(false);
-		imagesPanel.setMaximumSize(new Dimension(0, 1300));
-		imagesPanel.setMinimumSize(new Dimension(0, 100));
-		imagesPanel.setPreferredSize(new Dimension(0, 100));
+		this.flowLayout1.setAlignment(FlowLayout.LEFT);
+		this.imagesPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+		this.imagesPanel.setBackground(Color.white);
+		this.imagesPanel.setLayout(this.flowLayout1);
+		this.imagesPanel.setAutoscrolls(false);
+		this.imagesPanel.setMaximumSize(new Dimension(0, 1300));
+		this.imagesPanel.setMinimumSize(new Dimension(0, 100));
+		this.imagesPanel.setPreferredSize(new Dimension(0, 100));
 
-		jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		this.jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		this.jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 //		jScrollPane1.getViewport().setLayout();
-		jScrollPane1.getViewport().add(imagesPanel);
-		jScrollPane1.setWheelScrollingEnabled(true);
-		this.add(jScrollPane1, BorderLayout.CENTER);
+		this.jScrollPane1.getViewport().add(this.imagesPanel);
+		this.jScrollPane1.setWheelScrollingEnabled(true);
+		this.add(this.jScrollPane1, BorderLayout.CENTER);
 
-		chooseButton.setText("Выбрать");
-		chooseButton.setEnabled(false);
-		addButton.setText("Добавить");
+		this.chooseButton.setText("Выбрать");
+		this.chooseButton.setEnabled(false);
+		this.addButton.setText("Добавить");
 		cancelButton.setText("Отменить");
 		buttonsPanel.add(chooseButton, null);
 		buttonsPanel.add(addButton, null);
@@ -162,7 +165,7 @@ public class ImagesPanel extends JPanel
 		disp.notify(new OperationEvent(ir, 0, "selectir"));
 	}
 
-	private void addButton_actionPerformed(ActionEvent ae)
+	void addButton_actionPerformed(ActionEvent ae)
 	{
 		JFileChooser chooser = new JFileChooser();
 		  chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", "Picture"));

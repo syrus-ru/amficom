@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.configuration;
 import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.*;
+import com.syrus.AMFICOM.general.CharacteristicType;
 
 public final class CharacteristicTypeController implements ObjectResourceController
 {
@@ -61,8 +62,8 @@ public final class CharacteristicTypeController implements ObjectResourceControl
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value)
-	{
+	public void setValue(Object object, final String key, final Object value){
+		// TODO empty method !!!
 	}
 
 	public String getKey(final int index)
@@ -78,6 +79,7 @@ public final class CharacteristicTypeController implements ObjectResourceControl
 
 	public void setPropertyValue(String key, Object objectKey, Object objectValue)
 	{
+//		 TODO empty method !!!
 	}
 
 	public Class getPropertyClass(String key)

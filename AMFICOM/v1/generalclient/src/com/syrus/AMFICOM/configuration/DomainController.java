@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.*;
 
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.resource.*;
 
 public final class DomainController implements ObjectResourceController
