@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-public abstract interface ApplicationModelFactory 
+public interface ApplicationModelFactory 
 {
-	public abstract ApplicationModel create();
+	public ApplicationModel create();
 }
