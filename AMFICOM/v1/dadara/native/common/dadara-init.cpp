@@ -1,3 +1,4 @@
+#ifdef _WIN32
 #include <windows.h> // for APIENTRY #define
 #include "EventP.h"
 #include "prf.h"
@@ -9,7 +10,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH)
 	{
-		MF_init();
+//		MF_init();
 	}
     if (ul_reason_for_call == DLL_PROCESS_DETACH)
 	{
@@ -17,4 +18,4 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 	}
 	return TRUE;
 }
-
+#endif
