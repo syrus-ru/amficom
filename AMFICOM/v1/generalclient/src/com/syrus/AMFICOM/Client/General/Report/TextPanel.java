@@ -1,5 +1,5 @@
 /*
- * $Id: TextPanel.java,v 1.4 2004/09/27 07:47:07 bass Exp $
+ * $Id: TextPanel.java,v 1.5 2004/09/27 07:55:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,11 @@ import java.awt.Graphics;
 import javax.swing.*;
 
 /**
+ * Испольуется для реализации всех таблиц -
+ * элементов шаблона.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 07:47:07 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 07:55:50 $
  * @module generalclient_v1
  */
 public class TextPanel extends JScrollPane
