@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.1 2004/11/02 13:23:01 bob Exp $
+ * $Id: CMConfigurationReceive.java,v 1.2 2004/11/19 11:19:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
+import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
@@ -51,6 +53,8 @@ import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.UserDatabase;
+import com.syrus.AMFICOM.configuration.corba.AbstractLinkTypeSort;
+import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
@@ -84,7 +88,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/02 13:23:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/19 11:19:15 $
  * @author $Author: bob $
  * @module module
  */
@@ -765,7 +769,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
 	}
 
 	public void receiveLinkTypes(
-			LinkType_Transferable[] linkType_Transferables, boolean force,
+			AbstractLinkType_Transferable[] linkType_Transferables, boolean force,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("CMServerImpl.receiveLinkTypes | Received " + linkType_Transferables.length
@@ -774,9 +778,24 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < linkType_Transferables.length; i++) {
-                LinkType list = new LinkType(linkType_Transferables[i]);
-                ConfigurationStorableObjectPool.putStorableObject(list);
-                linkTypeList.add(list);
+            	AbstractLinkType abstractLinkType;
+                int sort = linkType_Transferables[i].discriminator().value();
+            	switch(sort){
+            		case AbstractLinkTypeSort._CABLE_LINK_TYPE:
+            			abstractLinkType = new LinkType(linkType_Transferables[i].cableLinkType());
+            			break;
+            		case AbstractLinkTypeSort._LINK_TYPE:
+            			abstractLinkType = new LinkType(linkType_Transferables[i].linkType());
+            			break;
+            		case AbstractLinkTypeSort._CABLE_THREAD_TYPE:
+            			abstractLinkType = new CableThreadType(linkType_Transferables[i].cableThreadType());
+            			break;
+            		default:
+            			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,  CompletionStatus.COMPLETED_NO,
+														 "Unsupported AbstractLinkTypeSort = " + sort);
+            	}
+                ConfigurationStorableObjectPool.putStorableObject(abstractLinkType);
+                linkTypeList.add(abstractLinkType);
             }
 
             LinkTypeDatabase linkTypeDatabase = (LinkTypeDatabase) ConfigurationDatabaseContext

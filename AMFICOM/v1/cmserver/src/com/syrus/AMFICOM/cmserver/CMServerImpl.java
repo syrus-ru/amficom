@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.67 2004/11/18 12:25:17 bob Exp $
+ * $Id: CMServerImpl.java,v 1.68 2004/11/19 11:19:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
+import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -36,6 +37,7 @@ import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.User;
+import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
@@ -120,7 +122,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2004/11/18 12:25:17 $
+ * @version $Revision: 1.68 $, $Date: 2004/11/19 11:19:15 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -1731,7 +1733,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-	public LinkType_Transferable[] transmitLinkTypes(
+	public AbstractLinkType_Transferable[] transmitLinkTypes(
 			Identifier_Transferable[] ids_Transferable,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
@@ -1751,11 +1753,11 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
 
-            LinkType_Transferable[] transferables = new LinkType_Transferable[list.size()];
+            AbstractLinkType_Transferable[] transferables = new AbstractLinkType_Transferable[list.size()];
             int i = 0;
             for (Iterator it = list.iterator(); it.hasNext(); i++) {
-                LinkType linkType = (LinkType) it.next();
-                transferables[i] = (LinkType_Transferable) linkType.getTransferable();
+                AbstractLinkType linkType = (AbstractLinkType) it.next();
+                transferables[i] = (AbstractLinkType_Transferable) linkType.getTransferable();
             }
             return transferables;
 
@@ -1780,7 +1782,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
 	}
 
-	public LinkType_Transferable[] transmitLinkTypesButIds(
+	public AbstractLinkType_Transferable[] transmitLinkTypesButIds(
 			Identifier_Transferable[] ids_Transferable,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
@@ -1800,11 +1802,11 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
 
-            LinkType_Transferable[] transferables = new LinkType_Transferable[list.size()];
+            AbstractLinkType_Transferable[] transferables = new AbstractLinkType_Transferable[list.size()];
             int i = 0;
             for (Iterator it = list.iterator(); it.hasNext(); i++) {
-                LinkType linkType = (LinkType) it.next();
-                transferables[i] = (LinkType_Transferable) linkType.getTransferable();
+            	AbstractLinkType linkType = (AbstractLinkType) it.next();
+                transferables[i] = (AbstractLinkType_Transferable) linkType.getTransferable();
             }
             return transferables;
 
