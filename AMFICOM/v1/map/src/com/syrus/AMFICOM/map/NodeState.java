@@ -1,12 +1,10 @@
 /**
- * $Id: NodeState.java,v 1.2 2005/01/17 15:05:24 bob Exp $
+ * $Id: NodeState.java,v 1.3 2005/01/17 15:05:41 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -21,10 +19,9 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/17 15:05:24 $
- * @module
+ * @version $Revision: 1.3 $, $Date: 2005/01/17 15:05:41 $
+ * @module map_v1
  * @author $Author: bob $
- * @see
  */
 public class NodeState extends MapElementState
 {
