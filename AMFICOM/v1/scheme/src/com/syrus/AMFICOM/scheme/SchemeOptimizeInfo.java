@@ -1,66 +1,56 @@
-/*
- * $Id: SchemeOptimizeInfo.java,v 1.4 2005/03/22 17:31:55 bass Exp $ Copyright ¿
- * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
+/*-
+ * $Id: SchemeOptimizeInfo.java,v 1.5 2005/03/24 16:58:52 bass Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode;
 import java.util.*;
 
 /**
+ * #05 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/22 17:31:55 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/24 16:58:52 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		implements Describable {
 	private static final long serialVersionUID = 3761127137155232822L;
 
-	protected Identifier schemeId = null;
-
-	protected Identifier schemeMonitoringSolutionId = null;
-
 	private String description;
 
-	protected double thisIterations = 0;
+	private int iterations;
 
-	protected double thisLenMargin = 0;
+	private double lenMargin;
 
-	protected double thisMutationDegree = 0;
+	private double mutationDegree;
 
-	protected double thisMutationRate = 0;
+	private double mutationRate;
 
 	private String name;
 
-	protected double thisNodesCutProb = 0;
+	private double nodesCutProb;
 
-	protected double thisNodesSpliceProb = 0;
+	private double nodesSpliceProb;
 
-	protected OptimizationMode thisOptimizationMode = null;
+	private int optimizationMode;
 
-	protected double thisPrice = 0;
+	private Identifier parentSchemeId;
 
-	protected String thisReflNames[] = null;
+	private double price;
 
-	protected double thisReflPrices[] = null;
+	private double rtuCreateProb;
 
-	protected double thisReflRanges[] = null;
+	private double rtuDeleteProb;
 
-	protected double thisRtuCreateProb = 0;
+	private double survivorRate;
 
-	protected double thisRtuDeleteProb = 0;
-
-	protected double thisSurvivorRate = 0;
-
-	protected String thisSwitchNames[] = null;
-
-	protected double thisSwitchNports[] = null;
-
-	protected double thisSwitchPrices[] = null;
-
-	protected double thisWavelength = 0;
+	private double waveLength;
 
 	/**
 	 * @param id
@@ -83,270 +73,6 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	/**
-	 * @see StorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	public double iterations() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newIterations
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#iterations(double)
-	 */
-	public void iterations(double newIterations) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double lenMargin() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newLenMargin
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#lenMargin(double)
-	 */
-	public void lenMargin(double newLenMargin) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double mutationDegree() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newMutationDegree
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#mutationDegree(double)
-	 */
-	public void mutationDegree(double newMutationDegree) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double mutationRate() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newMutationRate
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#mutationRate(double)
-	 */
-	public void mutationRate(double newMutationRate) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double nodesCutProb() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newNodesCutProb
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#nodesCutProb(double)
-	 */
-	public void nodesCutProb(double newNodesCutProb) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double nodesSpliceProb() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newNodesSpliceProb
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#nodesSpliceProb(double)
-	 */
-	public void nodesSpliceProb(double newNodesSpliceProb) {
-		throw new UnsupportedOperationException();
-	}
-
-	public OptimizationMode optimizationMode() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newOptimizationMode
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#optimizationMode(com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode)
-	 */
-	public void optimizationMode(OptimizationMode newOptimizationMode) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double price() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newPrice
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#price(double)
-	 */
-	public void price(double newPrice) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String[] reflNames() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newReflNames
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#reflNames(java.lang.String[])
-	 */
-	public void reflNames(String[] newReflNames) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double[] reflPrices() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newReflPrices
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#reflPrices(double[])
-	 */
-	public void reflPrices(double[] newReflPrices) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double[] reflRanges() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newReflRanges
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#reflRanges(double[])
-	 */
-	public void reflRanges(double[] newReflRanges) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double rtuCreateProb() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newRtuCreateProb
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#rtuCreateProb(double)
-	 */
-	public void rtuCreateProb(double newRtuCreateProb) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double rtuDeleteProb() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newRtuDeleteProb
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#rtuDeleteProb(double)
-	 */
-	public void rtuDeleteProb(double newRtuDeleteProb) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Scheme scheme() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newScheme
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#setParentScheme(com.syrus.AMFICOM.scheme.corba.Scheme)
-	 */
-	public void scheme(Scheme newScheme) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeMonitoringSolution schemeMonitoringSolution() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSchemeMonitoringSolution
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#setCurrentSchemeMonitoringSolution(com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution)
-	 */
-	public void schemeMonitoringSolution(
-			SchemeMonitoringSolution newSchemeMonitoringSolution) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double survivorRate() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSurvivorRate
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#survivorRate(double)
-	 */
-	public void survivorRate(double newSurvivorRate) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String[] switchNames() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSwitchNames
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#switchNames(java.lang.String[])
-	 */
-	public void switchNames(String[] newSwitchNames) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double[] switchNports() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSwitchNports
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#switchNports(double[])
-	 */
-	public void switchNports(double[] newSwitchNports) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double[] switchPrices() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSwitchPrices
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#switchPrices(double[])
-	 */
-	public void switchPrices(double[] newSwitchPrices) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double wavelength() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newWavelength
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#wavelength(double)
-	 */
-	public void wavelength(double newWavelength) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Object clone() {
-		final SchemeOptimizeInfo schemeOptimizeInfo = (SchemeOptimizeInfo) super
-				.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeOptimizeInfo;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
-	 */
-	public Object getTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
 	public static SchemeOptimizeInfo createInstance(
 			final Identifier creatorId)
 			throws CreateObjectException {
@@ -366,6 +92,133 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		}
 	}
 
+	public void addSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
+		throw new UnsupportedOperationException();
+	}
+
+	public Object clone() {
+		final SchemeOptimizeInfo schemeOptimizeInfo = (SchemeOptimizeInfo) super
+				.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeOptimizeInfo;
+	}
+
+	/**
+	 * @see StorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	public int getIterations() {
+		return this.iterations;
+	}
+
+	public double getLenMargin() {
+		return this.lenMargin;
+	}
+
+	public double getMutationDegree() {
+		return this.mutationDegree;
+	}
+
+	public double getMutationRate() {
+		return this.mutationRate;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
+
+	public double getNodesCutProb() {
+		return this.nodesCutProb;
+	}
+
+	public double getNodesSpliceProb() {
+		return this.nodesSpliceProb;
+	}
+
+	public int getOptimizationMode() {
+		return this.optimizationMode;
+	}
+
+	public Scheme getParentScheme() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double getPrice() {
+		return this.price;
+	}
+
+	public double getRtuCreateProb() {
+		return this.rtuCreateProb;
+	}
+
+	public double getRtuDeleteProb() {
+		return this.rtuDeleteProb;
+	}
+
+	public Collection getSchemeMonitoringSolutions() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeOptimizeInfoRtus() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeOptimizeInfoSwitches() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double getSurvivorRate() {
+		return this.survivorRate;
+	}
+
+	/**
+	 * @see TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double getWaveLength() {
+		return this.waveLength;
+	}
+
+	public void removeSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * @see Describable#setDescription(String)
 	 */
@@ -378,12 +231,32 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
-	/**
-	 * @see Describable#getDescription()
-	 */
-	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.description;
+	public void setIterations(final int iterations) {
+		if (this.iterations == iterations)
+			return;
+		this.iterations = iterations;
+		this.changed = true;
+	}
+
+	public void setLenMargin(final double lenMargin) {
+		if (this.lenMargin == lenMargin)
+			return;
+		this.lenMargin = lenMargin;
+		this.changed = true;
+	}
+
+	public void setMutationDegree(final double mutationDegree) {
+		if (this.mutationDegree == mutationDegree)
+			return;
+		this.mutationDegree = mutationDegree;
+		this.changed = true;
+	}
+
+	public void setMutationRate(final double mutationRate) {
+		if (this.mutationRate == mutationRate)
+			return;
+		this.mutationRate = mutationRate;
+		this.changed = true;
 	}
 
 	/**
@@ -398,11 +271,78 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
+	public void setNodesCutProb(final double nodesCutProb) {
+		if (this.nodesCutProb == nodesCutProb)
+			return;
+		this.nodesCutProb = nodesCutProb;
+		this.changed = true;
+	}
+
+	public void setNodesSpliceProb(final double nodesSpliceProb) {
+		if (this.nodesSpliceProb == nodesSpliceProb)
+			return;
+		this.nodesSpliceProb = nodesSpliceProb;
+		this.changed = true;
+	}
+
+	public void setOptimizationMode(final int optimizationMode) {
+		if (this.optimizationMode == optimizationMode)
+			return;
+		this.optimizationMode = optimizationMode;
+		this.changed = true;
+	}
+
 	/**
-	 * @see Namable#getName()
+	 * @param parentScheme
 	 */
-	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.name;
+	public void setParentScheme(final Scheme parentScheme) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setPrice(double price) {
+		if (this.price == price)
+			return;
+		this.price = price;
+		this.changed = true;
+	}
+
+	public void setRtuCreateProb(final double rtuCreateProb) {
+		if (this.rtuCreateProb == rtuCreateProb)
+			return;
+		this.rtuCreateProb = rtuCreateProb;
+		this.changed = true;
+	}
+
+	public void setRtuDeleteProb(final double rtuDeleteProb) {
+		if (this.rtuDeleteProb == rtuDeleteProb)
+			return;
+		this.rtuDeleteProb = rtuDeleteProb;
+		this.changed = true;
+	}
+
+	public void setSchemeMonitoringSolutions(final Collection schemeMonitoringSolutions) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemeOptimizeInfoRtus(final Collection schemeOptimizeInfoRtus) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemeOptimizeInfoSwitches(final Collection schemeOptimizeInfoSwitches) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSurvivorRate(final double survivorRate) {
+		if (this.survivorRate == survivorRate)
+			return;
+		this.survivorRate = survivorRate;
+		this.changed = true;
+	}
+
+	public void setWaveLength(double waveLength) {
+		if (this.waveLength == waveLength)
+			return;
+		this.waveLength = waveLength;
+		this.changed = true;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.7 2005/03/24 09:40:15 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.8 2005/03/24 16:58:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.*;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/24 09:40:15 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/24 16:58:52 $
  * @module scheme_v1
  */
 public final class SchemeProtoGroup extends AbstractCloneableStorableObject
@@ -81,7 +81,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		this.parentSchemeProtoGroupId
 				= parentSchemeProtoGroup == null
 				? Identifier.VOID_IDENTIFIER
-				: parentSchemeProtoGroup.getId();
+				: parentSchemeProtoGroup.id;
 
 		this.schemeProtoGroupDatabase = SchemeDatabaseContext.schemeProtoGroupDatabase;
 	}
@@ -178,8 +178,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	public void addSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
 		assert schemeProtoGroup != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert schemeProtoGroup != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
-		schemeProtoGroup.parentSchemeProtoGroupId = this.getId();
-		schemeProtoGroup.changed = true;
+		schemeProtoGroup.setParentSchemeProtoGroup(this);
 	}
 
 	/**
@@ -386,7 +385,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getSchemeProtoElements().contains(schemeProtoElement): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		SchemeStorableObjectPool.delete(schemeProtoElement.getId());
+		schemeProtoElement.setParentSchemeProtoGroup(null);
 	}
 
 	/**
@@ -485,7 +484,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		if (parentSchemeProtoGroup == null)
 			newParentSchemeProtoGroupId = Identifier.VOID_IDENTIFIER;
 		else
-			newParentSchemeProtoGroupId = parentSchemeProtoGroup.getId();
+			newParentSchemeProtoGroupId = parentSchemeProtoGroup.id;
 		if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId))
 			return;
 		this.parentSchemeProtoGroupId = newParentSchemeProtoGroupId;

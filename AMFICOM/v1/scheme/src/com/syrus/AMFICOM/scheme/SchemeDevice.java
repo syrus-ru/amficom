@@ -1,6 +1,9 @@
 /*
- * $Id: SchemeDevice.java,v 1.4 2005/03/22 11:29:22 bass Exp $ Copyright ¿ 2004
- * Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
+ * $Id: SchemeDevice.java,v 1.5 2005/03/24 16:58:52 bass Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
@@ -10,23 +13,25 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
+ * #07 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/22 11:29:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/24 16:58:52 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
 		implements Describable, Characterizable {
 	private static final long serialVersionUID = 3762529027398644793L;
 
-	protected Identifier characteristicIds[] = null;
-
-	protected Identifier schemeCablePortIds[] = null;
-
-	protected Identifier schemePortIds[] = null;
+	private Collection characteristics;
 
 	private String description;
 
 	private String name;
+
+	private Identifier parentSchemeElementId;
+	
+	private Identifier parentSchemeProtoElementId;
 
 	/**
 	 * @param id
@@ -50,108 +55,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
 	 */
-	public void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
-	 */
-	public Collection getCharacteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
-	 */
-	public void removeCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public SchemeCablePort[] getSchemeCablePortsAsArray() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Collection getSchemeCablePorts() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSchemeCablePorts
-	 * @see com.syrus.AMFICOM.scheme.SchemeDevice#schemeCablePorts(com.syrus.AMFICOM.scheme.corba.SchemeCablePort[])
-	 */
-	public void schemeCablePorts(SchemeCablePort[] newSchemeCablePorts) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public SchemePort[] getSchemePortsAsArray() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Collection getSchemePorts() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSchemePorts
-	 * @see com.syrus.AMFICOM.scheme.SchemeDevice#schemePorts(com.syrus.AMFICOM.scheme.corba.SchemePort[])
-	 */
-	public void schemePorts(SchemePort[] newSchemePorts) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
-	 */
-	public void setCharacteristics(Collection characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
-	 */
-	public void setCharacteristics0(Collection characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Object clone() {
-		final SchemeDevice schemeDevice = (SchemeDevice) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeDevice;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
-	 */
-	public Object getTransferable() {
+	public static SchemeDevice createInstance() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -174,9 +80,132 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 * @param characteristic
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
-	public static SchemeDevice createInstance() {
+	public void addCharacteristic(final Characteristic characteristic) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeCablePort(final SchemeCablePort schemeCablePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemePort(final SchemePort schemePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	public Object clone() {
+		final SchemeDevice schemeDevice = (SchemeDevice) super.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeDevice;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
+	 */
+	public Collection getCharacteristics() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEDEVICE;
+	}
+
+	/**
+	 * @see StorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
+
+	public SchemeElement getParentSchemeElement() {
+		throw new UnsupportedOperationException();
+	}
+
+	public SchemeProtoElement getParentSchemeProtoElement() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeCablePorts() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public SchemeCablePort[] getSchemeCablePortsAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemePorts() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public SchemePort[] getSchemePortsAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristic
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
+	 */
+	public void removeCharacteristic(final Characteristic characteristic) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeSchemeCablePort(final SchemeCablePort schemeCablePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeSchemePort(final SchemePort schemePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -193,14 +222,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Describable#getDescription()
-	 */
-	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.description;
-	}
-
-	/**
 	 * @see Namable#setName(String)
 	 */
 	public void setName(final String name) {
@@ -212,11 +233,33 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
+	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemeCablePorts(final Collection schemeCablePorts) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * @see Namable#getName()
+	 * @deprecated
 	 */
-	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.name;
+	public void setSchemeCablePortsAsArray(final SchemeCablePort schemeCablePorts[]) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemePorts(final Collection schemePorts) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public void setSchemePortsAsArray(final SchemePort schemePorts[]) {
+		throw new UnsupportedOperationException();
 	}
 }

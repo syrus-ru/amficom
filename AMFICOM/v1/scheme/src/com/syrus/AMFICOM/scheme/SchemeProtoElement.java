@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.9 2005/03/24 09:40:15 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.10 2005/03/24 16:58:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import java.util.*;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/24 09:40:15 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/24 16:58:52 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -123,7 +123,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.parentSchemeProtoElementId
 				= parentSchemeProtoElement == null
 				? Identifier.VOID_IDENTIFIER
-				: parentSchemeProtoElement.getId();
+				: parentSchemeProtoElement.id;
 
 		this.characteristics = new ArrayList();
 
@@ -308,6 +308,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
+		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeProtoElement != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 		throw new UnsupportedOperationException();
 	}
 
@@ -378,7 +380,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			assert this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
 			dependencies.add(this.parentSchemeProtoGroupId);
 		} else {
-			assert !this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.HEADLESS_CHILD_PROHIBITED;
+			assert !this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			dependencies.add(this.parentSchemeProtoElementId);
 		}
 		return Collections.unmodifiableList(dependencies);
@@ -455,7 +457,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		final SchemeProtoGroup parentSchemeProtoGroup = getParentSchemeProtoGroup();
 		if (parentSchemeProtoGroup == null) {
 			if (getParentSchemeProtoElement() == null)
-				throw new UnsupportedOperationException(ErrorMessages.HEADLESS_CHILD_PROHIBITED);
+				throw new UnsupportedOperationException(ErrorMessages.PARENTLESS_CHILD_PROHIBITED);
 			throw new UnsupportedOperationException(ErrorMessages.OUT_OF_LIBRARY_HIERARCHY);
 		}
 		return parentSchemeProtoGroup;
@@ -697,21 +699,96 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	public void setParent(final Library library) {
 		if (getParentSchemeProtoGroup() == null) {
 			if (getParentSchemeProtoElement() == null)
-				throw new UnsupportedOperationException(ErrorMessages.HEADLESS_CHILD_PROHIBITED);
+				throw new UnsupportedOperationException(ErrorMessages.PARENTLESS_CHILD_PROHIBITED);
 			throw new UnsupportedOperationException(ErrorMessages.OUT_OF_LIBRARY_HIERARCHY);
 		}
 		setParentSchemeProtoGroup((SchemeProtoGroup) library);
 	}
 
+	/**
+	 * If this <code>SchemeProtoElement</code> is initially inside another
+	 * <code>SchemeProtoElement</code>, and
+	 * <code>parentSchemeProtoElement</code> is <code>null</code>, then
+	 * this <code>SchemeProtoElement</code> will delete itself from the
+	 * pool. Alternatively, if this <code>SchemeProtoElement</code> is
+	 * initially inside a <code>SchemeProtoGroup</code>, and
+	 * <code>parentSchemeProtoElement</code> is <code>null</code>, then
+	 * no action is taken.
+	 *
+	 * @param parentSchemeProtoElement
+	 */
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeProtoGroupId != null
+				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert parentSchemeProtoElement != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		Identifier newParentSchemeProtoElementId;
+		if (this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER)) {
+			/*
+			 * Moving from an element to another element.
+			 */
+			assert !this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			if (parentSchemeProtoElement == null) {
+				SchemeStorableObjectPool.delete(this.id);
+				return;
+			}
+			newParentSchemeProtoElementId = parentSchemeProtoElement.id;
+			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId))
+				return;
+		} else {
+			/*
+			 * Moving from a group to an element.
+			 */
+			assert this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			if (parentSchemeProtoElement == null)
+				return;
+			newParentSchemeProtoElementId = parentSchemeProtoElement.id;
+			this.parentSchemeProtoGroupId = Identifier.VOID_IDENTIFIER;
+		}
+		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;
+		this.changed = true;
 	}
 
 	/**
+	 * If this <code>SchemeProtoElement</code> is initially inside another
+	 * <code>SchemeProtoElement</code>, and
+	 * <code>parentSchemeProtoGroup</code> is <code>null</code>, then
+	 * no action is taken. Alternatively, if this
+	 * <code>SchemeProtoElement</code> is initially inside a
+	 * <code>SchemeProtoGroup</code>, and
+	 * <code>parentSchemeProtoGroup</code> is <code>null</code>, then
+	 * this <code>SchemeProtoElement</code> will delete itself from the
+	 * pool.
+	 * 
 	 * @param parentSchemeProtoGroup
 	 */
 	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeProtoGroupId != null
+				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		Identifier newParentSchemeProtoGroupId;
+		if (this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER)) {
+			/*
+			 * Moving from a group to another group.
+			 */
+			assert !this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
+			if (parentSchemeProtoGroup == null) {
+				SchemeStorableObjectPool.delete(this.id);
+				return;
+			}
+			newParentSchemeProtoGroupId = parentSchemeProtoGroup.getId();
+			if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId))
+				return;
+		} else {
+			/*
+			 * Moving from an element to a group.
+			 */
+			assert this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			if (parentSchemeProtoGroup == null)
+				return;
+			newParentSchemeProtoGroupId = parentSchemeProtoGroup.getId();
+			this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
+		}
+		this.parentSchemeProtoGroupId = newParentSchemeProtoGroupId;
+		this.changed = true;
 	}
 
 	/**

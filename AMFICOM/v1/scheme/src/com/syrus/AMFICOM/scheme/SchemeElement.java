@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.6 2005/03/23 14:55:35 bass Exp $
+ * $Id: SchemeElement.java,v 1.7 2005/03/24 16:58:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.*;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/23 14:55:35 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/24 16:58:52 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -101,7 +101,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public void addInnerScheme(final Scheme innerScheme) {
+	public void addScheme(final Scheme innerScheme) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -164,14 +164,19 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public Scheme getInnerScheme() {
-		final Iterator innerSchemeIterator = getInnerSchemes().iterator();
-		if (innerSchemeIterator.hasNext())
-			return (Scheme) innerSchemeIterator.next();
+	/**
+	 * @return <em>the first</em> <code>Scheme</code> inner to this
+	 *         <code>SchemeElement</code>, or <code>null</code> if
+	 *         none.
+	 */
+	public Scheme getScheme() {
+		final Iterator schemeIterator = getSchemes().iterator();
+		if (schemeIterator.hasNext())
+			return (Scheme) schemeIterator.next();
 		return null;
 	}
 
-	public Collection getInnerSchemes() {
+	public Collection getSchemes() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -259,7 +264,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public void removeInnerScheme(final Scheme innerScheme) {
+	public void removeScheme(final Scheme scheme) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -289,13 +294,13 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public void setInnerScheme(final Scheme innerScheme) {
-		setInnerSchemes(innerScheme == null 
+	public void setScheme(final Scheme scheme) {
+		setSchemes(scheme == null 
 				? Collections.EMPTY_LIST
-				: Collections.singletonList(innerScheme));
+				: Collections.singletonList(scheme));
 	}
 
-	public void setInnerSchemes(final Collection innerSchemes) {
+	public void setSchemes(final Collection schemes) {
 		/**
 		 * @todo Check for circualr deps.
 		 */
@@ -346,6 +351,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCellImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	public SchemeElement getParentSchemeElement() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
 		throw new UnsupportedOperationException();
 	}
 }
