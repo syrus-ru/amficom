@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.10 2004/09/23 10:14:44 bob Exp $
+ * $Id: CMServerTestCase.java,v 1.11 2004/09/23 11:27:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/09/23 10:14:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/09/23 11:27:20 $
+ * @author $Author: max $
  * @module module
  */
 public class CMServerTestCase extends TestCase {
@@ -133,7 +133,7 @@ public class CMServerTestCase extends TestCase {
 	static void oneTimeTearDown() {
 	}
 
-	public void _testTransmitDomainX() throws AMFICOMRemoteException, CreateObjectException {
+	public void testTransmitDomainX() throws AMFICOMRemoteException, CreateObjectException {
 
 		//      Checking method transmitDomains(null , acc)
 		System.out.println("Checking method transmitDomainX");
@@ -142,7 +142,7 @@ public class CMServerTestCase extends TestCase {
 		Domain_Transferable[] domain_Transferables = server.transmitDomains(identifier_Transferables,
 											accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
-		System.out.println("1. transmit " + domain_Transferables.length + " identifier_Transferabl(es) for "
+		System.out.println("1. transmit " + domain_Transferables.length + " identifier_Transferable(s) for "
 				+ (time1 - time0) + " ms");
 
 		//      Checking method transmitDomain(Id_Trans , acc)
@@ -151,7 +151,7 @@ public class CMServerTestCase extends TestCase {
 		long time2 = System.currentTimeMillis();
 		Domain_Transferable domain_Transferable2 = server.transmitDomain(id_Tf, accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
-		System.out.println("2. transmit " + "Domain_Transferables" + "  for " + (time3 - time2) + " ms");
+		System.out.println("2. transmit " + "1 domain_Transferable" + "  for " + (time3 - time2) + " ms");
 		//      Checking method transmitDomain(Id_Trans[] , acc)
 		Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
 		identifier_Transferables2[0] = id_Tf;
@@ -160,11 +160,11 @@ public class CMServerTestCase extends TestCase {
 		Domain_Transferable[] domain_Transferables3 = server.transmitDomains(identifier_Transferables2,
 											accessIdentifier_Transferable);
 		long time5 = System.currentTimeMillis();
-		System.out.println("3. transmit " + identifier_Transferables2.length + "  for " + (time5 - time4)
+		System.out.println("3. transmit " + identifier_Transferables2.length + " identifier_Transferables  for " + (time5 - time4)
 				+ " ms");
 	}
 
-	public void _testTransmitAnalysisTypeX() throws AMFICOMRemoteException {
+	public void testTransmitAnalysisTypeX() throws AMFICOMRemoteException {
 		//      Checking method transmitAnalysisTypes(null , acc)
 		System.out.println("Checking method transmitAnalysisTypeX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -174,7 +174,7 @@ public class CMServerTestCase extends TestCase {
 										accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
 		System.out.println("1. transmit " + analysisType_Transferables.length
-				+ " identifier_Transferabl(es) for " + (time1 - time0) + " ms");
+				+ " identifier_Transferable(s) for " + (time1 - time0) + " ms");
 
 		//      Checking method transmitAnalysisType(Id_Trans , acc)
 		AnalysisType_Transferable analysisType_Transferable = analysisType_Transferables[0];
@@ -183,7 +183,7 @@ public class CMServerTestCase extends TestCase {
 		AnalysisType_Transferable analysisType_Transferable2 = server
 				.transmitAnalysisType(id_Tf, accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
-		System.out.println("2. transmit " + "AnalysisType_Transferables" + "  for " + (time3 - time2) + " ms");
+		System.out.println("2. transmit " + "1 analysisType_Transferable" + "  for " + (time3 - time2) + " ms");
 		//      Checking method transmitAnalysisType(Id_Trans[] , acc)
 		Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
 		identifier_Transferables2[0] = id_Tf;
@@ -192,11 +192,11 @@ public class CMServerTestCase extends TestCase {
 		AnalysisType_Transferable[] analysisType_Transferables3 = server
 				.transmitAnalysisTypes(identifier_Transferables2, accessIdentifier_Transferable);
 		long time5 = System.currentTimeMillis();
-		System.out.println("3. transmit " + identifier_Transferables2.length + "  for " + (time5 - time4)
+		System.out.println("3. transmit " + identifier_Transferables2.length + " analysisType_Transferables for " + (time5 - time4)
 				+ " ms");
 	}
 
-	public void _testTransmitEvaluationTypeX() throws AMFICOMRemoteException {
+	public void testTransmitEvaluationTypeX() throws AMFICOMRemoteException {
 		//      Checking method transmitEvaluationTypes(null , acc)
 		System.out.println("Checking method transmitEvaluationTypeX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -205,7 +205,7 @@ public class CMServerTestCase extends TestCase {
 				.transmitEvaluationTypes(identifier_Transferables, accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
 		System.out.println("1. transmit " + evaluationType_Transferables.length
-				+ " identifier_Transferabl(es) for " + (time1 - time0) + " ms");
+				+ " identifier_Transferable(s) for " + (time1 - time0) + " ms");
 
 		//      Checking method transmitEvaluationType(Id_Trans , acc)
 		EvaluationType_Transferable EvaluationType_Transferable = evaluationType_Transferables[0];
@@ -215,7 +215,7 @@ public class CMServerTestCase extends TestCase {
 				.transmitEvaluationType(id_Tf, accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
 		System.out
-				.println("2. transmit " + "EvaluationType_Transferables" + "  for " + (time3 - time2)
+				.println("2. transmit " + "1 evaluationType_Transferable" + "  for " + (time3 - time2)
 						+ " ms");
 		//      Checking method transmitEvaluationType(Id_Trans[] , acc)
 		Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
@@ -225,11 +225,11 @@ public class CMServerTestCase extends TestCase {
 		EvaluationType_Transferable[] evaluationType_Transferables3 = server
 				.transmitEvaluationTypes(identifier_Transferables2, accessIdentifier_Transferable);
 		long time5 = System.currentTimeMillis();
-		System.out.println("3. transmit " + identifier_Transferables2.length + "  for " + (time5 - time4)
+		System.out.println("3. transmit " + identifier_Transferables2.length + " evaluationType_Transferables  for " + (time5 - time4)
 				+ " ms");
 	}
 
-	public void _testTransmitMeasurementTypeX() throws AMFICOMRemoteException {
+	public void testTransmitMeasurementTypeX() throws AMFICOMRemoteException {
 		//      Checking method transmitMeasurementTypes(null , acc)
 		System.out.println("Checking method transmitMeasurementTypeX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -238,7 +238,7 @@ public class CMServerTestCase extends TestCase {
 				.transmitMeasurementTypes(identifier_Transferables, accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
 		System.out.println("1. transmit " + measurementType_Transferables.length
-				+ " identifier_Transferabl(es) for " + (time1 - time0) + " ms");
+				+ " identifier_Transferable(s) for " + (time1 - time0) + " ms");
 
 		//      Checking method transmitMeasurementType(Id_Trans , acc)
 		MeasurementType_Transferable MeasurementType_Transferable = measurementType_Transferables[0];
@@ -247,7 +247,7 @@ public class CMServerTestCase extends TestCase {
 		MeasurementType_Transferable measurementType_Transferable2 = server
 				.transmitMeasurementType(id_Tf, accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
-		System.out.println("2. transmit " + "MeasurementType_Transferables" + "  for " + (time3 - time2)
+		System.out.println("2. transmit " + "1 measurementType_Transferable" + "  for " + (time3 - time2)
 				+ " ms");
 		//      Checking method transmitMeasurementType(Id_Trans[] , acc)
 		Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
@@ -257,7 +257,7 @@ public class CMServerTestCase extends TestCase {
 		MeasurementType_Transferable[] measurementType_Transferables3 = server
 				.transmitMeasurementTypes(identifier_Transferables2, accessIdentifier_Transferable);
 		long time5 = System.currentTimeMillis();
-		System.out.println("3. transmit " + identifier_Transferables2.length + "  for " + (time5 - time4)
+		System.out.println("3. transmit " + identifier_Transferables2.length + " measurementType_Transferables  for " + (time5 - time4)
 				+ " ms");
 	}
 
@@ -270,7 +270,7 @@ public class CMServerTestCase extends TestCase {
 				.transmitMeasurements(identifier_Transferables, accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
 		System.out.println("1. transmit " + measurement_Transferables.length
-				+ " identifier_Transferabl(es) for " + (time1 - time0) + " ms");
+				+ " identifier_Transferable(s) for " + (time1 - time0) + " ms");
 
 		//      Checking method transmitMeasurement(Id_Trans , acc)
 		Measurement_Transferable measurement_Transferable = measurement_Transferables[0];
@@ -279,7 +279,7 @@ public class CMServerTestCase extends TestCase {
 		Measurement_Transferable measurement_Transferable2 = server
 				.transmitMeasurement(id_Tf, accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
-		System.out.println("2. transmit " + "Measurement_Transferables" + "  for " + (time3 - time2) + " ms");
+		System.out.println("2. transmit " + "1 measurement_Transferable" + "  for " + (time3 - time2) + " ms");
 		//      Checking method transmitMeasurement(Id_Trans[] , acc)
 		Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
 		identifier_Transferables2[0] = id_Tf;
@@ -288,11 +288,11 @@ public class CMServerTestCase extends TestCase {
 		Measurement_Transferable[] measurement_Transferables3 = server
 				.transmitMeasurements(identifier_Transferables2, accessIdentifier_Transferable);
 		long time5 = System.currentTimeMillis();
-		System.out.println("3. transmit " + identifier_Transferables2.length + "  for " + (time5 - time4)
+		System.out.println("3. transmit " + identifier_Transferables2.length + " measurement_Transferables  for " + (time5 - time4)
 				+ " ms");
 	}
 
-	public void _testTransmitMonitoredElementX() throws AMFICOMRemoteException {
+	public void testTransmitMonitoredElementX() throws AMFICOMRemoteException {
 		//      Checking method transmitMonitoredElements(null , acc)
 		System.out.println("Checking method transmitMonitoredElementX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -301,7 +301,7 @@ public class CMServerTestCase extends TestCase {
 				.transmitMonitoredElements(identifier_Transferables, accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
 		System.out.println("1. transmit " + monitoredElement_Transferables.length
-				+ " identifier_Transferabl(es) for " + (time1 - time0) + " ms");
+				+ " identifier_Transferable(s) for " + (time1 - time0) + " ms");
 
 		//      Checking method transmitMonitoredElement(Id_Trans , acc)
 		MonitoredElement_Transferable monitoredElement_Transferable = monitoredElement_Transferables[0];
@@ -310,7 +310,7 @@ public class CMServerTestCase extends TestCase {
 		MonitoredElement_Transferable monitoredElement_Transferable2 = server
 				.transmitMonitoredElement(id_Tf, accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
-		System.out.println("2. transmit " + "MonitoredElement_Transferables" + "  for " + (time3 - time2)
+		System.out.println("2. transmit " + "1 monitoredElement_Transferable" + "  for " + (time3 - time2)
 				+ " ms");
 		//      Checking method transmitMonitoredElement(Id_Trans[] , acc)
 		Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
@@ -320,11 +320,11 @@ public class CMServerTestCase extends TestCase {
 		MonitoredElement_Transferable[] monitoredElement_Transferables3 = server
 				.transmitMonitoredElements(identifier_Transferables2, accessIdentifier_Transferable);
 		long time5 = System.currentTimeMillis();
-		System.out.println("3. transmit " + identifier_Transferables2.length + "  for " + (time5 - time4)
+		System.out.println("3. transmit " + identifier_Transferables2.length + " monitoredElement_Transferables  for " + (time5 - time4)
 				+ " ms");
 	}
 
-	public void _testTransmitParameterTypeX() throws AMFICOMRemoteException {
+	public void testTransmitParameterTypeX() throws AMFICOMRemoteException {
 		//      Checking method transmitParameterTypes(null , acc)
 		System.out.println("Checking method transmitParameterTypeX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -333,7 +333,7 @@ public class CMServerTestCase extends TestCase {
 				.transmitParameterTypes(identifier_Transferables, accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
 		System.out.println("1. transmit " + parameterType_Transferables.length
-				+ " identifier_Transferabl(es) for " + (time1 - time0) + " ms");
+				+ " identifier_Transferable(s) for " + (time1 - time0) + " ms");
 
 		//      Checking method transmitParameterType(Id_Trans , acc)
 		ParameterType_Transferable parameterType_Transferable = parameterType_Transferables[0];
@@ -342,7 +342,7 @@ public class CMServerTestCase extends TestCase {
 		ParameterType_Transferable ParameterType_Transferable2 = server
 				.transmitParameterType(id_Tf, accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
-		System.out.println("2. transmit " + "ParameterType_Transferables" + "  for " + (time3 - time2) + " ms");
+		System.out.println("2. transmit " + "1 parameterType_Transferable" + "  for " + (time3 - time2) + " ms");
 		//      Checking method transmitParameterType(Id_Trans[] , acc)
 		Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
 		identifier_Transferables2[0] = id_Tf;
@@ -351,11 +351,11 @@ public class CMServerTestCase extends TestCase {
 		ParameterType_Transferable[] parameterType_Transferables3 = server
 				.transmitParameterTypes(identifier_Transferables2, accessIdentifier_Transferable);
 		long time5 = System.currentTimeMillis();
-		System.out.println("3. transmit " + identifier_Transferables2.length + "  for " + (time5 - time4)
+		System.out.println("3. transmit " + identifier_Transferables2.length + " parameterType_Transferables  for " + (time5 - time4)
 				+ " ms");
 	}
 
-	public void _testTransmitResultX() throws AMFICOMRemoteException {
+	public void testTransmitResultX() throws AMFICOMRemoteException {
 		//      Checking method transmitResults(null , acc)
 		System.out.println("Checking method transmitResultX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -363,7 +363,7 @@ public class CMServerTestCase extends TestCase {
 		Result_Transferable[] result_Transferables = server.transmitResults(identifier_Transferables,
 											accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
-		System.out.println("1. transmit " + result_Transferables.length + " identifier_Transferabl(es) for "
+		System.out.println("1. transmit " + result_Transferables.length + " identifier_Transferable(s) for "
 				+ (time1 - time0) + " ms");
 
 		//      Checking method transmitResult(Id_Trans , acc)
@@ -375,7 +375,7 @@ public class CMServerTestCase extends TestCase {
 					.transmitResult(id_Tf, accessIdentifier_Transferable);
 			long time3 = System.currentTimeMillis();
 			System.out
-					.println("2. transmit " + "Result_Transferables" + "  for " + (time3 - time2)
+					.println("2. transmit " + "1 result_Transferable" + "  for " + (time3 - time2)
 							+ " ms");
 			//      Checking method transmitResult(Id_Trans[] , acc)
 			Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
@@ -385,12 +385,12 @@ public class CMServerTestCase extends TestCase {
 			Result_Transferable[] result_Transferables3 = server
 					.transmitResults(identifier_Transferables2, accessIdentifier_Transferable);
 			long time5 = System.currentTimeMillis();
-			System.out.println("3. transmit " + identifier_Transferables2.length + "  for "
+			System.out.println("3. transmit " + identifier_Transferables2.length + " result_Transferables  for "
 					+ (time5 - time4) + " ms");
 		}
 	}
 
-	public void _testTransmitTestX() throws AMFICOMRemoteException {
+	public void testTransmitTestX() throws AMFICOMRemoteException {
 		//      Checking method transmitTests(null , acc)
 		System.out.println("Checking method transmitTestX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -398,7 +398,7 @@ public class CMServerTestCase extends TestCase {
 		Test_Transferable[] Test_Transferables = server.transmitTests(identifier_Transferables,
 										accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
-		System.out.println("1. transmit " + Test_Transferables.length + " identifier_Transferabl(es) for "
+		System.out.println("1. transmit " + Test_Transferables.length + " identifier_Transferable(s) for "
 				+ (time1 - time0) + " ms");
 
 		//      Checking method transmitTest(Id_Trans , acc)
@@ -407,7 +407,7 @@ public class CMServerTestCase extends TestCase {
 		long time2 = System.currentTimeMillis();
 		Test_Transferable test_Transferable2 = server.transmitTest(id_Tf, accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
-		System.out.println("2. transmit " + "Test_Transferables" + "  for " + (time3 - time2) + " ms");
+		System.out.println("2. transmit " + "1 test_Transferable" + "  for " + (time3 - time2) + " ms");
 		//      Checking method transmitTest(Id_Trans[] , acc)
 		Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
 		identifier_Transferables2[0] = id_Tf;
@@ -416,11 +416,11 @@ public class CMServerTestCase extends TestCase {
 		Test_Transferable[] test_Transferables3 = server.transmitTests(identifier_Transferables2,
 										accessIdentifier_Transferable);
 		long time5 = System.currentTimeMillis();
-		System.out.println("3. transmit " + identifier_Transferables2.length + "  for " + (time5 - time4)
+		System.out.println("3. transmit " + identifier_Transferables2.length + " test_Transferables  for " + (time5 - time4)
 				+ " ms");
 	}
 
-	public void _testTransmitSetX() throws AMFICOMRemoteException {
+	public void testTransmitSetX() throws AMFICOMRemoteException {
 		//      Checking method transmitSets(null , acc)
 		System.out.println("Checking method transmitSetX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
@@ -428,7 +428,7 @@ public class CMServerTestCase extends TestCase {
 		Set_Transferable[] set_Transferables = server.transmitSets(identifier_Transferables,
 										accessIdentifier_Transferable);
 		long time1 = System.currentTimeMillis();
-		System.out.println("1. transmit " + set_Transferables.length + " identifier_Transferabl(es) for "
+		System.out.println("1. transmit " + set_Transferables.length + " identifier_Transferable(s) for "
 				+ (time1 - time0) + " ms");
 
 		//      Checking method transmitSet(Id_Trans , acc)
@@ -437,7 +437,7 @@ public class CMServerTestCase extends TestCase {
 		long time2 = System.currentTimeMillis();
 		Set_Transferable set_Transferable2 = server.transmitSet(id_Tf, accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
-		System.out.println("2. transmit " + "Set_Transferables" + "  for " + (time3 - time2) + " ms");
+		System.out.println("2. transmit " + "1 set_Transferable" + "  for " + (time3 - time2) + " ms");
 		//      Checking method transmitSet(Id_Trans[] , acc)
 		Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
 		identifier_Transferables2[0] = id_Tf;
@@ -446,11 +446,11 @@ public class CMServerTestCase extends TestCase {
 		Set_Transferable[] set_Transferables3 = server.transmitSets(identifier_Transferables2,
 										accessIdentifier_Transferable);
 		long time5 = System.currentTimeMillis();
-		System.out.println("3. transmit " + identifier_Transferables2.length + "  for " + (time5 - time4)
+		System.out.println("3. transmit " + identifier_Transferables2.length + " set_Transferables  for " + (time5 - time4)
 				+ " ms");
 	}
 
-	public void _testTransmitMeasurementSetup() throws AMFICOMRemoteException {
+	public void testTransmitMeasurementSetup() throws AMFICOMRemoteException {
 
 		long time0 = System.currentTimeMillis();
 		MeasurementSetup_Transferable[] measurementSetup_Transferables = server
@@ -470,7 +470,7 @@ public class CMServerTestCase extends TestCase {
 				+ " ms");
 	}
 
-	public void _testTransmitTestsAndMeasurements() throws AMFICOMRemoteException, CreateObjectException {
+	public void testTransmitTestsAndMeasurements() throws AMFICOMRemoteException, CreateObjectException {
 
 		long time0 = System.currentTimeMillis();
 		// 2 month ago

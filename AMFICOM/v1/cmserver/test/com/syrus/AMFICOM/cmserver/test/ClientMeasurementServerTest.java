@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServerTest.java,v 1.6 2004/09/23 10:14:44 bob Exp $
+ * $Id: ClientMeasurementServerTest.java,v 1.7 2004/09/23 11:27:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Application;
@@ -24,8 +25,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/09/23 10:14:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2004/09/23 11:27:20 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 public class ClientMeasurementServerTest {
@@ -61,7 +62,9 @@ public class ClientMeasurementServerTest {
 			this.accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
 			this.accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 
-			testTransmitMeasurementX();
+            
+            
+            testTransmitMeasurementX();
 			testTransmitMeasurementX();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -70,33 +73,14 @@ public class ClientMeasurementServerTest {
 
 	public void testTransmitMeasurementX() throws AMFICOMRemoteException {
 		//      Checking method transmitMeasurements(null , acc)
-		System.out.println("Checking method transmitMeasurementX");
-		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
-		long time0 = System.currentTimeMillis();
-		Measurement_Transferable[] measurement_Transferables = this.server
-				.transmitMeasurements(identifier_Transferables, this.accessIdentifier_Transferable);
-		long time1 = System.currentTimeMillis();
-		System.out.println("1. transmit " + measurement_Transferables.length
-				+ " identifier_Transferabl(es) for " + (time1 - time0) + " ms");
-
-		//      Checking method transmitMeasurement(Id_Trans , acc)
-		Measurement_Transferable measurement_Transferable = measurement_Transferables[0];
-		Identifier_Transferable id_Tf = measurement_Transferable.id;
-		long time2 = System.currentTimeMillis();
-		Measurement_Transferable measurement_Transferable2 = this.server
-				.transmitMeasurement(id_Tf, this.accessIdentifier_Transferable);
-		long time3 = System.currentTimeMillis();
-		System.out.println("2. transmit  measurement_Transferable2  for " + (time3 - time2) + " ms");
-		//      Checking method transmitMeasurement(Id_Trans[] , acc)
-		Identifier_Transferable[] identifier_Transferables2 = new Identifier_Transferable[2];
-		identifier_Transferables2[0] = id_Tf;
-		identifier_Transferables2[1] = id_Tf;
-		long time4 = System.currentTimeMillis();
-		Measurement_Transferable[] measurement_Transferables3 = this.server
-				.transmitMeasurements(identifier_Transferables2, this.accessIdentifier_Transferable);
-		long time5 = System.currentTimeMillis();
-		System.out.println("3. transmit " + identifier_Transferables2.length + "  for " + (time5 - time4)
-				+ " ms");
+        System.out.println("Checking method transmitMeasurementTypeX");
+        Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
+        long time0 = System.currentTimeMillis();
+        MeasurementType_Transferable[] measurementType_Transferables = server
+                .transmitMeasurementTypes(identifier_Transferables, accessIdentifier_Transferable);
+        long time1 = System.currentTimeMillis();
+        System.out.println("1. transmit " + measurementType_Transferables.length
+                + " identifier_Transferabl(es) for " + (time1 - time0) + " ms");
 	}
 
 	public static void main(String[] args) {

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.18 2004/09/23 10:14:44 bob Exp $
+ * $Id: CMServerImpl.java,v 1.19 2004/09/23 11:27:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -73,8 +73,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/09/23 10:14:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2004/09/23 11:27:20 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 public class CMServerImpl implements CMServerOperations {
@@ -839,7 +839,7 @@ public class CMServerImpl implements CMServerOperations {
 										domain);
 
 				MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext
-						.getEvaluationTypeDatabase();
+						.getMeasurementTypeDatabase();
 
 				List listFromDatabase = database.retrieveButIds(list);
 
