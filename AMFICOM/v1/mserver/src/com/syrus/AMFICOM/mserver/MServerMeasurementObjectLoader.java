@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.12 2004/10/25 10:04:25 bob Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.13 2004/11/17 09:23:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,8 +62,8 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/10/25 10:04:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2004/11/17 09:23:16 $
+ * @author $Author: max $
  * @module mserver_v1
  */
 
@@ -488,6 +488,11 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
             throw new DatabaseException("MServerMeasumentObjectLoader.loadTests | Illegal Storable Object: " + e.getMessage());
         }
         return list;
+    }
+    
+    public java.util.Set refresh(java.util.Set s) {
+//      TODO method isn't complete
+       throw new UnsupportedOperationException("method isn't complete");
     }
     
     public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, CommunicationException {
