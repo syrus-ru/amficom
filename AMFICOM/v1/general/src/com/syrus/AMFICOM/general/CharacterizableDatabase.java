@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.5 2005/03/31 09:59:20 arseniy Exp $
+ * $Id: CharacterizableDatabase.java,v 1.6 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,18 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/31 09:59:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 06:34:57 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
@@ -45,8 +44,8 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		this.retrieveCharacteristics(this.fromStorableObject(storableObject));
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveCharacteristicsByOneQuery(collection);
 		return collection;
 	}
@@ -59,12 +58,12 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 				+ CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
 
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
-		Collection characteristics = characteristicDatabase.retrieveByCondition(sql);
+		Set characteristics = characteristicDatabase.retrieveByCondition(sql);
 
 		characterizable.setCharacteristics0(characteristics);
 	}
 
-	private void retrieveCharacteristicsByOneQuery(Collection storableObjects) throws RetrieveObjectException, IllegalDataException {
+	private void retrieveCharacteristicsByOneQuery(Set storableObjects) throws RetrieveObjectException, IllegalDataException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return;
 
@@ -76,18 +75,18 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		stringBuffer.append(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true));
 
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
-		Collection characteristics = characteristicDatabase.retrieveByCondition(stringBuffer.toString());
+		Set characteristics = characteristicDatabase.retrieveByCondition(stringBuffer.toString());
 
 		Map orderedCharacteristicsMap = new HashMap();
 		Characteristic characteristic;
 		Identifier characterizableId;
-		Collection orderedCharacteristics;
+		Set orderedCharacteristics;
 		for (Iterator it = characteristics.iterator(); it.hasNext();) {
 			characteristic = (Characteristic) it.next();
 			characterizableId = characteristic.getCharacterizableId();
-			orderedCharacteristics = (Collection) orderedCharacteristicsMap.get(characterizableId);
+			orderedCharacteristics = (Set) orderedCharacteristicsMap.get(characterizableId);
 			if (orderedCharacteristics == null) {
-				orderedCharacteristics = new ArrayList();
+				orderedCharacteristics = new HashSet();
 				orderedCharacteristicsMap.put(characterizableId, orderedCharacteristics);
 			}
 			orderedCharacteristics.add(characteristic);
@@ -97,7 +96,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			characterizable = this.fromStorableObject((StorableObject) it.next());
 			characterizableId = characterizable.getId();
-			orderedCharacteristics = (Collection) orderedCharacteristicsMap.get(characterizableId);
+			orderedCharacteristics = (Set) orderedCharacteristicsMap.get(characterizableId);
 			if (orderedCharacteristics == null)
 				orderedCharacteristics = Collections.EMPTY_SET;
 
@@ -105,7 +104,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private CharacteristicSort getOnlyOneCharacteristicSort(Collection storableObjects) throws IllegalDataException {
+	private CharacteristicSort getOnlyOneCharacteristicSort(Set storableObjects) throws IllegalDataException {
 		Characterizable characterizable = this.fromStorableObject((StorableObject) storableObjects.iterator().next());
 		CharacteristicSort sort0 = characterizable.getCharacteristicSort();
 		CharacteristicSort sort;
@@ -126,10 +125,10 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		characteristicDatabase.insert(characterizable.getCharacteristics());
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 
-		Collection characteristics = new HashSet();
+		Set characteristics = new HashSet();
 		Characterizable characterizable;
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			characterizable = this.fromStorableObject((StorableObject) it.next());
@@ -152,14 +151,14 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+	public void update(Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		this.updateCharacteristics(storableObjects);
 	}
 
 	private void updateCharacteristics(Characterizable characterizable) throws UpdateObjectException {
-		Collection characteristics;
+		Set characteristics;
 		Characteristic characteristic;
 
 		String cdIdStr = DatabaseIdentifier.toSQLString(characterizable.getId());
@@ -177,7 +176,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 					+ " '" + cdIdStr + "' -- " + ae.getMessage(), ae);
 		}
 
-		Collection dbCharacteristicIds = new HashSet(characteristics.size());
+		Set dbCharacteristicIds = new HashSet(characteristics.size());
 		for (Iterator it = characteristics.iterator(); it.hasNext();) {
 			characteristic = (Characteristic) it.next();
 			dbCharacteristicIds.add(characteristic.getId());
@@ -185,13 +184,13 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 		characteristics = characterizable.getCharacteristics();
 
-		Collection characteristicIds = new HashSet(characteristics.size());
+		Set characteristicIds = new HashSet(characteristics.size());
 		for (Iterator it = characteristics.iterator(); it.hasNext();) {
 			characteristic = (Characteristic) it.next();
 			characteristicIds.add(characteristic.getId());
 		}
 
-		Collection insertCharacteristics = null;
+		Set insertCharacteristics = null;
 		for (Iterator it = characteristics.iterator(); it.hasNext();) {
 			characteristic = (Characteristic) it.next();
 			if (!dbCharacteristicIds.contains(characteristic.getId())) {
@@ -201,7 +200,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		Collection deleteCharacteristicIds = null;
+		Set deleteCharacteristicIds = null;
 		Identifier id;
 		for (Iterator it = dbCharacteristicIds.iterator(); it.hasNext();) {
 			id = (Identifier) it.next();
@@ -223,7 +222,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		characteristicDatabase.delete(deleteCharacteristicIds);
 	}
 
-	private void updateCharacteristics(Collection storableObjects) throws UpdateObjectException {
+	private void updateCharacteristics(Set storableObjects) throws UpdateObjectException {
 		CharacteristicSort sort;
 		try {
 			sort = this.getOnlyOneCharacteristicSort(storableObjects);
@@ -231,7 +230,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		catch (IllegalDataException ide) {
 			throw new UpdateObjectException(ide);
 		}
-		Collection characteristics;
+		Set characteristics;
 		Characteristic characteristic;
 
 		StringBuffer stringBuffer = new StringBuffer(CharacteristicWrapper.COLUMN_SORT + EQUALS + Integer.toString(sort.value()) + SQL_AND);
@@ -250,7 +249,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			throw new UpdateObjectException(ae);
 		}
 
-		Collection dbCharacteristicIds = new HashSet(characteristics.size());
+		Set dbCharacteristicIds = new HashSet(characteristics.size());
 		for (Iterator it = characteristics.iterator(); it.hasNext();) {
 			characteristic = (Characteristic) it.next();
 			dbCharacteristicIds.add(characteristic.getId());
@@ -268,13 +267,13 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			characteristics.addAll(characterizable.getCharacteristics());
 		}
 
-		Collection characteristicIds = new HashSet();
+		Set characteristicIds = new HashSet();
 		for (Iterator it = characteristics.iterator(); it.hasNext();) {
 			characteristic = (Characteristic) it.next();
 			characteristicIds.add(characteristic.getId());
 		}
 
-		Collection insertCharacteristics = null;
+		Set insertCharacteristics = null;
 		for (Iterator it = characteristics.iterator(); it.hasNext();) {
 			characteristic = (Characteristic) it.next();
 			if (!dbCharacteristicIds.contains(characteristic.getId())) {
@@ -284,7 +283,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		Collection deleteCharacteristicIds = null;
+		Set deleteCharacteristicIds = null;
 		Identifier id;
 		for (Iterator it = dbCharacteristicIds.iterator(); it.hasNext();) {
 			id = (Identifier) it.next();

@@ -1,22 +1,22 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.7 2005/03/24 10:56:24 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.8 2005/04/01 06:34:57 bob Exp $
  * Copyright © 2004 Syrus Systems. Научно-технический центр. Проект: АМФИКОМ.
  */
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/24 10:56:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 06:34:57 $
+ * @author $Author: bob $
  * @module general_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	protected static final Short CHARACTERISTIC_SHORT = new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 
-	private LinkedIdsConditionImpl(Collection linkedIds, Short linkedEntityCode, Short entityCode) {
+	private LinkedIdsConditionImpl(Set linkedIds, Short linkedEntityCode, Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
@@ -59,7 +59,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		}
 	}
 
-	public boolean isNeedMore(Collection list) {
+	public boolean isNeedMore(Set set) {
 		return true;
 	}
 }

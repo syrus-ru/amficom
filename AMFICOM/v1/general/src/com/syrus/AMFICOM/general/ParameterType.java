@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.9 2005/02/14 09:09:46 arseniy Exp $
+ * $Id: ParameterType.java,v 1.10 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,14 +10,14 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/14 09:09:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 06:34:57 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -168,7 +168,7 @@ public class ParameterType extends StorableObjectType {
 		this.dataType = dataType;
 	}
 
-	public List getDependencies() {
-		return Collections.EMPTY_LIST;
+	public Set getDependencies() {
+		return Collections.EMPTY_SET;
 	}
 }

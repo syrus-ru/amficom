@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.9 2005/03/24 12:14:10 arseniy Exp $
+ * $Id: StorableObjectCondition.java,v 1.10 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,12 +7,12 @@
  */
 package com.syrus.AMFICOM.general;
 
-import java.util.Collection;
+import java.util.Set;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/24 12:14:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 06:34:57 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public interface StorableObjectCondition extends TransferableObject {
@@ -23,12 +23,11 @@ public interface StorableObjectCondition extends TransferableObject {
 	 * present in the local pool, and true otherwise (i. e. when certain
 	 * objects <em>do need</em> loading.
 	 *
-	 * @param list objects present in the local pool.
+	 * @param objects objects present in the local pool.
 	 * @return true if certain objects need to be loaded, false otherwise.
-	 * @throws ApplicationException
-	 * @see StorableObjectPool#getStorableObjectsByConditionButIdsImpl(Collection, StorableObjectCondition, boolean)
+	 * @see StorableObjectPool#getStorableObjectsByConditionButIdsImpl(Set, StorableObjectCondition, boolean)
 	 */
-	boolean isNeedMore(Collection objects);
+	boolean isNeedMore(Set objects);
 
 	Short getEntityCode();
 	

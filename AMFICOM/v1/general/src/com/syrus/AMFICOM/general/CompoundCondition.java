@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.18 2005/03/28 16:50:03 bob Exp $
+ * $Id: CompoundCondition.java,v 1.19 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,11 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.omg.CORBA.Any;
 import org.omg.CORBA.ORB;
@@ -26,11 +26,11 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  * 
- * @version $Revision: 1.18 $, $Date: 2005/03/28 16:50:03 $
+ * @version $Revision: 1.19 $, $Date: 2005/04/01 06:34:57 $
  * @author $Author: bob $
  * @module general_v1
  */
-public class CompoundCondition implements StorableObjectCondition {
+public final class CompoundCondition implements StorableObjectCondition {
 
 	private static final ORB ORB_INSTANCE = JavaSoftORBUtil.getInstance().getORB();
 
@@ -39,7 +39,7 @@ public class CompoundCondition implements StorableObjectCondition {
 	/**
 	 * Collection&lt;StorableObjectCondition&gt;
 	 */
-	private Collection conditions;
+	private Set conditions;
 
 	private Short entityCode = new Short(ObjectEntities.UNKNOWN_ENTITY_CODE);
 
@@ -57,10 +57,10 @@ public class CompoundCondition implements StorableObjectCondition {
 	public CompoundCondition(StorableObjectCondition firstCondition,
 			CompoundConditionSort operation,
 			StorableObjectCondition secondCondition) throws CreateObjectException {
-		this(Arrays.asList(new Object[] {firstCondition, secondCondition}), operation);
+		this(new HashSet(Arrays.asList(new Object[] {firstCondition, secondCondition})), operation);
 	}
 
-	public CompoundCondition(Collection conditions, CompoundConditionSort operation) throws CreateObjectException {
+	public CompoundCondition(Set conditions, CompoundConditionSort operation) throws CreateObjectException {
 		if (conditions == null)
 			throw new CreateObjectException("Unable to create CompoundCondition for null conditions");
 
@@ -97,7 +97,7 @@ public class CompoundCondition implements StorableObjectCondition {
 		Any[] anies = transferable.innerConditions;
 		if (anies.length <= 1)
 			throw new IllegalDataException("Unable to create CompoundCondition for " + anies.length + "  condition");
-		this.conditions = new ArrayList(anies.length);
+		this.conditions = new HashSet(anies.length);
 		short code = ObjectEntities.UNKNOWN_ENTITY_CODE;
 		for (int i = 0; i < anies.length; i++) {
 			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition((StorableObjectCondition_Transferable) anies[i].extract_Value());
@@ -131,18 +131,18 @@ public class CompoundCondition implements StorableObjectCondition {
 		return result;
 	}
 
-	public boolean isNeedMore(Collection collection) {
+	public boolean isNeedMore(Set set) {
 		boolean firstItem = true;
 		boolean result = false;
 
 		for (Iterator it = this.conditions.iterator(); it.hasNext();) {
 			StorableObjectCondition condition = (StorableObjectCondition) it.next();
 			if (firstItem) {
-				result = condition.isNeedMore(collection);
+				result = condition.isNeedMore(set);
 				firstItem = false;
 			}
 			else {
-				result = this.doCompare(result, condition.isNeedMore(collection));
+				result = this.doCompare(result, condition.isNeedMore(set));
 			}
 		}
 		return result;
@@ -177,7 +177,7 @@ public class CompoundCondition implements StorableObjectCondition {
 		return this.operation;
 	}
 
-	public Collection getConditions() {
-		return Collections.unmodifiableCollection(this.conditions);
+	public Set getConditions() {
+		return Collections.unmodifiableSet(this.conditions);
 	}
 }

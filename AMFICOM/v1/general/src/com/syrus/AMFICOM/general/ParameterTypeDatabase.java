@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.20 2005/03/11 09:14:50 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.21 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
@@ -19,7 +19,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/11 09:14:50 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/01 06:34:57 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -111,7 +111,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}	
 
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}	
 

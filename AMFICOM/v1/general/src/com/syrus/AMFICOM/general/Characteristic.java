@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.15 2005/03/05 21:26:16 arseniy Exp $
+ * $Id: Characteristic.java,v 1.16 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,17 +8,17 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/03/05 21:26:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/04/01 06:34:57 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -341,8 +341,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return csort;
 	}
 
-	public List getDependencies() {
-		List dependencies = new ArrayList(2);
+	public Set getDependencies() {
+		Set dependencies = new HashSet(2);
 		dependencies.add(this.characterizableId);
 		dependencies.add(this.type);
 		return dependencies;

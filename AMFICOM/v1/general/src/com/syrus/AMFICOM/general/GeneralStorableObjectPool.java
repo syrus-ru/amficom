@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.13 2005/03/21 16:17:40 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.14 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Set;
@@ -16,8 +15,8 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/21 16:17:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/01 06:34:57 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -109,16 +108,16 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws ApplicationException {
+	public static Set getStorableObjects(Set objectIds, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
+	public static Set getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
 			throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static Collection getStorableObjectsByConditionButIds(Collection ids,
+	public static Set getStorableObjectsByConditionButIds(Set ids,
 												StorableObjectCondition condition,
 												boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
@@ -143,8 +142,8 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws ApplicationException {
-		Collection loadedObjects = null;
+	protected Set loadStorableObjects(Short entityCode, Set ids) throws ApplicationException {
+		Set loadedObjects = null;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
 				loadedObjects = gObjectLoader.loadParameterTypes(ids);
@@ -162,8 +161,8 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return loadedObjects;
 	}
 
-	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
-		Collection loadedObjects = null;
+	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		Set loadedObjects = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
@@ -184,7 +183,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 	//public static void save()
 
-	protected void saveStorableObjects(short code, Collection objects, boolean force) throws ApplicationException {
+	protected void saveStorableObjects(short code, Set objects, boolean force) throws ApplicationException {
 		if (!objects.isEmpty()) {
 			boolean alone = (objects.size() == 1);
 			switch (code) {
@@ -233,7 +232,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Collection objects) throws IllegalDataException {
+	public static void delete(Set objects) throws IllegalDataException {
 		instance.deleteImpl(objects);
 	}
 
@@ -241,7 +240,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		gObjectLoader.delete(id);
 	}
 	
-	protected void deleteStorableObjects(Collection objects) throws IllegalDataException {
+	protected void deleteStorableObjects(Set objects) throws IllegalDataException {
 		gObjectLoader.delete(objects);
 	}
 

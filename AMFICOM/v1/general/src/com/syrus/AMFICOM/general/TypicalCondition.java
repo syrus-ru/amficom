@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.17 2005/03/31 09:05:03 bob Exp $
+ * $Id: TypicalCondition.java,v 1.18 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.general;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,7 +111,7 @@ import com.syrus.util.Log;
  * </li>
  * 
  * <li>It must override {@link #isConditionTrue(Object)},
- * {@link #isNeedMore(java.util.List)}.</li>
+ * {@link #isNeedMore(java.util.Set)}.</li>
  * 
  * <li>Overrided method {@link #isConditionTrue(Object)}get correspond value
  * of object using controller (wrapper) and key, and return result calculated at
@@ -119,7 +119,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.17 $, $Date: 2005/03/31 09:05:03 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/01 06:34:57 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -870,11 +870,11 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	/**
-	 * @param collection
-	 * @see StorableObjectCondition#isNeedMore(Collection)
+	 * @param set
+	 * @see StorableObjectCondition#isNeedMore(Set)
 	 */
-	public boolean isNeedMore(Collection collection) {
-		return this.delegate.isNeedMore(collection);
+	public boolean isNeedMore(Set set) {
+		return this.delegate.isNeedMore(set);
 	}
 
 	/**

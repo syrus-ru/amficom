@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralObjectLoader.java,v 1.9 2005/02/24 14:59:36 arseniy Exp $
+ * $Id: GeneralObjectLoader.java,v 1.10 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,11 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/24 14:59:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 06:34:57 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -26,20 +25,20 @@ public interface GeneralObjectLoader {
 	Characteristic loadCharacteristic(Identifier id) throws ApplicationException;
 
 
-	Collection loadParameterTypes(Collection ids) throws ApplicationException;
+	Set loadParameterTypes(Set ids) throws ApplicationException;
 
-	Collection loadCharacteristicTypes(Collection ids) throws ApplicationException;
+	Set loadCharacteristicTypes(Set ids) throws ApplicationException;
 
-	Collection loadCharacteristics(Collection ids) throws ApplicationException;
+	Set loadCharacteristics(Set ids) throws ApplicationException;
 
 
     /* Load Configuration StorableObject but argument ids */
 
-	Collection loadParameterTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+	Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
-	Collection loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+	Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
-	Collection loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+	Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
 
 	void saveParameterType(ParameterType parameterType, boolean force) throws ApplicationException;
@@ -49,11 +48,11 @@ public interface GeneralObjectLoader {
 	void saveCharacteristic(Characteristic characteristic, boolean force) throws ApplicationException;
 
 
-	void saveParameterTypes(Collection list, boolean force) throws ApplicationException;
+	void saveParameterTypes(Set list, boolean force) throws ApplicationException;
 
-	void saveCharacteristicTypes(Collection list, boolean force) throws ApplicationException;
+	void saveCharacteristicTypes(Set list, boolean force) throws ApplicationException;
 
-	void saveCharacteristics(Collection list, boolean force) throws ApplicationException;
+	void saveCharacteristics(Set list, boolean force) throws ApplicationException;
 
 
 	Set refresh(Set storableObjects) throws ApplicationException;
@@ -61,6 +60,6 @@ public interface GeneralObjectLoader {
 
 	void delete(Identifier id) throws IllegalDataException;
 
-	void delete(Collection objects) throws IllegalDataException;
+	void delete(Set objects) throws IllegalDataException;
 
 }

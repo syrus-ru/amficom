@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.12 2005/02/24 16:17:56 bob Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.13 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,13 @@
 package com.syrus.AMFICOM.general;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/24 16:17:56 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/01 06:34:57 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -46,46 +44,46 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		return (Characteristic) this.loadStorableObject(id);
 	}
 
-	public Collection loadParameterTypes(Collection ids) throws ApplicationException {
-		List list = new ArrayList(ids.size());
+	public Set loadParameterTypes(Set ids) throws ApplicationException {
+		Set set = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			list.add(this.loadStorableObject(id));
+			set.add(this.loadStorableObject(id));
 		}
-		return list;
+		return set;
 	}
 
-	public Collection loadCharacteristicTypes(Collection ids) throws ApplicationException {
-		List list = new ArrayList(ids.size());
+	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
+		Set set = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			list.add(this.loadStorableObject(id));
+			set.add(this.loadStorableObject(id));
 		}
-		return list;
+		return set;
 	}
 
-	public Collection loadCharacteristics(Collection ids) throws ApplicationException {
-		List list = new ArrayList(ids.size());
+	public Set loadCharacteristics(Set ids) throws ApplicationException {
+		Set set = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			list.add(this.loadStorableObject(id));
+			set.add(this.loadStorableObject(id));
 		}
-		return list;
+		return set;
 	}
 
-	private Collection loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	private Set loadStorableObjectButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.generalXML.retrieveByCondition(ids, condition);
 	}
 
-	public Collection loadParameterTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Collection loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Collection loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -110,7 +108,7 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		this.generalXML.flush();
 	}
 
-	private void saveStorableObjects(Collection storableObjects, boolean force) throws ApplicationException {
+	private void saveStorableObjects(Set storableObjects, boolean force) throws ApplicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			this.saveStorableObject(storableObject, force);
@@ -118,15 +116,15 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		this.generalXML.flush();
 	}
 
-	public void saveParameterTypes(Collection collection, boolean force) throws ApplicationException {
+	public void saveParameterTypes(Set collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 	}
 
-	public void saveCharacteristicTypes(Collection collection, boolean force) throws ApplicationException {
+	public void saveCharacteristicTypes(Set collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 	}
 
-	public void saveCharacteristics(Collection collection, boolean force) throws ApplicationException {
+	public void saveCharacteristics(Set collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 	}
 
@@ -140,7 +138,7 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		this.generalXML.flush();
 	}
 
-	public void delete(Collection collection) throws IllegalDataException {
+	public void delete(Set collection) throws IllegalDataException {
 		for (Iterator it = collection.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.generalXML.delete(id);

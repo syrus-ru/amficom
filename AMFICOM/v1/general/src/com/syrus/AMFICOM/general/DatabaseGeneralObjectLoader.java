@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.16 2005/03/10 15:19:14 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.17 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,19 +8,18 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/03/10 15:19:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/04/01 06:34:57 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -44,9 +43,9 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 	// for multiple objects
 
-	public Collection loadParameterTypes(Collection ids) throws ApplicationException {
+	public Set loadParameterTypes(Set ids) throws ApplicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.parameterTypeDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
 		}
@@ -57,9 +56,9 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		return collection;
 	}
 
-	public Collection loadCharacteristicTypes(Collection ids) throws ApplicationException {
+	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
 		}
@@ -71,9 +70,9 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		return collection;
 	}
 
-	public Collection loadCharacteristics(Collection ids) throws ApplicationException {
+	public Set loadCharacteristics(Set ids) throws ApplicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
 		}
@@ -88,10 +87,10 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 
 
-	public Collection loadParameterTypesButIds(StorableObjectCondition condition, Collection ids)
+	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids)
 			throws ApplicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.parameterTypeDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
@@ -103,10 +102,10 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		return collection;
 	}
 
-	public Collection loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids)
+	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids)
 			throws ApplicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
@@ -118,10 +117,10 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		return collection;
 	}
 
-	public Collection loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids)
+	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids)
 			throws ApplicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
@@ -158,17 +157,17 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 
 
-	public void saveParameterTypes(Collection objects, boolean force) throws ApplicationException {
+	public void saveParameterTypes(Set objects, boolean force) throws ApplicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveCharacteristicTypes(Collection objects, boolean force) throws ApplicationException {
+	public void saveCharacteristicTypes(Set objects, boolean force) throws ApplicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveCharacteristics(Collection objects, boolean force) throws ApplicationException {
+	public void saveCharacteristics(Set objects, boolean force) throws ApplicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
@@ -202,7 +201,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 			storableObjectDatabase.delete(id);
 	}
 
-	public void delete(Collection objects) throws IllegalDataException {
+	public void delete(Set objects) throws IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -213,7 +212,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		/**
 		 * separate objects by kind of entity
 		 */
-		Collection entityObjects;
+		Set entityObjects;
 		Short entityCode;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
@@ -228,9 +227,9 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 							+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			entityCode = new Short(identifier.getMajor());
-			entityObjects = (Collection) map.get(entityCode);
+			entityObjects = (Set) map.get(entityCode);
 			if (entityObjects == null) {
-				entityObjects = new LinkedList();
+				entityObjects = new HashSet();
 				map.put(entityCode, entityObjects);
 			}
 			entityObjects.add(object);
@@ -239,7 +238,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		StorableObjectDatabase storableObjectDatabase;
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			entityCode = (Short) it.next();
-			entityObjects = (Collection) map.get(entityCode);
+			entityObjects = (Set) map.get(entityCode);
 			storableObjectDatabase = GeneralDatabaseContext.getDatabase(entityCode);
 			if (storableObjectDatabase != null)
 				storableObjectDatabase.delete(entityObjects);

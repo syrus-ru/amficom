@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.20 2005/03/21 09:05:10 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.21 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,14 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Provide routines with storage StorableObject as XML. StorableObject must be
@@ -31,7 +31,7 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.20 $, $Date: 2005/03/21 09:05:10 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/01 06:34:57 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -105,20 +105,20 @@ public class StorableObjectXML {
 		return storableObject;
 	}
 
-	public List retrieveByCondition(Collection ids,
+	public Set retrieveByCondition(Set ids,
 									StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
-		List list = null;
-		List identifiers = this.driver.getIdentifiers(condition.getEntityCode().shortValue());
+		Set set = null;
+		Set identifiers = this.driver.getIdentifiers(condition.getEntityCode().shortValue());
 		for (Iterator it = identifiers.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			if (ids == null || !ids.contains(id)) {
 				try {
 					StorableObject storableObject = retrieve(id);
 					if (condition.isConditionTrue(storableObject)) {
-						if (list == null)
-							list = new LinkedList();
-						list.add(storableObject);
+						if (set == null)
+							set = new HashSet();
+						set.add(storableObject);
 					}
 
 				} catch (ObjectNotFoundException e) {
@@ -132,9 +132,9 @@ public class StorableObjectXML {
 				}
 			}
 		}
-		if (list == null)
-			list = Collections.EMPTY_LIST;
-		return list;
+		if (set == null)
+			set = Collections.EMPTY_SET;
+		return set;
 	}
 
 	public void updateObject(	final StorableObject storableObject,

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.17 2005/03/21 09:05:10 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.18 2005/04/01 06:34:57 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,14 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.17 $, $Date: 2005/03/21 09:05:10 $
+ * @version $Revision: 1.18 $, $Date: 2005/04/01 06:34:57 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -182,13 +182,13 @@ public class StorableObjectXMLDriver {
 			String className = namedItem.getNodeValue();
 			if (className.equals(Collection.class.getName())) {
 				NodeList childNodes = node.getChildNodes();
-				List list = new ArrayList(childNodes.getLength());
+				Set set = new HashSet(childNodes.getLength());
 				for (int i = 0; i < childNodes.getLength(); i++) {
 					Object object2 = this.parse(childNodes.item(i));
 					if (object2 != null)
-						list.add(object2);
+						set.add(object2);
 				}
-				object = list;
+				object = set;
 			} else if (className.equals(Map.class.getName())) {
 				NodeList childNodes = node.getChildNodes();
 				Map map = new HashMap(childNodes.getLength());
@@ -319,9 +319,11 @@ public class StorableObjectXMLDriver {
 			Text text = this.doc.createTextNode(buffer.toString());
 			element.appendChild(text);
 		} else if (object instanceof Collection) {
+			/* TODO replace for java.util.Set*/
 			Collection collection = (Collection) object;
 			className = Collection.class.getName();
-			for (Iterator it = collection.iterator(); it.hasNext();) {
+			Set set = new HashSet(collection);
+			for (Iterator it = set.iterator(); it.hasNext();) {
 				this.addObject(element, key + "item", it.next());
 			}
 		} else if (object instanceof Map) {
@@ -342,21 +344,21 @@ public class StorableObjectXMLDriver {
 		node.appendChild(element);
 	}
 
-	public List getIdentifiers(short entityCode) throws IllegalDataException {
+	public Set getIdentifiers(short entityCode) throws IllegalDataException {
 
 		try {
 			NodeList idNodeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/"
 					+ "*[starts-with(name(),'" + ObjectEntities.codeToString(entityCode) + "')]");
 			int size = idNodeList.getLength();
 			if (size == 0)
-				return Collections.EMPTY_LIST;
+				return Collections.EMPTY_SET;
 
-			List idList = new ArrayList(size);
+			Set idSet = new HashSet(size);
 			for (int i = 0; i < idNodeList.getLength(); i++) {
 				Node node = idNodeList.item(i);
-				idList.add(new Identifier(node.getNodeName()));
+				idSet.add(new Identifier(node.getNodeName()));
 			}
-			return idList;
+			return idSet;
 		} catch (TransformerException e) {
 			String msg = "StorableObjectXMLDriver.getIdentifiers | Caught " + e.getMessage()
 					+ " during retrieve identifiers for '" + ObjectEntities.codeToString(entityCode) + '\'';
