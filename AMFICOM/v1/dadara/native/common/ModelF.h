@@ -81,6 +81,11 @@ const int MF_PAR_FLAG_L = 4;
 // Определено только для ломаной, BREAKL
 #define MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXDYID 7 /* BREAKL only */
 
+// отбработать преобразование согласно ThreshDX, ThreshDY-порогам
+// и одновременно проследить соответствие X-порогов
+// Определено только для ломаной, BREAKL
+#define MF_CMD_CHANGE_BY_THRESH_AND_FIND_TTDXDY 8
+
 // создать линейную м.ф.
 #define MF_CMD_LIN_SET_BY_X1Y1X2Y2 2101
 
@@ -206,6 +211,7 @@ public:
 	// Некоторые функции могут изменять число параметров,
 	// для них можно использовать только execCmd.
 	// Для остальных функций используются оба варианта.
+	// Если тип команды не поддерживается - должен возвращать 0.0
 	double execCmdP(double *pars, int command, void *extra = 0);
 	double execCmd(               int command, void *extra = 0)
 	{

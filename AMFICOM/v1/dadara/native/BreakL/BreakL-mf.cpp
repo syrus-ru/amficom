@@ -224,11 +224,33 @@ double fc_BREAKL(double *pars, ModelF &mf, int command, void *extra)
 		void **args = (void** )(void* )extra;
 		return
 			BreakL_ChangeByThresh(mf,
-				*(ThreshDXArray *)args[1],
-				*(ThreshDYArray *)args[2],
-				*(int *)args[0],
+				*(ThreshDXArray *)args[0],
+				*(ThreshDYArray *)args[1],
+				*(int *)args[2],
 				*(int *)args[3],
 				*(int *)args[4]);
+	}
+	if (command == MF_CMD_CHANGE_BY_THRESH_AND_FIND_TTDXDY)
+	{
+		void **args = (void**)(void*)extra;
+
+		ThreshDXArray &taX = *(ThreshDXArray*)args[0];
+		ThreshDYArray &taY = *(ThreshDYArray*)args[1];
+		int key = *(int *)args[2];
+		int autoThresh = *(int *)args[3];
+		int xMin = *(int*)args[4];
+		int xMax = *(int*)args[5];
+		TTDX *ttdxOut = (TTDX*)args[6];
+		TTDY *ttdyOut = (TTDY*)args[7];
+
+		assert(xMax >= xMin);
+		//int xMin = (int )mf.getP()[0];
+		//int xMax = (int )mf.getP()[mf.getNPars() - 2];
+		int Nx = xMax - xMin + 1;
+
+		ChangeBreakLByThreshEx (mf, taX, taY, key, xMin, xMax, autoThresh, ttdxOut, ttdyOut);
+
+		return 1; // подтверждаем выполнение команды
 	}
 	return 0;
 }

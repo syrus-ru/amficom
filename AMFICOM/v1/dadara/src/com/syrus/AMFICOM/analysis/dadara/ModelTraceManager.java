@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.35 2005/03/30 12:48:34 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.36 2005/03/30 12:54:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.35 $, $Date: 2005/03/30 12:48:34 $
+ * @version $Revision: 1.36 $, $Date: 2005/03/30 12:54:37 $
  * @module
  */
 public class ModelTraceManager
@@ -761,5 +761,31 @@ public class ModelTraceManager
 			handle.posY = getThresholdY(bestKey, handle.posX);
 			return handle;
 		}
+	}
+
+	// XXX: хитрый метод для определения участка, соответствующего данному событию
+	public SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent, int key)
+	{
+		int begin = -1;
+		int end = -1;
+		Object[] t = mf.findResponsibleThreshDXDYArray(tDX, tDY, key, 0, traceLength - 1);
+		int[] aX = (int[])t[0];
+		int[] aYL = (int[])t[1];
+		//int[] aYR = (int[])t[2];
+		for (int i = 0; i < traceLength; i++)
+		{
+			boolean belongs = i >= se[nEvent].getBegin() && i <= se[nEvent].getEnd();
+			if (aX[i] >= 0)
+				belongs = tDX[aX[i]].isRelevantToNEvent(nEvent);
+			if (belongs)
+			{
+				end = i;
+				if (begin < 0)
+					begin = i;
+			}
+		}
+		if (begin < 0)
+			return null;
+		return new SimpleReflectogramEventImpl(begin, end, se[nEvent].getEventType());
 	}
 }

@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.14 $, $Date: 2005/03/21 18:02:57 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/30 12:54:37 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -43,6 +43,7 @@ public class ModelFunction {
 	// -1: порог не найден;
 	// >=0: индекс найденного порога в массиве threshDX
 	private native int nFindResponsibleThreshDXDYID(ThreshDX[] threshDX, ThreshDY[] threshDY, int key, int x, int xThType);
+	private native Object[] nFindResponsibleThreshDXDYArray(ThreshDX[] threshDX, ThreshDY[] threshDY, int key, int xMin, int xMax);
 	private native double nRMS(double y[], int begin, int end); // end is included
 
 	private static final int FITMODE_VARY_ALL = 1; // фитируем кривую, варьируем все параметры
@@ -410,7 +411,7 @@ public class ModelFunction {
 		nChangeByThresh(threshDX, threshDY, key);
 	}
 
-	// no javadoc yet; see comment if nFindResponsibleThreshDXDYID
+	// no javadoc yet; see comment of nFindResponsibleThreshDXDYID
 	public int findResponsibleThreshDXID(ThreshDX[] threshDX, ThreshDY[] threshDY, int key, int x)
 	{
 		return nFindResponsibleThreshDXDYID(threshDX, threshDY, key, x, 1);
@@ -418,6 +419,12 @@ public class ModelFunction {
 	public int findResponsibleThreshDYID(ThreshDX[] threshDX, ThreshDY[] threshDY, int key, int x)
 	{
 		return nFindResponsibleThreshDXDYID(threshDX, threshDY, key, x, 2);
+	}
+
+	// FIXME: too compicated
+	public Object[] findResponsibleThreshDXDYArray(ThreshDX[] threshDX, ThreshDY[] threshDY, int key, int xMin, int xMax)
+	{
+		return nFindResponsibleThreshDXDYArray(threshDX, threshDY, key, xMin, xMax);
 	}
 
 	public void writeToDOS(DataOutputStream dos) throws IOException {

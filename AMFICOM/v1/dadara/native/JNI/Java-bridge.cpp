@@ -23,6 +23,7 @@
 
 #include "../fit/ModelF-fit.h"
 #include "../BreakL/BreakL-fit.h"
+#include "../BreakL/BreakL-enh.h" // :-( for TTDX/TTDY
 
 #include "../an2/findLength.h"
 #include "../an2/findNoise.h"
@@ -241,7 +242,7 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nCha
 	int key_ = key;
 	int xID = 0;
 	int wannaID = 0;
-	void *args[5] = { &key, &taDX, &taDY, &xID, &wannaID};
+	void *args[5] = { &taDX, &taDY, &key, &xID, &wannaID};
 	mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXDYID, args);
 	ModelF_C2J_update(env, mf, obj);
 	prf_e();
@@ -264,11 +265,83 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFin
 	int key_ = key;
 	int xID = x;
 	int xType = xThType;
-	void *args[5] = { &key, &taDX, &taDY, &xID, &xType};
+	void *args[5] = { &taDX, &taDY, &key_, &xID, &xType};
 	int rcID = (int )mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXDYID, args);
 	// NB: do NOT update mf back to Java because mf is now changed but Java mf should not be modified
 	prf_e();
 	return rcID;
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
+ * Method:    nFindResponsibleThreshDXDYArray
+ * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/ThreshDX;[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDY;III)[Ljava/lang/Object;
+ */
+JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFindResponsibleThreshDXDYArray
+  (JNIEnv *env, jobject obj, jobjectArray threshArrDX, jobjectArray threshArrDY, jint keyj, jint xMinj, jint xMaxj)
+{
+	prf_b("nFindResponsibleThreshDXDYArray");
+	// получаем входные данные
+	ModelF mf;
+	if (ModelF_J2C(env, obj, mf))
+		assert(0);
+	ThreshDXArray taDX(env, threshArrDX);
+	ThreshDYArray taDY(env, threshArrDY);
+	int key = keyj;
+	int xMin = xMinj;
+	int xMax = xMaxj;
+	int autoThresh = 1; // FIXME
+	assert(xMax >= xMin);
+	int N = xMax - xMin + 1;
+
+	// создаем выходные массивы
+	jintArray jaX  = env->NewIntArray((jsize)N);
+	jintArray jaYL = env->NewIntArray((jsize)N);
+	jintArray jaYR = env->NewIntArray((jsize)N);
+	assert(jaX && jaYL && jaYR);
+	jclass jintclass = env->GetObjectClass(jaX);
+	jobjectArray jaOut = env->NewObjectArray((jsize)3, jintclass, (jobject)0);
+	assert(jaOut);
+	env->SetObjectArrayElement(jaOut, 0, jaX);
+	env->SetObjectArrayElement(jaOut, 1, jaYL);
+	env->SetObjectArrayElement(jaOut, 2, jaYR);
+
+	// формируем временные массивы
+	TTDX *ttdx = new TTDX[N];
+	TTDY *ttdy = new TTDY[N];
+	assert(ttdx);
+	assert(ttdy);
+
+	// выполняем преобразование
+	void *args[8] = { &taDX, &taDY, &key, &autoThresh, &xMin, &xMax, ttdx, ttdy };
+	int rcID = (int )mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_TTDXDY, args);
+	assert(rcID); // 0 - команда не поддерживается. FIXME: - в принципе, тут надо просто вернуть null в Java
+
+	// определяем leftmost и rightmost пороги каждого участка
+	jint *dX  = env->GetIntArrayElements(jaX,  0);
+	jint *dYL = env->GetIntArrayElements(jaYL, 0);
+	jint *dYR = env->GetIntArrayElements(jaYR, 0);
+
+	int i;
+	for (i = 0; i < N; i++)
+	{
+		dX[i] = ttdx[i].thId;
+		if (ttdy[i].nextWei)
+			dYL[i] = dYR[i] = -1;
+		else
+			dYL[i] = dYR[i] = ttdy[i].thId;
+	}
+
+	// освобождаем временные массивы и Java-объекты
+	delete[] ttdx;
+	delete[] ttdy;
+	env->ReleaseIntArrayElements(jaX,  dX,  0);
+	env->ReleaseIntArrayElements(jaYL, dYL, 0);
+	env->ReleaseIntArrayElements(jaYR, dYR, 0);
+
+	// NB: do NOT update mf back to Java because mf is now changed but Java mf should not be modified
+	prf_e();
+	return jaOut;
 }
 
 /*
