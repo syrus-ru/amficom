@@ -6,8 +6,8 @@
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
-#include "../An2/findLength.h"
-#include "../An2/findNoise.h"
+#include "../an2/findLength.h"
+#include "../an2/findNoise.h"
 
 #include "../common/prf.h"
 

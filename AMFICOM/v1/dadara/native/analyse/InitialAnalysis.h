@@ -2,12 +2,11 @@
 #define AFX_INITIALANALYSIS_H__017F9246_0344_404F_8231_CC3B33AB54DA__INCLUDED_
 
 #include <stdio.h>
-#include "../Common/EventParams.h"
+#include "../common/EventParams.h"
 
 #include "debug.h"
 
-//#include "EPList2.h"
-#include "../Common/ArrList.h"
+#include "../common/ArrList.h"
 
 class Splash;
 //---------------------------------------------------------------------------------------------------------------
