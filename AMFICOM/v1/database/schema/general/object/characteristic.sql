@@ -4,6 +4,7 @@ CREATE TABLE Characteristic (
  modified DATE NOT NULL,
  creator_id VARCHAR2(32) NOT NULL,
  modifier_id VARCHAR2(32) NOT NULL,
+ version NUMBER(19) NOT NULL,
 --
  type_id VARCHAR2(32) NOT NULL,
 --

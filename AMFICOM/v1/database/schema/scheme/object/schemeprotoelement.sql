@@ -1,4 +1,4 @@
--- $Id: schemeprotoelement.sql,v 1.3 2005/02/10 08:47:55 bass Exp $
+-- $Id: schemeprotoelement.sql,v 1.4 2005/02/10 11:09:26 max Exp $
 
 CREATE TABLE "SchemeProtoElement" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -7,6 +7,7 @@ CREATE TABLE "SchemeProtoElement" (
 	modified TIMESTAMP NOT NULL,
 	creator_id VARCHAR2(32 CHAR) NOT NULL,
 	modifier_id VARCHAR2(32 CHAR) NOT NULL,
+	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
 	description VARCHAR2(256 CHAR),

@@ -1,4 +1,4 @@
--- $Id: user.sql,v 1.1 2005/01/31 14:22:40 arseniy Exp $
+-- $Id: user.sql,v 1.2 2005/02/10 11:09:26 max Exp $
 
 CREATE TABLE "User"(
  id VARCHAR2(32),
@@ -6,6 +6,7 @@ CREATE TABLE "User"(
  modified DATE NOT NULL,
  creator_id VARCHAR2(32) NOT NULL,
  modifier_id VARCHAR2(32) NOT NULL,
+ version NUMBER(19) NOT NULL,
 --
  login VARCHAR2(32) NOT NULL,
  sort NUMBER(2, 0) NOT NULL,

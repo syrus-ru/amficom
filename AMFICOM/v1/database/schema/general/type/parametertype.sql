@@ -4,6 +4,7 @@ CREATE TABLE ParameterType (
  modified DATE NOT NULL,
  creator_id VARCHAR2(32) NOT NULL,
  modifier_id VARCHAR2(32) NOT NULL,
+ version NUMBER(19) NOT NULL,
 --
  codename VARCHAR2(32) NOT NULL,
  name VARCHAR2(128) NOT NULL,

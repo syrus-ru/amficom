@@ -1,4 +1,4 @@
--- $Id: domain.sql,v 1.7 2005/02/02 13:25:22 arseniy Exp $
+-- $Id: domain.sql,v 1.8 2005/02/10 11:09:25 max Exp $
 
 CREATE TABLE Domain (
  id VARCHAR2(32),
@@ -7,6 +7,7 @@ CREATE TABLE Domain (
  modified DATE NOT NULL,
  creator_id VARCHAR2(32) NOT NULL,
  modifier_id VARCHAR2(32) NOT NULL,
+ version NUMBER(19) NOT NULL,
 --
  domain_id VARCHAR2(32),
 --

@@ -4,6 +4,7 @@ CREATE TABLE Link (
  modified DATE NOT NULL,
  creator_id VARCHAR2(32) NOT NULL,
  modifier_id VARCHAR2(32) NOT NULL,
+ version NUMBER(19) NOT NULL,
 --
  domain_id VARCHAR2(32),
 --

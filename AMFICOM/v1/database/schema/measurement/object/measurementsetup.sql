@@ -4,6 +4,7 @@ CREATE TABLE MeasurementSetup (
  modified DATE NOT NULL,
  creator_id VARCHAR2(32) NOT NULL,
  modifier_id VARCHAR2(32) NOT NULL,
+ version NUMBER(19) NOT NULL,
 --
  parameter_set_id VARCHAR2(32) NOT NULL,
  criteria_set_id VARCHAR2(32),

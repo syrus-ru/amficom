@@ -4,6 +4,7 @@ CREATE TABLE Test (
  modified DATE NOT NULL,
  creator_id VARCHAR2(32) NOT NULL,
  modifier_id VARCHAR2(32) NOT NULL,
+ version NUMBER(19) NOT NULL,
 --
  temporal_type NUMBER(2, 0) NOT NULL,
  start_time DATE,
