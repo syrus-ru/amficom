@@ -1,6 +1,10 @@
 #include <jni.h>
 #include <math.h> // sqrt()
 
+#include "../common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
+#include "../common/com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h"
+#include "../common/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h"
+
 #include "Java-bridge.h"
 
 #include "../common/assert1.h"
@@ -22,9 +26,11 @@
 #include "../an2/findLength.h"
 #include "../an2/findNoise.h"
 
-#include "../common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
-#include "../common/com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h"
-#include "../common/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h"
+#include "../thresh/thresh.h"
+#include "../thresh/makeThresh.h"
+
+inline int imax(int a, int b) { return a > b ? a : b; }
+inline int imin(int a, int b) { return a < b ? a : b; }
 
 /*
  *
@@ -796,4 +802,82 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalc
 	prf_e();
 
 	return ret;
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
+ * Method:    nExtendThreshToCoverCurve
+ * Signature: ([D[D[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDX;[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDY;II)V
+ */
+JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nExtendThreshToCoverCurve
+  (JNIEnv *env, jclass cls, jdoubleArray jdayBase, jdoubleArray jdayCover,
+  jobjectArray thDX, jobjectArray thDY, jint keySoft, jint keyHard)
+{
+	prf_b("JNI: nExtendThreshToCoverCurve - enter");
+	prf_b("JNI: nExtendThreshToCoverCurve - get from java");
+
+	// get arrays
+	double *yBase;
+	int baseSize = get_arr(env, jdayBase, &yBase);
+	double *yCover;
+	int coverSize = get_arr(env, jdayCover, &yCover);
+
+	// get thresholds
+	ThreshDXArray THDXA(env, thDX);
+	ThreshDYArray THDYA(env, thDY);
+
+	prf_b("JNI: nExtendThreshToCoverCurve - convert soft thresholds");
+
+	// convert thresholds
+	THX *thx;
+	THY *thy;
+	int thxSize;
+	int thySize;
+	ThreshDXArrayToTHXArray(THDXA, keySoft, &thx, &thxSize);
+	ThreshDYArrayToTHYArray(THDYA, keySoft, &thy, &thySize);
+
+	prf_b("JNI: nExtendThreshToCoverCurve - process soft thresholds");
+
+	int xMin = 0;
+	int xMax = imin(baseSize, coverSize) - 1;
+
+	extendThreshToCover(thx, thy, thxSize, thySize, THDXA.isUpper(keySoft),
+		yBase, xMin, xMax, yCover);
+
+	prf_b("JNI: nExtendThreshToCoverCurve - convert soft thresholds back");
+	ThreshDXUpdateFromTHXArray(THDXA, keySoft, thx);
+	ThreshDYUpdateFromTHYArray(THDYA, keySoft, thy);
+
+	prf_b("JNI: nExtendThreshToCoverCurve - make hard thresholds");
+	{
+		THX *thxh;
+		THY *thyh;
+		// мы точно знаем, что число порогов не зависит от key, т.ч. th(x,y)hSize не нужен
+		ThreshDXArrayToTHXArray(THDXA, keyHard, &thxh, &thxSize);
+		ThreshDYArrayToTHYArray(THDYA, keyHard, &thyh, &thySize);
+		int i;
+		double ratioX = 1.5;
+		double ratioY = 1.5;
+		for (i = 0; i < thxSize; i++)
+		{
+			thxh[i].dxL = (int )ceil(thx[i].dxL * ratioX);
+			thxh[i].dxR = (int )ceil(thx[i].dxR * ratioX);
+		}
+		for (i = 0; i < thySize; i++)
+		{
+			thyh[i].dy = thy[i].dy * ratioY;
+		}
+		ThreshDXUpdateFromTHXArray(THDXA, keyHard, thxh);
+		ThreshDYUpdateFromTHYArray(THDYA, keyHard, thyh);
+	}
+
+	prf_b("JNI: nExtendThreshToCoverCurve - release data");
+
+	// release data
+	if (thx != 0) delete[] thx;
+	if (thy != 0) delete[] thy;
+	release_arr(env, jdayBase, yBase);
+	release_arr(env, jdayCover, yCover);
+
+	prf_e();
 }

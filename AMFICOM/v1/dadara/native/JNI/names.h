@@ -31,6 +31,8 @@ extern const char *N_Thresh_SOFT_DOWN;
 extern const char *S_Thresh_SOFT_DOWN;
 extern const char *N_Thresh_HARD_DOWN;
 extern const char *S_Thresh_HARD_DOWN;
+extern const char *N_Thresh_roundUp;
+extern const char *S_Thresh_roundUp;
 
 extern const char *CL_ThreshDX;
 extern const char *N_ThreshDX_dX;

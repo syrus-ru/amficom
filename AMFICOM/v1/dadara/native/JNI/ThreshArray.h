@@ -13,6 +13,7 @@ protected:
 
 	int cur_id;
 	jobject cur_obj;
+	jmethodID roundUp;
 
 private:
 	jfieldID id_x0;
@@ -44,10 +45,11 @@ private:
 	jfieldID id_typeL;
 	jfieldID id_values;
 public:
-	ThreshDYArray(JNIEnv *env, jobjectArray arrray);
+	ThreshDYArray(JNIEnv *env, jobjectArray array);
 	~ThreshDYArray();
 	int getTypeL(int id);
 	double getValue(int id, int key);
+	void setValue(int id, int key, double value);
 };
 
 class ThreshDXArray : public ThreshArray
@@ -56,13 +58,17 @@ private:
 	jfieldID id_dX;
 	jfieldID id_isRise;
 public:
-	ThreshDXArray(JNIEnv *env, jobjectArray arrray);
+	ThreshDXArray(JNIEnv *env, jobjectArray array);
 	~ThreshDXArray();
 	int getDX(int id, int key);
 	int getIsRise(int id);
+	void setDX(int id, int key, int value);
 };
 
 void ThreshDXArrayToTHXArray(ThreshDXArray &thXi, int key, THX** thxOut, int *thxOutSize);
 void ThreshDYArrayToTHYArray(ThreshDYArray &thYi, int key, THY** thyOut, int *thyOutSize);
+
+void ThreshDXUpdateFromTHXArray(ThreshDXArray &taX, int key, THX* thX);
+void ThreshDYUpdateFromTHYArray(ThreshDYArray &taY, int key, THY* thY);
 
 #endif

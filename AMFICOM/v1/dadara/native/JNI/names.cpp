@@ -14,6 +14,7 @@ const char *S_se		= "Lcom/syrus/AMFICOM/analysis/dadara/SimpleReflectogramEventI
 const char *CL_Thresh	= "com/syrus/AMFICOM/analysis/dadara/Thresh";
 const char *CL_ThreshDX	= "com/syrus/AMFICOM/analysis/dadara/ThreshDX";
 const char *CL_ThreshDY	= "com/syrus/AMFICOM/analysis/dadara/ThreshDY";
+
 const char *N_Thresh_IS_KEY_UPPER = "IS_KEY_UPPER";
 const char *S_Thresh_IS_KEY_UPPER = "[Z";
 const char *N_Thresh_CONJ_KEY	= "CONJ_KEY";
@@ -22,6 +23,9 @@ const char *N_Thresh_x0			= "xMin";
 const char *S_Thresh_x0			= "I";
 const char *N_Thresh_x1			= "xMax";
 const char *S_Thresh_x1			= "I";
+const char *N_Thresh_roundUp	= "roundUp";
+const char *S_Thresh_roundUp	= "(I)V";
+
 const char *N_ThreshDY_typeL	= "typeL";
 const char *S_ThreshDY_typeL	= "Z";
 const char *N_ThreshDY_values	= "values";
@@ -30,12 +34,14 @@ const char *N_ThreshDX_dX		= "dX";
 const char *S_ThreshDX_dX		= "[I";
 const char *N_ThreshDX_isRise	= "isRise";
 const char *S_ThreshDX_isRise	= "Z";
+
 const char *N_SE_begin			= "begin";
 const char *S_SE_begin			= "I";
 const char *N_SE_end			= "end";
 const char *S_SE_end			= "I";
 const char *N_SE_type			= "eventType";
 const char *S_SE_type			= "I";
+
 const char *N_Thresh_SOFT_UP	= "SOFT_UP";
 const char *S_Thresh_SOFT_UP	= "I";
 const char *N_Thresh_HARD_UP	= "HARD_UP";

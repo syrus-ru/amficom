@@ -55,6 +55,9 @@ ThreshArray::ThreshArray(JNIEnv *env, jobjectArray array)
 			keys[i] = env->GetStaticIntField(clazz, fid);
 		}
 	}
+
+	roundUp = env->GetMethodID(clazz, N_Thresh_roundUp, S_Thresh_roundUp);
+	assert(roundUp);
 }
 
 ThreshArray::~ThreshArray()
@@ -163,6 +166,39 @@ int ThreshArray::getX1(int id)
 		return 0;
 }
 
+int ThreshDXArray::getDX(int id, int key)
+{
+	if (!selectId(id))
+		return 0;
+	jintArray dx = (jintArray )env->GetObjectField(cur_obj, id_dX);
+	if (dx == 0)
+		return 0;
+	jint data = 0;
+	env->GetIntArrayRegion(dx, key, 1, &data);
+	return (int )data;
+}
+
+int ThreshDXArray::getIsRise(int id)
+{
+	if (!selectId(id))
+		return 0;
+	jboolean rise = env->GetBooleanField(cur_obj, id_isRise);
+	return rise;
+}
+
+void ThreshDXArray::setDX(int id, int key, int value)
+{
+	if (!selectId(id))
+		return;
+	jintArray dx = (jintArray )env->GetObjectField(cur_obj, id_dX);
+	if (dx == 0)
+		return;
+	jint data = value;
+	env->SetIntArrayRegion(dx, key, 1, &data);
+	// округляем вверх Java-методом
+	env->CallVoidMethod(cur_obj, roundUp, key);
+}
+
 int ThreshDYArray::getTypeL(int id)
 {
 	if (selectId(id))
@@ -185,24 +221,16 @@ double ThreshDYArray::getValue(int id, int key)
 	return data;
 }
 
-int ThreshDXArray::getDX(int id, int key)
+void ThreshDYArray::setValue(int id, int key, double value)
 {
 	if (!selectId(id))
-		return 0;
-	jintArray dx = (jintArray )env->GetObjectField(cur_obj, id_dX);
-	if (dx == 0)
-		return 0;
-	jint data = 0;
-	env->GetIntArrayRegion(dx, key, 1, &data);
-	return (int )data;
-}
-
-int ThreshDXArray::getIsRise(int id)
-{
-	if (!selectId(id))
-		return 0;
-	jboolean rise = env->GetBooleanField(cur_obj, id_isRise);
-	return rise;
+		return;
+	jdoubleArray values = (jdoubleArray )env->GetObjectField(cur_obj, id_values);
+	assert(values);
+	jdouble data = value;
+	env->SetDoubleArrayRegion(values, key, 1, &data);
+	// округляем вверх Java-методом
+	env->CallVoidMethod(cur_obj, roundUp, key);
 }
 
 // converters
@@ -260,4 +288,32 @@ void ThreshDYArrayToTHYArray(ThreshDYArray &taY, int key, THY** thyOut, int *thy
 	*thyOut = thY;
 	// the user will then have to free the array:
 	// if (*thyOut != 0) delete[] *thyOut;
+}
+
+void ThreshDXUpdateFromTHXArray(ThreshDXArray &taX, int key, THX* thX)
+{
+	const int thNpX = taX.getLength();
+
+	int conjKey = taX.getConjKey(key);
+	int isUpper = taX.isUpper(key);
+	int j;
+	for (j = 0; j < thNpX; j++)
+	{
+		int isRising = taX.getIsRise(j);
+		int leftMode = !!isRising ^ !!isUpper ^ 1;
+		//thX[j].dxL = leftMode ? -taX.getDX(j, key) : taX.getDX(j, conjKey);
+		//thX[j].dxR = leftMode ? -taX.getDX(j, conjKey) : taX.getDX(j, key);
+		taX.setDX(j, key,     leftMode ? -thX[j].dxL : thX[j].dxR);
+		taX.setDX(j, conjKey, leftMode ? -thX[j].dxR : thX[j].dxL);
+	}
+}
+
+void ThreshDYUpdateFromTHYArray(ThreshDYArray &taY, int key, THY* thY)
+{
+	const int thNpY = taY.getLength();
+	int j;
+	for (j = 0; j < thNpY; j++)
+	{
+		taY.setValue(j, key, thY[j].dy);
+	}
 }
