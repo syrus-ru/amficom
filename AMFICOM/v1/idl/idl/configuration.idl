@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.70 2004/12/15 13:07:34 max Exp $
+ * $Id: configuration.idl,v 1.71 2004/12/20 16:43:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -126,8 +126,7 @@ module corba {
 /////////////////////// LinkType /////////////////////	
 	enum AbstractLinkTypeSort {
 		LINK_TYPE,
-		CABLE_LINK_TYPE,
-		CABLE_THREAD_TYPE
+		CABLE_LINK_TYPE
 	};
 
 	enum LinkTypeSort {
@@ -191,8 +190,6 @@ module corba {
 			LinkType_Transferable linkType;
 		case CABLE_LINK_TYPE:
 			CableLinkType_Transferable cableLinkType;
-		case CABLE_THREAD_TYPE:
-			CableThreadType_Transferable cableThreadType;
 	};
 	
 	typedef sequence <AbstractLinkType_Transferable> AbstractLinkTypeSeq_Transferable;	
