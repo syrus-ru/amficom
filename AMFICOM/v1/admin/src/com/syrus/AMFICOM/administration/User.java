@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.5 2005/02/14 11:18:19 arseniy Exp $
+ * $Id: User.java,v 1.6 2005/02/14 13:05:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,22 +12,21 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.corba.UserSort;
+import com.syrus.AMFICOM.administration.corba.User_Transferable;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.administration.corba.User_Transferable;
-import com.syrus.AMFICOM.administration.corba.UserSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/14 11:18:19 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/14 13:05:38 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
