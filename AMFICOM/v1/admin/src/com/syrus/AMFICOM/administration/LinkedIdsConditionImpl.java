@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.9 2005/03/05 21:36:54 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/03/10 19:34:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/05 21:36:54 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/10 19:34:22 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -55,7 +55,13 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MCM_ENTITY_CODE:
 				MCM mcm = (MCM) object;
-				condition = this.checkDomain(mcm);
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.SERVER_ENTITY_CODE:
+						condition = super.conditionTest(mcm.getServerId());
+						break;
+					case ObjectEntities.DOMAIN_ENTITY_CODE:
+						condition = this.checkDomain(mcm);
+				}
 				break;
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
 				Domain domain = (Domain) object;
