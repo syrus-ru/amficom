@@ -17,3 +17,5 @@ Makefile.inc
 .all
 .idl
 .sqlj
+.project
+.classpath
