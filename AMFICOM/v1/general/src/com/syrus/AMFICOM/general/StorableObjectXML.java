@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.17 2005/02/15 07:11:18 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.18 2005/02/15 09:36:39 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.17 $, $Date: 2005/02/15 07:11:18 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/15 09:36:39 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -148,28 +148,33 @@ public class StorableObjectXML {
 			if (!shortClassName.equals(ObjectEntities.codeToString(id.getMajor())))
 				objectMap.put(CLASSNAME, shortClassName);
 		}
+		
+		boolean canBeModified = false;
 		try {
 			Map xmlObjectMap = this.driver.getObjectMap(id);
 			long version = ((Long) xmlObjectMap.get(StorableObjectWrapper.COLUMN_VERSION)).longValue();
 			if (force || version == storableObject.getVersion()) {
-				storableObject.version = version + 1;
-				storableObject.modified = new Date(System.currentTimeMillis());
-				storableObject.modifierId = modifierId;
+				storableObject.version = version + 1;	
+				canBeModified = true;
 			} else {
 				throw new VersionCollisionException("StorableObjectXML.updateObject | version collision, id='"
 						+ id.getIdentifierString() + '\'', storableObject.version, version);
 			}
-
 			this.driver.deleteObject(id);
 		} catch (ObjectNotFoundException e) {
 			// object not found , ok
+			canBeModified = true;
 		} catch (RetrieveObjectException e) {
-			// any problems
-			this.driver.deleteObject(id);
+			throw new UpdateObjectException("StorableObjectXML.updateObject | retrieve exception -- " + e.getMessage(),e );
 		} catch (IllegalDataException e) {
-			// any problems
-			this.driver.deleteObject(id);
+			throw new UpdateObjectException("StorableObjectXML.updateObject | illegal data exception -- " + e.getMessage(),e );
 		}
+		
+		if (canBeModified) {			
+			storableObject.modified = new Date(System.currentTimeMillis());
+			storableObject.modifierId = modifierId;
+		}
+		
 		objectMap.put(StorableObjectWrapper.COLUMN_ID, id);
 		objectMap.put(StorableObjectWrapper.COLUMN_CREATED, storableObject.getCreated());
 		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIED, storableObject.getModified());
