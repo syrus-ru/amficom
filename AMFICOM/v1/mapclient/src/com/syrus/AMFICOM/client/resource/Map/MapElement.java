@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.9 2004/09/28 07:58:36 krupenn Exp $
+ * $Id: MapElement.java,v 1.10 2004/09/29 15:03:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
-//import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -25,7 +24,7 @@ import java.awt.geom.Rectangle2D;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/09/28 07:58:36 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/29 15:03:21 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -73,11 +72,6 @@ public interface MapElement
 	boolean isVisible(Rectangle2D.Double visibleBounds);
 
 	/**
-	 * панель свойств элемента
-	 */
-//	String getPropertyPaneClassName();
-
-	/**
 	 * флаг возможности передвижения элемента
 	 */
 	boolean isMovable();
@@ -122,6 +116,5 @@ public interface MapElement
 
 	void setColumn(String field, String value);
 	
-//	ObjectResourceController getPropertiesController();
 }
 
