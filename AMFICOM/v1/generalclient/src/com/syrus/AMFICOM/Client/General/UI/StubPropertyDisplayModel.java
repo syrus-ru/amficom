@@ -1,16 +1,23 @@
+/*
+ * $Id: StubPropertyDisplayModel.java,v 1.5 2004/09/25 19:50:00 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-
+import com.syrus.AMFICOM.Client.Resource.*;
 import java.awt.Color;
+import java.util.*;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2004/09/25 19:50:00 $
+ * @module generalclient_v1
+ */
 public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
 {
 	ObjectResource or;

@@ -1,5 +1,25 @@
 /*
-для оптимизации работы дерева вводится следующая схема разворачивания ветви
+ * $Id: UniTreePanel.java,v 1.8 2004/09/25 19:48:27 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+package com.syrus.AMFICOM.Client.General.UI;
+
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import java.awt.*;
+import java.awt.dnd.*;
+import java.util.*;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.tree.*;
+
+/**
+ * для оптимизации работы дерева вводится следующая схема разворачивания ветви
 дерева:
 
 при добавлении новых узлов (нод) тем узлам, которые являются основными для
@@ -22,24 +42,11 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 
 Таким образом, послав в дерево ListSelectionEvent с указанием OperatorGroup.typ
 зарегистрированная ветвь станет выделенной.
-*/
-package com.syrus.AMFICOM.Client.General.UI;
-
-import java.awt.dnd.*;
-
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.ListIterator;
-import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.event.*;
-
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2004/09/25 19:48:27 $
+ * @module generalclient_v1
+ */
 public class UniTreePanel extends JPanel
 		implements OperationListener, DragGestureListener
 {
@@ -62,7 +69,7 @@ public class UniTreePanel extends JPanel
 	{
 		this.aContext = aContext;
 		this.dispatcher = disp;
-		dsi = aContext.getDataSourceInterface();
+		dsi = aContext.getDataSource();
 		this.otm = otm;
 		try
 		{
@@ -81,38 +88,20 @@ public class UniTreePanel extends JPanel
 		dispatcher.register(this, "treelistdeselectionevent");
 		dispatcher.register(this, "treelistrefreshevent");
 		dispatcher.register(this, ContextChangeEvent.type);
-		Environment.the_dispatcher.register(this, ContextChangeEvent.type);
+		Environment.getDispatcher().register(this, ContextChangeEvent.type);
 		this.setLayout(borderLayout1);
-/*
-		root = otm.getRoot();
-		otm.nodeBeforeExpanded(root);
-		List vec = otm.getChildNodes(root);
-		for (int i = 0; i < vec.size(); i++)
-		{
-			ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) vec.elementAt(i);
-			root.add(tn);
-			otm.nodeBeforeExpanded(tn);
-			List vect = otm.getChildNodes(tn);
-			for (int k = 0; k < vect.size(); k++)
-			{
-				ObjectResourceTreeNode rtn = (ObjectResourceTreeNode ) vect.elementAt(k);
-				tn.add(rtn);
-			}
-		}
-		tm = new DefaultTreeModel(root);
-*/
+
 		tree = new JTree(new Hashtable());
 		tree.setRootVisible(true);
-		tree.addTreeWillExpandListener(new javax.swing.event.TreeWillExpandListener() {
+		tree.addTreeWillExpandListener(new TreeWillExpandListener() {
 			public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
 				tree_treeWillExpand(e);
 			}
+
 			public void treeWillCollapse(TreeExpansionEvent e) {
-				//nothing
+
 			}
 		});
-//		tree.setBorder(BorderFactory.createEtchedBorder());
-//		tree.setEditable(true);
 		tree.setCellRenderer(renderer);
 		this.add(tree, BorderLayout.CENTER);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
