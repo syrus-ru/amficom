@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.19 2004/08/18 11:28:07 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.20 2004/09/24 13:32:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/18 11:28:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2004/09/24 13:32:36 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -61,6 +61,7 @@ public abstract class ObjectEntities {
 	public static final String RESULT_ENTITY = "Result";
 	public static final String RESULTPARAMETER_ENTITY = "ResultParameter";
 	public static final String TEMPORALPATTERN_ENTITY = "TemporalPattern";
+	public static final String MODELING_ENTITY = "Modeling";
 
 
 	public static final short UNKNOWN_ENTITY_CODE = 0x0000;
@@ -103,6 +104,7 @@ public abstract class ObjectEntities {
 	public static final short RESULT_ENTITY_CODE = 0x0188;
 	public static final short RESULTPARAMETER_ENTITY_CODE = 0x0189;
 	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x018A;
+	public static final short MODELING_ENTITY_CODE = 0x018B;
 
 	public static short stringToCode(String entity) {
 		if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
@@ -138,6 +140,7 @@ public abstract class ObjectEntities {
 		else if (entity.equals(RESULT_ENTITY)) return RESULT_ENTITY_CODE;
 		else if (entity.equals(RESULTPARAMETER_ENTITY)) return RESULTPARAMETER_ENTITY_CODE;
 		else if (entity.equals(TEMPORALPATTERN_ENTITY)) return TEMPORALPATTERN_ENTITY_CODE;
+		else if (entity.equals(MODELING_ENTITY)) return MODELING_ENTITY_CODE;
 
 		else return UNKNOWN_ENTITY_CODE;
 	}
@@ -207,6 +210,8 @@ public abstract class ObjectEntities {
 				return RESULTPARAMETER_ENTITY;
 			case TEMPORALPATTERN_ENTITY_CODE:
 				return TEMPORALPATTERN_ENTITY;
+			case MODELING_ENTITY_CODE:
+				return MODELING_ENTITY;
 
 			case UNKNOWN_ENTITY_CODE:
 				return null;
