@@ -15,6 +15,7 @@ SQLChecker.cache
 sqlj.properties
 .all
 .idl
+.xtra
 .sqlj
 .project
 .classpath
