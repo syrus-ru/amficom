@@ -1,15 +1,22 @@
+/*
+ * $Id: ObjectPermissionAttributes.java,v 1.7 2004/09/27 15:54:36 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-
-
-import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.CORBA.Admin.ObjectPermissionAttributes_Transferable;
 import com.syrus.AMFICOM.Client.Resource.*;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 15:54:36 $
+ * @module generalclient_v1
+ */
 public class ObjectPermissionAttributes extends AdminObjectResource implements AdminObjectRWXresource
 {
 	static final public String typ = "obj_perm_attrib";
@@ -273,12 +280,6 @@ public class ObjectPermissionAttributes extends AdminObjectResource implements A
 				groups.put(group_ids.get(i), o);
 		}
 	}
-
-	public String getPropertyPaneClassName()
-	{
-		return "";
-	}
-
 
 	public Collection getChildren(String key)
 	{

@@ -1,13 +1,24 @@
+/*
+ * $Id: DomainModel.java,v 1.4 2004/09/27 15:50:35 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import java.text.*;
+import com.syrus.AMFICOM.Client.Administrate.Object.UI.DomainPaneConfig;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Resource.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
-
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 15:50:35 $
+ * @module generalclient_v1
+ */
 public class DomainModel extends ObjectResourceModel
 {
   public Domain dom;
@@ -17,10 +28,11 @@ public class DomainModel extends ObjectResourceModel
     this.dom = dom;
   }
 
-  public PropertiesPanel getPropertyPane()
-  {
-    return new DomainPaneConfig(dom);
-  }
+	public ObjectResourcePropertiesPane getPropertyPane() {
+		DomainPaneConfig domainPaneConfig = DomainPaneConfig.getInstance();
+		domainPaneConfig.setObjectResource(dom);
+		return domainPaneConfig;
+	}
 
   public String getColumnValue(String col_id)
   {

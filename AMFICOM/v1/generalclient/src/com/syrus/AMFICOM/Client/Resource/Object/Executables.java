@@ -1,10 +1,22 @@
+/*
+ * $Id: Executables.java,v 1.3 2004/09/27 15:51:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource.Object;
 
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.Resource.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 15:51:58 $
+ * @module generalclient_v1
+ */
 public class Executables
 {
 	DataSourceInterface dsi;
@@ -17,37 +29,30 @@ public class Executables
     setCommands();
   }
 
-public void setCommands()
-{
-  Hashtable h = Pool.getHash(CommandPermissionAttributes.typ);
-  if(h == null)
-    h = new Hashtable();
+	public void setCommands() {
+		Map map = Pool.getMap(CommandPermissionAttributes.typ);
+		/**
+		 * @todo Can't we just return here?
+		 */
+		if (map == null)
+			map = new HashMap();
+		Collection c = map.values();
+		String commandNames[] = new String[c.size()];
+		int i = 0;
+		for (Iterator iterator = c.iterator(); iterator.hasNext(); i++) {
+			String commandName = ((CommandPermissionAttributes) (iterator.next())).codename;
+			commandNames[i] = ((commandName == null) ? "" : commandName);
+		}
 
-  CommandPermissionAttributes cpa;
-  String[] commandNames = new String[h.size()];
-
-  int i=0;
-  for(Enumeration e = h.elements(); e.hasMoreElements();)
-  {
-    cpa = (CommandPermissionAttributes)(e.nextElement());
-    commandNames[i] = cpa.codename;
-    if(commandNames[i] == null)
-      commandNames[i] = "";
-    i++;
-  }
 // commandNames contains the names of the commands,
 // which have already been defined.
 
-//     System.out.println("TRY TO SET THE EXECS");
-
-
 // SETTING OF THE ADMINISTRATING COMMANDS //
-  Vector categ = new Vector();
-  String []tmp = new String []{OperatorCategory.sysadmin, OperatorCategory.admin};
-  for(i=0; i<tmp.length; i++)
-  {
-    categ.add(tmp[i]);
-  }
+		Vector categ = new Vector();
+		String []tmp = new String []{OperatorCategory.sysadmin, OperatorCategory.admin};
+		for (i=0; i<tmp.length; i++)
+			categ.add(tmp[i]);
+
 /* 1 */     setDefaultCommand(commandNames,Checker.addDomain, "Добавить домен", categ);
 /* 2 */     setDefaultCommand(commandNames,Checker.addGroup, "Добавить группу", categ);
 /* 3 */     setDefaultCommand(commandNames,Checker.addProfile, "Добавить профиль", categ);
@@ -82,12 +87,10 @@ public void setCommands()
 
 
 // SETTING OF THE TEST PLANNER COMMANDS (EXECUTABLES) //
- categ = new Vector();
- tmp = new String []{OperatorCategory.analyst, OperatorCategory.operator, OperatorCategory.spec, OperatorCategory.subscriber};
- for(i=0; i<tmp.length; i++)
- {
-   categ.add(tmp[i]);
- }
+		categ = new Vector();
+		tmp = new String []{OperatorCategory.analyst, OperatorCategory.operator, OperatorCategory.spec, OperatorCategory.subscriber};
+		for (i=0; i<tmp.length; i++)
+			categ.add(tmp[i]);
 
 /* 1 */  setDefaultCommand(commandNames,Checker.setOneTimeTest, "Установить однократное тестирование", categ);
 /* 2 */  setDefaultCommand(commandNames,Checker.setTestTimeTable, "Установить расписание тестов", categ);
@@ -103,12 +106,10 @@ public void setCommands()
 /* 12*/  setDefaultCommand(commandNames,Checker.openTestPlannerWindow, "Открыть окно тестирования", categ);
 
 // SETTING OF THE MODELING COMMANDS (EXECUTABLES) //
- categ = new Vector();
- tmp = new String[]{OperatorCategory.spec, OperatorCategory.analyst};
- for(i=0; i<tmp.length; i++)
- {
-   categ.add(tmp[i]);
- }
+		categ = new Vector();
+		tmp = new String[]{OperatorCategory.spec, OperatorCategory.analyst};
+		for (i=0; i<tmp.length; i++)
+			categ.add(tmp[i]);
 
 /* 1 */  setDefaultCommand(commandNames,Checker.enterReflectoModelingWindow, "Войти в модуль моделирования", categ);
 /* 2 */  setDefaultCommand(commandNames,Checker.performReflectoModeling, "Выполнить моделирование", categ);
@@ -118,12 +119,10 @@ public void setCommands()
 /* 6 */  setDefaultCommand(commandNames,Checker.openMapForModeling, "Открыть карту модели", categ);
 
 // SETTING OF THE COMMANDS FOR ANALYSIS, EXTENDED ANALYSIS and THRESHOLD SETTING //
- categ = new Vector();
- tmp = new String []{OperatorCategory.analyst, OperatorCategory.subscriber, OperatorCategory.spec};
- for(i=0; i<tmp.length; i++)
- {
-   categ.add(tmp[i]);
- }
+		categ = new Vector();
+		tmp = new String []{OperatorCategory.analyst, OperatorCategory.subscriber, OperatorCategory.spec};
+		for (i=0; i<tmp.length; i++)
+			categ.add(tmp[i]);
 
 /* 1 */  setDefaultCommand(commandNames,Checker.enterAnalysisModul, "Войти в модуль анализатора", categ);
 /* 2 */  setDefaultCommand(commandNames,Checker.enterExtendedAnalysisModul, "Войти в модуль расширенного анализатора", categ);
@@ -140,12 +139,10 @@ public void setCommands()
 
 
 //  --------- OPTIMIZATOR OF THE OPTICAL NET ----------  //
- categ = new Vector();
- tmp = new String []{OperatorCategory.spec, OperatorCategory.analyst};
- for(i=0; i<tmp.length; i++)
- {
-   categ.add(tmp[i]);
- }
+		categ = new Vector();
+		tmp = new String []{OperatorCategory.spec, OperatorCategory.analyst};
+		for (i=0; i<tmp.length; i++)
+			categ.add(tmp[i]);
 
 /* 1 */   setDefaultCommand(commandNames, Checker.startOptimization, "Начать оптимизацию", categ);
 /* 2 */   setDefaultCommand(commandNames, Checker.stopOptimization, "Прервать оптимизацию", categ);
@@ -157,12 +154,10 @@ public void setCommands()
 /* 8 */   setDefaultCommand(commandNames, Checker.openSchemeToBeOptimized, "Открыть схему для оптимизации", categ);
 
 //---------- CONFIGURING OF THE SYSTEM ----------//
- categ = new Vector();
- tmp = new String []{OperatorCategory.designer, OperatorCategory.admin};
- for(i=0; i<tmp.length; i++)
- {
-   categ.add(tmp[i]);
- }
+		categ = new Vector();
+		tmp = new String []{OperatorCategory.designer, OperatorCategory.admin};
+		for (i=0; i<tmp.length; i++)
+			categ.add(tmp[i]);
 
 /* 1 */ setDefaultCommand(commandNames, Checker.enterConfiguringModul, "Войти в модуль конфигурирования", categ);
 /* 2 */ setDefaultCommand(commandNames, Checker.componentEditing, "Редактирование компонентов", categ);
@@ -176,12 +171,10 @@ public void setCommands()
 /* 10*/ setDefaultCommand(commandNames, Checker.catalogCMediting, "Редактирование каталога СМ", categ);
 
 //------- OBSERVING MODUL ----------//
- categ = new Vector();
- tmp = new String []{OperatorCategory.subscriber, OperatorCategory.spec};
- for(i=0; i<tmp.length; i++)
- {
-   categ.add(tmp[i]);
- }
+		categ = new Vector();
+		tmp = new String []{OperatorCategory.subscriber, OperatorCategory.spec};
+		for (i=0; i<tmp.length; i++)
+			categ.add(tmp[i]);
 
 
 /* 1 */ setDefaultCommand(commandNames, Checker.enterObservingModul, "Войти в модуль наблюдения", categ);
@@ -197,20 +190,17 @@ public void setCommands()
 
 
 //------- PREDICTION MODUL ---------//
- categ = new Vector();
- tmp = new String []{OperatorCategory.analyst, OperatorCategory.spec};
- for(i=0; i<tmp.length; i++)
- {
-   categ.add(tmp[i]);
- }
+		categ = new Vector();
+		tmp = new String []{OperatorCategory.analyst, OperatorCategory.spec};
+		for (i=0; i<tmp.length; i++)
+			categ.add(tmp[i]);
 
 
 /* 1 */ setDefaultCommand(commandNames, Checker.enterPredictionModul, "Войти в модуль прогнозирования", categ);
 /* 2 */ setDefaultCommand(commandNames, Checker.calculatePredictedReflectogramm, "Рассчитать прогнозируемую рефлектограмму", categ);
 /* 3 */ setDefaultCommand(commandNames, Checker.loadDataForPrediction, "Загрузить данные для прогнозирования", categ);
 /* 4 */ setDefaultCommand(commandNames, Checker.savePredictedReflectogramm, "Сохранить прогнозируемую рефлектограмму", categ);
-  return;
-}
+	}
 
   private void setDefaultCommand(String []commandNames, String commandName, String rusCommandName)
  {
