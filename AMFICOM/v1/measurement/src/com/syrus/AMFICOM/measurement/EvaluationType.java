@@ -56,17 +56,9 @@ public class EvaluationType extends ActionType {
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
-	}
+	}	
 	
-	/**
-	 * client constructor
-	 * @param id
-	 * @param inParameterTypes
-	 * @param thresholdParameterTypes
-	 * @param etalonParameterTypes
-	 * @param outParameterTypes
-	 */
-	public EvaluationType(Identifier id,
+	private EvaluationType(Identifier id,
 						  List etalonParameterTypes,
 						  List inParameterTypes,
 						  List outParameterTypes,
@@ -77,6 +69,27 @@ public class EvaluationType extends ActionType {
 		this.thresholdParameterTypes = thresholdParameterTypes;
 		this.etalonParameterTypes = etalonParameterTypes;
 		this.outParameterTypes = outParameterTypes;
+	}
+	
+	/**
+	 * create new instance for client
+	 * @param id
+	 * @param etalonParameterTypes
+	 * @param inParameterTypes
+	 * @param outParameterTypes
+	 * @param thresholdParameterTypes
+	 * @return
+	 */
+	public static EvaluationType createInstance(Identifier id,
+						  List etalonParameterTypes,
+						  List inParameterTypes,
+						  List outParameterTypes,
+						  List thresholdParameterTypes){
+		return new EvaluationType(id,
+								  etalonParameterTypes,
+								  inParameterTypes,
+								  outParameterTypes,
+								  thresholdParameterTypes);
 	}
 
 	public Object getTransferable() {

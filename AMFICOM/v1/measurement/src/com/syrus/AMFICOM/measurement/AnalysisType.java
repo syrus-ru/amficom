@@ -51,14 +51,7 @@ public class AnalysisType extends ActionType {
 		}
 	}
 
-	/**
-	 * client constructor
-	 * @param id
-	 * @param inParameterTypes
-	 * @param criteriaParameterTypes
-	 * @param outParameterTypes
-	 */
-	public AnalysisType(Identifier id,						
+	private AnalysisType(Identifier id,						
 						List criteriaParameterTypes,
 						List inParameterTypes,						
 						List outParameterTypes) {
@@ -68,7 +61,25 @@ public class AnalysisType extends ActionType {
 		this.criteriaParameterTypes = criteriaParameterTypes;		
 		this.outParameterTypes = outParameterTypes;
 	}
-
+	
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param criteriaParameterTypes
+	 * @param inParameterTypes
+	 * @param outParameterTypes
+	 * @return
+	 */
+	public static AnalysisType createInstance(Identifier id,						
+										List criteriaParameterTypes,
+										List inParameterTypes,						
+										List outParameterTypes){
+		return new AnalysisType(id,
+								criteriaParameterTypes,
+								inParameterTypes,
+								outParameterTypes);
+	}
+	
 	public Object getTransferable() {
 		Identifier_Transferable[] inParTypes = new Identifier_Transferable[this.inParameterTypes.size()];
 		int i = 0;

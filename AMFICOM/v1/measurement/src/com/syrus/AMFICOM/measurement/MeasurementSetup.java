@@ -82,18 +82,7 @@ public class MeasurementSetup extends StorableObject {
 		}
 	}
 
-	/** 
-	 * client constructor
-	 * @param id
-	 * @param parameterSet
-	 * @param criteriaSet
-	 * @param thresholdSet
-	 * @param etalon
-	 * @param description
-	 * @param measurementDuration
-	 * @param monitoredElementIds
-	 */
-	public MeasurementSetup(Identifier id,
+	private MeasurementSetup(Identifier id,
 							long measurementDuration,
 							String description,
 							Set criteriaSet,
@@ -110,6 +99,36 @@ public class MeasurementSetup extends StorableObject {
 		this.description = description;
 		this.measurementDuration = measurementDuration;
 		this.monitoredElementIds = monitoredElementIds;
+	}
+	
+	/**
+	 * create new instance for client
+	 * @param id
+	 * @param measurementDuration
+	 * @param description
+	 * @param criteriaSet
+	 * @param etalon
+	 * @param parameterSet
+	 * @param thresholdSet
+	 * @param monitoredElementIds
+	 * @return
+	 */
+	public static MeasurementSetup createInstance(Identifier id,
+							long measurementDuration,
+							String description,
+							Set criteriaSet,
+							Set etalon,
+							Set parameterSet,			
+							Set thresholdSet,	
+							List monitoredElementIds){
+		return new MeasurementSetup(id,
+									measurementDuration,
+									description,
+									criteriaSet,
+									etalon,
+									parameterSet,
+									thresholdSet,
+									monitoredElementIds);
 	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {

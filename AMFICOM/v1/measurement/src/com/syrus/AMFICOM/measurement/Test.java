@@ -207,23 +207,9 @@ public class Test extends StorableObject {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 		return measurement;
-	}
+	}	
 	
-	/**
-	 * client constructor
-	 * @param id
-	 * @param analysisTypeId
-	 * @param description
-	 * @param evaluationTypeId
-	 * @param mainMeasurementSetup
-	 * @param measurementTypeId
-	 * @param monitoredElement
-	 * @param returnType
-	 * @param status
-	 * @param temporalPatternId
-	 * @param temporalType
-	 */
-	public Test(Identifier id,
+	private Test(Identifier id,
 							Date startTime,
 							Date endTime,
 							Identifier temporalPatternId,
@@ -250,6 +236,49 @@ public class Test extends StorableObject {
 		this.measurementSetupIds = measurementSetupIds;
 
 		this.status = TestStatus._TEST_STATUS_SCHEDULED;
+	}
+	
+	/**
+	 * create new instance for client
+	 * @param id
+	 * @param startTime
+	 * @param endTime
+	 * @param temporalPatternId
+	 * @param temporalType
+	 * @param measurementTypeId
+	 * @param analysisTypeId
+	 * @param evaluationTypeId
+	 * @param monitoredElement
+	 * @param returnType
+	 * @param description
+	 * @param measurementSetupIds
+	 * @return
+	 */
+	public static Test createInstance(Identifier id,
+							Date startTime,
+							Date endTime,
+							Identifier temporalPatternId,
+							TestTemporalType temporalType,
+							Identifier measurementTypeId,
+							Identifier analysisTypeId,
+							Identifier evaluationTypeId,
+							MonitoredElement monitoredElement,
+							TestReturnType returnType,
+							String description,
+							List measurementSetupIds){
+		return new Test(id,
+						startTime,
+						endTime,
+						temporalPatternId,
+						temporalType,
+						measurementTypeId,
+						analysisTypeId,
+						evaluationTypeId,
+						monitoredElement,
+						returnType,
+						description,
+						measurementSetupIds);
+		
 	}
 
 

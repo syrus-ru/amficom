@@ -677,13 +677,7 @@ public class TemporalPattern extends StorableObject {
 		}
 	}
 	
-	/**
-	 * cleint constructor
-	 * @param id
-	 * @param description
-	 * @param cronString
-	 */
-	public TemporalPattern(Identifier id,
+	private TemporalPattern(Identifier id,
 						   String description,
 						   List cronString){		
 		//super(PoolId.getId(ObjectEntities.TEMPORALPATTERN_ENTITY));
@@ -696,6 +690,20 @@ public class TemporalPattern extends StorableObject {
 			
 	}
 	
+	/**
+	 * create new instance for client
+	 * @param id
+	 * @param description
+	 * @param cronString
+	 * @return
+	 */
+	public static TemporalPattern createInstance(Identifier id,
+						   String description,
+						   List cronString){
+		return new TemporalPattern(id,
+								   description,
+								   cronString);
+	}
 
 	public static TemporalPattern create(	Identifier id,
 											Date created,

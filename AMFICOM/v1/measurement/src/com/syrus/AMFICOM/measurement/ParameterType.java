@@ -55,16 +55,22 @@ public class ParameterType extends StorableObjectType {
 		}
 	}
 	
-	/**
-	 * cleint constructor
-	 * @param id
-	 * @param name
-	 */
-	public ParameterType(Identifier id,
+	private ParameterType(Identifier id,
 						 String name){
 		//super(PoolId.getId(ObjectEntities.PARAMETERTYPE_ENTITY));
 		super(id);
 		setName(name);
+	}
+	
+	/**
+	 * create new instance for client
+	 * @param id
+	 * @param name
+	 * @return
+	 */
+	public static ParameterType createInstance(Identifier id,
+						 String name){
+		return new ParameterType(id,name);
 	}
 
 	public Object getTransferable() {

@@ -65,17 +65,9 @@ public class Set extends StorableObject {
 		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
-	}
+	}	
 	
-	/**
-	 * client constructor
-	 * @param id
-	 * @param description
-	 * @param monitoredElementIds
-	 * @param parameters
-	 * @param sort
-	 */
-	public Set( Identifier id,
+	private Set(Identifier id,
 				String description,
 				List monitoredElementIds,				
 				List parameters,
@@ -88,10 +80,31 @@ public class Set extends StorableObject {
 		this.monitoredElementIds = monitoredElementIds;
 		
 	}
+	
+	/**
+	 * create new instance for client
+	 * @param id
+	 * @param description
+	 * @param monitoredElementIds
+	 * @param parameters
+	 * @param sort
+	 * @return
+	 */
+	public static Set createInstance(Identifier id,
+									 String description,
+									 List monitoredElementIds,				
+									 List parameters,
+									 int sort){
+		return new Set(id,
+					   description,
+					   monitoredElementIds,
+					   parameters,
+					   sort);
+	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
     return this.monitoredElementIds.contains(monitoredElementId);
-  }
+	}
 
 	public void attachToMonitoredElement(Identifier monitoredElementId,
 																			 Identifier modifierId) throws UpdateObjectException {

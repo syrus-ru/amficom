@@ -53,19 +53,28 @@ public class MeasurementType extends ActionType {
 		}
 	}
 	
-	/**
-	 * client constructor
-	 * @param id
-	 * @param inParameterTypes
-	 * @param outParameterTypes
-	 */
-	public MeasurementType(Identifier id,
+	private MeasurementType(Identifier id,
 						   List inParameterTypes,
 						   List	outParameterTypes){
 		//super(PoolId.getId(ObjectEntities.MEASUREMENTTYPE_ENTITY));
 		super(id);
 		setInParameterTypes(inParameterTypes);
 		this.outParameterTypes = outParameterTypes;
+	}
+	
+	/**
+	 * create new instance for client
+	 * @param id
+	 * @param inParameterTypes
+	 * @param outParameterTypes
+	 * @return
+	 */
+	public static MeasurementType createInstance(Identifier id,
+						   List inParameterTypes,
+						   List	outParameterTypes){
+		return new MeasurementType(id,
+								   inParameterTypes,
+								   outParameterTypes);
 	}
 
 	public Object getTransferable() {
