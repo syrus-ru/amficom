@@ -69,7 +69,7 @@ public class MapEquipmentPane extends PropertiesPanel
 		return mapequipment;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.mapequipment = (MapEquipmentNodeElement )or;
 
@@ -82,7 +82,6 @@ public class MapEquipmentPane extends PropertiesPanel
 //		pPanel.setObjectResource(mapequipment);
 //		caPanel.setObjectResource(mapequipment);
 //		chPanel.setObjectResource(mapequipment);
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)

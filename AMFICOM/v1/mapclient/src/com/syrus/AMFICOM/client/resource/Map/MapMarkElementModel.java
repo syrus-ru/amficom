@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 import java.awt.Component;
 
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -147,10 +148,10 @@ public class MapMarkElementModel extends ObjectResourceModel
 	}
 
 	
-	public Vector getPropertyColumns()
+	public List getPropertyColumns()
 	{
 //		System.out.println("marker prop cols");
-		Vector cols = getColumns();//new Hashtable();
+		List cols = getColumns();//new Hashtable();
 		for(Enumeration enum = mark.attributes.elements(); enum.hasMoreElements();)
 		{
 			ElementAttribute ea = (ElementAttribute )enum.nextElement();

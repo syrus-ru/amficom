@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.2 2004/06/22 09:54:32 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.3 2004/08/17 15:06:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/06/22 09:54:32 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/17 15:06:37 $
  * @author $Author: krupenn $
  * @see
  */
@@ -61,7 +61,7 @@ import java.awt.event.KeyEvent;
 	{
 		this.mmf = mmf;
 		if(mmf == null)
-			foundTable.setContents(new DataSet());
+			foundTable.setContents(new LinkedList());
 	}
 	
 	public MapMainFrame getMapMainFrame() 
@@ -86,7 +86,7 @@ import java.awt.event.KeyEvent;
 				new StubDisplayModel(
 					new String[] {"name", "type_id"}, 
 					new String[] {"Название", "Тип"} ), 
-				new DataSet());
+				new LinkedList());
 	}
 
 	/**
@@ -148,7 +148,7 @@ import java.awt.event.KeyEvent;
 		if(searchText.length() == 0)
 			return;
 		searching = true;
-		foundTable.setContents(new DataSet());
+		foundTable.setContents(new LinkedList());
 		
 		Thread t = new Thread(new Runnable() 
 		{

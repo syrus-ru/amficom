@@ -20,15 +20,19 @@ public class CommandPermissionAttributesDisplayModel extends StubDisplayModel
   public CommandPermissionAttributesDisplayModel()
   {
   }
-  public Vector getColumns()
-  {
-    Vector vec = new Vector();
-//    vec.add("id");
-    vec.add("name");
-//    vec.add("owner_id");
-    vec.add("modified");
-    return vec;
-  }
+
+    List cols = new LinkedList();
+	{
+//    	vec.add("id");
+		cols.add("name");
+//    	vec.add("owner_id");
+		cols.add("modified");
+	}
+	
+	public List getColumns()
+	{
+		return cols;
+	}
 
   public String getColumnName(String col_id)
   {

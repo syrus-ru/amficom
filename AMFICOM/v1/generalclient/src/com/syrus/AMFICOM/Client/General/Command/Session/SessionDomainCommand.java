@@ -4,6 +4,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.Session.SessionDomainDialog;
 
@@ -55,11 +56,11 @@ public class SessionDomainCommand extends VoidCommand
 		if(aContext.getSessionInterface() == null)
 		{
 			System.out.println("Session null!!! :(");
-			dispatcher.notify(new StatusMessageEvent("Нет сессии!"));
+			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Нет сессии!"));
 			return;
 		}
 
-		dispatcher.notify(new StatusMessageEvent("Выбор домена..."));
+		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Выбор домена..."));
 
 		SessionDomainDialog sDialog = new SessionDomainDialog(aContext.getSessionInterface().getUserId());
 
@@ -75,7 +76,7 @@ public class SessionDomainCommand extends VoidCommand
 
 		if(sDialog.retCode == sDialog.RET_CANCEL)
 		{
-			dispatcher.notify(new StatusMessageEvent("Операция отменена"));
+			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModel.getString("Aborted")));
 			return;
 		}
 
@@ -89,11 +90,11 @@ public class SessionDomainCommand extends VoidCommand
 			}
 			catch(Exception ex)
 			{
-				dispatcher.notify(new StatusMessageEvent("Ошибка соединения!"));
+				dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения!"));
 				System.out.println("DOMAIN not set - not a RISD connection!");
 			}
 			
-			dispatcher.notify(new StatusMessageEvent("Новый домен выбран"));
+			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Новый домен выбран"));
 			dispatcher.notify(new ContextChangeEvent(
 					sDialog.domain_id,
 					ContextChangeEvent.DOMAIN_SELECTED_EVENT));

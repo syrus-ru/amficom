@@ -24,10 +24,8 @@ public abstract class PropertiesPanel extends JPanel
 	 *        property.
 	 * @return <code>true</code> if operation succeeded, <code>false</code>
 	 *         otherwise.
-	 * @deprecated setter method should return void, abnormal conditions
-	 *             should be handled via exception throwing.
 	 */
-	public abstract boolean setObjectResource(ObjectResource objectResource);
+	public abstract void setObjectResource(ObjectResource objectResource);
 
 	public abstract void setContext(ApplicationContext aContext);
 	public abstract boolean modify();

@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
+import java.util.List;
 
 public class MapProtoGroup extends StubResource implements Serializable
 {
@@ -215,10 +216,13 @@ class MapProtoGroupDisplayModel extends StubDisplayModel
 		return false;
 	}
 
-	public Vector getColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
 		cols.add("name");
+	}
+	
+	public List getColumns()
+	{
 		return cols;
 	}
 

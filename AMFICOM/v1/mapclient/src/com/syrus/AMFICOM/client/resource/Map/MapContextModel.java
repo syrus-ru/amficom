@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import java.util.*;
 import java.awt.*;
 import java.io.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.text.*;
@@ -91,10 +92,9 @@ public class MapContextModel extends ObjectResourceModel
 	{
 		return new MapContextPane(map);
 	}
-	
-	public Vector getPropertyColumns()
+
+	List cols = new LinkedList();
 	{
-		Vector cols = super.getPropertyColumns();
 //		cols.add("id");
 		cols.add("name");
 //		cols.add("codename");
@@ -102,7 +102,13 @@ public class MapContextModel extends ObjectResourceModel
 		cols.add("scheme_id");
 		cols.add("created");
 		cols.add("modified");
-		return cols;
+	}
+	
+	public List getPropertyColumns()
+	{
+		List retcols = super.getPropertyColumns();
+		retcols.addAll(cols);
+		return retcols;
 	}
 
 	public String getPropertyName(String col_id)

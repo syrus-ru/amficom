@@ -4,6 +4,7 @@ import com.ofx.geometry.SxDoublePoint;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -82,7 +83,7 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 					(MapTransmissionPathProtoElement )Pool.get(
 							MapTransmissionPathProtoElement.typ,
 							path.type_id);
-			path.attributes = ResourceUtil.copyAttributes(null, mppe.attributes);
+			path.attributes = (Hashtable )ResourceUtil.copyAttributes(null, mppe.attributes);
 	//		type_id = (String )mppe.ID;
 		}
 		if(col_id.equals("path_id"))
@@ -174,10 +175,8 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		return getColumnRenderer(col_id);
 	}
 
-	public Vector getPropertyColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-		Vector cols2 = super.getPropertyColumns();
 //		cols.add("id");
 		cols.add("name");
 		cols.add("length");
@@ -188,8 +187,15 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		cols.add("path_id");
 		cols.add("startnode");
 		cols.add("endnode");
-		cols.addAll(cols2);
-		return cols;
+	}	
+
+	public List getPropertyColumns()
+	{
+		List retcols = new LinkedList();
+		List cols2 = super.getPropertyColumns();
+		retcols.addAll(cols);
+		retcols.addAll(cols2);
+		return retcols;
 	}
 
 	public String getPropertyName(String col_id)

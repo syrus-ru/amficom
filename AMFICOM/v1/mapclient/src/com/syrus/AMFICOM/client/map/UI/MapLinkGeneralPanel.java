@@ -123,7 +123,7 @@ public class MapLinkGeneralPanel extends GeneralPanel
 		return maplink;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.maplink = (MapPhysicalLinkElement )or;
 
@@ -147,7 +147,6 @@ public class MapLinkGeneralPanel extends GeneralPanel
 			typeComboBox.setSelected(maplink.type_id);
 			descriptionTextPane.setText(maplink.description);
 		}
-		return true;
 	}
 
 	public boolean modify()

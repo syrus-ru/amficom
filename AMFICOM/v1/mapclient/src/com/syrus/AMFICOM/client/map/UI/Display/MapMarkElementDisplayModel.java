@@ -8,6 +8,8 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
 import com.syrus.AMFICOM.Client.Resource.MyUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 //A0A
@@ -18,9 +20,8 @@ public class MapMarkElementDisplayModel extends StubDisplayModel
 		super();
 	}
 
-	public Vector getColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
 		cols.add("link_id");
 		cols.add("name");
 //		cols.add("text");
@@ -28,6 +29,10 @@ public class MapMarkElementDisplayModel extends StubDisplayModel
 		cols.add("latitude");
 		cols.add("Length_1");
 		cols.add("Length_2");
+	}
+	
+	public List getColumns()
+	{
 		return cols;
 	}
 

@@ -10,6 +10,8 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 
 import java.awt.Component;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 //A0A
@@ -38,7 +40,7 @@ public class MapNodeLinkElementModel extends MapLinkElementModel
 			if(col_id.equals("physical_link_id"))
 				return nl.getMapContext().getPhysicalLinkbyNodeLink( nl.getId()).getId();
 			if(col_id.equals("type_id"))
-				return LangModel.String("node" + MapNodeLinkElement.typ);
+				return LangModel.getString("node" + MapNodeLinkElement.typ);
 /*
 			if(col_id.equals("show_length"))
 //				return nl.myTrueFalseComboBox.returnValue.getStateText();
@@ -144,16 +146,21 @@ public class MapNodeLinkElementModel extends MapLinkElementModel
 		return getColumnRenderer(col_id);
 	}
 
-	public Vector getPropertyColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-		Vector cols2 = super.getPropertyColumns();
 //		cols.add("id");
 		cols.add("name");
 //		cols.add("owner_id");
 		cols.add("length");
 		cols.add("physical_link_id");
-		cols.addAll(cols2);
+	}
+	
+	public List getPropertyColumns()
+	{
+		List retcols = new LinkedList();
+		List cols2 = super.getPropertyColumns();
+		retcols.addAll(cols);
+		retcols.addAll(cols2);
 		return cols;
 	}
 

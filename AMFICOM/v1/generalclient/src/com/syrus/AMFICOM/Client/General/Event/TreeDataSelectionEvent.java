@@ -3,10 +3,12 @@ package com.syrus.AMFICOM.Client.General.Event;
 import java.util.Collection;
 
 import com.syrus.AMFICOM.Client.Resource.DataSet;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TreeDataSelectionEvent extends OperationEvent
 {
-	DataSet dataSet;
+	List dataSet;
 	Class dataClass;
 	int selected;
 	
@@ -29,7 +31,7 @@ public class TreeDataSelectionEvent extends OperationEvent
 	 * @param selected
 	 * @param selectedObject
 	 */
-	public TreeDataSelectionEvent(Object source, DataSet dataSet, Class dataClass, int selected, Object selectedObject)
+	public TreeDataSelectionEvent(Object source, List dataSet, Class dataClass, int selected, Object selectedObject)
 	{
 		super(source, 0, type);
 		this.dataSet = dataSet;
@@ -51,10 +53,11 @@ public class TreeDataSelectionEvent extends OperationEvent
 	 * @deprecated DataSet usage is deprecated, use Collection
 	 * @return
 	 */
-	public DataSet getDataSet()
+	public List getDataSet()
 	{
-		if (this.dataSet==null){
-			this.dataSet = new DataSet(this.collection.iterator());
+		if (this.dataSet == null){
+			this.dataSet = new LinkedList();
+			this.dataSet.addAll(this.collection);
 		}
 		return this.dataSet;
 	}

@@ -43,16 +43,20 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 
 import java.awt.Component;
 
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
+import java.util.Iterator;
 
 public class ObjectResourceTableModel extends AbstractTableModel
 {
     private Component parent;
 
-	private DataSet dataSet;
+	private List dataSet;
 	private ObjectResourceDisplayModel displayModel;
 
 	boolean doRestrict = false;
@@ -60,7 +64,7 @@ public class ObjectResourceTableModel extends AbstractTableModel
 
 	public ObjectResourceTableModel(
 			ObjectResourceDisplayModel displayModel,
-			DataSet dataSet)
+			List dataSet)
 	{
 		setDisplayModel(displayModel);
 		setContents(dataSet);
@@ -68,12 +72,12 @@ public class ObjectResourceTableModel extends AbstractTableModel
 
 	public ObjectResourceTableModel(ObjectResourceDisplayModel displayModel)
 	{
-		this(displayModel, new DataSet());
+		this(displayModel, new LinkedList());
 	}
 
 	public ObjectResourceTableModel()
 	{
-		this(new StubDisplayModel(), new DataSet());
+		this(new StubDisplayModel(), new LinkedList());
 	}
 
 	public void setDisplayModel(ObjectResourceDisplayModel displayModel)
@@ -92,17 +96,17 @@ public class ObjectResourceTableModel extends AbstractTableModel
 		return (String)displayModel.getColumns().get(col_i);
 	}
 
-	public void setContents(DataSet dataSet)
+	public void setContents(List dataSet)
 	{
 		if(dataSet == null)
-			dataSet = new DataSet();
+			dataSet = new LinkedList();
 		this.dataSet = dataSet;
 		if(doRestrict)
 			restrictContents();
 		super.fireTableDataChanged();
 	}
 
-	public DataSet getContents()
+	public List getContents()
 	{
 		return dataSet;
 	}
@@ -117,15 +121,15 @@ public class ObjectResourceTableModel extends AbstractTableModel
 
 	public void restrictContents()
 	{
-		Vector vec_to_remove = new Vector();
-		for(Enumeration enum = dataSet.elements(); enum.hasMoreElements();)
+		List vec_to_remove = new LinkedList();
+		for(Iterator it = dataSet.iterator(); it.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )enum.nextElement();
+			ObjectResource or = (ObjectResource )it.next();
 			if(!or.getDomainId().equals(domain_id))
 				vec_to_remove.add(or);
 		}
-		for(int i = 0; i < vec_to_remove.size(); i++)
-			dataSet.remove((ObjectResource )vec_to_remove.get(i));
+		for(Iterator it = vec_to_remove.iterator(); it.hasNext();)
+			dataSet.remove((ObjectResource )it.next());
 	}
 
 	public void setDomainId(String domain_id)
@@ -169,8 +173,8 @@ public class ObjectResourceTableModel extends AbstractTableModel
 	//--------------------------------------------------------------------------
 	public Object getValueAt(int p_row, int p_col)
 	{
-		String col_id = (String)displayModel.getColumns().get(p_col);
-		ObjectResource or = (ObjectResource)dataSet.get(p_row);
+		String col_id = (String )displayModel.getColumns().get(p_col);
+		ObjectResource or = (ObjectResource )dataSet.get(p_row);
 		return or;
 //		ObjectResourceModel model = or.getModel();
 //		return model.getColumnValue(col_id);
@@ -191,7 +195,7 @@ public class ObjectResourceTableModel extends AbstractTableModel
 	//--------------------------------------------------------------------------
 	public boolean isCellEditable(int p_row, int p_col)
 	{
-		String col_id = (String)displayModel.getColumns().get(p_col);
+		String col_id = (String )displayModel.getColumns().get(p_col);
 		return displayModel.isColumnEditable(col_id);
 	}
 
@@ -201,8 +205,8 @@ public class ObjectResourceTableModel extends AbstractTableModel
 	//--------------------------------------------------------------------------
 	public void setValueAt( Object p_obj, int p_row, int p_col)
 	{
-		String col_id = (String)displayModel.getColumns().get(p_col);
-		ObjectResource or = (ObjectResource)dataSet.get(p_row);
+		String col_id = (String )displayModel.getColumns().get(p_col);
+		ObjectResource or = (ObjectResource )dataSet.get(p_row);
 		ObjectResourceModel model = or.getModel();
 		model.setColumnValue(col_id, p_obj);
 		this.fireTableDataChanged();
@@ -211,21 +215,21 @@ public class ObjectResourceTableModel extends AbstractTableModel
 	public ObjectResource getObjectByIndex(int ind)
 	{
 //		String col_id = (String )displayModel.getColumns().get(p_col);
-		return (ObjectResource)dataSet.get(ind);
+		return (ObjectResource )dataSet.get(ind);
 	}
 
 	public void clearTable()
 	{
-		dataSet = new DataSet();
+		dataSet = new LinkedList();
 		super.fireTableDataChanged();
 	}
 
 	public void moveColumn(int from, int to)
 	{
 		Object o = displayModel.getColumns().get(from);
-		displayModel.getColumns().removeElementAt(from);
+		displayModel.getColumns().remove(from);
 //		if(from > to)
-			displayModel.getColumns().insertElementAt(o, to);
+			displayModel.getColumns().add(to, o);
 //		else
 //			displayModel.getColumns().insertElementAt(o, to - 1);
 	}

@@ -47,9 +47,9 @@ public class SessionCloseCommand extends VoidCommand
 
 	public void execute()
 	{
-		dispatcher.notify(new StatusMessageEvent("Закрытие сессии..."));
+		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Закрытие сессии..."));
 		aContext.getSessionInterface().CloseSession();
-		dispatcher.notify(new StatusMessageEvent("Сессия закрыта"));
+		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Сессия закрыта"));
 		dispatcher.notify(new ContextChangeEvent(
 				aContext.getSessionInterface(),
 				ContextChangeEvent.SESSION_CLOSED_EVENT));

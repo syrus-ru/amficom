@@ -9,12 +9,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import java.util.Iterator;
 
 public class ObjectResourceListBox extends JList
 		implements PropertyRenderer, PropertyEditor
@@ -167,6 +169,15 @@ public class ObjectResourceListBox extends JList
 	public ObjectResourceListBox(String type)
 	{
 		this(type, _DEFAULT_COL_ID);
+	}
+
+	public void setContents(Collection co)
+	{
+		vec = new Vector();
+		for(Iterator it = co.iterator(); it.hasNext();)
+		{
+			vec.addElement(it.next());
+		}
 	}
 
 	public void setContents(Enumeration enum)

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+import java.util.List;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -167,17 +168,17 @@ public class TwoListsPanel extends GeneralPanel
 
 
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     this.or = (AdminObjectResource )or;
 
     {
       list1.removeAll();
-      DataSet dSet = new DataSet(this.or.getChildren(childTyp));
+      List dSet = new DataSet(this.or.getChildren(childTyp));
       ObjectResourceSorter sorter = new ObjectResourceNameSorter();//  MonitoredElement.getDefaultSorter();
       sorter.setDataSet(dSet);
       dSet = sorter.default_sort();
-      list1.setContents(dSet.elements());
+      list1.setContents(dSet);
     }
 
 
@@ -201,13 +202,12 @@ public class TwoListsPanel extends GeneralPanel
     list2.removeAll();
 
     {
-      DataSet dSet = new DataSet(h);
+      List dSet = new DataSet(h);
       ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
       sorter.setDataSet(dSet);
       dSet = sorter.default_sort();
-      list2.setContents(dSet.elements());
+      list2.setContents(dSet);
     }
-    return true;
   }
 
 

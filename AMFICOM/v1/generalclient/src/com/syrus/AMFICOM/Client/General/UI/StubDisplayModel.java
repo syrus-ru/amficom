@@ -44,12 +44,15 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.Color;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
+import java.util.Enumeration;
 
 public class StubDisplayModel implements ObjectResourceDisplayModel
 {
-	Vector cols = new Vector();
-	Vector colnames = new Vector();
+	LinkedList cols = new LinkedList();
+	LinkedList colnames = new LinkedList();
 	int[] colsizes = new int[0];
 	
 	public StubDisplayModel()
@@ -58,14 +61,14 @@ public class StubDisplayModel implements ObjectResourceDisplayModel
 	
 	public StubDisplayModel(Vector cols, Vector colnames)
 	{
-		this.cols = cols;
-		this.colnames = colnames;
+		this.cols.addAll(cols);
+		this.colnames.addAll(colnames);
 	}
 	
 	public StubDisplayModel(Vector cols, Vector colnames, int[] colsizes)
 	{
-		this.cols = cols;
-		this.colnames = colnames;
+		this.cols.addAll(cols);
+		this.colnames.addAll(colnames);
 		this.colsizes = colsizes;
 	}
 
@@ -86,7 +89,7 @@ public class StubDisplayModel implements ObjectResourceDisplayModel
 		this.colsizes = colsizes;
 	}
 
-	public Vector getColumns()
+	public List getColumns()
 	{
 		return cols;
 	}

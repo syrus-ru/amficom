@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfileGeneralPanel.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: OperatorProfileGeneralPanel.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import oracle.jdeveloper.layout.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
  * @module generalclient_v1
  */
 public class OperatorProfileGeneralPanel extends GeneralPanel
@@ -308,11 +308,11 @@ public class OperatorProfileGeneralPanel extends GeneralPanel
     return profile;
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     this.profile = (OperatorProfile )or;
     if(profile == null)
-      return false;
+      return;
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
 //    System.out.println("set prop pane to " + profile.name);
@@ -367,7 +367,6 @@ public class OperatorProfileGeneralPanel extends GeneralPanel
 
     categoriesPanel.setObjectResource(profile);
 
-    return true;
   }
 
   public boolean modify()

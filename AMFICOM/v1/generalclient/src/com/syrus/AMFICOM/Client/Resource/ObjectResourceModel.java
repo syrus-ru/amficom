@@ -44,12 +44,17 @@ import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 
 import java.awt.Component;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ObjectResourceModel extends Object
 {
-	ObjectResource or;
+	protected ObjectResource or;
+
+	private LinkedList propertyColumns = new LinkedList();
+	private LinkedList children = new LinkedList();
+	private PropertiesPanel panel = new GeneralPanel();
 
 	public ObjectResourceModel()
 	{
@@ -60,16 +65,16 @@ public class ObjectResourceModel extends Object
 		this.or = or;
 	}
 
-	public Enumeration getChildren(String key)
+	public Collection getChildren(String key)
 	{
 //		System.out.println(" ORM: getChildren " + key);
-		return new Vector().elements();
+		return children;
 	}
 
 	public PropertiesPanel getPropertyPane()
 	{
 //		System.out.println("  ORM: getPropertyPane");
-		return new GeneralPanel();
+		return panel;
 	}
 
 	public String getColumnValue(String col_id)
@@ -95,10 +100,10 @@ public class ObjectResourceModel extends Object
 		return null;//new TextFieldEditor(col_id);
 	}
 */	
-	public Vector getPropertyColumns()
+	public List getPropertyColumns()
 	{
 //		System.out.println("           ORM: getPropertyColumns");
-		return new Vector();
+		return propertyColumns;
 	}
 
 	public String getPropertyName(String col_id)

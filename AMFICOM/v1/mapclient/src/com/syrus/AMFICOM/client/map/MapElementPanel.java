@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Map;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -70,7 +71,7 @@ public class MapElementPanel extends JPanel
 					new String[] {"Название", "Тип"} ), 
 //					new String[] {"id", "name"}, 
 //					new String[] {"Идентификатор", "Название"} ), 
-				new DataSet());
+				new LinkedList());
 
 		setEnableDisable(false);//устанавливаем в режим false
 		this.setLayout(borderLayout2);
@@ -174,7 +175,7 @@ public class MapElementPanel extends JPanel
 		myTable.clearSelection();
 		mouseSelect = true;
 		String selection = (String )typeComboBox.getSelectedItem();
-		DataSet dataSet = new DataSet();
+		List dataSet = new LinkedList();
 
 		if(mapContext != null)
 		{
@@ -207,7 +208,7 @@ public class MapElementPanel extends JPanel
 		//Здесь очищаем выбранные элементы у табли
 		myTable.clearSelection();
 		String selection = (String )typeComboBox.getSelectedItem();
-		DataSet dataSet = tablePane.getContents();
+		List dataSet = tablePane.getContents();
 		for(int i = 0; i < dataSet.size(); i++)
 		{
 			MapElement me = (MapElement )dataSet.get(i);
@@ -230,7 +231,7 @@ public class MapElementPanel extends JPanel
 
 		if ( b == false )
 		{
-			tablePane.setContents(new DataSet());
+			tablePane.setContents(new LinkedList());
 		}
 	}
 

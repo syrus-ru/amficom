@@ -12,15 +12,19 @@ public class UserDisplayModel extends StubDisplayModel
   public UserDisplayModel()
   {
   }
-  public Vector getColumns()
-  {
-	  Vector vec = new Vector();
-//	  vec.add("id");
-	  vec.add("name");
-	  vec.add("sessions");
-	  vec.add("last_login");
-		  return vec;
-  }
+
+    List cols = new LinkedList();
+	{
+//	  	vec.add("id");
+		cols.add("name");
+		cols.add("sessions");
+		cols.add("last_login");
+	}
+
+	public List getColumns()
+	{
+		return cols;
+	}
 
   public String getColumnName(String col_id)
   {

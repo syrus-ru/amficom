@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Image;
 
+import java.util.List;
 import java.util.Vector;
 import java.util.Enumeration;
 import javax.swing.ImageIcon;
@@ -34,6 +35,7 @@ import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 
 import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
+import java.util.Iterator;
 
 /**
  * <p>Description: Модель дерева с доступными отчётами</p>
@@ -106,7 +108,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(MapContext.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(MapContext.typ));
+					List dSet = new DataSet(Pool.getHash(MapContext.typ));
 
 					/*          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					  dSet = filter.filter(dSet);
@@ -114,10 +116,9 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 					  sorter.setDataSet(dSet);
 					  dSet = sorter.default_sort();*/
 
-					Enumeration enum = dSet.elements();
-					for (; enum.hasMoreElements(); )
+					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
-						MapContext mc = (MapContext) enum.nextElement();
+						MapContext mc = (MapContext) it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(mc,
 							mc.getName(), true);
 						vec.add(n);
@@ -131,7 +132,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 
-				DataSet dSet = new DataSet();
+				List dSet = new DataSet();
 				for (int i = 0; i < mc.getNodes().size(); i++)
 				{
 					ObjectResource os = (ObjectResource) mc.getNodes().get(i);
@@ -144,11 +145,9 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
-					MapEquipmentNodeElement me = (MapEquipmentNodeElement) enum.
-						nextElement();
+					MapEquipmentNodeElement me = (MapEquipmentNodeElement)it.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
@@ -187,7 +186,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 
-				DataSet dSet = new DataSet();
+				List dSet = new DataSet();
 				for (int i = 0; i < mc.getNodes().size(); i++)
 				{
 					ObjectResource os = (ObjectResource) mc.getNodes().get(i);
@@ -200,11 +199,9 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
-					MapPhysicalNodeElement me = (MapPhysicalNodeElement) enum.
-						nextElement();
+					MapPhysicalNodeElement me = (MapPhysicalNodeElement)it.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
@@ -215,7 +212,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode) node.
 					getParent();
 				MapContext mc = null;
-				DataSet dSet = null;
+				List dSet = null;
 				if (parent.getObject()instanceof MapContext)
 				{
 					mc = (MapContext) parent.getObject();
@@ -244,11 +241,9 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
-					MapPhysicalLinkElement ml = (MapPhysicalLinkElement) enum.
-						nextElement();
+					MapPhysicalLinkElement ml = (MapPhysicalLinkElement)it.next();
 
 					String curName = ml.getName();
 					ObjectsReport curReport = new ObjectsReport(new MapReportModel(),
@@ -283,19 +278,16 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 
-				DataSet dSet = new DataSet(mc.getTransmissionPath());
+				List dSet = new DataSet(mc.getTransmissionPath());
 
 				ObjectResourceSorter sorter = MapTransmissionPathElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
-					MapTransmissionPathElement me = (MapTransmissionPathElement)
-						enum.
-						nextElement();
+					MapTransmissionPathElement me = (MapTransmissionPathElement)it.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
@@ -309,7 +301,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 					getObject();
 				MapContext mc = ml.getMapContext();
 
-				DataSet dSet = new DataSet();
+				List dSet = new DataSet();
 				for (int i = 0; i < mc.getMapMarkElements().size(); i++)
 				{
 					MapMarkElement mme = (MapMarkElement) mc.getMapMarkElements().
@@ -322,10 +314,9 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
-					MapMarkElement mme = (MapMarkElement) enum.nextElement();
+					MapMarkElement mme = (MapMarkElement )it.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(mme,
 						mme.getName(), true);
 					vec.add(n);

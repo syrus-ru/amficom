@@ -180,11 +180,11 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPa
     this.aContext = aContext;
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     this.cpa = (CommandPermissionAttributes)or;
     if(cpa == null)
-      return false;
+      return;
 
     this.jTextCreatedBy.setTextNameByID(User.typ,cpa.created_by);
     this.jTextID.setText(cpa.id);
@@ -201,7 +201,6 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPa
 
     categoriesPanel.setObjectResource(cpa);
 
-    return true;
   }
   public ObjectResource getObjectResource()
   {

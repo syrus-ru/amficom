@@ -18,13 +18,13 @@ public class CommandPermissionAttributesModel extends ObjectResourceModel
     this.cpa = cpa;
   }
 
-  public Enumeration getChildren(String key)
+  public Collection getChildren(String key)
   {
     if(key.equals(OperatorCategory.typ))
     {
-      return cpa.categories.elements();
+      return cpa.categories.values();
     }
-    return new Vector().elements();
+    return new Vector();
   }
 
   public Enumeration getChildTypes()

@@ -50,7 +50,7 @@ public class CheckConnectionCommand extends VoidCommand
 	{
 		ConnectionInterface ci = aContext.getConnectionInterface();
 		System.out.println("Checking connection " + ci.toString());
-		dispatcher.notify(new StatusMessageEvent("Проверка соединения с сервером..."));
+		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Проверка соединения с сервером..."));
 		if(ConnectionInterface.getActiveConnection() != null)
 			if(ConnectionInterface.getActiveConnection().isConnected())
 				return;
@@ -59,7 +59,7 @@ public class CheckConnectionCommand extends VoidCommand
 		{
 			if(dispatcher != null)
 			{
-				dispatcher.notify(new StatusMessageEvent("Соединение установлено"));
+				dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Соединение установлено"));
 				dispatcher.notify(new ContextChangeEvent(
 						ci,
 						ContextChangeEvent.CONNECTION_OPENED_EVENT));
@@ -69,7 +69,7 @@ public class CheckConnectionCommand extends VoidCommand
 		{
 			if(dispatcher != null)
 			{
-				dispatcher.notify(new StatusMessageEvent("Ошибка установления соединения"));
+				dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Ошибка установления соединения"));
 				dispatcher.notify(new ContextChangeEvent(
 						ci,
 						ContextChangeEvent.CONNECTION_FAILED_EVENT));

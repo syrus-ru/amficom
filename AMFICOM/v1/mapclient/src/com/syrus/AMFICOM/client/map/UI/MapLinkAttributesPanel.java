@@ -81,7 +81,7 @@ public class MapLinkAttributesPanel extends GeneralPanel
 		return maplink;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.maplink = (MapPhysicalLinkElement )or;
 
@@ -90,8 +90,6 @@ public class MapLinkAttributesPanel extends GeneralPanel
 //		tableInit();
 //		tableModel.setObject(or);
 		charPane.setSelected(or);
-		return true;
-
 	}
 
 	public boolean modify()

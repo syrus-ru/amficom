@@ -17,11 +17,6 @@ public class UserModel extends ObjectResourceModel
     this.user = user;
   }
 
-  public Enumeration getChildren(String key)
-  {
-    return new Vector().elements();
-  }
-
   public Enumeration getChildTypes(String key)
   {
     return new Vector().elements();

@@ -6,6 +6,8 @@ import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
 import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 //A0A
@@ -23,10 +25,9 @@ public class MapPhysicalLinkElementDisplayModel extends StubDisplayModel
 		super();
 		this.aContext = aContext;
 	}
-	
-	public Vector getColumns()
+
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
 		cols.add("id");
 		cols.add("name");
 		cols.add("type_id");
@@ -34,6 +35,10 @@ public class MapPhysicalLinkElementDisplayModel extends StubDisplayModel
 //		cols.add("style");
 		cols.add("length");
 //		cols.add("thickness");
+	}
+	
+	public List getColumns()
+	{
 		return cols;
 	}
 

@@ -54,7 +54,7 @@ public class MapEquipmentSchemePanel extends GeneralPanel
 		return mapequipment;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.mapequipment = (MapEquipmentNodeElement )or;
 
@@ -65,7 +65,6 @@ public class MapEquipmentSchemePanel extends GeneralPanel
 			se = (SchemeElement )Pool.get(SchemeElement.typ, mapequipment.element_id);
 
 //		schPane.setElement(se);
-		return true;
 	}
 
 	public boolean modify()

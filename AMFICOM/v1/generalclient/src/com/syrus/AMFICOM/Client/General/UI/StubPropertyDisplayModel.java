@@ -6,6 +6,9 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 
 import java.awt.Color;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
@@ -21,15 +24,15 @@ public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
 		this.or = or;
 	}
 	
-	static Vector emptyVector = new Vector();
+	static LinkedList empty = new LinkedList();
 	
-	public Vector getColumns()
+	public List getColumns()
 	{
 		if(or == null)
-			return new Vector();
+			return empty;
 		ObjectResourceModel mod = or.getModel();
 		if(mod == null)
-			return emptyVector;
+			return empty;
 		return mod.getPropertyColumns();
 	}
 	

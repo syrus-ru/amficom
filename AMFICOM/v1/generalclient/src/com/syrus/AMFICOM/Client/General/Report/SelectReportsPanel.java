@@ -11,6 +11,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 import java.util.Enumeration;
 
@@ -380,7 +382,7 @@ public class SelectReportsPanel extends JInternalFrame implements
 			return;
 		}
 
-		DataSet dataset = new DataSet();
+		List dataset = new LinkedList();
 
 		additionalPanel = new SetRestrictionsWindow(
 			(ObjectResourceFilter) curFilterChanging.clone(),

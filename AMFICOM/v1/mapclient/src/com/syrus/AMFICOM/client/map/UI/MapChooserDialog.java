@@ -17,6 +17,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -74,7 +75,7 @@ public class MapChooserDialog extends JDialog
 		}
 	}
 
-	public void setContents(ObjectResourceDisplayModel odm, DataSet dataSet)
+	public void setContents(ObjectResourceDisplayModel odm, List dataSet)
 	{
 		listPane.initialize(odm, dataSet);
 		buttonOpen.setEnabled(false);

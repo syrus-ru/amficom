@@ -12,6 +12,8 @@ import com.syrus.AMFICOM.Client.Resource.MyUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 //A0A
@@ -30,15 +32,18 @@ public class MapEquipmentNodeElementDisplayModel extends StubDisplayModel
 		this.aContext = aContext;
 	}
 
-//Далее функции иполузуются для отображения свойств класса в таблице
-	public Vector getColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
 		cols.add("id");
 		cols.add("name");
 		cols.add("type_id");
 		cols.add("longitude");
 		cols.add("latitude");
+	}
+	
+//Далее функции иполузуются для отображения свойств класса в таблице
+	public List getColumns()
+	{
 		return cols;
 	}
 

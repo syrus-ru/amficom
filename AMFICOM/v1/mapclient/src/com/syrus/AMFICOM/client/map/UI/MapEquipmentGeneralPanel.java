@@ -151,7 +151,7 @@ public class MapEquipmentGeneralPanel extends GeneralPanel
 		return mapequipment;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
 
@@ -167,7 +167,7 @@ public class MapEquipmentGeneralPanel extends GeneralPanel
 			image_id = "";
 			imagePanel.removeAll();
 			imageButton.setEnabled(false);
-			return true;
+			return;
 		}
 
 //		System.out.println("set prop pane to " + mapequipment.name);
@@ -188,7 +188,6 @@ public class MapEquipmentGeneralPanel extends GeneralPanel
 		imagePanel.add(new JLabel(new ImageIcon(ir.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH))));
 		imagePanel.revalidate();
 		imageButton.setEnabled(true);
-		return true;
 	}
 
 	public boolean modify()

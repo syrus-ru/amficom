@@ -7,18 +7,46 @@ public abstract class ObjectResourceSorter
 	static public final int SORT_ASCENDING = 0;
 	static public final int SORT_DESCENDING = 1;
 
-	DataSet dataSet;
+	List dataSet;
 
 	public ObjectResourceSorter()
 	{
 	}
 
-	public ObjectResourceSorter(DataSet dataSet)
+	public ObjectResourceSorter(List dataSet)
 	{
 		this.dataSet = dataSet;
 	}
 
-	public void setDataSet(DataSet dataSet)
+	public ObjectResourceSorter(Collection dataSet)
+	{
+		setDataSet(dataSet);
+	}
+
+	public ObjectResourceSorter(Map elements)
+	{
+		setDataSet(elements);
+	}
+
+	public void setDataSet(Collection dataSet)
+	{
+		this.dataSet = new LinkedList();
+		for(Iterator it = dataSet.iterator(); it.hasNext();)
+		{
+			this.dataSet.add(it.next());
+		}
+	}
+
+	public void setDataSet(Map elements)
+	{
+		this.dataSet = new LinkedList();
+		for(Iterator it = elements.values().iterator(); it.hasNext();)
+		{
+			this.dataSet.add(it.next());
+		}
+	}
+
+	public void setDataSet(List dataSet)
 	{
 		this.dataSet = dataSet;
 	}
@@ -27,14 +55,15 @@ public abstract class ObjectResourceSorter
 	public abstract String getString(ObjectResource or, String column);
 	public abstract long getLong(ObjectResource or, String column);
 
-	public DataSet default_sort()
+	public List default_sort()
 	{
 		return sort(getSortedColumns()[0][0], SORT_ASCENDING);
 	}
 	
-	public DataSet sort(String column, int sortdir)
+	public List sort(String column, int sortdir)
 	{
-		DataSet sorted_dataSet = new DataSet();
+		List sorted_dataSet = new LinkedList();
+
 		int size = dataSet.size();
 		String sort_type = "";
 		ObjectResource temp_or = null;
@@ -62,9 +91,9 @@ public abstract class ObjectResourceSorter
 		{
 			curr_long = -9223372036854775808L;
 			curr_string = "";
-			for(Enumeration e = dataSet.elements(); e.hasMoreElements();)
+			for(Iterator it = dataSet.iterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )e.nextElement();
+				ObjectResource or = (ObjectResource )it.next();
 				if (sort_type.equals("long"))
 				{
 					long_obj_sorter = getLong(or, column);

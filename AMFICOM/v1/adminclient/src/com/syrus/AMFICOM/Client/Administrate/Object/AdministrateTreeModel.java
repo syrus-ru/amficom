@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Administrate.Object;
 import java.awt.*;
 import java.util.*;
 
+import java.util.List;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.*;
@@ -716,11 +717,11 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
 
   private Enumeration getSortedElements(Enumeration e)
   {
-    DataSet dSet = new DataSet(e);
+    List dSet = new DataSet(e);
     ObjectResourceSorter sorter = new ObjectResourceNameSorter();//  MonitoredElement.getDefaultSorter();
     sorter.setDataSet(dSet);
     dSet = sorter.default_sort();
-    return dSet.elements();
+    return Collections.enumeration(dSet);
   }
 
 

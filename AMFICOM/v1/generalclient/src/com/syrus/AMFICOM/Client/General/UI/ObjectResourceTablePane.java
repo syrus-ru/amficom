@@ -48,6 +48,7 @@ import java.awt.SystemColor;
 
 
 
+import java.util.List;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -152,7 +153,7 @@ public class ObjectResourceTablePane extends JScrollPane
 		jTable.setDefaultEditor(ObjectResource.class, editor);
 	}
 
-	public void initialize(ObjectResourceDisplayModel displayModel, DataSet dataSet)
+	public void initialize(ObjectResourceDisplayModel displayModel, List dataSet)
 	{
 		tableModel = new ObjectResourceTableModel(displayModel, dataSet);
 		tableInit();
@@ -174,12 +175,12 @@ public class ObjectResourceTablePane extends JScrollPane
 		return sorter;
 	}
 
-	public void setContents(DataSet dataSet)
+	public void setContents(List dataSet)
 	{
 		tableModel.setContents(dataSet);
 	}
 
-	public DataSet getContents()
+	public List getContents()
 	{
 		return tableModel.getContents();
 	}
@@ -188,7 +189,7 @@ public class ObjectResourceTablePane extends JScrollPane
 	{
 		if(sorter == null)
 			return;
-		DataSet ds = getContents();
+		List ds = getContents();
 		sorter.setDataSet(ds);
 		ds = sorter.sort(sort_type, sort_dir);
 		setContents(ds);
@@ -224,7 +225,7 @@ public class ObjectResourceTablePane extends JScrollPane
 
 	public int setSelected(Object o)
 	{
-		DataSet dataSet = tableModel.getContents();
+		List dataSet = tableModel.getContents();
 		int i = dataSet.indexOf(o);
 		if(i >= 0 && i < dataSet.size())
 		{
@@ -241,7 +242,7 @@ public class ObjectResourceTablePane extends JScrollPane
 
 	public void deselect(Object o)
 	{
-		DataSet dataSet = tableModel.getContents();
+		List dataSet = tableModel.getContents();
 		int i = dataSet.indexOf(o);
 		if(i >= 0 && i < dataSet.size())
 		{

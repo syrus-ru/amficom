@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPanel.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: ClientPanel.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import java.awt.Insets;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
  * @module generalclient_v1
  */
 public class ClientPanel extends GeneralPanel
@@ -144,14 +144,13 @@ public class ClientPanel extends GeneralPanel
   }
 
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     if(or == null)
-      return false;
+      return;
 
     client = (Client)or;
     setData(client);
-    return true;
   }
 
   private void setData(Client client)

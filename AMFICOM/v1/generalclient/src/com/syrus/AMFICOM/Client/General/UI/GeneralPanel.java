@@ -80,9 +80,8 @@ public class GeneralPanel extends PropertiesPanel
 		return null;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)

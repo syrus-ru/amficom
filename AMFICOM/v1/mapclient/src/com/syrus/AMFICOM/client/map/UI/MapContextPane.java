@@ -124,7 +124,7 @@ public class MapContextPane extends GeneralPanel
 		return mapContext;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		System.out.println("set OR " + or.getName());
 		this.mapContext = (MapContext )or;
@@ -141,8 +141,6 @@ public class MapContextPane extends GeneralPanel
 
 		latitudeTextField.setText(String.valueOf(MyUtil.fourdigits(mapContext.latitude)));
 		longitudeTextField.setText(String.valueOf(MyUtil.fourdigits(mapContext.longitude)));
-
-		return true;
 	}
 
 	public boolean modify()

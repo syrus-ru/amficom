@@ -81,7 +81,7 @@ public class MapPathAttributesPanel extends GeneralPanel
 		return mappath;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.mappath = (MapTransmissionPathElement )or;
 
@@ -90,8 +90,6 @@ public class MapPathAttributesPanel extends GeneralPanel
 //		tableInit();
 //		tableModel.setObject(or);
 		charPane.setSelected(or);
-		return true;
-
 	}
 
 	public boolean modify()

@@ -213,11 +213,11 @@ public class ObjectPermissionAttributesPanel extends GeneralPanel//PropertiesPan
                                 aContext.getSessionInterface().getUserId()));
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     this.opa = (ObjectPermissionAttributes)or;
     if(opa == null)
-      return false;
+      return;
 
     this.jTextCreatedBy.setTextNameByID(User.typ,opa.created_by);
     this.jTextID.setText(opa.id);
@@ -236,8 +236,6 @@ public class ObjectPermissionAttributesPanel extends GeneralPanel//PropertiesPan
     rwxPanel.setRWXproperties(opa);
 
     groupsPanel.setObjectResource(opa);
-
-    return true;
   }
 
   public ObjectResource getObjectResource()

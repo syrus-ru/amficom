@@ -116,11 +116,11 @@ public class CommandPermissionAttributesPane extends PropertiesPanel
 	 this.updater = new NewUpDater(aContext);
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
 	 ObjectResourceCatalogFrame f = (ObjectResourceCatalogFrame)
 											  Pool.get("ObjectFrame", "AdministrateObjectFrame");
-	 if(f!=null)
+	 if(f != null)
 	 {
 		f.setTitle("Команды");
 	 }
@@ -129,12 +129,11 @@ public class CommandPermissionAttributesPane extends PropertiesPanel
 	 {
 		this.showTheWindow(false);
 		setData(or);
-		return false;
+		return;
 	 }
 
 	 this.showTheWindow(true);
 	 setData(or);
-	 return true;
   }
 
   private void setData(ObjectResource or)

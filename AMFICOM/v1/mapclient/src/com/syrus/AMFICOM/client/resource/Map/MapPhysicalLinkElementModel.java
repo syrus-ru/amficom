@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.UI.TrueFalseComboBox;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -69,7 +70,7 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 					(MapPhysicalLinkProtoElement )Pool.get(
 							MapPhysicalLinkProtoElement.typ,
 							link.type_id);
-			link.attributes = ResourceUtil.copyAttributes(null, mplpe.attributes);
+			link.attributes = (Hashtable )ResourceUtil.copyAttributes(null, mplpe.attributes);
 		}
 		if(col_id.equals("link_id"))
 		{
@@ -138,10 +139,8 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 		return new MapLinkPane(link);
 	}
 
-	public Vector getPropertyColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-		Vector cols2 = super.getPropertyColumns();
 //		cols.add("id");
 		cols.add("name");
 		cols.add("length");
@@ -150,8 +149,15 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 //		cols.add("owner_id");
 		cols.add("type_id");
 		cols.add("link_id");
-		cols.addAll(cols2);
-		return cols;
+	}
+
+	public List getPropertyColumns()
+	{
+		List retcols = new LinkedList();
+		List cols2 = super.getPropertyColumns();
+		retcols.addAll(cols);
+		retcols.addAll(cols2);
+		return retcols;
 	}
 
 	public String getPropertyName(String col_id)

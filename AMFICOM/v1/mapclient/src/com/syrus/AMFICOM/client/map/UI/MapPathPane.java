@@ -59,13 +59,12 @@ public class MapPathPane extends PropertiesPanel
 		return mappath;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.mappath = (MapTransmissionPathElement )or;
 
 		gPanel.setObjectResource(mappath);
 		aPanel.setObjectResource(mappath);
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)

@@ -10,6 +10,8 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 
 import java.awt.Component;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -42,7 +44,7 @@ public class MapPhysicalNodeElementModel extends MapNodeElementModel
 			if(col_id.equals("latitude"))
 				return String.valueOf(MyUtil.fourdigits(node.getAnchor().y));
 			if(col_id.equals("type_id"))
-				return LangModel.String("node" + MapPhysicalNodeElement.typ);
+				return LangModel.getString("node" + MapPhysicalNodeElement.typ);
 		}
 		catch(Exception e)
 		{
@@ -98,15 +100,20 @@ public class MapPhysicalNodeElementModel extends MapNodeElementModel
 		return getColumnRenderer(col_id);
 	}
 
-	public Vector getPropertyColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-		Vector cols2 = super.getPropertyColumns();
 //		cols.add("id");
 		cols.add("name");
 		cols.add("longitude");
 		cols.add("latitude");
-		cols.addAll(cols2);
+	}
+	
+	public List getPropertyColumns()
+	{
+		List retcols = new LinkedList();
+		List cols2 = super.getPropertyColumns();
+		retcols.addAll(cols);
+		retcols.addAll(cols2);
 		return cols;
 	}
 	public String getPropertyName(String col_id)

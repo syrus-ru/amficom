@@ -153,11 +153,11 @@ public class DomainGeneralPanel extends GeneralPanel
   }
 
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     this.domain = (Domain)or;
     if(this.domain == null)
-      return false;
+      return;
 
     SimpleDateFormat sdf = new SimpleDateFormat();
     this.domainCreated.setText(sdf.format( new Date(domain.created)));
@@ -170,7 +170,6 @@ public class DomainGeneralPanel extends GeneralPanel
 
 //    this.domainOwner.setTyp(User.typ);
 //    this.domainOwner.setSelectedTyp(User.typ, domain.owner_id);
-    return true;
   }
 
   public boolean modify()

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.Image;
 
+import java.util.List;
 import javax.swing.JInternalFrame;
 import javax.swing.JFrame;
 import javax.swing.ImageIcon;
@@ -34,13 +35,13 @@ public class SetRestrictionsWindow extends JInternalFrame
   public ObjectResourceFilterPane orfp = null;
 
   private ObjectResourceFilter orf = null;
-  private DataSet dataset = null;
+  private List dataset = null;
   private ApplicationContext aContext = null;
 //  private JFrame ownerWindow = null;
 
   public SetRestrictionsWindow(
 		ObjectResourceFilter orf,
-		DataSet data,
+		List data,
 		ApplicationContext aC,
 		JFrame ownerWindow)
   {

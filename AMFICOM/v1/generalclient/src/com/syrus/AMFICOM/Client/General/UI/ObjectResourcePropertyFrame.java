@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 
@@ -130,12 +131,12 @@ public class ObjectResourcePropertyFrame extends JInternalFrame
 		{
 			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)oe;
 
-			DataSet data = tdse.getDataSet();
+			List data = tdse.getDataSet();
 			int n = tdse.getSelectionNumber();
 
 			if (n != -1)
 			{
-				ObjectResource res = data.get(n);
+				ObjectResource res = (ObjectResource )data.get(n);
 				panel.setSelected(res);
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroupPane.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: OperatorGroupPane.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.Client.Resource.Object.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
  * @module generalclient_v1
  */
 public class OperatorGroupPane extends PropertiesPanel // implements OperationListener
@@ -78,7 +78,7 @@ public class OperatorGroupPane extends PropertiesPanel // implements OperationLi
     return group;
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     ObjectResourceCatalogFrame f = (ObjectResourceCatalogFrame)
                                    Pool.get("ObjectFrame", "AdministrateObjectFrame");
@@ -91,11 +91,10 @@ public class OperatorGroupPane extends PropertiesPanel // implements OperationLi
     {
       this.showTheWindow(false);
       setData(or);
-      return false;
+      return;
     }
     this.showTheWindow(true);
     setData(or);
-    return true;
   }
 
   private void setData(ObjectResource or)

@@ -20,6 +20,7 @@ import java.awt.event.ComponentEvent;
 
 import java.util.*;
 
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -648,7 +649,7 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 		{
 			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)ae;
 
-			DataSet data = tdse.getDataSet();
+			List data = tdse.getDataSet();
 			int n = tdse.getSelectionNumber();
 
 			if (n != -1)

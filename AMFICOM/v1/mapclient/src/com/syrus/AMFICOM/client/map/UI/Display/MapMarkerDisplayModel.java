@@ -10,6 +10,8 @@ import com.syrus.AMFICOM.Client.Resource.MyUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 //A0A
@@ -20,9 +22,8 @@ public class MapMarkerDisplayModel extends StubDisplayModel
 		super();
 	}
 
-	public Vector getColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
 //		cols.add("id");
 //		cols.add("name");
 		cols.add("path_id");
@@ -30,6 +31,10 @@ public class MapMarkerDisplayModel extends StubDisplayModel
 		cols.add("latitude");
 		cols.add("Length_1");
 		cols.add("Length_2");
+	}
+
+	public List getColumns()
+	{
 		return cols;
 	}
 

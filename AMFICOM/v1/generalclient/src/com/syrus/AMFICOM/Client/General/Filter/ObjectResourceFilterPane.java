@@ -39,11 +39,14 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.Resource.DataSet;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.MyUtil;
 import com.syrus.AMFICOM.Client.General.UI.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
+import java.util.List;
+import java.util.LinkedList;
 import java.util.Vector;
 
 import oracle.jdeveloper.layout.VerticalFlowLayout;
@@ -67,7 +70,7 @@ public class ObjectResourceFilterPane extends JScrollPane
 
 	ObjectResourceFilter filter = null;
 
-	DataSet dataSet = new DataSet();
+	List dataSet = new LinkedList();
 
 	private JInternalFrame ownerWindow = null;
 
@@ -155,7 +158,7 @@ public class ObjectResourceFilterPane extends JScrollPane
 		}
 	}
 
-	public ObjectResourceFilterPane(ObjectResourceFilter filter, DataSet dataSet)
+	public ObjectResourceFilterPane(ObjectResourceFilter filter, List dataSet)
 	{
 		this(filter);
 		this.dataSet = dataSet;
@@ -163,7 +166,7 @@ public class ObjectResourceFilterPane extends JScrollPane
 
 	public ObjectResourceFilterPane(
 		ObjectResourceFilter filter,
-		DataSet dataSet,
+		List dataSet,
 		JInternalFrame oW,
 		ApplicationContext aC)
 	{
@@ -533,7 +536,7 @@ repaint();
 			String col_id = (String) columnComboBox.getSelectedItem();
 			String types[] = filter.getColumnFilterTypes(col_id);
 			vec = new Vector();
-			MyUtil.addToVector(vec, types);
+			MiscUtil.addToCollection(vec, types);
 			eqRadioButton.setEnabled(vec.contains("numeric"));
 			timeRadioButton.setEnabled(vec.contains("time"));
 			subRadioButton.setEnabled(vec.contains("string"));
@@ -566,7 +569,7 @@ repaint();
 
 		String types[] = filter.getColumnFilterTypes(col_id);
 		Vector vec = new Vector();
-		MyUtil.addToVector(vec, types);
+		MiscUtil.addToCollection(vec, types);
 		eqRadioButton.setEnabled(vec.contains("numeric"));
 		timeRadioButton.setEnabled(vec.contains("time"));
 		subRadioButton.setEnabled(vec.contains("string"));

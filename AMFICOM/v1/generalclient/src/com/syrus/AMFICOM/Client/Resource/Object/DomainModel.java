@@ -50,13 +50,13 @@ public class DomainModel extends ObjectResourceModel
     return s;
   }
 
-  public Enumeration getChildren(String key)
+  public Collection getChildren(String key)
   {
     if(key.equals(Domain.typ))
     {
-      return dom.domains.elements();
+      return dom.domains.values();
     }
-    return new Vector().elements();
+    return new Vector();
   }
 
   public Enumeration getChildTypes()

@@ -5,6 +5,8 @@ import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
 import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 //A0A
@@ -14,10 +16,9 @@ public class MapNodeLinkElementDisplayModel extends StubDisplayModel
 	{
 		super();
 	}
-
-	public Vector getColumns()
+	
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
 		cols.add("id");
 		cols.add("name");
 	//    cols.put("codename", "Кодовое имя");
@@ -29,6 +30,10 @@ public class MapNodeLinkElementDisplayModel extends StubDisplayModel
 	//    cols.put("color", "Цвет");
 	//    cols.put("line_type", "Стиль");
 	//          	cols.put("line_size", "Толщина");
+	}
+	
+	public List getColumns()
+	{
 		return cols;
 	}
 

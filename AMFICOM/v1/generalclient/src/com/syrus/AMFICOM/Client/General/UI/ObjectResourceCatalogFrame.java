@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 
@@ -85,7 +86,7 @@ public class ObjectResourceCatalogFrame
 			aContext.getDispatcher().register(this, TreeDataSelectionEvent.type);
 	}
 
-	public void setContents(DataSet dataSet)
+	public void setContents(List dataSet)
 	{
 		panel.setContents(dataSet);
 	}

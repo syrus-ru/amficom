@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDisplayModel.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: ServerDisplayModel.java,v 1.2 2004/08/17 15:02:51 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,8 @@ import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -21,8 +23,8 @@ import java.util.Vector;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:51 $
  * @module generalclient_v1
  */
 public class ServerDisplayModel extends StubDisplayModel
@@ -32,15 +34,18 @@ public class ServerDisplayModel extends StubDisplayModel
   {
   }
 
-  public Vector getColumns()
-  {
-    Vector vec = new Vector();
-    vec.add("id");
-    vec.add("name");
-    vec.add("created");
-    vec.add("modified");
-    return vec;
-  }
+    List cols = new LinkedList();
+	{
+//		cols.add("id");
+		cols.add("name");
+		cols.add("created");
+		cols.add("modified");
+	}
+	
+	public List getColumns()
+	{
+		return cols;
+	}
 
   public String getColumnName(String col_id)
   {

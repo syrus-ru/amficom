@@ -12,6 +12,8 @@ import com.syrus.AMFICOM.Client.Resource.MyUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 //A0A
@@ -30,9 +32,8 @@ public class MapPhysicalNodeElementDisplayModel extends StubDisplayModel
 		this.aContext = aContext;
 	}
 	
-	public Vector getColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
 		cols.add("id");
 		cols.add("name");
 	//    cols.put("codename", "Кодовое имя");
@@ -40,6 +41,10 @@ public class MapPhysicalNodeElementDisplayModel extends StubDisplayModel
 		cols.add("link_id");
 		cols.add("longitude");
 		cols.add("latitude");
+	}
+	
+	public List getColumns()
+	{
 		return cols;
 	}
 

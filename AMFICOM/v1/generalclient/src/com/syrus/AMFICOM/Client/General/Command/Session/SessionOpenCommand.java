@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Session;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
@@ -98,7 +99,7 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 */
 		final SessionOpenDialog sDialog = new SessionOpenDialog();
 
-		dispatcher.notify(new StatusMessageEvent("Открытие сессии..."));
+		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие сессии..."));
 		dispatcher.notify(new ContextChangeEvent(
 				aContext.getSessionInterface(),
 				ContextChangeEvent.SESSION_CHANGING_EVENT));
@@ -116,7 +117,7 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 
 		if(sDialog.retCode == sDialog.RET_CANCEL)
 		{
-			dispatcher.notify(new StatusMessageEvent("Операция отменена"));
+			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModel.getString("Aborted")));
 			return;
 		}
 
@@ -124,7 +125,7 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 		{
 			final DataSourceInterface dataSource = aContext.getApplicationModel().getDataSource(aContext.getSessionInterface());
 
-			dispatcher.notify(new StatusMessageEvent("Инициализация начальных данных"));
+			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация начальных данных"));
 
 			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 //		statusBar.enableProgressBar(true);
@@ -148,7 +149,7 @@ public class SessionOpenCommand extends VoidCommand //implements Command
           else
             sess.setDomainId("");
     
-          dispatcher.notify(new StatusMessageEvent("Сессия открыта"));
+          dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Сессия открыта"));
           dispatcher.notify(new ContextChangeEvent(
               sDialog.si,
               ContextChangeEvent.SESSION_OPENED_EVENT));

@@ -63,7 +63,7 @@ public class DomainPaneConfig extends PropertiesPanel
     return domain;
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     ObjectResourceCatalogFrame f = (ObjectResourceCatalogFrame)
                                    Pool.get("ObjectFrame", "AdministrateObjectFrame");
@@ -76,11 +76,10 @@ public class DomainPaneConfig extends PropertiesPanel
     {
       this.showTheWindow(false);
       setData(or);
-      return false;
+      return;
     }
     this.showTheWindow(true);
     setData(or);
-    return true;
   }
 
   private void setData(ObjectResource or)

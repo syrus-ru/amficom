@@ -42,6 +42,9 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 
 import java.awt.Component;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
@@ -50,16 +53,16 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 {
     private Component parent;
 
-	private Vector columns = new Vector();
+	private List columns = new LinkedList();
 	private ObjectResource or;
 	private ObjectResourceDisplayModel displayModel = new StubPropertyDisplayModel();
 
 	public ObjectResourcePropertyTableModel(
-			Vector columns,
+			List columns,
 //			ObjectResourceDisplayModel displayModel,
 			ObjectResource or)
 	{
-		this.columns = columns;
+		this.columns.addAll(columns);
 //		setDisplayModel(displayModel);
 		setContents(or);
 	}
@@ -75,7 +78,7 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 		setContents(or);
 	}
 
-	public ObjectResourcePropertyTableModel(Vector columns)
+	public ObjectResourcePropertyTableModel(List columns)
 	{
 		this(columns, null);
 	}
@@ -87,7 +90,7 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 
 	public ObjectResourcePropertyTableModel()
 	{
-		this(new Vector(), null);
+		this(new LinkedList(), null);
 	}
 
 	public void setDisplayModel(ObjectResourceDisplayModel displayModel)
@@ -102,7 +105,7 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 
 	public String getColumnByNumber(int col_i)
 	{
-		return (String)displayModel.getColumns().get(col_i);
+		return (String )displayModel.getColumns().get(col_i);
 	}
 
 	public void setContents(ObjectResource or)
@@ -208,7 +211,6 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 			String col_id = (String)displayModel.getColumns().get(p_row);
 			ObjectResourceModel model = or.getModel();
 			model.setPropertyValue(col_id, p_obj);
-			System.out.println("set " + col_id + " to " + p_obj);
 			this.fireTableDataChanged();
 		}
 	}

@@ -65,7 +65,7 @@ public class MapLinkPane extends PropertiesPanel
 		return maplink;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.maplink = (MapPhysicalLinkElement )or;
 
@@ -76,7 +76,6 @@ public class MapLinkPane extends PropertiesPanel
 //		caPanel.setObjectResource(maplink);
 //		lpPanel.setObjectResource(maplink);
 //		chPanel.setObjectResource(maplink);
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)

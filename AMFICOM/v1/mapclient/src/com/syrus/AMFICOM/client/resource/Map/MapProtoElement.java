@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
@@ -338,10 +340,13 @@ class MapProtoDisplayModel extends StubDisplayModel
 		return false;
 	}
 
-	public Vector getColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
 		cols.add("name");
+	}
+
+	public List getColumns()
+	{
 		return cols;
 	}
 

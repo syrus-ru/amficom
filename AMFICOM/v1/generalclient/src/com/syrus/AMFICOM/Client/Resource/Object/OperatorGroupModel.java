@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroupModel.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: OperatorGroupModel.java,v 1.2 2004/08/17 15:02:51 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.Client.Resource.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:51 $
  * @module generalclient_v1
  */
 public class OperatorGroupModel extends ObjectResourceModel
@@ -34,12 +34,12 @@ public class OperatorGroupModel extends ObjectResourceModel
 		this.group = group;
 	}
 
-	public Enumeration getChildren(String key)
+	public Collection getChildren(String key)
 	{
 		if(key.equals(User.typ))
-			return group.users.elements();
+			return group.users.values();
 
-		return new Vector().elements();
+		return new Vector();
 	}
 	public Enumeration getChildTypes()
 	{

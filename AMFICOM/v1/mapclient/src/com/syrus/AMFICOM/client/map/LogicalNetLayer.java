@@ -794,7 +794,7 @@ public class LogicalNetLayer extends SxMapLayer
 			Pool.put(MapTransmissionPathElement.typ, thePath.getId(), thePath);
 
 			thePath.type_id = mtppe.getId();
-			thePath.attributes = ResourceUtil.copyAttributes(dataSource, mtppe.attributes);
+			thePath.attributes = (Hashtable )ResourceUtil.copyAttributes(dataSource, mtppe.attributes);
 			thePath.physicalLink_ids = plink_ids;
 			thePath.PATH_ID = sp.getId();
 			thePath.name = sp.getName();
@@ -883,7 +883,7 @@ public class LogicalNetLayer extends SxMapLayer
 					getMapContext());
 
 			theLink.type_id = mplpe.getId();
-			theLink.attributes = ResourceUtil.copyAttributes(dataSource, mplpe.attributes);
+			theLink.attributes = (Hashtable )ResourceUtil.copyAttributes(dataSource, mplpe.attributes);
 			theLink.nodeLink_ids.add( myNodeLink.getId());
 			theLink.link_type_id = scl.cable_link_type_id;
 			theLink.LINK_ID = scl.getId();
@@ -916,7 +916,7 @@ public class LogicalNetLayer extends SxMapLayer
 					getMapContext(),
 					getMapContext().defaultScale/getMapContext().currentScale,
 					mpe);
-			theNode.attributes = ResourceUtil.copyAttributes(dataSource, mpe.attributes);
+			theNode.attributes = (Hashtable )ResourceUtil.copyAttributes(dataSource, mpe.attributes);
 			theNode.name = se.getName();
 
 			Pool.put( ((MapEquipmentNodeElement)(theNode)).getTyp(), theNode.getId(), theNode );

@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Map;
 
+import java.util.List;
 import javax.swing.*;
 import com.ofx.geometry.SxDoublePoint;
 import java.awt.*;
@@ -180,11 +181,9 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 	{
 		return new MapEquipmentPane(node);
 	}
-	
-	public Vector getPropertyColumns()
+
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-		Vector cols2 = super.getPropertyColumns();
 //		cols.add("id");
 		cols.add("name");
 //		cols.add("owner_id");
@@ -192,8 +191,16 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 		cols.add("element_id");
 		cols.add("longitude");
 		cols.add("latitude");
-		cols.addAll(cols2);
-		return cols;
+	}
+	
+	public List getPropertyColumns()
+	{
+		List retcol = new LinkedList();
+		List cols2 = super.getPropertyColumns();
+
+		retcol.addAll(cols);
+		retcol.addAll(cols2);
+		return retcol;
 	}
 	public String getPropertyName(String col_id)
 	{

@@ -43,11 +43,13 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.Color;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 public interface ObjectResourceDisplayModel
 {
-	public Vector getColumns();
+	public List getColumns();
 	public String getColumnName(String col_id);
 	public int getColumnSize(String col_id);
 	public boolean isColumnEditable(String col_id);

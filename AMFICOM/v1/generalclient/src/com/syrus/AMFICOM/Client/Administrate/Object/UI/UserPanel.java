@@ -137,11 +137,11 @@ public class UserPanel  extends GeneralPanel
 */
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     this.user = (User)or;
     if(user == null)
-      return false;
+      return;
 
     this.jTextFieldID.setText(user.id);
     this.jTextFieldLogin.setText(user.login);
@@ -166,6 +166,5 @@ public class UserPanel  extends GeneralPanel
 
     this.groupList.setContents(g.elements());
     this.categoryList.setContents(c.elements());
-    return true;
   }
 }

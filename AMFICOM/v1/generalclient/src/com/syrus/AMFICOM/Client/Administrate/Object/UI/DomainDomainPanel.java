@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+import java.util.List;
 import javax.swing.*;
 
 import oracle.jdeveloper.layout.*;
@@ -156,12 +157,12 @@ public class DomainDomainPanel extends GeneralPanel
   }*/
 
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
 
     this.domain = (Domain)or;
     if(domain == null)
-      return false;
+      return;
 
     this.fatherDomain.removeAllItems();
     this.internalDomainsList.removeAll();
@@ -171,22 +172,21 @@ public class DomainDomainPanel extends GeneralPanel
     this.fatherDomain.remove(this.domain);
     this.fatherDomain.setSelectedTyp(Domain.typ, domain.domain_id);
     {
-      DataSet dSet = new DataSet(this.domain.getChildren(Domain.typ));
+      List dSet = new DataSet(this.domain.getChildren(Domain.typ));
       ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
       sorter.setDataSet(dSet);
       dSet = sorter.default_sort();
-      internalDomainsList.setContents(dSet.elements());
+      internalDomainsList.setContents(dSet);
     }
 
 
     {
-      DataSet dSet = new DataSet(getOtherDomains());
+      List dSet = new DataSet(getOtherDomains());
       ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
       sorter.setDataSet(dSet);
       dSet = sorter.default_sort();
-      otherDomainsList.setContents(dSet.elements());
+      otherDomainsList.setContents(dSet);
     }
-    return true;
   }
 
 //--------------------------------------------------------

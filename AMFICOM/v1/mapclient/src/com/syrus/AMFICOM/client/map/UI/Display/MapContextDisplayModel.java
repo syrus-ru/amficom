@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Map.UI.Display;
 import java.util.*;
 import java.awt.*;
 import java.io.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -24,15 +25,18 @@ public class MapContextDisplayModel extends StubDisplayModel
 		super();
 	}
 
-//Далее функции иполузуются для отображения свойств класса в таблице
-	public Vector getColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
 //		cols.add("id");
 		cols.add("name");
 		cols.add("scheme_id");
 		cols.add("user_id");
 		cols.add("domain_id");
+	}
+
+//Далее функции иполузуются для отображения свойств класса в таблице
+	public List getColumns()
+	{
 		return cols;
 	}
 

@@ -50,10 +50,8 @@ import java.util.*;
 /**
  * @deprecated use Collection, Map according to the task 
  */
-public class DataSet extends Object
+public class DataSet extends ArrayList
 {
-	private ArrayList objects = new ArrayList();
-
 	public DataSet()
 	{
 	}
@@ -61,13 +59,13 @@ public class DataSet extends Object
 	public DataSet(Enumeration en)
 	{
 		while(en.hasMoreElements())
-			objects.add(en.nextElement());
+			super.add(en.nextElement());
 	}
 
 	public DataSet(Iterator it)
 	{
 		while(it.hasNext())
-			objects.add(it.next());
+			super.add(it.next());
 	}
 
 	public DataSet(Vector vec)
@@ -76,7 +74,7 @@ public class DataSet extends Object
 		{
 			Enumeration en = vec.elements();
 			while(en.hasMoreElements())
-				objects.add(en.nextElement());
+				super.add(en.nextElement());
 		}
 	}
 
@@ -85,7 +83,7 @@ public class DataSet extends Object
 		if(list != null)
 		{
 			for(Iterator it = list.iterator(); it.hasNext();)
-				objects.add(it.next());
+				super.add(it.next());
 		}
 	}
 
@@ -95,19 +93,19 @@ public class DataSet extends Object
 		{
 			Enumeration en = hash.elements();
 			while(en.hasMoreElements())
-				objects.add(en.nextElement());
+				super.add(en.nextElement());
 		}
 	}
 
 	public DataSet(Object[] objs)
 	{
 		for(int i = 0; i < objs.length; i++)
-			objects.add(objs[i]);
+			super.add(objs[i]);
 	}
 
 	public ObjectResource get(String obj_id)
 	{
-		for(Iterator it = objects.iterator(); it.hasNext();)
+		for(Iterator it = super.iterator(); it.hasNext();)
 		{
 			ObjectResource or = (ObjectResource )it.next();
 			if(or.getId().equals(obj_id))
@@ -116,15 +114,15 @@ public class DataSet extends Object
 		return null;
 	}
 
-	public ObjectResource get(int obj_i)
+	public Object get(int obj_i)
 	{
-		return (ObjectResource )objects.get(obj_i);
+		return super.get(obj_i);
 	}
 
 	public void add(ObjectResource obj)
 	{
-		if(!objects.contains(obj))
-			objects.add(obj);
+		if(!super.contains(obj))
+			super.add(obj);
 	}
 
 	public void add(DataSet ds)
@@ -138,23 +136,23 @@ public class DataSet extends Object
 
 	public void insertAt(ObjectResource obj, int obj_i)
 	{
-		if(!objects.contains(obj))
-			objects.add(obj_i, obj);
+		if(!super.contains(obj))
+			super.add(obj_i, obj);
 	}
 
 	public void remove(ObjectResource obj)
 	{
-		objects.remove(obj);
+		super.remove(obj);
 	}
 
 	public void remove(String obj_id)
 	{
-		for(Iterator it = objects.iterator(); it.hasNext();)
+		for(Iterator it = super.iterator(); it.hasNext();)
 		{
 			ObjectResource or = (ObjectResource )it.next();
 			if(or.getId().equals(obj_id))
 			{
-				objects.remove(or);
+				super.remove(or);
 				return;
 			}
 		}
@@ -162,32 +160,32 @@ public class DataSet extends Object
 
 	public void removeAt(int obj_i)
 	{
-			objects.remove(obj_i);
+			super.remove(obj_i);
 	}
 
 	public int size()
 	{
-		return objects.size();
+		return super.size();
 	}
 
 	public int indexOf(Object o)
 	{
-		return objects.indexOf(o);
+		return super.indexOf(o);
 	}
 
 	public Enumeration elements()
 	{
-		return Collections.enumeration(objects);
+		return Collections.enumeration(this);
 	}
 
 	public Iterator iterator()
 	{
-		return objects.iterator();
+		return super.iterator();
 	}
 
 	public void clear()
 	{
-		objects.clear();
+		super.clear();
 	}
 
 }

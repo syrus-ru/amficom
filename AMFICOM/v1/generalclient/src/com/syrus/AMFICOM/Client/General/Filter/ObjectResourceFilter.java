@@ -106,12 +106,13 @@ public abstract class ObjectResourceFilter implements Filter
 //		return criteria;
 	}
 
-	public DataSet filter(DataSet dataSet)
+	public List filter(List dataSet)
 	{
-		DataSet ds = new DataSet(dataSet.elements());
-		for(Enumeration e = dataSet.elements(); e.hasMoreElements();)
+		List ds = new DataSet(dataSet);
+		for(Iterator it = dataSet.iterator(); it.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )e.nextElement();
+			ObjectResource or = (ObjectResource )it.next();
+
 			if (this.logicScheme.passesAllConstraints(or) == false)
 				ds.remove(or);
 /*

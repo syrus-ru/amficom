@@ -35,6 +35,8 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
+import java.util.LinkedList;
+import java.util.List;
 import oracle.jdeveloper.layout.*;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -89,7 +91,7 @@ public class ObjectResourceCatalogPanel extends JPanel
 	private JButton filterclearButton = new JButton();
 
 	ObjectResourceDisplayModel dmod;
-	DataSet dataSet = new DataSet();
+	List dataSet = new LinkedList();
 	Class orclass;
 
 	JPanel jPanel = new JPanel();
@@ -127,21 +129,21 @@ public class ObjectResourceCatalogPanel extends JPanel
 		setObjectResourceClass(orclass);
 	}
 
-	public ObjectResourceCatalogPanel(ApplicationContext aContext, ObjectResourceDisplayModel dmod, Class orclass, DataSet dataSet)
+	public ObjectResourceCatalogPanel(ApplicationContext aContext, ObjectResourceDisplayModel dmod, Class orclass, List dataSet)
 	{
 		this(aContext, dmod, orclass);
 		setContents(dataSet);
 	}
 
-	public void setContents(DataSet dataSet)
+	public void setContents(List dataSet)
 	{
 		if(dmod == null)
 			dmod = new StubDisplayModel();
 		if(dataSet == null)
-			dataSet = new DataSet();
+			dataSet = new LinkedList();
 
 		this.dataSet = dataSet;
-		DataSet ds = dataSet;
+		List ds = dataSet;
 		if(this.filterPane.getFilter() != null)
 			ds = this.filterPane.getFilter().filter(ds);
 		listPane.initialize(dmod, ds);
@@ -152,7 +154,7 @@ public class ObjectResourceCatalogPanel extends JPanel
 		if(dmod == null)
 			dmod = new StubDisplayModel();
 		if(dataSet == null)
-			dataSet = new DataSet();
+			dataSet = new LinkedList();
 
 		this.dmod = dmod;
 		listPane.initialize(dmod, dataSet);
@@ -514,12 +516,12 @@ public class ObjectResourceCatalogPanel extends JPanel
 		propPane.setContext(aContext);
 	}
 
-	public void loadListValues(ObjectResourceDisplayModel dmod, DataSet dataSet)
+	public void loadListValues(ObjectResourceDisplayModel dmod, List dataSet)
 	{
 		if(dmod == null)
 			dmod = new StubDisplayModel();
 		if(dataSet == null)
-			dataSet = new DataSet();
+			dataSet = new LinkedList();
 
 		this.dmod = dmod;
 		this.dataSet = dataSet;
@@ -532,9 +534,15 @@ public class ObjectResourceCatalogPanel extends JPanel
 		ObjectResource or  = (ObjectResource)listPane.getSelectedObject();
 		if(or != null)
 		{
-			if(!propPane.setObjectResource(or))
-				return;
+			try 
+			{
+				propPane.setObjectResource(or);
 				jTabbedPane.setSelectedComponent(propScrollPane);
+			} 
+			catch (Exception ex) 
+			{
+				ex.printStackTrace();
+			} 
 		}
 	}
 
@@ -579,7 +587,7 @@ public class ObjectResourceCatalogPanel extends JPanel
 		}
 		else
 		{
-			ObjectResource obj = (ObjectResource )dataSet.elements().nextElement();
+			ObjectResource obj = (ObjectResource )dataSet.iterator().next();
 			listPane.setSelected(obj);
 			send_event = true;
 			dispatcher.notify(new TreeListSelectionEvent(obj, TreeListSelectionEvent.SELECT_EVENT));
@@ -658,7 +666,7 @@ public class ObjectResourceCatalogPanel extends JPanel
 		if (obj == null)
 			return;
 		if(obj instanceof ObjectResource)
-			propPane.setObjectResource((ObjectResource)obj);
+			propPane.setObjectResource((ObjectResource )obj);
 
 //		System.out.println("List value " + e.getFirstIndex() + " to " + e.getLastIndex());
 
@@ -686,7 +694,7 @@ public class ObjectResourceCatalogPanel extends JPanel
 
 			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)oe;
 
-			DataSet data = tdse.getDataSet();
+			List data = tdse.getDataSet();
 			int n = tdse.getSelectionNumber();
 			Class cl = tdse.getDataClass();
 			ObjectResourceCatalogActionModel orcam = (ObjectResourceCatalogActionModel )tdse.param;
@@ -704,7 +712,7 @@ public class ObjectResourceCatalogPanel extends JPanel
 */
 				if (n != -1)
 				{
-					ObjectResource res = data.get(n);
+					ObjectResource res = (ObjectResource )data.get(n);
 
 					if (dataSet.indexOf(res) == -1)
 					{
@@ -733,7 +741,7 @@ public class ObjectResourceCatalogPanel extends JPanel
 				ContextChangeEvent cce = (ContextChangeEvent )oe;
 				if(cce.DOMAIN_SELECTED)
 				{
-					setContents(new DataSet());
+					setContents(new LinkedList());
 				}
 			}
 	//		received_event = false;

@@ -8,6 +8,8 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 import java.awt.Component;
 
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 //A0A
@@ -38,9 +40,9 @@ public class MapNodeElementModel extends ObjectResourceModel
 		return ea.getEditor();
 	}
 
-	public Vector getPropertyColumns()
+	public List getPropertyColumns()
 	{
-		Vector cols = new Vector();//getColumns();
+		List cols = new LinkedList();//getColumns();
 		for(Enumeration enum = obj.attributes.elements(); enum.hasMoreElements();)
 		{
 			ElementAttribute ea = (ElementAttribute )enum.nextElement();

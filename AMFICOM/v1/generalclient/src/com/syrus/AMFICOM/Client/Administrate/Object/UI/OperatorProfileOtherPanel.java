@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfileOtherPanel.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: OperatorProfileOtherPanel.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import java.awt.Dimension;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
  * @module generalclient_v1
  */
 public class OperatorProfileOtherPanel extends GeneralPanel
@@ -186,7 +186,7 @@ public class OperatorProfileOtherPanel extends GeneralPanel
     return profile;
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     this.profile = (OperatorProfile )or;
 
@@ -215,7 +215,6 @@ public class OperatorProfileOtherPanel extends GeneralPanel
     this.profilePhoneMobile.setText(profile.phone_mobile);
     this.profilePhoneWork.setText(profile.phone_work);
     this.profileSecondName.setText(profile.second_name);
-    return true;
   }
 
   public boolean modify()

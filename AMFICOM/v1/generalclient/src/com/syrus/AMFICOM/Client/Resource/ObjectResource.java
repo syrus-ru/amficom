@@ -39,17 +39,7 @@
 
 package com.syrus.AMFICOM.Client.Resource;
 
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.Object.ObjectPermissionAttributes;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceNameSorter;
-
-import java.util.Enumeration;
-import java.util.Vector;
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 
 public interface ObjectResource
 {

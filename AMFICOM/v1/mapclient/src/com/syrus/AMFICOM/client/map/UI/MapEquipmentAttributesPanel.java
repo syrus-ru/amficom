@@ -60,14 +60,13 @@ public class MapEquipmentAttributesPanel extends GeneralPanel
 		return mapequipment;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.mapequipment = (MapEquipmentNodeElement )or;
 
 //		System.out.println("set prop pane to " + mapequipment.name);
 
 		charPane.setSelected(or);
-		return true;
 	}
 
 	public boolean modify()

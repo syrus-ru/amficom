@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroupGeneralPanel.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: OperatorGroupGeneralPanel.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import java.awt.Insets;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
  * @module generalclient_v1
  */
 public class OperatorGroupGeneralPanel extends GeneralPanel
@@ -183,7 +183,7 @@ public class OperatorGroupGeneralPanel extends GeneralPanel
     return group;
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     this.group = (OperatorGroup )or;
 //    System.out.println("set prop pane to " + group.name);
@@ -204,7 +204,6 @@ public class OperatorGroupGeneralPanel extends GeneralPanel
 
     groupOwner.setTyp(User.typ);
     groupOwner.setSelectedTyp(User.typ, group.owner_id);
-    return true;
   }
 
   public boolean modify()

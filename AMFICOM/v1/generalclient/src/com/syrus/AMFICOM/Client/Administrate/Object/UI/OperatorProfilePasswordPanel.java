@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfilePasswordPanel.java,v 1.2 2004/08/06 12:57:38 bass Exp $
+ * $Id: OperatorProfilePasswordPanel.java,v 1.3 2004/08/17 15:02:50 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import javax.swing.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/08/06 12:57:38 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2004/08/17 15:02:50 $
  * @module generalclient_v1
  */
 final class OperatorProfilePasswordPanel extends GeneralPanel
@@ -65,7 +65,7 @@ final class OperatorProfilePasswordPanel extends GeneralPanel
 	 *
 	 * @todo Consider refactoring.
 	 */
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.profile = (OperatorProfile) or;
 		this.jTextFieldLogin.setText(this.profile.login);
@@ -76,7 +76,6 @@ final class OperatorProfilePasswordPanel extends GeneralPanel
 		this.jPasswordFieldRepeat.setText("");
 		this.jLabelStatus.setText("");
 		this.jButtonSave.setVisible(true);
-		return true;
 	}
 
 	public boolean modify()

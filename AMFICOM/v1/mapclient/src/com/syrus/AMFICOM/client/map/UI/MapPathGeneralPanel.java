@@ -114,7 +114,7 @@ public class MapPathGeneralPanel extends GeneralPanel
 		return mappath;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.mappath = (MapTransmissionPathElement )or;
 
@@ -126,14 +126,13 @@ public class MapPathGeneralPanel extends GeneralPanel
 			pathComboBox.setSelected("");
 			nameField.setText("");
 			idField.setText("");
-			return true;
+			return;
 		}
 
 		typeBox.setSelected(mappath.type_id);
 		pathComboBox.setSelected(mappath.PATH_ID);
 		nameField.setText(mappath.getName());
 		idField.setText(mappath.getId());
-		return true;
 	}
 
 	public boolean modify()
