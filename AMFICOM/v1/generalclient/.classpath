@@ -19,5 +19,6 @@
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjorb.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/corbaportable-common.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/corba.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
