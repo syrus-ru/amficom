@@ -1,5 +1,5 @@
 /*
- * $Id: Agent.java,v 1.3 2004/09/10 14:13:35 stas Exp $
+ * $Id: Agent.java,v 1.4 2004/09/27 13:32:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,24 +8,20 @@
 
 package com.syrus.AMFICOM.Client.Resource.System;
 
-import java.io.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.CORBA.Admin.Agent_Transferable;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.Client.Resource.Object.AdminObjectResource;
+import java.io.*;
+import java.util.*;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2004/09/10 14:13:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 13:32:05 $
  * @module generalclient_v1
  */
 public class Agent extends AdminObjectResource implements Serializable
@@ -174,7 +170,7 @@ public class Agent extends AdminObjectResource implements Serializable
 		return new AgentModel(this);
 	}
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return "com.syrus.AMFICOM.Client.Administrate.Object.UI.AgentPane";
 	}
@@ -228,5 +224,4 @@ public class Agent extends AdminObjectResource implements Serializable
 	{
 		modified = time;
 	}
-
 }

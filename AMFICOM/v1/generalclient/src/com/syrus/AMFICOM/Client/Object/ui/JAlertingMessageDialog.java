@@ -1,5 +1,5 @@
 /*
- * $Id: JAlertingMessageDialog.java,v 1.3 2004/07/16 11:27:42 bass Exp $
+ * $Id: JAlertingMessageDialog.java,v 1.4 2004/09/27 13:28:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.table.*;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/16 11:27:42 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 13:28:51 $
  * @author $Author: bass $
  * @module generalclient_v1
  */
@@ -150,7 +150,7 @@ public final class JAlertingMessageDialog extends JDialog {
 
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton1ActionPerformed
 		synchronized (this) {
-			Environment.the_dispatcher.notify(jAlertingMessageTableModel1.getDelegate());
+			Environment.getDispatcher().notify(jAlertingMessageTableModel1.getDelegate());
 			jAlertingMessageTableModel1.setDelegate(new OpenModuleEvent());
 			dispose();
 		}
