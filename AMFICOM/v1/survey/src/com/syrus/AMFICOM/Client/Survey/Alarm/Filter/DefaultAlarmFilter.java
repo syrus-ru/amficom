@@ -66,12 +66,12 @@ public class DefaultAlarmFilter extends AlarmFilter
 		vec.add("list");
 		vec.add(new_tm);
 
-		col_name = getFilterColumnName("status");
+		col_name = getFilterColumnName("Status");
 		fe.setVec(vec);
 		fe.setName(LangModel.getString("labelFiltration") +
 				" \'" + col_name +
 				"\' " + LangModel.getString("labelPoSpisku"));
-		fe.setId("status");
+		fe.setId("Status");
 		addCriterium(fe);
 
 		this.logicScheme.organizeStandartScheme();

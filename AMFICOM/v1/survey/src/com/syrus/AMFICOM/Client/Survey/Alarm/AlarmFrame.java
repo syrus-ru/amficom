@@ -569,6 +569,7 @@ public class AlarmFrame extends JInternalFrame
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize =  dlg.getSize();
 		frameSize.width = 450;
+		frameSize.height = frameSize.height + 20;
 		dlg.setSize(frameSize);
 
         if (frameSize.height > screenSize.height)
