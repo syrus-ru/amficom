@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.6 2005/03/24 08:25:07 bob Exp $
+ * $Id: AbstractItem.java,v 1.7 2005/03/25 09:45:28 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.List;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/24 08:25:07 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/25 09:45:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -77,6 +77,10 @@ public abstract class AbstractItem implements Item {
 	public void addChild(Item childItem) {
 		Log.debugMessage("AbstractItem.addChild | this.name: " + this.getName() + " \n\t name: "
 				+ childItem.getName(), Log.FINEST);
+		
+		if (!this.canHaveChildren())
+			throw new UnsupportedOperationException("Item " + this.getName() + " can not have children.");
+		
 		if (this.children == null) {
 			this.children = new LinkedList();
 		}
