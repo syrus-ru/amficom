@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.3 2005/02/11 18:42:17 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.4 2005/02/14 13:11:33 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -28,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/11 18:42:17 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/14 13:11:33 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -215,6 +214,7 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 		EventSource eventSource = (storableObject == null) ? new EventSource(DatabaseIdentifier.getIdentifier(resultSet,
 				StorableObjectWrapper.COLUMN_ID),
 				null,
+				0L,
 				null) : this.fromStorableObject(storableObject);
 		short sourceEntityCode = resultSet.getShort(EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE);
 		Identifier sourceEntityId = null;
@@ -245,6 +245,7 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 				 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 				 sourceEntityId);
 
 		return eventSource;

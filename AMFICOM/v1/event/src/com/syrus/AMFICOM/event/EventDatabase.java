@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.8 2005/02/11 18:42:17 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.9 2005/02/14 13:11:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,6 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -47,24 +46,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/11 18:42:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/14 13:11:33 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
 public class EventDatabase extends StorableObjectDatabase {
 
-//	public static final String LINK_COLUMN_EVENT_ID	= "event_id";
-	
-//	public static final String LINK_COLUMN_SOURCE_ID	= "source_id";
-//	public static final String LINK_COLUMN_SOURCE_ENTITY_CODE	= "source_entity_code";
-//	public static final String LINK_COLUMN_SOURCE_PORT_ID	= "port_id";
-//	public static final String LINK_COLUMN_SOURCE_EQUIPMENT_ID	= "equipment_id";
-//	public static final String LINK_COLUMN_SOURCE_LINK_ID	= "link_id";
-//	public static final String LINK_COLUMN_SOURCE_MONITOREDELEMENT_ID	= "monitored_element_id";
-
 	private static String columns;
-
 	private static String updateMultiplySQLValues;
 
 	private Event fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -133,6 +122,7 @@ public class EventDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Event event = (storableObject == null) ? new Event(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 				null,
+				0L,
 				null,
 				null,
 				null,
@@ -149,6 +139,7 @@ public class EventDatabase extends StorableObjectDatabase {
 								DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+							  resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 								eventType,
 								resultSet.getInt(EventWrapper.COLUMN_STATUS),
 								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
@@ -416,7 +407,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		Map eventSourceIdsMap = new HashMap();
 		for (Iterator it = events.iterator(); it.hasNext();) {
 			Event event = this.fromStorableObject((StorableObject) it.next());
-			List eventSourceIds = event.getEventSourceIds();
+			Collection eventSourceIds = event.getEventSourceIds();
 			eventSourceIdsMap.put(event.getId(), eventSourceIds);
 		}
 
