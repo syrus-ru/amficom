@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.2 2004/09/15 12:40:48 bob Exp $
+ * $Id: CMServerImpl.java,v 1.3 2004/09/16 08:23:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
+import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -50,13 +51,17 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/15 12:40:48 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/16 08:23:17 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
 public class CMServerImpl implements CMServerOperations {
 
-	public void receiveTests(Test_Transferable[] test_Transferables) throws AMFICOMRemoteException {
+	public void receiveTests(Test_Transferable[] test_Transferables, AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		/**
+		 * TODO check user for access
+		 */
 		Log.debugMessage("Received " + test_Transferables.length + " tests", Log.DEBUGLEVEL07);
 		List testList = new ArrayList(test_Transferables.length);
 		try {
@@ -85,7 +90,11 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public void receiveSets(Set_Transferable[] set_Transferables) throws AMFICOMRemoteException {
+	public void receiveSets(Set_Transferable[] set_Transferables, AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		/**
+		 * TODO check user for access
+		 */
 		Log.debugMessage("Received " + set_Transferables.length + " sets", Log.DEBUGLEVEL07);
 		List setList = new ArrayList(set_Transferables.length);
 		try {
@@ -114,7 +123,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public AnalysisType_Transferable transmitAnalysisType(Identifier_Transferable identifier_Transferable)
+	public AnalysisType_Transferable transmitAnalysisType(	Identifier_Transferable identifier_Transferable,
+								AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
 		try {
@@ -140,7 +150,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public EvaluationType_Transferable transmitEvaluationType(Identifier_Transferable identifier_Transferable)
+	public EvaluationType_Transferable transmitEvaluationType(	Identifier_Transferable identifier_Transferable,
+									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
 		try {
@@ -166,7 +177,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public MeasurementSetup_Transferable transmitMeasurementSetup(Identifier_Transferable identifier_Transferable)
+	public MeasurementSetup_Transferable transmitMeasurementSetup(	Identifier_Transferable identifier_Transferable,
+									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
 		try {
@@ -192,7 +204,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public MeasurementType_Transferable transmitMeasurementType(Identifier_Transferable identifier_Transferable)
+	public MeasurementType_Transferable transmitMeasurementType(	Identifier_Transferable identifier_Transferable,
+									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
 		try {
@@ -218,7 +231,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public ParameterType_Transferable transmitParameterType(Identifier_Transferable identifier_Transferable)
+	public ParameterType_Transferable transmitParameterType(Identifier_Transferable identifier_Transferable,
+								AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
 		try {
@@ -244,7 +258,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public Set_Transferable transmitSet(Identifier_Transferable identifier_Transferable)
+	public Set_Transferable transmitSet(	Identifier_Transferable identifier_Transferable,
+						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
 		try {
@@ -269,7 +284,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public Test_Transferable transmitTest(Identifier_Transferable identifier_Transferable)
+	public Test_Transferable transmitTest(	Identifier_Transferable identifier_Transferable,
+						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
 		try {
@@ -294,7 +310,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public AnalysisType_Transferable[] transmitAnalysisTypes(Identifier_Transferable[] identifier_Transferables)
+	public AnalysisType_Transferable[] transmitAnalysisTypes(	Identifier_Transferable[] identifier_Transferables,
+									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		List idsList = new ArrayList(identifier_Transferables.length);
 		for (int i = 0; i < identifier_Transferables.length; i++)
@@ -327,7 +344,8 @@ public class CMServerImpl implements CMServerOperations {
 
 	}
 
-	public EvaluationType_Transferable[] transmitEvaluationTypes(Identifier_Transferable[] identifier_Transferables)
+	public EvaluationType_Transferable[] transmitEvaluationTypes(	Identifier_Transferable[] identifier_Transferables,
+									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		List idsList = new ArrayList(identifier_Transferables.length);
 		for (int i = 0; i < identifier_Transferables.length; i++)
@@ -359,7 +377,8 @@ public class CMServerImpl implements CMServerOperations {
 
 	}
 
-	public MeasurementSetup_Transferable[] transmitMeasurementSetups(Identifier_Transferable[] identifier_Transferables)
+	public MeasurementSetup_Transferable[] transmitMeasurementSetups(	Identifier_Transferable[] identifier_Transferables,
+										AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		List idsList = new ArrayList(identifier_Transferables.length);
 		for (int i = 0; i < identifier_Transferables.length; i++)
@@ -391,7 +410,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public MeasurementType_Transferable[] transmitMeasurementTypes(Identifier_Transferable[] identifier_Transferables)
+	public MeasurementType_Transferable[] transmitMeasurementTypes(	Identifier_Transferable[] identifier_Transferables,
+									AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		List idsList = new ArrayList(identifier_Transferables.length);
 		for (int i = 0; i < identifier_Transferables.length; i++)
@@ -422,7 +442,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public Set_Transferable[] transmitSets(Identifier_Transferable[] identifier_Transferables)
+	public Set_Transferable[] transmitSets(	Identifier_Transferable[] identifier_Transferables,
+						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		List idsList = new ArrayList(identifier_Transferables.length);
 		for (int i = 0; i < identifier_Transferables.length; i++)
@@ -453,7 +474,8 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public Test_Transferable[] transmitTests(Identifier_Transferable[] identifier_Transferables)
+	public Test_Transferable[] transmitTests(	Identifier_Transferable[] identifier_Transferables,
+							AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		List idsList = new ArrayList(identifier_Transferables.length);
 		for (int i = 0; i < identifier_Transferables.length; i++)
@@ -461,7 +483,7 @@ public class CMServerImpl implements CMServerOperations {
 
 		try {
 			List list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
-			
+
 			Test_Transferable[] transferables = new Test_Transferable[list.size()];
 			int i = 0;
 			for (Iterator it = list.iterator(); it.hasNext(); i++) {
@@ -484,7 +506,10 @@ public class CMServerImpl implements CMServerOperations {
 		}
 	}
 
-	public Test_Transferable[] transmitTestsByTime(long startTime, long endTime) throws AMFICOMRemoteException {
+	public Test_Transferable[] transmitTestsByTime(	long startTime,
+							long endTime,
+							AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
 
 		List list = null;
