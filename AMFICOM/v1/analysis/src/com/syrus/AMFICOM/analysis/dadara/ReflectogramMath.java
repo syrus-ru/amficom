@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+
 
 public class ReflectogramMath
 {

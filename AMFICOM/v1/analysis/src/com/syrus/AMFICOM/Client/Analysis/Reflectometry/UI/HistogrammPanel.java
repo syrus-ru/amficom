@@ -12,7 +12,7 @@ import javax.swing.SwingUtilities;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.AnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;

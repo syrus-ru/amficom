@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class AnalysisPanel extends MapMarkersPanel
 {

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Analysis;
+package com.syrus.AMFICOM.analysis.dadara;
 
 public class MathRef
 {

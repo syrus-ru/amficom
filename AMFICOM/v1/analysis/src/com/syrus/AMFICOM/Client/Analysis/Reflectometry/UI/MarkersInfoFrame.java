@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.io.BellcoreStructure;
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class MarkersInfoFrame extends JInternalFrame
 																		implements OperationListener

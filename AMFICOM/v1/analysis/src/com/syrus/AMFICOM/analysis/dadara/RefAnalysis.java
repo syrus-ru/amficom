@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 public class RefAnalysis

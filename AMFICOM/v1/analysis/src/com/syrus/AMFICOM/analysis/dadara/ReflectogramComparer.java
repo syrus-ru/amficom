@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
 import java.util.ArrayList;
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+
 
 public class ReflectogramComparer
 {

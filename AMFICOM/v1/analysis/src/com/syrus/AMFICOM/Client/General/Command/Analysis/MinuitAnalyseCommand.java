@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 //import com.syrus.AMFICOM.Client.Analysis.HistoAnalysis.WorkWithReflectoArray;
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.AnalysisManager;
 //import com.syrus.AMFICOM.analysis.dadara.AnalysResult;
 //import com.syrus.AMFICOM.analysis.dadara.EventReader;

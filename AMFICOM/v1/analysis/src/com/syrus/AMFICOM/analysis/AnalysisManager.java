@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.analysis;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.io.IniFile;
 
