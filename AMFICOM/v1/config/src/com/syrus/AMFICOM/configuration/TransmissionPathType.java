@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.20 2005/01/14 18:07:09 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.21 2005/01/17 13:16:26 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,14 +32,20 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/01/14 18:07:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/01/17 13:16:26 $
+ * @author $Author: stas $
  * @module config_v1
  */
 
 public class TransmissionPathType extends StorableObjectType implements Characterized {
 
-	private static final long serialVersionUID = 5311725679846973948L;	
+	private static final long serialVersionUID = 5311725679846973948L;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	private static Object[][] exportColumns = null;
 
 	private String name;
 	private List characteristics;
@@ -95,7 +101,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	}
 
 	/**
-	 * create new instance for client 
+	 * create new instance for client
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -201,5 +207,26 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
+	}
+
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[4][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_CHARACTERISTICS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		List characteristics = new ArrayList(getCharacteristics().size());
+		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+			Characteristic ch = (Characteristic)it.next();
+			characteristics.add(ch.exportColumns());
+		}
+		exportColumns[3][1] = characteristics;
+
+		return exportColumns;
 	}
 }

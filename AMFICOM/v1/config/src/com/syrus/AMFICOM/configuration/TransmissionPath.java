@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.36 2005/01/14 18:07:09 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.37 2005/01/17 13:16:26 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.36 $, $Date: 2005/01/14 18:07:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/01/17 13:16:26 $
+ * @author $Author: stas $
  * @module config_v1
  */
 
@@ -44,10 +44,19 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	protected static final int		UPDATE_ATTACH_ME	= 1;
 	protected static final int		UPDATE_DETACH_ME	= 2;
 
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_TRANSMISSION_PATH_TYPE = "type";
+	public static final String COLUMN_START_PORT_ID = "startPortId";
+	public static final String COLUMN_FINISH_PORT_ID = "finishPortId";
+	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	private static Object[][] exportColumns = null;
+
 	private TransmissionPathType type;
 	private List characteristics;
 	private String name;
-	private String description;	
+	private String description;
 	private Identifier startPortId;
 	private Identifier finishPortId;
 
@@ -69,7 +78,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 
 	public TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
 		super(tpt.header,
-			  new Identifier(tpt.domain_id));
+				new Identifier(tpt.domain_id));
 		super.monitoredElementIds = new ArrayList(tpt.monitored_element_ids.length);
 		for (int i = 0; i < tpt.monitored_element_ids.length; i++)
 			super.monitoredElementIds.add(new Identifier(tpt.monitored_element_ids[i]));
@@ -84,7 +93,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 			for (int i = 0; i < tpt.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
 
-      this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
+			this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -122,7 +131,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	}
 
 	/**
-	 * create new instance for client 
+	 * create new instance for client
 	 * @param creatorId
 	 * @param domainId
 	 * @param name
@@ -138,7 +147,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 																		TransmissionPathType type,
 																		Identifier startPortId,
 																		Identifier finishPortId) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || description == null || 
+		if (creatorId == null || domainId == null || name == null || description == null ||
 				type == null || startPortId == null || finishPortId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -169,16 +178,16 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 
 	public Object getTransferable() {
 		int i = 0;
-		
+
 		Identifier_Transferable[] meIds = new Identifier_Transferable[super.monitoredElementIds.size()];
 		for (Iterator iterator = super.monitoredElementIds.iterator(); iterator.hasNext();)
 			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		i = 0;		
+		i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
-		
+
 
 		return new TransmissionPath_Transferable(super.getHeaderTransferable(),
 												 (Identifier_Transferable)this.getDomainId().getTransferable(),
@@ -207,7 +216,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		this.description = description;
 		super.currentVersion = super.getNextVersion();
 	}
-	
+
 	public Identifier getFinishPortId() {
 		return this.finishPortId;
 	}
@@ -215,22 +224,22 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public Identifier getStartPortId() {
 		return this.startPortId;
 	}
-	
+
 	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  Identifier domainId,
-											  String name,
-											  String description,
-											  TransmissionPathType type,
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												Identifier domainId,
+												String name,
+												String description,
+												TransmissionPathType type,
 												Identifier startPortId,
-											  Identifier finishPortId) {
+												Identifier finishPortId) {
 		super.setAttributes(created,
 							modified,
 							creatorId,
 							modifierId,
-							domainId);		
+							domainId);
 		this.name = name;
 		this.description = description;
 		this.type = type;
@@ -242,7 +251,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		List dependencies = new LinkedList();
 		dependencies.add(this.startPortId);
 		dependencies.add(this.finishPortId);
-		dependencies.addAll(this.characteristics);			
+		dependencies.addAll(this.characteristics);
 		return dependencies;
 	}
 
@@ -263,7 +272,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public List getCharacteristics() {
 		return Collections.unmodifiableList(this.characteristics);
 	}
-	
+
 	protected void setCharacteristics0(final List characteristics) {
 		if (characteristics != null)
 			this.characteristics.clear();
@@ -275,5 +284,32 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
+	}
+
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[7][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_TRANSMISSION_PATH_TYPE;
+			exportColumns[4][0] = COLUMN_START_PORT_ID;
+			exportColumns[5][0] = COLUMN_FINISH_PORT_ID;
+			exportColumns[6][0] = COLUMN_CHARACTERISTICS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getType().getId();
+		exportColumns[4][1] = getStartPortId();
+		exportColumns[5][1] = getFinishPortId();
+		List characteristics = new ArrayList(getCharacteristics().size());
+		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+			Characteristic ch = (Characteristic)it.next();
+			characteristics.add(ch.exportColumns());
+		}
+		exportColumns[6][1] = characteristics;
+
+		return exportColumns;
 	}
 }

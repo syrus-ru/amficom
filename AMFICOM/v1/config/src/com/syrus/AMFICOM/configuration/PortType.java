@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.29 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: PortType.java,v 1.30 2005/01/17 13:16:26 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,22 +35,29 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/01/17 13:16:26 $
+ * @author $Author: stas $
  * @module config_v1
  */
 
 public class PortType extends StorableObjectType implements Characterized {
 	private static final long serialVersionUID = -115251480084275101L;
 
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	private static Object[][] exportColumns = null;
+
 	private String name;
 	private List characteristics;
 	private StorableObjectDatabase portTypeDatabase;
 	private int sort;
-    
+
 	public PortType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-		
+
 		this.characteristics = new LinkedList();
 		this.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
 		try {
@@ -63,8 +70,8 @@ public class PortType extends StorableObjectType implements Characterized {
 
 	public PortType(PortType_Transferable ptt) throws CreateObjectException {
 		super(ptt.header,
-			  new String(ptt.codename),
-			  new String(ptt.description));
+				new String(ptt.codename),
+				new String(ptt.description));
 		this.name = ptt.name;
 		this.sort = ptt.sort.value();
 		try {
@@ -103,21 +110,21 @@ public class PortType extends StorableObjectType implements Characterized {
 
 
 	/**
-	 * create new instance for client 
+	 * create new instance for client
 	 * @param creatorId
 	 * @param codename
 	 * @param description
 	 * @throws CreateObjectException
 	 */
 	public static PortType createInstance(Identifier creatorId,
-										  String codename,
-										  String description,
-										  String name,
-										  PortTypeSort sort) throws CreateObjectException{
-		if (creatorId == null || codename == null || name == null || description == null || 
+											String codename,
+											String description,
+											String name,
+											PortTypeSort sort) throws CreateObjectException{
+		if (creatorId == null || codename == null || name == null || description == null ||
 				sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
 			return new PortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORTTYPE_ENTITY_CODE),
 								creatorId,
@@ -156,13 +163,13 @@ public class PortType extends StorableObjectType implements Characterized {
 	}
 
 	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  String codename,
-											  String description,
-											  String name,
-											  int sort) {
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												String codename,
+												String description,
+												String name,
+												int sort) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -170,7 +177,7 @@ public class PortType extends StorableObjectType implements Characterized {
 				codename,
 				description);
 		this.name = name;
-        this.sort = sort;
+				this.sort = sort;
 	}
 
 	public String getName(){
@@ -190,7 +197,7 @@ public class PortType extends StorableObjectType implements Characterized {
 		this.name = name;
 	}
 
-	public List getDependencies() {		
+	public List getDependencies() {
 		return Collections.unmodifiableList(this.characteristics);
 	}
 
@@ -221,5 +228,28 @@ public class PortType extends StorableObjectType implements Characterized {
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
+	}
+
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[5][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_SORT;
+			exportColumns[4][0] = COLUMN_CHARACTERISTICS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = String.valueOf(getSort().value());
+		List characteristics = new ArrayList(getCharacteristics().size());
+		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+			Characteristic ch = (Characteristic)it.next();
+			characteristics.add(ch.exportColumns());
+		}
+		exportColumns[4][1] = characteristics;
+
+		return exportColumns;
 	}
 }

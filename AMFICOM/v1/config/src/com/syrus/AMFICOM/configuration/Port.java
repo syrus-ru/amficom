@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.32 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: Port.java,v 1.33 2005/01/17 13:16:26 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,14 +36,23 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/01/17 13:16:26 $
+ * @author $Author: stas $
  * @module config_v1
  */
 public class Port extends StorableObject implements Characterized, TypedObject {
 	private static final long serialVersionUID = -5139393638116159453L;
 
-	private PortType type;	
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_ABSTRACT_LINK_TYPE = "type";
+	public static final String COLUMN_EQUIPMENT_ID = "equipmentId";
+	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	private static Object[][] exportColumns = null;
+
+	private PortType type;
 	private String description;
 	private Identifier equipmentId;
 	private int sort;
@@ -116,7 +125,7 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 	}
 
 	/**
-	 * create new instance for client 
+	 * create new instance for client
 	 * @param creatorId
 	 * @param type
 	 * @param description
@@ -125,11 +134,11 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 	 * @throws CreateObjectException
 	 */
 	public static Port createInstance(Identifier creatorId,
-									  PortType type,
-									  String description,
-									  Identifier equipmentId,
-									  PortSort sort) throws CreateObjectException {
-		if (creatorId == null || type == null || description == null || 
+										PortType type,
+										String description,
+										Identifier equipmentId,
+										PortSort sort) throws CreateObjectException {
+		if (creatorId == null || type == null || description == null ||
 				type == null || equipmentId == null || sort == null )
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -158,11 +167,11 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 
 	public Object getTransferable() {
 		int i = 0;
-		
+
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
-		    
+
 		return new Port_Transferable(super.getHeaderTransferable(),
 									 (Identifier_Transferable)this.type.getId().getTransferable(),
 									 new String(this.description),
@@ -225,8 +234,8 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 																Date modified,
 																Identifier creatorId,
 																Identifier modifierId,
-																PortType type,																						
-																String description,	
+																PortType type,
+																String description,
 																Identifier equipmentId,
 																int sort) {
 		super.setAttributes(created,
@@ -245,5 +254,32 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 		dependencies.add(this.equipmentId);
 		dependencies.addAll(this.characteristics);
 		return dependencies;
+	}
+
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[7][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_ABSTRACT_LINK_TYPE;
+			exportColumns[4][0] = COLUMN_EQUIPMENT_ID;
+			exportColumns[5][0] = COLUMN_SORT;
+			exportColumns[6][0] = COLUMN_CHARACTERISTICS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = "";//getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getType().getId();
+		exportColumns[4][1] = getEquipmentId();
+		exportColumns[5][1] = String.valueOf(getSort());
+		List characteristics = new ArrayList(getCharacteristics().size());
+		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+			Characteristic ch = (Characteristic)it.next();
+			characteristics.add(ch.exportColumns());
+		}
+		exportColumns[6][1] = characteristics;
+
+		return exportColumns;
 	}
 }

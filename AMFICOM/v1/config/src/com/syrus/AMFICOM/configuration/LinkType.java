@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.21 2005/01/17 11:49:37 stas Exp $
+ * $Id: LinkType.java,v 1.22 2005/01/17 13:16:26 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/01/17 11:49:37 $
+ * @version $Revision: 1.22 $, $Date: 2005/01/17 13:16:26 $
  * @author $Author: stas $
  * @module config_v1
  */
@@ -296,4 +296,3 @@ public class LinkType extends AbstractLinkType implements Characterized {
 		return exportColumns;
 	}
 }
-
