@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.84 2005/03/05 10:00:03 arseniy Exp $
+ * $Id: configuration.idl,v 1.85 2005/03/05 21:18:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -133,8 +133,6 @@ module corba {
 		general::corba::WString32 manufacturerCode;
 		general::corba::Identifier_Transferable image_id;
 		general::corba::IdentifierSeq_Transferable characteristic_ids;
-		
-		general::corba::IdentifierSeq_Transferable cableThreadTypeIds;
 	};
 	typedef sequence<CableLinkType_Transferable> CableLinkTypeSeq_Transferable;
 	typedef CableLinkType_Transferable CableLinkType;
@@ -173,8 +171,6 @@ module corba {
 
 		general::corba::Identifier_Transferable domain_id;
 
-//		general::corba::IdentifierSeq_Transferable monitored_element_ids;
-
 		general::corba::Identifier_Transferable type_id;
 
 		general::corba::WString128 name;
@@ -206,8 +202,6 @@ module corba {
 		general::corba::StorableObject_Transferable header;
 
 		general::corba::Identifier_Transferable domain_id;
-
-//		general::corba::IdentifierSeq_Transferable monitored_element_ids;
 
 		general::corba::WString128 name;
 		general::corba::WString256 description;
@@ -258,7 +252,6 @@ module corba {
 		general::corba::Identifier_Transferable equipment_id;
 		general::corba::Identifier_Transferable mcm_id;
 		general::corba::IdentifierSeq_Transferable characteristic_ids;
-		general::corba::IdentifierSeq_Transferable measurement_port_ids;
 	};
 	
 	typedef sequence <KIS_Transferable> KISSeq_Transferable;
