@@ -1,5 +1,5 @@
 /*
- * $Id: ClientCMBridge.java,v 1.4 2004/11/18 12:25:17 bob Exp $
+ * $Id: ClientCMBridge.java,v 1.5 2004/11/25 15:42:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,19 +20,16 @@ import org.omg.PortableServer.POAHelper;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerHelper;
-import com.syrus.AMFICOM.configuration.ClientConfigurationObjectLoader;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.*;
-import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/18 12:25:17 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/25 15:42:17 $
  * @author $Author: bob $
  * @module module
  */
@@ -45,21 +42,31 @@ public class ClientCMBridge {
 	private ClientCMBridge() {
 		// empty
 	}
+	
+	public static void main(String[] args) {
+		init("desperado.science.syrus.ru");
+	}
 
 	public static void init(final String hostName) {
 		server = resolveCMServer(hostName);
 
-		MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(server), ClientLRUMap.class, 200);
-		ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(server), ClientLRUMap.class,
-							200);
-		IdentifierPool.init(server);
+		//MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(server), ClientLRUMap.class, 200);
+		//ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(server), ClientLRUMap.class,	200);
+		// IdentifierPool.init(server);
+		
 
 		accessIdentifier = new AccessIdentifier_Transferable();
+		try {
+			server.transmitDomain(new Identifier_Transferable("Domain_19"), accessIdentifier);
+		} catch (AMFICOMRemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private static void setAccessIdentifier(AccessIdentifier_Transferable accessIdentifier){
-		ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier);
-		ClientConfigurationObjectLoader.setAccessIdentifierTransferable(accessIdentifier);
+		//ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier);
+		//ClientConfigurationObjectLoader.setAccessIdentifierTransferable(accessIdentifier);
 	}
 	
 	public static void setDomain(Domain domain) {
@@ -87,9 +94,9 @@ public class ClientCMBridge {
 			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb
 					.resolve_initial_references("NameService"));
 
-			String hName = hostName;
+			String hName = hostName;			
 			if (hName == null)
-				hName = InetAddress.getLocalHost().getCanonicalHostName().replaceAll("\\.", "_");
+				hName = InetAddress.getByName(hostName).getCanonicalHostName().replaceAll("\\.", "_");
 
 			final String finalHostName = hName;
 

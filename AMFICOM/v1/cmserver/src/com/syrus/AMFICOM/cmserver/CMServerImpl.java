@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.71 2004/11/24 10:16:02 max Exp $
+ * $Id: CMServerImpl.java,v 1.72 2004/11/25 15:42:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -123,8 +123,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2004/11/24 10:16:02 $
- * @author $Author: max $
+ * @version $Revision: 1.72 $, $Date: 2004/11/25 15:42:17 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -219,6 +219,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
     public Identifier_Transferable reverseLookupUserLogin(String userLogin)
             throws AMFICOMRemoteException {
         try {
+        	Log.debugMessage("CMServerImpl.reverseLookupUserLogin | userLogin " + userLogin, Log.DEBUGLEVEL07);
         	StringFieldCondition stringFieldCondition = StringFieldCondition.getInstance();
 			stringFieldCondition.setEntityCode(ObjectEntities.USER_ENTITY_CODE);
 			stringFieldCondition.setString(userLogin);
@@ -241,6 +242,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 
 	public Identifier_Transferable reverseLookupUserName(final String userName)
 			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.reverseLookupUserName | userName = " + userName, Log.DEBUGLEVEL07);
 		try {
 			StringFieldCondition stringFieldCondition = StringFieldCondition.getInstance();
 			stringFieldCondition.setEntityCode(ObjectEntities.USER_ENTITY_CODE);
