@@ -24,7 +24,7 @@ static int ID_to_entry[MF_MAX_ID];
 // Вызывающая сторона может оставить значения по умолчанию
 // Вызываемая сторона может игнорировать эти параметры.
 // npars - должен игнорироваться в случае фиксированного числа параметров
-typedef double (*MF_Tfptr) (double *pars, int npars, double x, double *cache = 0, int valid = 0);
+typedef double (*MF_Tfptr) (double *pars, int npars, double x, double *cache, int valid);
 
 // расчет значений функции в диапазоне - необязательный метод
 // здесь кэш не нужен
@@ -219,7 +219,7 @@ int ModelF::getFlags(int ipar)
 double ModelF::calcFunP(double *pars, double x)
 {
 	assert(entry >= 0);
-	return funcs[entry].fptr(pars, nPars, x);
+	return funcs[entry].fptr(pars, nPars, x, 0, 0);
 }
 
 void ModelF::calcFunArrayP(double *pars, double x0, double step, int N, double *output)
@@ -237,7 +237,7 @@ void ModelF::calcFunArrayP(double *pars, double x0, double step, int N, double *
 		for (i = 0; i < N; i++)
 		{
 			// XXX: сюда надо добавить поддержку кэша fptr, это пара строк, но нет времени отлаживать
-			output[i] = fptr(pars, nPars, x0 + i * step);
+			output[i] = fptr(pars, nPars, x0 + i * step, 0, 0);
 		}
 	}
 }
