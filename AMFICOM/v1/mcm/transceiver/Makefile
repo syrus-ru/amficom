@@ -1,4 +1,4 @@
-OUT=libtcpkisconnection.so
+OUT=libmcmtransceiver.so
 
 CPP=g++#-3.3.1
 CFLAGS=-O0 -g -W -Wall -I$(AKP) -I$(TCPCONNECT) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux

@@ -23,7 +23,7 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_setupTCPInterface(
 	sockfd = create_listening_socket(port);
 
 	if (sockfd <= 0)
-		sockfd = (SOCKET)com_syrus_AMFICOM_mcm_Transceiver_TCP_SOCKET_DISCONNECTED;
+		sockfd = (SOCKET)com_syrus_AMFICOM_mcm_Transceiver_TCP_SOCKET_INVALID;
 	return (jint)sockfd;
 }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.28 2004/11/18 19:31:10 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.29 2004/11/24 16:40:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/18 19:31:10 $
+ * @version $Revision: 1.29 $, $Date: 2004/11/24 16:40:41 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -150,8 +150,9 @@ public class PeriodicalTestProcessor extends TestProcessor {
 							 + ", lastMeasurementAcquisition: " + super.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
 			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && super.lastMeasurementAcquisition)
 				this.complete();
-			else if (super.lastMeasurementAcquisition && (this.endTime + super.forgetFrame < System.currentTimeMillis())){
-					Log.debugMessage("Past " + (super.forgetFrame/1000) + " sec since last measurement,"
+			else
+				if (super.lastMeasurementAcquisition && (this.endTime + super.forgetFrame < System.currentTimeMillis())) {
+					Log.debugMessage("Passed " + (super.forgetFrame/1000) + " sec since last measurement,"
 									 + " forget acquire results for '" + super.test.getId().getIdentifierString() + "'", Log.DEBUGLEVEL03);
 					this.abort();
 				}

@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.17 2004/11/01 15:46:25 max Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.18 2004/11/24 16:40:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/11/01 15:46:25 $
- * @author $Author: max $
+ * @version $Revision: 1.18 $, $Date: 2004/11/24 16:40:41 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -73,9 +73,6 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
     catch (UnsatisfiedLinkError ule) {
       Log.errorMessage(ule.getMessage());
     }
-    	
-    	MeasurementDatabaseContext.init(new ParameterTypeDatabase(), null, null, null, null, null, null,
-										null, null, null, null, null, null);
 
 		outParameterTypeIds = new HashMap();
 		addOutParameterTypeId(CODENAME_DADARA_EVENT_ARRAY);

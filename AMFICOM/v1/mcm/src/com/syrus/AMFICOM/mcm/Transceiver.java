@@ -19,7 +19,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 public class Transceiver extends SleepButWorkThread {
-	private static final int TCP_SOCKET_DISCONNECTED = -1;
+	private static final int TCP_SOCKET_INVALID = -1;
 
 /*	Error codes for method processFall()	*/
 	public static final int FALL_CODE_GENERATE_IDENTIFIER = 1;
@@ -31,6 +31,10 @@ public class Transceiver extends SleepButWorkThread {
 	private KISReport kisReport;
 
 	private boolean running;
+
+	static {
+		System.loadLibrary("mcmtransceiver");
+	}
 
 	public Transceiver() throws CommunicationException {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
@@ -195,12 +199,21 @@ public class Transceiver extends SleepButWorkThread {
 	}
 
 	private void downReceiverInterface() {
-		this.tcpSocket = TCP_SOCKET_DISCONNECTED;
-		this.downTCPInterface();
+		if (this.receiverInterfaceIsUp()) {
+			this.downTCPInterface();
+			this.tcpSocket = TCP_SOCKET_INVALID;
+		}
 	}
 
 	private boolean receiverInterfaceIsUp() {
-		return (this.tcpSocket != TCP_SOCKET_DISCONNECTED);
+		return (this.tcpSocket != TCP_SOCKET_INVALID);
+	}
+
+	protected void shutdown() {
+		this.running = false;
+		this.testProcessors = null;
+		this.throwAwayKISReport();
+		this.downReceiverInterface();
 	}
 
 	/**

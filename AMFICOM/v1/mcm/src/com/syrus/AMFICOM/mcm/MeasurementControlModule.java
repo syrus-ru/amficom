@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.43 2004/11/18 16:21:35 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.44 2004/11/24 16:40:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/11/18 16:21:35 $
+ * @version $Revision: 1.44 $, $Date: 2004/11/24 16:40:41 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -151,15 +151,15 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			System.exit(-1);
 		}
 
-		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
-		prepareTestList();
-		prepareResultList();
-		
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
 
 		/*	Create reference to MServer*/
 		activateMServerReference();
+
+		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
+		prepareTestList();
+		prepareResultList();
 
 		/*	Initialize pool of Identifiers*/
 		NewIdentifierPool.init(mServerRef);
@@ -425,6 +425,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	protected void shutdown() {/*!!	Need synchronization	*/
 		this.running = false;
+		transceiver.shutdown();
 		DatabaseConnection.closeConnection();
 	}
 
