@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.6 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.7 2005/01/17 11:49:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,13 +32,25 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/14 18:07:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/01/17 11:49:37 $
+ * @author $Author: stas $
  * @module config_v1
  */
 public class CableLinkType extends AbstractLinkType implements Characterized {
 
 	private static final long   serialVersionUID    = 3257007652839372857L;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_MANUFACTURER = "manufacturer";
+	public static final String COLUMN_MANUFACTURER_CODE = "manufacturerCode";
+	public static final String COLUMN_IMAGE_ID = "imageId";
+	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	public static final String COLUMN_CABLE_THREAD_TYPES = "cableThreadTypes";
+	private static Object[][] exportColumns = null;
+
 	private String name;
 	private int                     sort;
 	private String                  manufacturer;
@@ -80,7 +92,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 			List cableThreadTypeIds = new ArrayList(cltt.cableThreadTypeIds.length);
 			for (int i = 0; i < cltt.cableThreadTypeIds.length; i++)
 				cableThreadTypeIds.add(new Identifier(cltt.cableThreadTypeIds[i]));
-			this.cableThreadTypes.addAll(ConfigurationStorableObjectPool.getStorableObjects(cableThreadTypeIds, true));			
+			this.cableThreadTypes.addAll(ConfigurationStorableObjectPool.getStorableObjects(cableThreadTypeIds, true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -225,11 +237,11 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 		List dependencies = new LinkedList();
 		dependencies.addAll(this.characteristics);
 		return dependencies;
-	}    
+	}
 
 	public List getCableThreadTypes() {
 		return Collections.unmodifiableList(this.cableThreadTypes);
-	}	
+	}
 
 	protected void setCableThreadTypes0(final List cableThreadTypes) {
 		this.cableThreadTypes.clear();
@@ -273,4 +285,39 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 		super.currentVersion = super.getNextVersion();
 	}
 
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[9][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_SORT;
+			exportColumns[4][0] = COLUMN_MANUFACTURER;
+			exportColumns[5][0] = COLUMN_MANUFACTURER_CODE;
+			exportColumns[6][0] = COLUMN_IMAGE_ID;
+			exportColumns[7][0] = COLUMN_CHARACTERISTICS;
+			exportColumns[8][0] = COLUMN_CABLE_THREAD_TYPES;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = String.valueOf(getSort().value());
+		exportColumns[4][1] = getManufacturer();
+		exportColumns[5][1] = getManufacturerCode();
+		exportColumns[6][1] = getImageId();
+		List characteristics = new ArrayList(getCharacteristics().size());
+		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+			Characteristic ch = (Characteristic)it.next();
+			characteristics.add(ch.exportColumns());
+		}
+		exportColumns[7][1] = characteristics;
+		List cableThreadTypes = new ArrayList(getCableThreadTypes().size());
+		for (Iterator it = getCableThreadTypes().iterator(); it.hasNext(); ) {
+			CableThreadType type = (CableThreadType)it.next();
+			characteristics.add(type.getId());
+		}
+		exportColumns[8][1] = cableThreadTypes;
+
+		return exportColumns;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.4 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: CableThread.java,v 1.5 2005/01/17 11:49:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,77 +28,83 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/14 18:07:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/01/17 11:49:37 $
+ * @author $Author: stas $
  * @module config_v1
  */
-public class CableThread extends DomainMember implements TypedObject {	
-    
-	private static final long	serialVersionUID	= 3258415027823063600L;
-	
-	private String name;
-    private String description;
-    private CableThreadType type;
-    
-    private StorableObjectDatabase cableThreadDatabase;
-    
-    public CableThread(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-        super(id);
+public class CableThread extends DomainMember implements TypedObject {
 
-        this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
-        try {
-            this.cableThreadDatabase.retrieve(this);
-        }
-        catch (IllegalDataException ide) {
-            throw new RetrieveObjectException(ide.getMessage(), ide);
-        }
-    }
-    
-    public CableThread(CableThread_Transferable ctt) throws CreateObjectException {
-        super(ctt.header,
-              new Identifier(ctt.domain_id));
-        
-        this.name = ctt.name;
-        this.description = ctt.description;
-        try {
-            this.type = (CableThreadType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(ctt.type_id), true);
-        }
-        catch (ApplicationException ae) {
-            throw new CreateObjectException(ae);
-        }
+	private static final long	serialVersionUID	= 3258415027823063600L;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_CABLE_THREAD_TYPE = "type";
+	private static Object[][] exportColumns = null;
+
+	private String name;
+		private String description;
+		private CableThreadType type;
+
+		private StorableObjectDatabase cableThreadDatabase;
+
+		public CableThread(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+				super(id);
 
 				this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
-    }
-    
-    protected CableThread(Identifier id,
-              Identifier creatorId,
-              Identifier domainId,
-              String name,
-              String description,
-              CableThreadType type) {
-	    super(id,
-	                new Date(System.currentTimeMillis()),
-	                new Date(System.currentTimeMillis()),
-	                creatorId,
-	                creatorId,
-	                domainId);
-	    this.name = name;
-	    this.description = description;
-	    this.type = type;
+				try {
+						this.cableThreadDatabase.retrieve(this);
+				}
+				catch (IllegalDataException ide) {
+						throw new RetrieveObjectException(ide.getMessage(), ide);
+				}
+		}
+
+		public CableThread(CableThread_Transferable ctt) throws CreateObjectException {
+				super(ctt.header,
+							new Identifier(ctt.domain_id));
+
+				this.name = ctt.name;
+				this.description = ctt.description;
+				try {
+						this.type = (CableThreadType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(ctt.type_id), true);
+				}
+				catch (ApplicationException ae) {
+						throw new CreateObjectException(ae);
+				}
+
+				this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
+		}
+
+		protected CableThread(Identifier id,
+							Identifier creatorId,
+							Identifier domainId,
+							String name,
+							String description,
+							CableThreadType type) {
+			super(id,
+									new Date(System.currentTimeMillis()),
+									new Date(System.currentTimeMillis()),
+									creatorId,
+									creatorId,
+									domainId);
+			this.name = name;
+			this.description = description;
+			this.type = type;
 
 			super.currentVersion = super.getNextVersion();
 
-	    this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
-    }
-    
-    public static CableThread createInstance(Identifier creatorId,
-              Identifier domainId,
-              String name,
-              String description,
-              CableThreadType type) throws CreateObjectException {
-    	if (creatorId == null || domainId == null || name == null || description == null 
-                || type == null)
-    		throw new IllegalArgumentException("Argument is 'null'");
+			this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
+		}
+
+		public static CableThread createInstance(Identifier creatorId,
+							Identifier domainId,
+							String name,
+							String description,
+							CableThreadType type) throws CreateObjectException {
+			if (creatorId == null || domainId == null || name == null || description == null
+								|| type == null)
+				throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
 			return new CableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLE_THREAD_ENTITY_CODE),
@@ -112,7 +118,7 @@ public class CableThread extends DomainMember implements TypedObject {
 			throw new CreateObjectException("CableThread.createInstance | cannot generate identifier ", e);
 		}
 	}
-    
+
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.cableThreadDatabase != null)
@@ -122,47 +128,63 @@ public class CableThread extends DomainMember implements TypedObject {
 			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
-    
-    public Object getTransferable() {       
-        return new CableThread_Transferable(super.getHeaderTransferable(),
-                                     (Identifier_Transferable)this.getDomainId().getTransferable(),
-                                     new String(this.name),
-                                     new String(this.description),
-                                     (Identifier_Transferable)this.type.getId().getTransferable());
-    }
-    
-    protected synchronized void setAttributes(Date created,
-            Date modified,
-            Identifier creatorId,
-            Identifier modifierId,
-            Identifier domainId,
-            String name,
-            String description,
-            CableThreadType type) {
+
+		public Object getTransferable() {
+				return new CableThread_Transferable(super.getHeaderTransferable(),
+																		 (Identifier_Transferable)this.getDomainId().getTransferable(),
+																		 new String(this.name),
+																		 new String(this.description),
+																		 (Identifier_Transferable)this.type.getId().getTransferable());
+		}
+
+		protected synchronized void setAttributes(Date created,
+						Date modified,
+						Identifier creatorId,
+						Identifier modifierId,
+						Identifier domainId,
+						String name,
+						String description,
+						CableThreadType type) {
 		super.setAttributes(created, modified, creatorId, modifierId, domainId);
 		this.name = name;
 		this.description = description;
-		this.type = type;		
-    }
-    
-    public String getDescription() {
-        return this.description;
-    }
-    
-    public void setDescription(String description){
-        this.description = description;
-        super.currentVersion = super.getNextVersion();
-    }
-    
-    public String getName() {
-        return this.name;
-    }
-    
-    public StorableObjectType getType() {       
-        return this.type;
-    }
-    
-    public List getDependencies() {
-        return Collections.singletonList(this.type);
-    }
+		this.type = type;
+		}
+
+		public String getDescription() {
+				return this.description;
+		}
+
+		public void setDescription(String description){
+				this.description = description;
+				super.currentVersion = super.getNextVersion();
+		}
+
+		public String getName() {
+				return this.name;
+		}
+
+		public StorableObjectType getType() {
+				return this.type;
+		}
+
+		public List getDependencies() {
+				return Collections.singletonList(this.type);
+		}
+
+			public Object[][] exportColumns() {
+				if (exportColumns == null) {
+					exportColumns = new Object[4][2];
+					exportColumns[0][0] = COLUMN_ID;
+					exportColumns[1][0] = COLUMN_NAME;
+					exportColumns[2][0] = COLUMN_DESCRIPTION;
+					exportColumns[3][0] = COLUMN_CABLE_THREAD_TYPE;
+				}
+				exportColumns[0][1] = getId();
+				exportColumns[1][1] = getName();
+				exportColumns[2][1] = getDescription();
+				exportColumns[3][1] = getType().getId();
+
+				return exportColumns;
+		}
 }

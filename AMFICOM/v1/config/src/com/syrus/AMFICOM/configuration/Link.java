@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.24 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: Link.java,v 1.25 2005/01/17 11:49:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,26 +35,39 @@ import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/01/17 11:49:37 $
+ * @author $Author: stas $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
 	private static final long serialVersionUID = -4235048398372768515L;
 
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_ABSTRACT_LINK_TYPE = "type";
+	public static final String COLUMN_INVENTORY_NO = "inventoryNo";
+	public static final String COLUMN_SUPPLIER = "supplier";
+	public static final String COLUMN_SUPPLIER_CODE = "supplierCode";
+	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_MARK = "mark";
+	public static final String COLUMN_COLOR = "color";
+	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	private static Object[][] exportColumns = null;
+
 	private String name;
-	private String description;		
-	private AbstractLinkType type;		
+	private String description;
+	private AbstractLinkType type;
 	private String inventoryNo;
 	private String supplier;
 	private String supplierCode;
 	private int sort;
-	
+
 	private String mark;
 	private int color;
-	
+
 	private List characteristics;
-	
+
 	private StorableObjectDatabase linkDatabase;
 
 	public Link(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
@@ -72,8 +85,8 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 
 	public Link(Link_Transferable lt) throws CreateObjectException  {
 		super(lt.header,
-			  new Identifier(lt.domain_id));
-		
+				new Identifier(lt.domain_id));
+
 		this.name = lt.name;
 		this.description = lt.description;
 		this.inventoryNo = lt.inventoryNo;
@@ -81,7 +94,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		this.supplierCode = lt.supplierCode;
 		this.sort = lt.sort.value();
 
-    try {
+		try {
 			this.characteristics = new ArrayList(lt.characteristic_ids.length);
 			for (int i = 0; i < lt.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(lt.characteristic_ids[i]), true));
@@ -101,17 +114,17 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	}
 
 	protected Link(Identifier id,
-				  Identifier creatorId,
-				  Identifier domainId,
-				  String name,
-				  String description,
-				  AbstractLinkType type,
-				  String inventoryNo,
-				  String supplier,
-				  String supplierCode,
-				  int sort,
-				  int color,
-				  String mark) {
+					Identifier creatorId,
+					Identifier domainId,
+					String name,
+					String description,
+					AbstractLinkType type,
+					String inventoryNo,
+					String supplier,
+					String supplierCode,
+					int sort,
+					int color,
+					String mark) {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
@@ -134,24 +147,24 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 
 		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
 	}
-	
+
 	/**
 	 * create new instance for client
 	 * @throws CreateObjectException
-	 */ 
+	 */
 
 	public static Link createInstance(Identifier creatorId,
-									  Identifier domainId,
-									  String name,
-									  String description,
-									  AbstractLinkType type,
-									  String inventoryNo,
-									  String supplier,
-									  String supplierCode,
-									  LinkSort sort,
-									  int color,
-									  String mark) throws CreateObjectException{
-		if (creatorId == null || domainId == null || name == null || description == null || 
+										Identifier domainId,
+										String name,
+										String description,
+										AbstractLinkType type,
+										String inventoryNo,
+										String supplier,
+										String supplierCode,
+										LinkSort sort,
+										int color,
+										String mark) throws CreateObjectException{
+		if (creatorId == null || domainId == null || name == null || description == null ||
 				type == null || inventoryNo == null || supplier == null || supplierCode == null ||
 				sort == null || mark == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -184,13 +197,13 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		}
 	}
 
-	public Object getTransferable() {		
+	public Object getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
-    return new Link_Transferable(super.getHeaderTransferable(),
+		return new Link_Transferable(super.getHeaderTransferable(),
 									 (Identifier_Transferable)this.getDomainId().getTransferable(),
 									 new String(this.name),
 									 new String(this.description),
@@ -198,7 +211,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 									 LinkSort.from_int(this.sort),
 									 this.inventoryNo,
 									 this.supplier,
-									 this.supplierCode,				
+									 this.supplierCode,
 									 this.color,
 									 (this.mark != null) ? this.mark : "",
 									 charIds);
@@ -212,7 +225,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 												String name,
 												String description,
 												AbstractLinkType type,
-												String inventoryNo,						
+												String inventoryNo,
 												String supplier,
 												String supplierCode,
 												int sort,
@@ -245,7 +258,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 
 	public String getInventoryNo() {
 		return this.inventoryNo;
-	}	
+	}
 
 	public String getName() {
 		return this.name;
@@ -259,7 +272,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		return this.supplierCode;
 	}
 
-	public StorableObjectType getType() {		
+	public StorableObjectType getType() {
 		return this.type;
 	}
 
@@ -268,7 +281,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	}
 
 	public int getColor() {
-		return this.color;		
+		return this.color;
 	}
 
 	public String getMark() {
@@ -311,5 +324,38 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
+	}
+
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[10][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_ABSTRACT_LINK_TYPE;
+			exportColumns[4][0] = COLUMN_INVENTORY_NO;
+			exportColumns[5][0] = COLUMN_SUPPLIER;
+			exportColumns[6][0] = COLUMN_SUPPLIER_CODE;
+			exportColumns[7][0] = COLUMN_SORT;
+			exportColumns[8][0] = COLUMN_COLOR;
+			exportColumns[9][0] = COLUMN_CHARACTERISTICS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getType().getId();
+		exportColumns[4][1] = getInventoryNo();
+		exportColumns[5][1] = getSupplier();
+		exportColumns[6][1] = getSupplierCode();
+		exportColumns[7][1] = String.valueOf(getSort().value());
+		exportColumns[8][1] = String.valueOf(getColor());
+		List characteristics = new ArrayList(getCharacteristics().size());
+		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+			Characteristic ch = (Characteristic)it.next();
+			characteristics.add(ch.exportColumns());
+		}
+		exportColumns[9][1] = characteristics;
+
+		return exportColumns;
 	}
 }

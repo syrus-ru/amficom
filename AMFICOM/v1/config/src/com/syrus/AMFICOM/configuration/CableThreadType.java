@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.13 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.14 2005/01/17 11:49:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/01/14 18:07:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/01/17 11:49:37 $
+ * @author $Author: stas $
  * @module config_v1
  */
 
@@ -38,6 +38,14 @@ public class CableThreadType extends StorableObjectType {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long  serialVersionUID	= 3689355429075628086L;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_COLOR = "color";
+	public static final String COLUMN_LINK_TYPE = "type";
+	private static Object[][] exportColumns = null;
+
 	private String             name;
 	private int                color;
 	private LinkType           type;
@@ -75,12 +83,12 @@ public class CableThreadType extends StorableObjectType {
 			String codename,
 			String description,
 			String name,
-            int color,
-            LinkType linkType) {
+						int color,
+						LinkType linkType) {
 		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId,
 				codename, description);
 		this.name = name;
-        this.color = color;
+				this.color = color;
 		this.type = linkType;
 
 		super.currentVersion = super.getNextVersion();
@@ -100,7 +108,7 @@ public class CableThreadType extends StorableObjectType {
 																		int color,
 																		LinkType linkType) throws CreateObjectException {
 
-		if (creatorId == null || codename == null || description == null || 
+		if (creatorId == null || codename == null || description == null ||
 				name == null || linkType == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
@@ -136,11 +144,11 @@ public class CableThreadType extends StorableObjectType {
 //	}
 
 	public Object getTransferable() {
-		return new CableThreadType_Transferable(super.getHeaderTransferable(), 
+		return new CableThreadType_Transferable(super.getHeaderTransferable(),
 										 super.codename,
 										 (super.description != null) ? super.description : "",
-                                         (this.name != null) ? this.name : "",
-                                         this.color,                                         
+																				 (this.name != null) ? this.name : "",
+																				 this.color,
 										 (Identifier_Transferable) this.type.getId().getTransferable());
 	}
 
@@ -150,31 +158,31 @@ public class CableThreadType extends StorableObjectType {
 												Identifier modifierId,
 												String codename,
 												String description,
-                                                String name,
-												int color,			
+																								String name,
+												int color,
 												LinkType linkType) {
 		super.setAttributes(created, modified, creatorId, modifierId, codename, description);
 		this.name = name;
-        this.color = color;
+				this.color = color;
 		this.type = linkType;
 	}
 
 	public LinkType getLinkType() {
 		return this.type;
 	}
-	
+
 	public int getColor() {
 		return this.color;
 	}
-    
-    public String getName() {
-        return this.name;
-    }
-	
+
+		public String getName() {
+				return this.name;
+		}
+
 	public void setName(String name) {
 		this.name = name;
 	}
-    
+
 	public void setLinkType(LinkType type) {
 		this.type = type;
 	}
@@ -182,4 +190,21 @@ public class CableThreadType extends StorableObjectType {
 		return Collections.singletonList(this.type);
 	}
 
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[5][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_COLOR;
+			exportColumns[4][0] = COLUMN_LINK_TYPE;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[2][1] = String.valueOf(getColor());
+		exportColumns[4][1] = getLinkType().getId();
+
+		return exportColumns;
+	}
 }

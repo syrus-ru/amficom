@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.34 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.35 2005/01/17 11:49:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,13 +33,21 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/01/14 18:07:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/01/17 11:49:37 $
+ * @author $Author: stas $
  * @module config_v1
  */
 
 public class EquipmentType extends StorableObjectType implements Characterized {
 	private static final long serialVersionUID = 9157517478787463967L;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_MANUFACTURER = "manufacturer";
+	public static final String COLUMN_MANUFACTURER_CODE = "manufacturerCode";
+	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	private static Object[][] exportColumns = null;
 
 	private String                     name;
 	private String                     manufacturer;
@@ -62,8 +70,8 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 
 	public EquipmentType(EquipmentType_Transferable ett) throws CreateObjectException {
 		super(ett.header,
-			  new String(ett.codename),
-			  new String(ett.description));	
+				new String(ett.codename),
+				new String(ett.description));
 		this.name = ett.name;
 		this.manufacturer = ett.manufacturer;
 		this.manufacturerCode = ett.manufacturerCode;
@@ -105,7 +113,7 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 
 
 	/**
-	 * Create new instance for client 
+	 * Create new instance for client
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -118,7 +126,7 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 																	 String manufacturer,
 																	 String manufacturerCode) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null || name == null
-                || manufacturer == null || manufacturerCode == null)
+								|| manufacturer == null || manufacturerCode == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -132,7 +140,7 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 		}
 		catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("EquipmentType.createInstance | cannot generate identifier ", ioee);
-		}		
+		}
 	}
 
 	public void insert() throws CreateObjectException {
@@ -189,7 +197,7 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 		this.name = name;
 	}
 
-	public List getDependencies() {		
+	public List getDependencies() {
 		return this.characteristics;
 	}
 
@@ -236,5 +244,30 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 
 	public void setManufacturerCode(String manufacturerCode) {
 		this.manufacturerCode = manufacturerCode;
+	}
+
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[6][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_MANUFACTURER;
+			exportColumns[4][0] = COLUMN_MANUFACTURER_CODE;
+			exportColumns[5][0] = COLUMN_CHARACTERISTICS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getManufacturer();
+		exportColumns[4][1] = getManufacturerCode();
+		List characteristics = new ArrayList(getCharacteristics().size());
+		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+			Characteristic ch = (Characteristic)it.next();
+			characteristics.add(ch.exportColumns());
+		}
+		exportColumns[5][1] = characteristics;
+
+		return exportColumns;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.53 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: Equipment.java,v 1.54 2005/01/17 11:49:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,18 +33,36 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/01/14 18:07:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/01/17 11:49:37 $
+ * @author $Author: stas $
  * @module config_v1
  */
 
 public class Equipment extends MonitoredDomainMember implements Characterized, TypedObject {
-	
+
 	private static final long serialVersionUID = -6115401698444070841L;
 
 	protected static final int		UPDATE_ATTACH_ME	= 1;
 	protected static final int		UPDATE_DETACH_ME	= 2;
-	
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_EQUIPMENT_TYPE = "type";
+	public static final String COLUMN_IMAGE_ID = "imageId";
+	public static final String COLUMN_LONGITUDE = "longitude";
+	public static final String COLUMN_LATITUDE = "latitude";
+	public static final String COLUMN_SUPPLIER = "supplier";
+	public static final String COLUMN_SUPPLIER_CODE = "supplierCode";
+	public static final String COLUMN_HW_SERIAL = "hwSerial";
+	public static final String COLUMN_HW_VERSION = "hwVersion";
+	public static final String COLUMN_SW_SERIAL = "swSerial";
+	public static final String COLUMN_SW_VERSION = "swVersion";
+	public static final String COLUMN_INVENTORY_NUMBER = "inventoryNumber";
+	public static final String COLUMN_PORT_IDS = "portIds";
+	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	private static Object[][] exportColumns = null;
+
 	private EquipmentType          type;
 	private String                 name;
 	private String                 description;
@@ -66,7 +84,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public Equipment(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		
+
 		this.portIds = new LinkedList();
 		this.characteristics = new LinkedList();
 		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
@@ -80,7 +98,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public Equipment(Equipment_Transferable et) throws CreateObjectException {
 		super(et.header,
-			  new Identifier(et.domain_id));
+				new Identifier(et.domain_id));
 
 		super.monitoredElementIds = new ArrayList(et.monitored_element_ids.length);
 		for (int i = 0; i < et.monitored_element_ids.length; i++)
@@ -108,7 +126,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 		this.portIds = new ArrayList(et.port_ids.length);
 		for (int i = 0; i < et.port_ids.length; i++)
-			this.portIds.add(new Identifier(et.port_ids[i]));		
+			this.portIds.add(new Identifier(et.port_ids[i]));
 
 		try {
 			this.characteristics = new ArrayList(et.characteristic_ids.length);
@@ -121,7 +139,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 	}
-	
+
 	protected Equipment(Identifier id,
 										Identifier creatorId,
 										Identifier domainId,
@@ -171,7 +189,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	}
 
 	/**
-	 * create new instance for client 
+	 * create new instance for client
 	 * @param creatorId
 	 * @param domainId
 	 * @param type
@@ -196,9 +214,9 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 														 String swVersion,
 														 String inventoryNumber) throws CreateObjectException {
 		if (creatorId == null || domainId == null || type == null || name == null
-                || description == null || imageId == null || supplier == null || supplierCode == null
-                || hwSerial == null || hwVersion == null || swSerial == null || swVersion == null 
-                || inventoryNumber == null)
+								|| description == null || imageId == null || supplier == null || supplierCode == null
+								|| hwSerial == null || hwVersion == null || swSerial == null || swVersion == null
+								|| inventoryNumber == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
 			return new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE),
@@ -245,7 +263,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
-		i = 0;		
+		i = 0;
 		Identifier_Transferable[] pIds = new Identifier_Transferable[this.portIds.size()];
 		for (Iterator iterator = this.portIds.iterator(); iterator.hasNext();)
 			pIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
@@ -281,7 +299,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 		super.currentVersion = super.getNextVersion();
@@ -301,7 +319,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 			super.currentVersion = super.getNextVersion();
 		}
 	}
-	
+
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
@@ -342,7 +360,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 																	String swSerial,
 																	String swVersion,
 																	String inventoryNumber) {
-		super.setAttributes(created,												
+		super.setAttributes(created,
 							modified,
 							creatorId,
 							modifierId,
@@ -446,5 +464,50 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setSwVersion(String swVersion) {
 		this.swVersion = swVersion;
+	}
+
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[16][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_EQUIPMENT_TYPE;
+			exportColumns[4][0] = COLUMN_IMAGE_ID;
+			exportColumns[5][0] = COLUMN_LONGITUDE;
+			exportColumns[6][0] = COLUMN_LATITUDE;
+			exportColumns[7][0] = COLUMN_SUPPLIER;
+			exportColumns[8][0] = COLUMN_SUPPLIER_CODE;
+			exportColumns[9][0] = COLUMN_HW_SERIAL;
+			exportColumns[10][0] = COLUMN_HW_VERSION;
+			exportColumns[11][0] = COLUMN_SW_SERIAL;
+			exportColumns[12][0] = COLUMN_SW_VERSION;
+			exportColumns[13][0] = COLUMN_INVENTORY_NUMBER;
+			exportColumns[14][0] = COLUMN_PORT_IDS;
+			exportColumns[15][0] = COLUMN_CHARACTERISTICS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getType().getId();
+		exportColumns[4][1] = getImageId();
+		exportColumns[5][1] = String.valueOf(getLatitude());
+		exportColumns[6][1] = String.valueOf(getLatitude());
+		exportColumns[7][1] = getSupplier();
+		exportColumns[8][1] = getSupplierCode();
+		exportColumns[9][1] = getHwSerial();
+		exportColumns[10][1] = getHwVersion();
+		exportColumns[11][1] = getSwSerial();
+		exportColumns[12][1] = getSwVersion();
+		exportColumns[13][1] = getInventoryNumber();
+		exportColumns[14][1] = getPortIds();
+		List characteristics = new ArrayList(getCharacteristics().size());
+		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+			Characteristic ch = (Characteristic)it.next();
+			characteristics.add(ch.exportColumns());
+		}
+		exportColumns[15][1] = characteristics;
+
+		return exportColumns;
 	}
 }

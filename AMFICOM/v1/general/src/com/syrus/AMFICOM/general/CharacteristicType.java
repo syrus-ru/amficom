@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.1 2005/01/13 14:16:11 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.2 2005/01/17 11:47:48 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,13 +17,19 @@ import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/13 14:16:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/01/17 11:47:48 $
+ * @author $Author: stas $
  * @module general_v1
  */
 
 public class CharacteristicType extends StorableObjectType {
 	private static final long serialVersionUID = 6153350736368296076L;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_DATA_TYPE = "type";
+	public static final String COLUMN_SORT = "sort";
+	private static Object[][] exportColumns = null;
 
 	private int dataType;
 	private int sort;
@@ -44,14 +50,14 @@ public class CharacteristicType extends StorableObjectType {
 
 	public CharacteristicType(CharacteristicType_Transferable ctt) {
 		super(ctt.header,
-			  new String(ctt.codename),
-			  new String(ctt.description));
+				new String(ctt.codename),
+				new String(ctt.description));
 		this.dataType = ctt.data_type.value();
 		this.sort = ctt.sort.value();
 
 		this.characteristicTypeDatabase = GeneralDatabaseContext.characteristicTypeDatabase;
 	}
-	
+
 	protected CharacteristicType(Identifier id,
 							Identifier creatorId,
 							String codename,
@@ -72,13 +78,13 @@ public class CharacteristicType extends StorableObjectType {
 
 		this.characteristicTypeDatabase = GeneralDatabaseContext.characteristicTypeDatabase;
 	}
-	
+
 	/**
-	 * create new instance for client 
+	 * create new instance for client
 	 * @param creatorId
 	 * @param codename
 	 * @param description
-	 * @param dataType see {@link DataType} 
+	 * @param dataType see {@link DataType}
 	 * @throws CreateObjectException
 	 */
 	public static CharacteristicType createInstance(Identifier creatorId,
@@ -86,21 +92,21 @@ public class CharacteristicType extends StorableObjectType {
 							String description,
 							int dataType,
 							CharacteristicTypeSort sort) throws CreateObjectException{
-		if (creatorId == null || codename == null || description == null || 
+		if (creatorId == null || codename == null || description == null ||
 				sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
 			return new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
-										  creatorId,
-										  codename,
-										  description,
-										  dataType,									  
-										  sort.value());
+											creatorId,
+											codename,
+											description,
+											dataType,
+											sort.value());
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("CharacteristicType.createInstance | cannot generate identifier ", e);
-		}	
+		}
 	}
 
 	public void insert() throws CreateObjectException {
@@ -115,16 +121,16 @@ public class CharacteristicType extends StorableObjectType {
 
 	public Object getTransferable() {
 		return new CharacteristicType_Transferable(super.getHeaderTransferable(),
-												   new String(super.codename),
-												   (super.description != null) ? (new String(super.description)) : "",
-												   DataType.from_int(this.dataType),
-												   CharacteristicTypeSort.from_int(this.sort));
+													 new String(super.codename),
+													 (super.description != null) ? (new String(super.description)) : "",
+													 DataType.from_int(this.dataType),
+													 CharacteristicTypeSort.from_int(this.sort));
 	}
 
 	public DataType getDataType() {
 		return DataType.from_int(this.dataType);
 	}
-	
+
 	public CharacteristicTypeSort getSort(){
 		return CharacteristicTypeSort.from_int(this.sort);
 	}
@@ -146,8 +152,24 @@ public class CharacteristicType extends StorableObjectType {
 		this.dataType = dataType;
 		this.sort = sort;
 	}
-	
+
 	public List getDependencies() {
 		return Collections.EMPTY_LIST;
+	}
+
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[4][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_DESCRIPTION;
+			exportColumns[2][0] = COLUMN_DATA_TYPE;
+			exportColumns[3][0] = COLUMN_SORT;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getDescription();
+		exportColumns[3][1] = String.valueOf(getDataType().value());
+		exportColumns[4][1] = String.valueOf(getSort().value());
+
+		return exportColumns;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.48 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: KIS.java,v 1.49 2005/01/17 11:49:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,17 +33,28 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2005/01/17 11:49:37 $
+ * @author $Author: stas $
  * @module config_v1
  */
 
 public class KIS extends DomainMember implements Characterized {
-	
+
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3257281422661466166L;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_EQUIPMENT_ID = "equipmentId";
+	public static final String COLUMN_MCM_ID = "mcmId";
+	public static final String COLUMN_HOSTNAME = "hostname";
+	public static final String COLUMN_TCP_PORT = "tcpPort";
+	public static final String COLUMN_MEASUREMENT_PORT_IDS = "measurementPortIds";
+	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	private static Object[][] exportColumns = null;
 
 	protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
 
@@ -127,7 +138,7 @@ public class KIS extends DomainMember implements Characterized {
 	}
 
 	/**
-	 * create new instance for client 
+	 * create new instance for client
 	 * @param creatorId
 	 * @param domainId
 	 * @param name
@@ -143,7 +154,7 @@ public class KIS extends DomainMember implements Characterized {
 											 short tcpPort,
 											 Identifier equipmentId,
 											 Identifier mcmId) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || 
+		if (creatorId == null || domainId == null || name == null ||
 				description == null || hostname == null || equipmentId == null || mcmId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -312,5 +323,36 @@ public class KIS extends DomainMember implements Characterized {
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
+	}
+
+	public Object[][] exportColumns() {
+		if (exportColumns == null) {
+			exportColumns = new Object[9][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_EQUIPMENT_ID;
+			exportColumns[4][0] = COLUMN_MCM_ID;
+			exportColumns[5][0] = COLUMN_HOSTNAME;
+			exportColumns[6][0] = COLUMN_TCP_PORT;
+			exportColumns[7][0] = COLUMN_MEASUREMENT_PORT_IDS;
+			exportColumns[8][0] = COLUMN_CHARACTERISTICS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getEquipmentId();
+		exportColumns[4][1] = getMCMId();
+		exportColumns[5][1] = getHostName();
+		exportColumns[6][1] = String.valueOf(getTCPPort());
+		exportColumns[7][1] = getMeasurementPortIds();
+		List characteristics = new ArrayList(getCharacteristics().size());
+		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+			Characteristic ch = (Characteristic)it.next();
+			characteristics.add(ch.exportColumns());
+		}
+		exportColumns[8][1] = characteristics;
+
+		return exportColumns;
 	}
 }
