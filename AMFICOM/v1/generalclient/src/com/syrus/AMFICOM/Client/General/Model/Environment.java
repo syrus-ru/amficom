@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.4 2004/07/09 11:42:03 krupenn Exp $
+ * $Id: Environment.java,v 1.5 2004/07/16 11:01:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.logging.*;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/07/09 11:42:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/07/16 11:01:37 $
  * @author $Author: krupenn $
  * @see
  */
@@ -68,6 +68,8 @@ public class Environment extends Singleton
 	private static final String LOOK_AND_FEEL_WINDOWS = "Windows";
 
 	private static String lookAndFeel;
+
+	private static String domain_id = "sysdomain";
 
 	private static boolean debugMode = false;
 
@@ -113,6 +115,9 @@ public class Environment extends Singleton
 			connection = iniFile.getValue("connection");
 			checkRun = iniFile.getValue("run");
 			lookAndFeel = iniFile.getValue("lookAndFeel");
+			domain_id = iniFile.getValue("domain");
+			if(domain_id == null || domain_id.length() == 0)
+				domain_id = "sysdomain";
 
 			String d_val = iniFile.getValue("gubed");
 			debugMode = (d_val != null);
@@ -134,6 +139,11 @@ public class Environment extends Singleton
 			System.out.println("Error opening " + iniFileName + " - setting defaults");
 			SetDefaults();
 		}
+	}
+	
+	public static String getDomainId()
+	{
+		return domain_id;
 	}
 
 	private static void initLog(String lh, String ll, String lf)

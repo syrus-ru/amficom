@@ -53,8 +53,8 @@ import org.omg.PortableServer.*;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:24:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/07/16 11:01:37 $
+ * @author $Author: krupenn $
  */
 public class RISDSessionInfo extends SessionInterface {
 	/**
@@ -289,6 +289,8 @@ public class RISDSessionInfo extends SessionInterface {
 			 * сохранить полученный идентификатор сессии
 			 */
 			accessIdentity = accessIdentityHolder.value;
+			
+			setDomainId(Environment.getDomainId());
 
 			logRecord = new LogRecord(Level.CONFIG, "accessIdentity information:" + ((accessIdentity == null) ? ("\n\taccessIdentity: null") : ("\n\tstarted: " + accessIdentity.started + "\n\tdomain_id: " + accessIdentity.domain_id + "\n\tsess_id: " + accessIdentity.sess_id + "\n\tuser_id: " + accessIdentity.user_id + "\n\tusername: " + accessIdentity.username)));
 			logRecord.setSourceClassName(getClass().getName());
