@@ -69,7 +69,7 @@ public class LangModelMap {
 	{
 		//System.out.println("keyName:" + keyName);
 		keyName = keyName.replaceAll(" ", "_");
-		String string = null;
+		String string = "";
 		try
 		{
 			string = RESOURCE_BUNDLE.getString(keyName);
@@ -84,10 +84,7 @@ public class LangModelMap {
 			{
 				try
 				{
-					throw new Exception("key '"
-											  + keyName + "Text"
-											  + "' "
-											  + "not found");
+					throw new Exception("key '" + keyName + "' not found");
 				}
 				catch (Exception exc)
 				{

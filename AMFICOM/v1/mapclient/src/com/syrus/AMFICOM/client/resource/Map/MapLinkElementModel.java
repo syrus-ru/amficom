@@ -44,7 +44,8 @@ public class MapLinkElementModel extends ObjectResourceModel
 		for(Enumeration enum = obj.attributes.elements(); enum.hasMoreElements();)
 		{
 			ElementAttribute ea = (ElementAttribute )enum.nextElement();
-			cols.add(ea.getId());
+			if(ea.visible)
+				cols.add(ea.getId());
 		}
 		return cols;
 	}
