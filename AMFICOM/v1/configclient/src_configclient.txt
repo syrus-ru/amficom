@@ -13,7 +13,7 @@ src/com/syrus/AMFICOM/Client/Configure/UI/CableLinkFibrePanel.java
 src/com/syrus/AMFICOM/Client/Configure/UI/CableLinkPane.java
 src/com/syrus/AMFICOM/Client/Configure/UI/CableLinkTypeCharacteristicsPanel.java
 src/com/syrus/AMFICOM/Client/Configure/UI/CableLinkTypeGeneralPanel.java
-src/com/syrus/AMFICOM/Client/Configure/UI/CableLinkTypeFiberPanel.java
+src/com/syrus/AMFICOM/Client/Configure/UI/CableLinkTypeFibrePanel.java
 src/com/syrus/AMFICOM/Client/Configure/UI/CableLinkTypePane.java
 src/com/syrus/AMFICOM/Client/Configure/UI/CablePortCharacteristicsPanel.java
 src/com/syrus/AMFICOM/Client/Configure/UI/CablePortGeneralPanel.java
