@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.74 2004/12/08 13:40:46 bob Exp $
+ * $Id: CMServerImpl.java,v 1.75 2004/12/16 10:20:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -119,11 +119,10 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
-import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2004/12/08 13:40:46 $
+ * @version $Revision: 1.75 $, $Date: 2004/12/16 10:20:28 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -137,7 +136,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 
 	private DomainCondition domainCondition;
 
-    private MServer mServer;
+//    private MServer mServer;
     //////////////////////////////////Name Resolver/////////////////////////////////////////////////
 
     

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.10 2004/12/09 14:50:47 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.11 2004/12/16 10:20:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.cmserver;
 
+import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
+import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
@@ -31,6 +33,7 @@ import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.configuration.UserDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
@@ -47,7 +50,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/12/09 14:50:47 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/16 10:20:28 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -63,41 +66,46 @@ public abstract class DatabaseContextSetup {
 
 	public static void initDatabaseContext() {
 		ConfigurationDatabaseContext.init(new CharacteristicTypeDatabase(),
-																			new EquipmentTypeDatabase(),
-																			new PortTypeDatabase(),
-																			new MeasurementPortTypeDatabase(),
-                                                                            new LinkTypeDatabase(),
-																			new CableThreadTypeDatabase(),
-                                                                            new CharacteristicDatabase(),
-																			new UserDatabase(),
-																			new DomainDatabase(),
-																			new ServerDatabase(), 
-																			new MCMDatabase(),
-																			new EquipmentDatabase(),
-																			new PortDatabase(),
-																			new MeasurementPortDatabase(),
-																			new TransmissionPathDatabase(),
-                                                                            new TransmissionPathTypeDatabase(),
-																			new KISDatabase(),
-																			new MonitoredElementDatabase(),
-                                                                            new LinkDatabase());
+				new EquipmentTypeDatabase(),
+				new PortTypeDatabase(),
+				new MeasurementPortTypeDatabase(),
+				new LinkTypeDatabase(),
+				new CableLinkTypeDatabase(),
+				new CableThreadTypeDatabase(),
+				new CharacteristicDatabase(),
+				new UserDatabase(),
+				new DomainDatabase(),
+				new ServerDatabase(), 
+				new MCMDatabase(),
+				new EquipmentDatabase(),
+				new PortDatabase(),
+				new MeasurementPortDatabase(),
+				new TransmissionPathDatabase(),
+				new TransmissionPathTypeDatabase(),
+				new KISDatabase(),
+				new MonitoredElementDatabase(),
+				new LinkDatabase(),
+				new CableThreadDatabase());
 		MeasurementDatabaseContext.init(new ParameterTypeDatabase(),
-																		new MeasurementTypeDatabase(),
-																		new AnalysisTypeDatabase(),
-																		new EvaluationTypeDatabase(),
-																		new SetDatabase(),
-																		new ModelingDatabase(),
-																		new MeasurementSetupDatabase(),
-																		new MeasurementDatabase(),
-																		new AnalysisDatabase(),
-																		new EvaluationDatabase(),
-																		new TestDatabase(),
-																		new ResultDatabase(),
-																		new TemporalPatternDatabase());
+				new MeasurementTypeDatabase(),
+				new AnalysisTypeDatabase(),
+				new EvaluationTypeDatabase(),
+				new SetDatabase(),
+				new ModelingDatabase(),
+				new MeasurementSetupDatabase(),
+				new MeasurementDatabase(),
+				new AnalysisDatabase(),
+				new EvaluationDatabase(),
+				new TestDatabase(),
+				new ResultDatabase(),
+				new TemporalPatternDatabase());
 	}
 
 	public static void initObjectPools() {
-		ConfigurationStorableObjectPool.init(new CMServerConfigurationObjectLoader(), ApplicationProperties.getInt(CONFIGURATION_POOL_SIZE_KEY, 1000));
-		MeasurementStorableObjectPool.init(new CMServerMeasurementObjectLoader(), ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));		
+		ConfigurationStorableObjectPool.init(new CMServerConfigurationObjectLoader(), 
+			ApplicationProperties.getInt(CONFIGURATION_POOL_SIZE_KEY, 1000));
+		//MeasurementStorableObjectPool.init(new CMServerMeasurementObjectLoader(), ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));		
+		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), 
+			ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));
 	}
 }

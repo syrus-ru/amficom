@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.19 2004/12/09 12:49:44 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.20 2004/12/16 10:20:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,10 @@
 package com.syrus.AMFICOM.cmserver;
 
 import java.net.InetAddress;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
@@ -21,12 +25,12 @@ import org.omg.PortableServer.POAHelper;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerPOATie;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.mserver.corba.MServer;
-import com.syrus.AMFICOM.mserver.corba.MServerHelper;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
@@ -34,7 +38,7 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/12/09 12:49:44 $
+ * @version $Revision: 1.20 $, $Date: 2004/12/16 10:20:28 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -66,10 +70,13 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 	public static final int		TICK_TIME					= 5;
 
-	protected static MServer	mServerRef;
+//	protected static MServer	mServerRef;
 
 	/* CORBA server */
 	private static CORBAServer	corbaServer;
+	
+	/*	References to MCMs*/
+	protected static Map mcmRefs;	/*	Map <Identifier mcmId, com.syrus.AMFICOM.mcm.corba.MCM mcmRef>*/
 
 	private boolean				running;
 
@@ -107,7 +114,9 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 		/* Create CORBA server with servant(s) */
 		activateCORBAServer();
-        activateMServerReference();
+        // activateMServerReference();
+		/* Activate mcms for mserver */
+		activateMCMReferences();
 
 		DatabaseContextSetup.initDatabaseContext();
 		DatabaseContextSetup.initObjectPools();
@@ -162,6 +171,36 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 			System.err.println(e);
 			System.exit(-1);
 		}
+	}
+	
+	private static void activateMCMReferences() {
+		List mcmIds = null;
+		try {
+			Server server = (Server)ConfigurationStorableObjectPool.getStorableObject(new Identifier(ApplicationProperties.getString(KEY_MSERVER_ID, MSERVER_ID)), true);
+			mcmIds = server.retrieveMCMIds();
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			System.exit(-1);
+		}
+
+		mcmRefs = new Hashtable(mcmIds.size());
+		for (Iterator iterator = mcmIds.iterator(); iterator.hasNext();) {
+			activateMCMReferenceWithId((Identifier)iterator.next());
+		}
+	}
+	
+	protected static void activateMCMReferenceWithId(Identifier mcmId) {
+		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
+		try {
+			mcmRef = com.syrus.AMFICOM.mcm.corba.MCMHelper.narrow(corbaServer.resolveReference(mcmId.toString()));
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+			mcmRef = null;
+		}
+		if (mcmRef != null)
+			mcmRefs.put(mcmId, mcmRef);
 	}
 
 	private static void stopCORBAServer() {
@@ -220,8 +259,8 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 	public void run() {
 		while (this.running) {
-			if (mServerRef == null)
-				resetMServerConnection();
+//			if (mServerRef == null)
+//				resetMServerConnection();
 			try {				
 				sleep(super.initialTimeToSleep);
 			} catch (InterruptedException ie) {
@@ -230,19 +269,5 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 		}
 		stopCORBAServer();
 	}
-
-	protected static void activateMServerReference() {
-		/* Obtain reference to measurement server */
-		try {
-			mServerRef = MServerHelper.narrow(corbaServer
-					.resolveReference(ApplicationProperties.getString(KEY_MSERVER_ID, MSERVER_ID)));
-		} catch (CommunicationException ce) {
-			Log.errorException(ce);
-			mServerRef = null;
-		}
-	}
-
-	protected static void resetMServerConnection() {
-		activateMServerReference();
-	}	
+		
 }

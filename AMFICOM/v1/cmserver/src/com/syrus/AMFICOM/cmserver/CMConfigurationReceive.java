@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.5 2004/12/06 10:59:36 bob Exp $
+ * $Id: CMConfigurationReceive.java,v 1.6 2004/12/16 10:20:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
 import com.syrus.AMFICOM.configuration.Characteristic;
@@ -87,7 +88,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/06 10:59:36 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/16 10:20:28 $
  * @author $Author: bob $
  * @module module
  */
@@ -772,13 +773,10 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
                 int sort = linkType_Transferables[i].discriminator().value();
             	switch(sort){
             		case AbstractLinkTypeSort._CABLE_LINK_TYPE:
-            			abstractLinkType = new LinkType(linkType_Transferables[i].cableLinkType());
+            			abstractLinkType = new CableLinkType(linkType_Transferables[i].cableLinkType());
             			break;
             		case AbstractLinkTypeSort._LINK_TYPE:
             			abstractLinkType = new LinkType(linkType_Transferables[i].linkType());
-            			break;
-            		case AbstractLinkTypeSort._CABLE_THREAD_TYPE:
-            			abstractLinkType = new CableThreadType(linkType_Transferables[i].cableThreadType());
             			break;
             		default:
             			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,  CompletionStatus.COMPLETED_NO,
