@@ -56,3 +56,5 @@ idls	idls
 serveradd	serveradd
 #M	filter	Files common for client-side and server-side filtering
 filter	filter
+#M	server	AMFICOM Server instance (server-client interface)
+server	server
