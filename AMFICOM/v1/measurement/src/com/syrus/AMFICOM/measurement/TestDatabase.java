@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.80 2005/03/11 09:08:23 bob Exp $
+ * $Id: TestDatabase.java,v 1.81 2005/03/17 14:46:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/03/11 09:08:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.81 $, $Date: 2005/03/17 14:46:33 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -62,7 +62,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	}	
 	
 	protected String getColumnsTmpl() {
-		if (columns == null){
+		if (columns == null) {
 			columns = TestWrapper.COLUMN_TEMPORAL_TYPE + COMMA
 				+ TestWrapper.COLUMN_START_TIME + COMMA
 				+ TestWrapper.COLUMN_END_TIME + COMMA
