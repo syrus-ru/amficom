@@ -1,5 +1,5 @@
 /*
- * $Id: RISDDataSource.java,v 1.4 2004/09/27 16:10:36 bass Exp $
+ * $Id: RISDDataSource.java,v 1.5 2004/10/05 11:46:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,17 +10,16 @@ package com.syrus.AMFICOM.Client.Resource;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.General.wstringSeqHolder;
 import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.io.Rewriter;
 import java.util.Vector;
-import org.omg.CORBA.StringHolder;
+import org.omg.CORBA.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 16:10:36 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/05 11:46:05 $
  * @module generalclient_v1
  */
 public class RISDDataSource 
@@ -475,7 +474,7 @@ public class RISDDataSource
 		int ecode = 0;
 		int count;
 
-		wstringSeqHolder userids = new wstringSeqHolder();
+		WStringSeqHolder userids = new WStringSeqHolder();
 
 		try
 		{
