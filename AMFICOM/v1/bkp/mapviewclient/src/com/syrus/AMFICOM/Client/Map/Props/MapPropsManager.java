@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.Props.MapPhysicalLinkController;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
@@ -49,6 +50,8 @@ public final class MapPropsManager
 			MapSiteNodeController.getInstance());
 		propsCtlMap.put(MapNodeLinkElement.class,
 			MapNodeLinkController.getInstance());
+		propsCtlMap.put(MapPhysicalLinkElement.class,
+			MapPhysicalLinkController.getInstance());
 	}
 	
 	public static ObjectResourcePropertiesPane getPropsPane(MapElement me)

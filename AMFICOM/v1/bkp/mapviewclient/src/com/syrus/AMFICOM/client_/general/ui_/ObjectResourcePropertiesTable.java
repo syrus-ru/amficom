@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.client_.general.ui_;
 
+import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -25,11 +26,11 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/29 15:24:03 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/29 16:13:46 $
  * @author $Author: krupenn $
  * @module generalclient_v1
  */
-public class ObjectResourcePropertiesTable extends JTable 
+public class ObjectResourcePropertiesTable extends ATable 
 {
 
 	public ObjectResourcePropertiesTable(ObjectResourcePropertiesController controller, ObjectResource objectResource) 

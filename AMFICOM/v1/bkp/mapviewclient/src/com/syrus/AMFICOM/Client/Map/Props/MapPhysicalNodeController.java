@@ -32,7 +32,8 @@ public final class MapPhysicalNodeController
 		String[] keysArray = new String[] { 
 				PROPERTY_NAME, 
 				PROPERTY_LATITUDE,
-				PROPERTY_LONGITUDE};
+				PROPERTY_LONGITUDE,
+				PROPERTY_PHYSICAL_LINK_ID};
 	
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -80,6 +81,11 @@ public final class MapPhysicalNodeController
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
 			result = String.valueOf(node.getAnchor().y);
+		}
+		else
+		if (key.equals(PROPERTY_NAME))
+		{
+			result = node.getMap().getPhysicalLink(node.getPhysicalLinkId());
 		}
 
 		return result;

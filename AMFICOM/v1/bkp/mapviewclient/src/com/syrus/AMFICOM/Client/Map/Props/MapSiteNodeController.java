@@ -95,7 +95,11 @@ public final class MapSiteNodeController
 
 	public boolean isEditable(final String key)
 	{
-		return true;
+		if (key.equals(PROPERTY_NAME))
+			return true;
+		if (key.equals(PROPERTY_PROTO_ID))
+			return true;
+		return false;
 	}
 
 	public void setValue(ObjectResource objectResource, final String key, final Object value)

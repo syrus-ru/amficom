@@ -30,7 +30,8 @@ public final class MapNodeLinkController
 				PROPERTY_NAME,
 				PROPERTY_TOPOLOGICAL_LENGTH,
 				PROPERTY_START_NODE_ID,
-				PROPERTY_END_NODE_ID};
+				PROPERTY_END_NODE_ID,
+				PROPERTY_PHYSICAL_LINK_ID};
 	
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -72,7 +73,7 @@ public final class MapNodeLinkController
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
 		{
-			result = nodeLink.getName();
+			result = String.valueOf(nodeLink.getLengthLt());
 		}
 		else
 		if (key.equals(PROPERTY_START_NODE_ID))
@@ -83,6 +84,11 @@ public final class MapNodeLinkController
 		if (key.equals(PROPERTY_END_NODE_ID))
 		{
 			result = nodeLink.getEndNode();
+		}
+		else
+		if (key.equals(PROPERTY_NAME))
+		{
+			result = nodeLink.getMap().getPhysicalLink(nodeLink.getPhysicalLinkId());
 		}
 
 		return result;

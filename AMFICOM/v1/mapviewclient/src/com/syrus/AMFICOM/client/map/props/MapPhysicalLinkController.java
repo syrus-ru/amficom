@@ -7,43 +7,45 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
-
-import java.awt.geom.Point2D;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public final class MapSiteNodeController 
+public final class MapPhysicalLinkController 
 		implements ObjectResourcePropertiesController 
 {
 
-	private static MapSiteNodeController instance;
+	private static MapPhysicalLinkController instance;
 
 	private List keys;
 
-	private MapSiteNodeController() 
+	private MapPhysicalLinkController() 
 	{
 		String[] keysArray = new String[] { 
 				PROPERTY_NAME,
 				PROPERTY_PROTO_ID,
-				PROPERTY_LATITUDE,
-				PROPERTY_LONGITUDE};
+				PROPERTY_TOPOLOGICAL_LENGTH,
+				PROPERTY_START_NODE_ID,
+				PROPERTY_END_NODE_ID,
+				PROPERTY_COLOR,
+				PROPERTY_STYLE,
+				PROPERTY_THICKNESS};
 	
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MapSiteNodeController getInstance() 
+	public static MapPhysicalLinkController getInstance() 
 	{
 		if (instance == null)
-			instance = new MapSiteNodeController();
+			instance = new MapPhysicalLinkController();
 		return instance;
 	}
 	
@@ -68,26 +70,46 @@ public final class MapSiteNodeController
 	public Object getValue(final ObjectResource object, final String key)
 	{
 		Object result = null;
-		MapSiteNodeElement site = (MapSiteNodeElement )object;
+		MapPhysicalLinkElement link = (MapPhysicalLinkElement )object;
 
 		if (key.equals(PROPERTY_NAME))
 		{
-			result = site.getName();
+			result = link.getName();
 		}
 		else
 		if (key.equals(PROPERTY_PROTO_ID))
 		{
-			result = Pool.get(MapNodeProtoElement.typ, site.getMapProtoId());
+			result = Pool.get(MapLinkProtoElement.typ, link.getMapProtoId());
 		}
 		else
-		if (key.equals(PROPERTY_LATITUDE))
+		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
 		{
-			result = String.valueOf(site.getAnchor().x);
+			result = String.valueOf(link.getLengthLt());
 		}
 		else
-		if (key.equals(PROPERTY_LONGITUDE))
+		if (key.equals(PROPERTY_START_NODE_ID))
 		{
-			result = String.valueOf(site.getAnchor().y);
+			result = link.getStartNode();
+		}
+		else
+		if (key.equals(PROPERTY_END_NODE_ID))
+		{
+			result = link.getEndNode();
+		}
+		else
+		if (key.equals(PROPERTY_COLOR))
+		{
+			result = link.getColor();
+		}
+		else
+		if (key.equals(PROPERTY_STYLE))
+		{
+			result = link.getStyle();
+		}
+		else
+		if (key.equals(PROPERTY_THICKNESS))
+		{
+			result = String.valueOf(link.getLineSize());
 		}
 
 		return result;
@@ -97,51 +119,16 @@ public final class MapSiteNodeController
 	{
 		if (key.equals(PROPERTY_NAME))
 			return true;
-		if (key.equals(PROPERTY_PROTO_ID))
-			return true;
 		return false;
 	}
 
 	public void setValue(ObjectResource objectResource, final String key, final Object value)
 	{
-		MapSiteNodeElement site = (MapSiteNodeElement )objectResource;
+		MapPhysicalLinkElement link = (MapPhysicalLinkElement )objectResource;
 
 		if (key.equals(PROPERTY_NAME))
 		{
-			site.setName((String )value);
-		}
-		else
-		if (key.equals(PROPERTY_PROTO_ID))
-		{
-			site.setMapProtoId(((MapElement )value).getId());
-		}
-		else
-		if (key.equals(PROPERTY_LATITUDE))
-		{
-			try
-			{
-				Point2D.Double pt = site.getAnchor();
-				pt.x = Double.parseDouble((String )value);
-				site.setAnchor(pt);
-			}
-			catch(NumberFormatException e)
-			{
-				return;
-			}
-		}
-		else
-		if (key.equals(PROPERTY_LONGITUDE))
-		{
-			try
-			{
-				Point2D.Double pt = site.getAnchor();
-				pt.y = Double.parseDouble((String )value);
-				site.setAnchor(pt);
-			}
-			catch(NumberFormatException e)
-			{
-				return;
-			}
+			link.setName((String )value);
 		}
 	}
 
