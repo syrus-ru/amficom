@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.82 2005/03/18 14:30:56 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.83 2005/03/25 12:13:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/03/18 14:30:56 $
+ * @version $Revision: 1.83 $, $Date: 2005/03/25 12:13:28 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -237,11 +237,11 @@ public class TestDatabase extends StorableObjectDatabase {
 		else 
 			throw new RetrieveObjectException("TestDatabase.retrieveMeasurementSetupTestLinks | Measurement setup ids for test '" + testIdStr + "' not found.");
 	}
-    
-    private void retrieveMeasurementSetupTestLinksByOneQuery(Collection tests) throws RetrieveObjectException {
+	
+	private void retrieveMeasurementSetupTestLinksByOneQuery(Collection tests) throws RetrieveObjectException {
 		if ((tests == null) || (tests.isEmpty()))
 			return;
-
+		
 		Map msIdsMap = null;
 		try {
 			msIdsMap = this.retrieveLinkedEntityIds(tests,
@@ -252,7 +252,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);
 		}
-
+		
 		Test test;
 		Identifier testId;
 		Collection msIds;
@@ -260,7 +260,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			test = (Test) it.next();
 			testId = test.getId();
 			msIds = (Collection) msIdsMap.get(testId);
-
+			
 			test.setMeasurementSetupIds0(msIds);
 		}
 	}
