@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierImpl.java,v 1.5 2004/12/21 13:56:56 bass Exp $
+ * $Id: IdentifierImpl.java,v 1.6 2005/02/28 14:21:03 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,17 +10,19 @@ package com.syrus.AMFICOM.general.corba;
 
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.HashCodeGenerator;
-import com.syrus.util.logging.ErrorHandler;
 import java.io.*;
 
 /**
+ * <code>Identifier</code>s, alike {@link String}s, are immutable. Hence, when
+ * one is cloning a <code>StorableObject</code>, there&apos;s no need to clone
+ * its respective <code>creatorId</code> and <code>modifierId</code>. But
+ * there&apos;s a particular task of <code>id</code> handling.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/12/21 13:56:56 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/28 14:21:03 $
  * @module general_v1
  */
-final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
-	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
-
+final class IdentifierImpl extends Identifier implements Comparable {
 	private static final long serialVersionUID = 8435961337633429780L;
 
 /*/	// #ifdef NUMERIC_IDENTIFIER
@@ -35,6 +37,7 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 	 * invoked directly.
 	 */
 	IdentifierImpl() {
+		// empty
 	}
 
 	IdentifierImpl(final Identifier_Transferable id) {
@@ -52,18 +55,6 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 		this.thisMajor = ObjectEntities.stringToCode(identifierString.substring(0, indexOfSeparator));
 		this.thisMinor = Long.parseLong(identifierString.substring(indexOfSeparator + 1));
 		this.thisIdentifierString = identifierString;
-	}
-
-	/**
-	 * @see Identifier#cloneInstance()
-	 */
-	public Identifier cloneInstance() {
-		try {
-			return (Identifier) this.clone();
-		} catch (CloneNotSupportedException cnse) {
-			ERROR_HANDLER.error(cnse);
-			return null;
-		}
 	}
 
 	/**
@@ -147,15 +138,7 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 //*/		// #endif // NUMERIC_IDENTIFIER
 	}
 
-	protected Object clone() throws CloneNotSupportedException {
-		IdentifierImpl id = (IdentifierImpl) super.clone();
-		id.thisMajor = this.major();
-		id.thisMinor = this.minor();
-		id.thisIdentifierString = this.identifierString();
-		return id;
-	}
-
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+	private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
 /*/		// #ifdef NUMERIC_IDENTIFIER
 		this.thisIdentifierString = IDENTIFIER_STRING_UNINITIALIZED; 
 /*/		// #else // NUMERIC_IDENTIFIER

@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.19 2004/12/21 13:56:56 bass Exp $
+ * $Id: Identifier.java,v 1.20 2005/02/28 14:21:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,12 @@ import java.io.Serializable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/12/21 13:56:56 $
+ * <code>Identifier</code>s, alike {@link String}s, are immutable. Hence, when
+ * one is cloning a <code>StorableObject</code>, there&apos;s no need to clone
+ * its respective <code>creatorId</code> and <code>modifierId</code>. But
+ * there&apos;s a particular task of <code>id</code> handling.
+ *
+ * @version $Revision: 1.20 $, $Date: 2005/02/28 14:21:03 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -51,6 +56,10 @@ public class Identifier implements
 		this.identifierString = ObjectEntities.codeToString(this.major) + SEPARATOR + Long.toString(this.minor);
 	}
 
+	/**
+	 * @see Object#clone()
+	 * @deprecated See notice about <code>Identifier</code> immutability.
+	 */
 	public Object clone() {
 		Identifier id = null;
 		try {

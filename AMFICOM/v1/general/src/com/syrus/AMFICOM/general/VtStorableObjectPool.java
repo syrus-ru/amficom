@@ -1,5 +1,5 @@
 /*
- * $Id: VtStorableObjectPool.java,v 1.1 2005/01/18 15:09:37 bass Exp $
+ * $Id: VtStorableObjectPool.java,v 1.2 2005/02/28 14:21:03 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.*;
  * scheme objects.
  *
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/01/18 15:09:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/28 14:21:03 $
  * @module general_v1
  * @see StorableObjectPool
  */
@@ -93,7 +93,7 @@ public abstract class VtStorableObjectPool {
 		final LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (objectPool != null)
 			for (final Iterator objectPoolIterator = objectPool.iterator(); objectPoolIterator.hasNext();)
-				if (((StorableObject) objectPoolIterator.next()).changed())
+				if (((StorableObject) objectPoolIterator.next()).isChanged())
 					objectPoolIterator.remove();
 	}
 
@@ -125,7 +125,7 @@ public abstract class VtStorableObjectPool {
 				list.clear();
 				for (final Iterator objectPoolIterator = objectPool.iterator(); objectPoolIterator.hasNext();) {
 					final StorableObject storableObject = (StorableObject) objectPoolIterator.next();
-					if (storableObject.changed() && !list.contains(storableObject)) {
+					if (storableObject.isChanged() && !list.contains(storableObject)) {
 						list.add(storableObject);
 						Log.debugMessage("VtStorableObjectPool.flushImpl | '" + storableObject.id() + "' is changed", Log.DEBUGLEVEL10);
 					}
@@ -356,7 +356,7 @@ public abstract class VtStorableObjectPool {
 
 				for (final Iterator lruMapIterator = ((LRUMap) this.objectPoolMap.get(entityCode)).iterator(); lruMapIterator.hasNext();) {
 					final StorableObject storableObject = (StorableObject) lruMapIterator.next();
-					if (!storableObject.changed())
+					if (!storableObject.isChanged())
 						storableObjects.add(storableObject);
 				}
 				if (storableObjects.isEmpty()) {
