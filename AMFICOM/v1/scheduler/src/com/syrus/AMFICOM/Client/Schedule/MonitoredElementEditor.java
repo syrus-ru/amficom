@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementEditor.java,v 1.2 2005/03/02 11:55:36 bob Exp $
+ * $Id: MonitoredElementEditor.java,v 1.3 2005/03/15 11:42:11 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,12 @@ import java.util.Collection;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/02 11:55:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/15 11:42:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
 public interface MonitoredElementEditor {
-
-	void setMonitoredElementEditors(Collection monitoredElements);
 
 	void setMonitoredElement(MonitoredElement monitoredElement);
 
