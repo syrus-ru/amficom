@@ -29,7 +29,7 @@ SQLJ=$(ORACLE_HOME)\bin\sqlj
 JAVAC2=D:\java\j2sdk_nb\j2sdk1.4.2\bin\javac
 JAVAC=javac
 JAVACOPTIONS=-d $(CLASSES) -sourcepath $(SRC) -classpath $(MYCLASSPATH)
-SQLJOPTIONS=-compiler-executable=$(JAVAC) -warn=none -codegen=oraclejdbc -ser2class -status $(CHECKSEMANTICSSTRING) -d $(CLASSES) -dir $(SRC) -classpath $(MYCLASSPATH)
+SQLJOPTIONS=-compiler-executable=$(JAVAC) -warn=none -codegen=oracle -status $(CHECKSEMANTICSSTRING) -d $(CLASSES) -dir $(SRC) -classpath $(MYCLASSPATH)
 JAR=jar
 
 LIBNAME=$(LIB)\server\serverload.jar
