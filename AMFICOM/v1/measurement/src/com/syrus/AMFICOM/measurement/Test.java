@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.40 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: Test.java,v 1.41 2004/08/23 14:43:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,132 +32,21 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/08/22 18:45:56 $
+ * @version $Revision: 1.41 $, $Date: 2004/08/23 14:43:11 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class Test extends StorableObject {
-
-	private class TestTimeStamps {
-		Date endTime;
-		Date startTime;
-		TemporalPattern temporalPattern;
-
-		private int	discriminator;		
-
-		TestTimeStamps(int temporalType,
-									 Date startTime,
-									 Date endTime,
-									 TemporalPattern temporalPattern) {
-			this.discriminator = temporalType;
-			switch (temporalType) {
-				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-					this.startTime = startTime;
-					this.endTime = null;
-					this.temporalPattern = null;
-					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					this.startTime = startTime;
-					this.endTime = endTime;
-					this.temporalPattern = temporalPattern;
-					if (this.endTime == null) {
-						Log.errorMessage("ERROR: End time is NULL");
-						this.endTime = this.startTime;
-					}
-					if (this.temporalPattern == null)
-						Log.errorMessage("ERROR: Temporal pattern is NULL");
-					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					this.startTime = startTime;
-					this.endTime = endTime;
-					this.temporalPattern = null;
-					if (this.endTime == null) {
-						Log.errorMessage("ERROR: End time is NULL");
-						this.endTime = this.startTime;
-					}
-					break;
-				default:
-					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + temporalType + " of test");
-			}
-		}
-
-		TestTimeStamps(TestTimeStamps_Transferable ttst) {
-			this.discriminator = ttst.discriminator().value();
-			switch (this.discriminator) {
-				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-					this.startTime = new Date(ttst.start_time());
-					this.endTime = null;
-					this.temporalPattern = null;
-					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					PeriodicalTestTimeStamps ptts = ttst.ptts();
-					this.startTime = new Date(ptts.start_time);
-					this.endTime = new Date(ptts.end_time);
-					this.temporalPattern = (TemporalPattern) MeasurementStorableObjectPool.getStorableObject(new Identifier(ptts.temporal_pattern_id), true);
-					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					ContinuousTestTimeStamps ctts = ttst.ctts();
-					this.startTime = new Date(ctts.start_time);
-					this.endTime = new Date(ctts.end_time);
-					break;
-				default:
-					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
-			}
-		}
-
-		TestTimeStamps_Transferable getTransferable() {
-			TestTimeStamps_Transferable ttst = new TestTimeStamps_Transferable();
-			switch (this.discriminator) {
-				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-					ttst.start_time(this.startTime.getTime());
-					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(),
-																								 this.endTime.getTime(),
-																								 (this.temporalPattern != null) ? (Identifier_Transferable)this.temporalPattern.getId().getTransferable() : (new Identifier_Transferable("")) ));
-					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(),
-																								 this.endTime.getTime()));
-					break;
-				default:
-					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
-			}
-			return ttst;
-		}
-		
-		
-		public int hashCode() {
-			HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
-			hashCodeGenerator.addInt(this.discriminator);
-			hashCodeGenerator.addObject(this.startTime);
-			hashCodeGenerator.addObject(this.endTime);
-			hashCodeGenerator.addObject(this.temporalPattern);
-			int result = hashCodeGenerator.getResult(); 
-			return result;
-		}
-		
-		public boolean equals(Object obj) {
-			boolean equals = (this==obj);
-			if ((!equals)&&(obj instanceof TestTimeStamps)){
-				TestTimeStamps stamps = (TestTimeStamps)obj;
-				if ((stamps.discriminator==this.discriminator)&&
-					(stamps.startTime==this.startTime)&&	
-					(stamps.endTime==this.endTime)&&
-					(stamps.temporalPattern.equals(this.temporalPattern)))
-					equals = true;
-			}
-			return equals;
-		}
-	}
-
 	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
 	protected static final int		RETRIEVE_LAST_MEASUREMENT	= 2;
+	protected static final int		RETRIEVE_NUMBER_OF_MEASUREMENTS	= 3;
+	protected static final int		RETRIEVE_NUMBER_OF_RESULTS	= 4;
 	protected static final int		UPDATE_MODIFIED			= 2;
 	protected static final int		UPDATE_STATUS			= 1;
 
@@ -424,6 +313,25 @@ public class Test extends StorableObject {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
+
+	public int retrieveNumberOfMeasurements() throws RetrieveObjectException, ObjectNotFoundException {
+		try {
+			return ((Integer)this.testDatabase.retrieveObject(this, RETRIEVE_NUMBER_OF_MEASUREMENTS, null)).intValue();
+		}
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e.getMessage(), e);
+		}
+	}
+
+	public int retrieveNumberOfResults(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
+		try {
+			return ((Integer)this.testDatabase.retrieveObject(this, RETRIEVE_NUMBER_OF_RESULTS, resultSort)).intValue();
+		}
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e.getMessage(), e);
+		}
+	}
+
 	/**
 	 * @param analysisTypeId The analysisTypeId to set.
 	 */
@@ -604,4 +512,118 @@ public class Test extends StorableObject {
 		}
 		return equals;
 	}
+
+	private class TestTimeStamps {
+		Date endTime;
+		Date startTime;
+		TemporalPattern temporalPattern;
+
+		private int	discriminator;		
+
+		TestTimeStamps(int temporalType,
+									 Date startTime,
+									 Date endTime,
+									 TemporalPattern temporalPattern) {
+			this.discriminator = temporalType;
+			switch (temporalType) {
+				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+					this.startTime = startTime;
+					this.endTime = null;
+					this.temporalPattern = null;
+					break;
+				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+					this.startTime = startTime;
+					this.endTime = endTime;
+					this.temporalPattern = temporalPattern;
+					if (this.endTime == null) {
+						Log.errorMessage("ERROR: End time is NULL");
+						this.endTime = this.startTime;
+					}
+					if (this.temporalPattern == null)
+						Log.errorMessage("ERROR: Temporal pattern is NULL");
+					break;
+				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+					this.startTime = startTime;
+					this.endTime = endTime;
+					this.temporalPattern = null;
+					if (this.endTime == null) {
+						Log.errorMessage("ERROR: End time is NULL");
+						this.endTime = this.startTime;
+					}
+					break;
+				default:
+					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + temporalType + " of test");
+			}
+		}
+
+		TestTimeStamps(TestTimeStamps_Transferable ttst) {
+			this.discriminator = ttst.discriminator().value();
+			switch (this.discriminator) {
+				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+					this.startTime = new Date(ttst.start_time());
+					this.endTime = null;
+					this.temporalPattern = null;
+					break;
+				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+					PeriodicalTestTimeStamps ptts = ttst.ptts();
+					this.startTime = new Date(ptts.start_time);
+					this.endTime = new Date(ptts.end_time);
+					this.temporalPattern = (TemporalPattern) MeasurementStorableObjectPool.getStorableObject(new Identifier(ptts.temporal_pattern_id), true);
+					break;
+				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+					ContinuousTestTimeStamps ctts = ttst.ctts();
+					this.startTime = new Date(ctts.start_time);
+					this.endTime = new Date(ctts.end_time);
+					break;
+				default:
+					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
+			}
+		}
+
+		TestTimeStamps_Transferable getTransferable() {
+			TestTimeStamps_Transferable ttst = new TestTimeStamps_Transferable();
+			switch (this.discriminator) {
+				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+					ttst.start_time(this.startTime.getTime());
+					break;
+				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(),
+																								 this.endTime.getTime(),
+																								 (this.temporalPattern != null) ? (Identifier_Transferable)this.temporalPattern.getId().getTransferable() : (new Identifier_Transferable("")) ));
+					break;
+				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(),
+																								 this.endTime.getTime()));
+					break;
+				default:
+					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
+			}
+			return ttst;
+		}
+		
+		
+		public int hashCode() {
+			HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+			hashCodeGenerator.addInt(this.discriminator);
+			hashCodeGenerator.addObject(this.startTime);
+			hashCodeGenerator.addObject(this.endTime);
+			hashCodeGenerator.addObject(this.temporalPattern);
+			int result = hashCodeGenerator.getResult(); 
+			return result;
+		}
+		
+		public boolean equals(Object obj) {
+			boolean equals = (this==obj);
+			if ((!equals)&&(obj instanceof TestTimeStamps)){
+				TestTimeStamps stamps = (TestTimeStamps)obj;
+				if ((stamps.discriminator==this.discriminator)&&
+					(stamps.startTime==this.startTime)&&	
+					(stamps.endTime==this.endTime)&&
+					(stamps.temporalPattern.equals(this.temporalPattern)))
+					equals = true;
+			}
+			return equals;
+		}
+	}
+
 }

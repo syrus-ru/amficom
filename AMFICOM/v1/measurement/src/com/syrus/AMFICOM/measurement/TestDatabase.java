@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.24 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.25 2004/08/23 14:43:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
@@ -37,7 +38,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/08/22 18:45:56 $
+ * @version $Revision: 1.25 $, $Date: 2004/08/23 14:43:12 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -210,6 +211,10 @@ public class TestDatabase extends StorableObjectDatabase {
 				return this.retrieveMeasurementsOrderByStartTime(test, (MeasurementStatus)arg);
 			case Test.RETRIEVE_LAST_MEASUREMENT:
 				return this.retrieveLastMeasurement(test);
+			case Test.RETRIEVE_NUMBER_OF_MEASUREMENTS:
+				return this.retrieveNumberOfMeasurements(test);
+			case Test.RETRIEVE_NUMBER_OF_RESULTS:
+				return this.retrieveNumberOfResults(test, (ResultSort)arg);
 			default:
 				return null;
 		}
@@ -223,7 +228,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
 			+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
-			+ SQL_AND + MeasurementDatabase.COLUMN_STATUS + EQUALS + Integer.toString(measurementStatus.value())
+				+ SQL_AND + MeasurementDatabase.COLUMN_STATUS + EQUALS + Integer.toString(measurementStatus.value())
 			+ SQL_ORDER_BY + MeasurementDatabase.COLUMN_START_TIME + " ASC";
 
 		Statement statement = null;
@@ -266,15 +271,14 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ COLUMN_ID
 			+ SQL_FROM
 			+ ObjectEntities.MEASUREMENT_ENTITY
-			+ SQL_WHERE
-			+ MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
-			+ SQL_AND + MeasurementDatabase.COLUMN_START_TIME + EQUALS
-			+ OPEN_BRACKET
-				+ SQL_SELECT
-				+ SQL_FUNCTION_MAX + OPEN_BRACKET + MeasurementDatabase.COLUMN_START_TIME + CLOSE_BRACKET
-				+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
-				+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
-			+ CLOSE_BRACKET;
+			+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
+				+ SQL_AND + MeasurementDatabase.COLUMN_START_TIME + EQUALS
+					+ OPEN_BRACKET
+						+ SQL_SELECT
+						+ SQL_FUNCTION_MAX + OPEN_BRACKET + MeasurementDatabase.COLUMN_START_TIME + CLOSE_BRACKET
+						+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+						+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
+					+ CLOSE_BRACKET;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -288,6 +292,85 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test '" + testIdStr + "' -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
+	private Integer retrieveNumberOfMeasurements(Test test) throws RetrieveObjectException, ObjectNotFoundException {
+		String testIdStr = test.getId().toSQLString();
+		String sql = SQL_SELECT
+			+ SQL_COUNT + " count "
+			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+			+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TestDatabase.retrieveNumberOfMeasurements | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			if (resultSet.next())
+				return new Integer(resultSet.getInt("count"));
+			else
+				throw new ObjectNotFoundException("No number of measurements for test '" + testIdStr + "'");
+		}
+		catch (SQLException sqle) {
+			String mesg = "TestDatabase.retrieveNumberOfMeasurements | Cannot retrieve number of measurements for test '" + testIdStr + "' -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
+	private Integer retrieveNumberOfResults(Test test, ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
+		String testIdStr = test.getId().toSQLString();
+		String sql = SQL_SELECT
+			+ SQL_COUNT + " count "
+			+ SQL_FROM + ObjectEntities.RESULT_ENTITY
+			+ SQL_WHERE + ResultDatabase.COLUMN_SORT + EQUALS + Integer.toString(resultSort.value())
+				+ SQL_AND + ResultDatabase.COLUMN_MEASUREMENT_ID + SQL_IN
+					+ OPEN_BRACKET
+						+ SQL_SELECT
+						+ COLUMN_ID
+						+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+						+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
+					+ CLOSE_BRACKET;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TestDatabase.retrieveNumberOfResults | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			if (resultSet.next())
+				return new Integer(resultSet.getInt("count"));
+			else
+				throw new ObjectNotFoundException("No number of results for test '" + testIdStr + "' of result sort " + resultSort.value());
+		}
+		catch (SQLException sqle) {
+			String mesg = "TestDatabase.retrieveNumberOfMeasurements | Cannot retrieve number of results for test '" + testIdStr + "' of result sort " + resultSort.value() + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
