@@ -154,7 +154,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 			this.displayed_alarm = alarm;
 			this.user_action = "result_selected";
 			this.id = event.descriptor;
-		} else 
+		}
 		if (this.user_action.equals("test_selected"))
 		{
 //			res_id = dataSource.GetTestResult(id);
