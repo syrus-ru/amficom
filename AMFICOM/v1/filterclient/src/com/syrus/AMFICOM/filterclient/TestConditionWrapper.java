@@ -1,5 +1,5 @@
 /*
- * $Id: TestConditionWrapper.java,v 1.1 2005/03/30 14:24:57 max Exp $
+ * $Id: TestConditionWrapper.java,v 1.2 2005/04/01 10:48:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.util.Map;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/30 14:24:57 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/01 10:48:31 $
  * @author $Author: max $
  * @module filterclient_v1
  */
@@ -96,9 +97,8 @@ public class TestConditionWrapper implements ConditionWrapper {
 			Test test = (Test) iter.next();
 			this.storableObjectInitialName.put(test, test.getDescription());
 		}
-		
 	}
-		
+
 	public String[] getLinkedNames(String key) throws IllegalDataException {
 		return (String[]) this.keyLinkedNames.get(key);
 	}

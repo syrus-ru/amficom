@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeConditionWrapper.java,v 1.3 2005/03/30 14:24:14 max Exp $
+ * $Id: MeasurementTypeConditionWrapper.java,v 1.4 2005/04/01 10:48:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/30 14:24:14 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/01 10:48:31 $
  * @author $Author: max $
  * @module measurement_v1
  */
