@@ -3,11 +3,12 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.*;
 
-public abstract class EquipmentDatabase {
+public class EquipmentDatabase {
 
 	public static final String	COLUMN_DOMAIN_ID	= "domain_id";
 //	 description VARCHAR2(256),
 	public static final String COLUMN_DESCRIPTION	= "description";
+	public static final String COLUMN_EQCLASS	= "eq_class";
 	// hw_serial VARCHAR2(256),
 	public static final String COLUMN_HW_SERIAL	= "hw_serial";
 	// hw_version VARCHAR2(32),
@@ -40,8 +41,15 @@ public abstract class EquipmentDatabase {
 	public static final String COLUMN_SW_VERSION	= "sw_version";
 	// type_id VARCHAR2(32) NOT NULL,
 	public static final String COLUMN_TYPE_ID	= "type_id";
+	
+	private EquipmentDatabase(){
+		// nothing
+	}
 
-	protected StringBuffer retriveSQLHeader(Equipment eq){
+	protected static String retriveSQL(Equipment eq,
+												   String tableName,
+												   String columnSQL,
+												   String whereSQL ){
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(StorableObjectDatabase.SQL_SELECT);
 		buffer.append(DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_CREATED));
@@ -82,15 +90,31 @@ public abstract class EquipmentDatabase {
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_SUPPLIER);
 		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(COLUMN_SUPPLIER_CODE);
+		buffer.append(COLUMN_SUPPLIER_CODE);		
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(COLUMN_EQCLASS);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_IMAGE_ID);
+		if ((columnSQL!=null)&&(columnSQL.length()>0)){
+			buffer.append(StorableObjectDatabase.COMMA);
+			buffer.append(columnSQL);
+		}
+		buffer.append(StorableObjectDatabase.SQL_FROM);
+		buffer.append(tableName);
+		buffer.append(StorableObjectDatabase.SQL_WHERE);
+		buffer.append(StorableObjectDatabase.COLUMN_ID);
+		buffer.append(StorableObjectDatabase.EQUALS);
+		buffer.append(eq.getId().toSQLString());
+		if ((whereSQL!=null)&&(whereSQL.length()>0)){
+			buffer.append(StorableObjectDatabase.SQL_AND);
+			buffer.append(whereSQL);
+		}
 
-		return buffer;
+		return buffer.toString();
 	}
 
 
-	protected String insertSQL(Equipment eq, 
+	protected static String insertSQL(Equipment eq, 
 						   String tableName,
 						   String columnSQL,
 						   String valuesSQL  ) {
@@ -139,6 +163,8 @@ public abstract class EquipmentDatabase {
 		buffer.append(COLUMN_SUPPLIER);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_SUPPLIER_CODE);
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(COLUMN_EQCLASS);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_IMAGE_ID);
 		if ((columnSQL!=null)&&(columnSQL.length()>0)){
@@ -214,6 +240,10 @@ public abstract class EquipmentDatabase {
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(StorableObjectDatabase.APOSTOPHE);
 		buffer.append(eq.getSupplierCode());
+		buffer.append(StorableObjectDatabase.APOSTOPHE);
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(StorableObjectDatabase.APOSTOPHE);
+		buffer.append(eq.getEqClass());
 		buffer.append(StorableObjectDatabase.APOSTOPHE);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(eq.getImageId().toSQLString());
