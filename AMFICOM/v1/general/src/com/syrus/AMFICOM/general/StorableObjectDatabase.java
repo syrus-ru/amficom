@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.98 2005/02/15 09:29:03 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.99 2005/02/16 13:40:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/02/15 09:29:03 $
+ * @version $Revision: 1.99 $, $Date: 2005/02/16 13:40:09 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -401,6 +401,9 @@ public abstract class StorableObjectDatabase {
 	 * @throws RetrieveObjectException
 	 */
 	protected Collection retrieveButIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		if (ids == null || ids.isEmpty())
+			return this.retrieveByIds(null, null);
+
 		StringBuffer stringBuffer = this.idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 		if ((condition != null) && (condition.length() > 0)) {
 			if (stringBuffer.length() != 0)
