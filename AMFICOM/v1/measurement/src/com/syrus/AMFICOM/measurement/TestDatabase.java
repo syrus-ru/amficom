@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.62 2005/02/03 14:57:22 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.63 2005/02/04 14:20:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -53,8 +52,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/02/03 14:57:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.63 $, $Date: 2005/02/04 14:20:22 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -791,27 +790,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		
 		return list;
 	}
-	
-	private List retrieveButIdsByTimeRange(List ids, Domain domain, Date start, Date end) throws RetrieveObjectException {
-		List list = null;		
-		
-		String condition = TestWrapper.COLUMN_START_TIME + " <= " + DatabaseDate.toUpdateSubString(end)
-			+ SQL_AND + TestWrapper.COLUMN_END_TIME + " >= " + DatabaseDate.toUpdateSubString(start)
-			+ SQL_AND 
-			+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
-				+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
-			+ CLOSE_BRACKET;
-		
-		try {
-			list = retrieveButIds(ids, condition);
-		}  catch (IllegalDataException ide) {			
-			Log.debugMessage("TestDatabase.retrieveButIdsByTimeRange | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-		
-		return list;
-	}
-	
+
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
@@ -822,19 +801,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		retrieveMeasurementSetupTestLinksByOneQuery(list);	
 		
 		return list;
-	}	
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
-		List list;
-		if (condition instanceof TemporalCondition){
-			TemporalCondition testCondition = (TemporalCondition) condition;
-			list = this.retrieveButIdsByTimeRange(ids, testCondition.getDomain(), testCondition.getStart(), testCondition.getEnd());
-		} else				
-			throw new RetrieveObjectException("TestDatabase.retrieveByCondition | Condition class doesn't support : " + condition );
-		return list;
 	}
-	
 	
 	public void delete(Identifier id) throws IllegalDataException {
 		throw new IllegalDataException("Deleting tests is imprincipal");
