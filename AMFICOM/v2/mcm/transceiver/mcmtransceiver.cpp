@@ -268,6 +268,8 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(JNIEnv 
 		env->DeleteLocalRef(jpar_value);
 	}
 
+	delete resultSegment;
+
 	jclass kis_report_class = env->FindClass("com/syrus/AMFICOM/mcm/KISReport");
 	jmethodID constructor_id = env->GetMethodID(kis_report_class, "<init>", "(Ljava/lang/String;[Ljava/lang/String;[[B)V");
 	jobject j_kis_report = env->NewObject(kis_report_class, constructor_id, j_measurement_id,
