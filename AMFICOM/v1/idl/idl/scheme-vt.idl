@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.16 2004/12/22 11:09:32 bass Exp $
+ * $Id: scheme-vt.idl,v 1.17 2005/01/20 10:04:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,9 @@
 #define SCHEME_VT_IDL
 
 #include "general-vt.idl"
+#include "scheme-administration.idl"
 #include "scheme-configuration.idl"
+#include "scheme-general.idl"
 #include "scheme-map.idl"
 #include "scheme-resource.idl"
 
@@ -26,9 +28,9 @@ module com {
 				native CharacteristicSeqContainer;
 
 				abstract valuetype Characterizable {
-					attribute configuration::corba::CharacteristicSeq characteristics;
+					attribute general::corba::CharacteristicSeq characteristics;
 					/**
-					 * Accessor pair for <code>sequence&lt;{@link com.syrus.AMFICOM.configuration.Characteristic}&gt;</code>.
+					 * Accessor pair for <code>sequence&lt;{@link com.syrus.AMFICOM.general.Characteristic}&gt;</code>.
 					 */
 					attribute CharacteristicSeqContainer characteristicsImpl;
 				};
@@ -53,7 +55,7 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
-							configuration::Characterizable,
+							general::Characterizable,
 							configuration::ComSyrusAmficomConfigurationAbstractSchemePort {
 						enum DirectionType {
 							_IN,
@@ -133,7 +135,7 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
-							configuration::Characterizable {
+							general::Characterizable {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::IdentifierSeq schemePortIds;
@@ -155,7 +157,7 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
-							configuration::Characterizable {
+							general::Characterizable {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::Identifier schemeId;
@@ -246,7 +248,7 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
-							configuration::Characterizable,
+							general::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemeCableThread {
 						private wstring thisName;
 						private wstring thisDescription;
@@ -415,7 +417,7 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
-							configuration::Characterizable,
+							general::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemePath {
 						private wstring thisName;
 						private wstring thisDescription;
@@ -445,7 +447,7 @@ module com {
 							general::corba::Describable,
 							resource::SchemeCellContainer,
 							scheme::Characterizable,
-							configuration::Characterizable,
+							general::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemeProtoElement {
 						private wstring thisName;
 						private wstring thisDescription;
@@ -565,7 +567,7 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							resource::SchemeCellContainer,
-							configuration::ComSyrusAmficomConfigurationScheme,
+							administration::ComSyrusAmficomAdministrationScheme,
 							map::ComSyrusAmficomMapScheme {
 						enum Type {
 							BUILDING,

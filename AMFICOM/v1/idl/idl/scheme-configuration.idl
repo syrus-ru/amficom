@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-configuration.idl,v 1.5 2004/12/22 10:02:43 bass Exp $
+ * $Id: scheme-configuration.idl,v 1.6 2005/01/20 10:04:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,6 @@ module com {
 				native AbstractLinkType;
 				native CableLinkType;
 				native CableThreadType;
-				native Characteristic;
-				native Domain;
 				native Equipment;
 				native EquipmentType;
 				native KIS;
@@ -31,12 +29,6 @@ module com {
 				native PortType;
 				native TransmissionPath;
 				native TransmissionPathType;
-				native User;
-
-				abstract valuetype Characterizable {
-					void addCharacteristic(in Characteristic characteristic);
-					void removeCharacteristic(in Characteristic characteristic);
-				};
 
 				abstract valuetype ComSyrusAmficomConfigurationAbstractSchemePort {
 					attribute configuration::corba::PortType portType;
@@ -98,14 +90,6 @@ module com {
 					attribute Equipment equipmentImpl;
 					attribute configuration::corba::Rtu rtu;
 					attribute KIS rtuImpl;
-				};
-
-				abstract valuetype ComSyrusAmficomConfigurationScheme {
-					/**
-					 * @see com.syrus.AMFICOM.scheme.corba.Scheme#domainId
-					 */
-					attribute configuration::corba::Domain domain;
-					attribute Domain domainImpl;
 				};
 			};
 		};

@@ -1,0 +1,27 @@
+/*
+ * $Id: scheme-general.idl,v 1.1 2005/01/20 10:04:28 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef SCHEME_GENERAL_IDL
+#define SCHEME_GENERAL_IDL
+
+module com {
+	module syrus {
+		module AMFICOM {
+			module general {
+				native Characteristic;
+
+				abstract valuetype Characterizable {
+					void addCharacteristic(in Characteristic characteristic);
+					void removeCharacteristic(in Characteristic characteristic);
+				};
+			};
+		};
+	};
+};
+
+#endif // SCHEME_GENERAL_IDL

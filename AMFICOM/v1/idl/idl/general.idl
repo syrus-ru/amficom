@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.48 2005/01/20 07:03:37 bass Exp $
+ * $Id: general.idl,v 1.49 2005/01/20 10:04:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -170,6 +170,8 @@ module corba {
 	};
 
 	typedef sequence <Characteristic_Transferable> CharacteristicSeq_Transferable;
+	typedef Characteristic_Transferable Characteristic;
+	typedef sequence<Characteristic> CharacteristicSeq;
 
 ///////////////////////// NameResolver ///////////////////////
 	abstract interface NameResolver {

@@ -1,0 +1,32 @@
+/*
+ * $Id: scheme-administration.idl,v 1.1 2005/01/20 10:04:28 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef SCHEME_ADMINISTRATION_IDL
+#define SCHEME_ADMINISTRATION_IDL
+
+#include "administration.idl"
+
+module com {
+	module syrus {
+		module AMFICOM {
+			module administration {
+				native Domain;
+
+				abstract valuetype ComSyrusAmficomAdministrationScheme {
+					/**
+					 * @see com.syrus.AMFICOM.scheme.corba.Scheme#domainId
+					 */
+					attribute administration::corba::Domain domain;
+					attribute Domain domainImpl;
+				};
+			};
+		};
+	};
+};
+
+#endif // SCHEME_ADMINISTRATION_IDL
