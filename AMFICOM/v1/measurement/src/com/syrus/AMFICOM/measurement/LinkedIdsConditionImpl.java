@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.22 2005/03/15 14:03:54 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.23 2005/03/15 14:23:14 bob Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/15 14:03:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/03/15 14:23:14 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -147,28 +147,15 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	public void setEntityCode(Short entityCode) {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				this.entityCode = ANALYSISTYPE_SHORT;
-				break;
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				this.entityCode = EVALUATIONTYPE_SHORT;
-				break;
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				this.entityCode = ANALYSIS_SHORT;
-				break;
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				this.entityCode = EVALUATION_SHORT;
-				break;				
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				this.entityCode = MEASUREMENT_SHORT;
-				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				this.entityCode = MEASUREMENTTYPE_SHORT;
-				break;
 			case ObjectEntities.MS_ENTITY_CODE:
-				this.entityCode = MS_SHORT;
-				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				this.entityCode = RESULT_SHORT;
+			case ObjectEntities.TEST_ENTITY_CODE:
+				this.entityCode = entityCode;
 				break;
 			default:
 				throw new UnsupportedOperationException("entityCode "
