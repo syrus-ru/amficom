@@ -4,12 +4,13 @@ import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:24:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/05/27 12:49:24 $
  * @author $Author: bass $
  * @module Survey
  * 
  * @see MessageModel
  * @see com.syrus.AMFICOM.Client.Object.UI.MessageDisplayModel
+ * @deprecated
  */
 public class Message extends ObjectResource
 {

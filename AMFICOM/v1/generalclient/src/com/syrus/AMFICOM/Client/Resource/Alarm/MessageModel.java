@@ -4,11 +4,12 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:24:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/05/27 12:49:24 $
  * @author $Author: bass $
  * 
  * @see Message
  * @see com.syrus.AMFICOM.Client.Object.UI.MessageDisplayModel
+ * @deprecated
  */
 public final class MessageModel extends ObjectResourceModel
 {

@@ -3,6 +3,12 @@ package com.syrus.AMFICOM.Client.Resource.Alarm;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/05/27 12:49:24 $
+ * @author $Author: bass $
+ *
+ * @deprecated
+ */
 public class MessageType extends StubResource
 {
 	/**
@@ -125,41 +131,40 @@ public class MessageType extends StubResource
 	 */
 	private static final String DESCRIPTION_WARNING = NAME_WARNING;
 
-  public static String type = "messagetype";
-  public String name = "";
-  public String id = "";
+	public static String type = "messagetype";
 
-  public MessageType()
-  {
-  }
+	public String name = "";
 
-  public MessageType(String id, String name)
-  {
-    this.id = id;
-    this.name = name;
-  }
+	public String id = "";
 
-  public static MessageType[] createTypes (int number,String[] ids, String[] names)
-  {
-    MessageType[] result = new MessageType[number];
-    for (int i = 0; i < number; i++)
+	public MessageType()
 	{
-      result[i] = new MessageType(ids[i], names[i]);
-	  Pool.put(MessageType.typ, result[i].getId(), result[i]);
 	}
-    return result;
-  }
 
-  public String getId()
-  {
-    return id;
-  }
+	public MessageType(String id, String name)
+	{
+		this.id = id;
+		this.name = name;
+	}
 
-  public String getName()
-  {
-    return name;
-  }
+	public static MessageType[] createTypes (int number,String[] ids, String[] names)
+	{
+		MessageType[] result = new MessageType[number];
+		for (int i = 0; i < number; i++)
+		{
+			result[i] = new MessageType(ids[i], names[i]);
+			Pool.put(MessageType.typ, result[i].getId(), result[i]);
+		}
+		return result;
+	}
 
+	public String getId()
+	{
+		return id;
+	}
 
+	public String getName()
+	{
+		return name;
+	}
 }
-
