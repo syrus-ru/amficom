@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.10 2004/09/28 14:45:52 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.11 2004/10/01 10:25:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/09/28 14:45:52 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/01 10:25:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -89,6 +89,40 @@ public interface ConfigurationObjectLoader {
 
     List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException;
 
+    /* Load Configuration StorableObject but argument ids */
+    
+    List loadCharacteristicTypesButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadEquipmentTypesButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadPortTypesButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadMeasurementPortTypesButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadCharacteristicsButIds(List ids) throws DatabaseException, CommunicationException;
+
+//  PermissionAttributes loadPermissionAttributesButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadUsersButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadDomainsButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadServersButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadMCMsButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadEquipmentsButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadPortsButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadTransmissionPathsButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadKISsButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadMeasurementPortsButIds(List ids) throws DatabaseException, CommunicationException;
+
+    List loadMonitoredElementsButIds(List ids) throws DatabaseException, CommunicationException;
+    
 	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
