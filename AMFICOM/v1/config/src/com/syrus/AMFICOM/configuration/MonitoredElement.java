@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.38 2005/02/14 09:15:46 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.39 2005/02/16 21:26:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/02/14 09:15:46 $
+ * @version $Revision: 1.39 $, $Date: 2005/02/16 21:26:05 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -42,14 +44,14 @@ public class MonitoredElement extends DomainMember {
 	private String name;
 	private String localAddress;
 
-	private List monitoredDomainMemberIds;
+	private Collection monitoredDomainMemberIds;
 
 	private StorableObjectDatabase monitoredElementDatabase;
 
 	public MonitoredElement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.monitoredDomainMemberIds = new LinkedList();
+		this.monitoredDomainMemberIds = new ArrayList();
 		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 		try {
 			this.monitoredElementDatabase.retrieve(this);
@@ -83,7 +85,7 @@ public class MonitoredElement extends DomainMember {
 								 Identifier measurementPortId,
 								 int sort,
 								 String localAddress,
-								 List monitoredDomainMemberIds) {
+								 Collection monitoredDomainMemberIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -95,10 +97,9 @@ public class MonitoredElement extends DomainMember {
 		this.measurementPortId = measurementPortId;
 		this.sort = sort;
 		this.localAddress = localAddress;
-		if (monitoredDomainMemberIds != null)
-			this.monitoredDomainMemberIds = monitoredDomainMemberIds;
-		else
-			this.monitoredDomainMemberIds = new LinkedList();
+
+		this.monitoredDomainMemberIds = new ArrayList();
+		this.setMonitoredDomainMemberIds0(monitoredDomainMemberIds);
 
 		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 	}
@@ -116,11 +117,11 @@ public class MonitoredElement extends DomainMember {
 												  Identifier domainId,
 												  String name,
 												  Identifier measurementPortId,
-												  int sort,
+												  MonitoredElementSort sort,
 												  String localAddress,
-												  List monitoredDomainMemberIds) throws CreateObjectException {
+												  Collection monitoredDomainMemberIds) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || measurementPortId == null || 
-				localAddress == null )
+				localAddress == null || monitoredDomainMemberIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
@@ -130,7 +131,7 @@ public class MonitoredElement extends DomainMember {
 								domainId,
 								name,
 								measurementPortId,
-								sort,
+								sort.value(),
 								localAddress,
 								monitoredDomainMemberIds);
 			monitoredElement.changed = true;
@@ -172,8 +173,19 @@ public class MonitoredElement extends DomainMember {
 		this.localAddress = localAddress;
 	}
 
-	public List getMonitoredDomainMemberIds() {
-		return this.monitoredDomainMemberIds;
+	public Collection getMonitoredDomainMemberIds() {
+		return Collections.unmodifiableCollection(this.monitoredDomainMemberIds);
+	}
+
+	protected synchronized void setMonitoredDomainMemberIds0(Collection monitoredDomainMemberIds) {
+		this.monitoredDomainMemberIds.clear();
+		if (monitoredDomainMemberIds != null)
+			this.monitoredDomainMemberIds.addAll(monitoredDomainMemberIds);
+	}
+
+	protected synchronized void setMonitoredDomainMemberIds(Collection monitoredDomainMemberIds) {
+		this.setMonitoredDomainMemberIds0(monitoredDomainMemberIds);
+		super.changed = true;
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -198,19 +210,13 @@ public class MonitoredElement extends DomainMember {
 		this.localAddress = localAddress;
 	}
 
-	protected synchronized void setMonitoredDomainMemberIds(List monitoredDomainMemberIds) {
-		this.monitoredDomainMemberIds.clear();
-		if (monitoredDomainMemberIds != null)
-			this.monitoredDomainMemberIds.addAll(monitoredDomainMemberIds);
-		super.changed = true;
-	}
-
 	public String getName() {
 		return this.name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+		super.changed = true;
 	}
 
 	public List getDependencies() {

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.62 2005/02/11 16:02:55 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.63 2005/02/16 21:26:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/02/11 16:02:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.63 $, $Date: 2005/02/16 21:26:05 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -39,6 +39,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	private static final int			CABLETHREADTYPE_OBJECT_POOL_SIZE	= 4;
 	private static final int			CABLELINKTYPE_OBJECT_POOL_SIZE	= 4;
 	private static final int			EQUIPMENTTYPE_OBJECT_POOL_SIZE		= 1;
+	private static final int			TRANSPATHTYPE_OBJECT_POOL_SIZE		= 1;
 	private static final int			LINKTYPE_OBJECT_POOL_SIZE	= 2;
 	// private static final int			KISTYPE_OBJECT_POOL_SIZE		= 1;
 	private static final int			PORTTYPE_OBJECT_POOL_SIZE		= 1;
@@ -74,6 +75,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, size);
 		// instance.addObjectPool(ObjectEntities.KISTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.LINKTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, size);
@@ -100,6 +102,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, CABLETHREADTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, CABLELINKTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, EQUIPMENTTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, TRANSPATHTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.LINKTYPE_ENTITY_CODE, LINKTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, PORTTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE);
@@ -173,6 +176,9 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadEquipmentType(objectId);
 				break;
+			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+				storableObject = cObjectLoader.loadTransmissionPathType(objectId);
+				break;
 			case ObjectEntities.LINKTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadLinkType(objectId);
 				break;
@@ -221,6 +227,9 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadEquipmentTypes(ids);
+					break;
+				case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+					loadedList = cObjectLoader.loadTransmissionPathTypes(ids);
 					break;
 				case ObjectEntities.PORTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadPortTypes(ids);
@@ -272,6 +281,9 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					loadedCollection = cObjectLoader.loadEquipmentTypesButIds(condition, ids);
+					break;
+				case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+					loadedCollection = cObjectLoader.loadTransmissionPathTypesButIds(condition, ids);
 					break;
 				case ObjectEntities.PORTTYPE_ENTITY_CODE:
 					loadedCollection = cObjectLoader.loadPortTypesButIds(condition, ids);
@@ -387,6 +399,18 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 						cObjectLoader.saveMonitoredElement((MonitoredElement) collection.iterator().next(), force);
 					else
 						cObjectLoader.saveMonitoredElements(collection, force);
+					break;
+				case ObjectEntities.TRANSPATH_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveTransmissionPath((TransmissionPath) collection.iterator().next(), force);
+					else
+						cObjectLoader.saveTransmissionPaths(collection, force);
+					break;
+				case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveTransmissionPathType((TransmissionPathType) collection.iterator().next(), force);
+					else
+						cObjectLoader.saveTransmissionPathTypes(collection, force);
 					break;
 
 				default:

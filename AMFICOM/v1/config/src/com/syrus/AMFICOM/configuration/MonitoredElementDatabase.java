@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.45 2005/02/11 18:40:02 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.46 2005/02/16 21:26:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -41,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/02/11 18:40:02 $
+ * @version $Revision: 1.46 $, $Date: 2005/02/16 21:26:05 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -146,7 +145,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveMonitoredDomainMemberIds(MonitoredElement monitoredElement) throws RetrieveObjectException {
-		List mdmIds = new ArrayList();
+		Collection mdmIds = new ArrayList();
 		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
 		int meSort = monitoredElement.getSort().value();
 		String column;
@@ -214,19 +213,19 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
-		monitoredElement.setMonitoredDomainMemberIds(mdmIds);
+		monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
 	}
 
 	private void retrieveMonitoredDomainMemberIdsByOneQuery(Collection monitoredElements) throws RetrieveObjectException {
 		Map sortedMonitoredElements = new HashMap();
-		List monitoredElementsOneSort;
+		Collection monitoredElementsOneSort;
 		Integer meSort;
 
 		MonitoredElement monitoredElement;
 		for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
 			monitoredElement = (MonitoredElement) it.next();
 			meSort = new Integer(monitoredElement.getSort().value());
-			monitoredElementsOneSort = (List) sortedMonitoredElements.get(meSort);
+			monitoredElementsOneSort = (Collection) sortedMonitoredElements.get(meSort);
 			if (monitoredElementsOneSort == null) {
 				monitoredElementsOneSort = new LinkedList();
 				sortedMonitoredElements.put(meSort, monitoredElementsOneSort);
@@ -236,15 +235,17 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 		for (Iterator it = sortedMonitoredElements.keySet().iterator(); it.hasNext();) {
 			meSort = (Integer) it.next();
-			monitoredElementsOneSort = (List) sortedMonitoredElements.get(meSort);
+			monitoredElementsOneSort = (Collection) sortedMonitoredElements.get(meSort);
 			switch (meSort.intValue()) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort, ObjectEntities.EQUIPMENTMELINK_ENTITY,
-						MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
+					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort,
+							ObjectEntities.EQUIPMENTMELINK_ENTITY,
+							MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
 					break;
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort, ObjectEntities.TRANSPATHMELINK_ENTITY,
-						MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort,
+							ObjectEntities.TRANSPATHMELINK_ENTITY,
+							MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 					break;
 				default:
 					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
@@ -253,31 +254,22 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void retrieveMDMIdsByOneQuery(List monitoredElements, String linkTable, String linkColumn)
+	private void retrieveMDMIdsByOneQuery(Collection monitoredElements, String linkTable, String linkColumn)
 			throws RetrieveObjectException {
 		if (monitoredElements == null || monitoredElements.isEmpty())
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT + MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID
-				+ COMMA + linkColumn + SQL_FROM + linkTable + SQL_WHERE
-				+ MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET);
-		int i = 1;
-		for (Iterator it = monitoredElements.iterator(); it.hasNext(); i++) {
-			MonitoredElement monitoredElement = (MonitoredElement) it.next();
-			sql.append(DatabaseIdentifier.toSQLString(monitoredElement.getId()));
-			if (it.hasNext()) {
-				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER) != 0)
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}
-			}
+		StringBuffer sql = new StringBuffer(SQL_SELECT
+				+ MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ linkColumn
+				+ SQL_FROM + linkTable
+				+ SQL_WHERE);
+		try {
+			sql.append(this.idsEnumerationString(monitoredElements, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, true));
 		}
-		sql.append(CLOSE_BRACKET);
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide);
+		}
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -289,11 +281,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 			Map mdmIdsMap = new HashMap();
 			Identifier meId;
-			List mdmIds;
+			Collection mdmIds;
 			while (resultSet.next()) {
-				meId = DatabaseIdentifier.getIdentifier(resultSet,
-					MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-				mdmIds = (List) mdmIdsMap.get(meId);
+				meId = DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+				mdmIds = (Collection) mdmIdsMap.get(meId);
 				if (mdmIds == null) {
 					mdmIds = new LinkedList();
 					mdmIdsMap.put(meId, mdmIds);
@@ -305,15 +296,17 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
 				monitoredElement = (MonitoredElement) it.next();
 				meId = monitoredElement.getId();
-				mdmIds = (List) mdmIdsMap.get(meId);
+				mdmIds = (Collection) mdmIdsMap.get(meId);
 
-				monitoredElement.setMonitoredDomainMemberIds(mdmIds);
+				monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
 			}
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "MonitoredElementDatabase.retrieveMDMIdsByOneQuery | Cannot retrieve parameters for result -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -321,9 +314,11 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -359,7 +354,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertMonitoredDomainMemberIds(MonitoredElement monitoredElement) throws CreateObjectException {
-		List mdmIds = monitoredElement.getMonitoredDomainMemberIds();
+		Collection mdmIds = monitoredElement.getMonitoredDomainMemberIds();
 		Identifier meId = monitoredElement.getId();
 		int meSort = monitoredElement.getSort().value();
 
@@ -412,28 +407,33 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				mdmId = (Identifier) it.next();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, mdmId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, meId);
-				Log.debugMessage(
-					"MonitoredElementDatabase.insertMonitoredDomainMemberIds | Inserting link for monitored element '"
-							+ meId.getIdentifierString() + "' and monitored domain member '"
-							+ mdmId.getIdentifierString() + "'", Log.DEBUGLEVEL09);
+				Log.debugMessage("MonitoredElementDatabase.insertMonitoredDomainMemberIds | Inserting link for monitored element '"
+						+ meId.getIdentifierString()
+						+ "' and monitored domain member '"
+						+ mdmId.getIdentifierString()
+						+ "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | Cannot insert link for monitored element '"
 					+ meId.getIdentifierString()
 					+ "' and monitored domain member '"
 					+ mdmId.getIdentifierString()
 					+ "'";
 			throw new CreateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
