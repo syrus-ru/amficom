@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.36 2004/12/27 11:25:35 arseniy Exp $
+ * $Id: ParameterType.java,v 1.37 2004/12/27 13:35:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/27 11:25:35 $
+ * @version $Revision: 1.37 $, $Date: 2004/12/27 13:35:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -170,7 +170,7 @@ public class ParameterType extends StorableObjectType {
 		return this.name;
 	}
 
-	public DataType getDataType(){
+	public DataType getDataType() {
 		return DataType.from_int(this.dataType);
 	}
 
@@ -233,21 +233,20 @@ public class ParameterType extends StorableObjectType {
 		int result = hashCodeGenerator.getResult();
 		hashCodeGenerator = null;
 		return result;
-
 	}
 
 	public String toString() {
-		String str = getClass().getName()+EOSL
+		String str = getClass().getName() + EOSL
 					 + ID+this.id + EOSL
-					 + ID_CREATED + this.created.toString()+ EOSL		
-					 + ID_CREATOR_ID + this.creatorId.toString()+ EOSL
+					 + ID_CREATED + this.created.toString() + EOSL		
+					 + ID_CREATOR_ID + this.creatorId.toString() + EOSL
 					 + ID_MODIFIED + this.modified.toString() + EOSL
 					 + ID_MODIFIER_ID + this.modifierId.toString() + EOSL
-					 + TypedObject.ID_CODENAME + this.codename+ EOSL
+					 + TypedObject.ID_CODENAME + this.codename + EOSL
 					 + TypedObject.ID_DESCRIPTION + this.description + EOSL
 					 + ID_NAME + this.name + EOSL
 					 + ID_DATA_TYPE + this.dataType;
-					 
+
 		return str;
 	}
 
