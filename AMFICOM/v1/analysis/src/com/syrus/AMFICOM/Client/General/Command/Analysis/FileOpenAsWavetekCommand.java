@@ -88,7 +88,7 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 																				JOptionPane.OK_OPTION);
 				return;
 			}
-			if (!Heap.getAllBSMap().isEmpty())
+			if (!Heap.hasEmptyAllBSMap())
 			{
 				if (Heap.getBSPrimaryTrace() != null)
 					new FileCloseCommand(dispatcher, aContext).execute();

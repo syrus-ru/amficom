@@ -82,7 +82,7 @@ public class FileAddCommand extends VoidCommand
 		{
 			System.out.println("DEBUG: the user has added file " + chooser.getSelectedFile().getAbsolutePath()); // FIXME: debugging purpose only
 			String id = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
-			if (!Heap.getAllBSMap().isEmpty())
+			if (!Heap.hasEmptyAllBSMap())
 			{
 				Iterator it = Heap.getAllBSMap().keySet().iterator();
 				while (it.hasNext())

@@ -420,7 +420,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 			if(rce.CLOSE)
 			{
 				String id = (String)(rce.getSource());
-				if (Heap.getAllBSMap().isEmpty())
+				if (Heap.hasEmptyAllBSMap())
 				{
 					aModel.setEnabled("menuFileSave", false);
 					aModel.setEnabled("menuFileSaveAll", false);
