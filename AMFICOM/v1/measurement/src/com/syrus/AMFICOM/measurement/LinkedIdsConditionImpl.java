@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.27 2005/03/24 15:48:13 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.28 2005/03/30 10:37:21 arseniy Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/03/24 15:48:13 $
+ * @version $Revision: 1.28 $, $Date: 2005/03/30 10:37:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -125,8 +125,16 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
 				Action action = (Action) object;
-				Identifier parentActionId = action.getParentAction().getId();
-				condition = super.conditionTest(parentActionId);
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+						Identifier parentActionId = action.getParentAction().getId();
+						condition = super.conditionTest(parentActionId);
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
 				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 				Measurement measurement = (Measurement) object;
