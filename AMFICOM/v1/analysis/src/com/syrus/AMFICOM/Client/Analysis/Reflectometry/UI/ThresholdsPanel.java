@@ -245,19 +245,19 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			if(isToPaintAllThresholds())
 				paint_all_thresholds(g);
 			else
-				paint_threshold(g);
+				paint_one_threshold(g);
 		}
 	}
 
-	// nEvent < 0 => paint all thresholds
+	/**
+	 * Paints one threshold or all thresholds.
+	 * @param g graphics
+	 * @param nEvent event number >= 0 to paint or -1 to paintall thresholds. 
+	 */
 	private void paintThresholdsEx(Graphics g, int nEvent)
 	{
 		if (et_mtm == null)
 			return;
-
-		SimpleReflectogramEvent sre = nEvent >= 0
-				? et_mtm.getSimpleEvent(nEvent)
-				: null;
 
 		for (int key = 0; key < 4; key++)
 		{
@@ -267,27 +267,24 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			// XXX: нет draw_joint_of_two_model_curves
 			ModelTrace thresholdMT = et_mtm.getThresholdMT(key);
 			// FIXME: debug code
-			if (sre != null)
+			SimpleReflectogramEvent sre = null;
+			if (nEvent >= 0)
 			{
 				sre = et_mtm.getEventRangeOnThresholdCurve(nEvent, key);
 				if (sre == null)
-					return;
+					continue;
 			}
-			drawModelCurve(g, thresholdMT, sre);
+			drawModelCurve(g, thresholdMT, sre, false);
 		}
 	}
 
-	private void paint_threshold(Graphics g)
+	private void paint_one_threshold(Graphics g)
 	{
-		paintThresholdsEx(g, c_event);
+		if (c_event >= 0)
+			paintThresholdsEx(g, c_event);
 	}
 	private void paint_all_thresholds(Graphics g)
 	{
-//		if (et_mtm == null)
-//			return;
-//		int nEvents = et_mtm.getNEvents();
-//		for (int i = 0; i < nEvents; i++)
-//			paintThresholdsEx(g, i);
 		paintThresholdsEx(g, -1);
 	}
 

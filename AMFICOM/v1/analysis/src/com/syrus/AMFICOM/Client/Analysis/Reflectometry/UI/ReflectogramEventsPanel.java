@@ -208,12 +208,14 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	 * May be used for drawing both model and threshold curve 
 	 * @param g graphics to plot
 	 * @param mt trace to plot
-	 * @param sre not null: range to plot coded as SimpleReflectogramEvent; null: plot whole trace 
+	 * @param sre not null: range to plot coded as SimpleReflectogramEvent; null: plot whole trace
+	 * @param avoidLastPoint true to draw [sre.begin .. sre.end-1]; false to draw [sre.begin .. sre.end].
+	 *  This parameter takes no effect if sre == null.
 	 */
-	protected void drawModelCurve(Graphics g, ModelTrace mt, SimpleReflectogramEvent sre)
+	protected void drawModelCurve(Graphics g, ModelTrace mt, SimpleReflectogramEvent sre, boolean avoidLastPoint)
 	{
 		int n1 = sre == null ? 0 : sre.getBegin();
-		int n2 = sre == null ? mt.getLength() - 1 : sre.getEnd();
+		int n2 = sre == null ? mt.getLength() - 1 : sre.getEnd() - (avoidLastPoint ? 1 : 0);
 		if ((n1 <= end) && (n2 >= start))
 		{
 		    int iFrom = Math.max(0, n1 - start);
@@ -242,7 +244,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		if (mtm == null)
 			return;
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MODELED));
-		drawModelCurve(g, mtm.getModelTrace(), null);
+		drawModelCurve(g, mtm.getModelTrace(), null, false);
 	}
 
 	protected void paint_reflectogram_events(Graphics g)
