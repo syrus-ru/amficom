@@ -1020,7 +1020,7 @@ static const char *an_canLeftLink = "canLeftLink";
 
 // ID = MF_ID_INVALID = 0: reserved
 
-static MF_MD funcs[] =
+MF_MD funcs[] =
 {
 	{
 		MF_ID_LIN,
