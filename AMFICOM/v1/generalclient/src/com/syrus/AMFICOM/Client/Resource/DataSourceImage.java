@@ -205,9 +205,8 @@ public class DataSourceImage
 		loadFromPool(type);
 
 		Boolean lc = (Boolean )loaded_catalog.get(type);
-		if(lc != null)
-			if(lc.equals(Boolean.TRUE))
-				return;
+		if(lc != null && lc.booleanValue())
+			return;
 		loaded_catalog.put(type, Boolean.FALSE);
 		
 		Hashtable hc = (Hashtable )catalog.get(type);
