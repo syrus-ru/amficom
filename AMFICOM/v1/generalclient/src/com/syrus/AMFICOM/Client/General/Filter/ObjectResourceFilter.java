@@ -123,15 +123,12 @@ public abstract class ObjectResourceFilter implements Filter
 	 * @param col source Collection, which will be filtrate
 	 */
 	public void filtrate(Collection col){
-		Collection _col = new LinkedList(col);
-		for(Iterator it=_col.iterator();it.hasNext();){
+		for(Iterator it=col.iterator();it.hasNext();){
 			ObjectResource or = (ObjectResource)it.next();
 			if (!this.logicScheme.passesAllConstraints(or)){
-				col.remove(or);				
+				it.remove();				
 			}
 		}	
-		_col.clear();
-		_col = null;
 	}
 	
 	/**
@@ -166,16 +163,13 @@ public abstract class ObjectResourceFilter implements Filter
 	 * @param map source Map, which will be filtrate
 	 */
 	public void filtrate(Map map){	
-		Map _map = new HashMap(map);
-		for(Iterator it=_map.keySet().iterator();it.hasNext();){
+		for(Iterator it=map.keySet().iterator();it.hasNext();){
 			Object key = it.next();
 			ObjectResource or = (ObjectResource)map.get(key);
 			if (!this.logicScheme.passesAllConstraints(or)){
-				map.remove(key);				
+				it.remove();				
 			}
 		}
-		_map.clear();
-		_map = null;
 	}
 	
 	/**
