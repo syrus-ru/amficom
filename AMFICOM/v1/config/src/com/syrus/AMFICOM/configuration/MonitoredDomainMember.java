@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredDomainMember.java,v 1.8 2005/02/11 07:49:43 bob Exp $
+ * $Id: MonitoredDomainMember.java,v 1.9 2005/03/03 21:30:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,23 +8,24 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Date;
+
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/11 07:49:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/03/03 21:30:43 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
 public abstract class MonitoredDomainMember extends DomainMember {
 	private static final long serialVersionUID = 7920469930983188858L;
 
-	List monitoredElementIds;
+	Collection monitoredElementIds;
 
 	protected MonitoredDomainMember(Identifier id) {
 		super(id);
@@ -51,18 +52,18 @@ public abstract class MonitoredDomainMember extends DomainMember {
 			  domainId);
 	}
 
-	protected synchronized void setMonitoredElementIds0(List monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds0(Collection monitoredElementIds) {
 		this.monitoredElementIds.clear();
 		if (monitoredElementIds != null)
 				this.monitoredElementIds.addAll(monitoredElementIds);
 	}
 
-	protected synchronized void setMonitoredElementIds(List monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds(Collection monitoredElementIds) {
 		this.setMonitoredElementIds0(monitoredElementIds);
 		super.changed = true;
 	}
 
-	public List getMonitoredElementIds() {
-		return Collections.unmodifiableList(this.monitoredElementIds);
+	public Collection getMonitoredElementIds() {
+		return Collections.unmodifiableCollection(this.monitoredElementIds);
 	}
 }

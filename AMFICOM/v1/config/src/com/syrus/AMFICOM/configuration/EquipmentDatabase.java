@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.76 2005/03/03 21:31:07 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.77 2005/03/03 21:35:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/03/03 21:31:07 $
+ * @version $Revision: 1.77 $, $Date: 2005/03/03 21:35:31 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -310,10 +310,10 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 				LINK_COLUMN_EQUIPMENT_ID,
 				LINK_COLUMN_MONITORED_ELEMENT_ID);
 		Equipment equipment;
-		List meIds;
+		Collection meIds;
 		for (Iterator it = equipments.iterator(); it.hasNext();) {
 			equipment = (Equipment) it.next();
-			meIds = (List) linkedEntityIdsMap.get(equipment.getId());
+			meIds = (Collection) linkedEntityIdsMap.get(equipment.getId());
 
 			equipment.setMonitoredElementIds0(meIds);
 		}

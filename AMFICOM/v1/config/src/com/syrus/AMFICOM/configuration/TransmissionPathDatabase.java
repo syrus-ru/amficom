@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.52 2005/02/28 14:12:14 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.53 2005/03/03 21:35:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/02/28 14:12:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.53 $, $Date: 2005/03/03 21:35:31 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -166,10 +166,10 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		Map linkedEntityIdsMap = this.retrieveLinkedEntityIds(transmissionPaths, ObjectEntities.TRANSPATHMELINK_ENTITY,
 			LINK_COLUMN_TRANSMISSION_PATH_ID, LINK_COLUMN_MONITORED_ELEMENT_ID);
 		TransmissionPath transmissionPath;
-		List meIds;
+		Collection meIds;
 		for (Iterator it = transmissionPaths.iterator(); it.hasNext();) {
 			transmissionPath = (TransmissionPath) it.next();
-			meIds = (List) linkedEntityIdsMap.get(transmissionPath.getId());
+			meIds = (Collection) linkedEntityIdsMap.get(transmissionPath.getId());
 
 			transmissionPath.setMonitoredElementIds0(meIds);
 		}
