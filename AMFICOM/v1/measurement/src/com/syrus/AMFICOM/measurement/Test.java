@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.22 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: Test.java,v 1.23 2004/07/28 07:22:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.KIS;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.23 $, $Date: 2004/07/28 07:22:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -121,6 +121,7 @@ public class Test extends StorableObject {
 	}
 
 	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
+	protected static final int		RETRIEVE_LAST_MEASUREMENT	= 2;
 	protected static final int		UPDATE_MODIFIED			= 2;
 	protected static final int		UPDATE_STATUS			= 1;
 
@@ -395,6 +396,15 @@ public class Test extends StorableObject {
 	public List retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)	throws RetrieveObjectException, ObjectNotFoundException {
 		try {
 			return (List)this.testDatabase.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
+		}
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e.getMessage(), e);
+		}
+	}
+	
+	public Measurement retrieveLastMeasurement() throws RetrieveObjectException, ObjectNotFoundException {
+		try {
+			return (Measurement)this.testDatabase.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);

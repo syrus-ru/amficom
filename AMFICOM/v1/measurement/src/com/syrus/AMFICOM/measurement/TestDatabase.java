@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.11 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.12 2004/07/28 07:22:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.12 $, $Date: 2004/07/28 07:22:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -203,6 +203,8 @@ public class TestDatabase extends StorableObjectDatabase {
 		switch (retrieveKind) {
 			case Test.RETRIEVE_MEASUREMENTS:
 				return this.retrieveMeasurementsOrderByStartTime(test, (MeasurementStatus)arg);
+			case Test.RETRIEVE_LAST_MEASUREMENT:
+				return this.retrieveLastMeasurement(test);
 			default:
 				return null;
 		}
@@ -261,6 +263,51 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 		}
 		return arraylist;
+	}
+	
+	private Measurement retrieveLastMeasurement(Test test) throws RetrieveObjectException, ObjectNotFoundException {
+		String testIdStr = test.getId().toSQLString();
+		String sql = SQL_SELECT
+			+ COLUMN_ID
+			+ SQL_FROM
+			+ ObjectEntities.MEASUREMENT_ENTITY
+			+ SQL_WHERE
+			+ MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
+			+ SQL_AND + MeasurementDatabase.COLUMN_START_TIME + EQUALS
+			+ OPEN_BRACKET
+				+ SQL_SELECT
+				+ SQL_FUNCTION_MAX + OPEN_BRACKET + MeasurementDatabase.COLUMN_START_TIME + CLOSE_BRACKET
+				+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+				+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
+			+ CLOSE_BRACKET;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TestDatabase.retrieveLastMeasurement | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			if (resultSet.next())
+				return new Measurement(new Identifier(resultSet.getString(COLUMN_ID)));
+			else
+				throw new ObjectNotFoundException("No last measurement for test: " + testIdStr);
+		}
+		catch (SQLException sqle) {
+			String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test " + testIdStr;
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
