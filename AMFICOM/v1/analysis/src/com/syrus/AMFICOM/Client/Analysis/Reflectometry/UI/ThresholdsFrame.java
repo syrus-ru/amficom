@@ -138,8 +138,8 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
+	    // MODELED_TRACE_KEY check removed by saa: XXX: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 
 		if (id.equals(Heap.PRIMARY_TRACE_KEY))
-	    //if (id.equals(Heap.PRIMARY_TRACE_KEY)) removed by saa: XXX: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 
 		{
 			p = new ThresholdsPanel(panel, dispatcher, y, deltaX);
 			ModelTraceManager mtm = Heap.getMTMByKey(id);
