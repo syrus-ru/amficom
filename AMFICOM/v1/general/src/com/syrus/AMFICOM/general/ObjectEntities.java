@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.18 2004/08/11 15:24:32 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.19 2004/08/18 11:28:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,14 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/11 15:24:32 $
+ * @version $Revision: 1.19 $, $Date: 2004/08/18 11:28:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
 public abstract class ObjectEntities {
 	/*	Object Types	*/
-	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteriscticType";
+	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType";
 	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
 	public static final String PORTTYPE_ENTITY = "PortType";
 	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType";
@@ -32,7 +32,7 @@ public abstract class ObjectEntities {
 	/*	Administration	*/
 
 	/*	Configuration	*/
-	public static final String CHARACTERISTIC_ENTITY = "Characterisctic";
+	public static final String CHARACTERISTIC_ENTITY = "Characteristic";
 	public static final String PERMATTR_ENTITY = "PermissionAttributes";
 	public static final String USER_ENTITY = "Users";
 	public static final String DOMAIN_ENTITY = "Domain";
