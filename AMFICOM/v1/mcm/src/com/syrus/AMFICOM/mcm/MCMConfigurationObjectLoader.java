@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.26 2005/04/04 14:11:22 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.27 2005/04/05 10:43:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,7 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.CableLinkType;
@@ -25,8 +23,10 @@ import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -50,7 +50,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -61,7 +60,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/04/04 14:11:22 $
+ * @version $Revision: 1.27 $, $Date: 2005/04/05 10:43:30 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -557,34 +556,18 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 	public Set loadKISs(Set ids) throws RetrieveObjectException {
 		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
-
-		Identifier id;
-		Set loadIds = new HashSet(ids);
-		for (Iterator it = objects.iterator(); it.hasNext();) {
-			id = ((StorableObject) it.next()).getId();
-			loadIds.remove(id);
-		}
-
-		if (loadIds.isEmpty())
-			return objects;
-
+		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = null;
 		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
+			loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		}
 		catch (IllegalDataException ide) {
 			// Never
 			Log.errorException(ide);
 		}
+		if (loadIdsT.length == 0)
+			return objects;
+
 		Set loadedObjects = new HashSet();
 
 		try {
@@ -623,6 +606,110 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		return objects;
 	}
 
+	public Set loadMeasurementPorts(Set ids) throws RetrieveObjectException {
+		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
+		Set objects = super.retrieveFromDatabase(database, ids);
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = super.createLoadIdsTransferable(ids, objects);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		if (loadIdsT.length == 0)
+			return objects;
+
+		Set loadedObjects = new HashSet();
+
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MeasurementPort_Transferable[] transferables = mServerRef.transmitMeasurementPorts(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new MeasurementPort(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPorts | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
+
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+
+		return objects;
+	}
+
+	public Set loadMonitoredElements(Set ids) throws RetrieveObjectException {
+		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
+		Set objects = super.retrieveFromDatabase(database, ids);
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = super.createLoadIdsTransferable(ids, objects);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		if (loadIdsT.length == 0)
+			return objects;
+
+		Set loadedObjects = new HashSet();
+
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			MonitoredElement_Transferable[] transferables = mServerRef.transmitMonitoredElements(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new MonitoredElement(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadMonitoredElements | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
+
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+
+		return objects;
+	}
+
 
 
 
@@ -630,26 +717,10 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "MCMConfigurationObjectLoader.loadKISsButIds | Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
-
-		Identifier id;
-		Collection loadButIds = new HashSet(ids);
-		for (Iterator it = objects.iterator(); it.hasNext();) {
-			id = ((StorableObject) it.next()).getId();
-			loadButIds.add(id);
-		}
-
+		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 		Identifier_Transferable[] loadButIdsT = null;
 		try {
-			loadButIdsT = Identifier.createTransferables(loadButIds);
+			loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		}
 		catch (IllegalDataException ide) {
 			// Never
@@ -791,10 +862,6 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadMeasurementPorts(Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
-	}
-
 	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
@@ -805,10 +872,6 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
-	}
-
-	public Set loadMonitoredElements(Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
 	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
