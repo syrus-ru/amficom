@@ -21,12 +21,17 @@ void EPold2EPnew(EventParams* epo, EventP &epn, double delta_x)
 		//epn.mf.init(MF_ID_LIN);
 		break;
 
-	case EventParams_SPLICE:
-		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LOSS; // FIXME
+	case EventParams_LOSS:
+		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LOSS;
 		epn.mf.init(MF_ID_BREAKL);
 		break;
 
-	case EventParams_CONNECTOR:
+	case EventParams_GAIN:
+		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_GAIN;
+		epn.mf.init(MF_ID_BREAKL);
+		break;
+
+	case EventParams_REFLECTIVE:
 		epn.gentype = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_REFLECTIVE;
 		epn.mf.init(MF_ID_BREAKL);
 		break;
@@ -59,11 +64,15 @@ void EPold2SE(EventParams* epo, SimpleEvent &epn)
 		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LINEAR;
 		break;
 
-	case EventParams_SPLICE:
-		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LOSS; // FIXME
+	case EventParams_LOSS:
+		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_LOSS;
 		break;
 
-	case EventParams_CONNECTOR:
+	case EventParams_GAIN:
+		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_GAIN;
+		break;
+
+	case EventParams_REFLECTIVE:
 		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_REFLECTIVE;
 		break;
 

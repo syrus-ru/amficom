@@ -128,7 +128,18 @@ void InitialAnalysis::performAnalysis()
     performTransformationOnly(data, 0, lastNonZeroPoint, f_wlet, wlet_width, wn);
 	calcAverageFactor(f_wlet, wlet_width, wn);
 	centerWletImageOnly(f_wlet, wlet_width, 0, lastNonZeroPoint, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
-    { // ищём все всплески вейвлет-образа
+
+#if 0
+	{
+		FILE *f = fopen ("noise2.tmp", "w");assert(f);
+		int i;
+		for (i = 0; i < lastNonZeroPoint; i++)
+			fprintf(f,"%d %g %g %g\n", i, data[i], f_wlet[i], noise[i]);
+		fclose(f);
+	}
+#endif
+    
+	{ // ищём все всплески вейвлет-образа
       ArrList splashes; // создаем пустой ArrList
       findAllWletSplashes(f_wlet, splashes); // заполняем массив splashes объектами
       findEventsBySplashes(splashes); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
@@ -158,8 +169,7 @@ void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
             //&& ( sp1.f_extr>mc+noise[sp1.x_extr] && -sp2.f_extr>mc+noise[sp2.x_extr] ) // если из двух сосоедних всплесков хотя бы один превышает порог коннектора, то это коннектор
           )
         {   EventParams *ep = new EventParams;
-            ep->n = events->getLength();
-            ep->type = EventParams::CONNECTOR;
+            ep->type = EventParams::REFLECTIVE;
             ep->begin = sp1.begin_nonoise;
             ep->end = sp2.end_nonoise;
             events->add(ep);
@@ -167,8 +177,8 @@ void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
         }
         else if( fabs(sp1.f_extr) > mw+noise[sp1.x_extr] )
         {	EventParams *ep = new EventParams;
-	        ep->n = events->getLength();
-            ep->type = EventParams::SPLICE;
+			if(sp1.f_extr>0) 	{ ep->type = EventParams::GAIN;}
+	        else 				{ ep->type = EventParams::LOSS;}
             ep->begin = sp1.begin_nonoise-1;
             ep->end = sp1.end_nonoise+1;
             events->add(ep);
@@ -321,7 +331,7 @@ void InitialAnalysis::correctAllConnectorsFronts(double *arr)
 return;
 	for(int n=0; n<events->getLength(); n++)
     {   EventParams* ev1 = (EventParams*)(*events)[n];
-        if( ev1->type != EventParams::CONNECTOR )// пока не дойдём до коннектора
+        if( ev1->type != EventParams::REFLECTIVE )// пока не дойдём до коннектора
     continue;
     	// ищем точку на фронте коннектора такую, что всё слква от неё - меьше, а справа - не меньше
         int i_begin = ev1->begin, i_end = ev1->end;
@@ -373,7 +383,7 @@ return;
 void InitialAnalysis::correctAllSpliceCoords()
 {	for(int n=1; n<events->getLength(); n++)
     {	EventParams* ev = (EventParams*)(*events)[n];
-    	if(ev->type == EventParams::SPLICE)
+    	if(ev->type == EventParams::GAIN || ev->type == EventParams::LOSS)
         {	correctSpliceCoords(n);
         }
     }
@@ -385,7 +395,7 @@ void InitialAnalysis::correctSpliceCoords(int n)
 {   EventParams* ev_lp = (EventParams*)(*events)[n];
     EventParams& ev = *ev_lp;
 	// если это не сварка, то выход
-    if(ev.type != EventParams::SPLICE)
+    if( !( ev.type == EventParams::GAIN || ev.type == EventParams::LOSS) )
 return;
 	//prf_b("correctSpliceCoords: enter");
 	const double noise_factor = 0;  // 0 , если мы не учитываем шум в пределах событий
@@ -401,14 +411,18 @@ return;
     int coln=-1,a=0xFFFFFF,b=0x0000FF,c=0x00FF00,d=0xFF7733,color[]={a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d,a,b,c,d};
 #endif
     // анализируем при разныех масштабах
-	for(int step=1; step<=nscale; step++)
+	for(int step=0; step<=nscale; step++)
     {   width = (int )(wlet_width/pow(factor,step));// чтобы не накапливать ошибки
     	if(width<=1)
     break;
 		//prf_b("correctSpliceCoords: getWLetNorma");
 	    wn = getWLetNorma(width);
 		//prf_b("correctSpliceCoords: performTransformationAndCenter");
-	   	performTransformationAndCenter(data, ev.begin, ev.end+1, f_wlet, width, wn);
+#ifdef debug_lines
+		performTransformationAndCenter(data, ev.begin, ev.end+1, f_wlet, width, wn);
+#else
+		performTransformationAndCenter(data, w_l, w_r+1, f_wlet, width, wn);
+#endif
 		//prf_b("correctSpliceCoords: processing");
 		// считаем добавку к шуму ( степень немонотонности от пересечения порога до максимума )
 		// сначала ищём положение экстремума при данном масштабе
@@ -449,7 +463,7 @@ return;
         }
 #ifdef debug_lines //рисуем вейвлет образы для данного масштаба
 		{ coln++;
-          for(int i=ev.begin-1; i<=ev.end+1; i++)
+          for(int i=ev.begin; i<ev.end; i++)
           { double x1=i, y1=f_wlet[i], x2=i+1, y2=f_wlet[i+1];
             xs[cou]=x1*delta_x; ys[cou]=y1; xe[cou]=x2*delta_x; ye[cou]=y2;
             col[cou]=color[coln];
@@ -487,7 +501,7 @@ return;
 	for(int n1=0, n2, n3; n1<events->getLength(); n1++)
 	{   // пока не дойдём до коннектора
         EventParams* ev1 = (EventParams*)(*events)[n1];
-    	if(ev1->type != EventParams::CONNECTOR)
+    	if(ev1->type != EventParams::REFLECTIVE)
     continue;
         else {cou1++;}
 		if(cou1 == 1) // первый "коннектор" это мёртвая зона
@@ -502,7 +516,7 @@ return;
         if(n3 >= events->getLength())
     break;
 	    EventParams* ev3 = (EventParams*)(*events)[n3];
-        if(ev3->type != EventParams::CONNECTOR)
+        if(ev3->type != EventParams::REFLECTIVE)
     continue;
     	if(ev2->end - ev2->begin < szc)
         { ev1->end = ev3->begin;
@@ -514,7 +528,7 @@ return;
 void InitialAnalysis::deleteAllEventsAfterLastConnector()
 {   for(int i=events->getLength()-1; i>0; i--)
 	{   EventParams* ev = (EventParams*)(*events)[i];
-    	if( ev->type != EventParams::CONNECTOR)
+    	if( ev->type != EventParams::REFLECTIVE)
         {   events->slowRemove(i);
         }
         else
