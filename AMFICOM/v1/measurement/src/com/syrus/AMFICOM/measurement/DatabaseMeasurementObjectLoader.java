@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.10 2004/10/04 10:22:17 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.11 2004/10/04 13:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.List;
 
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/10/04 10:22:17 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/04 13:17:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -359,7 +360,12 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		try {
 			if (condition instanceof MeasurementSetupCondition){
 				MeasurementSetupCondition measurementSetupCondition = (MeasurementSetupCondition)condition;
-				database.retrieveButIdsByMeasurementType(ids, measurementSetupCondition.getMeasurementType());
+				MeasurementType measurementType = measurementSetupCondition.getMeasurementType();				
+				MonitoredElement monitoredElement = measurementSetupCondition.getMonitoredElement();
+				if (measurementType!=null)
+					list = database.retrieveButIdsByMeasurementType(ids, measurementType);
+				else if (monitoredElement != null)
+					list = database.retrieveButIdsByMonitoredElement(ids, monitoredElement);			
 			}
 			else{
 				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetupsButIds | Unknown condition class: " + condition.getClass().getName());

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.27 2004/10/04 10:42:22 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.28 2004/10/04 13:17:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/10/04 10:42:22 $
+ * @version $Revision: 1.28 $, $Date: 2004/10/04 13:17:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -582,4 +583,22 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		
 		return list;
 	}
+	
+	public List retrieveButIdsByMonitoredElement(List ids, MonitoredElement monitoredElement) throws RetrieveObjectException {
+		List list = null;
+		
+		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
+					+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + ObjectEntities.MSMELINK_ENTITY
+					+ SQL_WHERE + LINK_COLUMN_ME_ID + EQUALS + monitoredElement.getId().toSQLString()
+				+ CLOSE_BRACKET;		
+		
+		try {
+			list = retrieveButIds(ids, condition);
+		}  catch (IllegalDataException ide) {			
+			Log.debugMessage("MeasurementSetupDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+		}
+		
+		return list;
+	}
+
 }
