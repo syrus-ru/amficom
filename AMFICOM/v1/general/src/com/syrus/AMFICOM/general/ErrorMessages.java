@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.9 2005/03/28 12:01:58 bass Exp $
+ * $Id: ErrorMessages.java,v 1.10 2005/03/29 15:57:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/28 12:01:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/29 15:57:50 $
  * @module general_v1
  */
 public interface ErrorMessages {
@@ -33,4 +33,5 @@ public interface ErrorMessages {
 	String OBJECT_BADLY_INITIALIZED = "object badly initialized"; //$NON-NLS-1$
 	String NO_COMMON_PARENT = "objects do not have a common parent"; //$NON-NLS-1$
 	String NATURE_INVALID = "nature invalid"; //$NON-NLS-1$
+	String CHILDREN_ALIEN = "object(s) alien with respect to this parent"; //$NON-NLS-1$
 }
