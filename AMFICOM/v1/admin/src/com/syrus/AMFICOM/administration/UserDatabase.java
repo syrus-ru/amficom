@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.6 2005/02/03 14:30:14 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.7 2005/02/07 08:58:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,27 +13,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.StringFieldCondition;
-import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/03 14:30:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/02/07 08:58:17 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -171,42 +167,6 @@ public class UserDatabase extends StorableObjectDatabase {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 		return this.retrieveByIdsOneQuery(ids, condition);
-	}
-	
-	private List retrieveByLogin(String login) throws RetrieveObjectException, IllegalDataException{
-		String condition = UserWrapper.COLUMN_LOGIN + EQUALS 
-						+ APOSTOPHE + login + APOSTOPHE;
-		
-		return this.retrieveByIdsOneQuery(null, condition);
-	}
-	
-	private List retrieveByName(String name) throws RetrieveObjectException, IllegalDataException{
-		String condition = StorableObjectWrapper.COLUMN_NAME + EQUALS 
-						+ APOSTOPHE + name + APOSTOPHE;
-		
-		return this.retrieveByIdsOneQuery(null, condition);
-	}
-	
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
-		 List list = null;
-		 if (condition instanceof StringFieldCondition) {
-		 	StringFieldCondition stringFieldCondition = (StringFieldCondition) condition;
-		 	switch(stringFieldCondition.getSort().value()){
-		 		case StringFieldSort._STRINGSORT_BASE:
-		 		case StringFieldSort._STRINGSORT_USERLOGIN:
-		 			list = retrieveByLogin(stringFieldCondition.getString());
-		 			break;
-		 		case StringFieldSort._STRINGSORT_USERNAME:
-		 			list = retrieveByName(stringFieldCondition.getString());
-		 			break;
-		 	}
-		 }
-		 else {
-		 	Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
-		 	list = this.retrieveButIds(ids);
-		 }
-		 return list;
 	}
 
 }

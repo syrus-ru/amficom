@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.7 2005/02/03 14:30:14 arseniy Exp $
+ * $Id: DomainDatabase.java,v 1.8 2005/02/07 08:58:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,21 +15,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.CharacteristicDatabase;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.Log;
@@ -38,8 +37,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/03 14:30:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/02/07 08:58:17 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -238,19 +237,6 @@ public class DomainDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	private List retrieveButIdsByName(List ids, String name) throws RetrieveObjectException {
-		List list = null;
-
-		String condition = StorableObjectWrapper.COLUMN_NAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(name, SIZE_NAME_COLUMN) + APOSTOPHE;
-
-		try {
-				list = retrieveButIds(ids, condition);
-		}  catch (IllegalDataException ide) {           
-				Log.debugMessage("DomainDatabase.retrieveButIdsByName | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-
-		return list;
-	}
 
 	public List retrieveByCondition(List ids, StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
@@ -263,14 +249,6 @@ public class DomainDatabase extends StorableObjectDatabase {
 											   + ObjectEntities.codeToString(entityCode) + "', expected '"
 											   + ObjectEntities.codeToString(ObjectEntities.DOMAIN_ENTITY_CODE) + '\'');
 			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-		} else if (condition instanceof StringFieldCondition) {
-			StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
-			short entityCode = stringFieldCondition.getEntityCode().shortValue();
-			if ( entityCode != ObjectEntities.DOMAIN_ENTITY_CODE)
-				throw new IllegalDataException("DomainDatabase.retrieveByCondition | illegal entity code '" 
-											   + ObjectEntities.codeToString(entityCode) + "', expected '"
-											   + ObjectEntities.codeToString(ObjectEntities.DOMAIN_ENTITY_CODE) + '\'');
-			list = this.retrieveButIdsByName(ids, stringFieldCondition.getString());
 		} else {
 			Log.errorMessage("DomainDatabase.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
 			list = this.retrieveButIds(ids);
