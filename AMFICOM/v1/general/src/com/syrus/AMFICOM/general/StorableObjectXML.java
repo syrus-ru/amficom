@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.12 2005/02/10 12:50:35 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.13 2005/02/10 12:53:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.12 $, $Date: 2005/02/10 12:50:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/02/10 12:53:58 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class StorableObjectXML {
@@ -80,19 +80,19 @@ public class StorableObjectXML {
 		storableObject.setAttributes((Date) objectMap.get(StorableObjectWrapper.COLUMN_CREATED), (Date) objectMap
 				.get(StorableObjectWrapper.COLUMN_MODIFIED), (Identifier) objectMap
 				.get(StorableObjectWrapper.COLUMN_CREATOR_ID), (Identifier) objectMap
-				.get(StorableObjectWrapper.COLUMN_MODIFIER_ID));
+				.get(StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				((Long)objectMap.get(StorableObjectWrapper.COLUMN_VERSION)).longValue());
 		objectMap.remove(CLASSNAME);
 		objectMap.remove(StorableObjectWrapper.COLUMN_ID);
 		objectMap.remove(StorableObjectWrapper.COLUMN_CREATED);
 		objectMap.remove(StorableObjectWrapper.COLUMN_MODIFIED);
 		objectMap.remove(StorableObjectWrapper.COLUMN_CREATOR_ID);
 		objectMap.remove(StorableObjectWrapper.COLUMN_MODIFIER_ID);
+		objectMap.remove(StorableObjectWrapper.COLUMN_VERSION);
 		for (Iterator it = objectMap.keySet().iterator(); it.hasNext();) {
 			String key = (String) it.next();
 			wrapper.setValue(storableObject, key, objectMap.get(key));
 		}
-//Версия должна восстанавливаться вместе с прочими полями сущности
-//		storableObject.resetVersion();
 		return storableObject;
 	}
 
@@ -149,6 +149,7 @@ public class StorableObjectXML {
 		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIED, storableObject.getModified());
 		objectMap.put(StorableObjectWrapper.COLUMN_CREATOR_ID, storableObject.getCreatorId());
 		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIER_ID, storableObject.getModifierId());
+		objectMap.put(StorableObjectWrapper.COLUMN_VERSION, new Long(storableObject.getVersion()));
 		this.driver.putObjectMap(storableObject.getId(), objectMap);
 	}
 
