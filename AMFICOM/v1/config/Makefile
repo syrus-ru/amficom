@@ -107,6 +107,7 @@ cleancorba:
 	$(RM) -f .corba
 
 #### Install ####
+.PHONY:	install
 install: $(LIBNAME)
 	$(CP) $(LIBNAME) $(LIBDIR)
 

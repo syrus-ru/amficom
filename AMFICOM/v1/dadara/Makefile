@@ -85,6 +85,7 @@ cleanhead:
 	$(RM) .head
 
 #### Install ####
+.PHONY:	install
 install: $(LIBNAME)
 	$(CP) $(LIBNAME) $(LIBDIR)
 

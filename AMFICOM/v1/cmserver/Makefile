@@ -68,6 +68,11 @@ cleancorba:
 	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/cmserver/corba
 	rm -f .corba
 
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME) $(LIBNAME_INTERFACE)
+	$(CP) $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
+
 #### Archive ####
 .PHONY:	arch
 arch:
@@ -76,6 +81,3 @@ arch:
 		$(IDLDIR)/cmserver.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/*.java
 
-
-install: $(LIBNAME) $(LIBNAME_INTERFACE)
-	$(CP) $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)

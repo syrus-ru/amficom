@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.22 2004/12/21 17:01:02 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.23 2004/12/21 17:36:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,6 @@ import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
-//import com.syrus.AMFICOM.cmserver.corba.CMServer;
-//import com.syrus.AMFICOM.cmserver.corba.CMServerPOATie;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.general.CORBAServer;
@@ -38,7 +36,7 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/21 17:01:02 $
+ * @version $Revision: 1.23 $, $Date: 2004/12/21 17:36:54 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -149,38 +147,6 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 		catch (Exception e) {
 			Log.errorException(e);
 		}
-
-//		try {
-//			ORB orb = JavaSoftORBUtil.getInstance().getORB();
-//
-//			POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-//			rootPOA.the_POAManager().activate();
-//			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
-//
-//			final String hostName = InetAddress.getLocalHost().getCanonicalHostName().replaceAll("\\.", "_");
-//
-//			NameComponent childPath[] = rootNamingCtx.to_name(hostName);
-//
-//			NamingContextExt childNamingCtx;
-//			try {
-//				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx.bind_new_context(childPath));
-//			}
-//			catch (AlreadyBound ab) {
-//				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx.resolve_str(hostName));
-//			}
-//
-//			CMServer server = (new CMServerPOATie(new CMServerImpl(), rootPOA))._this(orb);
-//			NameComponent serverPath[] = rootNamingCtx.to_name("CMServer");
-//			childNamingCtx.rebind(serverPath, server);
-//			corbaServer = new CORBAServer();
-//
-//		}
-//		catch (Exception e) {
-//			DatabaseConnection.closeConnection();
-//			Log.errorException(e);
-//			System.err.println(e);
-//			System.exit(-1);
-//		}
 	}
 	
 	private static void activateMCMReferences() {
