@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.58 2004/12/27 13:40:18 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.59 2004/12/27 14:33:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2004/12/27 13:40:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.59 $, $Date: 2004/12/27 14:33:36 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -98,7 +98,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	public static void init(MeasurementObjectLoader mObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new MeasurementStorableObjectPool();
-		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(size));
+		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 
 		mObjectLoader = mObjectLoader1;
 
