@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceDatabaseContext.java,v 1.2 2005/01/17 17:15:55 max Exp $
+ * $Id: ResourceDatabaseContext.java,v 1.3 2005/02/08 10:24:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,15 @@ package com.syrus.AMFICOM.resource;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/01/17 17:15:55 $
+ * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 10:24:54 $
  * @module resource_v1
  */
 public final class ResourceDatabaseContext {
 	private static StorableObjectDatabase imageResourceDatabase;
 
 	private ResourceDatabaseContext() {
+		// singleton
 	}
 
 	public static void init(final StorableObjectDatabase newImageResourceDatabase) {
