@@ -73,7 +73,8 @@ AMFICOM_v1	&idl_v1\
 		&dbscheme_v1 \
 		&mapinfo_v1 \
 		&spatialfx_v1 \
-		&arserver_v1
+		&arserver_v1 \
+		&scripts_v1
 
 #M	idl_v1		Client-side AMFICOM CORBA object & interface
 idl_v1		AMFICOM/v1/idl
@@ -167,6 +168,8 @@ spatialfx_v1	AMFICOM/v1/spatialfx
 dadara		AMFICOM/v1/dadara
 #M	arserver_v1	Administration and Resource Server
 arserver_v1	AMFICOM/v1/arserver
+#M	scripts_v1	Installation and Configuration Scripts for Solaris and Oracle
+scripts_v1	AMFICOM/v1/scripts
 
 akp		hw/akp
 trc		hw/trc
