@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.2 2004/12/08 16:43:01 bass Exp $
+ * $Id: StringFieldCondition.java,v 1.3 2005/01/13 13:02:04 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import java.util.*;
  * <li>It must override {@link #isConditionTrue(Object)}.</li></ul> 
  *
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/12/08 16:43:01 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/13 13:02:04 $
  * @module general_v1
  */
 public class StringFieldCondition implements StorableObjectCondition {
@@ -249,5 +249,34 @@ public class StringFieldCondition implements StorableObjectCondition {
 	
 	public final void setString(final String string) {
 		this.delegate.string = string;
+	}
+
+	public final String toString() {
+		/*
+		 * If delegate is not null, this is an instance of top-level
+		 * StringFieldCondition from module general (with own fields
+		 * empty), otherwise this is an implementation from the
+		 * corresponding module.
+		 */
+		return getClass().getName() + '[' + toString(this.delegate == null ? this : this.delegate) + ']';
+	}
+
+	private String sortToString(final StringFieldCondition stringFieldCondition) {
+		switch (stringFieldCondition.sort) {
+			case StringFieldSort._STRINGSORT_BASE:
+				return "StringFieldSort.STRINGSORT_BASE"; //$NON-NLS-1$
+			case StringFieldSort._STRINGSORT_INTEGER:
+				return "StringFieldSort.STRINGSORT_INTEGER"; //$NON-NLS-1$
+			case StringFieldSort._STRINGSORT_USERLOGIN:
+				return "StringFieldSort.STRINGSORT_USERLOGIN"; //$NON-NLS-1$
+			case StringFieldSort._STRINGSORT_USERNAME:
+				return "StringFieldSort.STRINGSORT_USERNAME"; //$NON-NLS-1$
+			default:
+				return String.valueOf(stringFieldCondition.sort);
+		}
+	}
+
+	private String toString(final StringFieldCondition stringFieldCondition) {
+		return "string = \"" + stringFieldCondition.string + "\"; entityCode = \"" + ObjectEntities.codeToString(stringFieldCondition.entityCode) + "\"; sort = \"" + sortToString(stringFieldCondition) + '"'; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }
