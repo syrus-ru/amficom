@@ -128,6 +128,8 @@ agent_v1	AMFICOM/v1/agent
 mcm_v1		AMFICOM/v1/mcm
 #M	mserver_v1	Measurement Server
 mserver_v1	AMFICOM/v1/mserver
+#M	cmserver_v1	Client Measurement Server
+cmserver_v1	AMFICOM/v1/cmserver
 
 database_v1	AMFICOM/v1/database
 
