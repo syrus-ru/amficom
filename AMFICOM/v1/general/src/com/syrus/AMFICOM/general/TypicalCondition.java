@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.9 2005/02/11 16:09:06 bob Exp $
+ * $Id: TypicalCondition.java,v 1.10 2005/02/11 16:11:01 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,7 +119,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.9 $, $Date: 2005/02/11 16:09:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/11 16:11:01 $
  * @author $Author: bob $
  * @module general_v1
  */
