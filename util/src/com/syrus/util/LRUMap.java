@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.9 2004/10/03 12:43:37 bob Exp $
+ * $Id: LRUMap.java,v 1.10 2004/11/10 15:52:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/03 12:43:37 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/10 15:52:36 $
  * @author $Author: bob $
  * @module util
  */
@@ -129,7 +129,7 @@ public class LRUMap implements Serializable {
 		}
 	}
 	
-    private class Itr implements Iterator {
+    protected class Itr implements Iterator {
     	/**
     	 * Index of element to be returned by subsequent call to next.
     	 */
