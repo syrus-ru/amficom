@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.39 2005/03/15 16:20:20 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.40 2005/03/22 16:11:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
@@ -35,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/03/15 16:20:20 $
+ * @version $Revision: 1.40 $, $Date: 2005/03/22 16:11:15 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -258,15 +256,24 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	private final void updateMyTestStatus(TestStatus status) {
-		TestStatusVerifier tsv = new TestStatusVerifier(this.test.getId(), status);
-		tsv.start();
-
+		this.test.setStatus(status);
 		try {
-			this.test.updateStatus(status, MeasurementControlModule.iAm.getUserId());
+			MeasurementStorableObjectPool.putStorableObject(this.test);
+			MeasurementStorableObjectPool.flush(true);
 		}
-		catch (UpdateObjectException uoe) {
-			Log.errorException(uoe);
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
 		}
+
+//		TestStatusVerifier tsv = new TestStatusVerifier(this.test.getId(), status);
+//		tsv.start();
+//
+//		try {
+//			this.test.updateStatus(status, MeasurementControlModule.iAm.getUserId());
+//		}
+//		catch (UpdateObjectException uoe) {
+//			Log.errorException(uoe);
+//		}
 	}
 
 	protected void complete() {
@@ -291,49 +298,49 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 
-	private class TestStatusVerifier extends SleepButWorkThread {
-		private Identifier testId;
-		private TestStatus testStatus;
-		private boolean running;
-
-		TestStatusVerifier (Identifier testId, TestStatus testStatus) {
-			super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
-						ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
-
-			this.testId = testId;
-			this.testStatus = testStatus;
-
-			this.running = true;
-		}
-
-		public void run() {
-			while (this.running) {
-				try {
-					Log.debugMessage("Updating on server status of test '" + this.testId + "' to " + this.testStatus.value(), Log.DEBUGLEVEL07);
-					if (MeasurementControlModule.mServerRef != null) {
-						MeasurementControlModule.mServerRef.updateTestStatus((Identifier_Transferable)this.testId.getTransferable(), this.testStatus);
-						super.clearFalls();
-						this.shutdown();
-					}
-					else {
-						MeasurementControlModule.resetMServerConnection();
-						super.sleepCauseOfFall();
-					}
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.resetMServerConnection();
-					super.sleepCauseOfFall();
-				}
-			}	//while
-		}
-
-		protected void processFall() {
-			this.shutdown();
-		}
-
-		private void shutdown() {
-			this.running = false;
-		}
-	}
+//	private class TestStatusVerifier extends SleepButWorkThread {
+//		private Identifier testId;
+//		private TestStatus testStatus;
+//		private boolean running;
+//
+//		TestStatusVerifier (Identifier testId, TestStatus testStatus) {
+//			super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
+//						ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
+//
+//			this.testId = testId;
+//			this.testStatus = testStatus;
+//
+//			this.running = true;
+//		}
+//
+//		public void run() {
+//			while (this.running) {
+//				try {
+//					Log.debugMessage("Updating on server status of test '" + this.testId + "' to " + this.testStatus.value(), Log.DEBUGLEVEL07);
+//					if (MeasurementControlModule.mServerRef != null) {
+//						MeasurementControlModule.mServerRef.updateTestStatus((Identifier_Transferable)this.testId.getTransferable(), this.testStatus);
+//						super.clearFalls();
+//						this.shutdown();
+//					}
+//					else {
+//						MeasurementControlModule.resetMServerConnection();
+//						super.sleepCauseOfFall();
+//					}
+//				}
+//				catch (org.omg.CORBA.SystemException se) {
+//					Log.errorException(se);
+//					MeasurementControlModule.resetMServerConnection();
+//					super.sleepCauseOfFall();
+//				}
+//			}	//while
+//		}
+//
+//		protected void processFall() {
+//			this.shutdown();
+//		}
+//
+//		private void shutdown() {
+//			this.running = false;
+//		}
+//	}
 }
