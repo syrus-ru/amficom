@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.16 2004/08/11 10:45:29 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.17 2004/08/11 12:37:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/11 10:45:29 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/11 12:37:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -38,8 +38,6 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	// table :: Equipment
 	 // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
-    // domain_id Identifier,
-    public static final String COLUMN_DOMAIN_ID     = "domain_id";
     // image_id Identifier,
     public static final String COLUMN_IMAGE_ID      = "image_id";
     // kis_id Identifier,
@@ -135,7 +133,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 								  /**
 									* @todo when change DB Identifier model ,change getString() to getLong()
 									*/
-								  new Identifier(resultSet.getString(COLUMN_DOMAIN_ID)),
+								  new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
 								  
 								  (equipmentTypeIdCode != null)?((EquipmentType)ConfigurationObjectTypePool.getObjectType(new Identifier(equipmentTypeIdCode))):null,
 								  (name != null)?name:"",
@@ -291,7 +289,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIED + COMMA
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_DOMAIN_ID + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_TYPE_ID + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION + COMMA

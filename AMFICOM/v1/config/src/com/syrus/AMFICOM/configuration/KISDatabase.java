@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.11 2004/08/09 14:17:55 bob Exp $
+ * $Id: KISDatabase.java,v 1.12 2004/08/11 12:37:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/09 14:17:55 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/11 12:37:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -34,8 +34,6 @@ public class KISDatabase extends StorableObjectDatabase {
 	// table :: kis
     // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
-    // domain_id Identifier,
-    public static final String COLUMN_DOMAIN_ID     = "domain_id";
     // name VARCHAR2(64) NOT NULL,
     public static final String COLUMN_NAME  = "name";	
 	// mcm_id Identifier NOT NULL
@@ -190,7 +188,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIED + COMMA
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_DOMAIN_ID + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_MCM_ID

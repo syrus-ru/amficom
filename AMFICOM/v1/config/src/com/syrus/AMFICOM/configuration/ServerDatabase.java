@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.10 2004/08/10 19:01:09 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.11 2004/08/11 12:37:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/10 19:01:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2004/08/11 12:37:30 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -34,8 +34,6 @@ public class ServerDatabase extends StorableObjectDatabase {
 
 	 // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
-    // domain_id VARCHAR2(32),
-    public static final String COLUMN_DOMAIN_ID     = "domain_id";
     // name VARCHAR2(64) NOT NULL,
     public static final String COLUMN_NAME  = "name";
     // type_id VARCHAR2(32) NOT NULL,

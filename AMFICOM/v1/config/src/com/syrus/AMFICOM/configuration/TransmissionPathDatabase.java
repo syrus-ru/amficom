@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.5 2004/08/11 06:50:44 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.6 2004/08/11 12:37:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/11 06:50:44 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/11 12:37:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -38,8 +38,6 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
     // table :: TransmissionPath
     // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
-    // domain_id Identifier,
-    public static final String COLUMN_DOMAIN_ID     = "domain_id";
     // name VARCHAR2(64) NOT NULL,
     public static final String COLUMN_NAME  = "name";
 
@@ -112,7 +110,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 								  /**
 									* @todo when change DB Identifier model ,change getString() to getLong()
 									*/
-								  new Identifier(resultSet.getString(COLUMN_DOMAIN_ID)),								  
+								  new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),								  
 
 								  (name != null)?name:"",
 								  (description != null)?description:"");
@@ -243,7 +241,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIED + COMMA
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_DOMAIN_ID + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION
 			+ CLOSE_BRACKET
