@@ -68,3 +68,5 @@ general_v1	general
 admin	admin
 #M	map	Mapping module
 map	map
+#M	config	Configuring module
+config	config
