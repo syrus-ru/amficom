@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
+import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 public class MCMDatabase extends StorableObjectDatabase {
 
@@ -96,6 +97,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			} catch (SQLException sqle1) {
+				// nothing yet.
 			}
 		}
 	}
@@ -105,8 +107,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT 
 				+ COLUMN_ID
 				+ SQL_FROM 
-				+ ObjectEntities.EQUIPMENT + SQL_WHERE 
-				+ LINK_COLUMN_SORT + EQUALS + EquipmentDatabase.COLUMN_SORT_KIS
+				+ ObjectEntities.EQUIPMENT_ENTITY + SQL_WHERE 
+				+ LINK_COLUMN_SORT + EQUALS + EquipmentSort._EQUIPMENT_SORT_KIS
 				+ SQL_AND
 				+ LINK_COLUMN_MCM_ID + EQUALS + mIdStr;
 		Statement statement = null;
@@ -132,6 +134,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			} catch (SQLException sqle1) {
+//				 nothing yet.
 			}
 		}
 	}
@@ -231,6 +234,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			} catch (SQLException sqle1) {
+//				 nothing yet.
 			}
 		}
 	}
