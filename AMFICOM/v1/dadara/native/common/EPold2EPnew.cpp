@@ -3,7 +3,7 @@
 
 #include "EPold2EPnew.h"
 #include "com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h"
-#include "../Common/assert.h"
+#include "../Common/assert1.h"
 
 void EPold2EPnew(EventParams* epo, EventP &epn, double delta_x)
 {

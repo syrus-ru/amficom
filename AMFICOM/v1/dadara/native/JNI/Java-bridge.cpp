@@ -3,7 +3,7 @@
 
 #include "Java-bridge.h"
 
-#include "../common/assert.h"
+#include "../common/assert1.h"
 
 #include "../common/ModelF.h"
 #include "../common/EventP.h"
