@@ -1,5 +1,5 @@
 /*
- * $Id: MCMWrapper.java,v 1.3 2005/02/08 15:13:00 bob Exp $
+ * $Id: MCMWrapper.java,v 1.4 2005/03/05 21:36:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/08 15:13:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/03/05 21:36:23 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class MCMWrapper implements StorableObjectWrapper {
@@ -38,7 +38,7 @@ public class MCMWrapper implements StorableObjectWrapper {
 	private MCMWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_USER_ID, COLUMN_SERVER_ID,
-				COLUMN_HOSTNAME, COLUMN_CHARACTERISTICS, COLUMN_KIS_IDS };
+				COLUMN_HOSTNAME, COLUMN_CHARACTERISTICS };
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -73,8 +73,6 @@ public class MCMWrapper implements StorableObjectWrapper {
 				return mcm.getHostName();
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return mcm.getCharacteristics();
-			if (key.equals(COLUMN_KIS_IDS))
-				return mcm.getKISIds();
 		}
 		return null;
 	}
@@ -98,8 +96,6 @@ public class MCMWrapper implements StorableObjectWrapper {
 				mcm.setHostName((String) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
 				mcm.setCharacteristics((List) value);
-			else if (key.equals(COLUMN_KIS_IDS))
-				mcm.setKISIds((List) value);
 
 		}
 	}
@@ -118,7 +114,8 @@ public class MCMWrapper implements StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(COLUMN_KIS_IDS)) { return List.class; }
+		if (key.equals(COLUMN_CHARACTERISTICS))
+			return List.class;
 		return String.class;
 	}
 

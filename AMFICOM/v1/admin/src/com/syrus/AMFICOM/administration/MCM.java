@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.9 2005/03/04 13:30:41 bass Exp $
+ * $Id: MCM.java,v 1.10 2005/03/05 21:36:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,11 +30,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/04 13:30:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/03/05 21:36:23 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -47,16 +48,13 @@ public class MCM extends DomainMember implements Characterizable {
 	private Identifier userId;
 	private Identifier serverId;
 
-	private Collection kisIds;
-
-	private List characteristics;
+	private Collection characteristics;
 
 	private StorableObjectDatabase mcmDatabase;
 
 	public MCM(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.kisIds = new ArrayList();
 		this.characteristics = new ArrayList();
 		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
 		try {
@@ -77,10 +75,6 @@ public class MCM extends DomainMember implements Characterizable {
 		this.serverId = new Identifier(mt.server_id);
 
 		try {
-			this.kisIds = new ArrayList(mt.kis_ids.length);
-			for (int i = 0; i < mt.kis_ids.length; i++)
-				this.kisIds.add(new Identifier(mt.kis_ids[i]));
-
 			this.characteristics = new ArrayList(mt.characteristic_ids.length);
 			for (int i = 0; i < mt.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(mt.characteristic_ids[i]), true));
@@ -116,32 +110,14 @@ public class MCM extends DomainMember implements Characterizable {
 
 		this.characteristics = new ArrayList();
 
-		this.kisIds = new ArrayList();
-
 		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
 	}
-//
-//	public void insert() throws CreateObjectException {
-//		try {
-//			if (this.mcmDatabase != null)
-//				this.mcmDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-//		}
-//		catch (ApplicationException ae) {
-//			throw new CreateObjectException(ae.getMessage(), ae);
-//		}
-//	}
 
 	public Object getTransferable() {
 		int i = 0;
-
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Characteristic)it.next()).getId().getTransferable();
-
-		i = 0;
-		Identifier_Transferable[] kisIdsT = new Identifier_Transferable[this.kisIds.size()];
-		for (Iterator it = this.kisIds.iterator(); it.hasNext();)
-			kisIdsT[i++] = (Identifier_Transferable)((Identifier)it.next()).getTransferable();
 
 		return new MCM_Transferable(super.getHeaderTransferable(),
 									(Identifier_Transferable)super.domainId.getTransferable(),
@@ -150,8 +126,7 @@ public class MCM extends DomainMember implements Characterizable {
 									new String(this.hostname),
 									(Identifier_Transferable)this.userId.getTransferable(),
 									(Identifier_Transferable)this.serverId.getTransferable(),
-									charIds,
-									kisIdsT);
+									charIds);
 	}
 
 	public String getName() {
@@ -166,7 +141,7 @@ public class MCM extends DomainMember implements Characterizable {
 		return this.hostname;
 	}
 
-	public void setDescription(String description){
+	public void setDescription(String description) {
 		this.description = description;
 		super.changed = true;
 	}
@@ -193,24 +168,20 @@ public class MCM extends DomainMember implements Characterizable {
 		}
 	}
 
-	public List getCharacteristics() {
-		return Collections.unmodifiableList(this.characteristics);
+	public Collection getCharacteristics() {
+		return Collections.unmodifiableCollection(this.characteristics);
 	}
 
-	protected void setCharacteristics0(final List characteristics) {
+	public void setCharacteristics0(final Collection characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final List characteristics) {
+	public void setCharacteristics(final Collection characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}
-
-	public Collection getKISIds() {
-		return Collections.unmodifiableCollection(this.kisIds);
-	}	
 
 	public static MCM createInstance(Identifier creatorId,
 									 Identifier domainId,
@@ -264,21 +235,9 @@ public class MCM extends DomainMember implements Characterizable {
 		this.userId = userId;
 		this.serverId = serverId;
 	}
-
-	protected synchronized void setKISIds0(Collection kisIds) {
-		this.kisIds.clear();
-		if (kisIds != null)
-			this.kisIds.addAll(kisIds);		
-	}
-
-	public void setKISIds(List kisIds) {
-		this.setKISIds0(kisIds);
-		super.changed = true;
-	}
 	
 	public List getDependencies() {
 		List dependencies = new LinkedList();
-		dependencies.addAll(this.kisIds);
 		dependencies.add(this.userId);
 		dependencies.add(this.serverId);
 		return dependencies;
@@ -302,5 +261,9 @@ public class MCM extends DomainMember implements Characterizable {
 	public void setUserId(Identifier userId) {
 		this.userId = userId;
 		super.changed = true;
+	}
+
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_MCM;
 	}
 }
