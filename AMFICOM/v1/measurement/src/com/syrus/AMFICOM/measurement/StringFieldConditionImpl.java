@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldConditionImpl.java,v 1.1 2005/01/24 10:47:40 bob Exp $
+ * $Id: StringFieldConditionImpl.java,v 1.2 2005/01/24 10:58:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,11 @@
 package com.syrus.AMFICOM.measurement;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/24 10:47:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/24 10:58:06 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -28,16 +27,7 @@ final class StringFieldConditionImpl extends com.syrus.AMFICOM.general.StringFie
 	
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;		
-		if (object instanceof ParameterType) {
-			ParameterType parameterType = (ParameterType)object;
-			switch(this.sort){
-				case StringFieldSort._STRINGSORT_BASE:
-					if (parameterType.getCodename().equals(this.string)) {
-						condition = true;
-					}
-					break;
-			}
-		} else if (object instanceof MeasurementType) {
+		if (object instanceof MeasurementType) {
 			MeasurementType measurementType = (MeasurementType)object;
 			switch(this.sort){
 				case StringFieldSort._STRINGSORT_BASE:
