@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.29 2004/11/17 09:33:55 max Exp $
+ * $Id: general.idl,v 1.30 2004/11/18 14:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,32 +8,46 @@
  *
  * Defines that can be specified at compile time:
  *
- * SCHEME_COMMON (off by default) -- will turn on compilation of valuetyped
- *  basic types, such as Identifier and StorableObject;
+ * GENERAL_COMMON (off by default) -- will turn on compilation of valuetyped
+ *  basic types, such as Identifier and StorableObject (as opposed to
+ *  Identifier_Transferable and StorableObject_Transferable, respectively);
  *
- * NUMERIC_IDENTIFIER (off by default, implies SCHEME_COMMON) -- Identifier will
- *  hold primitive major and minor fields rather than a string;
+ * NUMERIC_IDENTIFIER (off by default, implies GENERAL_COMMON) -- Identifier
+ *  will hold primitive major and minor fields rather than a string;
  *
- * REDUNDANT_DEPS (off by default, implies SCHEME_COMMON) -- StorableObject will
- *  depend on User.
+ * REDUNDANT_DEPS (off by default, implies GENERAL_COMMON) -- StorableObject
+ *  will depend on User.
  */
 
 #ifndef GENERAL_IDL
 #define GENERAL_IDL
 
+#ifdef SCHEME_COMMON
+
+#define GENERAL_BASE
+#define GENERAL_COMMON
+
+#else // SCHEME_COMMON
+
 #ifdef NUMERIC_IDENTIFIER
-#define SCHEME_COMMON
+#define GENERAL_COMMON
+#else // NUMERIC_IDENTIFIER
+#ifdef REDUNDANT_DEPS
+#define GENERAL_COMMON
+#else // REDUNDANT_DEPS
+#ifndef GENERAL_COMMON
+#define GENERAL_BASE
+#endif // GENERAL_COMMON
+#endif // REDUNDANT_DEPS
 #endif // NUMERIC_IDENTIFIER
 
-#ifdef REDUNDANT_DEPS
-#define SCHEME_COMMON
-#endif // REDUNDANT_DEPS
+#endif // SCHEME_COMMON
 
 module com {
 module syrus {
 module AMFICOM {
 
-#ifdef SCHEME_COMMON
+#ifdef GENERAL_COMMON
 #ifdef REDUNDANT_DEPS
 
 module configuration {
@@ -43,12 +57,12 @@ module corba {
 };
 
 #endif // REDUNDANT_DEPS
-#endif // SCHEME_COMMON
+#endif // GENERAL_COMMON
 
 module general {
 module corba {
 
-#ifndef SCHEME_COMMON
+#ifdef GENERAL_BASE
 
 	struct Identifier_Transferable {
 		wstring identifier_string;
@@ -67,7 +81,8 @@ module corba {
 	
 	typedef sequence <StorableObject_Transferable> StorableObjectSeq_Transferable;
 
-#else // SCHEME_COMMON
+#endif // GENERAL_BASE
+#ifdef GENERAL_COMMON
 
 	valuetype Identifier {
 #ifdef NUMERIC_IDENTIFIER
@@ -117,8 +132,8 @@ module corba {
 		readonly attribute long long version;
 	};
 
-#endif // SCHEME_COMMON
-#ifndef SCHEME_COMMON
+#endif // GENERAL_COMMON
+#ifdef GENERAL_BASE
 
 	enum DataType {
 		DATA_TYPE_INTEGER,
@@ -180,12 +195,12 @@ module corba {
 		IdentifierSeq_Transferable getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
 	};
 
-#endif // SCHEME_COMMON
+#endif // GENERAL_BASE
 
 };
 };
 
-#ifndef SCHEME_COMMON
+#ifdef GENERAL_BASE
 
 module CORBA {
 module General {
@@ -310,7 +325,8 @@ module General {
 };
 };
 
-#else // SCHEME_COMMON
+#endif // GENERAL_BASE
+#ifdef GENERAL_COMMON
 #ifdef REDUNDANT_DEPS
 
 module configuration {
@@ -337,7 +353,7 @@ module corba {
 };
 
 #endif // REDUNDANT_DEPS
-#endif // SCHEME_COMMON
+#endif // GENERAL_COMMON
 
 };
 };
