@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.18 2004/10/25 14:56:20 bob Exp $
+ * $Id: KISReport.java,v 1.19 2004/10/26 11:10:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,11 +24,12 @@ import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/10/25 14:56:20 $
+ * @version $Revision: 1.19 $, $Date: 2004/10/26 11:10:42 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -69,11 +70,12 @@ public class KISReport implements ParameterTypeCodenames {
 																				 this.parameterValues[i]);
 			}
 
-			return measurement.createResult(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE, 10),
+			Result result = measurement.createResult(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE, 10),
 																			MeasurementControlModule.iAm.getUserId(),
 																			null,
-																			AlarmLevel.ALARM_LEVEL_NONE,
-																			parameters);
+																			AlarmLevel.ALARM_LEVEL_NONE,							
+																			parameters);			
+			return Result.getInstance((Result_Transferable)result.getTransferable());
 		}
 		catch (IllegalObjectEntityException ioee) {
 			throw new MeasurementException(ioee.getMessage(), MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, ioee);
