@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.14 2004/12/22 08:12:48 bass Exp $
+ * $Id: scheme-vt.idl,v 1.15 2004/12/22 09:44:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,6 +54,7 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
+							configuration::Characterizable,
 							configuration::ComSyrusAmficomConfigurationAbstractSchemePort {
 						enum DirectionType {
 							_IN,
@@ -132,7 +133,8 @@ module com {
 							general::corba::StorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
-							scheme::Characterizable {
+							scheme::Characterizable,
+							configuration::Characterizable {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::IdentifierSeq schemePortIds;
@@ -153,7 +155,8 @@ module com {
 							general::corba::StorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
-							scheme::Characterizable {
+							scheme::Characterizable,
+							configuration::Characterizable {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::Identifier schemeId;
@@ -244,6 +247,7 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
+							configuration::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemeCableThread {
 						private wstring thisName;
 						private wstring thisDescription;
@@ -412,6 +416,7 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
+							configuration::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemePath {
 						private wstring thisName;
 						private wstring thisDescription;
@@ -441,6 +446,7 @@ module com {
 							general::corba::Describable,
 							resource::SchemeCellContainer,
 							scheme::Characterizable,
+							configuration::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemeProtoElement {
 						private wstring thisName;
 						private wstring thisDescription;
