@@ -415,7 +415,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			{
 				String id = (String)(rce.getSource());
 				analysisFrame.removeGraph(id);
-				if (Pool.getHash("bellcorestructure") == null)
+				if (Pool.getMap("bellcorestructure") == null)
 				{
 					aModel.setEnabled("menuFileSave", false);
 					aModel.setEnabled("menuFileSaveAll", false);
@@ -445,18 +445,18 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				}
 				else
 				{
-					Enumeration enum = Pool.getHash("bellcorestructure").keys();
-					String nextId = (String)enum.nextElement();
+					Iterator it = Pool.getMap("bellcorestructure").keySet().iterator();
+					String nextId = (String)it.next();
 					if (nextId.equals("primarytrace"))
 					{
-						if (!enum.hasMoreElements())
+						if (!it.hasNext())
 						{
 							aModel.setEnabled("menuFileRemoveCompare", false);
 							aModel.setEnabled("menuTraceRemoveCompare", false);
 							aModel.fireModelChanged("");
 						}
 						else
-							nextId = (String)enum.nextElement();
+							nextId = (String)it.next();
 					}
 					internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
 				}
@@ -750,7 +750,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			if(cce.DOMAIN_SELECTED)
 			{
 				setDomainSelected();
-				String name = Pool.getName("domain", aContext.getSessionInterface().getDomainId());
+				String name = ((ObjectResource)Pool.get("domain", aContext.getSessionInterface().getDomainId())).getName();
 				if(name != null)
 					statusBar.setText("domain", name);
 			}
@@ -866,7 +866,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		String domain_id = aContext.getSessionInterface().getDomainId();
 		if (domain_id != null && !domain_id.equals(""))
 		{
-			String name = Pool.getName("domain", domain_id);
+			String name = ((ObjectResource)Pool.get("domain", domain_id)).getName();
 			if(name != null)
 				statusBar.setText("domain", name);
 			setDomainSelected();
