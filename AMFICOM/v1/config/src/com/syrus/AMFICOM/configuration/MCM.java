@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.23 2004/11/12 10:25:32 bob Exp $
+ * $Id: MCM.java,v 1.24 2004/11/15 10:19:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/11/12 10:25:32 $
+ * @version $Revision: 1.24 $, $Date: 2004/11/15 10:19:40 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -35,7 +35,7 @@ public class MCM extends DomainMember implements Characterized {
 	private Identifier userId;
 	private Identifier serverId;
 
-	private List kisIds;
+	private List kiss;
 
 	private List characteristics;
 
@@ -61,11 +61,11 @@ public class MCM extends DomainMember implements Characterized {
 		this.userId = new Identifier(mt.user_id);
 		this.serverId = new Identifier(mt.server_id);
 
-		this.kisIds = new ArrayList(mt.kis_ids.length);
-		for (int i = 0; i < mt.kis_ids.length; i++)
-			this.kisIds.add(new Identifier(mt.kis_ids[i]));
-		
 		try {
+			this.kiss = new ArrayList(mt.kis_ids.length);
+			for (int i = 0; i < mt.kis_ids.length; i++)
+				this.kiss.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(mt.kis_ids[i]), true));			
+
 			this.characteristics = new ArrayList(mt.characteristic_ids.length);
 			for (int i = 0; i < mt.characteristic_ids.length; i++)
 				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(mt.characteristic_ids[i]), true));
@@ -76,26 +76,26 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	protected MCM(Identifier id,
-							Identifier creatorId,
-							Identifier domainId,
-							String name,
-							String description,
-							Identifier userId,
-							Identifier serverId) {
+				  Identifier creatorId,
+				  Identifier domainId,
+				  String name,
+				  String description,
+				  Identifier userId,
+				  Identifier serverId) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					domainId);
+			  new Date(System.currentTimeMillis()),
+			  new Date(System.currentTimeMillis()),
+			  creatorId,
+			  creatorId,
+			  domainId);
 		this.name = name;
 		this.description = description;
 		this.userId = userId;
 		this.serverId = serverId;
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new LinkedList();
 
-		this.kisIds = new ArrayList();
+		this.kiss = new LinkedList();
 		
 		this.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
 	}
@@ -123,9 +123,11 @@ public class MCM extends DomainMember implements Characterized {
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 		
 		i = 0;
-		Identifier_Transferable[] kisIdsT = new Identifier_Transferable[this.kisIds.size()];
-		for (Iterator iterator = this.kisIds.iterator(); iterator.hasNext();)
-			kisIdsT[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		Identifier_Transferable[] kisIdsT = new Identifier_Transferable[this.kiss.size()];
+		for (Iterator iterator = this.kiss.iterator(); iterator.hasNext();){
+			KIS kis = (KIS)iterator.next();
+			kisIdsT[i++] = (Identifier_Transferable)kis.getId().getTransferable();
+		}
 
 		return new MCM_Transferable(super.getHeaderTransferable(),
 									(Identifier_Transferable)super.domainId.getTransferable(),
@@ -162,53 +164,53 @@ public class MCM extends DomainMember implements Characterized {
 		this.characteristics = characteristics;
 	}
 
-	public List getKISIds() {
-		return this.kisIds;
+	public List getKISs() {
+		return this.kiss;
 	}
 
 	public static MCM createInstance(Identifier id,
-																	 Identifier creatorId,
-																	 Identifier domainId,
-																	 String name,
-																	 String description,
-																	 Identifier userId,
-																	 Identifier serverId) {
+									 Identifier creatorId,
+									 Identifier domainId,
+									 String name,
+									 String description,
+									 Identifier userId,
+									 Identifier serverId) {
 		return new MCM(id,
-									 creatorId,
-									 domainId,
-									 name,
-									 description,
-									 userId,
-									 serverId);
+					   creatorId,
+					   domainId,
+					   name,
+					   description,
+					   userId,
+					   serverId);
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						Identifier domainId,
-																						String name,
-																						String description,
-																						Identifier userId,
-																						Identifier serverId) {
-		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												domainId);
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  Identifier domainId,
+											  String name,
+											  String description,
+											  Identifier userId,
+											  Identifier serverId) {
+		super.setAttributes(created,												
+							modified,
+							creatorId,
+							modifierId,
+							domainId);
 		this.name = name;
 		this.description = description;
 		this.userId = userId;
 		this.serverId = serverId;		
 	}
 
-	protected synchronized void setKISIds(List kisIds) {
-		this.kisIds = kisIds;
+	protected synchronized void setKISs(List kiss) {
+		this.kiss = kiss;
 	}
 	
 	public List getDependencies() {
 		List dependencies = new LinkedList();
-		dependencies.addAll(this.kisIds);
+		dependencies.addAll(this.kiss);
 		dependencies.add(this.userId);
 		dependencies.add(this.serverId);
 		dependencies.addAll(this.characteristics);

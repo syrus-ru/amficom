@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.26 2004/11/10 15:23:51 bob Exp $
+ * $Id: MCMDatabase.java,v 1.27 2004/11/15 10:19:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,9 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import java.util.List;
+
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -38,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/15 10:19:40 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -172,7 +175,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	}
 		
 	private void retrieveKISIds(MCM mcm) throws RetrieveObjectException {
-		List kisIds = new ArrayList();
+		List kiss = new ArrayList();
 		String mcmIdStr = mcm.getId().toSQLString();
 		String sql = SQL_SELECT 
 			+ COLUMN_ID
@@ -185,12 +188,18 @@ public class MCMDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())				
-				kisIds.add(new Identifier(resultSet.getString(COLUMN_ID)));
+			while (resultSet.next())
+					kiss.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
 		}
 		catch (SQLException sqle) {
 			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
+		} catch (DatabaseException e) {
+			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
+			throw new RetrieveObjectException(mesg, e);
+		} catch (CommunicationException e) {
+			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
+			throw new RetrieveObjectException(mesg, e);
 		}
 		finally {
 			try {
@@ -207,7 +216,7 @@ public class MCMDatabase extends StorableObjectDatabase {
                 DatabaseConnection.closeConnection(connection);
             }
 		}
-		mcm.setKISIds(kisIds);
+		mcm.setKISs(kiss);
 	}
     
     private void retrieveKISIdsByOneQuery(List mcms) throws RetrieveObjectException {
@@ -245,7 +254,7 @@ public class MCMDatabase extends StorableObjectDatabase {
             statement = connection.createStatement();
             Log.debugMessage("MCMDatabase.retrieveKISIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
             resultSet = statement.executeQuery(sql.toString());
-            Map kisIdMap = new HashMap();
+            Map kisMap = new HashMap();
             while (resultSet.next()) {
                 MCM mcm = null;
                 String mcmId = resultSet.getString(KISDatabase.COLUMN_MCM_ID);
@@ -260,26 +269,36 @@ public class MCMDatabase extends StorableObjectDatabase {
                 if (mcm == null){
                     String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot found correspond result for '" + mcmId +"'" ;
                     throw new RetrieveObjectException(mesg);
-                }
-                    
+                }                    
                 
-                /**
-                 * @todo when change DB Identifier model ,change getString() to
-                 *       getLong()
-                 */
-                Identifier kisId = new Identifier(resultSet.getString(COLUMN_ID));
-                List kisIds = (List)kisIdMap.get(mcm);
-                if (kisIds == null){
-                    kisIds = new LinkedList();
-                    kisIdMap.put(mcm, kisIds);
-                }               
-                kisIds.add(kisId);              
+                                
+                Identifier kisId = null;
+				try {
+					/**
+	                 * @todo when change DB Identifier model ,change getString() to
+	                 *       getLong()
+	                 */
+					kisId = new Identifier(resultSet.getString(COLUMN_ID));
+					KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(kisId, true);
+					List kiss = (List)kisMap.get(mcm);
+	                if (kiss == null){
+	                    kiss = new LinkedList();
+	                    kisMap.put(mcm, kiss);
+	                }               
+	                kiss.add(kis);
+				} catch (DatabaseException e) {
+					 String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot retrieve kis " + ((kisId == null) ? "null" : kisId.getIdentifierString()) + " for result -- " + e.getMessage();
+			         throw new RetrieveObjectException(mesg, e);
+				} catch (CommunicationException e) {
+					 String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot retrieve kis " + ((kisId == null) ? "null" : kisId.getIdentifierString()) + " for result -- " + e.getMessage();
+			         throw new RetrieveObjectException(mesg, e);
+				}				              
             }
             
             for (Iterator iter = mcms.iterator(); iter.hasNext();) {
                 MCM mcm = (MCM) iter.next();
-                List kisIds = (List)kisIdMap.get(mcm);
-                mcm.setKISIds(kisIds);
+                List kiss = (List)kisMap.get(mcm);
+                mcm.setKISs(kiss);
             }
             
         } catch (SQLException sqle) {
