@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.7 2005/02/14 13:09:40 arseniy Exp $
+ * $Id: Event.java,v 1.8 2005/02/25 12:14:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/14 13:09:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/02/25 12:14:47 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -126,15 +126,15 @@ public class Event extends StorableObject implements TypedObject {
 	 * @param type
 	 * @param description
 	 * @param parameters
-	 * @param eventSources
+	 * @param eventSourceIds
 	 * @return new instance
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 */
 	public static Event createInstance(Identifier creatorId,
-													EventType type,
-													String description,
-													EventParameter[] parameters,
-													List eventSourceIds) throws CreateObjectException {
+		EventType type,
+		String description,
+		EventParameter[] parameters,
+		List eventSourceIds) throws CreateObjectException {
 		if (creatorId == null || type == null || description == null || parameters == null || eventSourceIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
