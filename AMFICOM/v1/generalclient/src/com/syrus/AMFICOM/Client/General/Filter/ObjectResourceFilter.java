@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -121,14 +122,16 @@ public abstract class ObjectResourceFilter implements Filter
 	 * Filtrate input Collection
 	 * @param col source Collection, which will be filtrate
 	 */
-	public void filtrate(Collection col){		
-		for(Iterator it=col.iterator();it.hasNext();){
+	public void filtrate(Collection col){
+		Collection _col = new LinkedList(col);
+		for(Iterator it=_col.iterator();it.hasNext();){
 			ObjectResource or = (ObjectResource)it.next();
 			if (!this.logicScheme.passesAllConstraints(or)){
-				col.remove(or);
-				it=col.iterator();
+				col.remove(or);				
 			}
-		}		
+		}	
+		_col.clear();
+		_col = null;
 	}
 	
 	/**
@@ -162,15 +165,17 @@ public abstract class ObjectResourceFilter implements Filter
 	 * Filtrate input Map
 	 * @param map source Map, which will be filtrate
 	 */
-	public void filtrate(Map map){		
-		for(Iterator it=map.keySet().iterator();it.hasNext();){
+	public void filtrate(Map map){	
+		Map _map = new HashMap(map);
+		for(Iterator it=_map.keySet().iterator();it.hasNext();){
 			Object key = it.next();
 			ObjectResource or = (ObjectResource)map.get(key);
 			if (!this.logicScheme.passesAllConstraints(or)){
-				map.remove(key);
-				it=map.keySet().iterator();
+				map.remove(key);				
 			}
 		}
+		_map.clear();
+		_map = null;
 	}
 	
 	/**
