@@ -1,5 +1,5 @@
 /*
- * $Id: ExportCommand.java,v 1.3 2005/01/14 09:33:42 krupenn Exp $
+ * $Id: ExportCommand.java,v 1.4 2005/02/07 16:10:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.util.Iterator;
  * Класс $RCSfile: ExportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/14 09:33:42 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/07 16:10:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -109,20 +109,28 @@ public abstract class ExportCommand extends VoidCommand
 		String fileName = null;
 		JFileChooser fileChooser = new JFileChooser();
 
-		ChoosableFileFilter filter =
+		ChoosableFileFilter esfFilter =
 			new ChoosableFileFilter(
 			"esf",
 			"Export Save File");
-		fileChooser.addChoosableFileFilter(filter);
-		fileChooser.setApproveButtonText("Ok");
+		fileChooser.addChoosableFileFilter(esfFilter);
+
+		ChoosableFileFilter xmlFilter =
+			new ChoosableFileFilter(
+			"xml",
+			"Export Save File");
+		fileChooser.addChoosableFileFilter(xmlFilter);
+
 		fileChooser.setCurrentDirectory(new File(path));
+		fileChooser.setDialogTitle("Выберите файл для записи");
+		fileChooser.setMultiSelectionEnabled(false);
 
 		int option = fileChooser.showSaveDialog(Environment.getActiveWindow());
 		if (option == JFileChooser.APPROVE_OPTION)
 		{
 			fileName = fileChooser.getSelectedFile().getPath();
-			if (!fileName.endsWith(".esf"))
-				fileName = fileName + ".esf";
+			if (!(fileName.endsWith(".xml") || fileName.endsWith(".esf")))
+				fileName = fileName + ".xml";
 		}
 
 		if (fileName == null)

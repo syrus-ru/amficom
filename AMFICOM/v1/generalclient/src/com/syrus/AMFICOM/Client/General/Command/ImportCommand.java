@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.6 2005/01/24 16:49:31 krupenn Exp $
+ * $Id: ImportCommand.java,v 1.7 2005/02/07 16:10:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import javax.swing.JOptionPane;
  * Класс $RCSfile: ImportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/24 16:49:31 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/07 16:10:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -234,19 +234,27 @@ public abstract class ImportCommand extends VoidCommand
 		String fileName = null;
 		JFileChooser fileChooser = new JFileChooser();
 
-		ChoosableFileFilter filter =
+		ChoosableFileFilter esfFilter =
 			new ChoosableFileFilter(
 			"esf",
 			"Export Save File");
-		fileChooser.addChoosableFileFilter(filter);
-		fileChooser.setApproveButtonText("Ok");
-		fileChooser.setCurrentDirectory(new File(path));
+		fileChooser.addChoosableFileFilter(esfFilter);
 
-		int option = fileChooser.showSaveDialog(Environment.getActiveWindow());
+		ChoosableFileFilter xmlFilter =
+			new ChoosableFileFilter(
+			"xml",
+			"Export Save File");
+		fileChooser.addChoosableFileFilter(xmlFilter);
+
+		fileChooser.setCurrentDirectory(new File(path));
+		fileChooser.setDialogTitle("Выберите файл для чтения");
+		fileChooser.setMultiSelectionEnabled(false);
+
+		int option = fileChooser.showOpenDialog(Environment.getActiveWindow());
 		if (option == JFileChooser.APPROVE_OPTION)
 		{
 			fileName = fileChooser.getSelectedFile().getPath();
-			if (!fileName.endsWith(".esf"))
+			if (!(fileName.endsWith(".xml") || fileName.endsWith(".esf")))
 				return null;
 		}
 
