@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCompoundCondition.java,v 1.1 2005/02/03 14:56:10 bob Exp $
+ * $Id: DatabaseCompoundCondition.java,v 1.2 2005/02/04 07:11:53 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/03 14:56:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/02/04 07:11:53 $
+ * @author $Author: max $
  * @module general_v1
  */
 public final class DatabaseCompoundCondition implements DatabaseStorableObjectCondition {
@@ -94,9 +94,8 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 				buffer.append(query2);
 				buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 				break;
-			case CompoundConditionSort._XOR:
-				// TODO XOR isn't implement yet
-				throw new IllegalDataException("DatabaseCompoundCondition.getSQLQuery | XOR isn't implement yet");
+			default:
+				throw new IllegalDataException("DatabaseCompoundCondition.getSQLQuery | Unsupported condition sort");
 
 		}
 		return buffer.toString();

@@ -1,5 +1,5 @@
 /*
-* $Id: CompoundCondition.java,v 1.9 2005/02/03 15:35:03 max Exp $
+* $Id: CompoundCondition.java,v 1.10 2005/02/04 07:11:53 max Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B), (A | B) , (A ^ B)
  * where A and B is conditions (they can be also compound condition too)
  *  
- * @version $Revision: 1.9 $, $Date: 2005/02/03 15:35:03 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/04 07:11:53 $
  * @author $Author: max $
  * @module general_v1
  */
@@ -48,8 +48,6 @@ public class CompoundCondition implements StorableObjectCondition {
 				return firstResult && secondResult;			
 			case CompoundConditionSort._OR:
 				return firstResult || secondResult;					
-			case CompoundConditionSort._XOR:
-				return (firstResult || secondResult) && !(firstResult && secondResult);			
 			default: 
 				throw new ApplicationException("CompoundCondition.doComapare Unsupported operation " + this.operation);
 		}
