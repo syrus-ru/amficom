@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalCondition.java,v 1.3 2005/02/07 09:58:20 bob Exp $
+ * $Id: DatabaseTypicalCondition.java,v 1.4 2005/02/08 11:47:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
  *	}
  * </pre> 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/02/07 09:58:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 11:47:07 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondition {
@@ -36,7 +36,7 @@ public class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondition {
 
 	private static final String					INVALID_UNDERLYING_IMPLEMENTATION	= "Invalid underlying implementation: ";	//$NON-NLS-1$
 
-	private static final String					DATABASE_TYPICAL_CONDITION_INIT			= "DatabaseLinkedIdsCondition.<init>() | "; //$NON-NLS-1$
+	private static final String					DATABASE_TYPICAL_CONDITION_INIT			= "DatabaseTypicalCondition.<init>() | "; //$NON-NLS-1$
 
 	public DatabaseTypicalCondition(TypicalCondition condition) {
 		super(condition);
