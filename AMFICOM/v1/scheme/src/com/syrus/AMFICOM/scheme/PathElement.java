@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.5 2005/03/25 18:12:11 bass Exp $
+ * $Id: PathElement.java,v 1.6 2005/03/25 18:18:39 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import java.util.*;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/25 18:12:11 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/25 18:18:39 $
  * @module scheme_v1
  */
 public final class PathElement extends AbstractCloneableStorableObject implements Describable {
@@ -78,13 +78,13 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	/**
-	 * @deprecated Use {@link #createInstance(Identifier, PathElementType)} instead.
+	 * @deprecated Use {@link #createInstance(Identifier, PathElementKind)} instead.
 	 */
 	public static PathElement createInstance() {
 		throw new UnsupportedOperationException();
 	}
 
-	public static PathElement createInstance(final Identifier creatorId, final PathElementKind pathElementType)
+	public static PathElement createInstance(final Identifier creatorId, final PathElementKind pathElementKind)
 			throws CreateObjectException {
 		assert creatorId != null;
 		try {
@@ -292,16 +292,6 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 	public void setParentScheme(final Scheme parentScheme) {
 		getAbstractSchemeElement().setParentScheme(parentScheme);
-	}
-
-	/**
-	 * @deprecated Switching <code>PathElementType</code> in runtime is
-	 *             not supported. Provide the desired value as a parameter
-	 *             for {@link #createInstance(Identifier, PathElementType)}
-	 *             at object creation time.
-	 */
-	public void setPathElementKind(final PathElementKind pathElementType) {
-		throw new UnsupportedOperationException();
 	}
 
 	public void setSchemeCableLink(final SchemeCableLink schemeCableLink) {
