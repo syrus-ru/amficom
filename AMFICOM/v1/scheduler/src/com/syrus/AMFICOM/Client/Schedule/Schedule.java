@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.Schedule;
 
-import javax.swing.UIManager;
-
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -24,12 +22,7 @@ public class Schedule {
 		}
 	}
 
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel(Environment.getLookAndFeel());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public static void main(String[] args) {		
 		new Schedule();
 	}
 }

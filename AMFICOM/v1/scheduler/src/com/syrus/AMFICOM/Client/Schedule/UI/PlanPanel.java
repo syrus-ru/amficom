@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -32,7 +33,6 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Test;
@@ -59,6 +59,7 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 					testLine.setPreferredSize(new Dimension(0, 25));
 					PlanPanel.this.testLines.put(value, testLine);
 					PlanPanel.this.updateTestLinesTimeRegion();
+					PlanPanel.this.addMouseListener(testLine.getTestLineMouseListener());
 					component = testLine;					
 				}
 			}
@@ -156,7 +157,7 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 				PlanPanel.this.startpos = e.getPoint();
 				PlanPanel.this.currpos = e.getPoint();
 				if (e.getButton() == MouseEvent.BUTTON1) {
-					setCursor(UIStorage.CROSS_HAIR_CURSOR);
+					setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 					PlanPanel.this.selectedByMouse = true;
 				}
 			}
@@ -164,7 +165,7 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 			public void mouseReleased(MouseEvent e) {
 				// if (e.getClickCount() > 0)
 				{
-					setCursor(UIStorage.DEFAULT_CURSOR);
+					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 					if (PlanPanel.this.currpos.x == PlanPanel.this.startpos.x) {
 						PlanPanel.this.parent.repaint();
@@ -399,7 +400,7 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 
 	void setDate(	Date startDate,
 					int scale) {
-		this.setCursor(UIStorage.WAIT_CURSOR);
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		setScale(scale);
 		setStartDate(startDate);
 		SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
@@ -411,7 +412,7 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 			SchedulerModel.showErrorMessage(this, e);
 		}
 
-		this.setCursor(UIStorage.DEFAULT_CURSOR);
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 	void updateTestLinesTimeRegion() {

@@ -6,7 +6,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -17,9 +18,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JLabel;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.TestEditor;
 import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
@@ -35,6 +38,7 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
+import com.syrus.util.Log;
 
 public class TestLine extends JLabel implements TestsEditor, TestEditor {
 
@@ -90,12 +94,13 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 
 	private long				end;
 
-	// Map <Identifier testId, List<TestTimeLine>>
-	private Map					measurements				= new HashMap();
+	Map					measurements				= new HashMap();
 	private Identifier			monitoredElementId;
-	private long				start;
+	long				start;
 
 	private String				title;
+	
+	private MouseListener testLineMouseListener;
 
 	public TestLine(ApplicationContext aContext,
 			String title,
@@ -105,88 +110,91 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 		this.schedulerModel.addTestEditor(this);
 		this.title = title;
 		this.monitoredElementId = monitoredElementId;
-		// initModule(aContext.getDispatcher());
-		this.addMouseListener(new MouseAdapter() {
-
-			public void mousePressed(MouseEvent e) {
-				if (!TestLine.this.tests.isEmpty()) {
-					try {
-					int x = e.getX();
-					int y = e.getY();
-
-					for (Iterator it = TestLine.this.tests.iterator(); it.hasNext();) {
-						// Test selectedTest = (Test) it.next();
-						Test test = (Test) it.next();
-						TestTemporalType temporalType = test.getTemporalType();
-						int st = PlanPanel.MARGIN /2 
-								+ (int) (TestLine.this.scale * (test.getStartTime().getTime() - TestLine.this
-										.getStart())) - 1;
-						int en = PlanPanel.MARGIN / 2
-								+ (int) (TestLine.this.scale * (test.getEndTime().getTime() - TestLine.this.getStart()))
-								+ 1;
-						en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH : en;
-						// System.out.println("."+((x >= st) && (x <= en) && (y
-						// >=
-						// titleHeight / 2 + 4)));
-						int w = en - st + 1;
-						if (temporalType.value() == TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS)
-							w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
-						else
-							w = MINIMAL_WIDTH;
-						en = st + w;
-						boolean condition = false;
-						switch (temporalType.value()) {
-							case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-								List times = ((TemporalPattern)MeasurementStorableObjectPool
-								.getStorableObject(test.getTemporalPatternId(), true)).getTimes(test.getStartTime(), test.getEndTime());
-								for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {
-									Date time = (Date) timeIt.next();
-									st = PlanPanel.MARGIN / 2
-											+ (int) (TestLine.this.scale * (time.getTime() - TestLine.this.getStart()));
-									en = st + w;
-									if ((x >= st) && (x <= en) && (y >= TestLine.this.titleHeight / 2 + 4)) {
-										condition = true;
-										// System.out.println("selected:" + j);
-										break;
-									}
-								}
-								break;
-							default:
-								if ((x >= st) && (x <= en) && (y >= TestLine.this.titleHeight / 2 + 4)) {
-									condition = true;
-								}
-								break;
-						}
-
-						if (condition) {							
-								TestLine.this.schedulerModel.setSelectedTest(test);
-							
-							break;
-						}
-					}
-					} catch (ApplicationException e1) {
-						SchedulerModel.showErrorMessage(TestLine.this, e1);
-					}
-				}
-
-			}
-
-		});
-		this.addMouseMotionListener(new MouseMotionListener() {
-
-			public void mouseDragged(MouseEvent e) {
-				if (TestLine.this.selectedTest != null) {
-					// nothing
-				}
-
-			}
-
-			public void mouseMoved(MouseEvent e) {
-				// nothing
-			}
-		});
-
 		this.acquireTests();
+	}
+	
+	public MouseListener getTestLineMouseListener() {
+		if (this.testLineMouseListener == null) {
+			this.testLineMouseListener = new MouseAdapter() {
+
+				public void mousePressed(MouseEvent e) {
+					if (!TestLine.this.tests.isEmpty()) {
+						try {
+							int x = e.getX();
+							int y = e.getY();
+
+							for (Iterator iter = TestLine.this.tests.iterator(); iter.hasNext();) {
+								// Test selectedTest = (Test) it.next();
+								Test test = (Test) iter.next();
+								TestTemporalType temporalType = test.getTemporalType();
+								List testTimeLineList = (List) TestLine.this.measurements.get(test.getId());
+								for (Iterator it = testTimeLineList.iterator(); it.hasNext();) {
+									TestTimeLine testTimeLine = (TestTimeLine) it.next();
+								
+								
+								System.out.println("test: "
+										+ test.getId()
+										+ " ( "
+										+ test.getStartTime()
+										+ ", "
+										+ test.getEndTime());
+								
+								int st = PlanPanel.MARGIN / 2 + (int) (TestLine.this.scale * (testTimeLine.startTime - TestLine.this.start));
+								int en = PlanPanel.MARGIN / 2 + (int) (TestLine.this.scale * (testTimeLine.startTime + testTimeLine.duration - TestLine.this.start));
+								
+								en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH : en;
+								// System.out.println("."+((x >= st) && (x <=
+								// en) && (y
+								// >=
+								// titleHeight / 2 + 4)));
+								int w = en - st + 1;
+								en = st + w;
+								boolean condition = false;
+								switch (temporalType.value()) {
+									case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+										List times = ((TemporalPattern) MeasurementStorableObjectPool
+												.getStorableObject(test.getTemporalPatternId(), true)).getTimes(test
+												.getStartTime(), test.getEndTime());
+										for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {
+											Date time = (Date) timeIt.next();
+											st = PlanPanel.MARGIN
+													/ 2
+													+ (int) (TestLine.this.scale * (time.getTime() - TestLine.this
+															.getStart()));
+											en = st + w;
+											if ((x >= st) && (x <= en) && (y >= TestLine.this.titleHeight / 2 + 4)) {
+												condition = true;
+												// System.out.println("selected:"
+												// + j);
+												break;
+											}
+										}
+										break;
+									default:
+										System.out.println("search at (" + st + " .. " + en + ", " + TestLine.this.titleHeight / 2 + 4 + ") yours (" + x + ", " + y + ")");
+										if ((x >= st) && (x <= en) && (y >= TestLine.this.titleHeight / 2 + 4)) {
+											condition = true;
+										}
+										break;
+								}
+
+								if (condition) {
+									TestLine.this.schedulerModel.setSelectedTest(test);
+
+									break;
+								}
+							}
+							}
+						} catch (ApplicationException e1) {
+							SchedulerModel.showErrorMessage(TestLine.this, e1);
+						}
+					}
+
+				}
+			};
+		}
+		return this.testLineMouseListener;
+
 	}
 
 	private void paintFlash(Graphics g) {
@@ -196,7 +204,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 				Test test = (Test) it.next();
 				g.setColor(this.flash ? (((this.selectedTest == null) || (!this.selectedTest.getId().equals(
 					test.getId()))) ? COLOR_SCHEDULED : COLOR_SCHEDULED_SELECTED) : COLOR_UNRECOGNIZED);
-				drawTestRect(g, test);
+				this.drawTestRect(g, test);
 			}
 		}
 	}
@@ -305,6 +313,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 	 */
 	public void setStart(long start) {
 		this.start = start;
+		Log.debugMessage("TestLine.setStart | " + ((SimpleDateFormat)(UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT))).format(new Date(start)), Log.FINEST);
 	}
 
 	// public void unregisterDispatcher() {
@@ -498,8 +507,8 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 			//
 			// // alarm.
 			// }
-			// }
-			x = PlanPanel.MARGIN / 2 + (int) (this.scale * (testTimeLine.startTime - this.start));
+			// }	
+			
 			Color mColor = g.getColor();
 			if (testTimeLine.haveMeasurement) {
 				g.setColor(TestLine.COLOR_COMPLETED);

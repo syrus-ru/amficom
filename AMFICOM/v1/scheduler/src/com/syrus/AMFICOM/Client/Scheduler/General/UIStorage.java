@@ -5,7 +5,6 @@
 
 package com.syrus.AMFICOM.Client.Scheduler.General;
 
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -75,14 +74,7 @@ public final class UIStorage {
 																			.getImage("images/zoom_in.gif"));		//$NON-NLS-1$
 	public static final Icon				ZOOMOUT_ICON			= new ImageIcon(Toolkit.getDefaultToolkit()
 																			.getImage("images/zoom_out.gif"));		//$NON-NLS-1$
-	public static final Icon				NOZOOM_ICON				= new ImageIcon(Toolkit.getDefaultToolkit()
-																			.getImage("images/zoom_actual.gif"));	//$NON-NLS-1$
-
-	public static final Cursor				WAIT_CURSOR				= new Cursor(Cursor.WAIT_CURSOR);
-
-	public static final Cursor				DEFAULT_CURSOR			= new Cursor(Cursor.DEFAULT_CURSOR);
-
-	public static final Cursor				CROSS_HAIR_CURSOR		= new Cursor(Cursor.CROSSHAIR_CURSOR);
+	public static final Icon				NOZOOM_ICON				= new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_actual.gif"));	//$NON-NLS-1$
 
 	public static final Font				ARIAL_12_FONT			= new Font("Arial", //$NON-NLS-1$
 																				Font.PLAIN, 12);

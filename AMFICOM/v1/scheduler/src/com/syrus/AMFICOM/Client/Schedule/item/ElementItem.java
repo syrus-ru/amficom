@@ -1,5 +1,5 @@
 /*
- * $Id: ElementItem.java,v 1.4 2005/03/25 08:09:28 bob Exp $
+ * $Id: ElementItem.java,v 1.5 2005/03/30 14:26:20 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,50 +10,51 @@ package com.syrus.AMFICOM.Client.Schedule.item;
 
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.AbstractItem;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/25 08:09:28 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/30 14:26:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
 public abstract class ElementItem extends AbstractItem {
 
-	protected Object	object;
+	protected Identifier	identifier;
 
-	protected Class		clazz;
+	protected short entityCode = ObjectEntities.UNKNOWN_ENTITY_CODE;
 
-	protected ElementItem(Object object) {
-		this.object = object;
+	protected ElementItem(Identifier identifier) {
+		this.identifier = identifier;
 	}
 
-	protected abstract Class getChildenClass();
+	protected abstract short getChildenEntityCode();
 
 	public int getMaxChildrenCount() {
 		return Integer.MAX_VALUE;
 	}
 
 	public Object getObject() {
-		return this.object;
-	}
+		return this.identifier;
+	}	
 
 	public void addChild(Item childItem) {
 		Log.debugMessage("ElementItem.addChild | this.name: " + this.getName() + " \n\t name: " + childItem.getName(),
 			Log.FINEST);
 
-		if (this.clazz == null)
-			this.clazz = this.getChildenClass();
+		if (this.entityCode == ObjectEntities.UNKNOWN_ENTITY_CODE)
+			this.entityCode = this.getChildenEntityCode();
 
 		Object object2 = childItem.getObject();
-		if (childItem.isService() || object2.getClass().equals(this.clazz)) {
+		if (childItem.isService() || ((Identifier) object2).getMajor() == this.entityCode) {
 
 			super.addChild(childItem);
 		} else {
-			throw new UnsupportedOperationException("Class object " + object2.getClass()
-					+ " isn't supported.");
+			throw new UnsupportedOperationException("Class object " + object2.getClass() + " isn't supported.");
 		}
 
 	}

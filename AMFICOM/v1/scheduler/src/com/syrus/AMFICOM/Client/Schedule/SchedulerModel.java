@@ -186,7 +186,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	/**
 	 * @return saved tests
 	 */
-	public Collection getTests() {
+	public Collection getTests() {		
 		return this.tests;
 	}
 
@@ -242,7 +242,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
 				MeasurementType measurementType = (MeasurementType) iter.next();
-				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType);
+				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType.getId());
 				measurementTypeItems.add(measurementTypeItem);
 				measurementTypeItem.setChildrenFactory(new MeasurementTypeChildrenFactory(sessionInterface.getDomainIdentifier()));
 			}
@@ -269,40 +269,42 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	private void refreshTest() throws ApplicationException {
-		this.measurementTypeEditor.setMeasurementType((MeasurementType) MeasurementStorableObjectPool
-				.getStorableObject(this.selectedTest.getMeasurementTypeId(), true));
-		MonitoredElement monitoredElement = this.selectedTest.getMonitoredElement();
-		MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
-			monitoredElement.getMeasurementPortId(), true);
-		this.kisEditor
-				.setKIS((KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true));
-		this.monitoredElementEditor.setMonitoredElement(monitoredElement);
-		this.analysisTypeEditor.setAnalysisType((AnalysisType) MeasurementStorableObjectPool.getStorableObject(
-			this.selectedTest.getAnalysisTypeId(), true));
-		this.evaluationTypeEditor.setEvaluationType((EvaluationType) MeasurementStorableObjectPool.getStorableObject(
-			this.selectedTest.getEvaluationTypeId(), true));
-		Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
-		if (!measurementSetupIds.isEmpty()) {
-			Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
-			MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
-				mainMeasurementSetupId, true);
-			this.setEditor.setSet(measurementSetup.getParameterSet());
-			this.measurementSetupEditor.setMeasurementSetup(measurementSetup);
-		}
+		if (this.selectedTest != null) {
+			this.measurementTypeEditor.setMeasurementType((MeasurementType) MeasurementStorableObjectPool
+					.getStorableObject(this.selectedTest.getMeasurementTypeId(), true));
+			MonitoredElement monitoredElement = this.selectedTest.getMonitoredElement();
+			MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
+				monitoredElement.getMeasurementPortId(), true);
+			this.kisEditor.setKIS((KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(),
+				true));
+			this.monitoredElementEditor.setMonitoredElement(monitoredElement);
+			this.analysisTypeEditor.setAnalysisType((AnalysisType) MeasurementStorableObjectPool.getStorableObject(
+				this.selectedTest.getAnalysisTypeId(), true));
+			this.evaluationTypeEditor.setEvaluationType((EvaluationType) MeasurementStorableObjectPool
+					.getStorableObject(this.selectedTest.getEvaluationTypeId(), true));
+			Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
+			if (!measurementSetupIds.isEmpty()) {
+				Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
+				MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
+					mainMeasurementSetupId, true);
+				this.setEditor.setSet(measurementSetup.getParameterSet());
+				this.measurementSetupEditor.setMeasurementSetup(measurementSetup);
+			}
 
-		this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
-		{
-			TestTemporalStamps timeStamps = new TestTemporalStamps(this.selectedTest.getTemporalType(),
-																	this.selectedTest.getStartTime(), this.selectedTest
-																			.getEndTime(),
-																	(TemporalPattern) MeasurementStorableObjectPool
-																			.getStorableObject(this.selectedTest
-																					.getTemporalPatternId(), true));
-			this.testTemporalStampsEditor.setTestTemporalStamps(timeStamps);
-		}
+			this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
+			{
+				TestTemporalStamps timeStamps = new TestTemporalStamps(this.selectedTest.getTemporalType(),
+																		this.selectedTest.getStartTime(),
+																		this.selectedTest.getEndTime(),
+																		(TemporalPattern) MeasurementStorableObjectPool
+																				.getStorableObject(this.selectedTest
+																						.getTemporalPatternId(), true));
+				this.testTemporalStampsEditor.setTestTemporalStamps(timeStamps);
+			}
 
-		for (int i = 0; i < this.testEditors.length; i++) {
-			this.testEditors[i].updateTest();
+			for (int i = 0; i < this.testEditors.length; i++) {
+				this.testEditors[i].updateTest();
+			}
 		}
 	}
 
@@ -383,19 +385,40 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 																	OperationSort.OPERATION_IN_RANGE,
 																	ObjectEntities.TEST_ENTITY_CODE,
 																	TestWrapper.COLUMN_END_TIME);
-		CompoundCondition compoundCondition = new CompoundCondition(startTypicalCondition, CompoundConditionSort.AND,
-																	endTypicalCondition);
+		TypicalCondition startTypicalCondition1 = new TypicalCondition(startDate, null,
+																		OperationSort.OPERATION_LESS_EQUALS,
+																		ObjectEntities.TEST_ENTITY_CODE,
+																		TestWrapper.COLUMN_START_TIME);
+		TypicalCondition endTypicalCondition2 = new TypicalCondition(endDate, null,
+																		OperationSort.OPERATION_GREAT_EQUALS,
+																		ObjectEntities.TEST_ENTITY_CODE,
+																		TestWrapper.COLUMN_END_TIME);
 
+		
+		CompoundCondition compoundCondition1 = new CompoundCondition(startTypicalCondition, CompoundConditionSort.OR,
+																	endTypicalCondition);
+		
+		CompoundCondition compoundCondition2 = new CompoundCondition(startTypicalCondition1, CompoundConditionSort.AND,
+			endTypicalCondition2);
+
+		CompoundCondition compoundCondition = new CompoundCondition(compoundCondition1, CompoundConditionSort.OR,
+			compoundCondition2);
+		
 		this.tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
 
-		{
-			List alarmsIds = null;
-			List testArgumentSetIds = null;
-			if (alarmsIds != null)
-				dsi.GetAlarms((String[]) alarmsIds.toArray(new String[alarmsIds.size()]));
-			if (testArgumentSetIds != null)
-				dsi.LoadTestArgumentSets((String[]) testArgumentSetIds.toArray(new String[testArgumentSetIds.size()]));
+		for (Iterator it = this.tests.iterator(); it.hasNext();) {
+			Test test = (Test) it.next();
+			System.out.println(">"+test.getId());
 		}
+		
+//		{
+//			List alarmsIds = null;
+//			List testArgumentSetIds = null;
+//			if (alarmsIds != null)
+//				dsi.GetAlarms((String[]) alarmsIds.toArray(new String[alarmsIds.size()]));
+//			if (testArgumentSetIds != null)
+//				dsi.LoadTestArgumentSets((String[]) testArgumentSetIds.toArray(new String[testArgumentSetIds.size()]));
+//		}
 
 		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
 				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$

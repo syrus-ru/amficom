@@ -4,6 +4,8 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.Icon;
@@ -11,8 +13,6 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
@@ -27,17 +27,19 @@ import com.syrus.AMFICOM.Client.Schedule.MeasurementTypeEditor;
 import com.syrus.AMFICOM.Client.Schedule.MonitoredElementEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
-import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.SelectionListener;
 import com.syrus.AMFICOM.logic.ServiceItem;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 public class ElementsTreeFrame extends JInternalFrame implements KISEditor, MonitoredElementEditor,
@@ -76,7 +78,7 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 		return this.command;
 	}
 
-	private Object getObject(Class clazz) {
+	private Identifier getObject(short entityCode) {
 		JTree tree = this.treePanel.getTree();
 		TreePath treePath = tree.getSelectionPath();
 		if (treePath != null) {
@@ -84,10 +86,9 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 				Object nodeObject = treePath.getPathComponent(i);
 				if (nodeObject instanceof Item) {
 					Item item = (Item) nodeObject;
-					Object object = item.getObject();
-					Class class1 = object == null ? null : object.getClass();
-					if (class1 != null && class1.equals(clazz))
-						return object;
+					Identifier identifier = (Identifier) item.getObject();
+					if (identifier != null && entityCode == identifier.getMajor())
+						return identifier;
 				}
 			}
 		}
@@ -99,25 +100,42 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 	}
 
 	public KIS getKIS() {
-		return (KIS) this.getObject(KIS.class);
+		try {
+			return (KIS) ConfigurationStorableObjectPool.getStorableObject(this.getObject(ObjectEntities.KIS_ENTITY_CODE), true);
+		} catch (ApplicationException e) {			
+			//
+		}
+		return null;
 	}
 
 	public MeasurementType getMeasurementType() {
-		return (MeasurementType) this.getObject(MeasurementType.class);
+		try {
+			return (MeasurementType) MeasurementStorableObjectPool.getStorableObject(this.getObject(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
+		} catch (ApplicationException e) {			
+			//
+		}
+		return null;
 	}
 
 	public MonitoredElement getMonitoredElement() {
-		return (MonitoredElement) this.getObject(MonitoredElement.class);
+		try {
+			return (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(this.getObject(ObjectEntities.ME_ENTITY_CODE), true);
+		} catch (ApplicationException e) {			
+			//
+		}
+		return null;
 	}
 
 	public void setKIS(KIS kis) {
 		this.paramMap.put(ObjectEntities.KIS_ENTITY, kis);
 		this.treePanel.expandAll(true);
+		this.selectItems();
 	}
 
 	public void setMeasurementType(MeasurementType measurementType) {
 		this.paramMap.put(ObjectEntities.MEASUREMENTTYPE_ENTITY, measurementType);
 		this.treePanel.expandAll(true);
+		this.selectItems();
 
 	}
 
@@ -126,11 +144,37 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 			MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
 				monitoredElement.getMeasurementPortId(), true);
 			this.paramMap.put(ObjectEntities.MEASUREMENTPORT_ENTITY, measurementPort);
-			this.paramMap.put(ObjectEntities.ME_ENTITY, monitoredElement);
+			this.paramMap.put(ObjectEntities.ME_ENTITY, monitoredElement);			
 			this.treePanel.expandAll(true);
+			this.selectItems();
 
 		} catch (ApplicationException e) {
 			SchedulerModel.showErrorMessage(this, e);
+		}
+	}
+	
+	private void selectItems() {
+		List list = new LinkedList();
+		this.getSelectItem((Item) this.treePanel.getTreeModel().getRoot(), list);
+		this.treePanel.selectedItems(list);
+	}
+	
+	private void getSelectItem(Item parent, List list) {
+		Object object = parent.getObject();
+		if (object instanceof Identifier) {
+			Identifier identifier = (Identifier)object;
+			StorableObject storableObject = (StorableObject) this.paramMap.get(ObjectEntities.codeToString(identifier.getMajor()));
+			if (storableObject != null && storableObject.getId().equals(identifier)) {
+				list.add(parent);
+			}
+		}
+		
+		List children = parent.getChildren();
+		if (!children.isEmpty()) {
+			for (Iterator it = children.iterator(); it.hasNext();) {
+				Item item = (Item) it.next();
+				this.getSelectItem(item, list);
+			}
 		}
 	}
 
