@@ -15,6 +15,7 @@ scheme.jpx~
 *.gz
 .classpath
 .project
+.settings
 .nbintdb
 scheme.jpx
 doc
