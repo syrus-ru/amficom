@@ -7,8 +7,8 @@ CREATE TABLE SiteNode (
 --
  name VARCHAR2(128),
  description VARCHAR2(256),
- longitude NUMBER(12,6),
- latiude NUMBER(12,6),
+ longitude DOUBLE,
+ latiude DOUBLE,
  image_id VARCHAR2(32) NOT NULL,
  site_node_type_id VARCHAR2(32) NOT NULL,
  city VARCHAR2(128),

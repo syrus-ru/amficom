@@ -7,8 +7,8 @@ CREATE TABLE TopologicalNode (
 --
  name VARCHAR2(128),
  description VARCHAR2(256),
- longitude NUMBER(12,6),
- latiude NUMBER(12,6),
+ longitude DOUBLE,
+ latiude DOUBLE,
  active NUMBER(1),
 --
  CONSTRAINT topnode_pk PRIMARY KEY (id),

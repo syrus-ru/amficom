@@ -9,7 +9,7 @@ CREATE TABLE NodeLink (
  physical_link_id VARCHAR2(32),
  start_node_id VARCHAR2(32),
  end_node_id VARCHAR2(32), 
- length NUMBER(12,6),
+ length DOUBLE,
 --
  CONSTRAINT nodelink_pk PRIMARY KEY (id),
  CONSTRAINT nodelink_creator_fk FOREIGN KEY (creator_id)
