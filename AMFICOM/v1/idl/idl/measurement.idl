@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.34 2004/10/19 05:45:47 bob Exp $
+ * $Id: measurement.idl,v 1.35 2004/10/21 10:35:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,16 +18,7 @@ module AMFICOM {
 module measurement {
 module corba {
 
-////////////////////////// Type ///////////////////////////
-
-	enum ParameterTypeSort{
-		PARAMETERTYPE_DATA,
-		PARAMETERTYPE_SHORT,
-		PARAMETERTYPE_INTEGER,
-		PARAMETERTYPE_LONG,
-		PARAMETERTYPE_DOUBLE,
-		PARAMETERTYPE_STRING
-	};
+////////////////////////// Type ///////////////////////////	
 	
 	struct ParameterType_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
@@ -40,7 +31,7 @@ module corba {
 		wstring description;
 
 		wstring name;
-		ParameterTypeSort sort;
+		com::syrus::AMFICOM::general::corba::DataType sort;
 	};	
 	typedef sequence <ParameterType_Transferable> ParameterTypeSeq_Transferable;
 
