@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.3 2004/11/23 17:42:26 max Exp $
+ * $Id: CMConfigurationReceive.java,v 1.4 2004/11/24 08:43:22 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,6 @@ import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
-import com.syrus.AMFICOM.configuration.KISType;
-import com.syrus.AMFICOM.configuration.KISTypeDatabase;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkDatabase;
 import com.syrus.AMFICOM.configuration.LinkType;
@@ -63,7 +61,6 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
-import com.syrus.AMFICOM.configuration.corba.KISType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
@@ -90,7 +87,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/23 17:42:26 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/24 08:43:22 $
  * @author $Author: max $
  * @module module
  */
@@ -651,86 +648,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
 
     }
     
-    public void receiveKISType(KISType_Transferable kisType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-        Log.debugMessage("CMServerImpl.receiveKISType | Received " + " kis", Log.DEBUGLEVEL07);
-        try {
-
-            KISType kisType = new KISType(kisType_Transferable);
-            ConfigurationStorableObjectPool.putStorableObject(kisType);
-            KISTypeDatabase kisTypeDatabase = (KISTypeDatabase) ConfigurationDatabaseContext
-                    .getKISTypeDatabase();
-            kisTypeDatabase.update(kisType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-
-        } catch (UpdateObjectException e) {
-        Log.errorException(e);
-        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                .getMessage());
-        } catch (IllegalDataException e) {
-        Log.errorException(e);
-        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-                            CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (IllegalObjectEntityException e) {
-        Log.errorException(e);
-        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-                            CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (VersionCollisionException e){
-        Log.errorException(e);
-        throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
-                                            CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (CreateObjectException e) {
-        Log.errorException(e);
-        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                .getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
-    
-    public void receiveKISTypes(KISType_Transferable[] kisType_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-        Log.debugMessage("CMServerImpl.receiveKISTypes | Received " + kisType_Transferables.length
-                + " kiss", Log.DEBUGLEVEL07);
-        List kisTypeList = new ArrayList(kisType_Transferables.length);
-        try {
-
-            for (int i = 0; i < kisType_Transferables.length; i++) {
-                KISType kisType = new KISType(kisType_Transferables[i]);
-                ConfigurationStorableObjectPool.putStorableObject(kisType);
-                kisTypeList.add(kisType);
-            }
-
-            KISTypeDatabase kisTypeDatabase = (KISTypeDatabase) ConfigurationDatabaseContext
-                    .getKISTypeDatabase();
-            kisTypeDatabase.update(kisTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-
-        } catch (UpdateObjectException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                    .getMessage());
-        } catch (IllegalDataException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-                                CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (IllegalObjectEntityException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-                                CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (VersionCollisionException e){
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
-                                                CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (CreateObjectException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
-                    .getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-
-    }
-
-	public void receiveLink(Link_Transferable link_Transferable, boolean force,
+    public void receiveLink(Link_Transferable link_Transferable, boolean force,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("CMServerImpl.receiveLink | Received " + " link", Log.DEBUGLEVEL07);
