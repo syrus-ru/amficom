@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalCondition.java,v 1.4 2005/01/14 18:09:56 arseniy Exp $
+ * $Id: TemporalCondition.java,v 1.5 2005/01/17 11:44:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalCondition_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/14 18:09:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/01/17 11:44:14 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class TemporalCondition implements StorableObjectCondition {
@@ -35,7 +36,7 @@ public class TemporalCondition implements StorableObjectCondition {
 	private Short	entityCode	= new Short(ObjectEntities.TEST_ENTITY_CODE);
 	
 	public TemporalCondition(TemporalCondition_Transferable transferable) throws DatabaseException, CommunicationException {
-		this.domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(new Identifier(transferable.domain_id), true);
+		this.domain = (Domain) AdministrationStorableObjectPool.getStorableObject(new Identifier(transferable.domain_id), true);
 		this.start = new Date(transferable.start);
 		this.end = new Date(transferable.end);
 		setEntityCode(new Short(transferable.entity_code));

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.28 2005/01/17 10:34:03 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.29 2005/01/17 11:43:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.CORBAServer;
@@ -26,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/01/17 10:34:03 $
+ * @version $Revision: 1.29 $, $Date: 2005/01/17 11:43:47 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -138,7 +139,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 	private static void activateMCMReferences() {
 		List mcmIds = null;
 		try {
-			Server server = (Server)ConfigurationStorableObjectPool.getStorableObject(new Identifier(ApplicationProperties.getString(KEY_MSERVER_ID, MSERVER_ID)), true);
+			Server server = (Server)AdministrationStorableObjectPool.getStorableObject(new Identifier(ApplicationProperties.getString(KEY_MSERVER_ID, MSERVER_ID)), true);
 			mcmIds = server.retrieveMCMIds();
 		}
 		catch (Exception e) {

@@ -7,11 +7,13 @@ import javax.swing.JTree;
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.DomainCondition;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 public class KISTree extends FilterTree
 {
@@ -22,7 +24,7 @@ public class KISTree extends FilterTree
 	{
 		try {
 			Identifier domainId = new Identifier(aContext.getSessionInterface().getDomainId());
-			Domain domain = (Domain)ConfigurationStorableObjectPool.
+			Domain domain = (Domain)AdministrationStorableObjectPool.
 					getStorableObject(domainId, true);
 			StorableObjectCondition condition = new DomainCondition(domain,
 					ObjectEntities.KIS_ENTITY_CODE);

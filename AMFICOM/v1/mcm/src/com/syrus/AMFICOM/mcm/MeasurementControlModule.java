@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.55 2005/01/17 09:03:33 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.56 2005/01/17 11:44:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
@@ -62,7 +63,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/01/17 09:03:33 $
+ * @version $Revision: 1.56 $, $Date: 2005/01/17 11:44:26 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -252,7 +253,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void activateCORBAServer() {
 		/*	Create local CORBA server end activate servant*/
 		try {
-			Server server = (Server)ConfigurationStorableObjectPool.getStorableObject(iAm.getServerId(), true);
+			Server server = (Server)AdministrationStorableObjectPool.getStorableObject(iAm.getServerId(), true);
 	
 			corbaServer = new CORBAServer(server.getHostName());
 			corbaServer.activateServant(new MCMImplementation(), iAm.getId().toString());
@@ -534,15 +535,15 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		try {
 			id = new Identifier(domainT.header.creator_id);
 			Log.debugMessage("Getting user '" + id + "' (domain creator)", Log.DEBUGLEVEL05);
-			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
 	
 			id = new Identifier(domainT.header.modifier_id);
 			Log.debugMessage("Getting user '" + id + "' (domain modifier)", Log.DEBUGLEVEL05);
-			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
 	
 			id = new Identifier(domainT.header.id);
 			Log.debugMessage("Getting domain '" + id + "' ", Log.DEBUGLEVEL05);
-			domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			domain = (Domain)AdministrationStorableObjectPool.getStorableObject(id, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -565,36 +566,36 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		try {
 			id = new Identifier(serverT.header.creator_id);
 			Log.debugMessage("Getting user '" + id + "' (server creator)", Log.DEBUGLEVEL05);
-			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
 	
 			id = new Identifier(serverT.header.modifier_id);
 			Log.debugMessage("Getting user '" + id + "' (server modifier)", Log.DEBUGLEVEL05);
-			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
 	
 			id = new Identifier(serverT.user_id);
 			Log.debugMessage("Getting user '" + id + "' (server user)", Log.DEBUGLEVEL05);
-			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
 	
 			id = new Identifier(serverT.header.id);
 			Log.debugMessage("Getting server '" + id + "' ", Log.DEBUGLEVEL05);
-			server = (Server)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			server = (Server)AdministrationStorableObjectPool.getStorableObject(id, true);
 	
 	
 			id = new Identifier(mcmT.header.creator_id);
 			Log.debugMessage("Getting user '" + id + "' (mcm creator)", Log.DEBUGLEVEL05);
-			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
 	
 			id = new Identifier(mcmT.header.modifier_id);
 			Log.debugMessage("Getting user '" + id + "' (mcm modifier)", Log.DEBUGLEVEL05);
-			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
 	
 			id = new Identifier(mcmT.user_id);
 			Log.debugMessage("Getting user '" + id + "' (mcm user)", Log.DEBUGLEVEL05);
-			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			user = (User)AdministrationStorableObjectPool.getStorableObject(id, true);
 	
 			id = new Identifier(mcmT.header.id);
 			Log.debugMessage("Getting MCM '" + id + "' ", Log.DEBUGLEVEL05);
-			mcm = (MCM)ConfigurationStorableObjectPool.getStorableObject(id, true);
+			mcm = (MCM)AdministrationStorableObjectPool.getStorableObject(id, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
