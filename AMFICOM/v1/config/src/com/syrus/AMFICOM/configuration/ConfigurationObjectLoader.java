@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.13 2004/10/20 06:29:19 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.14 2004/10/22 10:23:41 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/10/20 06:29:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2004/10/22 10:23:41 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -32,7 +32,9 @@ public interface ConfigurationObjectLoader {
 
 	MeasurementPortType loadMeasurementPortType(Identifier id) throws DatabaseException, CommunicationException;
 
-	Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException;
+	KISType loadKISType(Identifier id) throws DatabaseException, CommunicationException;
+    
+    Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException;
 
 //	PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException;
 
@@ -67,6 +69,8 @@ public interface ConfigurationObjectLoader {
     List loadMeasurementPortTypes(List ids) throws DatabaseException, CommunicationException;
 
     List loadCharacteristics(List ids) throws DatabaseException, CommunicationException;
+    
+    List loadKISTypes(List ids) throws DatabaseException, CommunicationException;
 
 //  PermissionAttributes loadPermissionAttributes(List ids) throws DatabaseException, CommunicationException;
 
@@ -101,6 +105,8 @@ public interface ConfigurationObjectLoader {
     List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
     List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+    
+    List loadKISTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 //  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
@@ -132,7 +138,9 @@ public interface ConfigurationObjectLoader {
 
 	void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+    void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+    
+    void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
@@ -165,6 +173,8 @@ public interface ConfigurationObjectLoader {
 	void saveMeasurementPortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+    
+    void saveKISTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.12 2004/10/19 07:48:58 bob Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.13 2004/10/22 10:23:41 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/10/19 07:48:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2004/10/22 10:23:41 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -47,6 +47,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	public Characteristic loadCharacteristic(Identifier id) throws DatabaseException {
 		return new Characteristic(id);
 	}
+    
+    public KISType loadKISType(Identifier id) throws DatabaseException {
+        return new KISType(id);
+    }
 
 //	public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException {
 //		return new PermissionAttributes(id);
@@ -148,6 +152,18 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public List loadKISTypes(List ids) throws DatabaseException {
+        KISTypeDatabase database = (KISTypeDatabase)ConfigurationDatabaseContext.getKISTypeDatabase();
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISTypeDatabases | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
         }
         return list;
@@ -335,6 +351,18 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public List loadKISTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException {
+        KISTypeDatabase database = (KISTypeDatabase)ConfigurationDatabaseContext.getKISTypeDatabase();
+        List list = null;
+        try {
+            list = database.retrieveByCondition(ids, condition);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISTypeButIds | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadKISTypeButIds | Illegal Storable Object: " + e.getMessage());
         }
         return list;
     }
@@ -527,6 +555,22 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
             throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPortType | VersionCollisionException: " + e.getMessage());
 		}
 	}
+    
+    public void saveKISType(KISType kisType, boolean force) throws DatabaseException, CommunicationException{
+        KISTypeDatabase database = (KISTypeDatabase)ConfigurationDatabaseContext.getKISTypeDatabase();
+        try {
+            database.update(kisType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        } catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISType | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISType | UpdateObjectException: " + e.getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISType | Illegal Storable Object: " + e.getMessage());
+        } catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISType | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISType | VersionCollisionException: " + e.getMessage());
+        }
+    }
 
 	public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, CommunicationException{
 		CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
@@ -787,6 +831,22 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
             throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristics | VersionCollisionException: " + e.getMessage());
 		}
 	}
+    
+    public void saveKISTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+        KISTypeDatabase database = (KISTypeDatabase)ConfigurationDatabaseContext.getKISTypeDatabase();
+        try {
+            database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        } catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISTypes | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISTypes | UpdateObjectException: " + e.getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISTypes | Illegal Storable Object: " + e.getMessage());
+        } catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISTypes | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISTypes | VersionCollisionException: " + e.getMessage());
+        }
+    }
 
 
 //	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException, CommunicationException;

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.3 2004/10/20 13:09:25 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.4 2004/10/22 10:24:27 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.KISType;
 import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -37,6 +38,7 @@ import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
+import com.syrus.AMFICOM.configuration.corba.KISType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
@@ -63,8 +65,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/20 13:09:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/10/22 10:24:27 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 
@@ -157,6 +159,21 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new CommunicationException(msg, e);
         }
 	}
+    
+    public KISType loadKISType(Identifier id) throws RetrieveObjectException, CommunicationException {
+        try {
+            return new KISType(this.server.transmitKISType((Identifier_Transferable) id
+                    .getTransferable(), accessIdentifierTransferable));
+        } catch (CreateObjectException e) {
+            String msg = "ClientMeasurementObjectLoader.loadKISType | new KISType(" + id.toString()
+                    + ")";
+            throw new RetrieveObjectException(msg, e);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientMeasurementObjectLoader.loadKISType | server.transmitKISType("
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
+    }
 
 	//	public PermissionAttributes loadPermissionAttributes(Identifier id)
 	// throws DatabaseException {
@@ -454,6 +471,54 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         }
 	}
 
+	public List loadKISTypes(List ids) throws DatabaseException,
+			CommunicationException {
+		try {
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            KISType_Transferable[] transferables = this.server
+                    .transmitKISTypes(identifierTransferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new KISType(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+	}
+
+	public List loadKISTypesButIds(StorableObjectCondition condition, List ids)
+			throws DatabaseException, CommunicationException {
+		try {
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            KISType_Transferable[] transferables = this.server
+                    .transmitKISTypesButIds(identifierTransferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new KISType(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+	}
+
 	public List loadMCMs(List ids) throws DatabaseException, CommunicationException {
         try {
             Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -730,6 +795,22 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
              throw new CommunicationException(msg, e);       
          }
      }
+     
+     public void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
+        KISType_Transferable transferables = (KISType_Transferable) kisType.getTransferable();         
+        try {
+            this.server.receiveKISType(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.saveKISType ";
+            
+            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+            
+            throw new CommunicationException(msg, e);       
+        }
+    }
+     
+     
 
 //     public void savePermissionAttributes(PermissionAttributes permissionAttributes, Boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
@@ -964,6 +1045,24 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new CommunicationException(msg, e);       
          }
      }
+     
+     public void saveKISTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
+        KISType_Transferable[] transferables = new KISType_Transferable[list.size()];
+        int i=0;
+        for (Iterator it = list.iterator(); it.hasNext();i++) {
+            transferables[i] = (KISType_Transferable)( (Characteristic)it.next() ).getTransferable();                        
+        }
+        try {
+            this.server.receiveKISTypes(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+           String msg = "ClientMeasurementObjectLoader.saveKISType ";
+           
+           if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+           
+           throw new CommunicationException(msg, e);       
+        }
+    }
 
 //     public void savePermissionAttributes(PermissionAttributes permissionAttributes) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub

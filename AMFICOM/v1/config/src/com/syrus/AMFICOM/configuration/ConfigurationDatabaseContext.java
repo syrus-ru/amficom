@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.21 2004/08/27 15:18:15 bob Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.22 2004/10/22 10:23:41 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/08/27 15:18:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2004/10/22 10:23:41 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -21,6 +21,7 @@ public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase equipmentTypeDatabase;
 	protected static StorableObjectDatabase portTypeDatabase;
 	protected static StorableObjectDatabase measurementPortTypeDatabase;
+    protected static StorableObjectDatabase kisTypeDatabase;
 	
 	protected static StorableObjectDatabase characteristicDatabase;
 	protected static StorableObjectDatabase userDatabase;
@@ -42,6 +43,7 @@ public class ConfigurationDatabaseContext {
 													StorableObjectDatabase equipmentTypeDatabase1,
 													StorableObjectDatabase portTypeDatabase1,
 													StorableObjectDatabase measurementPortTypeDatabase1,
+                                                    StorableObjectDatabase kisTypeDatabase1,
 													StorableObjectDatabase characteristicDatabase1,
 													StorableObjectDatabase userDatabase1,
 													StorableObjectDatabase domainDatabase1,
@@ -57,6 +59,7 @@ public class ConfigurationDatabaseContext {
 		equipmentTypeDatabase = equipmentTypeDatabase1;
 		portTypeDatabase = portTypeDatabase1;
 		measurementPortTypeDatabase = measurementPortTypeDatabase1;
+        kisTypeDatabase = kisTypeDatabase1;
 		
 		characteristicDatabase = characteristicDatabase1;
 		userDatabase = userDatabase1;
@@ -88,6 +91,9 @@ public class ConfigurationDatabaseContext {
 	public static StorableObjectDatabase getKISDatabase() {
 		return kisDatabase;
 	}
+    public static StorableObjectDatabase getKISTypeDatabase() {
+        return kisTypeDatabase;
+    }
 	public static StorableObjectDatabase getMCMDatabase() {
 		return mcmDatabase;
 	}
