@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.8 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.9 2005/03/01 15:43:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/01 15:43:58 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -179,7 +179,6 @@ public class MapElementLabel extends JLabel
 	public DataFlavor[] getTransferDataFlavors()
 	{
 		DataFlavor dataFlavor = new DataFlavor(this.getClass(), DATA_FLAVOUR);
-		System.out.println("dataFlavor " + dataFlavor.getHumanPresentableName());
 		DataFlavor[] dfs = new DataFlavor[2];
 		dfs[0] = dataFlavor;
 //	    dfs[1] = DataFlavor.plainTextFlavor;
@@ -189,7 +188,6 @@ public class MapElementLabel extends JLabel
 
 	public boolean isDataFlavorSupported(DataFlavor flavor)
 	{
-		System.out.println("support DataFlavor " + (flavor.getHumanPresentableName().equals(DATA_FLAVOUR)));
 		return (flavor.getHumanPresentableName().equals(DATA_FLAVOUR));
 	}
 
