@@ -33,7 +33,7 @@ SQLJOPTIONS=-optcols -compiler-executable=$(JAVAC) -codegen=oraclejdbc -ser2clas
 JAR=jar-3.3.1
 
 LIBNAME=kisserver.jar
-ARCHFILE=amficomkis.tar.gz
+ARCHFILE=kisserver.tar.gz
 
 
 .PHONY:	clean cleanmach lp arch drop
