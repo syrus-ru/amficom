@@ -1,5 +1,5 @@
 /*
- * $Id: LogicSchemeBase.java,v 1.1 2004/06/17 10:23:05 krupenn Exp $
+ * $Id: LogicSchemeBase.java,v 1.2 2004/06/23 10:01:59 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/17 10:23:05 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/23 10:01:59 $
  * @module filter_v1
  */
 public class LogicSchemeBase implements Serializable
@@ -465,7 +465,11 @@ public class LogicSchemeBase implements Serializable
 	{
 		boolean toBreak = false; // Удаляем внешние скобки
 		do
-			toBreak = cropBranches(expression);
+		{
+			String croppedString = cropBranches(expression);
+			toBreak = croppedString.equals(expression);
+			expression = croppedString;
+		}
 		while (!toBreak);
 
 		int conditionNumber = getCondition(expression);
@@ -481,6 +485,8 @@ public class LogicSchemeBase implements Serializable
 					0, //Задаём координаты (0,0) их будем устанавливать,
 					0, //когда дерево построим
 					this);
+
+			schemeElements.add(se);
 
 			return se;
 		}
@@ -527,33 +533,45 @@ public class LogicSchemeBase implements Serializable
 		return null;
 	}
 
-	private boolean cropBranches (String expression)
+	private String cropBranches (String expression)
 	{
-		if ((expression.charAt(0) == '(') && (expression.charAt(0) == ')'))
+		int len = expression.length();
+		if ((expression.charAt(0) == '(')
+			 && (expression.charAt(len - 1) == ')'))
 		{
 			int bracketCount = 0;
-			for (int i = 0; i < expression.length() - 1; i++)
+			for (int i = 0; i < len - 1; i++)
 			{
 				if (expression.charAt(i) == '(')
 					bracketCount++;
 				if (expression.charAt(i) == ')')
 					bracketCount--;
 				if (bracketCount == 0)
-					return false;
+					return expression;
 			}
-			return true;
+			return expression.substring(1,expression.length() - 1);
 		}
-		return false;
+		return expression;
 	}
 
 	private int getCondition (String expression)
 	{
-		if (expression.substring(0,8).equals("\"" + LogicSchemeElementBase.string(LogicSchemeElementBase.t_condition)) &&
-			(expression.charAt(expression.length()) == '\"'))
+		if (expression.startsWith("\"" + LogicSchemeElementBase.t_condition)
+			 && (expression.charAt(expression.length() - 1) == '\"'))
 		{
-			int condIndex = Integer.parseInt(
-				expression.substring(8, expression.length()));
-			return condIndex;
+			try
+			{
+				String numbString = expression.substring(
+								 LogicSchemeElementBase.t_condition.length() + 2,
+								 expression.length() - 1);
+
+				int condIndex = Integer.parseInt(numbString);
+				return condIndex;
+			}
+			catch (Exception exc)
+			{
+				return 0;
+			}
 		}
 		return 0;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: FilterExpressionBase.java,v 1.1 2004/06/17 10:23:05 krupenn Exp $
+ * $Id: FilterExpressionBase.java,v 1.2 2004/06/23 10:01:59 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/17 10:23:05 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/23 10:01:59 $
  * @module filter_v1
  */
 public class FilterExpressionBase implements FilterExpressionInterface
@@ -28,10 +28,14 @@ public class FilterExpressionBase implements FilterExpressionInterface
 	 * Value: {@value}
 	 * @deprecated Use {@link #TYP} instead.
 	 */
+
 	public static final String typ = TYP;
 
 	protected String col_name = "";
 	protected String col_id = "";
+
+	protected String visualName = "";
+
 	protected Vector vec = new Vector();
 	protected boolean is_template = false;
 
@@ -39,7 +43,7 @@ public class FilterExpressionBase implements FilterExpressionInterface
 
 	public String getName()
 	{
-		return col_name;
+		return visualName;
 	}
 
 	public String getId()
@@ -64,7 +68,17 @@ public class FilterExpressionBase implements FilterExpressionInterface
 
 	public void setName(String n)
 	{
+		visualName = n;
+	}
+
+	public void setColumnName(String n)
+	{
 		col_name = n;
+	}
+
+	public String getColumnName()
+	{
+		return col_name;
 	}
 
 	public void setId(String i)
@@ -93,25 +107,30 @@ public class FilterExpressionBase implements FilterExpressionInterface
 		 * ???: what's the need of creating one more object *reference*
 		 *      before serialization?
 		 */
-		Vector vec1 = vec;
+
+		out.writeObject(visualName);
 		out.writeObject(col_name);
 		out.writeObject(col_id);
+//		Vector vec1 = vec;
 //		String type = (String )vec.get(0);
 //		if (type.equals(LIST_EXPRESSION))
 //		{
 //			TreeModelClone tree = (TreeModelClone )vec.get(1);
 //			vec1.setElementAt(tree.getHash(), 1);
 //		}
-		out.writeObject(vec1);
+//		out.writeObject(vec1);
+		out.writeObject(vec);
 
 		out.writeInt(listID);
 	}
 
 	public void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
+		visualName = (String) in.readObject();
 		col_name = (String )in.readObject();
 		col_id = (String )in.readObject();
-		Vector vec1 = (Vector )in.readObject();
+		vec = (Vector) in.readObject();
+//		Vector vec1 = (Vector )in.readObject();
 //		String type = (String )vec1.get(0);
 //		if (type.equals(LIST_EXPRESSION))
 //		{
@@ -121,8 +140,22 @@ public class FilterExpressionBase implements FilterExpressionInterface
 		/*
 		 * ???: the same: assignment WILL NOT happen if readObject() fails.
 		 */
-		vec = vec1;
+//		vec = vec1;
 
 		listID = in.readInt();
 	}
+
+	public Object clone()
+	{
+		FilterExpressionBase fe = new FilterExpressionBase();
+		fe.setName(getName());
+		fe.setColumnName(getColumnName());
+		fe.setId(getId());
+		fe.setVec((Vector )getVec().clone());
+
+		fe.setListID(getListID());
+
+		return fe;
+	}
+
 }
