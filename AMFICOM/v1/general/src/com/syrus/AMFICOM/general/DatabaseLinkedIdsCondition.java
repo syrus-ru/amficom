@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsCondition.java,v 1.3 2005/02/08 13:56:53 max Exp $
+ * $Id: DatabaseLinkedIdsCondition.java,v 1.4 2005/02/09 11:01:52 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  *	}
  * </pre> 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/02/08 13:56:53 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/09 11:01:52 $
  * @author $Author: max $
  * @module general_v1
  */
@@ -88,14 +88,11 @@ public class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsConditi
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException" //$NON-NLS-1$
 			, Log.SEVERE);
 		}
-	}
-
-	protected String getColumnName(short entityCode) {
-		return this.delegate.getColumnName(entityCode);
-	}
+	}	
 
 	public String getSQLQuery() throws IllegalDataException {
-		return super.getSQLQuery();
+		//TODO: implement this method
+		return null;
 	}
 
 	public Short getEntityCode() {
