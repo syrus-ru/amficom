@@ -72,7 +72,7 @@ public class ViewCatalogCommand extends VoidCommand
 			parameter = "";
 		}
 
-		ObjectResourceCatalogFrame frame = new ObjectResourceCatalogFrame(LangModel.String("titleCatalog"), aContext);
+		ObjectResourceCatalogFrame frame = new ObjectResourceCatalogFrame(LangModel.getString("titleCatalog"), aContext);
 		frame.setDisplayModel(dModel);
 		frame.setContents(new DataSet(Pool.getHash(parameter)));
 		frame.setObjectResourceClass(orclass);

@@ -99,7 +99,7 @@ public class GeneralTreeFilterPanel extends FilterPanel
 		FilterExpression fexp = new FilterExpression();
 		fexp.setVec(vec);
 
-		String expName = LangModel.String("labelFiltration") + " \'" + col_name + "\' " + LangModel.String("labelPoSpisku");
+		String expName = LangModel.getString("labelFiltration") + " \'" + col_name + "\' " + LangModel.getString("labelPoSpisku");
 		fexp.setName(expName);
 		fexp.setColumnName(col_name);
 		fexp.setId(col_id);

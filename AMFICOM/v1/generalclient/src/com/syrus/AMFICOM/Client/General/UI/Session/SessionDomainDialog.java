@@ -90,7 +90,7 @@ public class SessionDomainDialog extends JDialog
 
 	public SessionDomainDialog(String user_id)
 	{
-		this(Environment.getActiveWindow(), LangModel.String("SessionDomainTitle"), false);
+		this(Environment.getActiveWindow(), LangModel.getString("SessionDomainTitle"), false);
 		this.user_id = user_id;
 	}
 
@@ -102,15 +102,15 @@ public class SessionDomainDialog extends JDialog
 
 		this.setResizable(false);
 
-		jLabel3.setText(LangModel.String("labelDomain"));
+		jLabel3.setText(LangModel.getString("labelDomain"));
 
-		buttonOk.setText(LangModel.String("buttonSelect"));
+		buttonOk.setText(LangModel.getString("buttonSelect"));
 		buttonOk.addActionListener(
 				new SessionDomainDialog_buttonOk_actionAdapter(this));
-		buttonHelp.setText(LangModel.String("buttonHelp"));
+		buttonHelp.setText(LangModel.getString("buttonHelp"));
 		buttonHelp.addActionListener(
 				new SessionDomainDialog_buttonHelp_actionAdapter(this));
-		buttonCancel.setText(LangModel.String("buttonCancel"));
+		buttonCancel.setText(LangModel.getString("buttonCancel"));
 		buttonCancel.addActionListener(
 				new SessionDomainDialog_buttonCancel_actionAdapter(this));
 
@@ -132,18 +132,18 @@ public class SessionDomainDialog extends JDialog
 
 	void buttonOk_actionPerformed(ActionEvent e)
 	{
-		try 
-        {
-            domain_id = (String )domainCB.getSelected();
+		try
+		  {
+				domain_id = (String )domainCB.getSelected();
 			if(!Checker.checkObject(user_id, Domain.typ, domain_id, Checker.read))
 				return;
 			retCode = RET_OK;
-        } 
-		catch (Exception ex) 
-        {
+		  }
+		catch (Exception ex)
+		  {
 			retCode = RET_CANCEL;
-            ex.printStackTrace();
-        }
+				ex.printStackTrace();
+		  }
 		dispose();
 	}
 

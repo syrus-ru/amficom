@@ -47,10 +47,10 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/11 13:48:38 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/07/09 09:42:38 $
+ * @author $Author: peskovsky $
  * @module general
- * 
+ *
  * @todo Also show session timeout.
  */
 public final class ConnectionDialog extends JDialog {
@@ -59,11 +59,11 @@ public final class ConnectionDialog extends JDialog {
 	public int retCode = 0;
 	public static final int RET_OK = 1;
 	public static final int RET_CANCEL = 2;
-	
+
 	public ConnectionDialog(Frame parent, String title, boolean modal) {
 		super(parent, title, modal);
 		initComponents();
-		
+
 		/*
 		 * Some tricky layout code.
 		 */
@@ -84,14 +84,14 @@ public final class ConnectionDialog extends JDialog {
 	}
 
 	public ConnectionDialog(ApplicationContext aContext) {
-		this(Environment.getActiveWindow(), LangModel.String("ConnectionTitle"), true);
+		this(Environment.getActiveWindow(), LangModel.getString("ConnectionTitle"), true);
 		this.aContext = aContext;
 		setFields();
 	}
-	
+
 	private void initComponents() {//GEN-BEGIN:initComponents
 		java.awt.GridBagConstraints gridBagConstraints;
-		
+
 		jServerAddressLabel1 = new JLabel();
 		jServerAddressTextField1 = new JTextField();
 		/*
@@ -150,9 +150,9 @@ public final class ConnectionDialog extends JDialog {
 		buttonOk = jOKButton3;
 		jCancelButton4 = new JButton();
 		jHelpButton5 = new JButton();
-		
+
 		getContentPane().setLayout(new java.awt.GridBagLayout());
-		
+
 		setModal(true);
 		setResizable(false);
 		addWindowListener(new java.awt.event.WindowAdapter() {
@@ -160,60 +160,60 @@ public final class ConnectionDialog extends JDialog {
 				closeDialog(e);
 			}
 		});
-		
+
 		jServerAddressLabel1.setLabelFor(jServerAddressTextField1);
-		jServerAddressLabel1.setText(LangModel.String("labelServerIP"));
+		jServerAddressLabel1.setText(LangModel.getString("labelServerIP"));
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(10, 10, 5, 5);
 		getContentPane().add(jServerAddressLabel1, gridBagConstraints);
-		
+
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 10);
 		getContentPane().add(jServerAddressTextField1, gridBagConstraints);
-		
+
 		jServerPortLabel2.setLabelFor(jServerPortTextField2);
-		jServerPortLabel2.setText(LangModel.String("labelServerTCP"));
+		jServerPortLabel2.setText(LangModel.getString("labelServerTCP"));
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jServerPortLabel2, gridBagConstraints);
-		
+
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
 		getContentPane().add(jServerPortTextField2, gridBagConstraints);
-		
+
 		jSIDLabel3.setLabelFor(jSIDTextField3);
-		jSIDLabel3.setText(LangModel.String("labelSID"));
+		jSIDLabel3.setText(LangModel.getString("labelSID"));
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jSIDLabel3, gridBagConstraints);
-		
+
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
 		getContentPane().add(jSIDTextField3, gridBagConstraints);
-		
+
 		jCtxLabel4.setLabelFor(jCtxTextField4);
-		jCtxLabel4.setText(LangModel.String("labelCtx"));
+		jCtxLabel4.setText(LangModel.getString("labelCtx"));
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jCtxLabel4, gridBagConstraints);
-		
+
 		jCtxTextField4.setEditable(false);
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -221,30 +221,30 @@ public final class ConnectionDialog extends JDialog {
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
 		getContentPane().add(jCtxTextField4, gridBagConstraints);
-		
+
 		jServerObjectLabel5.setLabelFor(jServerObjectTextField5);
-		jServerObjectLabel5.setText(LangModel.String("labelServerObject"));
+		jServerObjectLabel5.setText(LangModel.getString("labelServerObject"));
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jServerObjectLabel5, gridBagConstraints);
-		
+
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
 		getContentPane().add(jServerObjectTextField5, gridBagConstraints);
-		
+
 		jServiceURLLabel6.setLabelFor(jServiceURLTextField6);
-		jServiceURLLabel6.setText(LangModel.String("labelServiceURL"));
+		jServiceURLLabel6.setText(LangModel.getString("labelServiceURL"));
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jServiceURLLabel6, gridBagConstraints);
-		
+
 		jServiceURLTextField6.setEditable(false);
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -252,15 +252,15 @@ public final class ConnectionDialog extends JDialog {
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
 		getContentPane().add(jServiceURLTextField6, gridBagConstraints);
-		
+
 		jFullURLLabel7.setLabelFor(jFullURLTextField7);
-		jFullURLLabel7.setText(LangModel.String("labelFullURL"));
+		jFullURLLabel7.setText(LangModel.getString("labelFullURL"));
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jFullURLLabel7, gridBagConstraints);
-		
+
 		jFullURLTextField7.setEditable(false);
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -268,57 +268,57 @@ public final class ConnectionDialog extends JDialog {
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
 		getContentPane().add(jFullURLTextField7, gridBagConstraints);
-		
+
 		jUserNameLabel8.setLabelFor(jUserNameTextField8);
-		jUserNameLabel8.setText(LangModel.String("labelObjectName"));
+		jUserNameLabel8.setText(LangModel.getString("labelObjectName"));
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jUserNameLabel8, gridBagConstraints);
-		
+
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
 		getContentPane().add(jUserNameTextField8, gridBagConstraints);
-		
+
 		jPasswordLabel9.setLabelFor(jPasswordTextField9);
-		jPasswordLabel9.setText(LangModel.String("labelObjectPassword"));
+		jPasswordLabel9.setText(LangModel.getString("labelObjectPassword"));
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jPasswordLabel9, gridBagConstraints);
-		
+
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
 		getContentPane().add(jPasswordTextField9, gridBagConstraints);
-		
+
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 5);
 		getContentPane().add(jConnectionStatusLabel10, gridBagConstraints);
-		
-		jResetToDefaultsButton1.setText(LangModel.String("buttonStandard"));
+
+		jResetToDefaultsButton1.setText(LangModel.getString("buttonStandard"));
 		jResetToDefaultsButton1.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				jResetToDefaultsButton1ActionPerformed(e);
 			}
 		});
-		
+
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 10);
 		getContentPane().add(jResetToDefaultsButton1, gridBagConstraints);
-		
+
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.gridheight = java.awt.GridBagConstraints.RELATIVE;
@@ -328,45 +328,45 @@ public final class ConnectionDialog extends JDialog {
 		gridBagConstraints.weighty = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 5, 10);
 		getContentPane().add(jÂñåìÑåïàðàòîðàìÑåïàðàòîðSeparator1, gridBagConstraints);
-		
+
 		jPanel1.setLayout(new java.awt.GridLayout(1, 4, 5, 0));
-		
-		jTestConnectionButton2.setText(LangModel.String("buttonCheck"));
+
+		jTestConnectionButton2.setText(LangModel.getString("buttonCheck"));
 		jTestConnectionButton2.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				jTestConnectionButton2ActionPerformed(e);
 			}
 		});
-		
+
 		jPanel1.add(jTestConnectionButton2);
-		
-		jOKButton3.setText(LangModel.String("buttonAccept"));
+
+		jOKButton3.setText(LangModel.getString("buttonAccept"));
 		jOKButton3.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				jOKButton3ActionPerformed(e);
 			}
 		});
-		
+
 		jPanel1.add(jOKButton3);
-		
-		jCancelButton4.setText(LangModel.String("buttonCancel"));
+
+		jCancelButton4.setText(LangModel.getString("buttonCancel"));
 		jCancelButton4.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				jCancelButton4ActionPerformed(e);
 			}
 		});
-		
+
 		jPanel1.add(jCancelButton4);
-		
-		jHelpButton5.setText(LangModel.String("buttonHelp"));
+
+		jHelpButton5.setText(LangModel.getString("buttonHelp"));
 		jHelpButton5.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				jHelpButton5ActionPerformed(e);
 			}
 		});
-		
+
 		jPanel1.add(jHelpButton5);
-		
+
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
@@ -374,7 +374,7 @@ public final class ConnectionDialog extends JDialog {
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(0, 10, 10, 10);
 		getContentPane().add(jPanel1, gridBagConstraints);
-		
+
 		pack();
 	}//GEN-END:initComponents
 
@@ -400,7 +400,7 @@ public final class ConnectionDialog extends JDialog {
 		ci.setObjectName(jServerObjectTextField5.getText());
 		ci.setUser(jUserNameTextField8.getText());
 		ci.setPassword(jPasswordTextField9.getText());
-		
+
 		String serviceURL = ci.getServiceURL();
 		String sessionId;
 		String objectName = ci.getObjectName();
@@ -408,7 +408,7 @@ public final class ConnectionDialog extends JDialog {
 		new CheckConnectionCommand(aContext.getDispatcher(), aContext).execute();
 		if (ci.isConnected()) {
 			jConnectionStatusLabel10.setForeground(Color.BLUE);
-			jConnectionStatusLabel10.setText(LangModel.String("connectionSuccess"));
+			jConnectionStatusLabel10.setText(LangModel.getString("connectionSuccess"));
 
 			try {
 				sessionId = ((RISDConnectionInfo) ci).getSubcontextName();
@@ -419,8 +419,8 @@ public final class ConnectionDialog extends JDialog {
 			ci.Disconnect();
 		} else {
 			jConnectionStatusLabel10.setForeground(Color.RED);
-			jConnectionStatusLabel10.setText(LangModel.String("connectionFail"));
-			
+			jConnectionStatusLabel10.setText(LangModel.getString("connectionFail"));
+
 			sessionId = RISDConnectionInfo.DEFAULT_SUBCONTEXT_NAME;
 		}
 
@@ -457,7 +457,7 @@ public final class ConnectionDialog extends JDialog {
 		setVisible(false);
 		dispose();
 	}//GEN-LAST:event_closeDialog
-	
+
 	public void setFields() {
 		ConnectionInterface ci = aContext.getConnectionInterface();
 
@@ -489,7 +489,7 @@ public final class ConnectionDialog extends JDialog {
 		jPasswordTextField9.setText(ci.getPassword());
 		jPasswordTextField9.setCaretPosition(0);
 	}
-	
+
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private javax.swing.JButton jCancelButton4;
 	private javax.swing.JLabel jConnectionStatusLabel10;

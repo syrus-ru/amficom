@@ -48,7 +48,7 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 
-public class ObjectResourceCatalogFrame 
+public class ObjectResourceCatalogFrame
 		extends JInternalFrame
 		implements OperationListener
 {
@@ -104,7 +104,7 @@ public class ObjectResourceCatalogFrame
 	{
 		panel.setActionModel(orcam);
 	}
-	
+
 	private void jbInit() throws Exception
 	{
 
@@ -146,7 +146,7 @@ public class ObjectResourceCatalogFrame
 				title = "";
 			}
 
-			setTitle(LangModel.String("node" + title));
+			setTitle(LangModel.getString("node" + title));
 		}
 	}
 
@@ -162,5 +162,5 @@ public class ObjectResourceCatalogFrame
 			ex.printStackTrace();
 		}
 		super.doDefaultCloseAction();
-    }
+	 }
 }

@@ -103,7 +103,7 @@ public class SessionInfoDialog extends JDialog
 
 	public SessionInfoDialog()
 	{
-		this(Environment.getActiveWindow(), LangModel.String("SessionInfoTitle"), false);
+		this(Environment.getActiveWindow(), LangModel.getString("SessionInfoTitle"), false);
 	}
 
 	public SessionInfoDialog(SessionInterface si)
@@ -138,16 +138,16 @@ public class SessionInfoDialog extends JDialog
 		jPanel1.setLayout(xYLayout1);
 		xYLayout1.setHeight(224);
 		xYLayout1.setWidth(400);
-		buttonOk.setText(LangModel.String("buttonClose"));
+		buttonOk.setText(LangModel.getString("buttonClose"));
 		buttonOk.addActionListener(new SessionInfoDialog_buttonOk_actionAdapter(this));
-		jLabel1.setText(LangModel.String("labelServer"));
-		jLabel3.setText(LangModel.String("labelUser"));
-		jLabel5.setText(LangModel.String("labelCategory"));
-		jLabel7.setText(LangModel.String("labelSessionStart"));
-		jLabel9.setText(LangModel.String("labelSessionTotal"));
-		jLabel11.setText(LangModel.String("labelActiveDomain"));
-		jLabel13.setText(LangModel.String("labelServerConnectLast"));
-		jLabel2.setText(LangModel.String("labelServerConnectLast2"));
+		jLabel1.setText(LangModel.getString("labelServer"));
+		jLabel3.setText(LangModel.getString("labelUser"));
+		jLabel5.setText(LangModel.getString("labelCategory"));
+		jLabel7.setText(LangModel.getString("labelSessionStart"));
+		jLabel9.setText(LangModel.getString("labelSessionTotal"));
+		jLabel11.setText(LangModel.getString("labelActiveDomain"));
+		jLabel13.setText(LangModel.getString("labelServerConnectLast"));
+		jLabel2.setText(LangModel.getString("labelServerConnectLast2"));
 
 		jSplitPane1.setOrientation(SwingConstants.VERTICAL);
 		jSplitPane2.setOrientation(SwingConstants.HORIZONTAL);

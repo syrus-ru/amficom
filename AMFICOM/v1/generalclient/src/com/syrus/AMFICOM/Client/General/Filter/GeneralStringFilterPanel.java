@@ -35,7 +35,7 @@ public class GeneralStringFilterPanel extends FilterPanel
 	private void jbInit() throws Exception
 	{
 		this.setLayout(new GridBagLayout());
-		jLabel1.setText(LangModel.String("labelStringForSearch"));
+		jLabel1.setText(LangModel.getString("labelStringForSearch"));
 		this.add(jLabel1,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
 		this.add(textField,  new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
@@ -50,7 +50,7 @@ public class GeneralStringFilterPanel extends FilterPanel
 		FilterExpression fexp = new FilterExpression();
 		fexp.setVec(vec);
 
-		String expName = LangModel.String("labelFiltration") + " \'" + col_name + "\' "+LangModel.String("labelPoPodstroke");
+		String expName = LangModel.getString("labelFiltration") + " \'" + col_name + "\' "+LangModel.getString("labelPoPodstroke");
 		if (conditionsRequested)
 			expName += (" " + textField.getText());
 

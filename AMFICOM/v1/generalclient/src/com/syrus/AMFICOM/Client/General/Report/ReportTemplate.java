@@ -151,7 +151,7 @@ public class ReportTemplate extends ObjectResource implements Serializable
 		Object[] selectValues = {"A4","A3"};
 		Object resultValue = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(),
-				LangModelReport.String("label_chooseTemplateSize"),
+				LangModelReport.getString("label_chooseTemplateSize"),
 				"",
 				JOptionPane.QUESTION_MESSAGE,
 				null,

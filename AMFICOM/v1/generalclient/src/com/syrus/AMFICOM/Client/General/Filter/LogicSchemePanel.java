@@ -228,8 +228,8 @@ public class LogicSchemePanel extends JPanel
 		{
 		  JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				LangModel.String("label_cantDeleteComp"),
-				LangModel.String("label_error"),
+				LangModel.getString("label_cantDeleteComp"),
+				LangModel.getString("label_error"),
 				JOptionPane.ERROR_MESSAGE);
 		  return;
 		}

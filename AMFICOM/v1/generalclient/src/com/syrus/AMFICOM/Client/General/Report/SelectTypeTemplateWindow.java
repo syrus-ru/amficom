@@ -77,7 +77,7 @@ public class SelectTypeTemplateWindow extends JDialog
 	private void jbInit() throws Exception
 	{
 		this.setSize(new Dimension(293, 255));
-		this.setTitle(LangModelReport.String("label_chooseReport"));
+		this.setTitle(LangModelReport.getString("label_chooseReport"));
 		this.setResizable(true);
 
 		JPanel mainPanel = new JPanel();
@@ -126,22 +126,22 @@ public class SelectTypeTemplateWindow extends JDialog
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
 
-		viewButton.setText(LangModelReport.String("label_viewReport"));
+		viewButton.setText(LangModelReport.getString("label_viewReport"));
 		viewButton.setEnabled(false);
 		buttonPanel.add(viewButton, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(2, 5, 2, 5), 0, 0));
 
-		cancelButton.setText(LangModelReport.String("label_cancel"));
+		cancelButton.setText(LangModelReport.getString("label_cancel"));
 		buttonPanel.add(cancelButton,  new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(2, 5, 2, 5), 0, 0));
 
 
-		saveButton.setText(LangModelReport.String("label_saveReport"));
+		saveButton.setText(LangModelReport.getString("label_saveReport"));
 		saveButton.setEnabled(false);
 		buttonPanel.add(saveButton, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(2, 5, 2, 5), 0, 0));
 
-		printButton.setText(LangModelReport.String("label_print"));
+		printButton.setText(LangModelReport.getString("label_print"));
 		printButton.setEnabled(false);
 		buttonPanel.add(printButton, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(2, 5, 2, 5), 0, 0));
@@ -194,7 +194,7 @@ public class SelectTypeTemplateWindow extends JDialog
 			JScrollPane scrPane = new JScrollPane (rtiPanel);
 			rtiWindow.getContentPane().add(scrPane,BorderLayout.CENTER);
 
-			JButton closeButton = new JButton (LangModelReport.String("label_close"));
+			JButton closeButton = new JButton (LangModelReport.getString("label_close"));
 			closeButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(ActionEvent e)
 				{
@@ -202,7 +202,7 @@ public class SelectTypeTemplateWindow extends JDialog
 				}
 			});
 
-			JButton vSaveButton = new JButton (LangModelReport.String("label_saveReport"));
+			JButton vSaveButton = new JButton (LangModelReport.getString("label_saveReport"));
 			vSaveButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(ActionEvent e)
 				{
@@ -211,7 +211,7 @@ public class SelectTypeTemplateWindow extends JDialog
 				}
 			});
 
-			JButton vPrintButton = new JButton (LangModelReport.String("label_print"));
+			JButton vPrintButton = new JButton (LangModelReport.getString("label_print"));
 			vPrintButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(ActionEvent e)
 				{
@@ -241,7 +241,7 @@ public class SelectTypeTemplateWindow extends JDialog
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					cre.getMessage(),
-					LangModelReport.String("label_error"),
+					LangModelReport.getString("label_error"),
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
@@ -268,7 +268,7 @@ public class SelectTypeTemplateWindow extends JDialog
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					cre.getMessage(),
-					LangModelReport.String("label_error"),
+					LangModelReport.getString("label_error"),
 					JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
@@ -291,7 +291,7 @@ public class SelectTypeTemplateWindow extends JDialog
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					cre.getMessage(),
-					LangModelReport.String("label_error"),
+					LangModelReport.getString("label_error"),
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}

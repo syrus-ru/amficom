@@ -93,8 +93,8 @@ public class GeneralTimeFilterPanel extends FilterPanel
 			});
 
 		this.setLayout(new GridBagLayout());
-		jLabel1.setText(LangModel.String("labelFrom"));
-		jLabel2.setText(LangModel.String("labelTo"));
+		jLabel1.setText(LangModel.getString("labelFrom"));
+		jLabel2.setText(LangModel.getString("labelTo"));
 
 		this.add(jLabel1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 10), 0, 0));
@@ -139,10 +139,10 @@ public class GeneralTimeFilterPanel extends FilterPanel
 
 		FilterExpression fexp = new FilterExpression();
 
-		String expName = LangModel.String("labelFiltration") + " \'" + col_name + "\' ";
+		String expName = LangModel.getString("labelFiltration") + " \'" + col_name + "\' ";
 		if (conditionsRequested)
-			expName += (LangModel.String("labelTimeOt") + " " + fromDate + " " +
-							LangModel.String("labelTimeDo") + " " + toDate);
+			expName += (LangModel.getString("labelTimeOt") + " " + fromDate + " " +
+							LangModel.getString("labelTimeDo") + " " + toDate);
 
 		fexp.setName(expName);
 		fexp.setColumnName(col_name);

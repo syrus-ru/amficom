@@ -32,13 +32,13 @@ public class CreateReportException extends Exception
   public String getMessage()
   {
 	 if (reason.equals(cantImplement))
-		return LangModelReport.String("label_report") + reportName + LangModelReport.String(reason);
+		return LangModelReport.getString("label_report") + reportName + LangModelReport.getString(reason);
 	 if (reason.equals(templatePiece))
-		return LangModelReport.String(reason) + " (" + reportName + ")";
+		return LangModelReport.getString(reason) + " (" + reportName + ")";
 	 if (reason.equals(poolObjNotExists))
-		return LangModelReport.String(reason) + reportName;
+		return LangModelReport.getString(reason) + reportName;
 	 if (reason.equals(generalError))
-		return LangModelReport.String(reason);
+		return LangModelReport.getString(reason);
 
 	 return "";
   }

@@ -42,7 +42,7 @@ public class CalendarUI extends JPanel
 		}
 
 		mCanvas.init(this, cal);
-		monthLabel.setText(" " + sdf.format(getCalendar().getTime()) + LangModel.String("YearPostfix"));
+		monthLabel.setText(" " + sdf.format(getCalendar().getTime()) + LangModel.getString("YearPostfix"));
 	}
 
 	public static JDialog createDialogInstance(Calendar cal, boolean hideOnChoose)
@@ -57,7 +57,7 @@ public class CalendarUI extends JPanel
 			}
 		};
 		dialog.setSize(new Dimension(190, 190));
-		dialog.setTitle(LangModel.String("CalendarTitle"));
+		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
 		return dialog;
@@ -75,7 +75,7 @@ public class CalendarUI extends JPanel
 			}
 		};
 		dialog.setSize(new Dimension(190, 190));
-		dialog.setTitle(LangModel.String("CalendarTitle"));
+		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
 		return dialog;
@@ -94,7 +94,7 @@ public class CalendarUI extends JPanel
 		};
 		dialog.setModal(modal);
 		dialog.setSize(new Dimension(190, 190));
-		dialog.setTitle(LangModel.String("CalendarTitle"));
+		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
 		return dialog;
@@ -113,7 +113,7 @@ public class CalendarUI extends JPanel
 		};
 		dialog.setContentPane(instance);
 		dialog.setSize(new Dimension(190, 190));
-		dialog.setTitle(LangModel.String("CalendarTitle"));
+		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		instance.setHideOnChoose(hideOnChoose);
 		return dialog;
 	}
@@ -131,7 +131,7 @@ public class CalendarUI extends JPanel
 		};
 		dialog.setModal(modal);
 		dialog.setSize(new Dimension(190, 190));
-		dialog.setTitle(LangModel.String("CalendarTitle"));
+		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
 		return dialog;
@@ -149,7 +149,7 @@ public class CalendarUI extends JPanel
 			}
 		};
 		frame.setSize(new Dimension(190, 190));
-		frame.setTitle(LangModel.String("CalendarTitle"));
+		frame.setTitle(LangModel.getString("CalendarTitle"));
 		frame.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
 		return frame;
@@ -160,7 +160,7 @@ public class CalendarUI extends JPanel
 		CalendarUI instance = new CalendarUI(cal);
 		internalFrame = new JInternalFrame();
 		internalFrame.setSize(new Dimension(190, 190));
-		internalFrame.setTitle(LangModel.String("CalendarTitle"));
+		internalFrame.setTitle(LangModel.getString("CalendarTitle"));
 		internalFrame.setContentPane(instance);
 		return internalFrame;
 	}
@@ -213,9 +213,9 @@ public class CalendarUI extends JPanel
 		todayPanel = new JPanel(new FlowLayout());
 		todayPanel.add(
 			new JLabel(
-				LangModel.String("Today") + ": " +
+				LangModel.getString("Today") + ": " +
 				new SimpleDateFormat("dd.MM.yyyy").format(mCanvas.todayCal.getTime()) +
-				LangModel.String("YearPostfix")),
+				LangModel.getString("YearPostfix")),
 			BorderLayout.SOUTH);
 
 		add(monthPanel, BorderLayout.NORTH);
@@ -251,7 +251,7 @@ public class CalendarUI extends JPanel
 			cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
 
 		mCanvas.reinit();
-		monthLabel.setText(" " + sdf.format(cal.getTime()) + LangModel.String("YearPostfix"));
+		monthLabel.setText(" " + sdf.format(cal.getTime()) + LangModel.getString("YearPostfix"));
 	}
 
 	public void decrease()
@@ -266,7 +266,7 @@ public class CalendarUI extends JPanel
 			cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
 
 		mCanvas.reinit();
-		monthLabel.setText(" " + sdf.format(cal.getTime()) + LangModel.String("YearPostfix"));
+		monthLabel.setText(" " + sdf.format(cal.getTime()) + LangModel.getString("YearPostfix"));
 	}
 
 	public void setMonthVisible(boolean b)

@@ -100,7 +100,7 @@ public class ChangePasswordDialog extends JDialog
 
 	public ChangePasswordDialog(ApplicationContext aContext)
 	{
-		this(Environment.getActiveWindow(), LangModel.String("ChangePasswordTitle"), false);
+		this(Environment.getActiveWindow(), LangModel.getString("ChangePasswordTitle"), false);
 		this.aContext = aContext;
 	}
 
@@ -111,20 +111,20 @@ public class ChangePasswordDialog extends JDialog
 		xYLayout1.setWidth(343);
 		xYLayout1.setHeight(158);
 
-		jLabel1.setText(LangModel.String("labelName"));
-		jLabel2.setText(LangModel.String("labelOldPassword"));
-		jLabel3.setText(LangModel.String("labelNewPassword"));
-		jLabel4.setText(LangModel.String("labelNewPassword2"));
+		jLabel1.setText(LangModel.getString("labelName"));
+		jLabel2.setText(LangModel.getString("labelOldPassword"));
+		jLabel3.setText(LangModel.getString("labelNewPassword"));
+		jLabel4.setText(LangModel.getString("labelNewPassword2"));
 
 		getContentPane().add(jPanel1);
 
-		buttonOk.setText(LangModel.String("buttonChange"));
+		buttonOk.setText(LangModel.getString("buttonChange"));
 		buttonOk.addActionListener(
 				new ChangePasswordDialog_buttonOk_actionAdapter(this));
-		buttonHelp.setText(LangModel.String("buttonHelp"));
+		buttonHelp.setText(LangModel.getString("buttonHelp"));
 		buttonHelp.addActionListener(
 				new ChangePasswordDialog_buttonHelp_actionAdapter(this));
-		buttonCancel.setText(LangModel.String("buttonCancel"));
+		buttonCancel.setText(LangModel.getString("buttonCancel"));
 		buttonCancel.addActionListener(
 				new ChangePasswordDialog_buttonCancel_actionAdapter(this));
 
@@ -162,8 +162,8 @@ public class ChangePasswordDialog extends JDialog
 			fieldNewPassword2.setText("");
 			JOptionPane.showMessageDialog(
 					this,
-					LangModel.String("errorWrongName"),
-					LangModel.String("errorTitleChangePassword"),
+					LangModel.getString("errorWrongName"),
+					LangModel.getString("errorTitleChangePassword"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
 			return;
@@ -176,8 +176,8 @@ public class ChangePasswordDialog extends JDialog
 			fieldNewPassword2.setText("");
 			JOptionPane.showMessageDialog(
 					this,
-					LangModel.String("errorWrongPassword"),
-					LangModel.String("errorTitleChangePassword"),
+					LangModel.getString("errorWrongPassword"),
+					LangModel.getString("errorTitleChangePassword"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
 			return;
@@ -189,8 +189,8 @@ public class ChangePasswordDialog extends JDialog
 			fieldNewPassword2.setText("");
 			JOptionPane.showMessageDialog(
 					this,
-					LangModel.String("errorPasswordTooShort"),
-					LangModel.String("errorTitleChangePassword"),
+					LangModel.getString("errorPasswordTooShort"),
+					LangModel.getString("errorTitleChangePassword"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
 			return;
@@ -201,8 +201,8 @@ public class ChangePasswordDialog extends JDialog
 			fieldNewPassword2.setText("");
 			JOptionPane.showMessageDialog(
 					this,
-					LangModel.String("errorWrongPassword2"),
-					LangModel.String("errorTitleChangePassword"),
+					LangModel.getString("errorWrongPassword2"),
+					LangModel.getString("errorTitleChangePassword"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
 			return;
@@ -213,7 +213,7 @@ public class ChangePasswordDialog extends JDialog
 			JOptionPane.showMessageDialog(
 					this,
 					"Ошибка изменения пароля",
-					LangModel.String("errorTitleChangePassword"),
+					LangModel.getString("errorTitleChangePassword"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
 			return;

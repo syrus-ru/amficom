@@ -43,8 +43,8 @@ public class GeneralEquationFilterPanel extends FilterPanel
 	private void jbInit() throws Exception
 	{
 		this.setLayout(new GridBagLayout());
-		jLabel1.setText(LangModel.String("labelUslovie"));
-		jLabel2.setText(LangModel.String("labelZnachenie"));
+		jLabel1.setText(LangModel.getString("labelUslovie"));
+		jLabel2.setText(LangModel.getString("labelZnachenie"));
 		eqButton.setText("=");
 		lessButton.setText("<");
 		moreButton.setText(">");
@@ -85,7 +85,7 @@ public class GeneralEquationFilterPanel extends FilterPanel
 		vec.add(textField.getText());
 		FilterExpression fexp = new FilterExpression();
 
-		String expName = LangModel.String("labelFiltration") + " \'" + col_name + "\' " + LangModel.String("labelPoZnach");
+		String expName = LangModel.getString("labelFiltration") + " \'" + col_name + "\' " + LangModel.getString("labelPoZnach");
 		if (conditionsRequested)
 			expName += (" " + temp + " " + textField.getText());
 

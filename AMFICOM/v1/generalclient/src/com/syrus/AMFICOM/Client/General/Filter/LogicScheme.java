@@ -109,7 +109,7 @@ public class LogicScheme extends LogicSchemeBase
 	private String getTextFor(LogicSchemeElement top)
 	{
 		if (top.type.equals(LogicSchemeElement.t_condition))
-			return "\"" + LangModel.String(LogicSchemeElement.t_condition) + " " + top.filterExpression.getListID() + "\"";
+			return "\"" + LangModel.getString(LogicSchemeElement.t_condition) + " " + top.filterExpression.getListID() + "\"";
 
 		LinkedList allTopLinks = top.input.getLinks();
 
@@ -128,7 +128,7 @@ public class LogicScheme extends LogicSchemeBase
 			if (i == 0)
 				result = getTextFor(curInputElement);
 			else
-				result = result + " " + LangModel.String(top.operandType) + " " + getTextFor(curInputElement);
+				result = result + " " + LangModel.getString(top.operandType) + " " + getTextFor(curInputElement);
 		}
 
 		if (top != treeResult)
@@ -204,7 +204,7 @@ public class LogicScheme extends LogicSchemeBase
 						fe.getName(),
 						true);
 
-					JButton applyButton = new JButton (LangModelReport.String("label_apply"));
+					JButton applyButton = new JButton (LangModelReport.getString("label_apply"));
 					applyButton.addActionListener(new ActionListener()
 					{
 						public void actionPerformed(ActionEvent e)

@@ -99,7 +99,7 @@ public class SessionOpenDialog extends JDialog
 
 	public SessionOpenDialog()
 	{
-		this(Environment.getActiveWindow(), LangModel.String("SessionOpenTitle"), false);
+		this(Environment.getActiveWindow(), LangModel.getString("SessionOpenTitle"), false);
 	}
 
 	public SessionOpenDialog(String lastuser)
@@ -117,19 +117,19 @@ public class SessionOpenDialog extends JDialog
 		xYLayout1.setWidth(460);
 		xYLayout1.setHeight(255);
 
-		jLabel1.setText(LangModel.String("labelName"));
-		jLabel3.setText(LangModel.String("labelCategory"));
+		jLabel1.setText(LangModel.getString("labelName"));
+		jLabel3.setText(LangModel.getString("labelCategory"));
 		fieldPassword.addKeyListener(new SessionOpenDialog_fieldPassword_keyAdapter(this));
 		fieldUser.addKeyListener(new SessionOpenDialog_fieldUser_keyAdapter(this));
-		jLabel2.setText(LangModel.String("labelPassword"));
+		jLabel2.setText(LangModel.getString("labelPassword"));
 
-		buttonOk.setText(LangModel.String("buttonEnter"));
+		buttonOk.setText(LangModel.getString("buttonEnter"));
 		buttonOk.addActionListener(
 				new SessionOpenDialog_buttonOk_actionAdapter(this));
-		buttonHelp.setText(LangModel.String("buttonHelp"));
+		buttonHelp.setText(LangModel.getString("buttonHelp"));
 		buttonHelp.addActionListener(
 				new SessionOpenDialog_buttonHelp_actionAdapter(this));
-		buttonCancel.setText(LangModel.String("buttonCancel"));
+		buttonCancel.setText(LangModel.getString("buttonCancel"));
 		buttonCancel.addActionListener(
 				new SessionOpenDialog_buttonCancel_actionAdapter(this));
 
@@ -165,8 +165,8 @@ public class SessionOpenDialog extends JDialog
 			fieldPassword.setText("");
 			JOptionPane.showMessageDialog(
 					this,
-					LangModel.String("errorWrongLogin"),
-					LangModel.String("errorTitleOpenSession"),
+					LangModel.getString("errorWrongLogin"),
+					LangModel.getString("errorTitleOpenSession"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
 			return;

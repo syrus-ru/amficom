@@ -10,7 +10,7 @@ public class LangModelReport {
 																	.getBundle(BUNDLE_NAME);
 
 
-	private LangModelReport() {
+	public LangModelReport() {
 		//symbols = new DateFormatSymbols(locale);
 	}
 
@@ -20,7 +20,7 @@ public class LangModelReport {
 		String string = null;
 		try {
 			string = RESOURCE_BUNDLE.getString(keyName);
-		} catch (MissingResourceException e) {			
+		} catch (MissingResourceException e) {
 
 			try {
 				throw new Exception("key '"

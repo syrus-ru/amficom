@@ -167,7 +167,7 @@ public class SelectReportsPanel extends JInternalFrame implements
 		this.setClosable(true);
 		this.setResizable(true);
 		this.setVisible(true);
-		this.setTitle(LangModelReport.String("label_availableReports"));
+		this.setTitle(LangModelReport.getString("label_availableReports"));
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		this.setSize(new Dimension(280, -1));

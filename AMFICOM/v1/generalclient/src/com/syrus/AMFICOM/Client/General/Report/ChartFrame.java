@@ -27,7 +27,7 @@
  * Original Author:  David Gilbert (for Object Refinery Limited);
  * Contributor(s):   -;
  *
- * $Id: ChartFrame.java,v 1.2 2004/06/22 09:26:53 arseniy Exp $
+ * $Id: ChartFrame.java,v 1.3 2004/07/09 09:42:38 peskovsky Exp $
  *
  * Changes
  * -------
@@ -215,7 +215,7 @@ public class ChartFrame extends JInternalFrame
 		plot.setStartAngle(270);
 		plot.setDirection(Rotation.CLOCKWISE);
 		plot.setForegroundAlpha(0.5f);
-		plot.setNoDataMessage(LangModelReport.String("error_noDataToDisplay"));
+		plot.setNoDataMessage(LangModelReport.getString("error_noDataToDisplay"));
 //      plot.setExplodePercent();
 		Rotator rotator = new Rotator(plot, this);
 		rotator.start();
@@ -274,7 +274,7 @@ public class ChartFrame extends JInternalFrame
 		JFreeChart chart = ChartFactory.createBarChart3D(
 			stat.field, // chart title
 			"", //LangModelReport.String("label_field"), // domain axis label
-			LangModelReport.String("label_value"), // range axis label
+			LangModelReport.getString("label_value"), // range axis label
 			dataset, // data
 			PlotOrientation.VERTICAL,
 			true, // include legend
@@ -315,7 +315,7 @@ public class ChartFrame extends JInternalFrame
 		JFreeChart chart = ChartFactory.createBarChart(
 			stat.field, // chart title
 			"", //LangModelReport.String("label_field"), // domain axis label
-			LangModelReport.String("label_number"), // range axis label
+			LangModelReport.getString("label_number"), // range axis label
 			dataset, // data
 			PlotOrientation.VERTICAL,
 			true, // include legend
@@ -366,7 +366,7 @@ public class ChartFrame extends JInternalFrame
 			return null;
 
 		TimeSeries s1 = new TimeSeries(
-			LangModelReport.String("label_number"), this.interval_size);
+			LangModelReport.getString("label_number"), this.interval_size);
 
 		for (int i = 0; i < this.objectsNumberAtInterval.length; i++)
 		{
@@ -439,9 +439,9 @@ public class ChartFrame extends JInternalFrame
 	{
 
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(
-			LangModelReport.String("label_numberForPeriod"),
-			LangModelReport.String("label_period"),
-			LangModelReport.String("label_number"),
+			LangModelReport.getString("label_numberForPeriod"),
+			LangModelReport.getString("label_period"),
+			LangModelReport.getString("label_number"),
 			dataset,
 			true,
 			true,
@@ -489,9 +489,9 @@ public class ChartFrame extends JInternalFrame
 	{
 
 		JFreeChart chart = ChartFactory.createXYBarChart(
-			LangModelReport.String("label_numberForPeriod"),
-			LangModelReport.String("label_period"),
-			LangModelReport.String("label_number"),
+			LangModelReport.getString("label_numberForPeriod"),
+			LangModelReport.getString("label_period"),
+			LangModelReport.getString("label_number"),
 			dataset,
 			PlotOrientation.VERTICAL,
 			true,

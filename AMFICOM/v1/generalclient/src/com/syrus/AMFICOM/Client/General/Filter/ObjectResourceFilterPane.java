@@ -229,7 +229,7 @@ public class ObjectResourceFilterPane extends JScrollPane
 		if (SwingUtilities.isRightMouseButton(e))
 		{
 			JPopupMenu popup = new JPopupMenu();
-			JMenuItem delete = new JMenuItem(LangModel.String(
+			JMenuItem delete = new JMenuItem(LangModel.getString(
 				"label_deleteCriteria"));
 			delete.addActionListener(new java.awt.event.ActionListener()
 			{
@@ -287,7 +287,7 @@ repaint();
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModel.String("labelTabbedFilter"));
+		setName(LangModel.getString("labelTabbedFilter"));
 		ml = new MouseAdapter()
 		{
 			public void mousePressed(MouseEvent e)
@@ -297,7 +297,7 @@ repaint();
 		};
 		this.setSize(new Dimension(443, 462));
 		mainPanel.setLayout(gridBagLayout1);
-		jLabel1.setText(LangModel.String("label_filterCriteria"));
+		jLabel1.setText(LangModel.getString("label_filterCriteria"));
 		columnComboBox.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -309,7 +309,7 @@ repaint();
 		eqRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/filter_equal.gif").getScaledInstance(16, 16,
 			Image.SCALE_SMOOTH)));
-		eqRadioButton.setToolTipText(LangModel.String("label_equality"));
+		eqRadioButton.setToolTipText(LangModel.getString("label_equality"));
 		eqRadioButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -322,7 +322,7 @@ repaint();
 															getImage(
 			"images/filter_diapazon.gif").getScaledInstance(16, 16,
 			Image.SCALE_SMOOTH)));
-		rangeRadioButton.setToolTipText(LangModel.String("label_diapason"));
+		rangeRadioButton.setToolTipText(LangModel.getString("label_diapason"));
 		rangeRadioButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -335,7 +335,7 @@ repaint();
 														  getImage("images/filter_time.gif").
 														  getScaledInstance(16, 16,
 			Image.SCALE_SMOOTH)));
-		timeRadioButton.setToolTipText(LangModel.String("label_time"));
+		timeRadioButton.setToolTipText(LangModel.getString("label_time"));
 		timeRadioButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -347,7 +347,7 @@ repaint();
 		subRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/filter_substring.gif").getScaledInstance(16, 16,
 			Image.SCALE_SMOOTH)));
-		subRadioButton.setToolTipText(LangModel.String("label_substring"));
+		subRadioButton.setToolTipText(LangModel.getString("label_substring"));
 		subRadioButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -360,7 +360,7 @@ repaint();
 														  getImage("images/filter_list.gif").
 														  getScaledInstance(16, 16,
 			Image.SCALE_SMOOTH)));
-		listRadioButton.setToolTipText(LangModel.String("label_list"));
+		listRadioButton.setToolTipText(LangModel.getString("label_list"));
 		listRadioButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -373,7 +373,7 @@ repaint();
 		typePanel.setLayout(verticalFlowLayout1);
 
 		changeButton.setEnabled(false);
-		changeButton.setText(LangModel.String("label_change"));
+		changeButton.setText(LangModel.getString("label_change"));
 		changeButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -394,8 +394,8 @@ repaint();
 				editLogicTreeButton_actionPerformed(e);
 			}
 		});
-		jLabel2.setText(LangModel.String("label_summaryExpression"));
-		/*		applyButton.setText(LangModel.String("label_apply"));
+		jLabel2.setText(LangModel.getString("label_summaryExpression"));
+		/*		applyButton.setText(LangModel.getString("label_apply"));
 		  applyButton.addActionListener(new java.awt.event.ActionListener()
 		  {
 			public void actionPerformed(ActionEvent e)
@@ -469,7 +469,7 @@ repaint();
 		filterPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.
 			RAISED));
 
-		addButton.setText(LangModel.String("label_add"));
+		addButton.setText(LangModel.getString("label_add"));
 
 		mainPanel.add(jLabel1,
 							new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0
@@ -691,8 +691,8 @@ repaint();
 		{
 			JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				LangModel.String("label_emptyScheme"),
-				LangModel.String("label_error"),
+				LangModel.getString("label_emptyScheme"),
+				LangModel.getString("label_error"),
 				JOptionPane.ERROR_MESSAGE);
 			return;
 		}

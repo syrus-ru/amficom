@@ -112,9 +112,9 @@ class StatTableModel
 			switch (col % 2)
 			{
 				case 0:
-					return LangModelReport.String("label_value");
+					return LangModelReport.getString("label_value");
 				case 1:
-					return LangModelReport.String("label_number");
+					return LangModelReport.getString("label_number");
 			}
 
 		int index = (this.getRowCount() - 1) * (int) (col / 2) + row - 1;

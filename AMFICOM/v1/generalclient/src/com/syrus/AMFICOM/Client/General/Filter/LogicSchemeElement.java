@@ -35,13 +35,13 @@ public class LogicSchemeElement extends LogicSchemeElementBase
 		int titleY = this.y + 15;
 
 		if (this.filterExpression != null)
-			g.drawString(LangModel.String(this.type) + ":" + this.filterExpression.getListID(), titleX, titleY);
+			g.drawString(LangModel.getString(this.type) + ":" + this.filterExpression.getListID(), titleX, titleY);
 		else
 		{
 			if (this.operandType != "")
-				g.drawString(LangModel.String(this.type) + ":" + LangModel.String(this.operandType), titleX, titleY);
+				g.drawString(LangModel.getString(this.type) + ":" + LangModel.getString(this.operandType), titleX, titleY);
 			else
-				g.drawString(LangModel.String(this.type), titleX, titleY);
+				g.drawString(LangModel.getString(this.type), titleX, titleY);
 		}
 	}
 }

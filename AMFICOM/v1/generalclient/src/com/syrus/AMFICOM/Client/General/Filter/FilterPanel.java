@@ -17,7 +17,7 @@ public class FilterPanel extends JPanel
 	public FilterPanel()
 	{
 		super();
-		this.setName(LangModel.String("labelTabbedProperties"));
+		this.setName(LangModel.getString("labelTabbedProperties"));
 		try
 		{
 			jbInit();

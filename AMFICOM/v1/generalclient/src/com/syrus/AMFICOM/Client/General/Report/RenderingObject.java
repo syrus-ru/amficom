@@ -171,7 +171,7 @@ public class RenderingObject
 		}
 		else
 		{
-			String stringToPrint = LangModelReport.String("label_ro");
+			String stringToPrint = LangModelReport.getString("label_ro");
 
 			Rectangle labelBounds = g.getFont().getStringBounds(stringToPrint,
 					new FontRenderContext(null,true,true)).getBounds();

@@ -1106,8 +1106,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 		{
 			JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				LangModelReport.String("label_emptyReport"),
-				LangModelReport.String("label_error"),
+				LangModelReport.getString("label_emptyReport"),
+				LangModelReport.getString("label_error"),
 				JOptionPane.ERROR_MESSAGE);
 			return -7777;
 		}
@@ -1119,7 +1119,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 			ChoosableFileFilter filter =
 				new ChoosableFileFilter(
 				"html",
-				LangModelReport.String("label_htmlFiles"));
+				LangModelReport.getString("label_htmlFiles"));
 			fileChooser.addChoosableFileFilter(filter);
 
 			int option = fileChooser.showSaveDialog(Environment.getActiveWindow());
@@ -1137,7 +1137,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 		{
 			if (JOptionPane.showConfirmDialog(
 				Environment.getActiveWindow(),
-				LangModelReport.String("label_fileExists"),
+				LangModelReport.getString("label_fileExists"),
 				"",
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
@@ -1406,8 +1406,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 		{
 			JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				LangModelReport.String("error_fileNotAvailable"),
-				LangModelReport.String("label_error"),
+				LangModelReport.getString("error_fileNotAvailable"),
+				LangModelReport.getString("label_error"),
 				JOptionPane.ERROR_MESSAGE);
 			return -7777;
 		}
@@ -1610,7 +1610,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 			"<meta name=\"GENERATOR\" content=\"Microsoft FrontPage 4.0\">\n" +
 			"<meta name=\"ProgId\" content=\"FrontPage.Editor.Document\">\n" +
 			"<title>" +
-			LangModelReport.String("label_reportForTemplate") +
+			LangModelReport.getString("label_reportForTemplate") +
 			" " + templateName + "</title>\n" +
 			"</head>\n\n<body>\n\n" +
 			"<table border=\"0\" width=\"" + mainTableWidth.intValue() +

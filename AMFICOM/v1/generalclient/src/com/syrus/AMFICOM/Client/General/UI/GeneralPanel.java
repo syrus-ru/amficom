@@ -51,7 +51,7 @@ public class GeneralPanel
 	XYLayout xYLayout1 = new XYLayout();
 
 	public ApplicationContext aContext = new ApplicationContext();
-	
+
 	public GeneralPanel()
 	{
 		super();
@@ -67,8 +67,8 @@ public class GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModel.String("labelTabbedProperties"));
-	
+		setName(LangModel.getString("labelTabbedProperties"));
+
 //		xYLayout1.setWidth(610);
 //		xYLayout1.setHeight(410);
 
@@ -87,7 +87,7 @@ public class GeneralPanel
 	{
 		return true;
 	}
-	
+
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
@@ -97,12 +97,12 @@ public class GeneralPanel
 	{
 		return false;
 	}
-	
+
 	public boolean create()
 	{
 		return false;
 	}
-	
+
 	public boolean delete()
 	{
 		return false;
@@ -114,10 +114,10 @@ public class GeneralPanel
 	{
 		return false;
 	}
-	
+
 	public boolean save()
 	{
 		return false;
 	}
-	
+
 }

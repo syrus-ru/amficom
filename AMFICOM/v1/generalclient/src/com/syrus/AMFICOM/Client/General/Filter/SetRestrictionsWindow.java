@@ -81,7 +81,7 @@ public class SetRestrictionsWindow extends JInternalFrame
 
 	 this.setClosable(true);
 	 this.setResizable(true);
-	 this.setTitle(LangModel.String("label_filter"));
+	 this.setTitle(LangModel.getString("label_filter"));
 	 this.getContentPane().add(orfp, BorderLayout.CENTER);
   }
 

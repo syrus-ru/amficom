@@ -48,13 +48,13 @@ public class ImagePanel extends JPanel
 		ChoosableFileFilter filter =
 			new ChoosableFileFilter(
 			"gif",
-			LangModelReport.String("label_GIFFiles"));
+			LangModelReport.getString("label_GIFFiles"));
 		fileChooser.addChoosableFileFilter(filter);
 
 		filter =
 			new ChoosableFileFilter(
 			"jpg",
-			LangModelReport.String("label_JPGFiles"));
+			LangModelReport.getString("label_JPGFiles"));
 		fileChooser.addChoosableFileFilter(filter);
 
 

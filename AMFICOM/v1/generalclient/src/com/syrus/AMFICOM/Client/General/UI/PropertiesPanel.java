@@ -14,7 +14,7 @@ public abstract class PropertiesPanel extends JPanel
 	public PropertiesPanel()
 	{
 		super();
-		this.setName(LangModel.String("labelTabbedProperties"));
+		this.setName(LangModel.getString("labelTabbedProperties"));
 	}
 
 	public abstract ObjectResource getObjectResource();

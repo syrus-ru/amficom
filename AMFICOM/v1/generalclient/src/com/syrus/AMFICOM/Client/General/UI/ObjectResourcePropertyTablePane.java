@@ -81,7 +81,7 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModel.String("labelTabbedList"));
+		setName(LangModel.getString("labelTabbedList"));
 
 		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
 
@@ -202,5 +202,5 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 	{
 		return jTable;
 	}
-	
+
 }

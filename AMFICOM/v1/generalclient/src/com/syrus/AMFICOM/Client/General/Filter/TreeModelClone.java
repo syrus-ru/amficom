@@ -19,7 +19,7 @@ public class TreeModelClone extends DefaultTreeModel
 
 	public TreeModelClone myclone ()
 	{
-		FilterTreeNode new_root = new FilterTreeNode(LangModel.String("labelRoot"), "root");
+		FilterTreeNode new_root = new FilterTreeNode(LangModel.getString("labelRoot"), "root");
 		new_root.state = ((FilterTreeNode)root).state;
 		for(Enumeration en = root.children(); en.hasMoreElements();)
 		{
@@ -39,7 +39,7 @@ public class TreeModelClone extends DefaultTreeModel
 					FilterTreeNode vol_tt_new = new FilterTreeNode(vol_tt_old.getName(),vol_tt_old.id);
 					vol_tt_new.state = vol_tt_old.state;
 					portnode_new.add(vol_tt_new);
-					if ( vol_tt_new.getName().equals(LangModel.String("ORMones")) )
+					if ( vol_tt_new.getName().equals(LangModel.getString("ORMones")) )
 					{
 						for(Enumeration enum = vol_tt_old.children(); enum.hasMoreElements();)
 						{
@@ -49,7 +49,7 @@ public class TreeModelClone extends DefaultTreeModel
 							vol_tt_new.add(pathnode_new);
 						}
 					}
-					if ( vol_tt_new.getName().equals(LangModel.String("ORTestTypes")) )
+					if ( vol_tt_new.getName().equals(LangModel.getString("ORTestTypes")) )
 					{
 						for(Enumeration enum = vol_tt_old.children(); enum.hasMoreElements();)
 						{
@@ -66,24 +66,24 @@ public class TreeModelClone extends DefaultTreeModel
 		TreeModelClone mtm = new TreeModelClone(new_root);
 		return mtm;
 	}
-  
+
 	public Hashtable getHash ()
 	{
 		Hashtable result = new Hashtable();
-    
+
 		FilterTreeNode node = (FilterTreeNode )this.getRoot();
 
 		getTreeHash(node, result);
 
 		return result;
 	}
-  
+
 	private void getTreeHash(FilterTreeNode node, Hashtable volume)
 	{
 		FilterTreeNode parent = (FilterTreeNode )node.getParent();
-      
+
 		ArrayList childList = new ArrayList();
-		for(Enumeration enum1 = node.children(); enum1.hasMoreElements();)      
+		for(Enumeration enum1 = node.children(); enum1.hasMoreElements();)
 			childList.add(((FilterTreeNode )enum1.nextElement()).id);
 
 		FilterTreeNodeHolder trans = new FilterTreeNodeHolder(
@@ -93,19 +93,19 @@ public class TreeModelClone extends DefaultTreeModel
 //				"root",
 				(parent == null) ? "" : parent.id,
 				(String[] )childList.toArray(new String[0]));
-        
+
 		volume.put(node.id, trans);
 
 		for(Enumeration enum = node.children(); enum.hasMoreElements();)
 		{
 			FilterTreeNode curElem = (FilterTreeNode )enum.nextElement();
-			
+
 			getTreeHash(curElem, volume);
-/*      
+/*
 			ArrayList childList = new ArrayList();
-			for(Enumeration enum1 = curElem.children(); enum1.hasMoreElements();)      
+			for(Enumeration enum1 = curElem.children(); enum1.hasMoreElements();)
 				childList.add(((FilterTreeNode )enum1.nextElement()).id);
-      
+
 			FilterTreeNodeHolder trans = new FilterTreeNodeHolder(
 					curElem.id,
 					curElem.state,
@@ -113,7 +113,7 @@ public class TreeModelClone extends DefaultTreeModel
 					node.id,
 //					(parent == null) ? "root" : parent.id,
 					(String[] )childList.toArray());
-        
+
 			volume.put(curElem.id, trans);
 */
 		}

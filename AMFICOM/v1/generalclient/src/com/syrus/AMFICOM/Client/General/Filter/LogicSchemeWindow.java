@@ -103,10 +103,10 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	{
 //    setClosable(true);
 //    this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-		this.setTitle(LangModel.String("label_lswTitle"));
+		this.setTitle(LangModel.getString("label_lswTitle"));
 		JPanel contentPane = (JPanel) this.getContentPane();
-		buttonClose.setText(LangModel.String("label_close"));
-		deleteButton.setText(LangModel.String("label_delete"));
+		buttonClose.setText(LangModel.getString("label_close"));
+		deleteButton.setText(LangModel.getString("label_delete"));
 		deleteButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -118,7 +118,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 		this.setSize(new Dimension(610, 300));
 
 		andToggleButton.setMargin(new Insets(2, 2, 2, 2));
-		andToggleButton.setText(LangModel.String("label_and"));
+		andToggleButton.setText(LangModel.getString("label_and"));
 		andToggleButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -126,7 +126,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 				andToggleButton_actionPerformed(e);
 			}
 		});
-		orToggleButton.setText(LangModel.String("label_or"));
+		orToggleButton.setText(LangModel.getString("label_or"));
 		orToggleButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -139,7 +139,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 		jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		jScrollPane1.setAutoscrolls(true);
 		useStandartSchemeCheckBox.setSelected(true);
-		useStandartSchemeCheckBox.setText(LangModel.String("label_createStandartScheme"));
+		useStandartSchemeCheckBox.setText(LangModel.getString("label_createStandartScheme"));
 		contentPane.setBorder(BorderFactory.createEtchedBorder());
 		contentPane.add(useStandartSchemeCheckBox, new GridBagConstraints(0, 0, 4, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 0, 0));
 		contentPane.add(jScrollPane1, new GridBagConstraints(0, 1, 5, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 0, 10), 0, 0));
@@ -166,8 +166,8 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 				{
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModel.String("label_schemeNotCompleted"),
-							LangModel.String("label_error"),
+							LangModel.getString("label_schemeNotCompleted"),
+							LangModel.getString("label_error"),
 							JOptionPane.ERROR_MESSAGE);
 					filter.logicScheme.organizeStandartScheme();
 					refreshLSTextValue();
