@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.15 2005/03/10 12:51:46 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.16 2005/03/10 15:19:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/03/10 12:51:46 $
+ * @version $Revision: 1.16 $, $Date: 2005/03/10 15:19:14 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -48,7 +48,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.parameterTypeDatabase;
 		Collection collection = null;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
@@ -61,7 +61,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Collection collection = null;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
@@ -75,7 +75,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		Collection collection = null;
 		try {
-			collection = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
