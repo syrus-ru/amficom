@@ -133,6 +133,7 @@ database_v1	AMFICOM/v1/database
 
 akp		hw/akp
 trc		hw/trc
+tracedatareader	hw/tracedatareader
 t4		hw/t4
 r6		hw/r6
 
