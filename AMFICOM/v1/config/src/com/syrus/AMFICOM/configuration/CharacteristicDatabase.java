@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.11 2004/08/18 12:37:48 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.12 2004/08/20 12:53:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/18 12:37:48 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/20 12:53:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -145,8 +145,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 						characterizedId = new Identifier(resultSet.getString(COLUMN_PORT_ID));
 						break;
 					default:
-						characterizedId = null;
-						Log.errorMessage("Characteristic_Database.retrieveCharacteristic | Unknown sort: " + sort + " for characteristic: " + cIdStr);
+						throw new RetrieveObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
 				}
 				CharacteristicType characteristicType = (CharacteristicType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
 				characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -374,7 +373,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					buffer.append(COMMA);
 					buffer.append(characterizedIdStr);
 					break;
-
+				default:
+					throw new CreateObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
 			}
 			buffer.append(CLOSE_BRACKET);
 			sql = buffer.toString();
@@ -444,6 +444,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
 					buffer.append(COLUMN_PORT_ID);
 					break;
+				default:
+					throw new RetrieveObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
 			}
 			buffer.append(EQUALS);
 			buffer.append(cdIdStr);
