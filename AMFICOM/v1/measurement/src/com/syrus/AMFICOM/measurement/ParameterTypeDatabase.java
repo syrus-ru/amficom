@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.24 2004/09/09 09:21:47 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.25 2004/09/09 10:08:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.List;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -28,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/09 09:21:47 $
+ * @version $Revision: 1.25 $, $Date: 2004/09/09 10:08:54 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -196,42 +195,19 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	public ParameterType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
-		String sql = SQL_SELECT
-			+ COLUMN_ID
-			+ SQL_FROM + ObjectEntities.PARAMETERTYPE_ENTITY
-			+ SQL_WHERE + COLUMN_CODENAME + EQUALS + APOSTOPHE + codename + APOSTOPHE;
-		Statement statement = null;
-		ResultSet resultSet = null;
+	public ParameterType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {		
+		List list = null;
+		
 		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ParameterTypeDatabase.retrieveForCodename | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()){
-				/**
-				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */
-				return new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)));
-			}
-			throw new ObjectNotFoundException("No such parameter type with codename: '" + codename + "'");
+			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + codename + APOSTOPHE);
+		}  catch (IllegalDataException ide) {				
+			throw new RetrieveObjectException(ide);
 		}
-		catch (SQLException sqle) {
-			String mesg = "ParameterTypeDatabase.retrieveForCodename | Cannot retrieve parameter type with codename: '" + codename + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
+		
+		if ((list == null) || (list.isEmpty()))
+				throw new ObjectNotFoundException("No parameter type with codename: '" + codename + "'");
+		
+		return (ParameterType) list.get(0);
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {

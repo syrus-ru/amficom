@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.22 2004/09/09 09:21:47 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.23 2004/09/09 10:08:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/09/09 09:21:47 $
+ * @version $Revision: 1.23 $, $Date: 2004/09/09 10:08:54 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -327,6 +327,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
 			preparedStatement.setString(++i, etalonIdSubstr);
+			preparedStatement.setString(++i, measurementSetup.getDescription());
+			preparedStatement.setLong(++i, measurementSetup.getMeasurementDuration());
+			
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
