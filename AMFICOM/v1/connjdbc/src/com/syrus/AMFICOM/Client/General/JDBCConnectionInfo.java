@@ -1,5 +1,5 @@
 /*
- * $Id: JDBCConnectionInfo.java,v 1.2 2004/08/20 13:47:37 bass Exp $
+ * $Id: JDBCConnectionInfo.java,v 1.3 2004/08/29 13:52:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,11 +9,11 @@
 package com.syrus.AMFICOM.Client.General;
 
 import com.syrus.AMFICOM.server.ConnectionManager;
-import com.syrus.AMFICOM.server.object.AMFICOMServer;
+import com.syrus.AMFICOM.server.object.AMFICOMImpl;
 import java.util.logging.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/20 13:47:37 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/29 13:52:03 $
  * @author $Author: bass $
  * @module connjdbc_v1
  */
@@ -79,7 +79,7 @@ public class JDBCConnectionInfo extends RISDConnectionInfo
 			try
 		{
 			connect();
-			server = new AMFICOMServer();
+			server = new AMFICOMImpl();
 
 //              /*
 //               * если соединение установлено (не произошло исключения)
