@@ -19,8 +19,8 @@
 #include "../fit/ModelF-fit.h"
 #include "../BreakL/BreakL-fit.h"
 
-#include "../An2/findLength.h"
-#include "../An2/findNoise.h"
+#include "../an2/findLength.h"
+#include "../an2/findNoise.h"
 
 #include "../common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
 #include "../common/com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h"

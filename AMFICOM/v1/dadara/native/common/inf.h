@@ -11,7 +11,9 @@
 	#endif
 #endif
 
+#ifndef HUGE
 #define HUGE 1e308
+#endif
 
 #endif
 

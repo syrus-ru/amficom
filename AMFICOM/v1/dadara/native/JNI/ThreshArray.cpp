@@ -192,7 +192,7 @@ int ThreshDXArray::getDX(int id, int key)
 	jintArray dx = (jintArray )env->GetObjectField(cur_obj, id_dX);
 	if (dx == 0)
 		return 0;
-	long data = 0;
+	jint data = 0;
 	env->GetIntArrayRegion(dx, key, 1, &data);
 	return (int )data;
 }
