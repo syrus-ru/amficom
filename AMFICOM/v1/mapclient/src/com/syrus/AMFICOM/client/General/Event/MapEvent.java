@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.8 2004/12/22 16:09:48 krupenn Exp $
+ * $Id: MapEvent.java,v 1.9 2005/01/30 15:11:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,50 +15,58 @@ package com.syrus.AMFICOM.Client.General.Event;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/22 16:09:48 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/30 15:11:53 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 public class MapEvent extends OperationEvent 
 {
-	/** открыто окно карты */
+	/** Открыто окно карты. */
 	public static final String MAP_FRAME_SHOWN = "mapframeshownevent";
 
-	/** карта закрыта */
+	/** Карта закрыта. */
 	public static final String MAP_VIEW_CLOSED = "mapviewclosedevent";
-	/** окно с картой активировано */
+	/** Окно с картой активировано. */
 	public static final String MAP_VIEW_SELECTED = "mapviewselectedevent";
-	/** окно карты деактивировано */
+	/** Окно карты деактивировано. */
 	public static final String MAP_VIEW_DESELECTED = "mapviewdeselectedevent";
-	/** содержимое вида изменилось */
+	/** Содержимое вида изменилось. */
 	public static final String MAP_VIEW_CHANGED = "mapviewchangedevent";
-	/** поменялись координаты курсора на карте */
+	/** Поменялись координаты курсора на карте. */
 	public static final String MAP_VIEW_CENTER_CHANGED = "maplatlong";
-	/** поменялся масштаб на карте */
+	/** Поменялся масштаб на карте. */
 	public static final String MAP_VIEW_SCALE_CHANGED = "mapscale";
 
-	/** окно с картой активировано */
+	/** Окно с картой активировано. */
 	public static final String MAP_SELECTED = "mapselectedevent";
-	/** окно карты деактивировано */
+	/** Окно карты деактивировано. */
 	public static final String MAP_DESELECTED = "mapdeselectedevent";
-	/** содержимое карты изменилось */
+	/** Содержимое карты изменилось. */
 	public static final String MAP_CHANGED = "mapchangedevent";
 
-	/** управление элементами на карте */
+	/** Управление элементами на карте. */
 	public static final String MAP_NAVIGATE = "mapnavigateevent";
-	/** поместить элемент на карту */
+	/** Поместить элемент на карту. */
 	public static final String PLACE_ELEMENT = "placeelement";
 
-	/** выделен элемент карты */
+	/** Выделен элемент карты. */
 	public static final String MAP_ELEMENT_SELECTED = "mapelementselectedevent";
-	/** снято выделение элемента карты */
+	/** Снято выделение элемента карты. */
 	public static final String MAP_ELEMENT_DESELECTED = "mapelementdeselectedevent";
-	/** изменен элемент карты */
+	/** Изменен элемент карты. */
 	public static final String MAP_ELEMENT_CHANGED = "mapelementchangedevent";
 
-	/** изменился список выбранных элементов на карте */
+	/** Изменился список выбранных элементов на карте. */
 	public static final String SELECTION_CHANGED = "mapselectionchangedevent";
+
+	/** Необходимо перерисовать карту. */
+	public static final String NEED_REPAINT = "needrepaint";
+	/** Необходимо перерисовать карту, включая картографические объекты. */
+	public static final String NEED_FULL_REPAINT = "needfullrepaint";
+
+	/** Снять выделение со всех объектов. */
+	public static final String DESELECT_ALL = "deselectall";
 	
 	public MapEvent(Object source, String type)
 	{	
