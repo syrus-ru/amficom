@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.7 2005/01/14 18:04:32 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.8 2005/01/28 12:25:21 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * </ul>
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/01/14 18:04:32 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/28 12:25:21 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -123,10 +123,10 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 				linkIds.add(new Identifier(transferable.linked_ids[i]));
 			}
 		}
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl"; //$NON-NLS-1$
 		try {
 			Constructor ctor;
-			if (id == null){
+			if (id == null) {
 				ctor = Class.forName(className).getDeclaredConstructor(new Class[] { List.class, Short.class});
 				ctor.setAccessible(true);
 				this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { linkIds, code});
