@@ -113,7 +113,8 @@ implements OperationListener
 						RefAnalysis a = (RefAnalysis)Pool.get("refanalysis", id);
 						BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 						setTableModel(bs, a.events);
-						updTableModel(0);
+						this.skip = true;
+						this.updateTableModel(0);
 					}
 					setVisible(true);
 				}
@@ -174,7 +175,7 @@ implements OperationListener
 						setTableModel(bs, a.events);
 						if (selected >= a.events.length)
 							selected = a.events.length-1;
-						updTableModel (selected);
+						updateTableModel (selected);
 					}
 					setVisible(true);
 				}
@@ -182,7 +183,7 @@ implements OperationListener
 
 			if (rue.eventSelected())
 			{
-				updTableModel (Integer.parseInt((String)rue.getSource()));
+				updateTableModel (Integer.parseInt((String)rue.getSource()));
 			}
 
 //			if (rue.CONCAVITY_SELECTED)
@@ -319,15 +320,15 @@ implements OperationListener
 		repaint();
 	}
 
-	void updTableModel(int activeEvent)
+	private void updateTableModel(int activeEvent)
 	{
-		if (activeEvent != -1 && activeEvent < jTable.getRowCount())
+		if (activeEvent != -1 && activeEvent < this.jTable.getRowCount())
 //			if (selected != activeEvent)
 			{
-				selected = activeEvent;
-				skip = true;
-				jTable.setRowSelectionInterval(selected, selected);
-				jTable.scrollRectToVisible(jTable.getCellRect(jTable.getSelectedRow(), jTable.getSelectedColumn(), true));
+				this.selected = activeEvent;
+			
+				this.jTable.setRowSelectionInterval(this.selected, this.selected);
+				this.jTable.scrollRectToVisible(this.jTable.getCellRect(this.jTable.getSelectedRow(), this.jTable.getSelectedColumn(), true));
 			}
 	}
 
@@ -418,85 +419,83 @@ implements OperationListener
 					 DASH  // затух
 				});
 				break;
+			}			
+		}
+	}
+	
+	private class EventTableRenderer extends ADefaultTableCellRenderer
+	{
+		int []newEventsList;
+		int []amplitudeChangedEventsList;
+		int []lossChangedEventsList;
+
+		JTable table;
+
+		public void setNewEventsList(int []newEventsList)
+		{
+			this.newEventsList = newEventsList;
+		}
+
+		public void setAmplitudeChangedEventsList(int []amplitudeChangedEventsList)
+		{
+			this.amplitudeChangedEventsList = amplitudeChangedEventsList;
+		}
+
+		public void setLossChangedEventsList(int []lossChangedEventsList)
+		{
+			this.lossChangedEventsList = lossChangedEventsList;
+		}
+
+		public EventTableRenderer(JTable table)
+		{
+			this.table = table;
+		}
+
+
+
+
+		public Component getTableCellRendererComponent(	JTable table,
+														Object value,
+														boolean isSelected,
+														boolean hasFocus,
+														int row,
+														int column) {
+			Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+			Color color = null;
+			if (containsRow(row, newEventsList))
+				color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED) : UIManager
+						.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW);
+			else if (containsRow(row, lossChangedEventsList))
+				color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED)
+						: UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED);
+			else if (containsRow(row, amplitudeChangedEventsList))
+				color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED)
+						: UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED);
+			else
+				color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_SELECTED) : UIManager
+						.getColor(AnalysisResourceKeys.COLOR_EVENTS);
+
+			if (color != null) {
+				c.setForeground(color);
 			}
 
+			return c;
+		}
+
+		private boolean containsRow(int row,
+									int[] array) {
+			boolean result = false;
+			if (array == null)
+				return false;
+
+			for (int i = 0; i < array.length; i++) {
+				if (array[i] == row) {
+					result = true;
+					break;
+				}
+			}
+			return result;
 		}
 	}
 }
-
-class EventTableRenderer extends ADefaultTableCellRenderer
-{
-	int []newEventsList;
-	int []amplitudeChangedEventsList;
-	int []lossChangedEventsList;
-
-	JTable table;
-
-	public void setNewEventsList(int []newEventsList)
-	{
-		this.newEventsList = newEventsList;
-	}
-
-	public void setAmplitudeChangedEventsList(int []amplitudeChangedEventsList)
-	{
-		this.amplitudeChangedEventsList = amplitudeChangedEventsList;
-	}
-
-	public void setLossChangedEventsList(int []lossChangedEventsList)
-	{
-		this.lossChangedEventsList = lossChangedEventsList;
-	}
-
-	public EventTableRenderer(JTable table)
-	{
-		this.table = table;
-	}
-
-
-
-
-	public Component getTableCellRendererComponent(	JTable table,
-													Object value,
-													boolean isSelected,
-													boolean hasFocus,
-													int row,
-													int column) {
-		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-		Color color = null;
-		if (containsRow(row, newEventsList))
-			color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED) : UIManager
-					.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW);
-		else if (containsRow(row, lossChangedEventsList))
-			color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED)
-					: UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED);
-		else if (containsRow(row, amplitudeChangedEventsList))
-			color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED)
-					: UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED);
-		else
-			color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_SELECTED) : UIManager
-					.getColor(AnalysisResourceKeys.COLOR_EVENTS);
-
-		if (color != null) {
-			c.setForeground(color);
-		}
-
-		return c;
-	}
-
-	private boolean containsRow(int row,
-								int[] array) {
-		boolean result = false;
-		if (array == null)
-			return false;
-
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] == row) {
-				result = true;
-				break;
-			}
-		}
-		return result;
-	}
-}
-

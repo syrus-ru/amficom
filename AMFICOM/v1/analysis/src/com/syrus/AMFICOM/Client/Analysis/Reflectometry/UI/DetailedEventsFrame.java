@@ -185,7 +185,7 @@ public class DetailedEventsFrame extends JInternalFrame
 						else alignedDataMT = null;
 						if (selected >= a.events.length)
 							selected = a.events.length - 1;
-						updTableModel (selected);
+						updateTableModel (selected);
 					}
 				}
 				if (Pool.get("eventparams", "primarytrace") != null)
@@ -196,7 +196,7 @@ public class DetailedEventsFrame extends JInternalFrame
 			if (rue.eventSelected())
 			{
 				selected = Integer.parseInt((String)rue.getSource());
-				updTableModel (selected);
+				updateTableModel (selected);
 				setData(selected);
 			}
 		}
@@ -466,9 +466,9 @@ public class DetailedEventsFrame extends JInternalFrame
 		jTableComp.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
-	void updTableModel(int num)
+	private void updateTableModel(int num)
 	{
-		if (num == -1)
+		if (num <0 || this.a == null || num >= a.events.length)
 			return;
 		TraceEvent ev = a.events[num];
 
