@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.6 2004/09/28 07:56:50 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.7 2004/09/28 09:44:25 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/09/28 07:56:50 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/28 09:44:25 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -523,107 +523,107 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
     
-    public void saveMeasurementType(MeasurementType measurementType) throws DatabaseException, CommunicationException{
+    public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveAnalysisType(AnalysisType analysisType) throws DatabaseException, CommunicationException{
+     public void saveAnalysisType(AnalysisType analysisType, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEvaluationType(EvaluationType evaluationType) throws DatabaseException, CommunicationException{
+     public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveSet(Set set) throws DatabaseException, CommunicationException{
+     public void saveSet(Set set, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurementSetup(MeasurementSetup measurementSetup) throws DatabaseException, CommunicationException{
+     public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveModeling(Modeling modeling) throws DatabaseException, CommunicationException{
+     public void saveModeling(Modeling modeling, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurement(Measurement measurement) throws DatabaseException, CommunicationException{
+     public void saveMeasurement(Measurement measurement, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveAnalysis(Analysis analysis) throws DatabaseException, CommunicationException{
+     public void saveAnalysis(Analysis analysis, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEvaluation(Evaluation evaluation) throws DatabaseException, CommunicationException{
+     public void saveEvaluation(Evaluation evaluation, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveTest(Test test) throws DatabaseException, CommunicationException{
+     public void saveTest(Test test, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveResult(Result result) throws DatabaseException, CommunicationException{
+     public void saveResult(Result result, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveTemporalPattern(TemporalPattern temporalPattern) throws DatabaseException, CommunicationException{
+     public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveParameterTypes(List parameterTypes) throws DatabaseException, CommunicationException{
+     public void saveParameterTypes(List parameterTypes, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurementTypes(List measurementTypes) throws DatabaseException, CommunicationException{
+     public void saveMeasurementTypes(List measurementTypes, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveAnalysisTypes(List analysisTypes) throws DatabaseException, CommunicationException{
+     public void saveAnalysisTypes(List analysisTypes, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEvaluationTypes(List evaluationTypes) throws DatabaseException, CommunicationException{
+     public void saveEvaluationTypes(List evaluationTypes, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveSets(List sets) throws DatabaseException, CommunicationException{
+     public void saveSets(List sets, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveModelings(List modelings) throws DatabaseException, CommunicationException{
+     public void saveModelings(List modelings, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurementSetups(List measurementSetups) throws DatabaseException, CommunicationException{
+     public void saveMeasurementSetups(List measurementSetups, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurements(List measurements) throws DatabaseException, CommunicationException{
+     public void saveMeasurements(List measurements, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveAnalyses(List analyses) throws DatabaseException, CommunicationException{
+     public void saveAnalyses(List analyses, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEvaluations(List evaluations) throws DatabaseException, CommunicationException{
+     public void saveEvaluations(List evaluations, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveTests(List tests) throws DatabaseException, CommunicationException{
+     public void saveTests(List tests, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveResults(List results) throws DatabaseException, CommunicationException{
+     public void saveResults(List results, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveTemporalPatterns(List temporalPatterns) throws DatabaseException, CommunicationException{
+     public void saveTemporalPatterns(List temporalPatterns, boolean force) throws DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
      
-    public void saveParameterType(ParameterType parameterType)
+    public void saveParameterType(ParameterType parameterType, boolean force)
             throws DatabaseException, CommunicationException {
         // TODO Auto-generated method stub
 
