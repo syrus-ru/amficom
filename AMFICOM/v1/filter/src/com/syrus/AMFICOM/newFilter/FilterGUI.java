@@ -1,5 +1,5 @@
 /*
- * $Id: FilterGUI.java,v 1.3 2005/03/25 10:29:31 max Exp $
+ * $Id: FilterGUI.java,v 1.4 2005/03/31 09:09:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -27,7 +29,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/25 10:29:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/31 09:09:57 $
  * @author $Author: max $
  * @module misc
  */
@@ -49,10 +51,14 @@ public class FilterGUI extends JFrame implements FilterView {
 	private static final String FROM_LABEL 				= "From";
 	private static final String TO_LABEL 				= "To";
 	private static final String INCLUDE_BOUNDS_LABEL 	= "Include boundary";
+	private static final String	CLEAR_DATE				= "Clear";
+	private static final String	SET_START_DATE			= "..";
+	private static final String	SET_END_DATE			= "..";
 	
 	private static final String NUMBER_CARD	= "number";
 	private static final String STRING_CARD	= "string";
 	private static final String LIST_CARD	= "list";
+	private static final String	DATE_CARD	= "date";
 	
 	private Filter filter;
 	
@@ -73,10 +79,20 @@ public class FilterGUI extends JFrame implements FilterView {
 	private JButton addButton;  
 	private JButton removeButton; 
 	private JButton createSchemeButton;
+	private JButton startClear;
+	private JButton startDayButton;
+	private JButton endClear;
+	private JButton endDayButton;
+	
+	private TimeSpinner startTimeSpinner;
+	private DateSpinner startDateSpinner;
+	private TimeSpinner endTimeSpinner;
+	private DateSpinner endDateSpinner;
+	
 	
 	
 	private FilterController controller;
-	
+		
 	public FilterGUI(Filter filter) {
 		this.filter = filter;
 		this.controller = new FilterController(filter, this);
@@ -103,6 +119,10 @@ public class FilterGUI extends JFrame implements FilterView {
 		this.addButton = 				new JButton(ADD_BUTTON);
 		this.removeButton = 			new JButton(REMOVE_BUTTON);
 		this.createSchemeButton = 		new JButton(LOGIC_SCHEME_BUTTON);
+		this.startClear = 				new JButton(CLEAR_DATE);
+		this.startDayButton = 			new JButton(SET_START_DATE);		
+		this.endClear = 				new JButton(CLEAR_DATE);
+		this.endDayButton =				new JButton(SET_END_DATE);
 		
 		this.mainPanel = 				new JPanel(gbl);
 		this.conditionPanel = 			new JPanel(cardLayout);
@@ -116,6 +136,8 @@ public class FilterGUI extends JFrame implements FilterView {
 		JPanel firstSubPanel = 			new JPanel(flowLayout);
 		JPanel secondSubPanel = 		new JPanel(flowLayout);
 		JPanel thirdSubPanel = 			new JPanel(flowLayout);
+		JPanel datePanel = 				new JPanel(gbl);
+		
 		
 		JSplitPane firstSplit = 		new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, createPanel, edditPanel);
 		JSplitPane secondSplit = 		new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, filterPanel, createConditionPanel);
@@ -125,6 +147,11 @@ public class FilterGUI extends JFrame implements FilterView {
 		this.filteredList = 			new JList(this.filter.getFilteredNames());
 		this.conditions = 				new JList();
 		this.linkedConditionList = 		new JList();
+		
+		this.startDateSpinner = 		new DateSpinner();
+		this.startTimeSpinner = 		new TimeSpinner();
+		this.endDateSpinner = 			new DateSpinner();
+		this.endTimeSpinner = 			new TimeSpinner();
 		
 		JScrollPane filterScroller = 	new JScrollPane(this.filteredList);
 		JScrollPane conditionScroller =	new JScrollPane(this.conditions);
@@ -224,9 +251,30 @@ public class FilterGUI extends JFrame implements FilterView {
 		gbc.weighty = 1;
 		numberPanel.add(thirdSubPanel, gbc);
 		
+		gbc.weighty = 0;
+		gbc.weightx = 1;
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.gridwidth = 1;
+		datePanel.add(fromLabel, gbc);
+		datePanel.add(this.startDateSpinner, gbc);
+		datePanel.add(this.startDayButton, gbc);
+		datePanel.add(this.startTimeSpinner);
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		datePanel.add(this.startTimeSpinner);
+		
+		gbc.weighty = 1;
+		gbc.gridwidth = 1;
+		datePanel.add(toLabel, gbc);
+		datePanel.add(this.endDateSpinner, gbc);
+		datePanel.add(this.endDayButton, gbc);
+		datePanel.add(this.endTimeSpinner);
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		datePanel.add(this.startTimeSpinner);
+		
 		this.conditionPanel.add(numberPanel, NUMBER_CARD);
 		this.conditionPanel.add(linkedPanel, LIST_CARD);
 		this.conditionPanel.add(stringPanel, STRING_CARD);
+		this.conditionPanel.add(datePanel, DATE_CARD);
 		
 		this.keysCombo.addActionListener(this.controller);
 		this.keysCombo.addPopupMenuListener(this.controller);
@@ -267,6 +315,15 @@ public class FilterGUI extends JFrame implements FilterView {
 		
 		CardLayout cardLayout = (CardLayout) this.conditionPanel.getLayout();
 		cardLayout.show(this.conditionPanel, LIST_CARD);
+	}
+	
+	public void drawDateCondition(DateCondition dateCondition) {
+		this.startDateSpinner.setValue(dateCondition.getStartDate());
+		this.startTimeSpinner.setValue(dateCondition.getStartDate());
+		this.endDateSpinner.setValue(dateCondition.getStartDate());
+		this.endTimeSpinner.setValue(dateCondition.getStartDate());	
+		CardLayout cardLayout = (CardLayout) this.conditionPanel.getLayout();
+		cardLayout.show(this.conditionPanel, DATE_CARD);
 	}
 	
 	public void showErrorMessage(String string) {
@@ -317,6 +374,17 @@ public class FilterGUI extends JFrame implements FilterView {
 
 	public void setListCondition(ListCondition listCondition) {
 		listCondition.setSelectedIndices(this.linkedConditionList.getSelectedIndices());		
+	}
+	
+	public void setDateCondition(DateCondition dateCondition) {
+		long startYearMonthDay = ((Date)this.startDateSpinner.getValue()).getTime(); 
+		long startTime = ((Date)this.startTimeSpinner.getValue()).getTime();
+		long endYearMonthDay = ((Date)this.endDateSpinner.getValue()).getTime(); 
+		long endTime = ((Date)this.endTimeSpinner.getValue()).getTime();
+		Date start = new Date(startYearMonthDay + startTime);
+		Date end = new Date(endYearMonthDay + endTime);
+		dateCondition.setStartDate(start);
+		dateCondition.setEndDate(end);		
 	}
 
 	public void refreshCreatedConditions(Object[] conditionNames) {

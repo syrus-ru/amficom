@@ -1,5 +1,5 @@
 /*
- * $Id: FilterView.java,v 1.1 2005/03/25 10:29:31 max Exp $
+ * $Id: FilterView.java,v 1.2 2005/03/31 09:10:15 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/25 10:29:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/31 09:10:15 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -20,6 +20,7 @@ public interface FilterView {
 	static final String	EQUALS_AND_FROM_SIMULTENIOUSLY	= "Fill \"Equals\" or \"From\"";
 	static final String	EQUALS_AND_TO_SIMULTENIOUSLY	= "Fill \"Equals\" or \"To\"";
 	static final String	NO_CONDITIONS_CREATED	= "You have to create condition(s) first";
+	static final String	WRONG_DATE_MESSAGE	= "Please, set the date";
 
 	void showErrorMessage(String message);
 	void createLogicalSchemeView(LogicalScheme logicalScheme, Filter filter);
@@ -27,6 +28,7 @@ public interface FilterView {
 	void drawLinkedCondition(ListCondition listCondition);
 	void drawStringCondition(StringCondition stringCondition);
 	void drawNumberCondition(NumberCondition numberCondition);
+	void drawDateCondition(DateCondition dateCondition);
 	
 	int getSelectedKeyIndex();
 	
@@ -40,6 +42,7 @@ public interface FilterView {
 	void setNumberCondition(NumberCondition intCondition);
 	void setStringCondition(StringCondition stringCondition);
 	void setListCondition(ListCondition listCondition);
+	void setDateCondition(DateCondition dateCondition);
 	
 	void refreshCreatedConditions(Object[] conditionNames);
 	void refreshFilteredEntities(String[] filteredNames);
