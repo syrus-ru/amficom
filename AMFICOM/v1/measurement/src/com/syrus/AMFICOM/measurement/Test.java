@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.57 2004/10/14 09:25:42 bob Exp $
+ * $Id: Test.java,v 1.58 2004/10/27 09:39:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,12 +43,14 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2004/10/14 09:25:42 $
+ * @version $Revision: 1.58 $, $Date: 2004/10/27 09:39:25 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class Test extends StorableObject {
+	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
+	
 	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
 	protected static final int		RETRIEVE_LAST_MEASUREMENT	= 2;
 	protected static final int		RETRIEVE_NUMBER_OF_MEASUREMENTS	= 3;
@@ -88,7 +91,9 @@ public class Test extends StorableObject {
 		Measurement measurement1 = Measurement.createInstance(measurementId,
 															 creatorId,
 															 this.measurementType,
-															 "create by Test:" + this.getDescription(),
+															 "create by Test:" 
+															 + this.getDescription() + " at "
+															 + SIMPLE_DATE_FORMAT.format(new Date(System.currentTimeMillis())),
 															 this.monitoredElement.getId(),
 															 this.mainMeasurementSetup,
 															 startTime,

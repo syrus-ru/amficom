@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.31 2004/10/27 07:39:39 bob Exp $
+ * $Id: ResultDatabase.java,v 1.32 2004/10/27 09:39:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/10/27 07:39:39 $
+ * @version $Revision: 1.32 $, $Date: 2004/10/27 09:39:25 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -890,7 +890,10 @@ public class ResultDatabase extends StorableObjectDatabase {
 		List list;
 		if (condition instanceof LinkedIdsCondition){
 			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-			list = this.retrieveButIdsByMeasurement(ids, linkedIdsCondition.getMeasurementIds());
+			List measurementIds = linkedIdsCondition.getMeasurementIds();
+			if (measurementIds == null)
+				measurementIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
+			list = this.retrieveButIdsByMeasurement(ids, measurementIds);
 		} else if (condition instanceof DomainCondition){
 			DomainCondition domainCondition = (DomainCondition)condition;
 			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());

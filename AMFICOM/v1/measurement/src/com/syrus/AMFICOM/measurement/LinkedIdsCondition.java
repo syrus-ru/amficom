@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.13 2004/10/20 13:53:34 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.14 2004/10/27 09:39:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/10/20 13:53:34 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/27 09:39:25 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -163,7 +163,7 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				if (object instanceof Result) {
-					Result resultMeasurementId = (Result) object;
+					Identifier resultMeasurementId = ((Result)object).getMeasurement().getId();
 					if (this.linkedIds == null) {
 						Identifier id = this.identifier;
 						if (id.equals(resultMeasurementId)) {
