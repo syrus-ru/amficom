@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.18 2004/08/24 14:54:28 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.19 2004/08/24 14:56:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/24 14:54:28 $
+ * @version $Revision: 1.19 $, $Date: 2004/08/24 14:56:01 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -67,13 +67,9 @@ public class PeriodicalTestProcessor extends TestProcessor {
 				long start = System.currentTimeMillis();
 				if (start <= this.endTime) {
 					List times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
-<<<<<<< PeriodicalTestProcessor.java
-=======
-					System.out.println("From " + (new Date(start)) + " to " 
-									   + (new Date(Math.min(start + FRAME, this.endTime))));
+					System.out.println("From " + (new Date(start)) + " to " + (new Date(Math.min(start + FRAME, this.endTime))));
 					for (Iterator it = times.iterator(); it.hasNext();)
 						System.out.println("time: " + it.next());
->>>>>>> 1.17
 					this.timeStampsList.addAll(times);
 					if (! this.timeStampsList.isEmpty())
 						timeStamp = (Date)this.timeStampsList.remove(0);
