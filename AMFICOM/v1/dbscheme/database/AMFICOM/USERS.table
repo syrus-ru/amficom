@@ -1,0 +1,329 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TABLE class="oracle.jdeveloper.cm.ds.db.Table">
+   <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c5bafbe-00ff-1000-8832-c73a017b6a50" type="TABLE" id="1"/>
+   <columns>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c6c2b97-00ff-1000-80fc-c73a017befc8" type="Column"/>
+         <dataType identifier="oracle.jdeveloper.cm.ds.db.ora.OracleDatabase.ORA_VARCHAR2" id="0"/>
+         <default/>
+         <name>SUBSCRIBER_ID</name>
+         <notNull>false</notNull>
+         <precision>64</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>ID</Key>
+               <Value>0c6c2b68-00ff-1000-80f3-c73a017befc8::AMFICOM.USERS::Column</Value>
+            </Item>
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>SUBSCRIBER_ID</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c6c2b97-00ff-1000-80fd-c73a017befc8" type="Column"/>
+         <dataType idref="0"/>
+         <default/>
+         <name>LOGIN</name>
+         <notNull>false</notNull>
+         <precision>128</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>ID</Key>
+               <Value>0c6c2b68-00ff-1000-80f4-c73a017befc8::AMFICOM.USERS::Column</Value>
+            </Item>
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>LOGIN</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c6c2b97-00ff-1000-80fe-c73a017befc8" type="Column"/>
+         <dataType idref="0"/>
+         <default/>
+         <name>OPERATOR_ID</name>
+         <notNull>false</notNull>
+         <precision>64</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>ID</Key>
+               <Value>0c6c2b68-00ff-1000-80f5-c73a017befc8::AMFICOM.USERS::Column</Value>
+            </Item>
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>OPERATOR_ID</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c6c2b97-00ff-1000-80ff-c73a017befc8" type="Column"/>
+         <dataType idref="0"/>
+         <default/>
+         <name>ORGANIZATION_ID</name>
+         <notNull>false</notNull>
+         <precision>64</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>ID</Key>
+               <Value>0c6c2b68-00ff-1000-80f6-c73a017befc8::AMFICOM.USERS::Column</Value>
+            </Item>
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>ORGANIZATION_ID</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c6c2b97-00ff-1000-8100-c73a017befc8" type="Column"/>
+         <dataType idref="0"/>
+         <default/>
+         <name>NAME</name>
+         <notNull>false</notNull>
+         <precision>128</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>ID</Key>
+               <Value>0c6c2b68-00ff-1000-80f7-c73a017befc8::AMFICOM.USERS::Column</Value>
+            </Item>
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>NAME</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item id="2">
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c6c2b97-00ff-1000-8101-c73a017befc8" type="Column"/>
+         <dataType idref="0"/>
+         <default/>
+         <name>ID</name>
+         <notNull>true</notNull>
+         <precision id="3">64</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>ID</Key>
+               <Value>0c6c2b68-00ff-1000-80f8-c73a017befc8::AMFICOM.USERS::Column</Value>
+            </Item>
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>ID</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c6c2b97-00ff-1000-8102-c73a017befc8" type="Column"/>
+         <dataType idref="0"/>
+         <default/>
+         <name>OPERATIONAL_ID</name>
+         <notNull>false</notNull>
+         <precision>64</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>ID</Key>
+               <Value>0c6c2b68-00ff-1000-80f9-c73a017befc8::AMFICOM.USERS::Column</Value>
+            </Item>
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>OPERATIONAL_ID</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c6c2b97-00ff-1000-8103-c73a017befc8" type="Column"/>
+         <dataType idref="0"/>
+         <default/>
+         <name>TYPE</name>
+         <notNull>true</notNull>
+         <precision>64</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>ID</Key>
+               <Value>0c6c2b68-00ff-1000-80fa-c73a017befc8::AMFICOM.USERS::Column</Value>
+            </Item>
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>TYPE</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+   </columns>
+   <constraints>
+      <Item class="oracle.jdeveloper.cm.ds.db.PKConstraint">
+         <ID class="oracle.jdeveloper.cm.ds.db.ConstraintID" name="USR_PK" type="Constraint">
+            <parentID idref="1"/>
+         </ID>
+         <columns>
+            <Item idref="2"/>
+         </columns>
+         <enabled>true</enabled>
+         <name>USR_PK</name>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>ID</Key>
+               <Value>0c6c2b68-00ff-1000-80fb-c73a017befc8::AMFICOM.USERS.USR_PK::UniqueKey</Value>
+            </Item>
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID>PKConstraint(USR_PK) : TABLE(31507)</ID>
+                  <name>USR_PK</name>
+                  <schemaName/>
+                  <type>Constraint</type>
+               </Value>
+            </Item>
+         </properties>
+      </Item>
+   </constraints>
+   <indexes>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c6c2b97-00ff-1000-8104-c73a017befc8" type="Index"/>
+         <columns>
+            <Item>
+               <ID/>
+               <dataType idref="0"/>
+               <default/>
+               <name>ID</name>
+               <notNull>true</notNull>
+               <precision idref="3"/>
+               <properties class="java.util.HashMap"/>
+               <scale/>
+            </Item>
+         </columns>
+         <name>USR_PK</name>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>USR_PK</name>
+                  <schemaName>AMFICOM</schemaName>
+                  <type>Index</type>
+               </Value>
+            </Item>
+         </properties>
+         <schema>
+            <ID/>
+            <name>AMFICOM</name>
+            <properties class="java.util.HashMap"/>
+         </schema>
+      </Item>
+   </indexes>
+   <name>USERS</name>
+   <properties class="java.util.HashMap">
+      <Item>
+         <Key>COMPLETE_LIBRARY</Key>
+         <Value>FALSE</Value>
+      </Item>
+      <Item>
+         <Key>ID</Key>
+         <Value>0c6c2b68-00ff-1000-80f1-c73a017befc8::AMFICOM.USERS::DatabaseTable</Value>
+      </Item>
+      <Item>
+         <Key>IS_ACTIVE</Key>
+         <Value>FALSE</Value>
+      </Item>
+      <Item>
+         <Key>IS_ROOT</Key>
+         <Value>TRUE</Value>
+      </Item>
+      <Item>
+         <Key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</Key>
+         <Value>JAMAICA</Value>
+      </Item>
+      <Item>
+         <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+         <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+            <ID>TABLE(31507)</ID>
+            <name>USERS</name>
+            <schemaName>AMFICOM</schemaName>
+            <type>TABLE</type>
+         </Value>
+      </Item>
+      <Item>
+         <Key>OfflineDBConstants.IMPORT_SOURCE_NAME</Key>
+         <Value>USERS</Value>
+      </Item>
+      <Item>
+         <Key>OfflineDBConstants.IMPORT_SOURCE_SCHEMA</Key>
+         <Value>AMFICOM</Value>
+      </Item>
+      <Item>
+         <Key>TableType</Key>
+         <Value>Normal</Value>
+      </Item>
+      <Item>
+         <Key>Timestamp</Key>
+         <Value class="java.lang.Long">1080631927000</Value>
+      </Item>
+   </properties>
+   <schema>
+      <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c5b206e-00ff-1000-87df-c73a017b6a50" type="SCHEMA"/>
+      <name>AMFICOM</name>
+      <properties class="java.util.HashMap">
+         <Item>
+            <Key>ID</Key>
+            <Value>0c6c27fd-00ff-1000-8096-c73a017befc8::AMFICOM::DatabasePackage</Value>
+         </Item>
+         <Item>
+            <Key>NAMESPACE_REFERENCE</Key>
+            <Value>1006::::DatabaseContainer</Value>
+         </Item>
+         <Item>
+            <Key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</Key>
+            <Value>JAMAICA</Value>
+         </Item>
+         <Item>
+            <Key>OfflineDBConstants.IMPORT_SOURCE_SCHEMA</Key>
+            <Value>AMFICOM</Value>
+         </Item>
+      </properties>
+   </schema>
+</TABLE>

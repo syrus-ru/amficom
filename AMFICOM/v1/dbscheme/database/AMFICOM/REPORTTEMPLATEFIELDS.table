@@ -1,0 +1,322 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TABLE class="oracle.jdeveloper.cm.ds.db.Table">
+   <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c5beb8e-00ff-1000-8b2c-c73a017b6a50" type="TABLE" id="3"/>
+   <columns>
+      <Item id="4">
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="10bd084b-00ff-1000-800a-c73a017bbb68" type="Column"/>
+         <dataType identifier="oracle.jdeveloper.cm.ds.db.ora.OracleDatabase.ORA_VARCHAR2" id="0"/>
+         <default/>
+         <name>ID</name>
+         <notNull>true</notNull>
+         <precision>64</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>ID</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item id="5">
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="10bd084b-00ff-1000-800b-c73a017bbb68" type="Column"/>
+         <dataType idref="0"/>
+         <default/>
+         <name>REPORT_TEMPLATE_ID</name>
+         <notNull>true</notNull>
+         <precision>64</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>REPORT_TEMPLATE_ID</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="10bd084b-00ff-1000-800c-c73a017bbb68" type="Column"/>
+         <dataType identifier="oracle.jdeveloper.cm.ds.db.ora.OracleDatabase.ORA_NUMBER" id="1"/>
+         <default/>
+         <name>OBJECT_X</name>
+         <notNull>false</notNull>
+         <precision>38</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>OBJECT_X</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale>0</scale>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="10bd084b-00ff-1000-800d-c73a017bbb68" type="Column"/>
+         <dataType idref="1"/>
+         <default/>
+         <name>WIDTH</name>
+         <notNull>false</notNull>
+         <precision>38</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>WIDTH</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale>0</scale>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="10bd084b-00ff-1000-800e-c73a017bbb68" type="Column"/>
+         <dataType idref="1"/>
+         <default/>
+         <name>HEIGHT</name>
+         <notNull>false</notNull>
+         <precision>38</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>HEIGHT</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale>0</scale>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="10bd084b-00ff-1000-800f-c73a017bbb68" type="Column"/>
+         <dataType identifier="oracle.jdeveloper.cm.ds.db.ora.OracleDatabase.ORA_BLOB" id="2"/>
+         <default/>
+         <name>IN_REPORT</name>
+         <notNull>false</notNull>
+         <precision/>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>IN_REPORT</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="10bd084b-00ff-1000-8010-c73a017bbb68" type="Column"/>
+         <dataType idref="2"/>
+         <default/>
+         <name>COL_WIDTHS</name>
+         <notNull>false</notNull>
+         <precision/>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>COL_WIDTHS</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale/>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="10bd084b-00ff-1000-8011-c73a017bbb68" type="Column"/>
+         <dataType idref="1"/>
+         <default/>
+         <name>TDN</name>
+         <notNull>false</notNull>
+         <precision>38</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>TDN</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale>0</scale>
+      </Item>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="10bd084b-00ff-1000-8012-c73a017bbb68" type="Column"/>
+         <dataType idref="1"/>
+         <default/>
+         <name>OBJECT_Y</name>
+         <notNull>false</notNull>
+         <precision>38</precision>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>OBJECT_Y</name>
+                  <schemaName/>
+                  <type>Column</type>
+               </Value>
+            </Item>
+         </properties>
+         <scale>0</scale>
+      </Item>
+   </columns>
+   <constraints>
+      <Item class="oracle.jdeveloper.cm.ds.db.PKConstraint">
+         <ID class="oracle.jdeveloper.cm.ds.db.ConstraintID" name="RPTTMPF_PK" type="Constraint">
+            <parentID idref="3"/>
+         </ID>
+         <columns>
+            <Item idref="4"/>
+         </columns>
+         <enabled>true</enabled>
+         <name>RPTTMPF_PK</name>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID>PKConstraint(RPTTMPF_PK) : TABLE(31496)</ID>
+                  <name>RPTTMPF_PK</name>
+                  <schemaName/>
+                  <type>Constraint</type>
+               </Value>
+            </Item>
+         </properties>
+      </Item>
+      <Item class="oracle.jdeveloper.cm.ds.db.FKConstraint">
+         <ID class="oracle.jdeveloper.cm.ds.db.ConstraintID" name="RPTTMPF_REPTMP_FK" type="Constraint">
+            <parentID idref="3"/>
+         </ID>
+         <columns>
+            <Item idref="5"/>
+         </columns>
+         <deleteMode>0</deleteMode>
+         <enabled>true</enabled>
+         <name>RPTTMPF_REPTMP_FK</name>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID>FKConstraint(RPTTMPF_REPTMP_FK) : TABLE(31496)</ID>
+                  <name>RPTTMPF_REPTMP_FK</name>
+                  <schemaName/>
+                  <type>Constraint</type>
+               </Value>
+            </Item>
+         </properties>
+         <referenceID class="oracle.jdeveloper.cm.ds.db.ConstraintID" name="REPTMP_PK" type="Constraint">
+            <parentID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c5c4557-00ff-1000-8e31-c73a017b6a50" type="TABLE"/>
+         </referenceID>
+         <referencedColumnNames class="[Ljava.lang.String;"/>
+         <referencedName/>
+         <referencedRelation/>
+         <referencedSchema/>
+      </Item>
+   </constraints>
+   <indexes>
+      <Item>
+         <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="10bd084b-00ff-1000-8013-c73a017bbb68" type="Index"/>
+         <columns>
+            <Item>
+               <ID/>
+               <dataType idref="0"/>
+               <default/>
+               <name>ID</name>
+               <notNull>true</notNull>
+               <precision>64</precision>
+               <properties class="java.util.HashMap"/>
+               <scale/>
+            </Item>
+         </columns>
+         <name>RPTTMPF_PK</name>
+         <properties class="java.util.HashMap">
+            <Item>
+               <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+               <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+                  <ID/>
+                  <name>RPTTMPF_PK</name>
+                  <schemaName>AMFICOM</schemaName>
+                  <type>Index</type>
+               </Value>
+            </Item>
+         </properties>
+         <schema>
+            <ID/>
+            <name>AMFICOM</name>
+            <properties class="java.util.HashMap"/>
+         </schema>
+      </Item>
+   </indexes>
+   <name>REPORTTEMPLATEFIELDS</name>
+   <properties class="java.util.HashMap">
+      <Item>
+         <Key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</Key>
+         <Value>JAMAICA</Value>
+      </Item>
+      <Item>
+         <Key>OfflineDBConstants.IMPORT_SOURCE_ID</Key>
+         <Value class="oracle.jdeveloper.offlinedb.marshal.DummyDBObjectID">
+            <ID>TABLE(31496)</ID>
+            <name>REPORTTEMPLATEFIELDS</name>
+            <schemaName>AMFICOM</schemaName>
+            <type>TABLE</type>
+         </Value>
+      </Item>
+      <Item>
+         <Key>OfflineDBConstants.IMPORT_SOURCE_NAME</Key>
+         <Value>REPORTTEMPLATEFIELDS</Value>
+      </Item>
+      <Item>
+         <Key>OfflineDBConstants.IMPORT_SOURCE_SCHEMA</Key>
+         <Value>AMFICOM</Value>
+      </Item>
+      <Item>
+         <Key>TableType</Key>
+         <Value>Normal</Value>
+      </Item>
+      <Item>
+         <Key>Timestamp</Key>
+         <Value class="java.lang.Long">1080631938000</Value>
+      </Item>
+   </properties>
+   <schema>
+      <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c5b206e-00ff-1000-87df-c73a017b6a50" type="SCHEMA"/>
+      <name>AMFICOM</name>
+      <properties class="java.util.HashMap">
+         <Item>
+            <Key>ID</Key>
+            <Value>0c735ac3-00ff-1000-8170-c73a017befc8::AMFICOM::DatabasePackage</Value>
+         </Item>
+         <Item>
+            <Key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</Key>
+            <Value>JAMAICA</Value>
+         </Item>
+         <Item>
+            <Key>OfflineDBConstants.IMPORT_SOURCE_SCHEMA</Key>
+            <Value>AMFICOM</Value>
+         </Item>
+      </properties>
+   </schema>
+</TABLE>
