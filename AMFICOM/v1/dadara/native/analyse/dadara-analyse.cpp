@@ -22,6 +22,7 @@
 	FILE* dbg_stream;
 #endif
 
+#define ANALYSE_SIMPLE_DEBUG
 
 /*
  * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
@@ -101,9 +102,22 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 
 	for (i = 0; i < nEvents; i++)
 	{
-		EPold2SE((EventParams*)ev[i], se[i]);
-		//fprintf(stderr, "event %d type %d begin %d end %d\n", i, se[i].type, se[i].begin, se[i].end);
-		//fflush(stderr);
+		EventParams &ep = *(EventParams*)ev[i];
+#ifdef ANALYSE_SIMPLE_DEBUG
+		fprintf(stderr, "EventParams[%2d] type %2d begin %4d end %4d",
+			i, ep.type, ep.begin, ep.end);
+		if (ep.type == EventParams::GAIN || ep.type == EventParams::LOSS)
+		{
+			fprintf(stderr, " -- R %g", ep.R);
+		}
+		if (ep.type == EventParams::REFLECTIVE)
+		{
+			fprintf(stderr, " --            R1 %.1f R2 %.1f R3 %.1f",
+				ep.R1, ep.R3, ep.R3);
+		}
+		fprintf(stderr, "\n");
+#endif
+		EPold2SE(&ep, se[i]);
 		assert(se[i].begin >= 0);
 		assert(se[i].end < sz);
 		assert(se[i].end >= se[i].begin);
@@ -113,6 +127,10 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 			assert(se[i].begin == se[i-1].end);
 		}
 	}
+
+#ifdef ANALYSE_SIMPLE_DEBUG
+	fflush(stderr);
+#endif
 
 	prf_b("analyse3() - sending to JNI");
 	jobjectArray ret_obj = SimpleEvent_C2J_arr(env, se, nEvents);
