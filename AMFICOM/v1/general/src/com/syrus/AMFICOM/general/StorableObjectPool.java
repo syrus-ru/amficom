@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.24 2005/02/11 16:25:30 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.25 2005/02/14 14:51:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/02/11 16:25:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/02/14 14:51:25 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -44,6 +44,8 @@ public abstract class StorableObjectPool {
 	private short 	selfGroupCode;
 	
 	private Map 	flushedGroup;
+	
+	private Collection deletedIds;
 
 	public StorableObjectPool() {
 		// empty
@@ -105,6 +107,14 @@ public abstract class StorableObjectPool {
 			|| (ObjectEntities.SCHEME_MAX_ENTITY_CODE < entityCode.shortValue())
 			: "Invalid storable object pool used...";
 
+		short code = entityCode.shortValue();
+		if (this.deletedIds != null) {
+			for (Iterator it = this.deletedIds.iterator(); it.hasNext();) {
+				Identifier id = (Identifier) it.next();
+				if (id.getMajor() == code)
+					it.remove();
+			}
+		}
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (objectPool != null) {
 			for (Iterator poolIt = objectPool.iterator(); poolIt.hasNext();) {
@@ -122,7 +132,7 @@ public abstract class StorableObjectPool {
 		}
 	}
 
-	protected void deleteImpl(final Identifier id) throws DatabaseException, CommunicationException {
+	protected synchronized void deleteImpl(final Identifier id) throws DatabaseException, CommunicationException {
 		Short entityCode = new Short(id.getMajor());
 		LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (lruMap != null)
@@ -130,10 +140,15 @@ public abstract class StorableObjectPool {
 		else
 			Log.errorMessage("StorableObjectPool.deleteImpl | Cannot find object pool for entity '" + ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
 
-		this.deleteStorableObject(id);
+		if (this.deletedIds == null)
+			this.deletedIds = Collections.synchronizedCollection(new LinkedList());
+		
+		this.deletedIds.add(id);
+		/* do not delete object immediatly, delete during flushing */
+		// this.deleteStorableObject(id);
 	}
 
-	protected void deleteImpl(final Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	protected synchronized void deleteImpl(final Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		Object object;
 		Identifier id;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
@@ -146,6 +161,11 @@ public abstract class StorableObjectPool {
 				else
 					throw new IllegalDataException("StorableObjectPool.deleteImpl | Object " + object.getClass().getName() + " isn't Identifier or Identified");
 
+			if (this.deletedIds == null)
+				this.deletedIds = Collections.synchronizedCollection(new LinkedList());
+			
+			this.deletedIds.add(id);
+
 			Short entityCode = new Short(id.getMajor());
 			LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
 			if (lruMap != null)
@@ -153,8 +173,9 @@ public abstract class StorableObjectPool {
 			else
 				Log.errorMessage("StorableObjectPool.deleteImpl | Cannot find object pool for entity '" + ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
 		}
-
-		this.deleteStorableObjects(objects);
+		
+		/* do not delete object immediatly, delete during flushing */
+		// this.deleteStorableObjects(objects);
 	}
 
 	protected abstract void deleteStorableObject(final Identifier id) throws DatabaseException, CommunicationException;
@@ -170,16 +191,27 @@ public abstract class StorableObjectPool {
 	 * @throws CommunicationException
 	 * @throws IllegalDataException
 	 */
-	protected void flushImpl(final boolean force)
+	protected synchronized void flushImpl(final boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException,
 				IllegalDataException {
 
 		if (this.flushedGroup == null)
-			this.flushedGroup = new HashMap();
+			this.flushedGroup = Collections.synchronizedMap(new HashMap());
 		else
 			this.flushedGroup.clear();
+		
+		/* delete objects !*/
+		if (this.deletedIds != null) {
+			
+			if (this.deletedIds.size() == 1)
+				this.deleteStorableObject((Identifier)this.deletedIds.iterator().next());
+			else
+				this.deleteStorableObjects(this.deletedIds);
+			
+			this.deletedIds.clear();
+		}
 
 		List changedObjects = new LinkedList();
 		for (final Iterator entityCodeIterator = this.objectPoolMap.keySet().iterator(); entityCodeIterator.hasNext();) {
@@ -207,6 +239,10 @@ public abstract class StorableObjectPool {
 			throws DatabaseException,
 				CommunicationException {
 		if (objectId != null) {
+			/* do not load deleted objects */
+			if (this.deletedIds.contains(objectId))
+				return null;
+			
 			short objectEntityCode = objectId.getMajor();
 			LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(objectEntityCode));
 			if (objectPool != null) {
@@ -260,7 +296,8 @@ public abstract class StorableObjectPool {
 			collection = new LinkedList();
 			for (Iterator it = objectPool.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
-				if (!ids.contains(storableObject.getId())
+				Identifier id = storableObject.getId();
+				if (!ids.contains(id) && !this.deletedIds.contains(id)
 						&& condition.isConditionTrue(storableObject))
 					collection.add(storableObject);
 			}
@@ -277,6 +314,16 @@ public abstract class StorableObjectPool {
 				for (Iterator iter = ids.iterator(); iter.hasNext();) {
 					Identifier id = (Identifier) iter.next();
 					idsList.add(id);
+				}
+				/* do not load delete object too */
+				short code = condition.getEntityCode().shortValue();
+				if (this.deletedIds != null) {
+					/* do not load deleted object with entityCode */
+					for (Iterator iter = this.deletedIds.iterator(); iter.hasNext();) {
+						Identifier id = (Identifier) iter.next();
+						if (id.getMajor() == code)
+							idsList.add(id);
+					}
 				}
 
 				loadedList = this.loadStorableObjectsButIds(condition, idsList);
@@ -326,6 +373,11 @@ public abstract class StorableObjectPool {
 		if (objectIds != null) {
 			for (Iterator it = objectIds.iterator(); it.hasNext();) {
 				Identifier objectId = (Identifier) it.next();
+				
+				/* do not operate with deleted objects */
+				if (this.deletedIds.contains(objectId))
+					continue;
+				
 				Short entityCode = new Short(objectId.getMajor());
 				LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 				StorableObject storableObject = null;
@@ -365,7 +417,16 @@ public abstract class StorableObjectPool {
 				list = new LinkedList();
 			for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
 				Short entityCode = (Short) it.next();
+				short code = entityCode.shortValue();
 				List objectQueue = (List) objectQueueMap.get(entityCode);
+				if (this.deletedIds != null) {
+					/* do not load deleted object with entityCode */
+					for (Iterator iter = this.deletedIds.iterator(); iter.hasNext();) {
+						Identifier id = (Identifier) iter.next();
+						if (id.getMajor() == code)
+							objectQueue.add(id);
+					}
+				}
 				Collection storableObjects = this.loadStorableObjects(entityCode, objectQueue);
 				if (storableObjects != null) {
 					try {
