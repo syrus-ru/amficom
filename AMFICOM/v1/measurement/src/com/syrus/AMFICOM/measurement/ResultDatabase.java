@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.33 2004/11/01 11:01:49 bob Exp $
+ * $Id: ResultDatabase.java,v 1.34 2004/11/01 14:08:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/11/01 11:01:49 $
+ * @version $Revision: 1.34 $, $Date: 2004/11/01 14:08:21 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -478,7 +478,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 	 */
 	private void retrieveResultParametersByOneQuery(List results) throws RetrieveObjectException {
 		//List parameters = new LinkedList();
-
+		
+		if ((results == null) || (results.isEmpty()))
+			return;		
 		
 		StringBuffer sql = new StringBuffer(SQL_SELECT + COLUMN_ID + COMMA 
 											+ LINK_COLUMN_TYPE_ID + COMMA 
@@ -486,11 +488,21 @@ public class ResultDatabase extends StorableObjectDatabase {
 											+ LINK_COLUMN_RESULT_ID 
 				+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY + SQL_WHERE + LINK_COLUMN_RESULT_ID
 				+ SQL_IN + OPEN_BRACKET);
-		for (Iterator it = results.iterator(); it.hasNext(); ) {
+		int i = 1;
+		for (Iterator it = results.iterator(); it.hasNext();i++) {
 			Result result = (Result)it.next();
 			sql.append(result.getId().toSQLString());
-			if (it.hasNext())
+			if (it.hasNext()){
+				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 					sql.append(COMMA);
+				else {
+					sql.append(CLOSE_BRACKET);
+					sql.append(SQL_OR);
+					sql.append(COLUMN_ID);
+					sql.append(SQL_IN);
+					sql.append(OPEN_BRACKET);
+				}					
+			}
 		}
 		sql.append(CLOSE_BRACKET);
 		
@@ -844,7 +856,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 			buffer.append(COLUMN_MEASUREMENT_ID);
 			buffer.append(SQL_IN);
 			buffer.append(OPEN_BRACKET);
-			for (Iterator it = measurementIds.iterator(); it.hasNext();) {
+			int i = 1;
+			for (Iterator it = measurementIds.iterator(); it.hasNext(); i++) {
 				Object object = it.next();
 				Identifier id = null;
 				if (object instanceof Identifier)
@@ -861,8 +874,17 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 				if (id != null) {
 					buffer.append(id.toSQLString());
-					if (it.hasNext())
-						buffer.append(COMMA);
+					if (it.hasNext()){
+						if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+							buffer.append(COMMA);
+						else {
+							buffer.append(CLOSE_BRACKET);
+							buffer.append(SQL_OR);
+							buffer.append(COLUMN_MEASUREMENT_ID);
+							buffer.append(SQL_IN);
+							buffer.append(OPEN_BRACKET);
+						}					
+					}
 				}
 			}
 			buffer.append(CLOSE_BRACKET);
