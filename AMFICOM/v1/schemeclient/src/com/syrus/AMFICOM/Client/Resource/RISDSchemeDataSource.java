@@ -6,7 +6,6 @@ import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.Resource.Optimize.SolutionCompact;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
 
