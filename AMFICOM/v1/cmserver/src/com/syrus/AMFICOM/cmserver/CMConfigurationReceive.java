@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.8 2004/12/21 17:01:02 arseniy Exp $
+ * $Id: CMConfigurationReceive.java,v 1.9 2005/01/17 10:34:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,19 +10,26 @@ package com.syrus.AMFICOM.cmserver;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainDatabase;
+import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.administration.MCMDatabase;
+import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.administration.ServerDatabase;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.UserDatabase;
+import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
+import com.syrus.AMFICOM.administration.corba.Server_Transferable;
+import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.cmserver.corba.CMServerPOA;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.DomainDatabase;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentType;
@@ -33,8 +40,6 @@ import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkDatabase;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
-import com.syrus.AMFICOM.configuration.MCM;
-import com.syrus.AMFICOM.configuration.MCMDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -45,52 +50,49 @@ import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
-import com.syrus.AMFICOM.configuration.Server;
-import com.syrus.AMFICOM.configuration.ServerDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
-import com.syrus.AMFICOM.configuration.User;
-import com.syrus.AMFICOM.configuration.UserDatabase;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
-import com.syrus.AMFICOM.configuration.corba.User_Transferable;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicDatabase;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
+import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/21 17:01:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/01/17 10:34:02 $
+ * @author $Author: bob $
  * @module module
  */
 public abstract class CMConfigurationReceive extends CMServerPOA {
@@ -150,7 +152,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
                 cableThreadTypeList.add(cableThreadType);
             }
 
-            CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext
+            CableThreadTypeDatabase database = (CableThreadTypeDatabase) GeneralDatabaseContext
                     .getCharacteristicDatabase();
             database.update(cableThreadTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -182,7 +184,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
         	characteristic_Transferable.header.modifier_id = accessIdentifier.user_id;
             Characteristic characteristic = new Characteristic(characteristic_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(characteristic);
-            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) ConfigurationDatabaseContext
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext
                     .getCharacteristicDatabase();
             characteristicDatabase.update(characteristic, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -225,7 +227,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
                 characteristicList.add(characteristic);
             }
 
-            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) ConfigurationDatabaseContext
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext
                     .getCharacteristicDatabase();
             characteristicDatabase.update(characteristicList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -261,7 +263,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
         	characteristicType_Transferable.header.modifier_id = accessIdentifier.user_id;
             CharacteristicType characteristicType = new CharacteristicType(characteristicType_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(characteristicType);
-            CharacteristicTypeDatabase characteristicTypeDatabase = (CharacteristicTypeDatabase) ConfigurationDatabaseContext
+            CharacteristicTypeDatabase characteristicTypeDatabase = (CharacteristicTypeDatabase) GeneralDatabaseContext
                     .getCharacteristicDatabase();
             characteristicTypeDatabase.update(characteristicType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -303,7 +305,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
                 characteristicTypeList.add(characteristicType);
             }
 
-            CharacteristicTypeDatabase characteristicTypeDatabase = (CharacteristicTypeDatabase) ConfigurationDatabaseContext
+            CharacteristicTypeDatabase characteristicTypeDatabase = (CharacteristicTypeDatabase) GeneralDatabaseContext
                     .getCharacteristicTypeDatabase();
             characteristicTypeDatabase.update(characteristicTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -336,7 +338,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
         	domain_Transferable.header.modifier_id = accessIdentifier.user_id;
             Domain domain = new Domain(domain_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(domain);
-            DomainDatabase domainDatabase = (DomainDatabase) ConfigurationDatabaseContext
+            DomainDatabase domainDatabase = (DomainDatabase) AdministrationDatabaseContext
                     .getDomainDatabase();
             domainDatabase.update(domain, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -380,7 +382,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
                 domainList.add(domain);
             }
 
-            DomainDatabase domainDatabase = (DomainDatabase) ConfigurationDatabaseContext
+            DomainDatabase domainDatabase = (DomainDatabase) AdministrationDatabaseContext
                     .getDomainDatabase();
             domainDatabase.update(domainList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -832,7 +834,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
         	mcm_Transferable.header.modifier_id = accessIdentifier.user_id;
             MCM mcm = new MCM(mcm_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(mcm);
-            MCMDatabase mcmDatabase = (MCMDatabase) ConfigurationDatabaseContext
+            MCMDatabase mcmDatabase = (MCMDatabase) AdministrationDatabaseContext
                     .getMCMDatabase();
             mcmDatabase.update(mcm, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -875,7 +877,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
                 mcmList.add(mcm);
             }
 
-            MCMDatabase mcmDatabase = (MCMDatabase) ConfigurationDatabaseContext
+            MCMDatabase mcmDatabase = (MCMDatabase) AdministrationDatabaseContext
                     .getMCMDatabase();
             mcmDatabase.update(mcmList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -1302,7 +1304,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
         	server_Transferable.header.modifier_id = accessIdentifier.user_id;
             Server server = new Server(server_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(server);
-            ServerDatabase serverDatabase = (ServerDatabase) ConfigurationDatabaseContext
+            ServerDatabase serverDatabase = (ServerDatabase) AdministrationDatabaseContext
                     .getServerDatabase();
             serverDatabase.update(server, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -1345,7 +1347,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
                 serverList.add(server);
             }
 
-            ServerDatabase serverDatabase = (ServerDatabase) ConfigurationDatabaseContext
+            ServerDatabase serverDatabase = (ServerDatabase) AdministrationDatabaseContext
                     .getServerDatabase();
             serverDatabase.update(serverList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -1545,7 +1547,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
         	user_Transferable.header.modifier_id = accessIdentifier.user_id;
             User user = new User(user_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(user);
-            UserDatabase userDatabase = (UserDatabase) ConfigurationDatabaseContext
+            UserDatabase userDatabase = (UserDatabase) AdministrationDatabaseContext
                     .getUserDatabase();
             userDatabase.update(user, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 
@@ -1586,7 +1588,7 @@ public abstract class CMConfigurationReceive extends CMServerPOA {
                 userList.add(user);
             }
 
-            UserDatabase userDatabase = (UserDatabase) ConfigurationDatabaseContext
+            UserDatabase userDatabase = (UserDatabase) AdministrationDatabaseContext
                     .getUserDatabase();
             userDatabase.update(userList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.27 2004/12/23 11:16:11 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.28 2005/01/17 10:34:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/12/23 11:16:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/01/17 10:34:03 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 public class ClientMeasurementServer extends SleepButWorkThread {
