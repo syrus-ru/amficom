@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImpl.java,v 1.6 2004/12/15 15:08:31 bass Exp $
+ * $Id: SchemeImpl.java,v 1.7 2004/12/17 11:57:12 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/12/15 15:08:31 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/17 11:57:12 $
  * @module schemecommon_v1
  */
 final class SchemeImpl extends Scheme implements Cloneable {
@@ -164,33 +164,6 @@ final class SchemeImpl extends Scheme implements Cloneable {
 	}
 
 	public void name(String name) {
-		throw new UnsupportedOperationException();
-	}
-
-	public User_Transferable owner() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newOwner
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationScheme#owner(com.syrus.AMFICOM.configuration.corba.User_Transferable)
-	 */
-	public void owner(User_Transferable newOwner) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationScheme#ownerImpl()
-	 */
-	public User ownerImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newOwnerImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationScheme#ownerImpl(com.syrus.AMFICOM.configuration.User)
-	 */
-	public void ownerImpl(User newOwnerImpl) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePathImpl.java,v 1.5 2004/12/15 15:08:32 bass Exp $
+ * $Id: SchemePathImpl.java,v 1.6 2004/12/17 11:57:12 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/12/15 15:08:32 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/17 11:57:12 $
  * @module schemecommon_v1
  */
 final class SchemePathImpl extends SchemePath implements Cloneable {
@@ -183,6 +183,21 @@ final class SchemePathImpl extends SchemePath implements Cloneable {
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#pathImpl(com.syrus.AMFICOM.configuration.TransmissionPath)
 	 */
 	public void pathImpl(TransmissionPath newPathImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see SchemePath#scheme()
+	 */
+	public Scheme scheme() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newScheme
+	 * @see SchemePath#scheme(Scheme)
+	 */
+	public void scheme(final Scheme newScheme) {
 		throw new UnsupportedOperationException();
 	}
 

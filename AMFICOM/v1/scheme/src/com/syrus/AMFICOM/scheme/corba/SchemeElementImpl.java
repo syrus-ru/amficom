@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.7 2004/12/15 15:08:32 bass Exp $
+ * $Id: SchemeElementImpl.java,v 1.8 2004/12/17 11:57:12 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -15,12 +15,11 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.util.logging.ErrorHandler;
-
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/12/15 15:08:32 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/17 11:57:12 $
  * @module schemecommon_v1
  */
 final class SchemeElementImpl extends SchemeElement implements Cloneable {
@@ -194,6 +193,21 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
 	 */
 	public boolean isChanged() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see SchemeElement#label()
+	 */
+	public String label() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newLabel
+	 * @see SchemeElement#label(String)
+	 */
+	public void label(final String newLabel) {
 		throw new UnsupportedOperationException();
 	}
 

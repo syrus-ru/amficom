@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoGroupImpl.java,v 1.6 2004/12/15 15:08:32 bass Exp $
+ * $Id: SchemeProtoGroupImpl.java,v 1.7 2004/12/17 11:57:12 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/12/15 15:08:32 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/17 11:57:12 $
  * @module schemecommon_v1
  */
 final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
@@ -120,18 +120,6 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 	 * @see com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup#parent(com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup)
 	 */
 	public void parent(SchemeProtoGroup newParent) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String schemeProtoElementClass() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSchemeProtoElementClass
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup#schemeProtoElementClass(java.lang.String)
-	 */
-	public void schemeProtoElementClass(String newSchemeProtoElementClass) {
 		throw new UnsupportedOperationException();
 	}
 

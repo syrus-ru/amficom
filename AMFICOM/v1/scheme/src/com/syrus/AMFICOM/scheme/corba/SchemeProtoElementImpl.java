@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoElementImpl.java,v 1.6 2004/12/15 15:08:32 bass Exp $
+ * $Id: SchemeProtoElementImpl.java,v 1.7 2004/12/17 11:57:12 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.resource.*;
@@ -18,7 +18,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/12/15 15:08:32 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/17 11:57:12 $
  * @module schemecommon_v1
  */
 final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneable {
@@ -88,33 +88,6 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 	 * @see com.syrus.AMFICOM.scheme.corba.SchemeProtoElement#devices(com.syrus.AMFICOM.scheme.corba.SchemeDevice[])
 	 */
 	public void devices(SchemeDevice[] newDevices) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Domain_Transferable domain() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newDomain
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeProtoElement#domain(com.syrus.AMFICOM.configuration.corba.Domain_Transferable)
-	 */
-	public void domain(Domain_Transferable newDomain) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeProtoElement#domainImpl()
-	 */
-	public Domain domainImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newDomainImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeProtoElement#domainImpl(com.syrus.AMFICOM.configuration.Domain)
-	 */
-	public void domainImpl(Domain newDomainImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -220,6 +193,21 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 	}
 
 	public void name(String name) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see SchemeProtoElement#parent()
+	 */
+	public SchemeProtoGroup parent() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newParent
+	 * @see SchemeProtoElement#parent(SchemeProtoGroup)
+	 */
+	public void parent(final SchemeProtoGroup newParent) {
 		throw new UnsupportedOperationException();
 	}
 
