@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2004/07/06 08:10:12 bass Exp $
+# $Id: Makefile,v 1.9 2004/07/06 12:54:22 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -38,6 +38,7 @@ all: .all
 		$(JAVACFLAGS) \
 		$(JAVAC_WARNOFF_FLAG) \
 		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-sourcepath $(SRCDIR) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
 

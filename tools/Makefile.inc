@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.4 2004/07/06 12:27:44 bass Exp $
+# $Id: Makefile.inc,v 1.5 2004/07/06 12:49:55 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -174,8 +174,7 @@ JAVACFLAGS += \
 	-deprecation \
 	-encoding $(ENCODING) \
 	-extdirs $(JAVA_HOME)/jre/lib/ext \
-	-g \
-	-sourcepath $(SRCDIR)
+	-g
 # User may specify -target 1.1/1.2/1.3/1.4
 SUNJAVACFLAGS +=
 # User may specify -target 1.1/1.2/1.3/1.4/1.4.2 
