@@ -17,12 +17,12 @@ import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.map.Map;
@@ -119,7 +119,7 @@ public class MapPanel
 			List domains = null;
 			
 			StorableObjectCondition condition = 
-				new DomainCondition(null, ObjectEntities.DOMAIN_ENTITY_CODE);
+				new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
 			try
 			{
 				domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(

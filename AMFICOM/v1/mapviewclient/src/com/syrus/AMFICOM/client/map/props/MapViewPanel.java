@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -182,7 +183,7 @@ public class MapViewPanel
 			List domains = null;
 
 			StorableObjectCondition condition = 
-				new DomainCondition(null, ObjectEntities.DOMAIN_ENTITY_CODE);
+				new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
 			try
 			{
 				domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(
