@@ -1,5 +1,5 @@
 /*
- * $Id: JAlertingMessageDialog.java,v 1.2 2004/06/18 07:47:21 bass Exp $
+ * $Id: JAlertingMessageDialog.java,v 1.3 2004/07/16 11:27:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.table.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/18 07:47:21 $
+ * @version $Revision: 1.3 $, $Date: 2004/07/16 11:27:42 $
  * @author $Author: bass $
+ * @module generalclient_v1
  */
 public final class JAlertingMessageDialog extends JDialog {
 	private static final long serialVersionUID = 8756613248708170516L;
@@ -42,6 +43,10 @@ public final class JAlertingMessageDialog extends JDialog {
 				 * Calculate and set table row height according to the maximum
 				 * JOptionPane icon height. Native GTK Look & Feel has no such resources
 				 * available.
+				 *
+				 * See also:
+				 * javax.swing.UIManager#installLookAndFeel(String, String)
+				 * http://java.sun.com/developer/JDCTechTips/2004/tt0309.html#1
 				 */
 				Icon errorIcon = UIManager.getIcon("OptionPane.errorIcon");
 				Icon informationIcon = UIManager.getIcon("OptionPane.informationIcon");
