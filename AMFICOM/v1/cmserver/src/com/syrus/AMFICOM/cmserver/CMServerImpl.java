@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.46 2004/10/15 15:46:14 max Exp $
+ * $Id: CMServerImpl.java,v 1.47 2004/10/18 13:59:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -116,7 +116,7 @@ import com.syrus.AMFICOM.measurement.StringFieldCondition;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestCondition;
+import com.syrus.AMFICOM.measurement.TemporalCondition;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
@@ -139,8 +139,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/10/15 15:46:14 $
- * @author $Author: max $
+ * @version $Revision: 1.47 $, $Date: 2004/10/18 13:59:50 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -6583,10 +6583,10 @@ public class CMServerImpl implements CMServerOperations {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds( idsList, new TestCondition(testCondition_Transferable), true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds( idsList, new TemporalCondition(testCondition_Transferable), true);
 
             } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new TestCondition(testCondition_Transferable), true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new TemporalCondition(testCondition_Transferable), true);
 
             Test_Transferable[] transferables = new Test_Transferable[list.size()];
             int i = 0;

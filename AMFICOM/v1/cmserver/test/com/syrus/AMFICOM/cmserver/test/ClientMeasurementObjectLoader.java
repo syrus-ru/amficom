@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.20 2004/10/15 11:00:24 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.21 2004/10/18 13:59:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestCondition;
+import com.syrus.AMFICOM.measurement.TemporalCondition;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
@@ -62,8 +62,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/15 11:00:24 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2004/10/18 13:59:50 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -989,14 +989,14 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
                 Identifier id = (Identifier) it.next();
                 identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             }
-            if (storableObjectCondition instanceof TestCondition) {
+            if (storableObjectCondition instanceof TemporalCondition) {
                 transferables = this.server.transmitTestsButIdsCondition(identifier_Transferables,
                         accessIdentifierTransferable,
                         (TestCondition_Transferable) storableObjectCondition.getTransferable());                
             } else {
                 transferables = this.server.transmitTestsButIds(identifier_Transferables,
                         accessIdentifierTransferable);
-                if (storableObjectCondition != null && !(storableObjectCondition instanceof TestCondition)) {
+                if (storableObjectCondition != null && !(storableObjectCondition instanceof TemporalCondition)) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadResultsButIds | " +
                             "Class '" + storableObjectCondition.getClass().getName() + "' is not instanse of DomainCondition");
                 }
