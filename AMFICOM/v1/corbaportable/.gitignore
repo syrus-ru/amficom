@@ -1,8 +1,0 @@
-classes
-docs
-lib
-*.deploy
-*.jar
-*.jpr
-.idl
-Makefile.inc
