@@ -17,10 +17,16 @@ $(call checkenve,ORACLE_HOME)
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 
-SOURCES := com/syrus/AMFICOM/event/EventType.java \
+SOURCES := com/syrus/AMFICOM/event/EventDatabaseContext.java \
+	com/syrus/AMFICOM/event/EventObjectLoader.java \
+	com/syrus/AMFICOM/event/DatabaseEventObjectLoader.java \
+	com/syrus/AMFICOM/event/EventStorableObjectPool.java \
+	com/syrus/AMFICOM/event/EventType.java \
 	com/syrus/AMFICOM/event/EventTypeDatabase.java \
+	com/syrus/AMFICOM/event/EventTypeWrapper.java \
 	com/syrus/AMFICOM/event/Event.java \
 	com/syrus/AMFICOM/event/EventDatabase.java \
+	com/syrus/AMFICOM/event/EventWrapper.java \
 	com/syrus/AMFICOM/event/EventParameter.java \
 	com/syrus/AMFICOM/event/EventSource.java
 
@@ -65,6 +71,22 @@ cleancorba:
 .PHONY:	install
 install: $(LIBNAME)
 	$(CP) $(LIBNAME) $(LIBDIR)
+
+#### Test ####
+TESTDIR = test
+TESTSOURCES := com/syrus/AMFICOM/event/CommonEventTest.java \
+	com/syrus/AMFICOM/event/TestEventType.java
+JUNITCLASSPATH = /mnt/d/eclipse/3.1M4/plugins/org.junit_3.8.1/junit.jar
+
+.PHONY:	test
+test: $(LIBNAME)
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(LIBNAME):$(APPCLASSPATH):../general_v1/classes:$(JUNITCLASSPATH) \
+		$(addprefix $(TESTDIR)/,$(TESTSOURCES))
+
+.PHONY:	cleantest
+cleantest:
+	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,*.class,$(TESTSOURCES)))
 
 #### Archive ####
 .PHONY:	arch
