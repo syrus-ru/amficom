@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.18 2004/09/09 10:16:40 bob Exp $
+ * $Id: ServerDatabase.java,v 1.19 2004/09/16 07:57:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/09/09 10:16:40 $
+ * @version $Revision: 1.19 $, $Date: 2004/09/16 07:57:11 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -274,8 +274,8 @@ public class ServerDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retriveByIdsOneQuery(null, condition);
-		else list = retriveByIdsOneQuery(ids, condition);
+			list = retrieveByIdsOneQuery(null, condition);
+		else list = retrieveByIdsOneQuery(ids, condition);
 		
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		for(Iterator it=list.iterator();it.hasNext();){

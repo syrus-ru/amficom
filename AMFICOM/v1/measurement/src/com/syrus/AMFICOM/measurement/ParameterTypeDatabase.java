@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.25 2004/09/09 10:08:54 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.26 2004/09/16 07:56:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/09/09 10:08:54 $
+ * @version $Revision: 1.26 $, $Date: 2004/09/16 07:56:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -220,8 +220,8 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null, condition);
-		return retriveByIdsOneQuery(ids, condition);
+			return retrieveByIdsOneQuery(null, condition);
+		return retrieveByIdsOneQuery(ids, condition);
 	}
 	
 	

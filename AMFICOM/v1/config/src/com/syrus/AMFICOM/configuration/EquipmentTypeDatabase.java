@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.10 2004/09/10 10:19:44 max Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.11 2004/09/16 07:57:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/09/10 10:19:44 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2004/09/16 07:57:11 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -248,8 +248,8 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) 
 			throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return super.retriveByIdsOneQuery(null, condition);
-		return super.retriveByIdsOneQuery(ids, condition);	
+			return super.retrieveByIdsOneQuery(null, condition);
+		return super.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
 }

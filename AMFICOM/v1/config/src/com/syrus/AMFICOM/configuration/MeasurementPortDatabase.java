@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.14 2004/09/10 10:19:44 max Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.15 2004/09/16 07:57:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/09/10 10:19:44 $
- * @author $Author: max $
+ * @version $Revision: 1.15 $, $Date: 2004/09/16 07:57:11 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -150,9 +150,9 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = super.retriveByIdsOneQuery(null, condition);
+			list = super.retrieveByIdsOneQuery(null, condition);
 		else 
-			list = super.retriveByIdsOneQuery(ids, condition);		
+			list = super.retrieveByIdsOneQuery(ids, condition);		
 		return list;	
 		//return retriveByIdsPreparedStatement(ids);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.23 2004/09/16 07:36:13 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.24 2004/09/16 07:55:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/16 07:36:13 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/16 07:55:42 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -237,8 +237,8 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 
 	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null, conditions);
-		return retriveByIdsOneQuery(ids, conditions);	
+			return retrieveByIdsOneQuery(null, conditions);
+		return retrieveByIdsOneQuery(ids, conditions);	
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}
 	
@@ -251,7 +251,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 			+ CLOSE_BRACKET;
 		
 		try {
-			list = retriveButIds(ids, condition);
+			list = retrieveButIds(ids, condition);
 		}  catch (IllegalDataException ide) {			
 			Log.debugMessage("AnalysisDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.17 2004/09/10 10:19:44 max Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.18 2004/09/16 07:57:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/09/10 10:19:44 $
- * @author $Author: max $
+ * @version $Revision: 1.18 $, $Date: 2004/09/16 07:57:11 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -445,8 +445,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = super.retriveByIdsOneQuery(null, condition);
-		else list = super.retriveByIdsOneQuery(ids, condition);
+			list = super.retrieveByIdsOneQuery(null, condition);
+		else list = super.retrieveByIdsOneQuery(ids, condition);
 		for (Iterator iter = list.iterator(); iter.hasNext();) {
 			MonitoredElement monitoredElement = (MonitoredElement) iter.next();
 			this.retrieveMonitoredDomainMemberIds(monitoredElement);

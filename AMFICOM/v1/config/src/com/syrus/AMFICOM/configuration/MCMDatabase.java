@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.19 2004/09/09 13:12:27 bob Exp $
+ * $Id: MCMDatabase.java,v 1.20 2004/09/16 07:57:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/09 13:12:27 $
+ * @version $Revision: 1.20 $, $Date: 2004/09/16 07:57:11 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -288,9 +288,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = super.retriveByIdsOneQuery(null, condition);
+			list = super.retrieveByIdsOneQuery(null, condition);
 		else 
-			list = super.retriveByIdsOneQuery(ids, condition);
+			list = super.retrieveByIdsOneQuery(ids, condition);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		for (Iterator iter = list.iterator(); iter.hasNext();) {
 			MCM mcm = (MCM) iter.next();

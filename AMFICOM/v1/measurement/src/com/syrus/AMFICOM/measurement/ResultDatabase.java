@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.21 2004/09/09 09:21:47 bob Exp $
+ * $Id: ResultDatabase.java,v 1.22 2004/09/16 07:56:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/09/09 09:21:47 $
+ * @version $Revision: 1.22 $, $Date: 2004/09/16 07:56:30 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -508,8 +508,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retriveByIdsOneQuery(null, condition);
-		else list = retriveByIdsOneQuery(ids, condition);
+			list = retrieveByIdsOneQuery(null, condition);
+		else list = retrieveByIdsOneQuery(ids, condition);
 		
 		for(Iterator it=list.iterator();it.hasNext();){
 			Result result = (Result)it.next();

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.27 2004/09/09 09:21:47 bob Exp $
+ * $Id: SetDatabase.java,v 1.28 2004/09/16 07:56:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/09/09 09:21:47 $
+ * @version $Revision: 1.28 $, $Date: 2004/09/16 07:56:30 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -602,8 +602,8 @@ public class SetDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retriveByIdsOneQuery(null, condition);
-		else list = retriveByIdsOneQuery(ids, condition);
+			list = retrieveByIdsOneQuery(null, condition);
+		else list = retrieveByIdsOneQuery(ids, condition);
 		
 		for(Iterator it=list.iterator();it.hasNext();){
 			Set set = (Set)it.next();

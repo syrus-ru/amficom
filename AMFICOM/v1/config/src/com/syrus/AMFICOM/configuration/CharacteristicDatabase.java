@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.26 2004/09/09 09:29:07 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.27 2004/09/16 07:57:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/09/09 09:29:07 $
- * @author $Author: max $
+ * @version $Revision: 1.27 $, $Date: 2004/09/16 07:57:11 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -505,8 +505,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return super.retriveByIdsOneQuery(null, condition);
-		return super.retriveByIdsOneQuery(ids, condition);	
+			return super.retrieveByIdsOneQuery(null, condition);
+		return super.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids);
 	}	
 }

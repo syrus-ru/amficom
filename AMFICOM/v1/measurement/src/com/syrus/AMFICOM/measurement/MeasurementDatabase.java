@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.22 2004/09/10 06:18:59 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.23 2004/09/16 07:56:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/09/10 06:18:59 $
+ * @version $Revision: 1.23 $, $Date: 2004/09/16 07:56:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -392,8 +392,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null, condition);
-		return retriveByIdsOneQuery(ids, condition);	
+			return retrieveByIdsOneQuery(null, condition);
+		return retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids, condition);
 	}	
 	

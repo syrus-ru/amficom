@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.11 2004/09/09 09:29:07 max Exp $
+ * $Id: DomainDatabase.java,v 1.12 2004/09/16 07:57:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/09/09 09:29:07 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2004/09/16 07:57:11 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -226,8 +226,8 @@ public class DomainDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids ,String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return super.retriveByIdsOneQuery(null, condition);
-		return super.retriveByIdsOneQuery(ids, condition);	
+			return super.retrieveByIdsOneQuery(null, condition);
+		return super.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
 	

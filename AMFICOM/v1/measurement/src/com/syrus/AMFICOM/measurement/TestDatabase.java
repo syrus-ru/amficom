@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.37 2004/09/16 07:26:00 bob Exp $
+ * $Id: TestDatabase.java,v 1.38 2004/09/16 07:56:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/09/16 07:26:00 $
+ * @version $Revision: 1.38 $, $Date: 2004/09/16 07:56:30 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -785,7 +785,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ CLOSE_BRACKET;
 		
 		try {
-			list = retriveButIds(ids, condition);
+			list = retrieveButIds(ids, condition);
 		}  catch (IllegalDataException ide) {			
 			Log.debugMessage("TestDatabase.retrieveButIdsByTimeRange | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
@@ -796,8 +796,8 @@ public class TestDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retriveByIdsOneQuery(null, condition);
-		else list = retriveByIdsOneQuery(ids, condition);
+			list = retrieveByIdsOneQuery(null, condition);
+		else list = retrieveByIdsOneQuery(ids, condition);
 		
 		for(Iterator it=list.iterator();it.hasNext();){
 			Test test = (Test)it.next();
