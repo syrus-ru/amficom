@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.1 2005/02/07 08:47:33 bob Exp $
+ * $Id: TypicalConditionImpl.java,v 1.2 2005/02/08 11:24:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,11 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/07 08:47:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/02/08 11:24:16 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
-public class TypicalConditionImpl extends TypicalCondition {
+class TypicalConditionImpl extends TypicalCondition {
 
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,

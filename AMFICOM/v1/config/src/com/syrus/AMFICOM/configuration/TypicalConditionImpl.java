@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.2 2005/02/07 10:02:11 bob Exp $
+ * $Id: TypicalConditionImpl.java,v 1.3 2005/02/08 11:25:04 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.general.corba.TypicalSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/07 10:02:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 11:25:04 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
-public class TypicalConditionImpl extends TypicalCondition {
+class TypicalConditionImpl extends TypicalCondition {
 
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,
