@@ -39,6 +39,8 @@ measurement	AMFICOM/v2/measurement
 
 mcm		AMFICOM/v2/mcm
 
+database	AMFICOM/v2/database
+
 AMFICOMv1	&kisserver
 
 kisserver	AMFICOM/v1/kisserver
