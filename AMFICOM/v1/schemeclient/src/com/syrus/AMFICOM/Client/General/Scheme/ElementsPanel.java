@@ -183,6 +183,10 @@ public class ElementsPanel extends UgoPanel
 					getGraph().getGraphResource().currentPath = path;
 				}
 			}
+			else
+			{
+				getGraph().getGraphResource().currentPath = null;
+			}
 			if (SchemeGraph.skip_notify)
 				return;
 

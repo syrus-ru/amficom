@@ -21,12 +21,15 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 	public UgoTabbedPane(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		panel = new UgoPanel(aContext);
+		init_panel();
+		init_module();
+	}
 
+	protected void init_panel()
+	{
+		panel = new UgoPanel(aContext);
 		setLayout(new BorderLayout());
 		add(panel);
-
-		init_module();
 	}
 
 	public void init_module()
@@ -47,15 +50,17 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 			if (panel.getGraph().getScheme() != null)
 				res = JOptionPane.showConfirmDialog(
 						Environment.getActiveWindow(),
-						"Схема была изменена. Вы действительно хотите закрыть схему?",
+						"Схема \"" + panel.getGraph().getScheme().getName() +
+						"\" была изменена. Вы действительно хотите закрыть схему?",
 						"Подтверждение",
-						JOptionPane.YES_NO_CANCEL_OPTION);
+						JOptionPane.YES_NO_OPTION);
 			else if (panel.getGraph().getSchemeElement() != null)
 				res = JOptionPane.showConfirmDialog(
 						Environment.getActiveWindow(),
-						"Компонент был изменен. Вы действительно хотите закрыть схему?",
+						"Элемент \"" + panel.getGraph().getSchemeElement().getName() +
+						"\" был изменен. Вы действительно хотите закрыть схему?",
 						"Подтверждение",
-						JOptionPane.YES_NO_CANCEL_OPTION);
+						JOptionPane.YES_NO_OPTION);
 
 			if (res != JOptionPane.OK_OPTION)
 			{

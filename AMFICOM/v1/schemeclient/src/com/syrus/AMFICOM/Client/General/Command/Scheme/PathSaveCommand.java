@@ -13,18 +13,18 @@ public class PathSaveCommand extends VoidCommand
 {
 	ApplicationContext aContext;
 	SchemePanel panel;
-	UgoPanel upanel;
+//	UgoPanel upanel;
 
-	public PathSaveCommand(ApplicationContext aContext, SchemePanel panel, UgoPanel upanel)
+	public PathSaveCommand(ApplicationContext aContext, SchemePanel panel)
 	{
 		this.aContext = aContext;
 		this.panel = panel;
-		this.upanel = upanel;
+//		this.upanel = upanel;
 	}
 
 	public Object clone()
 	{
-		return new PathSaveCommand(aContext, panel, upanel);
+		return new PathSaveCommand(aContext, panel);
 	}
 
 	public void execute()

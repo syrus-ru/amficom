@@ -14,13 +14,14 @@ public class ElementsTabbedPane extends UgoTabbedPane
 	public ElementsTabbedPane(ApplicationContext aContext)
 	{
 		super(aContext);
-		panel = new ElementsPanel(aContext);
+	}
 
-		removeAll();
+	protected void init_panel()
+	{
+		panel = new ElementsPanel(aContext);
 		setLayout(new BorderLayout());
 		add(panel);
 	}
-
 
 	public void openScheme(Scheme sch)
 	{

@@ -231,6 +231,8 @@ public class SchemePanel extends ElementsPanel
 	{
 		SchemeGraph graph = getGraph();
 		graph.setScheme(sch); //(Scheme)sch.clone(aContext.getDataSourceInterface());
+		sch.serializable_cell = null;
+		sch.serializable_ugo = null;
 		sch.unpack();
 		Map clones = graph.copyFromArchivedState(sch.serializable_cell, new Point(0, 0));
 //		graph.setGraphChanged(false);

@@ -1,9 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.*;
-
 import javax.swing.JOptionPane;
 
+import com.jgraph.graph.DefaultGraphModel;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
@@ -76,7 +75,7 @@ public class SchemeSaveCommand extends VoidCommand
 			return;
 		}
 
-		if (ugograph.getScheme().equals(graph.getScheme()))
+		if (graph.getScheme().equals(ugograph.getScheme()))
 		{
 			if (ugograph.getRoots().length == 0)
 			{
@@ -127,6 +126,14 @@ public class SchemeSaveCommand extends VoidCommand
 		//}
 
 		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
+		if (graph.getScheme().equals(ugograph.getScheme()))
+		{
+			scheme.serializable_ugo = ugograph.getArchiveableState(ugograph.getRoots());
+			ugoTab.setGraphChanged(false);
+		}
+		else if (scheme.serializable_ugo == null)
+			scheme.serializable_ugo = new SchemeGraph(new DefaultGraphModel(), new ApplicationContext()).getArchiveableState();
+
 		boolean res = scheme.pack();
 
 		if (!res)
@@ -135,16 +142,12 @@ public class SchemeSaveCommand extends VoidCommand
 																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
 			return;
 		}
-		if (graph.getScheme().equals(ugograph.getScheme()))
-		{
-			scheme.serializable_ugo = ugograph.getArchiveableState(ugograph.getRoots());
-			ugoTab.setGraphChanged(false);
-		}
+
 
 		dataSource.SaveScheme(scheme.getId());
 		schemeTab.setGraphChanged(false);
 
-//		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
+		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
 
 		JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),

@@ -48,21 +48,13 @@ public class PathElement extends StubResource implements Serializable
 	{
 		PathElement pe = new PathElement();
 		pe.n = n;
-		pe.is_cable = is_cable;
-		pe.link_id = (String)Pool.get("clonedids", link_id);
-		pe.scheme_id = (String)Pool.get("clonedids", scheme_id);
-		pe.scheme_element_id = (String)Pool.get("clonedids", scheme_element_id);
-		if (pe.link_id == null)
-			pe.link_id = link_id;
-		if (is_cable)
-		{
-			pe.thread_id = (String)Pool.get("clonedids", thread_id);
-			if (pe.thread_id == null)
-				pe.thread_id = thread_id;
-		}
-		else
-			pe.thread_id = "";
-
+		pe.type = type;
+		pe.link_id = link_id.length() == 0 ? "" : (String)Pool.get("clonedids", link_id);
+		pe.scheme_id = scheme_id.length() == 0 ? "" : (String)Pool.get("clonedids", scheme_id);
+		pe.scheme_element_id = scheme_element_id.length() == 0 ? "" : (String)Pool.get("clonedids", scheme_element_id);
+		pe.thread_id = thread_id.length() == 0 ? "" : (String)Pool.get("clonedids", thread_id);
+		pe.start_port_id = start_port_id.length() == 0 ? "" : (String)Pool.get("clonedids", start_port_id);
+		pe.end_port_id = end_port_id.length() == 0 ? "" : (String)Pool.get("clonedids", end_port_id);
 		return pe;
 	}
 

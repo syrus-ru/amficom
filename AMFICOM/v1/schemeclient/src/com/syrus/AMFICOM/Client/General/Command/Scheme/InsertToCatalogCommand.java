@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeTabbedPane;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
@@ -20,35 +21,17 @@ import com.syrus.AMFICOM.Client.Schematics.Elements.CatalogElementsDialog;
 public class InsertToCatalogCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-	SchemeGraph graph;
-	SchemePanel panel;
-	UgoPanel ugo_panel;
-	boolean include_paths = false;
+	SchemeTabbedPane pane;
 
-	public InsertToCatalogCommand(ApplicationContext aContext, SchemePanel panel, UgoPanel ugo_panel, boolean include_paths)
+	public InsertToCatalogCommand(ApplicationContext aContext, SchemeTabbedPane pane)
 	{
 		this.aContext = aContext;
-		this.include_paths = include_paths;
-		this.panel = panel;
-		this.ugo_panel = ugo_panel;
-		this.graph = panel.getGraph();
+		this.pane = pane;
 	}
-
-//	public InsertToCatalogCommand(ApplicationContext aContext, SchemeGraph graph)
-//	{
-//		this(aContext, graph, false);
-//	}
-
-//	public InsertToCatalogCommand(ApplicationContext aContext, SchemeGraph graph, boolean include_paths)
-//	{
-//		this.aContext = aContext;
-//		this.graph = graph;
-//		this.include_paths = include_paths;
-//	}
 
 	public Object clone()
 	{
-		return new InsertToCatalogCommand(aContext, panel, ugo_panel, include_paths);
+		return new InsertToCatalogCommand(aContext, pane);
 	}
 
 	public void execute()
@@ -58,7 +41,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			return;
 
 		//Save elements
-		Object[] cells = graph.getSelectionCells();
+		Object[] cells = pane.getPanel().getGraph().getSelectionCells();
 
 		if (cells.length == 0)
 		{
@@ -85,9 +68,7 @@ public class InsertToCatalogCommand extends VoidCommand
 		{
 			if (save(dataSource, elements_to_save,links_to_save, cable_links_to_save, paths_to_save))
 			{
-				aContext.getDispatcher().notify(new SchemeElementsEvent(this, graph, SchemeElementsEvent.SCHEME_CHANGED_EVENT));
-//				if (ugo_panel != null)
-//					new SchemeSaveCommand(aContext, panel, ugo_panel).execute();
+				aContext.getDispatcher().notify(new SchemeElementsEvent(this, pane.getPanel().getGraph(), SchemeElementsEvent.SCHEME_CHANGED_EVENT));
 			}
 		}
 	}
@@ -100,45 +81,40 @@ public class InsertToCatalogCommand extends VoidCommand
 	{
 		CatalogElementsDialog dialog = new CatalogElementsDialog(aContext);
 
-//			DataSet d = new DataSet(elements_to_save);
-//			d.add(new DataSet(links_to_save));
-//			d.add(new DataSet(cable_links_to_save));
-//			d.add(new DataSet(paths_to_save));
+		Map d = new HashMap(elements_to_save);
+		d.putAll(links_to_save);
+		d.putAll(cable_links_to_save);
+		d.putAll(paths_to_save);
 
-			Map d = new HashMap(elements_to_save);
-			d.putAll(links_to_save);
-			d.putAll(cable_links_to_save);
-			d.putAll(paths_to_save);
+		int res = dialog.init(d);
+		if (res != dialog.OK)
+			return false;
 
-			int res = dialog.init(d);
-			if (res != dialog.OK)
-				return false;
+		Map mapping = dialog.getMapping();
+		boolean status = true;
 
-			Map mapping = dialog.getMapping();
-			boolean status = true;
-
-			for (Iterator it = elements_to_save.values().iterator(); it.hasNext();)
+		for (Iterator it = elements_to_save.values().iterator(); it.hasNext();)
+		{
+			SchemeElement se = (SchemeElement)it.next();
+			Object obj = mapping.get(se.getId());
+			if (obj instanceof Equipment)
 			{
-				SchemeElement se = (SchemeElement)it.next();
-				Object obj = mapping.get(se.getId());
-				if (obj instanceof Equipment)
-				{
-					se.equipment_id = ((Equipment)obj).getId();
-					status = saveEquipment(dataSource, se, "");
-				}
-				else if (obj.equals(""))
-					se.equipment_id = "";
-				else
-					status = saveEquipment(dataSource, se, (String)obj);
+				se.equipment_id = ((Equipment)obj).getId();
+				status = saveEquipment(dataSource, se, "");
 			}
-			if (!status)
-				return false;
+			else if (obj.equals(""))
+				se.equipment_id = "";
+			else
+				status = saveEquipment(dataSource, se, (String)obj);
+		}
+		if (!status)
+			return false;
 
-			for (Iterator it = links_to_save.values().iterator(); it.hasNext();)
-			{
-				SchemeLink sl = (SchemeLink)it.next();
-				Object obj = mapping.get(sl.getId());
-				if (obj instanceof Link)
+		for (Iterator it = links_to_save.values().iterator(); it.hasNext();)
+		{
+			SchemeLink sl = (SchemeLink)it.next();
+			Object obj = mapping.get(sl.getId());
+			if (obj instanceof Link)
 				{
 					sl.link_id = ((Link)obj).getId();
 					status = saveLink(dataSource, sl, "");
@@ -193,60 +169,79 @@ public class InsertToCatalogCommand extends VoidCommand
 													Map cable_links_to_save,
 													Map paths_to_save)
 	{
+		if (pane.getPanel().getGraph().mode.equals(Constants.PATH_MODE))
+		{
+			SchemePath path = pane.getPanel().getGraph().getGraphResource().currentPath;
+			if (path != null)
+			{
+				Object[] path_cells = pane.getPanel().getGraph().getGraphResource().getPathElements(path);
+				paths_to_save.put(path.getId(), path);
+				if (path_cells.length > 0)
+				{
+					HashSet tmp = new HashSet(Math.max(cells.length, path_cells.length));
+					for (int i = 0; i < cells.length; i++)
+						tmp.add(cells[i]);
+					for (int i = 0; i < path_cells.length; i++)
+						tmp.add(path_cells[i]);
+					cells = tmp.toArray();
+				}
+			}
+		}
+
 		for (int i = 0; i < cells.length; i++)
 		{
 			if (cells[i] instanceof DeviceGroup)
 			{
-			SchemeElement element = ((DeviceGroup)cells[i]).getSchemeElement();
-			//saveEquipment(dataSource, element);
-			if (element.scheme_id.equals(""))
-			{
-				elements_to_save.put(element.getId(), element);
-
-				/*
-				разремарчено 04.03.04 потому как без внутренних элементов не вносятся
-				порты и соответственно глючат пасы и линки
-				*/
-
-				for (Iterator it = element.getAllChilds().iterator(); it.hasNext();)
+				SchemeElement element = ( (DeviceGroup) cells[i]).getSchemeElement();
+				//saveEquipment(dataSource, element);
+				if (element.scheme_id.equals(""))
 				{
-					SchemeElement se = (SchemeElement)it.next();
-					elements_to_save.put(se.getId(), se);
+					elements_to_save.put(element.getId(), element);
+
+					/*
+						 разремарчено 04.03.04 потому как без внутренних элементов не вносятся
+						 порты и соответственно глючат пасы и линки
+					 */
+
+					for (Iterator it = element.getAllChilds().iterator(); it.hasNext(); )
+					{
+						SchemeElement se = (SchemeElement) it.next();
+						elements_to_save.put(se.getId(), se);
+					}
+					for (Iterator it = element.getAllElementsLinks().iterator(); it.hasNext(); )
+					{
+						SchemeLink sl = (SchemeLink) it.next();
+						links_to_save.put(sl.getId(), sl);
+					}
+					/**/
 				}
-				for (Iterator it = element.getAllElementsLinks().iterator(); it.hasNext();)
+				else
 				{
-					SchemeLink sl = (SchemeLink)it.next();
-					links_to_save.put(sl.getId(), sl);
-				}
-				/**/
-			}
-			else
-			{
-				Scheme inner_scheme = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
-				SchemePanel virtual_panel = new SchemePanel(aContext);
-				virtual_panel.openScheme(inner_scheme);
-				findElementsToSave(virtual_panel.getGraph().getAll(),
-													elements_to_save,
-													links_to_save,
-													cable_links_to_save,
-													paths_to_save);
+					Scheme inner_scheme = (Scheme) Pool.get(Scheme.typ, element.scheme_id);
+					SchemePanel virtual_panel = new SchemePanel(aContext);
+					virtual_panel.openScheme(inner_scheme);
+					findElementsToSave(virtual_panel.getGraph().getAll(),
+							elements_to_save,
+							links_to_save,
+							cable_links_to_save,
+							paths_to_save);
 //				if (panel != null)
 //					panel.schemes_to_save.add(inner_scheme);
+				}
 			}
-		}
-		if (cells[i] instanceof DefaultLink)
-		{
-			DefaultLink link = (DefaultLink)cells[i];
-			SchemeLink scheme_link = link.getSchemeLink();
-			//saveLink (dataSource, scheme_link);
-			links_to_save.put(scheme_link.getId(), scheme_link);
-			/*String path_id = link.getSchemePathId();
-			if (include_paths && !path_id.equals("") && !paths_to_save.containsKey(path_id))
+			if (cells[i] instanceof DefaultLink)
 			{
-				SchemePath path = link.getSchemePath();
-				paths_to_save.put(path.getId(), path);
-				for (Enumeration e = path.links.elements(); e.hasMoreElements();)
-				{
+				DefaultLink link = (DefaultLink) cells[i];
+				SchemeLink scheme_link = link.getSchemeLink();
+				//saveLink (dataSource, scheme_link);
+				links_to_save.put(scheme_link.getId(), scheme_link);
+				/*String path_id = link.getSchemePathId();
+						if (include_paths && !path_id.equals("") && !paths_to_save.containsKey(path_id))
+						{
+				 SchemePath path = link.getSchemePath();
+				 paths_to_save.put(path.getId(), path);
+				 for (Enumeration e = path.links.elements(); e.hasMoreElements();)
+				 {
 					PathElement pe = (PathElement)e.nextElement();
 					if (pe.is_cable)
 					{
@@ -259,25 +254,25 @@ public class InsertToCatalogCommand extends VoidCommand
 						links_to_save.put(l.getId(), l);
 					}
 				}
-			}*/
-		}
-		if (cells[i] instanceof DefaultCableLink)
-		{
-			DefaultCableLink link = (DefaultCableLink)cells[i];
-			SchemeCableLink scheme_link = link.getSchemeCableLink();
-			//saveCableLink(dataSource, scheme_link);
-			cable_links_to_save.put(scheme_link.getId(), scheme_link);
-			/*String path_id = link.getSchemePathId();
-			if (include_paths && !path_id.equals("") && !paths_to_save.containsKey(path_id))
+			 }*/
+			}
+			if (cells[i] instanceof DefaultCableLink)
 			{
-				SchemePath path = link.getSchemePath();
+				DefaultCableLink link = (DefaultCableLink) cells[i];
+				SchemeCableLink scheme_link = link.getSchemeCableLink();
+				//saveCableLink(dataSource, scheme_link);
+				cable_links_to_save.put(scheme_link.getId(), scheme_link);
+				/*String path_id = link.getSchemePathId();
+					if (include_paths && !path_id.equals("") && !paths_to_save.containsKey(path_id))
+					{
+						 SchemePath path = link.getSchemePath();
 				paths_to_save.put(path.getId(), path);
 				for (Enumeration e = path.links.elements(); e.hasMoreElements();)
 				{
-					PathElement pe = (PathElement)e.nextElement();
-					if (pe.is_cable)
-					{
-						SchemeCableLink cl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
+				 PathElement pe = (PathElement)e.nextElement();
+				 if (pe.is_cable)
+				 {
+					SchemeCableLink cl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
 						cable_links_to_save.put(cl.getId(), cl);
 					}
 					else
@@ -287,7 +282,7 @@ public class InsertToCatalogCommand extends VoidCommand
 					}
 				}
 			}*/
-		}
+			}
 		}
 	}
 
@@ -315,7 +310,22 @@ public class InsertToCatalogCommand extends VoidCommand
 				path.monitored_element_id = "";
 			}
 
-			String access_port_id = "";
+//			String access_port_id = "";
+			PathElement first_pe = (PathElement)scheme_path.links.get(0);
+			if (first_pe.getType() == PathElement.SCHEME_ELEMENT)
+			{
+				SchemePort sp = (SchemePort)Pool.get(SchemePort.typ, first_pe.end_port_id);
+				if (sp != null)
+					path.access_port_id = sp.access_port_id;
+				else
+				{
+					SchemeCablePort scp = (SchemeCablePort)Pool.get(SchemeCablePort.typ, first_pe.end_port_id);
+					if (scp != null)
+						path.access_port_id = scp.access_port_id;
+				}
+			}
+
+			/*
 			for (Iterator it = scheme_path.links.iterator(); it.hasNext();)
 			{
 				PathElement pel = (PathElement)it.next();
@@ -365,7 +375,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			}
 
 			path.access_port_id = access_port_id;
-
+*/
 			path.links = new ArrayList();
 
 			for (Iterator it = scheme_path.links.iterator(); it.hasNext();)

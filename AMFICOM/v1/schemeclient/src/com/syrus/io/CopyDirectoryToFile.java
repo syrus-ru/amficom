@@ -1384,7 +1384,7 @@ public class CopyDirectoryToFile
 								PathElement pe = new PathElement();
 								pe.n = Integer.parseInt(s[0]);
 								s = analyseString(isr.readASCIIString());
-								pe.is_cable = Boolean.valueOf(s[0]).booleanValue();
+								pe.setType(Integer.valueOf(s[0]).intValue());
 								s = analyseString(isr.readASCIIString());
 								pe.link_id = s[0];
 								s = analyseString(isr.readASCIIString());

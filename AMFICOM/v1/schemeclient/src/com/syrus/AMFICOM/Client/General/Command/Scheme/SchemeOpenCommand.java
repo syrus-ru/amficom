@@ -58,25 +58,18 @@ public class SchemeOpenCommand extends VoidCommand
 		{
 			Scheme scheme = (Scheme)mcd.retObject;
 
-			scheme.serializable_cell = null;
-			scheme.serializable_ugo = null;
-			scheme.unpack();
-
-			if (scheme.serializable_cell == null)
+			if (scheme.schemecell == null || scheme.schemecell.length == 0)
 			{
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
 						"Ошибка открытия схемы " + scheme.getName(),
 						"Ошибка",
 						JOptionPane.OK_OPTION);
+				return;
 			}
-			//graph.setSchemeFromArchivedState(scheme.serializable_cell);
-		//	graph.copyFromArchivedState(scheme.serializable_cell, new java.awt.Point(0, 0));
 
 			aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,
 					SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
-
-			Pool.put("currentscheme", "currentscheme", scheme);
 		}
 	}
 

@@ -11,11 +11,15 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class SchemeTabbedPane extends ElementsTabbedPane
 {
-	JTabbedPane tabs = new JTabbedPane();
+	JTabbedPane tabs;
 
 	public SchemeTabbedPane(ApplicationContext aContext)
 	{
 		super(aContext);
+	}
+
+	protected void init_panel()
+	{
 		tabs = new JTabbedPane(JTabbedPane.TOP);
 		tabs.addMouseListener(new MouseAdapter()
 		{
@@ -52,17 +56,34 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 
 	public UgoPanel getPanel()
 	{
-		return (UgoPanel)tabs.getComponentAt(tabs.getSelectedIndex());
+		if (tabs.getSelectedIndex() != -1)
+			return (UgoPanel)tabs.getComponentAt(tabs.getSelectedIndex());
+
+		SchemePanel panel = new SchemePanel(aContext);
+		Scheme scheme = new Scheme();
+		scheme.name = "Новая схема";
+		panel.getGraph().setScheme(scheme);
+
+		addPanel(panel);
+		updateTitle(scheme.getName());
+
+		return panel;
 	}
 
 	public void addPanel(UgoPanel panel)
 	{
-		Scheme scheme = panel.getGraph().getScheme();
-		SchemeElement se = panel.getGraph().getSchemeElement();
+//		Scheme scheme = panel.getGraph().getScheme();
+//		SchemeElement se = panel.getGraph().getSchemeElement();
 		tabs.addTab(
 				"",
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_unchanged.gif")),
 				panel);
+		tabs.setSelectedComponent(panel);
+		setGraphChanged(false);
+	}
+
+	public void selectPanel(UgoPanel panel)
+	{
 		tabs.setSelectedComponent(panel);
 	}
 
@@ -145,6 +166,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 						setGraphChanged(false);
 					}
 				}
+				updateTitle(sch.getName());
 				return;
 			}
 		}
@@ -194,6 +216,17 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 		if (graph.getScheme() != null && sch != null && sch.getId().equals(graph.getScheme().getId()))
 		{
 			removePanel(getPanel());
+			if (tabs.getTabCount() == 0)
+			{
+//				Scheme scheme = new Scheme();
+//				scheme.name = "Новая схема";
+//				SchemePanel panel = new SchemePanel(aContext);
+//				panel.getGraph().setScheme(scheme);
+//
+//				addPanel(panel);
+//				updateTitle(scheme.getName());
+				setGraphChanged(false);
+			}
 			return true;
 		}
 		return false;

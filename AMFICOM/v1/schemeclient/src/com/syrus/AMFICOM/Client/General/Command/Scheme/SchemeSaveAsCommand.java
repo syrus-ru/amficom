@@ -60,7 +60,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 			return;
 		}
 
-		if (ugograph.getScheme().equals(graph.getScheme()))
+		if (graph.getScheme().equals(ugograph.getScheme()))
 		{
 			if (ugograph.getRoots().length == 0)
 			{

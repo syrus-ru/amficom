@@ -44,9 +44,7 @@ public class SchemeEditorMainFrame extends JFrame
 
 	static int scheme_count = 0;
 	PrimarySchemeEditorFrame editorFrame;
-//	SchemePanel epanel;
 	SchemeViewerFrame ugoFrame;
-	UgoPanel upanel;
 	PropsFrame propsFrame;
 	ElementsListFrame elementsListFrame;
 	JInternalFrame treeFrame;
@@ -121,20 +119,13 @@ public class SchemeEditorMainFrame extends JFrame
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 
 		//epanel = new SchemePanelNoEdition(aContext);
-		SchemePanel panel = new SchemePanel(aContext);
-		Scheme scheme = new Scheme();
-		scheme.name = "Новая схема";
-		panel.getGraph().setScheme(scheme);
 
 		schemeTab = new SchemeTabbedPane(aContext);
-		schemeTab.addPanel(panel);
-		schemeTab.updateTitle(scheme.getName());
-		schemeTab.setGraphChanged(false);
 
 		editorFrame = new PrimarySchemeEditorFrame(aContext, schemeTab);
 		editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
 		desktopPane.add(editorFrame);
-		graphs.add(panel);
+//		graphs.add(panel);
 
 		ugoPane = new UgoTabbedPane(aContext);
 //		upanel = new UgoPanel(aContext);
@@ -224,7 +215,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(aContext, schemeTab, ugoPane));
 		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(aContext, schemeTab, ugoPane));
 		//aModel.setCommand("menuInsertToCatalog", new InsertToCatalogCommand(aContext, epanel.getGraph()));
-		aModel.setCommand("menuInsertToCatalog", new InsertToCatalogCommand(aContext, epanel, upanel, false));
+		aModel.setCommand("menuInsertToCatalog", new InsertToCatalogCommand(aContext, schemeTab));
 		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment.the_dispatcher, aContext));
 		aModel.setCommand("menuSchemeImport", new SchemeFromFileCommand(Environment.the_dispatcher, aContext));
 
@@ -235,7 +226,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setCommand("menuPathAddLink", new PathAddLinkCommand(aContext, scheme_graph));
 		aModel.setCommand("menuPathRemoveLink", new PathRemoveLinkCommand(aContext, scheme_graph));
 		aModel.setCommand("menuPathUpdateLink", new PathUpdateLinkCommand(aContext, scheme_graph));
-		aModel.setCommand("menuPathSave", new PathSaveCommand(aContext, epanel, upanel));
+		aModel.setCommand("menuPathSave", new PathSaveCommand(aContext, epanel));
 		aModel.setCommand("menuPathCancel", new PathCancelCommand(aContext, scheme_graph));
 		aModel.setCommand("menuPathDelete", new PathDeleteCommand(aContext, epanel));
 
@@ -488,14 +479,12 @@ public class SchemeEditorMainFrame extends JFrame
 		{
 			String scheme_id = (String)ae.getSource();
 			Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
-			scheme.unpack();
 			schemeTab.openScheme(scheme);
 		}
 		else if (ae.getActionCommand().equals("addschemeelementevent"))
 		{
 			String se_id = (String)ae.getSource();
 			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, se_id);
-			se.unpack();
 			schemeTab.openSchemeElement(se);
 		}
 	}
@@ -673,24 +662,61 @@ public class SchemeEditorMainFrame extends JFrame
 
 	void this_windowClosing(WindowEvent e)
 	{
-		if(schemeTab.getPanel().getGraph().getScheme() != null && schemeTab.getPanel().getGraph().isGraphChanged())
+		UgoPanel[] p = schemeTab.getAllPanels();
+		for (int i = 0; i < p.length; i++)
 		{
-			int res = JOptionPane.showConfirmDialog(
-					Environment.getActiveWindow(),
-					"Схема была изменена. Сохранить схему перед закрытием?",
-					"Подтверждение",
-					JOptionPane.YES_NO_CANCEL_OPTION);
-			if (res == JOptionPane.OK_OPTION)
+			schemeTab.selectPanel(p[i]);
+			/*
+			if (p[i].getGraph().getSchemeElement() != null && p[i].getGraph().isGraphChanged())
 			{
-				SchemeSaveCommand ssc = new SchemeSaveCommand(aContext, schemeTab, ugoPane);
-				ssc.execute();
-				if (ssc.ret_code == SchemeSaveCommand.CANCEL)
+				schemeTab.selectPanel(p[i]);
+				int res = JOptionPane.showConfirmDialog(
+						Environment.getActiveWindow(),
+						"Элемент \"" + p[i].getGraph().getSchemeElement().getName() +
+						"\" был изменен. Сохранить схему перед закрытием?",
+						"Подтверждение",
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				if (res == JOptionPane.OK_OPTION)
+				{
+					SchemeSaveCommand ssc = new SchemeSaveCommand(aContext, schemeTab, ugoPane);
+					ssc.execute();
+					if (ssc.ret_code == SchemeSaveCommand.CANCEL)
+						return;
+				}
+				else if (res == JOptionPane.CANCEL_OPTION)
 					return;
-			}
-			else if (res == JOptionPane.CANCEL_OPTION)
+			}*/
+			if (!schemeTab.removePanel(p[i]))
 				return;
 		}
 
+		p = schemeTab.getAllPanels();
+		for (int i = 0; i < p.length; i++)
+		{
+			schemeTab.selectPanel(p[i]);
+			/*
+			if (p[i].getGraph().getScheme() != null && p[i].getGraph().isGraphChanged())
+			{
+				schemeTab.selectPanel(p[i]);
+				int res = JOptionPane.showConfirmDialog(
+						Environment.getActiveWindow(),
+						"Схема \"" + p[i].getGraph().getScheme().getName() +
+						"\" была изменена. Сохранить схему перед закрытием?",
+						"Подтверждение",
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				if (res == JOptionPane.OK_OPTION)
+				{
+					SchemeSaveCommand ssc = new SchemeSaveCommand(aContext, schemeTab, ugoPane);
+					ssc.execute();
+					if (ssc.ret_code == SchemeSaveCommand.CANCEL)
+						return;
+				}
+				else if (res == JOptionPane.CANCEL_OPTION)
+					return;
+			}*/
+			if (!schemeTab.removePanel(p[i]))
+				return;
+		}
 		internal_dispatcher.unregister(this, "contextchange");
 		Environment.the_dispatcher.unregister(this, "contextchange");
 		aContext.getApplicationModel().getCommand("menuExit").execute();

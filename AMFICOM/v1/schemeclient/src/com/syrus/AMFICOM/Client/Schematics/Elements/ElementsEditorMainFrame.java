@@ -38,13 +38,16 @@ public class ElementsEditorMainFrame extends JFrame
 	ElementsEditorMenuBar menuBar = new ElementsEditorMenuBar();
 
 	PrimaryElementsEditorFrame editorFrame;
-	ElementsPanel epanel;
+//	ElementsPanel epanel;
 	SchemeViewerFrame ugoFrame;
-	UgoPanel upanel;
+//	UgoPanel upanel;
 	PropsFrame propsFrame;
 	ElementsListFrame elementsListFrame;
 	//ElementsUploadListFrame elementsListFrame;
 	JInternalFrame treeFrame;
+
+	UgoTabbedPane ugoPane;
+	ElementsTabbedPane elementsTab;
 
 	public ElementsEditorMainFrame(ApplicationContext aContext)
 	{
@@ -106,13 +109,13 @@ public class ElementsEditorMainFrame extends JFrame
 		mainPanel.add(statusBarPanel, BorderLayout.SOUTH);
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-		epanel = new ElementsPanel(aContext);
-//		editorFrame = new PrimaryElementsEditorFrame(aContext, epanel);
+		elementsTab = new ElementsTabbedPane(aContext);
+		editorFrame = new PrimaryElementsEditorFrame(aContext, elementsTab);
 		editorFrame.setTitle(LangModelSchematics.getString("elementsMainTitle"));
 		desktopPane.add(editorFrame);
 
-		upanel = new UgoPanel(aContext);
-//		ugoFrame = new SchemeViewerFrame(aContext, upanel);
+		ugoPane = new UgoTabbedPane(aContext);
+		ugoFrame = new SchemeViewerFrame(aContext, ugoPane);
 		ugoFrame.setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 		desktopPane.add(ugoFrame);
 
@@ -180,8 +183,8 @@ public class ElementsEditorMainFrame extends JFrame
 		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
-		aModel.setCommand("menuComponentNew", new ComponentNewCommand(aContext, epanel.getGraph(), upanel.getGraph()));
-		aModel.setCommand("menuComponentSave", new ComponentSaveCommand(aContext, epanel.getGraph(), upanel.getGraph()));
+		aModel.setCommand("menuComponentNew", new ComponentNewCommand(aContext, elementsTab.getPanel().getGraph(), ugoPane.getPanel().getGraph()));
+		aModel.setCommand("menuComponentSave", new ComponentSaveCommand(aContext, elementsTab.getPanel().getGraph(), ugoPane.getPanel().getGraph()));
 
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(new ElementsEditorWindowArranger(this)));
 		aModel.setCommand("menuWindowTree", new ShowFrameCommand(desktopPane, treeFrame));
