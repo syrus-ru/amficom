@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.87 2005/03/10 21:07:27 arseniy Exp $
+ * $Id: Test.java,v 1.88 2005/03/15 14:02:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -46,7 +48,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/03/10 21:07:27 $
+ * @version $Revision: 1.88 $, $Date: 2005/03/15 14:02:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -79,8 +81,11 @@ public class Test extends StorableObject {
 	private Collection measurementSetupIds;
 
 	private MeasurementSetup mainMeasurementSetup;
-	
+
 	private StorableObjectDatabase	testDatabase;
+
+	private Identifier kisId;
+	private Identifier mcmId;
 
 	public Test(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -534,59 +539,31 @@ public class Test extends StorableObject {
 		super.changed = true;
 	}
 
-//	public int hashCode() {
-//		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
-//		hashCodeGenerator.addObject(this.id);
-//		hashCodeGenerator.addObject(this.created);
-//		hashCodeGenerator.addObject(this.creatorId);
-//		hashCodeGenerator.addObject(this.modified);
-//		hashCodeGenerator.addObject(this.modifierId);
-//		hashCodeGenerator.addInt(this.timeStamps.hashCode());
-//		hashCodeGenerator.addObject(this.analysisTypeId);
-//		hashCodeGenerator.addObject(this.evaluationTypeId);
-//		hashCodeGenerator.addObject(this.measurementTypeId);
-//		hashCodeGenerator.addObject(this.monitoredElement);
-//		hashCodeGenerator.addObject(this.mainMeasurementSetup);
-//		hashCodeGenerator.addObjectArray(this.measurementSetupIds.toArray());
-//		hashCodeGenerator.addInt(this.returnType);
-//		hashCodeGenerator.addInt(this.status);		
-//		hashCodeGenerator.addObject(this.description);
-//		int result = hashCodeGenerator.getResult();
-//		hashCodeGenerator = null;
-//		return result;
-//	}
-//
-//	public boolean equals(Object obj) {
-//		boolean equals = (this == obj);		
-//		if ((!equals) && (obj instanceof Test)){
-//			Test test = (Test)obj;
-//			if (	(test.id.equals(this.id)) &&
-//					HashCodeGenerator.equalsDate(this.created,test.created) &&
-//					(this.creatorId.equals(test.creatorId))&&
-//					HashCodeGenerator.equalsDate(this.modified,test.modified) &&
-//					(this.modifierId.equals(test.modifierId))&&					
-//					( ((test.getStartTime() == null) && (this.getStartTime() == null) ) 
-//							|| (Math.abs(test.getStartTime().getTime()-this.getStartTime().getTime())<1000) ) &&
-//					( ((test.getEndTime() == null) && (this.getEndTime() == null) ) 
-//							|| (Math.abs(test.getEndTime().getTime()-this.getEndTime().getTime())<1000) ) &&
-//					(test.getTemporalType().equals(this.getTemporalType())) &&
-//					( ((test.getTemporalPatternId()==null) && (this.getTemporalPatternId() == null)) 
-//							|| (test.getTemporalPatternId().equals(this.getTemporalPatternId())) ) &&
-//					( ((test.getAnalysisTypeId()==null) && (this.getAnalysisTypeId() == null)) 
-//								|| (test.getAnalysisTypeId().equals(this.getAnalysisTypeId())) ) &&
-//					( ((test.getEvaluationTypeId()==null) && (this.getEvaluationTypeId() == null)) 
-//								|| (test.getEvaluationTypeId().equals(this.getEvaluationTypeId())) ) &&
-//					(test.getMeasurementTypeId().equals(this.getMeasurementTypeId())) &&
-//					(test.getMonitoredElement().equals(this.getMonitoredElement())) &&
-//					( ((test.getMeasurementSetupIds()==null) && (this.getMeasurementSetupIds() == null)) 
-//							|| (test.getMeasurementSetupIds().equals(this.getMeasurementSetupIds())) ) &&
-//					(test.getReturnType().equals(getReturnType())) && 
-//					(test.getStatus().equals(test.getStatus()))
-//					)
-//					equals = true;
-//		}
-//		return equals;
-//	}
+	public Identifier getKISId() {
+		if (this.kisId == null) {
+			try {
+				MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(this.getMonitoredElement().getMeasurementPortId(), true);
+				this.kisId = measurementPort.getKISId();
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+		return this.kisId;
+	}
+
+	public Identifier getMCMId() {
+		if (this.mcmId == null) {
+			try {
+				KIS kis = (KIS) ConfigurationStorableObjectPool.getStorableObject(this.getKISId(), true);
+				this.mcmId = kis.getMCMId();
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+		return this.mcmId;
+	}
 
 	public List getDependencies() {
 		List dependencies = new LinkedList();
