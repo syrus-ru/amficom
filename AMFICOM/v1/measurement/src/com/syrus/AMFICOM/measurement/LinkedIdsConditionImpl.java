@@ -1,6 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/01/26 15:38:40 arseniy Exp $
- *
+ * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/01/27 16:02:57 arseniy Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -19,7 +18,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/26 15:38:40 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/27 16:02:57 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -30,7 +29,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 	protected static final Short RESULT_SHORT = new Short(ObjectEntities.RESULT_ENTITY_CODE);
 	protected static final Short MEASUREMENTTYPE_SHORT = new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 	protected static final Short MS_SHORT = new Short(ObjectEntities.MS_ENTITY_CODE);
-	
+
 	private LinkedIdsConditionImpl(List linkedIds, Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.entityCode = entityCode;
@@ -44,26 +43,22 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 	/**
 	 * @return <code>true</code>
 	 *         <ul>
-	 * 
-	 * <li>if {@link #entityCode}is {@link AnalysisType}for all analysesType
-	 * for criteria ParameterTypes identifier in linkedIds;</li>
-	 * 
-	 * <li>if {@link #entityCode}is {@link EvaluationType}for all analysesType
-	 * for threshold ParameterTypes identifier in linkedIds;</li>
-	 * 
-	 * <li>if {@link #entityCode}is {@link Measurement}for all measurements
-	 * for Test identifier in linkedIds;</li>
-	 * 
-	 * <li>if {@link #entityCode}is {@link Result}for all results for
-	 * Measurement identifier in linkedIds;</li>
-	 * 
-	 * <li>if {@link #entityCode}is {@link MeasurementType}for all
-	 * measurementTypes MeasurementPortType identifier in linkedIds;</li>
-	 * 
-	 * <li>if {@link #entityCode}is {@link MeasurementSetup}for all
-	 * measurement setups for MonitoredElement identifier in linkedIds;</li>
-	 * 
-	 * </ul>
+	 *         <li>if {@link #entityCode}is {@link AnalysisType}for all
+	 *         analysesType for criteria ParameterTypes identifier in linkedIds;
+	 *         </li>
+	 *         <li>if {@link #entityCode}is {@link EvaluationType}for all
+	 *         analysesType for threshold ParameterTypes identifier in linkedIds;
+	 *         </li>
+	 *         <li>if {@link #entityCode}is {@link Measurement}for all
+	 *         measurements for Test identifier in linkedIds;</li>
+	 *         <li>if {@link #entityCode}is {@link Result}for all results for
+	 *         Measurement identifier in linkedIds;</li>
+	 *         <li>if {@link #entityCode}is {@link MeasurementType}for all
+	 *         measurementTypes MeasurementPortType identifier in linkedIds;</li>
+	 *         <li>if {@link #entityCode}is {@link MeasurementSetup}for all
+	 *         measurement setups for MonitoredElement identifier in linkedIds;
+	 *         </li>
+	 *         </ul>
 	 */
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
@@ -81,7 +76,8 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 								break;
 							}
 						}
-					} else {
+					}
+					else {
 						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
 							Identifier criteriaParameterTypeId = (Identifier) it.next();
 							for (Iterator it2 = criteriaParameterTypes.iterator(); it2.hasNext();) {
@@ -108,7 +104,8 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 								break;
 							}
 						}
-					} else {
+					}
+					else {
 						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
 							Identifier thresholdParameterTypeId = (Identifier) it.next();
 							for (Iterator it2 = thresholdParameterTypes.iterator(); it2.hasNext();) {
@@ -126,12 +123,12 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 				if (object instanceof Measurement) {
 					Identifier testId = ((Measurement) object).getTestId();
 					if (this.linkedIds == null) {
-						Identifier id = this.identifier;
-						if (id.equals(testId)) {
+						if (this.identifier.equals(testId)) {
 							condition = true;
 							break;
 						}
-					} else {
+					}
+					else {
 						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
 							Identifier id = (Identifier) it.next();
 							if (testId.equals(id)) {
@@ -146,7 +143,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 				if (object instanceof MeasurementType) {
 					MeasurementType measurementType = (MeasurementType) object;
 					List measurementPortTypes = measurementType.getMeasurementPortTypes();
-					if (measurementPortTypes != null){
+					if (measurementPortTypes != null) {
 						for (Iterator it = measurementPortTypes.iterator(); it.hasNext();) {
 							MeasurementPortType measurementPortType = (MeasurementPortType) it.next();
 							Identifier id2 = measurementPortType.getId();
@@ -157,19 +154,21 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 										condition = true;
 										break;
 									}
-								} else {
+								}
+								else {
 									for (Iterator iter = this.linkedIds.iterator(); iter.hasNext();) {
 										Identifier id = (Identifier) iter.next();
 										if (id2.equals(id)) {
 											condition = true;
 											break;
 										}
-	
+
 									}
 								}
 							}
 						}
-					} else {
+					}
+					else {
 						condition = false;
 					}
 				}
@@ -180,29 +179,31 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 					/* choose type of linked objects */
 					short code = 0;
 					List objectList;
-					if (this.linkedIds != null){
+					if (this.linkedIds != null) {
 						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
 							Identifier id = (Identifier) it.next();
 							if (code == 0)
 								code = id.getMajor();
-							else 
+							else
 								if (code != id.getMajor())
-									throw new UnsupportedOperationException("LinkedIdsCondition.isConditionTrue | there some different entities : " 
-										+ ObjectEntities.codeToString(code) + " and " + ObjectEntities.codeToString(id.getMajor()));
+									throw new UnsupportedOperationException("LinkedIdsCondition.isConditionTrue | there some different entities : "
+											+ ObjectEntities.codeToString(code)
+											+ " and "
+											+ ObjectEntities.codeToString(id.getMajor()));
 						}
 						objectList = this.linkedIds;
-					} else{
-						/* work with simple identifier*/
+					}
+					else {
+						/* work with simple identifier */
 						code = this.identifier.getMajor();
 						objectList = Collections.singletonList(this.identifier);
 					}
 
-					switch(code) {
+					switch (code) {
 						case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-						{
 							for (Iterator iter = objectList.iterator(); iter.hasNext();) {
 								Identifier id = (Identifier) iter.next();
-								MeasurementType measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(id, true);
+								MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool.getStorableObject(id, true);
 								SetParameter[] setParameters = measurementSetup.getParameterSet().getParameters();
 								for (int i = 0; (i < setParameters.length) && (!condition); i++) {
 									ParameterType parameterType = (ParameterType) setParameters[i].getType();
@@ -215,53 +216,70 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 												condition = true;
 												break;
 											}
-										}	
+										}
 									}
-	
+
 									if (!condition) {
 										List outParameterTypes = measurementType.getOutParameterTypes();
 										for (Iterator it = outParameterTypes.iterator(); it.hasNext();) {
 											Object element = it.next();
 											if (element instanceof ParameterType) {
 												ParameterType parameterType2 = (ParameterType) element;
-												if (parameterType.getId()
-														.equals(parameterType2.getId())) {
+												if (parameterType.getId().equals(parameterType2.getId())) {
 													condition = true;
 													break;
 												}
 											}
-	
+
 										}
 									}
-	
+
 								}
 							}
-						}
 							break;
 						case ObjectEntities.ME_ENTITY_CODE:
-							{
-								for (Iterator it = measurementSetup.getMonitoredElementIds().iterator(); it.hasNext();) {
-									Identifier id2 = (Identifier) it.next();
-									if (!condition) {										
-										for (Iterator iter = objectList.iterator(); iter.hasNext();) {
-											Identifier id = (Identifier) iter.next();
-											if (id.equals(id2)) {
-												condition = true;
-												break;
-											}
-										}										
+							for (Iterator it = measurementSetup.getMonitoredElementIds().iterator(); it.hasNext();) {
+								Identifier id2 = (Identifier) it.next();
+								if (!condition) {
+									for (Iterator iter = objectList.iterator(); iter.hasNext();) {
+										Identifier id = (Identifier) iter.next();
+										if (id.equals(id2)) {
+											condition = true;
+											break;
+										}
 									}
 								}
 							}
 							break;
 						default:
-							throw new UnsupportedOperationException("LinkedIdsCondition.isConditionTrue | unknown linked entity : " 
-								+ ObjectEntities.codeToString(code));
+							throw new UnsupportedOperationException("LinkedIdsCondition.isConditionTrue | unknown linked entity : "
+									+ ObjectEntities.codeToString(code));
+					}
+				}
+				break;
+			case ObjectEntities.RESULT_ENTITY_CODE:
+				if (object instanceof Result) {
+					Identifier actionId = ((Result) object).getAction().getId();
+					if (this.linkedIds == null) {
+						if (actionId.equals(this.identifier)) {
+							condition = true;
+							break;
+						}
+					}
+					else {
+						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+							if (actionId.equals(it.next())) {
+								condition = true;
+								break;
+							}
+						}
 					}
 				}
 				break;
 			default:
-				throw new UnsupportedOperationException("entityCode " + ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
+				throw new UnsupportedOperationException("entityCode "
+						+ ObjectEntities.codeToString(this.entityCode.shortValue())
+						+ " is unknown for this condition");
 		}
 
 		return condition;
@@ -288,12 +306,14 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 				this.entityCode = RESULT_SHORT;
 				break;
 			default:
-				throw new UnsupportedOperationException("entityCode " + ObjectEntities.codeToString(entityCode.shortValue()) + " is unknown for this condition");
+				throw new UnsupportedOperationException("entityCode "
+						+ ObjectEntities.codeToString(entityCode.shortValue())
+						+ " is unknown for this condition");
 		}
 
 	}
 
-	public boolean isNeedMore(List list) {		
+	public boolean isNeedMore(List list) {
 		return true;
 	}
 }
