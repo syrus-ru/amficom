@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.83 2005/02/07 12:59:47 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.84 2005/02/07 14:21:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/02/07 12:59:47 $
+ * @version $Revision: 1.84 $, $Date: 2005/02/07 14:21:39 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -99,6 +99,45 @@ public abstract class StorableObjectDatabase {
 		//connection = DatabaseConnection.getConnection();
 	}
 
+	protected StringBuffer idsInListString(List objects, String idColumn) throws IllegalDataException {
+		if (objects == null || objects.isEmpty())
+			return null;
+
+		StringBuffer stringBuffer = new StringBuffer(idColumn + SQL_IN + OPEN_BRACKET);
+
+		Object object;
+		Identifier id;
+		int i = 0;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			object = it.next();
+			if (object instanceof Identifier)
+				id = (Identifier) object;
+			else
+				if (object instanceof Identified)
+					id = ((Identified) object).getId();
+				else
+					throw new IllegalDataException("StorableObjectDatabase.listIdsString | Object "
+							+ object.getClass().getName()
+							+ " isn't Identifier or Identified");
+
+			stringBuffer.append(DatabaseIdentifier.toSQLString(id));
+			if (it.hasNext()) {
+				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+					stringBuffer.append(COMMA);
+				else {
+					stringBuffer.append(CLOSE_BRACKET);
+					stringBuffer.append(SQL_OR);
+					stringBuffer.append(idColumn);
+					stringBuffer.append(SQL_IN);
+					stringBuffer.append(OPEN_BRACKET);
+				}
+			}
+		}
+		stringBuffer.append(CLOSE_BRACKET);
+
+		return stringBuffer;
+	}
+
 	public void delete(Identifier id)  throws IllegalDataException {
 		String storableObjectIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
@@ -161,7 +200,7 @@ public abstract class StorableObjectDatabase {
 				buffer.append(OPEN_BRACKET);
 
 				int i = 1;
-				for (Iterator it = ids.iterator(); it.hasNext();i++) {						
+				for (Iterator it = ids.iterator(); it.hasNext(); i++) {						
 					Object object = it.next();
 					Identifier id = null;
 					if (object instanceof Identifier)
@@ -195,7 +234,7 @@ public abstract class StorableObjectDatabase {
 		try {			
 			statement = connection.createStatement();
 			Log.debugMessage("StorableObjectDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);			
+			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle1) {
 			Log.errorException(sqle1);
