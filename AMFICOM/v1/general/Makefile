@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.10 2004/07/21 13:33:11 arseniy Exp $
+# $Id: Makefile,v 1.11 2004/08/02 14:56:52 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -13,7 +13,7 @@ IDLDIR=../idl_v1/idl
 
 APPCLASSPATH = $(LIBDIR)/util.jar
 
-IDL2JAVAFLAGS = -strict
+IDL2JAVAFLAGS = -strict -servant
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
 JIKESFLAGS = -target 1.2
