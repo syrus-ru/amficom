@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerIdentifierTestCase.java,v 1.1 2005/03/04 12:52:46 bass Exp $
+ * $Id: CMServerIdentifierTestCase.java,v 1.2 2005/03/04 13:00:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/04 12:52:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/04 13:00:14 $
  * @author $Author: bass $
  * @module module
  */
@@ -122,10 +122,6 @@ public class CMServerIdentifierTestCase extends TestCase {
 			accessIdentifier_Transferable.domain_id = (Identifier_Transferable) domainId.getTransferable();
 			accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
-
-			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
-			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
-
 		}
 		//		catch (CommunicationException e) {
 		//			e.printStackTrace();

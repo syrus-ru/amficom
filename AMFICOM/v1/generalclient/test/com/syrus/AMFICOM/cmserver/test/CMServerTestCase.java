@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.1 2005/03/04 12:52:46 bass Exp $
+ * $Id: CMServerTestCase.java,v 1.2 2005/03/04 13:00:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/04 12:52:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/04 13:00:14 $
  * @author $Author: bass $
  * @module module
  */
@@ -133,10 +133,6 @@ public class CMServerTestCase extends TestCase {
 			accessIdentifier_Transferable.domain_id = server.reverseLookupDomainName("Системный домен");
 			accessIdentifier_Transferable.user_id = server.reverseLookupUserLogin("sys");
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
-
-			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
-			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
-
 		}
 		//		catch (CommunicationException e) {
 		//			e.printStackTrace();
@@ -169,7 +165,7 @@ public class CMServerTestCase extends TestCase {
         Set emptySet = new Set(new Identifier("AnalysysTest"));
         for (int i = 0; i < Analysiss.length; i++) {
             Identifier id = IdentifierPool.generateId(ObjectEntities.ANALYSIS_ENTITY_CODE);
-            Analysiss[i] = Analysis.createInstance(id, userId, new AnalysisType(new Identifier("Analyses test")) , new Identifier("Analyses test"), emptySet);            
+            Analysiss[i] = Analysis.createInstance(userId, new AnalysisType(new Identifier("Analyses test")), new Identifier("Analyses test"), null, emptySet);            
             Analysis_Transferables[i] = (Analysis_Transferable)Analysiss[i].getTransferable();
             identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             System.out.println("the object has been created with id " + id);
@@ -194,7 +190,7 @@ public class CMServerTestCase extends TestCase {
         List emptyList = new ArrayList();
         for (int i = 0; i < analysisTypes.length; i++) {
             Identifier id = IdentifierPool.generateId(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-            analysisTypes[i] = AnalysisType.createInstance(id, userId, "Test"+ id , "This object was creates for test", emptyList, emptyList,emptyList,emptyList);            
+            analysisTypes[i] = AnalysisType.createInstance(userId, "Test"+ id , "This object was creates for test", emptyList, emptyList,emptyList,emptyList);            
             analysisType_Transferables[i] = (AnalysisType_Transferable)analysisTypes[i].getTransferable();
             identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             System.out.println("the object has been created with codename " + "Test"+ id);
@@ -209,7 +205,7 @@ public class CMServerTestCase extends TestCase {
         
     }
     
-    public void _testRecieveEvaluationTypes() throws AMFICOMRemoteException {
+    public void _testRecieveEvaluationTypes() throws AMFICOMRemoteException, CreateObjectException {
         
         //      Checking recieveEvaluationTypes and transmitEvaluationTypes methods
         
@@ -219,7 +215,7 @@ public class CMServerTestCase extends TestCase {
         List emptyList = new ArrayList();
         for (int i = 0; i < evaluationTypes.length; i++) {
             Identifier id = IdentifierPool.generateId(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
-            evaluationTypes[i] = EvaluationType.createInstance(id, userId, "Test"+ id , "This object was creates for test", emptyList, emptyList,emptyList,emptyList);            
+            evaluationTypes[i] = EvaluationType.createInstance(userId, "Test"+ id , "This object was creates for test", emptyList, emptyList,emptyList,emptyList);            
             evaluationType_Transferables[i] = (EvaluationType_Transferable)evaluationTypes[i].getTransferable();
             identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             System.out.println("the object has been created with id " + id);
@@ -234,7 +230,7 @@ public class CMServerTestCase extends TestCase {
         
     }
     
-    public void _testRecieveMeasurementTypes() throws AMFICOMRemoteException {
+    public void _testRecieveMeasurementTypes() throws AMFICOMRemoteException, CreateObjectException {
         
         //      Checking recieveMeasurementTypes and transmitMeasurementTypes methods
         
@@ -244,7 +240,7 @@ public class CMServerTestCase extends TestCase {
         List emptyList = new ArrayList();
         for (int i = 0; i < measurementTypes.length; i++) {
             Identifier id = IdentifierPool.generateId(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-            measurementTypes[i] = MeasurementType.createInstance(id, userId, "Test"+ id , "This object was creates for test", emptyList, emptyList, emptyList);            
+            measurementTypes[i] = MeasurementType.createInstance(userId, "Test"+ id , "This object was creates for test", emptyList, emptyList, emptyList);            
             measurementType_Transferables[i] = (MeasurementType_Transferable)measurementTypes[i].getTransferable();
             identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             System.out.println("the object has been created with id " + id);
@@ -259,7 +255,7 @@ public class CMServerTestCase extends TestCase {
         
     }
     
-    public void _testRecieveParameterTypes() throws AMFICOMRemoteException {
+    public void _testRecieveParameterTypes() throws AMFICOMRemoteException, CreateObjectException {
         
         //      Checking recieveParameterTypes and transmitParameterTypes methods
         
@@ -268,7 +264,7 @@ public class CMServerTestCase extends TestCase {
         Identifier_Transferable[]   identifier_Transferables =   new Identifier_Transferable[parameterTypes.length];                      
         for (int i = 0; i < parameterTypes.length; i++) {
             Identifier id = IdentifierPool.generateId(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
-            parameterTypes[i] = ParameterType.createInstance(id, userId, "Test"+ id , "This object was creates for test", "test");            
+            parameterTypes[i] = ParameterType.createInstance(userId, "Test"+ id , "This object was creates for test", "test", null);            
             parameterType_Transferables[i] = (ParameterType_Transferable)parameterTypes[i].getTransferable();
             identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             System.out.println("the object has been created with id " + id);
@@ -283,7 +279,7 @@ public class CMServerTestCase extends TestCase {
         
     }
     
-    public void _testRecieveSets() throws AMFICOMRemoteException {
+    public void _testRecieveSets() throws AMFICOMRemoteException, CreateObjectException {
         
         //      Checking recievesets and transmitsets methods
         
@@ -294,7 +290,7 @@ public class CMServerTestCase extends TestCase {
         List emptyList = new ArrayList();
         for (int i = 0; i < sets.length; i++) {
             Identifier id = IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE);
-            sets[i] = Set.createInstance(id, userId, emptySetSort ,"test" , new SetParameter[0], emptyList);            
+            sets[i] = Set.createInstance(userId, emptySetSort ,"test" , new SetParameter[0], emptyList);            
             set_Transferables[i] = (Set_Transferable)sets[i].getTransferable();
             identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             System.out.println("the object has been created with id " + id);
