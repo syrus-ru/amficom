@@ -11,6 +11,7 @@ CREATE TABLE Port (
 --
  description VARCHAR2(256),
 --
+ equipment_id VARCHAR2(32),
  sort NUMBER(2) NOT NULL,
  port_id VARCHAR2(32),
  cable_port_id VARCHAR2(32),
