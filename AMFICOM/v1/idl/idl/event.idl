@@ -1,5 +1,5 @@
 /*
- * $Id: event.idl,v 1.6 2005/01/21 17:06:38 arseniy Exp $
+ * $Id: event.idl,v 1.7 2005/01/28 15:16:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -71,7 +71,19 @@ module corba {
 	struct EventParameter_Transferable {
 		general::corba::Identifier_Transferable id;
 		general::corba::Identifier_Transferable type_id;
-		sequence <octet> value;
+		enum EventParameterSort {
+			SORT_NUMBER,
+			SORT_STRING,
+			SORT_RAW
+		} sort;
+		union EventParameterValue switch (EventParameterSort) {
+			case SORT_NUMBER:
+				long value_number;
+			case SORT_STRING:
+				wstring value_string;
+			case SORT_RAW:
+				sequence <octet> value_raw;
+		} value;
 	};
 
 	typedef sequence <EventParameter_Transferable> EventParameterSeq_Transferable;
