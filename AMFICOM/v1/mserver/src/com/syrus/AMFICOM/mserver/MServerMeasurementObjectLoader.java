@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.20 2005/04/01 21:46:36 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.21 2005/04/05 10:54:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/04/01 21:46:36 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/05 10:54:38 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -333,15 +333,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 	public Set loadMeasurements(Set ids) throws RetrieveObjectException {
 		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
+		Set objects = super.retrieveFromDatabase(database, ids);
 
 		Identifier id;
 		Set loadIds = new HashSet(ids);
@@ -415,15 +407,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 	public Set loadAnalyses(Set ids) throws RetrieveObjectException {
 		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
+		Set objects = super.retrieveFromDatabase(database, ids);
 
 		Identifier id;
 		Set loadIds = new HashSet(ids);
@@ -497,15 +481,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 	public Set loadEvaluations(Set ids) throws RetrieveObjectException {
 		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
+		Set objects = super.retrieveFromDatabase(database, ids);
 
 		Identifier id;
 		Set loadIds = new HashSet(ids);
@@ -723,15 +699,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "MServerMeasurementObjectLoader.loadMeasurementsButIds | Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
+		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 
 		Identifier id;
 		Set loadButIds = new HashSet(ids);
@@ -816,15 +784,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "MServerMeasurementObjectLoader.loadAnalysesButIds | Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
+		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 
 		Identifier id;
 		Set loadButIds = new HashSet(ids);
@@ -908,15 +868,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	}
 	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "MServerMeasurementObjectLoader.loadEvaluationsButIds | Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
+		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 
 		Identifier id;
 		Set loadButIds = new HashSet(ids);
