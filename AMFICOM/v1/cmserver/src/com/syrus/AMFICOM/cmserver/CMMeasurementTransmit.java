@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.8 2005/02/15 09:56:38 arseniy Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.9 2005/02/25 08:35:07 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,6 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.measurement.ActionCondition;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Evaluation;
@@ -49,7 +48,6 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.ActionCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
@@ -66,8 +64,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/15 09:56:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/02/25 08:35:07 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
@@ -1817,52 +1815,6 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 
 			return transferables;
 
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public Result_Transferable[] transmitResultsButIdsActionCondition(	Identifier_Transferable[] ids,
-																		AccessIdentifier_Transferable accessIdentifier,
-																		ActionCondition_Transferable actionCondition_Transferable)
-			throws AMFICOMRemoteException {
-		Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsActionCondition | requiere "
-				+ (ids.length == 0 ? "all" : Integer.toString(ids.length)) + " item(s) ", Log.DEBUGLEVEL07);
-		try {
-			Collection collection;
-			if (ids.length > 0) {
-				List idsList = new ArrayList(ids.length);
-				for (int i = 0; i < ids.length; i++)
-					idsList.add(new Identifier(ids[i]));
-
-				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
-					new ActionCondition(actionCondition_Transferable), true);
-
-			} else
-				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-					new ActionCondition(actionCondition_Transferable), true);
-
-			Result_Transferable[] transferables = new Result_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				Result result = (Result) it.next();
-				transferables[i] = (Result_Transferable) result.getTransferable();
-			}
-
-			return transferables;
 		} catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
