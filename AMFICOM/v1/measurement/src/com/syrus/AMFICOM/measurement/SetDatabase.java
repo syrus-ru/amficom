@@ -109,7 +109,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("SetDatabase.retrieveSetParameters | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())				
+			while (resultSet.next())			
 				arraylist.add(new SetParameter(
 												/**
 												 * @todo when change DB Identifier model ,change getString() to getLong()
