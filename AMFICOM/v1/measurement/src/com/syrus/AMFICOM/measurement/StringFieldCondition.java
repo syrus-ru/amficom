@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.5 2004/10/19 14:23:43 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.6 2004/10/19 14:30:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/19 14:23:43 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/19 14:30:31 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -24,6 +24,18 @@ public class StringFieldCondition extends com.syrus.AMFICOM.configuration.String
 	
 	private StringFieldCondition() {
 		super(null, null);
+	}
+	
+	public StringFieldCondition(StringFieldCondition_Transferable transferable){
+		super(transferable);
+	}
+	
+	public StringFieldCondition(String string, Short entityCode){
+		super(string, entityCode);		
+	}
+
+	public StringFieldCondition(String string, short entityCode){
+		super(string, entityCode);		
 	}
 
 	public static StringFieldCondition getInstance() {
