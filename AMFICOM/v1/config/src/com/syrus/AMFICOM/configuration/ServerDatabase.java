@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.6 2004/08/09 13:21:04 bob Exp $
+ * $Id: ServerDatabase.java,v 1.7 2004/08/09 13:21:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,15 +24,9 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/09 13:21:04 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/09 13:21:26 $
  * @author $Author: bob $
  * @module configuration_v1
  */

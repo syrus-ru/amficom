@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.8 2004/08/09 11:55:41 bob Exp $
+ * $Id: KISDatabase.java,v 1.9 2004/08/09 13:20:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/09 11:55:41 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/09 13:20:38 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -183,7 +183,7 @@ public class KISDatabase extends StorableObjectDatabase {
 
 		
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.SET_ENTITY
+			+ ObjectEntities.KIS_ENTITY
 			+ OPEN_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
