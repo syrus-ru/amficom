@@ -263,9 +263,6 @@ public class PlanPanel extends JPanel implements OperationListener {
 						model
 								.setValue(model.getMaximum() - 2 * this.margin - (int) ((scaleEndTime - startDate.getTime())
 										* model.getMaximum() / (scaleEndTime - scaleStartTime)));
-						System.out.println("visibleRect:" + this.parent.getVisibleRect().width);
-						System.out.println("min:" + model.getMinimum() + "\tmax:" + model.getMaximum());
-						System.out.println("value:" + model.getValue());
 					}
 					//				java.util.List tests = ((SchedulerModel)
 					// this.aContext.getApplicationModel()).getTests();
