@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.23 2005/01/14 10:26:59 krupenn Exp $
+ * $Id: Map.java,v 1.24 2005/02/09 11:40:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,11 +17,10 @@ package com.syrus.AMFICOM.Client.Resource.Map;
  * 
  * 
  * 
- * @version $Revision: 1.23 $, $Date: 2005/01/14 10:26:59 $
- * @module
+ * @version $Revision: 1.24 $, $Date: 2005/02/09 11:40:52 $
+ * @module mapclient_v1
  * @author $Author: krupenn $
- * @see
- * @deprecated
+ * @deprecated use
  */
 public abstract class Map
 {

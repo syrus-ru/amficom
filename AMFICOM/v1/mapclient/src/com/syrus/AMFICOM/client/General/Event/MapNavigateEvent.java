@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.13 2005/02/07 17:00:54 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.14 2005/02/09 11:40:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,10 +18,9 @@ import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
  *
  *
  *
- * @version $Revision: 1.13 $, $Date: 2005/02/07 17:00:54 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/09 11:40:52 $
  * @module mapclient_v2
  * @author $Author: krupenn $
- * @see
  */
 public class MapNavigateEvent extends MapEvent
 {

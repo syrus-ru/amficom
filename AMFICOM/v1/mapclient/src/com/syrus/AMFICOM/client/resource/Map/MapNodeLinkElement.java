@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.26 2005/01/14 10:27:00 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.27 2005/02/09 11:40:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,10 +16,9 @@ package com.syrus.AMFICOM.Client.Resource.Map;
  * 
  * 
  * 
- * @version $Revision: 1.26 $, $Date: 2005/01/14 10:27:00 $
- * @module map_v2
+ * @version $Revision: 1.27 $, $Date: 2005/02/09 11:40:52 $
+ * @module mapclient_v1
  * @author $Author: krupenn $
- * @see
  * @deprecated
  */
 public abstract class MapNodeLinkElement

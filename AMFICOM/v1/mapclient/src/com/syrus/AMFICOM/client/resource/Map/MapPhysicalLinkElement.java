@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.34 2005/01/14 10:27:00 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.35 2005/02/09 11:40:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,10 +17,9 @@ package com.syrus.AMFICOM.Client.Resource.Map;
  * 
  * 
  * 
- * @version $Revision: 1.34 $, $Date: 2005/01/14 10:27:00 $
- * @module
+ * @version $Revision: 1.35 $, $Date: 2005/02/09 11:40:53 $
+ * @module mapclient_v1
  * @author $Author: krupenn $
- * @see
  * @deprecated
  */
 public abstract class MapPhysicalLinkElement 
