@@ -1,5 +1,12 @@
 CREATE TABLE KIS (
  id VARCHAR2(32),
+ created DATE NOT NULL,
+ modified DATE NOT NULL,
+ creator_id VARCHAR2(32) NOT NULL,
+ modifier_id VARCHAR2(32) NOT NULL,
+--
+ domain_id VARCHAR2(32),
+--
  mcm_id VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT kis_pk PRIMARY KEY (id),
