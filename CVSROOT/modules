@@ -61,6 +61,7 @@ AMFICOM_v1	&idl_v1\
 		&schemecommon_v1\
 		&filter_v1\
 		&reportbuilder_v1\
+		&resource_v1\
 		&server_v1\
 		&servermisc_v1\
 		&load_v1\
@@ -113,6 +114,8 @@ schemecommon_v1	AMFICOM/v1/schemecommon
 filter_v1	AMFICOM/v1/filter
 #M	reportbuilder_v1	Report builder module
 reportbuilder_v1	AMFICOM/v1/reportbuilder
+#M	resource_v1	Images'n'stuff
+resource_v1		AMFICOM/v1/resource
 #M	server_v1	AMFICOM Server instance (server-client interface)
 server_v1	AMFICOM/v1/server
 #M	servermisc_v1	Miscellaneous files for server-side modules
