@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.17 2004/10/19 07:48:58 bob Exp $
+ * $Id: UserDatabase.java,v 1.18 2004/10/19 14:23:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,10 +24,11 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/19 07:48:58 $
+ * @version $Revision: 1.18 $, $Date: 2004/10/19 14:23:08 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -197,11 +198,26 @@ public class UserDatabase extends StorableObjectDatabase {
 		if ((ids == null) || (ids.isEmpty()))
 			return retrieveByIdsOneQuery(null, condition);
 		return retrieveByIdsOneQuery(ids, condition);
-	}	
+	}
+	
+	private List retrieveByLogin(String login) throws RetrieveObjectException, IllegalDataException{
+		String condition = COLUMN_LOGIN + EQUALS 
+						+ APOSTOPHE + login + APOSTOPHE;
+		
+		return retrieveByIdsOneQuery(null, condition);
+	}
 	
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
-		 return this.retrieveButIds(ids);
+		 List list = null;
+		 if (condition instanceof StringFieldCondition){
+		 	StringFieldCondition stringFieldCondition = (StringFieldCondition) condition;
+		 	list = retrieveByLogin(stringFieldCondition.getString());
+		 } else {
+		 	Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
+		 	list = this.retrieveButIds(ids);
+		 }
+		 return list;
 	}
 
 }
