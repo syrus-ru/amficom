@@ -80,6 +80,10 @@ public class Transceiver extends SleepButWorkThread {
 			Log.errorMessage("Transceiver.addAcquiringMeasurement | Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
 	}
 
+	protected void abortMeasurementsForTestProcessor(TestProcessor testProcessor) {
+		// TODO Implement
+	}
+
 	public void run() {
 		Measurement measurement;
 		Identifier measurementId;
