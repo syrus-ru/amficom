@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/02/07 10:00:25 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/02/08 12:02:59 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 //import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -16,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/07 10:00:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 12:02:59 $
+ * @author $Author: max $
  * @module config_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
@@ -28,7 +29,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 	}
 
 	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-		this.identifier = identifier;
+		this.linkedIds = Collections.singletonList(identifier);
 		this.entityCode = entityCode;
 	}
 
