@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.13 2005/02/03 19:54:35 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.14 2005/02/07 09:56:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/03 19:54:35 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/07 09:56:24 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -117,7 +117,7 @@ public abstract class StorableObjectPool {
 	protected void cleanChangedStorableObjectsImpl() {
 		for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
-			cleanChangedStorableObjectImpl(entityCode);
+			this.cleanChangedStorableObjectImpl(entityCode);
 		}
 	}
 
@@ -165,12 +165,17 @@ public abstract class StorableObjectPool {
 	 * @throws CommunicationException
 	 * @throws IllegalDataException
 	 */
-	protected void flushImpl(final boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
-		synchronized(this) {
+	protected void flushImpl(final boolean force)
+			throws VersionCollisionException,
+				DatabaseException,
+				CommunicationException,
+				IllegalDataException {
+		synchronized (this) {
 			List list = new LinkedList();
 			if (this.flushedGroup == null)
 				this.flushedGroup = new HashMap();
-			else this.flushedGroup.clear();
+			else
+				this.flushedGroup.clear();
 			for (final Iterator entityCodeIterator = this.objectPoolMap.keySet().iterator(); entityCodeIterator.hasNext();) {
 				final Short entityCode = (Short) entityCodeIterator.next();
 				LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
@@ -186,12 +191,13 @@ public abstract class StorableObjectPool {
 							}
 						}
 					}
-					save(list, force);
-	
+					this.save(list, force);
+
 				}
 				else {
 					Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity code: '"
-						+ ObjectEntities.codeToString(entityCode) + "'");
+							+ ObjectEntities.codeToString(entityCode)
+							+ "'");
 				}
 			}
 		}
@@ -512,18 +518,19 @@ public abstract class StorableObjectPool {
 		return ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
 	}
 
-	private void save(final List storableObjects, final boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
-		assert hasSingleTypeEntities(storableObjects) :
-			"Storable objects of different type are saved separately...";
+	private void save(final List storableObjects, final boolean force)
+			throws VersionCollisionException,
+				DatabaseException,
+				CommunicationException,
+				IllegalDataException {
+		assert this.hasSingleTypeEntities(storableObjects) : "Storable objects of different type are saved separately...";
 
 		if (!storableObjects.isEmpty()) {
 			// calculate dependencies to save
 			final Map dependencyMap = new HashMap();
 			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
 				StorableObject storableObject = (StorableObject) storableObjectIterator.next();
-				Log.debugMessage("StorableObjectPool.save | calculate dependencies for '"
-						+ storableObject.getId()
-						+ "'",
+				Log.debugMessage("StorableObjectPool.save | calculate dependencies for '" + storableObject.getId() + "'",
 						Log.DEBUGLEVEL08);
 				final List dependencies = storableObject.getDependencies();
 				for (final Iterator dependencyIterator = dependencies.iterator(); dependencyIterator.hasNext();) {
@@ -533,12 +540,16 @@ public abstract class StorableObjectPool {
 					if (dependency instanceof StorableObject) {
 						stObj = (StorableObject) dependency;
 						id = stObj.getId();
-					} else if (dependency instanceof Identifier) {
-						id = (Identifier) dependency;
-						stObj = getStorableObjectImpl(id, true);
-					} else {
-						throw new IllegalDataException("StorableObjectPool.save | Illegal dependencies Object: " + dependency.getClass().getName());
 					}
+					else
+						if (dependency instanceof Identifier) {
+							id = (Identifier) dependency;
+							stObj = this.getStorableObjectImpl(id, true);
+						}
+						else {
+							throw new IllegalDataException("StorableObjectPool.save | Illegal dependencies Object: "
+									+ dependency.getClass().getName());
+						}
 
 					final Short entityCode = new Short(id.getMajor());
 					List depList = (List) dependencyMap.get(entityCode);
@@ -546,16 +557,18 @@ public abstract class StorableObjectPool {
 						Short group = new Short(ObjectGroupEntities.getGroupCode(entityCode.shortValue()));
 						/* invoke only for other groups that this package pool */
 						if (group.shortValue() != this.selfGroupCode) {
-							if (this.flushedGroup.get(group) == null) 
-							/* set that flush for this group wan't invoke*/
-							this.flushedGroup.put(group, Boolean.FALSE);
-						} else {						
+							if (this.flushedGroup.get(group) == null)
+								/* set that flush for this group wan't invoke */
+								this.flushedGroup.put(group, Boolean.FALSE);
+						}
+						else {
 							depList = new LinkedList();
 							dependencyMap.put(entityCode, depList);
 						}
-						
+
 					}
-					if (stObj != null && ObjectGroupEntities.getGroupCode(stObj.getId().getMajor()) == this.selfGroupCode
+					if (stObj != null
+							&& ObjectGroupEntities.getGroupCode(stObj.getId().getMajor()) == this.selfGroupCode
 							&& stObj.isChanged()
 							&& !depList.contains(stObj))
 						depList.add(stObj);
@@ -565,80 +578,88 @@ public abstract class StorableObjectPool {
 			// invoke *StrorableObjectPool for other modules
 			for (final Iterator entityCodeIterator = this.flushedGroup.keySet().iterator(); entityCodeIterator.hasNext();) {
 				final Short groupCode = (Short) entityCodeIterator.next();
-				final boolean invoked = ((Boolean)this.flushedGroup.get(groupCode)).booleanValue();
-				
-				/* there is no reason one more invoke flush because of just flushed*/
+				final boolean invoked = ((Boolean) this.flushedGroup.get(groupCode)).booleanValue();
+
+				/* there is no reason one more invoke flush because of just flushed */
 				if (invoked)
 					continue;
-				
+
 				final short group = groupCode.shortValue();
 				String packageName;
-				switch(group) {
-					case ObjectGroupEntities.GENERAL_GROUP_CODE :
+				switch (group) {
+					case ObjectGroupEntities.GENERAL_GROUP_CODE:
 						packageName = "general.General";
 						break;
-					case ObjectGroupEntities.EVENT_GROUP_CODE :
+					case ObjectGroupEntities.EVENT_GROUP_CODE:
 						packageName = "event.Event";
 						break;
-					case ObjectGroupEntities.ADMINISTRATION_GROUP_CODE :
+					case ObjectGroupEntities.ADMINISTRATION_GROUP_CODE:
 						packageName = "administration.Administration";
 						break;
-					case ObjectGroupEntities.CONFIGURATION_GROUP_CODE :
+					case ObjectGroupEntities.CONFIGURATION_GROUP_CODE:
 						packageName = "configuration.Configuration";
 						break;
-					case ObjectGroupEntities.MEASUREMENT_GROUP_CODE :
+					case ObjectGroupEntities.MEASUREMENT_GROUP_CODE:
 						packageName = "measurement.Measurement";
 						break;
-					case ObjectGroupEntities.MAP_GROUP_CODE :
+					case ObjectGroupEntities.MAP_GROUP_CODE:
 						packageName = "map.Map";
 						break;
-					case ObjectGroupEntities.RESOURCE_GROUP_CODE :
+					case ObjectGroupEntities.RESOURCE_GROUP_CODE:
 						packageName = "resource.Resource";
 						break;
-					case ObjectGroupEntities.MAPVIEW_GROUP_CODE :
+					case ObjectGroupEntities.MAPVIEW_GROUP_CODE:
 						packageName = "mapview.MapView";
 						break;
 					default:
-						throw new IllegalDataException("StorableObjectPool.save | Illegal dependencies Object group: " + ObjectGroupEntities.codeToString(group));						
+						throw new IllegalDataException("StorableObjectPool.save | Illegal dependencies Object group: "
+								+ ObjectGroupEntities.codeToString(group));
 				}
-				
+
 				String className = "com.syrus.AMFICOM." + packageName + "StorableObjectPool";
 				try {
 					Class clazz = Class.forName(className);
-					Method flushMethod = clazz.getDeclaredMethod("flush", new Class[] {boolean.class} );
-					flushMethod.invoke(null, new Object[] { force ? Boolean.TRUE : Boolean.FALSE});
+					Method flushMethod = clazz.getDeclaredMethod("flush", new Class[] {boolean.class});
+					flushMethod.invoke(null, new Object[] {force ? Boolean.TRUE : Boolean.FALSE});
 					/* set that we have invoke flush for this group */
 					this.flushedGroup.put(groupCode, Boolean.TRUE);
-				} catch (ClassNotFoundException e) {
-					Log.debugMessage("StorableObjectPool.save | Class " + className //$NON-NLS-1$
-						+ " not found on the classpath" //$NON-NLS-1$
-						, Log.WARNING);
-				} catch (SecurityException e) {
-					Log.debugMessage("StorableObjectPool.save | Caught a SecurityException " + className //$NON-NLS-1$
-						, Log.WARNING);
-				} catch (NoSuchMethodException e) {
-					Log.debugMessage("StorableObjectPool.save | " + className + " doesn't have the flush method expected " //$NON-NLS-1$
-						, Log.WARNING);
-				} catch (IllegalArgumentException e) {					
-					Log.debugMessage("StorableObjectPool.save | " + className + " Caught an IllegalArgumentException" //$NON-NLS-1$
-						, Log.WARNING);
-				} catch (IllegalAccessException e) {					
-					Log.debugMessage("StorableObjectPool.save | " + className + " Caught an IllegalAccessException" //$NON-NLS-1$
-						, Log.WARNING);
-				} catch (InvocationTargetException e) {
-					Log.debugMessage("StorableObjectPool.save | flush method throws an exception in class " + className //$NON-NLS-1$
-						, Log.WARNING);
 				}
-			}			
-			
+				catch (ClassNotFoundException e) {
+					Log.debugMessage("StorableObjectPool.save | Class " + className //$NON-NLS-1$
+							+ " not found on the classpath" //$NON-NLS-1$
+					, Log.WARNING);
+				}
+				catch (SecurityException e) {
+					Log.debugMessage("StorableObjectPool.save | Caught a SecurityException " + className //$NON-NLS-1$
+					, Log.WARNING);
+				}
+				catch (NoSuchMethodException e) {
+					Log.debugMessage("StorableObjectPool.save | " + className + " doesn't have the flush method expected " //$NON-NLS-1$
+					, Log.WARNING);
+				}
+				catch (IllegalArgumentException e) {
+					Log.debugMessage("StorableObjectPool.save | " + className + " Caught an IllegalArgumentException" //$NON-NLS-1$
+					, Log.WARNING);
+				}
+				catch (IllegalAccessException e) {
+					Log.debugMessage("StorableObjectPool.save | " + className + " Caught an IllegalAccessException" //$NON-NLS-1$
+					, Log.WARNING);
+				}
+				catch (InvocationTargetException e) {
+					Log.debugMessage("StorableObjectPool.save | flush method throws an exception in class " + className //$NON-NLS-1$
+					, Log.WARNING);
+				}
+			}
+
 			// recursively save dependencies in this module
 			for (final Iterator entityCodeIterator = dependencyMap.keySet().iterator(); entityCodeIterator.hasNext();) {
 				final Short entityCode = (Short) entityCodeIterator.next();
 				List depList = (List) dependencyMap.get(entityCode);
-				if (depList != null && !depList.isEmpty()){
-					Log.debugMessage("StorableObjectPool.save | recursive save '" + ObjectEntities.codeToString(entityCode) + "'", Log.DEBUGLEVEL08);
+				if (depList != null && !depList.isEmpty()) {
+					Log.debugMessage("StorableObjectPool.save | recursive save '" + ObjectEntities.codeToString(entityCode) + "'",
+							Log.DEBUGLEVEL08);
 					// [:]/\/\/\/\/|||||||||||||||||||||||||||[:]
-					save(depList, force);
+					this.save(depList, force);
 				}
 			}
 
@@ -647,8 +668,8 @@ public abstract class StorableObjectPool {
 				Log.debugMessage("StorableObjectPool.save | save '" + storableObject.getId() + "'", Log.DEBUGLEVEL08);
 			}
 
-			final short entityCode = getEntityCodeOfStorableObjects(storableObjects);
-			saveStorableObjects(entityCode, storableObjects, force);
+			final short entityCode = this.getEntityCodeOfStorableObjects(storableObjects);
+			this.saveStorableObjects(entityCode, storableObjects, force);
 		}
 	}
 
