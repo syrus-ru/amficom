@@ -1,3 +1,11 @@
+/*
+ * $Id: DatabaseSetup.java,v 1.3 2004/07/21 08:26:06 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
@@ -16,6 +24,12 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
+
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/07/21 08:26:06 $
+ * @author $Author: arseniy $
+ * @module 
+ */
 
 public abstract class DatabaseSetup {
 	public static void initDatabaseContext() {

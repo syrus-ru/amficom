@@ -1,3 +1,11 @@
+/*
+ * $Id: DadaraAnalysisManager.java,v 1.6 2004/07/21 08:26:06 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Map;
@@ -27,6 +35,12 @@ import com.syrus.util.Log;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
+
+/**
+ * @version $Revision: 1.6 $, $Date: 2004/07/21 08:26:06 $
+ * @author $Author: arseniy $
+ * @module 
+ */
 
 public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager {
 	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";

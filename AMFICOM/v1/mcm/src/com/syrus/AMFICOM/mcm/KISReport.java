@@ -1,3 +1,11 @@
+/*
+ * $Id: KISReport.java,v 1.6 2004/07/21 08:26:06 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -5,6 +13,12 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
+
+/**
+ * @version $Revision: 1.6 $, $Date: 2004/07/21 08:26:06 $
+ * @author $Author: arseniy $
+ * @module 
+ */
 
 public class KISReport {
 	private Identifier measurementId;

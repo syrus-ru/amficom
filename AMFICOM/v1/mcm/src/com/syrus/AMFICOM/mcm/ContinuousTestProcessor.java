@@ -1,9 +1,23 @@
+/*
+ * $Id: ContinuousTestProcessor.java,v 1.5 2004/07/21 08:26:06 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.util.Log;
+
+/**
+ * @version $Revision: 1.5 $, $Date: 2004/07/21 08:26:06 $
+ * @author $Author: arseniy $
+ * @module 
+ */
 
 public class ContinuousTestProcessor extends TestProcessor {
 	private static final int STATUS_NEW_MEASUREMENT = 0;

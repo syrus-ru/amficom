@@ -1,3 +1,11 @@
+/*
+ * $Id: AnalysisEvaluationProcessor.java,v 1.3 2004/07/21 08:26:05 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Map;
@@ -18,6 +26,12 @@ import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
+
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/07/21 08:26:05 $
+ * @author $Author: arseniy $
+ * @module 
+ */
 
 public abstract class AnalysisEvaluationProcessor {
 	private static final String CODENAME_ANALYSIS_TYPE_DADARA = "dadara";

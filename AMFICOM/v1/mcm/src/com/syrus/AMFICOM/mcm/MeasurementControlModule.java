@@ -1,3 +1,11 @@
+/*
+ * $Id: MeasurementControlModule.java,v 1.10 2004/07/21 08:26:06 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import java.util.List;
@@ -24,6 +32,12 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.corba.CORBAServer;
 import com.syrus.util.database.DatabaseConnection;
+
+/**
+ * @version $Revision: 1.10 $, $Date: 2004/07/21 08:26:06 $
+ * @author $Author: arseniy $
+ * @module 
+ */
 
 public class MeasurementControlModule extends Thread {
 	public static final String ID = "mcm_1";

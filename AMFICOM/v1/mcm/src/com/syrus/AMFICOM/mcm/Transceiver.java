@@ -1,3 +1,11 @@
+/*
+ * $Id: Transceiver.java,v 1.7 2004/07/21 08:26:06 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import java.util.List;
@@ -11,6 +19,12 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
+
+/**
+ * @version $Revision: 1.7 $, $Date: 2004/07/21 08:26:06 $
+ * @author $Author: arseniy $
+ * @module 
+ */
 
 public class Transceiver extends Thread {
 	public static final int KIS_TICK_TIME = 1;

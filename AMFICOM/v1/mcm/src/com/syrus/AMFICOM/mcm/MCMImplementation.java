@@ -1,9 +1,23 @@
+/*
+ * $Id: MCMImplementation.java,v 1.5 2004/07/21 08:26:06 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.mcm.corba._MCMImplBase;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+
+/**
+ * @version $Revision: 1.5 $, $Date: 2004/07/21 08:26:06 $
+ * @author $Author: arseniy $
+ * @module 
+ */
 
 public class MCMImplementation extends _MCMImplBase {
 
