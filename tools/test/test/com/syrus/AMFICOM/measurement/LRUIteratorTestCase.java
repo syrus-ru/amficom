@@ -1,5 +1,5 @@
 /*
- * $Id: LRUIteratorTestCase.java,v 1.1 2004/11/11 12:15:57 bob Exp $
+ * $Id: LRUIteratorTestCase.java,v 1.2 2004/11/11 12:16:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,9 +19,9 @@ import com.syrus.util.LRUMap;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/11 12:15:57 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/11 12:16:16 $
  * @author $Author: bob $
- * @module module
+ * @module tools/test
  */
 public class LRUIteratorTestCase extends TestCase {
 
