@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import javax.swing.JScrollPane;
@@ -8,7 +10,6 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Dimension;
-import java.util.Vector;
 
 import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
 
@@ -55,7 +56,7 @@ public class RenderingObject
 	/**
 	 * Вектор с ширинами столбцов (для таблицы)
 	 */
-	private Vector columnWidths = null;
+	private List columnWidths = null;
 	/**
 	 * Количество вертикальных разбиений (для таблицы)
 	 */
@@ -201,7 +202,7 @@ public class RenderingObject
 
 		JScrollPane sp = (JScrollPane) this.rendererPanel.getComponent(0);
 
-		this.columnWidths = new Vector();
+		this.columnWidths = new LinkedList();
 		JTable itsTable = (JTable)sp.getViewport().getView();
 		int colNumber = itsTable.getColumnModel().getColumnCount();
 		for (int i = 0; i < colNumber / this.getTableDivisionsNumber(); i ++)
@@ -255,7 +256,7 @@ public class RenderingObject
 			this.columnWidths = null;
 			return;
 		}
-		this.columnWidths = new Vector();
+		this.columnWidths = new LinkedList();
 		for (int i = 0; i < widths.length; i++)
 			this.columnWidths.add(new Integer(widths[i]));
 	}
@@ -322,7 +323,7 @@ public class RenderingObject
 	 * вписывается схематичное изображение элемента шаблона и
 	 * привязанные к нему надписи.
 	 */
-	public Rectangle getObjectWithLabelsBounds(Vector labels)
+	public Rectangle getObjectWithLabelsBounds(List labels)
 	{
 		int x1 = this.x;
 		int y1 = this.y;
@@ -364,7 +365,7 @@ public class RenderingObject
 	 * @param labels вектор, содержащий все надписи шаблона.
 	 * @return true если точка, принадлежит кластеру
 	 */
-	public boolean hasPoint (int x, int y, Vector labels)
+	public boolean hasPoint (int x, int y, List labels)
 	{
 		Rectangle r = null;
 		if (labels != null)

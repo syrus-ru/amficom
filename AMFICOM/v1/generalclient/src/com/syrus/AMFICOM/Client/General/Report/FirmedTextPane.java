@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
+import java.util.List;
 import javax.swing.JTextPane;
 
-import java.util.Vector;
 import java.awt.Rectangle;
 import java.awt.Dimension;
 import java.awt.font.FontRenderContext;
@@ -85,7 +85,7 @@ public final class FirmedTextPane extends JTextPane
 	 * @param ros список всех элементов, принадлежащих шаблону
 	 */
 	public FirmedTextPane(FirmedTextPane_Transferable ftp_trans,
-		Vector ros)
+		List ros)
 	{
 		this();
 		this.setLocation(ftp_trans.labelX, ftp_trans.labelY);

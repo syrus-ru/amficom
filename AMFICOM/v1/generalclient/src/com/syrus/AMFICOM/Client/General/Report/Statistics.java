@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.table.TableColumn;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -22,14 +23,14 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 public class Statistics
 		extends ReportData
 {
-	public Vector fieldValues = new Vector();
-	public Vector timesFound = new Vector();
+	public List fieldValues = new LinkedList();
+	public List timesFound = new LinkedList();
 
 	public static String field = "";
 
 	public Statistics(
 			int divisionsNumber,
-			Vector objects,
+			List objects,
 			String id,
 			ObjectResourceReportModel orrm)
 	{

@@ -27,7 +27,7 @@
  * Original Author:  David Gilbert (for Object Refinery Limited);
  * Contributor(s):   -;
  *
- * $Id: ChartFrame.java,v 1.5 2004/08/11 11:45:06 peskovsky Exp $
+ * $Id: ChartFrame.java,v 1.6 2004/08/18 08:05:19 peskovsky Exp $
  *
  * Changes
  * -------
@@ -40,6 +40,7 @@
 
 package com.syrus.AMFICOM.Client.General.Report;
 
+import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.Pie3DPlot;
@@ -87,7 +88,6 @@ import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
-import java.util.Vector;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
@@ -108,7 +108,7 @@ public class ChartFrame extends JInternalFrame
 
 	private int[] objectsNumberAtInterval = null;
 
-	private Vector periodsBounds = null;
+	private List periodsBounds = null;
 
 	private Class interval_size = null;
 
@@ -140,7 +140,7 @@ public class ChartFrame extends JInternalFrame
 		}
 	}
 
-	public ChartFrame(int[] onai, Vector periodsBounds, Class interval_size, RenderingObject ro)
+	public ChartFrame(int[] onai, List periodsBounds, Class interval_size, RenderingObject ro)
 	{
 		renderingObject = ro;
 		this.objectsNumberAtInterval = onai;

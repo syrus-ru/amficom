@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
 import com.syrus.AMFICOM.Client.Resource.StubResource;
-import java.util.Vector;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
 
@@ -10,6 +9,8 @@ import java.io.Serializable;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -59,8 +60,8 @@ public class ObjectsReport extends StubResource
 			catch (CreateReportException cre){}
 		}
 
-		else if (reserve instanceof Vector)
-			newReport.reserve = ((Vector)reserve).clone();
+		else if (reserve instanceof List)
+			newReport.reserve = ((LinkedList)reserve).clone();
 
 		return newReport;
 	}

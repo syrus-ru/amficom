@@ -6,14 +6,11 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 
-
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
-
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import java.util.Enumeration;
 
 import javax.swing.JInternalFrame;
@@ -240,7 +237,7 @@ public class SelectReportsPanel extends JInternalFrame implements
 					ObjectResourceReportModel orrm =
 						(ObjectResourceReportModel) curReport.model;
 
-					Vector columns = (Vector) curReport.getReserve();
+					List columns = (LinkedList) curReport.getReserve();
 					if (columns.contains((String) lastElem.getObject()))
 						columns.remove((String) lastElem.getObject());
 					else
@@ -487,7 +484,7 @@ class AvailableReportsTreeRenderer implements TreeCellRenderer
 			if (curReport.view_type.equals(ObjectResourceReportModel.
 													 rt_objectsReport))
 			{
-				Vector columns = (Vector) curReport.getReserve();
+				List columns = (LinkedList) curReport.getReserve();
 				if (!columns.contains((String) node.getObject()))
 					node.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 															 getImage(

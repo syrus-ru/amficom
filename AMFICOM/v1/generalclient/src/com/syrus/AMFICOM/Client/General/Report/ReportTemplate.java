@@ -26,13 +26,14 @@ import java.io.FileInputStream;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Date;
 
 import java.awt.Dimension;
 import java.awt.Font;
 
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -120,19 +121,19 @@ public class ReportTemplate extends StubResource implements Serializable
 	/**
 	 * Список всех элементов шаблона
 	 */
-	public Vector objectRenderers = new Vector();
+	public List objectRenderers = new LinkedList();
 	/**
 	 * Список фильтров использующихся в шаблоне
 	 */
-	public Vector objectResourceFilters = new Vector();
+	public List objectResourceFilters = new LinkedList();
 	/**
 	 * Список надписей из шаблона
 	 */
-	public Vector labels = new Vector();
+	public List labels = new LinkedList();
 	/**
 	 * Список картинок из шаблона
 	 */
-	public Vector images = new Vector();
+	public List images = new LinkedList();
 
 	/**
 	 * В таблице хранится информация о том, какие ресурсы были подгружены,
@@ -223,7 +224,7 @@ public class ReportTemplate extends StubResource implements Serializable
 		initResources();
 	}
 
-	public void setLabels(Vector newLabels)
+	public void setLabels(List newLabels)
 	{
 		this.labels = newLabels;
 	}
@@ -267,10 +268,10 @@ public class ReportTemplate extends StubResource implements Serializable
 		this.modified = transferable.modified;
 		this.curModified = transferable.modified;
 
-		this.objectRenderers = new Vector();
-		this.labels = new Vector();
-		this.images = new Vector();
-		this.objectResourceFilters = new Vector();
+		this.objectRenderers = new LinkedList();
+		this.labels = new LinkedList();
+		this.images = new LinkedList();
+		this.objectResourceFilters = new LinkedList();
 
 		for (int i = 0; i < this.transferable.renderingObjects.length; i++)
 		{
@@ -564,7 +565,7 @@ public class ReportTemplate extends StubResource implements Serializable
 		this.description = (String)in.readObject();
 
 		// Перекачиваем объекты
-		this.objectRenderers = new Vector();
+		this.objectRenderers = new LinkedList();
 
 		int orCount = in.readInt();
 		for (int i = 0; i < orCount; i++)
@@ -596,7 +597,7 @@ public class ReportTemplate extends StubResource implements Serializable
 		}
 
 		// Перекачиваем надписи
-		this.labels = new Vector();
+		this.labels = new LinkedList();
 
 		int labelCount = in.readInt();
 		for (int i = 0; i < labelCount; i++)
@@ -636,7 +637,7 @@ public class ReportTemplate extends StubResource implements Serializable
 		}
 
 		// Перекачиваем картинки
-		this.images = new Vector();
+		this.images = new LinkedList();
 
 		int imagesCount = in.readInt();
 		for (int i = 0; i < imagesCount; i++)
@@ -664,7 +665,7 @@ public class ReportTemplate extends StubResource implements Serializable
 		}
 
 		// Перекачиваем фильтры
-		this.objectResourceFilters = new Vector();
+		this.objectResourceFilters = new LinkedList();
 
 		int filtersCount = in.readInt();
 		for (int i = 0; i < filtersCount; i++)
@@ -694,11 +695,9 @@ public class ReportTemplate extends StubResource implements Serializable
 	 */
 	public RenderingObject findROforReport (ObjectsReport report)
 	{
-		Vector ros = this.objectRenderers;
-
-		for (int i = 0; i < ros.size(); i++)
+		for (int i = 0; i < objectRenderers.size(); i++)
 		{
-			RenderingObject curRO = (RenderingObject)ros.get(i);
+			RenderingObject curRO = (RenderingObject)objectRenderers.get(i);
 			if (curRO.getReportToRender().equals(report))
 				return curRO;
 		}

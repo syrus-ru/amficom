@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import java.util.Vector;
+import java.util.List;
 import javax.swing.table.TableColumn;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
@@ -28,7 +28,7 @@ public final class ObjectList
 	public DividableTableModel tableModel = null;
 
 	public ObjectList(int divisionsNumber,
-										Vector objects,
+										List objects,
 										ObjectsReport or) throws CreateReportException
 	{
 //		this.objects = objects;
@@ -41,13 +41,13 @@ public final class ObjectList
 
 		columnModel = new ObjectListColumnModel(
 				divisionsNumber,
-				(Vector) or.getReserve(),
+				(List) or.getReserve(),
 				orrm);
 
 		tableModel = new objectListModel(divisionsNumber,
 																		 objects,
-																		 (Vector) or.getReserve(),
-																		 orrm.getColumnNamesbyIDs((Vector) or.
+																		 (List) or.getReserve(),
+																		 orrm.getColumnNamesbyIDs((List) or.
 																			 getReserve()));
 	}
 }
@@ -57,7 +57,7 @@ final class ObjectListColumnModel
 {
 	public ObjectListColumnModel(
 			int divisionsNumber,
-			Vector columnIDs,
+			List columnIDs,
 			ObjectResourceReportModel model)
 	{
 		super(divisionsNumber);
@@ -74,17 +74,17 @@ final class ObjectListColumnModel
 final class objectListModel
 		extends DividableTableModel
 {
-	private Vector objects = null;
-	private Vector columnIDs = null;
-	private Vector columnNames = null;
+	private List objects = null;
+	private List columnIDs = null;
+	private List columnNames = null;
 	private int length = 0;
 	private int width = 0;
 
 	public objectListModel(
 			int divisionsNumber,
-			Vector objects,
-			Vector columnIDs,
-			Vector columnNames)
+			List objects,
+			List columnIDs,
+			List columnNames)
 	{
 		super(divisionsNumber, columnIDs.size());
 		this.objects = objects;

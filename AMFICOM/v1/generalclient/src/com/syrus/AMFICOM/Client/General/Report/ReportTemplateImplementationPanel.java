@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
@@ -26,8 +28,6 @@ import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.File;
-
-import java.util.Vector;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -64,11 +64,11 @@ public class ReportTemplateImplementationPanel extends JPanel
 
 	public String itemToAdd = "";
 
-	public Vector objects = null;
+	public List objects = null;
 
-	public Vector labels = null;
+	public List labels = null;
 
-	public Vector images = null;
+	public List images = null;
 
 	private boolean[] labelsPrinted = null;
 
@@ -337,7 +337,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 		}
 
 		if (images == null)
-			images = new Vector();
+			images = new LinkedList();
 
 		for (int i = 0; i < images.size(); i++)
 		{
@@ -376,8 +376,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 			 распечатать те, которые е и ниже его)
 			 */
 
-		Vector xs = new Vector(); //строим карту уже распечатанных элементов
-		Vector ys = new Vector();
+		List xs = new LinkedList(); //строим карту уже распечатанных элементов
+		List ys = new LinkedList();
 		getAxisValuesMatrices(xs, ys);
 
 		boolean toBreak = false;
@@ -538,8 +538,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 */
 	private int checkToTopForElements(
 		Object elem,
-		Vector xs,
-		Vector ys)
+		List xs,
+		List ys)
 	{
 		// Находим границы диапазона на котором мы проверяем наличие
 		//объектов сверху
@@ -703,8 +703,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 	 * @param ys вектор значений y и y + height для всех объектов
 */
 	private void getAxisValuesMatrices(
-		Vector xs,
-		Vector ys)
+		List xs,
+		List ys)
 	{
 		int elemCount = 0;
 
@@ -1086,8 +1086,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 
 	public int saveToHTML(String fileName, boolean beforePrinting)
 	{
-		Vector xs = new Vector();
-		Vector ys = new Vector();
+		List xs = new LinkedList();
+		List ys = new LinkedList();
 
 		this.getHTMLAxisValuesMatrices(xs, ys);
 
@@ -1366,8 +1366,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 	}
 
 	private void getHTMLAxisValuesMatrices(
-		Vector xs,
-		Vector ys)
+		List xs,
+		List ys)
 	{
 		//Возвращает соритрованную матрицы xs и ys начал и концов объектов и надписей по x,y
 
@@ -1475,7 +1475,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 		return -1;
 	}
 
-	private int[][] createElemsMatrix(Vector xs, Vector ys)
+	private int[][] createElemsMatrix(List xs, List ys)
 	{
 		if (xs == null)
 			return null;

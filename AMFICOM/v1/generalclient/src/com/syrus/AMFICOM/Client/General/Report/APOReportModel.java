@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
+import java.util.List;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Vector;
 
 /**
  * <p>Title: </p>
@@ -18,7 +18,7 @@ abstract public class APOReportModel extends ReportModel
 {
 	public String getName() {return "aporeportmodel";}
 
-	abstract public Vector getAvailableReports();
+	abstract public List getAvailableReports();
 	abstract public String getLangForField(String field);
 
   public void setData (ReportTemplate rt, AMTReport aReport)

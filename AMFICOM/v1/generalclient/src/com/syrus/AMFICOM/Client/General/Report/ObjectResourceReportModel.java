@@ -1,8 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JComponent;
 
-import java.util.Vector;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Date;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
 abstract public class ObjectResourceReportModel extends ReportModel
 {
-  public static Vector reportObjects = null;
+  public static List reportObjects = null;
 
 	public static final String rt_statistics = "rep_stat_po_polju";
 
@@ -71,19 +72,19 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		  ReportTemplate rt,
 		  DataSourceInterface dsi);
 
-	abstract public Vector getAllObjectColumnIDs();
+	abstract public List getAllObjectColumnIDs();
 
-	abstract public Vector getAllObjectColumnNames();
+	abstract public List getAllObjectColumnNames();
 
-	abstract public Vector getAllObjectColumnSizes();
+	abstract public List getAllObjectColumnSizes();
 
 	abstract public Hashtable getAvailableViews();
 
-	private Vector allColumnNames = null;
+	private List allColumnNames = null;
 
-	private Vector allColumnIDs = null;
+	private List allColumnIDs = null;
 
-	private Vector allColumnSizes = null;
+	private List allColumnSizes = null;
 
 	private Hashtable availableViews = null;
 
@@ -96,14 +97,14 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		availableViews = getAvailableViews();
 	}
 
-	public final Vector getAllColumnIDs()
+	public final List getAllColumnIDs()
 	{
 		return allColumnIDs;
 	}
 
-	public final Vector getColumnNamesbyIDs(Vector IDs)
+	public final List getColumnNamesbyIDs(List IDs)
 	{
-		Vector result = new Vector(IDs.size());
+		List result = new LinkedList();
 
 		for (int j = 0; j < IDs.size(); j++)
 			result.add(this.getColumnNamebyID((String) IDs.get(j)));
@@ -138,21 +139,21 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		return null;
 	}
 
-	public final Vector getAvailableViewTypesforField(String ID)
+	public final List getAvailableViewTypesforField(String ID)
 	{
 		if (ID == null)
-			return new Vector();
+			return new LinkedList();
 
-		Vector result = (Vector) availableViews.get(ID);
+		List result = (List) availableViews.get(ID);
 		if (result == null)
-			return new Vector();
+			return new LinkedList();
 
-		return (Vector) result;
+		return result;
 	}
 
-	private static final Vector getReports(Vector reports)
+	private static final List getReports(List reports)
 	{
-		Vector result = new Vector(reports.size());
+		List result = new LinkedList();
 		for (int i = 0; i < reports.size(); i++)
 			result.add((ObjectsReport) reports.get(i));
 		return result;
@@ -177,7 +178,7 @@ else
 				CreateReportException.poolObjNotExists);
 	}
 
-	private final Vector getReportObjects(
+	private final List getReportObjects(
 		ReportTemplate rt,
 		ObjectsReport or,
 		DataSourceInterface dsi)
@@ -185,13 +186,13 @@ else
     if (ObjectResourceReportModel.reportObjects != null)
       return ObjectResourceReportModel.reportObjects;
 
-    Vector reportObjects = new Vector();
+    List reportObjects = new LinkedList();
 		if (or.model instanceof ObjectResourceReportModel)
 		{
 			ObjectResourceReportModel orrm = (ObjectResourceReportModel) or.model;
 			Hashtable hash = Pool.getHash(orrm.getObjectsType());
 			if (hash == null)
-				return new Vector();
+				return new LinkedList();
 
 			ObjectResourceFilter filter = this.findORFilterforModel(rt,dsi);
 
@@ -230,7 +231,7 @@ else
 	{
 		JComponent returnValue = null;
 
-		Vector reportObjects = getReportObjects(rt, rp,aContext.getDataSourceInterface());
+		List reportObjects = getReportObjects(rt, rp,aContext.getDataSourceInterface());
 
 		ObjectResourceReportModel model = (ObjectResourceReportModel) rp.model;
 		if (rp.view_type.equals(ObjectResourceReportModel.rt_statistics))
@@ -289,7 +290,7 @@ else
 			Long[] minDate = new Long[1];
 			Long[] maxDate = new Long[1];
 
-			Vector periodsBounds = new Vector();
+			List periodsBounds = new LinkedList();
 
 			getMinMaxDates(minDate, maxDate, reportObjects, rp, model);
 
@@ -324,7 +325,7 @@ else
 	private static void getMinMaxDates(
 		Long[] minDate,
 		Long[] maxDate,
-		Vector objects,
+		List objects,
 		ObjectsReport rp,
 		ObjectResourceReportModel curReportModel)
 	{
@@ -358,7 +359,7 @@ else
 
 	private static int getPeriods(Long rMinDate, Long rMaxDate,
 		Class periodClass,
-		Vector bounds)
+		List bounds)
 	{
 		Date minTime = new Date(rMinDate.longValue()); //Это надо взять из фильтров
 		Date maxTime = new Date(rMaxDate.longValue());
@@ -384,7 +385,7 @@ else
 		return 0;
 	}
 
-	private static int iterate(Vector bounds, Date minTime, Date maxTime,
+	private static int iterate(List bounds, Date minTime, Date maxTime,
 		int yIncr, int moIncr, int daIncr, int hIncr)
 	{
 		GregorianCalendar maxTimeCalendar = new GregorianCalendar();
@@ -413,9 +414,9 @@ else
 	}
 
 	private static int[] getObjectsNumberAtIntervals(
-		Vector repObjects,
+		List repObjects,
 		ObjectsReport rp,
-		Vector allBounds,
+		List allBounds,
 		ObjectResourceReportModel curReportModel)
 	{
 		int[] objectsNumberAtInterval = new int[allBounds.size()];
