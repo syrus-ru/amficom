@@ -97,7 +97,7 @@ public class SavePredictionCommand extends VoidCommand
 //			return;
 
 
-		Modeling m = new Modeling(dataSource.GetUId(Modeling.typ));
+		Modeling m = new Modeling(dataSource.GetUId(Modeling.TYPE));
 
 		m.setName(bs.title);
 
@@ -152,7 +152,7 @@ public class SavePredictionCommand extends VoidCommand
 		}
 
 		m.setTransferableFromLocal();
-		Pool.put(Modeling.typ, m.getId(), m);
+		Pool.put(Modeling.TYPE, m.getId(), m);
 
 		Result r = new Result(m.getId(), "modeling", "", aContext.getSessionInterface().getUserId(), dataSource.GetUId("result"));
 		apt = (ActionParameterType )mt.getSortedParameters().get("reflectogramm");

@@ -2,19 +2,11 @@ package com.syrus.AMFICOM.Client.Model.ModelMath;
 
 import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-
 import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ATableFrame;
-import com.syrus.AMFICOM.Client.Model.ModelMath.*;
-import com.syrus.io.BellcoreStructure;
 
 public class ModelGenerator
 {
@@ -42,10 +34,10 @@ public class ModelGenerator
 		this.defAttenuation = defAttenuation;
 		this.attenuationString = new StringBuffer("Attenuation_").append(waveLength).toString();
 
-		pathelements = new DataSet(path.links);
-		ObjectResourceSorter sorter = PathElement.getSorter();
-		sorter.setDataSet(pathelements);
-		pathelements = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
+		pathelements = path.links;
+//		ObjectResourceSorter sorter = SchemePath.getSorter();
+//		sorter.setDataSet(pathelements);
+//		path.links = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
 		Pool.put("activecontext", "activepathid", path.getId());
 	}
 
@@ -204,9 +196,9 @@ public class ModelGenerator
 					return null;
 				}
 				SchemeCableThread thread = null;
-				for(Enumeration en2 = scl.cable_threads.elements(); en2.hasMoreElements();)
+				for(Iterator it2 = scl.cable_threads.iterator(); it2.hasNext();)
 				{
-					SchemeCableThread sct = (SchemeCableThread)en2.nextElement();
+					SchemeCableThread sct = (SchemeCableThread)it2.next();
 					if(sct.getId().equals(pe.thread_id))
 					{
 						thread = sct;

@@ -470,6 +470,7 @@ class ModelParamsTableEditor extends DefaultCellEditor
 	{
 		super(new JTextField());
 		this.model = model;
+		setClickCountToStart(1);
 	}
 
 	public Component getTableCellEditorComponent(JTable table, Object value,
@@ -526,11 +527,6 @@ class ModelParamsTableEditor extends DefaultCellEditor
 		}
 		else
 			return obj;
-	}
-
-	public int getClickCountToStart()
-	{
-		return 1;
 	}
 }
 

@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
 import com.syrus.AMFICOM.Client.Resource.Result.Modeling;
 
@@ -66,11 +66,11 @@ public class CountPredictedReflectogramm extends VoidCommand
 		 String pathId = rep.getStatistics().getPathID();
 		 if(pathId != null)
 		 {
-			 pathId = Pool.getName(MonitoredElement.typ, pathId);
+			 pathId = ((ObjectResource)Pool.get(MonitoredElement.typ, pathId)).getName();
 		 }
 		 if(pathId != null)
 		 {
-			 title = title + ", трасса: "+pathId + ", id: "+aContext.getDataSourceInterface().GetUId(Modeling.typ);
+			 title = title + ", трасса: "+pathId + ", id: "+aContext.getDataSourceInterface().GetUId(Modeling.TYPE);
 		 }
 
 		 double[] predicted = rep.getPredictedReflectogramm();

@@ -10,12 +10,12 @@ public class LangModelAnalyse
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
 		.getBundle(BUNDLE_NAME);
 
-	static public Locale locale;
-	static public String language;
-	static public String country;
-	static public ResourceBundle lang;
-	static public DateFormatSymbols symbols;
-	static public String resourceBundle;
+//	static public Locale locale;
+//	static public String language;
+//	static public String country;
+//	static public ResourceBundle lang;
+//	static public DateFormatSymbols symbols;
+//	static public String resourceBundle;
 
 	public LangModelAnalyse()
 	{

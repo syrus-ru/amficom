@@ -121,9 +121,9 @@ public class LoadModelingCommand extends VoidCommand
 		Pool.put("bellcorestructure", "primarytrace", bs);
 
 
-		if(Pool.get(Modeling.typ, res.getModelingId()) != null)
+		if(Pool.get(Modeling.TYPE, res.getModelingId()) != null)
 		{
-			String path_id = ((Modeling)Pool.get(Modeling.typ, res.getModelingId())).getSchemePathId();
+			String path_id = ((Modeling)Pool.get(Modeling.TYPE, res.getModelingId())).getSchemePathId();
 			Pool.put("activecontext", "activepathid", path_id);
 		}
 

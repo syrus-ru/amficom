@@ -99,7 +99,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 //    MonitoredElement path = (MonitoredElement)Pool.get(MonitoredElement.typ, path_id);
 
-		TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, testSetupId);
+		TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, testSetupId);
 		if(ts == null)
 		{
 			String error = "Ошибка загрузки тестовых установок.\n";
@@ -108,7 +108,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		}
 
 		dataSource.LoadEtalons(new String[] {ts.getEthalonId()});
-		Etalon et = (Etalon)Pool.get(Etalon.typ, ts.getEthalonId());
+		Etalon et = (Etalon)Pool.get(Etalon.TYPE, ts.getEthalonId());
 		if(et == null)
 		{
 			String error = "Ошибка загрузки эталона.\n";
@@ -159,7 +159,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		Result analysisResult;
 		for(int i=0; i<analysisResultIds.length; i++)
 		{
-			analysisResult = (Result)Pool.get(Result.typ, analysisResultIds[i]);
+			analysisResult = (Result)Pool.get(Result.TYPE, analysisResultIds[i]);
 			if(analysisResult != null)
 			{
 				for (Iterator it = analysisResult.getParameterList().iterator(); it.hasNext();)
@@ -178,7 +178,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 							}
 
 							ReflectoEventContainer rec =
-									new ReflectoEventContainer(analysisResultIds[i], sre, re, bs, analysisResult.elementary_start_time);
+									new ReflectoEventContainer(analysisResultIds[i], sre, re, bs, analysisResult.getElementaryStartTime());
 							v.add(rec);
 						}
 					}
@@ -210,11 +210,9 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		if(bs == null)
 			return;
 
-		if (Pool.getHash("bellcorestructure") != null )
-		{
-			if ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace") != null)
-				new FileCloseCommand(dispatcher, aContext).execute();
-		}
+		if ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace") != null)
+			new FileCloseCommand(dispatcher, aContext).execute();
+
 		Pool.put("bellcorestructure", "primarytrace", bs);
 
 //    new MinuitAnalyseCommand(dispatcher, "primarytrace", aContext).execute();

@@ -82,7 +82,7 @@ public class PrimaryParametersFrame extends ATableFrame
 				String id = (String)(rce.getSource());
 				if (id.equals("all"))
 				{
-					tModel.clearTable();
+				//	tModel.clearTable();
 					setVisible(false);
 				}
 			}

@@ -58,7 +58,7 @@ public class SaveModelingCommand extends VoidCommand
 
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
-		String modelingId = dataSource.GetUId(Modeling.typ);
+		String modelingId = dataSource.GetUId(Modeling.TYPE);
 
 
 		String inicialName = "Модель маршрута <"+bs.monitored_element_id+">, id: "+modelingId;
@@ -95,7 +95,7 @@ public class SaveModelingCommand extends VoidCommand
 		Result r = new Result(m.getId(), "modeling", "", aContext.getSessionInterface().getUserId(), dataSource.GetUId("result"));
 		ActionParameterType apt;
 		apt = (ActionParameterType )mt.getSortedParameters().get("reflectogramm");
-		Pool.put(apt.typ, apt.getId(), apt);
+		Pool.put(apt.TYPE, apt.getId(), apt);
 
 //    GlobalParameterType gpt = new GlobalParameterType();
 		Parameter resparam1 = new Parameter(

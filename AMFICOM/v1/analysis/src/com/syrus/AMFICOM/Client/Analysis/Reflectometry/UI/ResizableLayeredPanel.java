@@ -34,7 +34,7 @@ public class ResizableLayeredPanel extends JPanel
 
 	private void jbInit() throws Exception
 	{
-		this.addComponentListener(new java.awt.event.ComponentAdapter()
+		this.addComponentListener(new ComponentAdapter()
 		{
 			public void componentShown(ComponentEvent e)
 			{

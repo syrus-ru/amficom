@@ -61,7 +61,8 @@ public class FileRemoveCommand extends VoidCommand
 
 		bs = (BellcoreStructure)(Pool.get("bellcorestructure", activeRefId));
 		if (!activeRefId.equals(AnalysisUtil.ETALON))
-			Pool.remove("bellcorestructure", activeRefId);
+			//Pool.remove("bellcorestructure", activeRefId);
+			Pool.remove(bs);
 		bs = null;
 		dispatcher.notify(new RefChangeEvent(activeRefId, RefChangeEvent.CLOSE_EVENT));
 		dispatcher.notify(new RefChangeEvent("primarytrace", RefChangeEvent.SELECT_EVENT));

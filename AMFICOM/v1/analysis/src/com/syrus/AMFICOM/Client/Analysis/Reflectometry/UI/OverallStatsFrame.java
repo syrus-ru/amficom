@@ -92,7 +92,7 @@ public class OverallStatsFrame extends ATableFrame
 				String id = (String)(rce.getSource());
 				if (id.equals("all"))
 				{
-					tModel.clearTable();
+//					tModel.clearTable();
 					wctModel.clearTable();
 					tabbedPane.setSelectedIndex(0);
 					analysis_performed = false;

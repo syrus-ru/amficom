@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -199,7 +199,7 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 	{
 		new ConfigDataSourceImage(dataSource).LoadISM();
 
-		Hashtable h = Pool.getHash(MonitoredElement.typ);
+		Map h = Pool.getMap(MonitoredElement.typ);
 
 		pathComboBox.removeAllItems();
 		pathComboBox.setContents(MonitoredElement.typ, false);
@@ -208,17 +208,17 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 		testSetupComboBox.removeAllItems();
 		String []testSetupIds = dataSource.getTestSetupsByME(pathComboBox.getSelectedId());
 
-		Vector v = new Vector();
+		Collection v = new ArrayList();
 		for(int i=0; i<testSetupIds.length; i++)
 		{
-			if(Pool.get(TestSetup.typ, testSetupIds[i]) != null)
+			if(Pool.get(TestSetup.TYPE, testSetupIds[i]) != null)
 			{
-				Object o = Pool.get(TestSetup.typ, testSetupIds[i]);
+				Object o = Pool.get(TestSetup.TYPE, testSetupIds[i]);
 				v.add(o);
 			}
 		}
 
-		testSetupComboBox.setContents(v.elements(), false);
+		testSetupComboBox.setContents(v, false);
 		testSetupComboBox.setEditable(false);
 	}
 
@@ -234,16 +234,16 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 		testSetupComboBox.removeAllItems();
 		String []testSetupIds = dataSource.getTestSetupsByME(pathComboBox.getSelectedId());
 
-		Vector v = new Vector();
+		Collection v = new ArrayList();
 		for(int i=0; i<testSetupIds.length; i++)
 		{
-			if(Pool.get(TestSetup.typ, testSetupIds[i]) != null)
+			if(Pool.get(TestSetup.TYPE, testSetupIds[i]) != null)
 			{
-				v.add(Pool.get(TestSetup.typ, testSetupIds[i]));
+				v.add(Pool.get(TestSetup.TYPE, testSetupIds[i]));
 			}
 		}
 
-		testSetupComboBox.setContents(v.elements(), false);
+		testSetupComboBox.setContents(v, false);
 		testSetupComboBox.setEditable(false);
 	}
 }

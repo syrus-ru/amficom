@@ -1,25 +1,16 @@
 package com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.util.Enumeration;
+import java.util.*;
 
-import javax.swing.ImageIcon;
-import javax.swing.JToggleButton;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScalableFrame;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleGraphPanel;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TimeDependanceLayeredPanel;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TimeDependencePanel;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.LinearCoeffs;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.TimeDependenceData;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 
 public class TimeDependenceFrame extends ScalableFrame implements OperationListener
 {
@@ -115,9 +106,9 @@ public class TimeDependenceFrame extends ScalableFrame implements OperationListe
 	public void setData(TimeDependenceData[] data)
 	{
 		Object coeffs = Pool.get("linearCoeffs", "MyLinearCoeffs");
-		for (Enumeration enum = panels.elements(); enum.hasMoreElements();)
+		for (Iterator it = panels.values().iterator(); it.hasNext();)
 		{
-			SimpleGraphPanel p = (SimpleGraphPanel)enum.nextElement();
+			SimpleGraphPanel p = (SimpleGraphPanel)it.next();
 			if (p instanceof TimeDependencePanel)
 			{
 				((TimeDependencePanel)p).init(data);
@@ -146,9 +137,9 @@ public class TimeDependenceFrame extends ScalableFrame implements OperationListe
 
 	private void updateViewStyle()
 	{
-		for (Enumeration enum = panels.elements(); enum.hasMoreElements();)
+		for (Iterator it = panels.values().iterator(); it.hasNext();)
 		{
-			SimpleGraphPanel sp = (SimpleGraphPanel)enum.nextElement();
+			SimpleGraphPanel sp = (SimpleGraphPanel)it.next();
 			if (sp instanceof TimeDependencePanel)
 			{
 				TimeDependencePanel p = (TimeDependencePanel)sp;

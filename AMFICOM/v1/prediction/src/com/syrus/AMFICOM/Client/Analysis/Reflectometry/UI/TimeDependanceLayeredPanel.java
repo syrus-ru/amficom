@@ -1,25 +1,16 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
+import java.util.*;
 
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JToggleButton;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventStatistics;
-import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.TimeDependenceData;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements OperationListener
 {
@@ -317,9 +308,18 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements 
 	}
 }
 
-class TimedToolBar extends ToolBarPanel
+class TimedToolBar extends ScalableToolBar
 {
-	ButtonGroup gr = new ButtonGroup();
+	protected static final String points = "points";
+	protected static final String lines = "lines";
+	protected static final String approx = "approx";
+
+	protected static final String att = "att";
+	protected static final String loss = "loss";
+	protected static final String plevel = "plevel";
+	protected static final String ampl = "ampl";
+	protected static final String refl = "refl";
+
 
 	JToggleButton pointsButton = new JToggleButton();
 	JToggleButton linesButton = new JToggleButton();
@@ -334,153 +334,163 @@ class TimedToolBar extends ToolBarPanel
 	public TimedToolBar(TimeDependanceLayeredPanel panel)
 	{
 		super(panel);
-
-		try
-		{
-			jbInit();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 
-	private void jbInit() throws Exception
+	protected static String[] buttons = new String[]
 	{
-		setLayout (new XYLayout());
+			att, loss, plevel, ampl, refl, separator, points, lines, approx, separator, ex, dx, ey, dy, fit
+	};
 
-		attButton.setMaximumSize(btn_size);
-		attButton.setMinimumSize(btn_size);
-		attButton.setPreferredSize(btn_size);
-//		attButton.setFocusable(false);
-		attButton.setToolTipText(LangModelPrediction.getString("attenuation"));
-		attButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/attenuation.gif")));
-		attButton.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				attButton_actionPerformed(e);
-			}
-		});
-		lossButton.setMaximumSize(btn_size);
-		lossButton.setMinimumSize(btn_size);
-		lossButton.setPreferredSize(btn_size);
-//		attButton.setFocusable(false);
-		lossButton.setToolTipText(LangModelPrediction.getString("loss"));
-		lossButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/loss.gif")));
-		lossButton.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				lossButton_actionPerformed(e);
-			}
-		});
-		plevelButton.setMaximumSize(btn_size);
-		plevelButton.setMinimumSize(btn_size);
-		plevelButton.setPreferredSize(btn_size);
-//		amplButton.setFocusable(false);
-		plevelButton.setToolTipText(LangModelPrediction.getString("power_level"));
-		plevelButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/entrance.gif")));
-		plevelButton.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				plevelButton_actionPerformed(e);
-			}
-		});
-		amplButton.setMaximumSize(btn_size);
-		amplButton.setMinimumSize(btn_size);
-		amplButton.setPreferredSize(btn_size);
-//		reflButton.setFocusable(false);
-		amplButton.setToolTipText(LangModelPrediction.getString("amplitude"));
-		amplButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/amplitude.gif")));
-		amplButton.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				amplButton_actionPerformed(e);
-			}
-		});
+	protected String[] getButtons()
+	{
+		return buttons;
+	}
 
-		reflButton.setMaximumSize(btn_size);
-		reflButton.setMinimumSize(btn_size);
-		reflButton.setPreferredSize(btn_size);
-//		reflButton.setFocusable(false);
-		reflButton.setToolTipText(LangModelPrediction.getString("reflectance"));
-		reflButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reflect.gif")));
-		reflButton.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				reflButton_actionPerformed(e);
-			}
-		});
+	protected Map createGraphButtons()
+	{
+		Map buttons = super.createGraphButtons();
 
-		pointsButton.setMaximumSize(btn_size);
-		pointsButton.setMinimumSize(btn_size);
-		pointsButton.setPreferredSize(btn_size);
-//		attButton.setFocusable(false);
-		pointsButton.setToolTipText(LangModelPrediction.getString("show_points"));
-		pointsButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/points.gif")));
-		pointsButton.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				toggleDisplayMode();
-			}
-		});
-		linesButton.setMaximumSize(btn_size);
-		linesButton.setMinimumSize(btn_size);
-		linesButton.setPreferredSize(btn_size);
-//		amplButton.setFocusable(false);
-		linesButton.setToolTipText(LangModelPrediction.getString("show_lines"));
-		linesButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/lines.gif")));
-		linesButton.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				toggleDisplayMode();
-			}
-		});
-		approximationButton.setMaximumSize(btn_size);
-		approximationButton.setMinimumSize(btn_size);
-		approximationButton.setPreferredSize(btn_size);
-//		reflButton.setFocusable(false);
-		approximationButton.setToolTipText(LangModelPrediction.getString("show_approximation"));
-		approximationButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/approximation.gif")));
-		approximationButton.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				toggleDisplayMode();
-			}
-		});
+		buttons.put(
+				loss,
+				createToolButton(
+				lossButton,
+				btn_size,
+				null,
+				LangModelPrediction.getString("loss"),
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/loss.gif")),
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						lossButton_actionPerformed(e);
+					}
+				},
+				true));
+		buttons.put(
+			att,
+				createToolButton(
+				attButton,
+				btn_size,
+				null,
+				LangModelPrediction.getString("attenuation"),
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/attenuation.gif")),
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						attButton_actionPerformed(e);
+					}
+				},
+				true));
+		buttons.put(
+				plevel,
+				createToolButton(
+				plevelButton,
+				btn_size,
+				null,
+				LangModelPrediction.getString("power_level"),
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/entrance.gif")),
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						plevelButton_actionPerformed(e);
+					}
+				},
+				true));
+		buttons.put(
+				ampl,
+				createToolButton(
+				amplButton,
+				btn_size,
+				null,
+				LangModelPrediction.getString("amplitude"),
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/amplitude.gif")),
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						amplButton_actionPerformed(e);
+					}
+				},
+				true));
+		buttons.put(
+				refl,
+				createToolButton(
+				reflButton,
+				btn_size,
+				null,
+				LangModelPrediction.getString("reflectance"),
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reflect.gif")),
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						reflButton_actionPerformed(e);
+					}
+				},
+				true));
+		buttons.put(
+				points,
+				createToolButton(
+				pointsButton,
+				btn_size,
+				null,
+				LangModelPrediction.getString("show_points"),
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/points.gif")),
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						toggleDisplayMode();
+					}
+				},
+				true));
+		buttons.put(
+				lines,
+				createToolButton(
+				linesButton,
+				btn_size,
+				null,
+				LangModelPrediction.getString("show_lines"),
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/lines.gif")),
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						toggleDisplayMode();
+					}
+				},
+				true));
+		buttons.put(
+				approx,
+				createToolButton(
+				approximationButton,
+				btn_size,
+				null,
+				LangModelPrediction.getString("show_approximation"),
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/approximation.gif")),
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						toggleDisplayMode();
+					}
+				},
+				true));
 
-		gr.add(attButton);
-		gr.add(plevelButton);
-		gr.add(amplButton);
-		gr.add(reflButton);
-		gr.add(lossButton);
-
-		add(plevelButton, new XYConstraints(0, 0, -1, -1));
-		add(lossButton, new XYConstraints(btn_size.width, 0, -1, -1));
-		add(attButton, new XYConstraints(2 * btn_size.width, 0, -1, -1));
-		add(reflButton, new XYConstraints(3 * btn_size.width, 0, -1, -1));
-		add(amplButton, new XYConstraints(4 * btn_size.width, 0, -1, -1));
-
-		add(pointsButton, new XYConstraints(6 * btn_size.width, 0, -1, -1));
-		add(linesButton, new XYConstraints(7 * btn_size.width, 0, -1, -1));
-		add(approximationButton, new XYConstraints(8 * btn_size.width, 0, -1, -1));
+		ButtonGroup group = new ButtonGroup();
+		group.add(attButton);
+		group.add(plevelButton);
+		group.add(amplButton);
+		group.add(reflButton);
+		group.add(lossButton);
 
 		lossButton.setSelected(true);
 		pointsButton.setSelected(true);
 		linesButton.setSelected(true);
 		approximationButton.setSelected(true);
-	}
-
-	protected int getItemsCount ()
-	{
-		return 9;
+		return buttons;
 	}
 
 	void lossButton_actionPerformed(ActionEvent e)
