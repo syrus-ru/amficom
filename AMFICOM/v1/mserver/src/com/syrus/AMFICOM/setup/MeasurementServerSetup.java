@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.6 2004/08/18 18:11:53 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.7 2004/08/19 12:24:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/18 18:11:53 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/19 12:24:23 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -112,7 +112,7 @@ public class MeasurementServerSetup {
 
 		Identifier mportId = createMeasurementPort(sysAdminId, mPortType, kisId, portId1);
 
-		Identifier me = createMonitoredElement(sysAdminId, domainId, mportId);
+		Identifier me = createMonitoredElement(sysAdminId, domainId, mportId, tpId);
 
 
 		createParameterTypes(sysAdminId);
@@ -356,15 +356,19 @@ public class MeasurementServerSetup {
 
 	private static Identifier createMonitoredElement(Identifier creatorId,
 																									 Identifier domainId,
-																									 Identifier mPortId) {
+																									 Identifier mPortId,
+																									 Identifier transmissionPathId) {
 		try {
+			List mdmIds = new ArrayList(1);
+			mdmIds.add(transmissionPathId);
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.ME_ENTITY_CODE);
 			MonitoredElement me = MonitoredElement.createInstance(id,
 																														 creatorId,
 																														 domainId,
 																														 mPortId,
-																														 MonitoredElementSort._MONITOREDELEMENT_SORT_PORT,
-																														 "ME");
+																														 MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
+																														 "ME",
+																														 mdmIds);
 			MonitoredElement me1 = new MonitoredElement((MonitoredElement_Transferable)me.getTransferable()); 
 			return id;
 		}
