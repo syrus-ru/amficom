@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalScheme.java,v 1.4 2005/04/01 10:44:52 max Exp $
+ * $Id: LogicalScheme.java,v 1.5 2005/04/06 12:36:26 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.newFilter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -22,7 +21,7 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/01 10:44:52 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/06 12:36:26 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -115,32 +114,32 @@ public class LogicalScheme {
 			return;
 		} 
 		if(isDefault()) {
-			for (Iterator it = this.rootItem.getChildren().iterator(); it.hasNext();) {
-				LogicalItem rootChild = (LogicalItem) it.next();
-				if (rootChild.getType().equals(LogicalItem.CONDITION)) {
-					this.rootItem.removeChild(rootChild);
-					LogicalItem newOrItem = new LogicalItem(LogicalItem.OR);
-					newOrItem.addChild(rootChild);
-					newOrItem.addChild(newItem);
-					this.rootItem.addChild(newOrItem);
-				} else {
-					rootChild.addChild(newItem);
-				}
+			LogicalItem rootChild = (LogicalItem) this.rootItem.getChildren().iterator().next();
+			//LogicalItem rootChild = (LogicalItem) it.next();
+			if (rootChild.getType().equals(LogicalItem.CONDITION)) {
+				//this.rootItem.removeChild(rootChild);
+				LogicalItem newOrItem = new LogicalItem(LogicalItem.OR);
+				//newOrItem.addChild(rootChild);
+				newOrItem.addChild(newItem);
+				newOrItem.addChild(rootChild);
+				this.rootItem.addChild(newOrItem);
+			} else {
+				rootChild.addChild(newItem);
 			}
 		} else {
-			for (Iterator it = this.rootItem.getChildren().iterator(); it.hasNext();) {
-				LogicalItem rootChild = (LogicalItem) it.next();
-				String type = rootChild.getType();
-				if (type.equals(LogicalItem.OR))
-					rootChild.addChild(newItem);
-				else {
-					this.rootItem.removeChild(rootChild);
-					LogicalItem newOrItem = new LogicalItem(LogicalItem.OR);
-					this.rootItem.addChild(newOrItem);
-					newOrItem.addChild(rootChild);
-					newOrItem.addChild(newItem);
-				}	
-			}
+			LogicalItem rootChild = (LogicalItem) this.rootItem.getChildren().iterator().next();
+			String type = rootChild.getType();
+			if (type.equals(LogicalItem.OR))
+				rootChild.addChild(newItem);
+			else {
+				//this.rootItem.removeChild(rootChild);
+				LogicalItem newOrItem = new LogicalItem(LogicalItem.OR);
+				newOrItem.addChild(rootChild);
+				newOrItem.addChild(newItem);
+				this.rootItem.addChild(newOrItem);
+				
+			}	
+			
 		}
 		LogicalItem newRootItem = (LogicalItem)this.rootItem.clone();
 		this.rootItem = newRootItem;
@@ -161,16 +160,18 @@ public class LogicalScheme {
 	public void removeCondition(String keyName) {
 		LogicalItem conditionItem = findConditionItem(keyName, this.rootItem);
 		LogicalItem parent = (LogicalItem) conditionItem.getParent();
-		parent.removeChild(conditionItem);
+		conditionItem.setParent(null);
+		//parent.removeChild(conditionItem);
 		if (parent.getChildren().size() < parent.getMinChildrenCount()){
 			LogicalItem superParent = (LogicalItem) parent.getParent();
-			
+			parent.setParent(null);
 			for (Iterator it = parent.getChildren().iterator(); it.hasNext();) {
 				LogicalItem child = (LogicalItem) it.next();
-				LogicalItem newChildren = (LogicalItem) child.clone();
-				newChildren.setParent(superParent);				
+				LogicalItem newChilde = (LogicalItem) child.clone();
+				superParent.addChild(newChilde);
+				//newChildren.setParent(superParent);				
 			}
-			superParent.removeChild(parent);
+			//superParent.removeChild(parent);
 		}
 		LogicalItem newRootItem = (LogicalItem)this.rootItem.clone();
 		this.rootItem = newRootItem;

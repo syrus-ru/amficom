@@ -1,5 +1,5 @@
 /*
- * $Id: FilterGUI.java,v 1.5 2005/04/01 08:37:09 max Exp $
+ * $Id: FilterGUI.java,v 1.6 2005/04/06 12:36:26 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/01 08:37:09 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/06 12:36:26 $
  * @author $Author: max $
  * @module misc
  */
@@ -227,7 +227,7 @@ public class FilterGUI extends JFrame implements FilterView {
 		gbc.weighty = 1.0;
 		linkedPanel.add(linkedConditionListScroller, gbc);
 				
-		gbc.weighty = 0;
+		gbc.weighty = 1;
 		gbc.weightx = 1;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -250,25 +250,24 @@ public class FilterGUI extends JFrame implements FilterView {
 		gbc.weighty = 1;
 		numberPanel.add(thirdSubPanel, gbc);
 		
-		gbc.weighty = 0;
+		gbc.weighty = 1;
 		gbc.weightx = 1;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.fill = GridBagConstraints.NONE;
 		gbc.gridwidth = 1;
 		datePanel.add(fromLabel, gbc);
 		datePanel.add(this.startDateSpinner, gbc);
 		datePanel.add(this.startDayButton, gbc);
-		datePanel.add(this.startTimeSpinner);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		datePanel.add(this.startTimeSpinner);
+		datePanel.add(this.startTimeSpinner, gbc);
 		
 		gbc.weighty = 1;
 		gbc.gridwidth = 1;
 		datePanel.add(toLabel, gbc);
 		datePanel.add(this.endDateSpinner, gbc);
 		datePanel.add(this.endDayButton, gbc);
-		datePanel.add(this.endTimeSpinner);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		datePanel.add(this.startTimeSpinner);
+		datePanel.add(this.endTimeSpinner, gbc);
 		
 		this.conditionPanel.add(numberPanel, NUMBER_CARD);
 		this.conditionPanel.add(linkedPanel, LIST_CARD);
