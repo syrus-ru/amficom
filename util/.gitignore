@@ -1,5 +1,6 @@
 classes
 docs
+lib
 *.jar
 *.jpr
 *.trc
@@ -15,4 +16,5 @@ cache
 SQLChecker.cache
 sqlj.properties
 .all
+.idl
 .sqlj

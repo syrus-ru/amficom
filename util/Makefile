@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.9 2004/06/03 14:16:30 bass Exp $
+# $Id: Makefile,v 1.10 2004/06/21 09:53:36 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -11,6 +11,8 @@ USER = AMFICOM
 PASSWORD = amficom
 HOST = RESEARCH
 SERVICE_NAME = SHAITAN
+
+LIBNAME = util.jar
 
 CLIENT_EXCLUDED_CLASSES = \
 	com.syrus.util.ServerLogger \
@@ -40,8 +42,14 @@ CLASS_SUFFIXES = \
 	_SJProfile0.class \
 	_SJProfileKeys.class
 
+IDLDIR = idl
 SRCDIR = src
 CLASSDIR = classes
+ifeq ($(shell hostname -s),bass)
+LIBDIR = lib
+else
+LIBDIR = ../lib
+endif
 ENCODING = windows-1251
 JAVACFLAGS = -source 1.3 -sourcepath $(SRCDIR) -deprecation -g -O
 SUNJAVACFLAGS = -target 1.2
@@ -54,7 +62,17 @@ JIKESFLAGS = \
 	+Predundant-modifiers \
 	+Pno-switchcheck \
 	+Pnaming-convention \
-	+T=4
+	+T=8
+IDL2JAVAFLAGS = \
+	-C \
+	-H \
+	-no_bind \
+	-no_examples \
+	-narrow_compliance \
+	-portable \
+	-root_dir $(SRCDIR) \
+	-strict \
+	-no_toString
 SQLJFLAGS = \
 	-cache=true \
 	-checkfilename=true \
@@ -79,19 +97,30 @@ $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
 .PHONY: export
-export: $(MODULE_NAME).jar $(MODULE_NAME)client.jar $(MODULE_NAME)server.jar
+export: $(LIBNAME) $(MODULE_NAME)client.jar $(MODULE_NAME)server.jar
 
 .PHONY: all
 all: .all
 
-.all: .sqlj
+.all: .idl .sqlj
 	$(JAVAC) \
 		$(JAVACFLAGS) \
-		-classpath $(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
 		-d $(CLASSDIR) \
 		-encoding $(ENCODING) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
+
+.PHONY: idl
+idl: .idl
+
+.idl: $(SRCDIR) $(CLASSDIR)
+	touch $@
+
+.PHONY: idlclean
+idlclean:
+	$(RM) -r \
+		.idl
 
 .PHONY: sqlj
 sqlj: .sqlj
@@ -100,7 +129,7 @@ sqlj: .sqlj
 	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS)" > sqlj.properties
 	$(SQLJ) \
 		$(SQLJFLAGS) \
-		-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-classpath $(AMFICOMCLASSPATH)$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
 		-d $(CLASSDIR) \
 		-encoding $(ENCODING) \
 		$(SRCDIR)/com/syrus/util/database/ServerProperties.sqlj \
@@ -117,26 +146,14 @@ sqljclean:
 		$(foreach file, $(filter $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.sqlj
 
-$(CLASSDIR):
+$(SRCDIR) $(CLASSDIR):
 	mkdir -p $@
 
 .PHONY: clean
-clean: sqljclean
+clean: sqljclean idlclean
 	$(RM) \
 		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.all
-
-$(MODULE_NAME).jar: .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com
-
-$(MODULE_NAME)client.jar: .all
-	$(JAR) cf $@ \
-		$(foreach file, $(filter-out $(foreach class, $(subst .,/, $(CLIENT_EXCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
-
-$(MODULE_NAME)server.jar: .all
-	$(JAR) cf $@ \
-		$(foreach file, $(filter $(foreach class, $(subst .,/, $(SERVER_INCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
 
 .PHONY: dist
 dist: distclean
@@ -151,3 +168,15 @@ distclean: clean
 		SQLChecker.cache \
 		sqlj.properties \
 		*.jar
+
+$(LIBNAME): .all
+	$(JAR) cf $@ \
+		-C $(CLASSDIR) com
+
+$(MODULE_NAME)client.jar: .all
+	$(JAR) cf $@ \
+		$(foreach file, $(filter-out $(foreach class, $(subst .,/, $(CLIENT_EXCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
+
+$(MODULE_NAME)server.jar: .all
+	$(JAR) cf $@ \
+		$(foreach file, $(filter $(foreach class, $(subst .,/, $(SERVER_INCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
