@@ -14,4 +14,4 @@
 #LogHistory=TOFEWGCMAR
 
 SystemAuth=no
-LockDir=lock
+LockDir=/export/cvsroot/lock
