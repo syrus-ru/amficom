@@ -66,7 +66,7 @@ module Report
 		sequence <FirmedTextPane_Transferable> firmedTextPanes;
 
 		//картинки
-		sequence <ImagePane_Transferable> imagePanes;
+//		sequence <ImagePane_Transferable> imagePanes;
 
 		//фильтры
 		//sequence <ObjectResourceFilter_Transferable> objectResourceFilters;
