@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.46 2004/11/16 10:26:42 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.47 2004/11/16 10:29:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseIdentifier;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/11/16 10:26:42 $
+ * @version $Revision: 1.47 $, $Date: 2004/11/16 10:29:38 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -248,17 +248,17 @@ public abstract class StorableObjectDatabase {
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObjectIdCode = storableObject.getId().getCode();
 				this.setEntityForPreparedStatement(storableObject, preparedStatement);
-				Log.debugMessage(this.getEnityName() + "Database.insertEntities | Inserting  "
-						+ this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
+				Log.debugMessage(this.getEnityName() + "Database.insertEntities | Inserting  " + this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
-			
+
 			connection.commit();			
-		} catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.insertEntities | Cannot insert "
-					+ this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
+		}
+		catch (SQLException sqle) {
+			String mesg = this.getEnityName() + "Database.insertEntities | Cannot insert " + this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
-		} catch(UpdateObjectException uoe){
+		}
+		catch(UpdateObjectException uoe){
 			throw new CreateObjectException(uoe);
 		}
 		finally {
@@ -266,16 +266,17 @@ public abstract class StorableObjectDatabase {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;				
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally{
 				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
 
-	protected void retrieveEntity(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
+	protected void retrieveEntity(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		String strorableObjectTypeIdStr = storableObject.getId().toSQLString();
 		String sql = retrieveQuery(COLUMN_ID + EQUALS + strorableObjectTypeIdStr);
 		Statement statement = null;
@@ -283,45 +284,44 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retrieveEntity | Trying: " + sql,
-						Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEnityName() + "Database.retrieveEntity | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				updateEntityFromResultSet(storableObject, resultSet);
 			else
-				throw new ObjectNotFoundException("No such " + getEnityName() + ": "
-						+ strorableObjectTypeIdStr);
-		} catch (SQLException sqle) {
+				throw new ObjectNotFoundException("No such " + getEnityName() + ": " + strorableObjectTypeIdStr);
+		}
+		catch (SQLException sqle) {
 			sqle.printStackTrace();
 			Log.errorException(sqle);
-			String mesg = this.getEnityName() + "Database.retrieveEntity | Cannot retrieve "
-					+ getEnityName() + " '" + strorableObjectTypeIdStr + "' -- "
-					+ sqle.getMessage();
+			String mesg = this.getEnityName() + "Database.retrieveEntity | Cannot retrieve " + getEnityName() + " '" + strorableObjectTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				try {
 					if (resultSet != null)
 						resultSet.close();
-				} finally {
+				}
+				finally {
 					try{
-					if (statement != null)
-						statement.close();
-					} finally {
+						if (statement != null)
+							statement.close();
+					}
+					finally {
 						DatabaseConnection.closeConnection(connection);
 					}
 				}
-			} catch (SQLException sqle) {
+			}
+			catch (SQLException sqle) {
 				Log.errorException(sqle);
 			}
 		}
 	}
 
-	protected String retrieveQuery(final String condition){
-		
-		
+	protected String retrieveQuery(final String condition) {
 		StringBuffer buffer;
-		if (retrieveQuery == null){
+		if (retrieveQuery == null) {
 			buffer = new StringBuffer(SQL_SELECT);
 			String cols = this.getColumns();
 			cols = cols.replaceFirst(COLUMN_CREATED, DatabaseDate.toQuerySubString(COLUMN_CREATED));
@@ -330,18 +330,18 @@ public abstract class StorableObjectDatabase {
 			buffer.append(SQL_FROM);
 			buffer.append(this.getEnityName());
 			retrieveQuery = buffer.toString();
-		} else
+		}
+		else
 			buffer = new StringBuffer(retrieveQuery);
-		if (condition != null && condition.trim().length() > 0){
+		if (condition != null && condition.trim().length() > 0) {
 			buffer.append(SQL_WHERE);
 			buffer.append(condition);
 		}
 		return buffer.toString();
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject,
-								PreparedStatement preparedStatement)
-			throws IllegalDataException, UpdateObjectException{
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+			throws IllegalDataException, UpdateObjectException {
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 1 , storableObject.getId());
 			preparedStatement.setTimestamp(2, new Timestamp(storableObject.getCreated().getTime()));
