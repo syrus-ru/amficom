@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -64,7 +63,7 @@ public class ResizableLayeredPanel extends JPanel
 		String[] buttons = toolbar.getButtons();
 		for (int i = 0; i < buttons.length; i++)
 		{
-			if (buttons[i].equals(ToolBarPanel.separator))
+			if (buttons[i].equals(ToolBarPanel.SEPARATOR))
 				toolbar.add(new JToolBar.Separator());
 			else
 				toolbar.add((Component)commands.get(buttons[i]));
@@ -80,7 +79,6 @@ public class ResizableLayeredPanel extends JPanel
 
 		toolbar.setVisible(false);
 
-		updColorModel();
 	}
 
 	public ScaledGraphPanel getTopPanel()
@@ -106,10 +104,6 @@ public class ResizableLayeredPanel extends JPanel
 		toolbar.setVisible(b);
 	}
 
-	protected void updColorModel()
-	{
-//		mainPanel.setBackground(SystemColor.window);
-	}
 
 	public void setGraphPanel(SimpleGraphPanel panel)
 	{
@@ -139,13 +133,17 @@ public class ResizableLayeredPanel extends JPanel
 			panel.scaleY *= ky;
 			panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 		}
-		jLayeredPane.repaint();
+//		this.jLayeredPane.setSize(this.getSize());
+//		this.jLayeredPane.revalidate();
+//		this.jLayeredPane.repaint();
 	}
 
 	public void resize()
 	{
 		int width = jLayeredPane.getWidth();
 		int height = jLayeredPane.getHeight();
+		height = height > 1 ? height : 1;
+		width = width > 1 ? width : 1;
 
 		resize ((double)width/(double)_width, (double)height/(double)_height);
 
@@ -254,7 +252,7 @@ class ToolBarPanel extends JToolBar
 	protected ResizableLayeredPanel panel;
 	protected int position = 0;
 
-	protected static final String separator = "separator";
+	protected static final String SEPARATOR = "separator";
 
 	protected Map actions = new HashMap();
 
@@ -265,23 +263,10 @@ class ToolBarPanel extends JToolBar
 	public ToolBarPanel(ResizableLayeredPanel panel)
 	{
 		this.panel = panel;
-
-		try
-		{
-			jbInit();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	private void jbInit() throws Exception
-	{
-		//setPreferredSize(new Dimension (1, btn_size.height + 5));
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout (new BoxLayout(this, BoxLayout.X_AXIS));
 	}
+	
 
 	protected String[] getButtons()
 	{
