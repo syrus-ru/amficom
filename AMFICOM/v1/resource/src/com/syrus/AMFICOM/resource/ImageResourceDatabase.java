@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.6 2005/01/26 09:01:37 max Exp $
+ * $Id: ImageResourceDatabase.java,v 1.7 2005/02/02 06:07:48 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: max $
- * @version $Revision: 1.6 $, $Date: 2005/01/26 09:01:37 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/02 06:07:48 $
  * @module resource_v1
  */
 
@@ -71,49 +71,27 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultiplySQLValues;
     
-	private void insertImage(AbstractImageResource abstractImageResource) throws CreateObjectException {
-		String sql = SQL_INSERT_INTO + getEnityName()		
-			+ OPEN_BRACKET + COLUMN_IMAGE + CLOSE_BRACKET 
-			+ SQL_VALUES 
-			+ OPEN_BRACKET + SQL_EMPTY_BLOB + CLOSE_BRACKET
-			+ SQL_WHERE + COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(abstractImageResource.getId());
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		byte[] image = abstractImageResource.getImage();
-		try {
-			statement = connection.createStatement();
-			statement.execute(sql);
-			connection.commit();
-			ByteArrayDatabase.saveAsBlob(image, connection, ObjectEntities.IMAGE_RESOURCE_ENTITY, COLUMN_IMAGE, COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(abstractImageResource.getId()));
-			connection.commit();
-		} catch (SQLException sqle) {
-			String mesg = getEnityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage(); //$NON-NLS-1$
-			throw new CreateObjectException(mesg, sqle);
-		} finally {
-			DatabaseConnection.releaseConnection(connection);
-		}
-	}
-    
-	private void retrieveImage(AbstractImageResource abstractImageResource) throws RetrieveObjectException {
+	private byte[] retrieveImage(AbstractImageResource abstractImageResource) throws RetrieveObjectException {
 		String absIdStr = DatabaseIdentifier.toSQLString(abstractImageResource.getId());
 		String sql = SQL_SELECT + COLUMN_IMAGE + SQL_FROM + getEnityName() + SQL_WHERE + COLUMN_ID + EQUALS + absIdStr;
 		Connection connection = DatabaseConnection.getConnection();
 		Statement statement = null;
 		ResultSet resultSet = null;
+		byte[] image = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(getEnityName() + "Database.retrieveImage | Trying: " + sql, Log.DEBUGLEVEL09); //$NON-NLS-1$
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				Blob blob = resultSet.getBlob(COLUMN_IMAGE);
-				byte[] image = ByteArrayDatabase.toByteArray(blob);
+				image = ByteArrayDatabase.toByteArray(blob);
 				if(abstractImageResource instanceof BitmapImageResource) { 
 					BitmapImageResource bitmapImageResource = (BitmapImageResource) abstractImageResource;
 					bitmapImageResource.setImage(image);
 				} else {
 					SchemeImageResource schemeImageResource = (SchemeImageResource) abstractImageResource;
 					schemeImageResource.setImage(image);
-				}
+				}				
 			}			
 		} catch (SQLException sqle) {
 			String mesg = getEnityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage(); //$NON-NLS-1$
@@ -121,6 +99,8 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		} finally {
 			DatabaseConnection.releaseConnection(connection);
 		}
+		return image;
+		
 	}
     
 	private void updateImage(AbstractImageResource abstractImageResource) throws UpdateObjectException {
@@ -139,7 +119,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			ByteArrayDatabase.saveAsBlob(image, connection, ObjectEntities.IMAGE_RESOURCE_ENTITY, COLUMN_IMAGE, COLUMN_ID + EQUALS + absIdStr);
 			connection.commit();			
 		} catch (SQLException sqle) {
-			String mesg = getEnityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage(); //$NON-NLS-1$
+			String mesg = getEnityName() + "Database.insertImage | Cannot update blob " + sqle.getMessage(); //$NON-NLS-1$
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
 			DatabaseConnection.releaseConnection(connection);
@@ -221,25 +201,33 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
 		super.insertEntity(abstractImageResource);
-		if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource))
-			this.insertImage(abstractImageResource);		
+		if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource)) {
+			try {
+				this.updateImage(abstractImageResource);
+			} catch (UpdateObjectException e) {
+				throw new CreateObjectException(getEnityName() + "Database.insert ", e);
+			}
+		}
 	}
     
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
 		for(Iterator it = storableObjects.iterator();it.hasNext();){
 			AbstractImageResource abstractImageResource = this.fromStorableObject((StorableObject)it.next());
-			if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource))
-				this.insertImage(abstractImageResource);
+			if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource)) {
+				try {
+					this.updateImage(abstractImageResource);
+				} catch (UpdateObjectException e) {
+					throw new CreateObjectException(getEnityName() + "Database.insert ", e);
+				}
+			}
 		}
 
 	}
 	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
-		super.retrieveEntity(abstractImageResource);
-		if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource))
-			this.retrieveImage(abstractImageResource);
+		super.retrieveEntity(abstractImageResource);		
 	}
 
 	public List retrieveByCondition(List ids,
@@ -270,11 +258,6 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		list = super.retrieveByIdsOneQuery(ids, condition);
-		for (Iterator iter = list.iterator(); iter.hasNext();) {
-			AbstractImageResource abstractImageResource = this.fromStorableObject((AbstractBitmapImageResource)iter.next());
-			if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource))
-				this.retrieveImage(abstractImageResource);
-		}
 		return list;
 	}
 
@@ -296,8 +279,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				break;
 			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);
-				return;
+				super.checkAndUpdateEntities(storableObjects, true);				
 		}
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			AbstractImageResource abstractImageResource = fromStorableObject((AbstractImageResource) it.next());
@@ -317,11 +299,8 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				break;
 			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntity(storableObject, true);
-				return;			
-		}
-		if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource))
-			updateImage(fromStorableObject(storableObject));
+				super.checkAndUpdateEntity(storableObject, true);						
+		}		
 	}
 	
 
@@ -329,6 +308,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException,
 			SQLException {
+		try {
 		int sort = resultSet.getInt(COLUMN_SORT);
 		if (sort == ImageResourceSort._BITMAP) {
 			BitmapImageResource bitmapImageResource;
@@ -338,13 +318,14 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			} else {
 				bitmapImageResource = (BitmapImageResource) storableObject;
 			}
-
+			byte[] image = retrieveImage(bitmapImageResource);
 			bitmapImageResource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-				ByteArrayDatabase.toByteArray(resultSet.getBlob(COLUMN_IMAGE)));
+				image);
+			
 			return bitmapImageResource;
 		} else if (sort == ImageResourceSort._FILE) {
 			FileImageResource fileImageResource;
@@ -367,15 +348,20 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 						null, null, null, null);
 			} else {
 				schemeImageResource = (SchemeImageResource) storableObject;
-			}			
+			}
+			byte[] image = retrieveImage(schemeImageResource);
 			schemeImageResource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 					DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 					DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 					DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-					ByteArrayDatabase.toByteArray(resultSet.getBlob(COLUMN_IMAGE)));
+					image);			
 			return schemeImageResource;
 		}
 		throw new RetrieveObjectException(getEnityName() + "Database.updateEntityFromResultSet | wrong sort " + sort);				 //$NON-NLS-1$
+	} catch (SQLException e) {
+		Log.errorMessage("ImageResourceDatabase.updateEntityFromResultSet " + e.getMessage() );
+		throw new RetrieveObjectException("ImageResourceDatabase.updateEntityFromResultSet ", e);
+	}
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
