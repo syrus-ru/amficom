@@ -174,8 +174,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 				//System.out.println("new TestSetup()");
 			}
 			//System.out.println("ts:" + ts.id);
-			tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
-					ts.getTestArgumentSetId());
+			tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, ts
+					.getTestArgumentSetId());
 			if (tas == null) {
 				tas = new TestArgumentSet();
 				//System.out.println("new TestArgumentSet()");
@@ -184,74 +184,118 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 			ActionParameterType apt;
 
 			TestType testType = (TestType) Pool.get(TestType.typ, test_type_id);
-			apt = (ActionParameterType) testType.getSortedArguments()
-					.get(PARAMETER_REFRACTION);
+			apt = (ActionParameterType) testType.getSortedArguments().get(
+					PARAMETER_REFRACTION);
 			try {
 				ByteArray byteArray;
-
-				byteArray = new ByteArray(Double.parseDouble(refractTextField
-						.getText()));
+				String refract = refractTextField.getText();
+				if ((refract == null) || (refract.length() == 0))
+						throw new IllegalArgumentException(I18N
+								.getString("index_of_refraction_is_not_set")); //$NON-NLS-1$
+				byteArray = new ByteArray(Double.parseDouble(refract));
 				// dsi.GetUId("testargument")
-				Parameter reflectParam = new Parameter(dsi
+				Parameter refractParam = new Parameter(dsi
 						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
 						.getBytes(), PARAMETER_REFRACTION, "double"); //$NON-NLS-1$
-				if (reflectParam == null)
-						System.out.println("reflectParam is null"); //$NON-NLS-1$
-				tas.addArgument(reflectParam);
+				if (refractParam == null)
+						throw new IllegalArgumentException(I18N
+								.getString("index_of_refraction_is_not_set"));
 
-				apt = (ActionParameterType) testType.getSortedArguments()
-						.get(PARAMETER_WAVELENGHT);
+				tas.addArgument(refractParam);
 
-				byteArray = new ByteArray(Integer.parseInt(waveLengthComboBox
-						.getSelectedItem().toString()));
+				apt = (ActionParameterType) testType.getSortedArguments().get(
+						PARAMETER_WAVELENGHT);
+				Object wave = waveLengthComboBox.getSelectedItem();
+				if (wave == null)
+						throw new IllegalArgumentException(I18N
+								.getString("wave_length_is_not_set"));
+
+				String waveStr = wave.toString();
+				if ((waveStr == null) || (waveStr.length() == 0))
+						throw new IllegalArgumentException(I18N
+								.getString("wave_length_is_not_set"));
+				byteArray = new ByteArray(Integer.parseInt(waveStr));
 				//			 dsi.GetUId("testargument")
 				Parameter waveLengthParam = new Parameter(dsi
 						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
 						.getBytes(), PARAMETER_WAVELENGHT, "int"); //$NON-NLS-1$
 				tas.addArgument(waveLengthParam);
 
-				apt = (ActionParameterType) testType.getSortedArguments()
-						.get(PARAMETER_AVERAGE_QUANTITY);
-				byteArray = new ByteArray(Double
-						.parseDouble(averageQuantityComboBox.getSelectedItem()
-								.toString()));
+				Object average = averageQuantityComboBox.getSelectedItem();
+				if (average == null)
+						throw new IllegalArgumentException(I18N
+								.getString("average_quantity_is_not_set"));
+				String averageStr = average.toString();
+				if ((averageStr == null) || (averageStr.length() == 0))
+						throw new IllegalArgumentException(I18N
+								.getString("average_quantity_is_not_set"));
+
+				apt = (ActionParameterType) testType.getSortedArguments().get(
+						PARAMETER_AVERAGE_QUANTITY);
+				byteArray = new ByteArray(Double.parseDouble(averageStr));
 				// dsi.GetUId("testargument")
 				Parameter averageOutCountParam = new Parameter(dsi
 						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
 						.getBytes(), PARAMETER_AVERAGE_QUANTITY, "double"); //$NON-NLS-1$
 				tas.addArgument(averageOutCountParam);
-
-				apt = (ActionParameterType) testType.getSortedArguments()
-						.get(PARAMETER_PULSE_WIDTH);
-				byteArray = new ByteArray(Double.parseDouble(pulseWidthComboBox
-						.getSelectedItem().toString()));
+				Object pulse = pulseWidthComboBox.getSelectedItem();
+				if (pulse == null)
+						throw new IllegalArgumentException(I18N
+								.getString("pulse_width_is_not_set"));
+				String pulseStr = pulse.toString();
+				if ((pulseStr == null) || (pulseStr.length() == 0))
+						throw new IllegalArgumentException(I18N
+								.getString("pulse_width_is_not_set"));
+				apt = (ActionParameterType) testType.getSortedArguments().get(
+						PARAMETER_PULSE_WIDTH);
+				byteArray = new ByteArray(Double.parseDouble(pulseStr));
 				// dsi.GetUId("testargument")
 				Parameter pulseWidthParam = new Parameter(dsi
 						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
 						.getBytes(), PARAMETER_PULSE_WIDTH, "double"); //$NON-NLS-1$
 				tas.addArgument(pulseWidthParam);
 
-				apt = (ActionParameterType) testType.getSortedArguments()
-						.get(PARAMETER_RESOLUTION);
-				byteArray = new ByteArray(Double.parseDouble(resolutionComboBox
-						.getSelectedItem().toString()));
+				Object resolution = resolutionComboBox.getSelectedItem();
+				if (resolution == null)
+						throw new IllegalArgumentException(I18N
+								.getString("resolution_is_not_set"));
+				String resolutionStr = resolution.toString();
+				if ((resolutionStr == null) || (resolutionStr.length() == 0))
+						throw new IllegalArgumentException(I18N
+								.getString("resolution_is_not_set"));
+				apt = (ActionParameterType) testType.getSortedArguments().get(
+						PARAMETER_RESOLUTION);
+				byteArray = new ByteArray(Double.parseDouble(resolutionStr));
 				// dsi.GetUId("testargument")
 				Parameter resolutionParam = new Parameter(dsi
 						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
 						.getBytes(), PARAMETER_RESOLUTION, "double"); //$NON-NLS-1$
 				tas.addArgument(resolutionParam);
 
-				apt = (ActionParameterType) testType.getSortedArguments()
-						.get(PARAMETER_MAX_DISTANCE);
-				byteArray = new ByteArray(Double
-						.parseDouble(maxDistanceComboBox.getSelectedItem()
-								.toString()));
+				Object distance = maxDistanceComboBox.getSelectedItem();
+				if (distance == null)
+						throw new IllegalArgumentException(I18N
+								.getString("distance_is_not_set"));
+
+				String distanceStr = distance.toString();
+				if ((distanceStr == null) || (distanceStr.length() == 0))
+						throw new IllegalArgumentException(I18N
+								.getString("distance_is_not_set"));
+				apt = (ActionParameterType) testType.getSortedArguments().get(
+						PARAMETER_MAX_DISTANCE);
+				byteArray = new ByteArray(Double.parseDouble(distanceStr));
 				Parameter maxDistanceParam = new Parameter(dsi
 						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
 						.getBytes(), PARAMETER_MAX_DISTANCE, "double"); //$NON-NLS-1$
 				tas.addArgument(maxDistanceParam);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				String message = e.getMessage();
+				System.out.println(message);
+				JOptionPane.showMessageDialog(this, message, I18N
+						.getString("Error"), JOptionPane.OK_OPTION);
+				tas = null;
 			}
 		}
 		return tas;
@@ -367,9 +411,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 			if (values.length == 0)
 					values = new String[] { defaultMaxDistance};
 			maxDistanceComboBox.removeAllItems();
-			for (int i = 0; i < values.length; i++)
-				maxDistanceComboBox.addItem(values[i].toString());
-			maxDistanceComboBox.setSelectedIndex(0);
+			if (false) {
+				for (int i = 0; i < values.length; i++)
+					maxDistanceComboBox.addItem(values[i].toString());
+				maxDistanceComboBox.setSelectedIndex(0);
+			}
 		}
 
 	}
@@ -421,7 +467,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 
 		try {
 			java.util.List arguments = tas.getArgumentList();
-			for (int i=0;i<arguments.size();i++) {
+			for (int i = 0; i < arguments.size(); i++) {
 				Parameter p = (Parameter) arguments.get(i);
 				String codeName = p.getCodename();
 				byte[] value = p.getValue();
@@ -539,18 +585,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 				}
 			}
 		});
-		JLabel refractLabel = new JLabel(I18N
-				.getString("Index_Of_Refraction")); //$NON-NLS-1$
-		JLabel waveLengthLabel = new JLabel(I18N
-				.getString("WaveLength")); //$NON-NLS-1$
+		JLabel refractLabel = new JLabel(I18N.getString("Index_Of_Refraction")); //$NON-NLS-1$
+		JLabel waveLengthLabel = new JLabel(I18N.getString("WaveLength")); //$NON-NLS-1$
 		JLabel countOfAverageOutLabel = new JLabel(I18N
 				.getString("AverageQuantity")); //$NON-NLS-1$
-		JLabel pulseWidthLabel = new JLabel(I18N
-				.getString("PulseWidth")); //$NON-NLS-1$
-		JLabel resolutionLabel = new JLabel(I18N
-				.getString("Resolution")); //$NON-NLS-1$
-		JLabel maxDistanceLabel = new JLabel(I18N
-				.getString("Distance")); //$NON-NLS-1$
+		JLabel pulseWidthLabel = new JLabel(I18N.getString("PulseWidth")); //$NON-NLS-1$
+		JLabel resolutionLabel = new JLabel(I18N.getString("Resolution")); //$NON-NLS-1$
+		JLabel maxDistanceLabel = new JLabel(I18N.getString("Distance")); //$NON-NLS-1$
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
