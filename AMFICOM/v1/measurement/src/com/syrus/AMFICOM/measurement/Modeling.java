@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.23 2005/01/26 15:38:41 arseniy Exp $
+ * $Id: Modeling.java,v 1.24 2005/01/28 10:28:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/01/26 15:38:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/01/28 10:28:46 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -193,5 +193,20 @@ public class Modeling extends Action {
 
 	public List getDependencies() {
 		return Collections.singletonList(this.argumentSet);
+	}
+	
+	/**
+	 * @param argumentSet The argumentSet to set.
+	 */
+	public void setArgumentSet(Set argumentSet) {
+		this.argumentSet = argumentSet;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param name The name to set.
+	 */
+	public void setName(String name) {
+		this.name = name;
+		super.currentVersion = super.getNextVersion();
 	}
 }
