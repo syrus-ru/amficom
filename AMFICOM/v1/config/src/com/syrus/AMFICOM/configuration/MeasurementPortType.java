@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.6 2004/08/31 15:33:35 bob Exp $
+ * $Id: MeasurementPortType.java,v 1.7 2004/09/01 15:08:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/31 15:33:35 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/01 15:08:01 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -41,7 +41,7 @@ public class MeasurementPortType extends StorableObjectType {
 		}
 	}
 
-	private MeasurementPortType(MeasurementPortType_Transferable ptt) throws CreateObjectException {
+	public MeasurementPortType(MeasurementPortType_Transferable ptt) throws CreateObjectException {
 		super(new Identifier(ptt.id),
 					new Date(ptt.created),
 					new Date(ptt.modified),

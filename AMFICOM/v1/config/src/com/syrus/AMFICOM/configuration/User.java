@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.8 2004/08/31 15:33:36 bob Exp $
+ * $Id: User.java,v 1.9 2004/09/01 15:08:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/31 15:33:36 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/01 15:08:02 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -46,7 +46,7 @@ public class User extends StorableObject {
 		}
 	}
 
-	private User(User_Transferable ut) throws CreateObjectException {
+	public User(User_Transferable ut) throws CreateObjectException {
 		super(new Identifier(ut.id),
 					new Date(ut.created),
 					new Date(ut.modified),

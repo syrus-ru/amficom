@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.27 2004/08/31 15:32:32 bob Exp $
+ * $Id: AnalysisType.java,v 1.28 2004/09/01 15:08:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/08/31 15:32:32 $
+ * @version $Revision: 1.28 $, $Date: 2004/09/01 15:08:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -65,7 +65,7 @@ public class AnalysisType extends ActionType {
 		}
 	}
 
-	private AnalysisType(AnalysisType_Transferable att) throws CreateObjectException {
+	public AnalysisType(AnalysisType_Transferable att) throws CreateObjectException {
 		super(new Identifier(att.id),
 					new Date(att.created),
 					new Date(att.modified),

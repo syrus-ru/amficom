@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.22 2004/08/31 15:32:32 bob Exp $
+ * $Id: Set.java,v 1.23 2004/09/01 15:08:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/08/31 15:32:32 $
+ * @version $Revision: 1.23 $, $Date: 2004/09/01 15:08:11 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -61,7 +61,7 @@ public class Set extends StorableObject {
 		}
 	}
 
-	private Set(Set_Transferable st) throws CreateObjectException {
+	public Set(Set_Transferable st) throws CreateObjectException {
 		super(new Identifier(st.id),
 					new Date(st.created),
 					new Date(st.modified),

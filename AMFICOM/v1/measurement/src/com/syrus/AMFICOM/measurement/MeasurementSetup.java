@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.26 2004/08/31 15:32:32 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.27 2004/09/01 15:08:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/08/31 15:32:32 $
+ * @version $Revision: 1.27 $, $Date: 2004/09/01 15:08:11 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -56,7 +56,7 @@ public class MeasurementSetup extends StorableObject {
 		}
 	}
 
-	private MeasurementSetup(MeasurementSetup_Transferable mst) throws CreateObjectException {
+	public MeasurementSetup(MeasurementSetup_Transferable mst) throws CreateObjectException {
 		super(new Identifier(mst.id),
 					new Date(mst.created),
 					new Date(mst.modified),

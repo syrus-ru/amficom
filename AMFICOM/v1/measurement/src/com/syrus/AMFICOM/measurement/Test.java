@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.47 2004/08/31 15:32:32 bob Exp $
+ * $Id: Test.java,v 1.48 2004/09/01 15:08:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/08/31 15:32:32 $
+ * @version $Revision: 1.48 $, $Date: 2004/09/01 15:08:11 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -192,7 +192,7 @@ public class Test extends StorableObject {
 	}
 
 
-	private Test(Test_Transferable tt) throws CreateObjectException {
+	public Test(Test_Transferable tt) throws CreateObjectException {
 			super(new Identifier(tt.id),
 					new Date(tt.created),
 					new Date(tt.modified),

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.27 2004/08/31 15:33:35 bob Exp $
+ * $Id: Equipment.java,v 1.28 2004/09/01 15:08:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/08/31 15:33:35 $
+ * @version $Revision: 1.28 $, $Date: 2004/09/01 15:08:01 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -58,7 +58,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		}
 	}
 
-	private Equipment(Equipment_Transferable et) throws CreateObjectException {
+	public Equipment(Equipment_Transferable et) throws CreateObjectException {
 		super(new Identifier(et.id),
 					new Date(et.created),
 					new Date(et.modified),

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.24 2004/08/31 15:32:32 bob Exp $
+ * $Id: EvaluationType.java,v 1.25 2004/09/01 15:08:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/08/31 15:32:32 $
+ * @version $Revision: 1.25 $, $Date: 2004/09/01 15:08:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -65,7 +65,7 @@ public class EvaluationType extends ActionType {
 		}
 	}
 
-	private EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
+	public EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
 		super(new Identifier(ett.id),
 					new Date(ett.created),
 					new Date(ett.modified),

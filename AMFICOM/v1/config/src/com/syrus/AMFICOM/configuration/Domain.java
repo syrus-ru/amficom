@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.8 2004/08/31 15:33:35 bob Exp $
+ * $Id: Domain.java,v 1.9 2004/09/01 15:08:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/31 15:33:35 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/01 15:08:01 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -47,7 +47,7 @@ public class Domain extends DomainMember implements Characterized {
 		}
 	}
 
-	private Domain(Domain_Transferable dt) throws CreateObjectException {
+	public Domain(Domain_Transferable dt) throws CreateObjectException {
 		super(new Identifier(dt.id),
 					new Date(dt.created),
 					new Date(dt.modified),

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.18 2004/08/31 15:33:35 bob Exp $
+ * $Id: MonitoredElement.java,v 1.19 2004/09/01 15:08:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/31 15:33:35 $
+ * @version $Revision: 1.19 $, $Date: 2004/09/01 15:08:01 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -49,7 +49,7 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	private MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
+	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
 		super(new Identifier(met.id),
 					new Date(met.created),
 					new Date(met.modified),
