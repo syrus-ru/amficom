@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.3 2004/09/27 07:41:34 krupenn Exp $
+ * $Id: MapSelection.java,v 1.4 2004/09/29 15:21:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/27 07:41:34 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/29 15:21:21 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -108,7 +108,8 @@ public final class MapSelection
 	protected void recalcAnchor()
 	{
 		MapElement me;
-		anchor = new Point2D.Double(0.0, 0.0);
+		anchor.x = 0.0D;
+		anchor.y = 0.0D;
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
 			me = (MapElement )it.next();
