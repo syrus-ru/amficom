@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.4 2005/01/31 13:16:46 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.5 2005/02/03 14:49:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,40 +8,40 @@
 
 package com.syrus.AMFICOM.event;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/31 13:16:46 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 14:49:53 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -66,8 +66,8 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ StorableObjectType.COLUMN_CODENAME + COMMA 
-				+ StorableObjectType.COLUMN_DESCRIPTION;
+				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA 
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -99,18 +99,18 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws IllegalDataException, RetrieveObjectException, SQLException{
 		EventType eventType = storableObject == null ? 
-				new EventType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+				new EventType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 											null,
 											null,
 											null,
 											null) :
 				this.fromStorableObject(storableObject);
-		eventType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-								   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-								   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-								   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectType.COLUMN_CODENAME)),
-								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectType.COLUMN_DESCRIPTION)));
+		eventType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+								   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+								   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+								   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return eventType;
 	}
 
@@ -118,7 +118,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		List parTyps = new ArrayList();
 		String eventTypeIdStr = DatabaseIdentifier.toSQLString(eventType.getId());
 		String sql = SQL_SELECT
-			+ LINK_COLUMN_PARAMETER_TYPE_ID
+			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
 			+ SQL_FROM + ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
 			+ SQL_WHERE + LINK_COLUMN_EVENT_TYPE_ID + EQUALS + eventTypeIdStr;
 		Statement statement = null;
@@ -130,7 +130,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			Identifier parameterTypeId;
 			while (resultSet.next()) {
-				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 				parTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 			}
 		}
@@ -167,7 +167,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			return;
 
     StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
+				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
 				+ LINK_COLUMN_EVENT_TYPE_ID
 				+ SQL_FROM + ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
 				+ SQL_WHERE + LINK_COLUMN_EVENT_TYPE_ID + SQL_IN + OPEN_BRACKET);
@@ -203,7 +203,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			Identifier eventTypeId;
 			List parameterTypes;
 			while (resultSet.next()) {
-				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 				eventTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EVENT_TYPE_ID);
 
 				parameterTypes = (List)parameterTypesMap.get(eventTypeId);
@@ -278,7 +278,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			String sql = SQL_INSERT_INTO
 			+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
 			+ LINK_COLUMN_EVENT_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_TYPE_ID
+			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ QUESTION + COMMA
 			+ QUESTION
@@ -366,7 +366,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 					+ SQL_WHERE + LINK_COLUMN_EVENT_TYPE_ID + EQUALS + eventTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.EVENTTYPE_ENTITY 
-					+ SQL_WHERE + COLUMN_ID + EQUALS + eventTypeIdStr);
+					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + eventTypeIdStr);
 
 			connection.commit();
 		}
@@ -391,7 +391,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 	public EventType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
 		List list = null;
 		try {
-			list = this.retrieveByIds(null, StorableObjectType.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
@@ -418,6 +418,8 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			list = this.retrieveByIdsOneQuery(null, condition);
 		else
 			list = this.retrieveByIdsOneQuery(ids, condition);
+
+		this.retrieveParameterTypesByOneQuery(list);
 
 		return list;		
 	}
