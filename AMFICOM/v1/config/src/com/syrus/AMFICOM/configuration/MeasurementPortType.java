@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.1 2004/08/11 13:23:21 bob Exp $
+ * $Id: MeasurementPortType.java,v 1.2 2004/08/13 14:08:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/11 13:23:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/13 14:08:15 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -57,6 +57,37 @@ public class MeasurementPortType extends StorableObjectType {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+	}
+	
+	private MeasurementPortType(Identifier id,
+								Identifier creatorId,
+								String codename,
+								String description){
+						super(id,
+								new Date(System.currentTimeMillis()),
+								new Date(System.currentTimeMillis()),
+								creatorId,
+								creatorId,
+								codename,
+								description);						
+	}
+	
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 * @return
+	 */
+	public static MeasurementPortType createInstance(Identifier id,
+													 Identifier creatorId,
+													 String codename,
+													 String description){
+		return new MeasurementPortType(id,
+									   creatorId,
+									   codename,
+									   description);
 	}
 	
 	public Object getTransferable() {

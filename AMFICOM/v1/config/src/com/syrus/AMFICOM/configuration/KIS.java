@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.12 2004/08/10 19:01:09 arseniy Exp $
+ * $Id: KIS.java,v 1.13 2004/08/13 14:08:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/10 19:01:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2004/08/13 14:08:14 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -56,10 +56,13 @@ public class KIS extends DomainMember {
 					new Identifier(kt.modifier_id),
 					new Identifier(kt.domain_id));
 		this.mcmId = new Identifier(kt.mcm_id);
+		this.name = kt.name;
+		this.description = kt.description;
 		
 		this.measurementPortIds = new ArrayList(kt.measurement_port_ids.length);
 		for (int i = 0; i < kt.measurement_port_ids.length; i++)
-			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));
+			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));		
+		
 
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 		try {
@@ -68,6 +71,48 @@ public class KIS extends DomainMember {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+	}
+	
+	private KIS(Identifier id,
+				Identifier creatorId,
+				Identifier domainId,
+				String name,
+				String description,																						
+				Identifier mcmId){
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				domainId);
+		this.name = name;
+		this.description = description;
+		this.mcmId = mcmId;
+		this.measurementPortIds = new ArrayList();
+	}
+	
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param creatorId
+	 * @param domainId
+	 * @param name
+	 * @param description
+	 * @param mcmId
+	 * @return
+	 */
+	public static KIS createInstance(Identifier id,
+										Identifier creatorId,
+										Identifier domainId,
+										String name,
+										String description,																						
+										Identifier mcmId){
+		return new KIS(id,
+					   creatorId,
+					   domainId,
+					   name,
+					   description,
+					   mcmId);
 	}
 
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.3 2004/08/13 05:17:37 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.4 2004/08/13 14:08:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/13 05:17:37 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/13 14:08:14 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -220,5 +220,34 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 		return equipmentTypes;
+	}
+	
+	public static void delete(EquipmentType equipmentType) {
+		String eqIdStr = equipmentType.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			String sql = SQL_DELETE_FROM
+						+ ObjectEntities.EQUIPMENTTYPE_ENTITY
+						+ SQL_WHERE
+						+ COLUMN_ID + EQUALS
+						+ eqIdStr;
+			Log.debugMessage("EquipmentTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
 	}
 }

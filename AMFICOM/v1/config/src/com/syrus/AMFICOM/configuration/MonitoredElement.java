@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.13 2004/08/11 13:39:51 bob Exp $
+ * $Id: MonitoredElement.java,v 1.14 2004/08/13 14:08:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/11 13:39:51 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/13 14:08:15 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -62,6 +62,47 @@ public class MonitoredElement extends DomainMember {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+	}
+	
+	private MonitoredElement(Identifier id,
+						Identifier creatorId,
+						Identifier domainId,
+						Identifier measurementPortId,
+						int sort,
+						String localAddress){
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				domainId);
+		this.measurementPortId = measurementPortId;
+		this.sort = sort;
+		this.localAddress = localAddress;
+	}
+	
+	/**
+	 * create new instance for client
+	 * @param id
+	 * @param creatorId
+	 * @param domainId
+	 * @param measurementPortId
+	 * @param sort
+	 * @param localAddress
+	 * @return
+	 */
+	public static MonitoredElement createInstance(Identifier id,
+												  Identifier creatorId,
+												  Identifier domainId,
+												  Identifier measurementPortId,
+												  int sort,
+												  String localAddress){
+		return new MonitoredElement(id,
+									creatorId,
+									domainId,
+									measurementPortId,
+									sort,
+									localAddress);
 	}
 
 	public Object getTransferable() {

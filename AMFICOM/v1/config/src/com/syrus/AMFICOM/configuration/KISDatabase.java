@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.12 2004/08/11 12:37:30 bob Exp $
+ * $Id: KISDatabase.java,v 1.13 2004/08/13 14:08:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -25,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/11 12:37:30 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/13 14:08:15 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -39,6 +42,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	// mcm_id Identifier NOT NULL
 	public static final String COLUMN_MCM_ID = "mcm_id";
 	
+	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private KIS fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof KIS)
@@ -178,7 +182,6 @@ public class KISDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		Identifier mcmId = kis.getMCMId();
-
 		
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.KIS_ENTITY
@@ -228,7 +231,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			  */
 			preparedStatement.setString(6, (domainId != null)?domainId.getCode():Identifier.getNullSQLString());
 
-			preparedStatement.setString(7, kis.getName());
+			preparedStatement.setString(7, kis.getName() );
 			
 			preparedStatement.setString(8, kis.getDescription());			
 			
@@ -263,5 +266,71 @@ public class KISDatabase extends StorableObjectDatabase {
 			default:
 				return;
 		}
+	}
+	
+	public static void delete(KIS kis) {
+		String kisIdStr = kis.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			String sql = SQL_DELETE_FROM
+						+ ObjectEntities.KIS_ENTITY
+						+ SQL_WHERE
+						+ COLUMN_ID + EQUALS
+						+ kisIdStr;
+			Log.debugMessage("KISDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+	
+	public static List retrieveAll() throws RetrieveObjectException {
+		List kiss = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.KIS_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("KISDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				kiss.add(new KIS(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "KISDatabase.retrieveAll | Cannot retrieve kis";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return kiss;
 	}
 }

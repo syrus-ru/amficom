@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.7 2004/08/10 19:01:08 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.8 2004/08/13 14:08:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,15 +21,15 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/10 19:01:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2004/08/13 14:08:14 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class CharacteristicType extends StorableObjectType {
 	private int dataType;
-	private boolean isEditable;
-	private boolean isVisible;
+	private boolean editable;
+	private boolean visible;
 
 	private StorableObjectDatabase characteristicTypeDatabase;
 
@@ -54,8 +54,8 @@ public class CharacteristicType extends StorableObjectType {
 					new String(ctt.codename),
 					new String(ctt.description));
 		this.dataType = ctt.data_type.value();
-		this.isEditable = ctt.is_editable;
-		this.isVisible = ctt.is_visible;
+		this.editable = ctt.is_editable;
+		this.visible = ctt.is_visible;
 
 		this.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
 		try {
@@ -64,6 +64,53 @@ public class CharacteristicType extends StorableObjectType {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+	}
+	
+	private CharacteristicType(Identifier id,
+							Identifier creatorId,
+							String codename,
+							String description,
+							int dataType,
+							boolean editable,
+							boolean visible){
+					super(id,
+							new Date(System.currentTimeMillis()),
+							new Date(System.currentTimeMillis()),
+							creatorId,
+							creatorId,
+							codename,
+							description);
+					this.dataType = dataType;
+					this.editable = editable;
+					this.visible = visible;
+	}
+	
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 * @param dataType
+	 * @param editable
+	 * @param visible
+	 * @return
+	 */
+	public static CharacteristicType createInstance(Identifier id,
+							Identifier creatorId,
+							String codename,
+							String description,
+							int dataType,
+							boolean editable,
+							boolean visible){
+		return new CharacteristicType(id,
+									  creatorId,
+									  codename,
+									  description,
+									  dataType,
+									  editable,
+									  visible);
+	
 	}
 
 	public Object getTransferable() {
@@ -75,20 +122,20 @@ public class CharacteristicType extends StorableObjectType {
 																							 new String(super.codename),
 																							 new String(super.description),
 																							 DataType.from_int(this.dataType),
-																							 this.isEditable,
-																							 this.isVisible);
+																							 this.editable,
+																							 this.visible);
 	}
 
 	public DataType getDataType() {
 		return DataType.from_int(this.dataType);
 	}
 
-	public boolean getIsEditable() {
-		return this.isEditable;
+	public boolean isEditable() {
+		return this.editable;
 	}
 
-	public boolean getIsVisible() {
-		return this.isVisible;
+	public boolean isVisible() {
+		return this.visible;
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -98,8 +145,8 @@ public class CharacteristicType extends StorableObjectType {
 																						String codename,
 																						String description,
 																						int dataType,
-																						boolean isEditable,
-																						boolean isVisible) {
+																						boolean editable,
+																						boolean visible) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -107,7 +154,7 @@ public class CharacteristicType extends StorableObjectType {
 												codename,
 												description);
 		this.dataType = dataType;
-		this.isEditable = isEditable;
-		this.isVisible = isVisible;
+		this.editable = editable;
+		this.visible = visible;
 	}
 }

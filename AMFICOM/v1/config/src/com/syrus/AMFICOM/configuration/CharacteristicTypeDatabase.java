@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.6 2004/07/28 12:54:18 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.7 2004/08/13 14:08:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/07/28 12:54:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2004/08/13 14:08:14 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -168,8 +168,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + characteristicType.getCodename() + APOSTOPHE + COMMA
 			+ APOSTOPHE + characteristicType.getDescription() + APOSTOPHE + COMMA
 			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
-			+ (characteristicType.getIsEditable()?"1":"0") + COMMA
-			+ (characteristicType.getIsVisible()?"1":"0")
+			+ (characteristicType.isEditable()?"1":"0") + COMMA
+			+ (characteristicType.isVisible()?"1":"0")
 			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {

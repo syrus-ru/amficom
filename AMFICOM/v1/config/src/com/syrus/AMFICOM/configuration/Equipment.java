@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.19 2004/08/13 05:17:37 bob Exp $
+ * $Id: Equipment.java,v 1.20 2004/08/13 14:08:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/13 05:17:37 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/13 14:08:14 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -129,13 +129,26 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 				this.sort = sort;
 				this.kisId = kisId;
 				
+				super.monitoredElementIds = new ArrayList();				
 				this.characteristicIds = new ArrayList();
 				this.portIds = new ArrayList();
 				this.cablePortIds = new ArrayList();
 				this.specialPortIds = new ArrayList();
 	}
 				
-	
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param creatorId
+	 * @param domainId
+	 * @param type
+	 * @param name
+	 * @param description
+	 * @param imageId
+	 * @param sort
+	 * @param kisId
+	 * @return
+	 */
 	public static Equipment  createInstance(Identifier id,
 											Identifier creatorId,
 											Identifier domainId,

@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.9 2004/08/11 16:45:01 arseniy Exp $
+ * $Id: Characteristic.java,v 1.10 2004/08/13 14:08:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.ArrayList;
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/11 16:45:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2004/08/13 14:08:14 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -70,6 +71,57 @@ public class Characteristic extends StorableObject implements TypedObject {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+	}
+	
+	private Characteristic(Identifier id,
+						Identifier creatorId,
+						CharacteristicType type,
+						String name,
+						String description,
+						int sort,
+						String value,
+						Identifier characterizedId){
+				super(id,
+						new Date(System.currentTimeMillis()),
+						new Date(System.currentTimeMillis()),
+						creatorId,
+						creatorId);
+				this.type = type;
+				this.name = name;
+				this.description = description;				
+				this.sort = sort;
+				this.value = value;
+				this.characterizedId = characterizedId;
+	}
+	
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param creatorId
+	 * @param type
+	 * @param name
+	 * @param description
+	 * @param sort
+	 * @param value
+	 * @param characterizedId
+	 * @return
+	 */
+	public static Characteristic  createInstance(Identifier id,
+													Identifier creatorId,
+													CharacteristicType type,
+													String name,
+													String description,
+													int sort,
+													String value,
+													Identifier characterizedId){
+		return new Characteristic(id,
+								  creatorId,
+								  type,
+								  name,
+								  description,
+								  sort,
+								  value,
+								  characterizedId);
 	}
 
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.2 2004/08/11 16:45:02 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.3 2004/08/13 14:08:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/11 16:45:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2004/08/13 14:08:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class MeasurementPort extends StorableObject implements TypedObject{
@@ -74,6 +74,52 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+	}
+	
+	private MeasurementPort(Identifier id,
+							Identifier creatorId,
+							MeasurementPortType type,
+							String name,
+							String description,	
+							Identifier kisId,
+							Identifier portId){
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId);
+		this.type = type;
+		this.name = name;
+		this.description = description;
+		this.kisId = kisId;
+		this.portId = portId;
+	}
+	
+	/**
+	 * create new instance for client 
+	 * @param id
+	 * @param creatorId
+	 * @param type
+	 * @param name
+	 * @param description
+	 * @param kisId
+	 * @param portId
+	 * @return
+	 */
+	public static MeasurementPort createInstance(Identifier id,
+													Identifier creatorId,
+													MeasurementPortType type,
+													String name,
+													String description,	
+													Identifier kisId,
+													Identifier portId){
+		return new MeasurementPort(id,
+								   creatorId,
+								   type,
+								   name,
+								   description,
+								   kisId,
+								   portId);
 	}
 
 	public Object getTransferable() {

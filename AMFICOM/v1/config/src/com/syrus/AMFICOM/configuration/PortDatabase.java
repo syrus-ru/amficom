@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.5 2004/08/11 16:45:02 arseniy Exp $
+ * $Id: PortDatabase.java,v 1.6 2004/08/13 14:08:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -27,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/11 16:45:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2004/08/13 14:08:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
@@ -42,6 +44,8 @@ public class PortDatabase extends StorableObjectDatabase {
     public static final String COLUMN_EQUIPMENT_ID  = "equipment_id";
     // sort NUMBER(2) NOT NULL,
     public static final String COLUMN_SORT  = "sort";
+    
+    public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
     
 	private Port fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Port)
@@ -269,6 +273,72 @@ public class PortDatabase extends StorableObjectDatabase {
 				default:
 					return;
 			}
+	}
+
+	public static void delete(Equipment equipment) {
+		String portIdStr = equipment.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			String sql = SQL_DELETE_FROM
+						+ ObjectEntities.PORT_ENTITY
+						+ SQL_WHERE
+						+ COLUMN_ID + EQUALS
+						+ portIdStr;
+			Log.debugMessage("PortDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+	
+	public static List retrieveAll() throws RetrieveObjectException {
+		List ports = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.PORT_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("PortDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				ports.add(new Port(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "PortDatabase.retrieveAll | Cannot retrieve port";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return ports;
 	}
 
 }
