@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.22 2004/08/18 18:08:05 arseniy Exp $
+ * $Id: Equipment.java,v 1.23 2004/08/19 12:21:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,15 +24,15 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/08/18 18:08:05 $
+ * @version $Revision: 1.23 $, $Date: 2004/08/19 12:21:22 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
-//extends MonitoredDomainMember 
-public class Equipment extends DomainMember implements Characterized, TypedObject {
+
+public class Equipment extends MonitoredDomainMember implements Characterized, TypedObject {
 	
-//	protected static final int		UPDATE_ATTACH_ME	= 1;
-//	protected static final int		UPDATE_DETACH_ME	= 2;
+	protected static final int		UPDATE_ATTACH_ME	= 1;
+	protected static final int		UPDATE_DETACH_ME	= 2;
 	
 	private EquipmentType type;
 	private String name;
@@ -65,9 +65,9 @@ public class Equipment extends DomainMember implements Characterized, TypedObjec
 					new Identifier(et.modifier_id),
 					new Identifier(et.domain_id));
 
-//		super.monitoredElementIds = new ArrayList(et.monitored_element_ids.length);
-//		for (int i = 0; i < et.monitored_element_ids.length; i++)
-//			super.monitoredElementIds.add(new Identifier(et.monitored_element_ids[i]));
+		super.monitoredElementIds = new ArrayList(et.monitored_element_ids.length);
+		for (int i = 0; i < et.monitored_element_ids.length; i++)
+			super.monitoredElementIds.add(new Identifier(et.monitored_element_ids[i]));
 
 		this.type = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
 		this.name = new String(et.name);
@@ -104,8 +104,8 @@ public class Equipment extends DomainMember implements Characterized, TypedObjec
 							creatorId,
 							creatorId,
 							domainId);
-//
-//				super.monitoredElementIds = new ArrayList();
+
+				super.monitoredElementIds = new ArrayList();
 
 				this.type = type;
 				this.name = name;
@@ -148,10 +148,10 @@ public class Equipment extends DomainMember implements Characterized, TypedObjec
 
 	public Object getTransferable() {
 		int i = 0;
-//
-//		Identifier_Transferable[] meIds = new Identifier_Transferable[super.monitoredElementIds.size()];
-//		for (Iterator iterator = super.monitoredElementIds.iterator(); iterator.hasNext();)
-//			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+
+		Identifier_Transferable[] meIds = new Identifier_Transferable[super.monitoredElementIds.size()];
+		for (Iterator iterator = super.monitoredElementIds.iterator(); iterator.hasNext();)
+			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
 		i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
@@ -169,7 +169,7 @@ public class Equipment extends DomainMember implements Characterized, TypedObjec
 																			(Identifier_Transferable)super.creatorId.getTransferable(),
 																			(Identifier_Transferable)super.modifierId.getTransferable(),
 																			(Identifier_Transferable)super.domainId.getTransferable(),
-//																			meIds,
+																			meIds,
 																			(Identifier_Transferable)this.type.getId().getTransferable(),
 																			new String(this.name),
 																			new String(this.description),
