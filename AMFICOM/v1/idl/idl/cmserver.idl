@@ -323,7 +323,17 @@ module corba {
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void receiveModelings(in measurement::corba::ModelingSeq_Transferable sets,
+		void receiveModelings(in measurement::corba::ModelingSeq_Transferable modelings_Transferable,
+						in boolean force,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+			
+		void receiveModelingType(in measurement::corba::ModelingType_Transferable modelingType_Transferable,
+						in boolean force,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+
+		void receiveModelingTypes(in measurement::corba::ModelingTypeSeq_Transferable modelingTypes_Transferable,
 						in boolean force,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
@@ -833,6 +843,11 @@ module corba {
 						in general::corba::Identifier_Transferable id,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
+			
+		measurement::corba::ModelingType_Transferable transmitModelingType(
+						in general::corba::Identifier_Transferable id,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::Measurement_Transferable transmitMeasurement(
 						in general::corba::Identifier_Transferable id,
@@ -957,9 +972,20 @@ module corba {
 						in general::corba::IdentifierSeq_Transferable ids,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
+			
+		measurement::corba::ModelingTypeSeq_Transferable transmitModelingTypes(
+						in general::corba::IdentifierSeq_Transferable ids,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::ModelingSeq_Transferable transmitModelingsButIds(
 						in general::corba::IdentifierSeq_Transferable ids,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+			
+		measurement::corba::ModelingTypeSeq_Transferable transmitModelingTypesButIds(
+						in general::corba::IdentifierSeq_Transferable ids,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable,						
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
