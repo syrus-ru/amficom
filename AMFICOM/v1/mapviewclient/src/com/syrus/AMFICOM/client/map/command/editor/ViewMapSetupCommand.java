@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapSetupCommand.java,v 1.6 2005/03/02 12:33:29 krupenn Exp $
+ * $Id: ViewMapSetupCommand.java,v 1.7 2005/03/05 16:00:06 peskovsky Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,8 +13,11 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.Editor.MapEditorWindowArranger;
 import com.syrus.AMFICOM.Client.Map.Operations.ControlsFrame;
 
 import java.awt.Dimension;
@@ -23,8 +26,8 @@ import javax.swing.JDesktopPane;
 
 /**
  *  оманда отображает окно управлени€ сло€ми и поиска 
- * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/03/02 12:33:29 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.7 $, $Date: 2005/03/05 16:00:06 $
  * @module mapviewclient_v1
  */
 public class ViewMapSetupCommand extends VoidCommand
@@ -48,10 +51,9 @@ public class ViewMapSetupCommand extends VoidCommand
 			this.frame = new ControlsFrame(null, this.aContext);
 
 			this.desktop.add(this.frame);
-
-			Dimension dim = new Dimension(this.desktop.getWidth(), this.desktop.getHeight());
-			this.frame.setLocation(dim.width * 4 / 5, dim.height / 2);
-			this.frame.setSize(dim.width / 5, dim.height / 2);
+			
+			this.aContext.getDispatcher().notify(
+					new OperationEvent(this.desktop,0,MapEditorWindowArranger.EVENT_ARRANGE));
 		}
 
 		this.frame.setVisible(true);

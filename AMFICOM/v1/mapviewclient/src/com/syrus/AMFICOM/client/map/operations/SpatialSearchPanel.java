@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.1 2005/03/02 12:30:40 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.2 2005/03/05 16:00:06 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.1 $, $Date: 2005/03/02 12:30:40 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2005/03/05 16:00:06 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
  public class SpatialSearchPanel extends JPanel
@@ -190,6 +190,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 		try {
 			SpatialObject so = (SpatialObject )this.foundList.getSelectedValue();
 			this.mapFrame.getMapViewer().getLogicalNetLayer().centerSpatialObject(so);
+			this.mapFrame.getMapViewer().getLogicalNetLayer().repaint(true);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

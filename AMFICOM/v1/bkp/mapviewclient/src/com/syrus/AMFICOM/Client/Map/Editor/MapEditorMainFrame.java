@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.24 2005/03/04 14:34:53 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.25 2005/03/05 16:00:06 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -95,9 +95,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.24 $, $Date: 2005/03/04 14:34:53 $
+ * @version $Revision: 1.25 $, $Date: 2005/03/05 16:00:06 $
  * @module mapviewclient_v1
- * @author $Author: krupenn $
+ * @author $Author: peskovsky $
  */
 public class MapEditorMainFrame extends JFrame 
 	implements OperationListener, Module
@@ -125,6 +125,8 @@ public class MapEditorMainFrame extends JFrame
 	MapEditorMenuBar menuBar = new MapEditorMenuBar();
 
 	protected MapFrame mapFrame = null;
+	
+	private MapEditorWindowArranger arranger = null;
 
 	public MapFrame getMapFrame()
 	{
@@ -428,9 +430,9 @@ public class MapEditorMainFrame extends JFrame
 					this.aContext ));
 		aModel.setCommand("menuViewAll", 
 				new ViewMapAllCommand(
-						this.desktopPane, 
-						this.aContext, 
-					new MapMapEditorApplicationModelFactory()));
+						this.desktopPane,
+						this.aContext,
+						new MapMapEditorApplicationModelFactory()));
           
 		CreateMapReportCommand rc = new CreateMapReportCommand(this.aContext);
 		aModel.setCommand("menuReportCreate", rc);
@@ -489,6 +491,8 @@ public class MapEditorMainFrame extends JFrame
 			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_CLOSED);
 			this.statusBar.addDispatcher(this.aContext.getDispatcher());
 		}
+		
+		this.arranger = new MapEditorWindowArranger(this.desktopPane,this.aContext);
 	}
 
 	public ApplicationContext getContext()
@@ -742,7 +746,10 @@ public class MapEditorMainFrame extends JFrame
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("DataLoaded")));
 
-		new ViewMapAllCommand(this.desktopPane, this.aContext, new MapMapEditorApplicationModelFactory()).execute();
+		new ViewMapAllCommand(
+				this.desktopPane,
+				this.aContext,
+				new MapMapEditorApplicationModelFactory()).execute();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuMap", true);
@@ -854,6 +861,4 @@ public class MapEditorMainFrame extends JFrame
 		}
 		super.processWindowEvent(e);
 	}
-
 }
-

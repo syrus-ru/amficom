@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.10 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.11 2005/03/05 16:00:06 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * <li>center
  * <li>zoom
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/25 13:49:16 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.11 $, $Date: 2005/03/05 16:00:06 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -390,6 +390,7 @@ public final class MapPropertiesManager
 			properties.load(new FileInputStream(iniFileName));
 			properties.setProperty(KEY_LAST_LONGITUDE, lastLong);
 			properties.setProperty(KEY_LAST_LATITUDE, lastLat);
+			properties.setProperty(KEY_LAST_ZOOM, lastZoom);			
 			properties.setProperty(KEY_LAST_DIRECTORY, lastDirectory);
 			properties.store(new FileOutputStream(iniFileName), null);
 		}

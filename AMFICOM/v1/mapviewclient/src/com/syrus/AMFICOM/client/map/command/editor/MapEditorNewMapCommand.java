@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewMapCommand.java,v 1.10 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapEditorNewMapCommand.java,v 1.11 2005/03/05 16:00:06 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactor
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapCloseCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
+import com.syrus.AMFICOM.Client.Map.Editor.MapEditorWindowArranger;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -28,9 +29,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.10 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/05 16:00:06 $
  * @module
- * @author $Author: krupenn $
+ * @author $Author: peskovsky $
  * @see MapNewCommand
  * @see ViewMapAllCommand
  */

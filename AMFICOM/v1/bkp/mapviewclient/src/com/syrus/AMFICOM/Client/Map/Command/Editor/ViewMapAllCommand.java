@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapAllCommand.java,v 1.5 2005/02/24 14:31:54 krupenn Exp $
+ * $Id: ViewMapAllCommand.java,v 1.6 2005/03/05 16:00:06 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,15 +13,18 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
+import com.syrus.AMFICOM.Client.Map.Editor.MapEditorWindowArranger;
 
 import javax.swing.JDesktopPane;
 
 /**
  * отобразить стандартный набор окон модуля "Редактор топологических схем"
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/24 14:31:54 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.6 $, $Date: 2005/03/05 16:00:06 $
  * @module mapviewclient_v1
  */
 public class ViewMapAllCommand extends VoidCommand
@@ -30,7 +33,10 @@ public class ViewMapAllCommand extends VoidCommand
 	JDesktopPane desktop;
 	ApplicationModelFactory factory;
 
-	public ViewMapAllCommand(JDesktopPane desktop, ApplicationContext aContext, ApplicationModelFactory factory)
+	public ViewMapAllCommand(
+			JDesktopPane desktop,
+			ApplicationContext aContext,
+			ApplicationModelFactory factory)
 	{
 		this.desktop = desktop;
 		this.aContext = aContext;
@@ -44,6 +50,10 @@ public class ViewMapAllCommand extends VoidCommand
 		new ViewMapNavigatorCommand(this.desktop, this.aContext).execute();
 		new ViewMapElementsBarCommand(this.desktop, this.aContext).execute();
 		new ViewMapWindowCommand(this.aContext.getDispatcher(), this.desktop, this.aContext, this.factory).execute();
+		
+		this.aContext.getDispatcher().notify(
+				new OperationEvent(this.desktop,0,MapEditorWindowArranger.EVENT_ARRANGE));
+		
 		setResult(Command.RESULT_OK);
 	}
 }
