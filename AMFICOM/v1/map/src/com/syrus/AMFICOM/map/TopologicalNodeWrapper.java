@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeWrapper.java,v 1.4 2005/02/03 08:38:02 bob Exp $
+ * $Id: TopologicalNodeWrapper.java,v 1.5 2005/03/04 08:11:36 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/03 08:38:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/03/04 08:11:36 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class TopologicalNodeWrapper implements StorableObjectWrapper {
@@ -42,7 +42,7 @@ public class TopologicalNodeWrapper implements StorableObjectWrapper {
 	private TopologicalNodeWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_LONGITUDE, COLUMN_LATIUDE,
-				COLUMN_ACTIVE, NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID, COLUMN_CHARACTERISTICS};
+				COLUMN_ACTIVE, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
