@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.15 2005/03/09 15:16:02 bass Exp $
+# $Id: Makefile,v 1.16 2005/03/16 16:48:09 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -42,6 +42,7 @@ IDL_GENERATED_SCHEMA_CLASSES = $(subst \
 				.java,\
 				.class,\
 				$(shell cat $(srcdir)/.cvsignore)))))
+_CLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -50,7 +51,7 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(AMFICOMCLASSPATH):$(CLASSDIR) \
+		-classpath $(_CLASSPATH):$(CLASSDIR) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
 	touch $@
 
@@ -74,7 +75,7 @@ corba: .corba
 # Compilation of stubs & skeletons
 .corba:	$(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(AMFICOMCLASSPATH) \
+		-classpath $(_CLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java
 	touch $@
