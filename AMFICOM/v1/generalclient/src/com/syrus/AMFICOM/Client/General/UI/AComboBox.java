@@ -14,7 +14,7 @@ public class AComboBox extends JComboBox {
 
 		public ComboBoxRenderer() {
 			setOpaque(true);
-			font = UIGeneralStrorage.DIALOG_FONT;
+			font = UIGeneralStorage.DIALOG_FONT;
 		}
 
 		public Font getFont() {

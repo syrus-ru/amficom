@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
@@ -482,7 +482,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (ScheduleMainFrame.DEBUG >= 5)
+		if (SchedulerModel.DEBUG >= 5)
 				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 						+ commandName);
 		if (commandName.equals(TestUpdateEvent.typ)) {

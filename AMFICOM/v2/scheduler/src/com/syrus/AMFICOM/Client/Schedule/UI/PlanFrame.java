@@ -8,29 +8,15 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
-public class PlanFrame extends JInternalFrame
-{
-	ApplicationContext aContext;
-	PlanToolBar toolBar;
-	PlanPanel mainPanel;
+public class PlanFrame extends JInternalFrame {
 
-	public PlanFrame(ApplicationContext aContext)
-	{
+	ApplicationContext	aContext;
+	PlanToolBar			toolBar;
+	PlanPanel			mainPanel;
+
+	public PlanFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
 
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		toolBar.apply_changes();
-	}
-	
-	private void jbInit() throws Exception
-	{
 		setTitle(I18N.getString("Plan.Title")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
@@ -41,18 +27,17 @@ public class PlanFrame extends JInternalFrame
 
 		JScrollPane scroll = new JScrollPane();
 
-
-//		PlanLayeredPanel panel = new PlanLayeredPanel();
+		//		PlanLayeredPanel panel = new PlanLayeredPanel();
 		mainPanel = new PlanPanel(scroll, aContext);
 		toolBar = mainPanel.getToolBar();
-//		panel.setGraphPanel(mainPanel);
+		//		panel.setGraphPanel(mainPanel);
 		scroll.getViewport().add(mainPanel);
 
 		getContentPane().setBackground(SystemColor.window);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(toolBar, BorderLayout.NORTH);
 		getContentPane().add(scroll, BorderLayout.CENTER);
+		toolBar.apply_changes();
 	}
-
 
 }

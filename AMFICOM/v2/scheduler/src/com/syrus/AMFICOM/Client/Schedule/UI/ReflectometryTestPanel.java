@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.*;
 import com.syrus.util.ByteArray;
 
@@ -304,7 +304,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		//Object obj = ae.getSource();
-		if (ScheduleMainFrame.DEBUG >= 5)
+		if (SchedulerModel.DEBUG >= 5)
 				System.out.println(getClass().getName() + " commandName:" //$NON-NLS-1$
 						+ commandName);
 		if (commandName.equals(TestUpdateEvent.typ)) {
@@ -411,11 +411,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 			if (values.length == 0)
 					values = new String[] { defaultMaxDistance};
 			maxDistanceComboBox.removeAllItems();
-			if (false) {
-				for (int i = 0; i < values.length; i++)
-					maxDistanceComboBox.addItem(values[i].toString());
-				maxDistanceComboBox.setSelectedIndex(0);
-			}
+			for (int i = 0; i < values.length; i++)
+				maxDistanceComboBox.addItem(values[i].toString());
+			maxDistanceComboBox.setSelectedIndex(0);
 		}
 
 	}

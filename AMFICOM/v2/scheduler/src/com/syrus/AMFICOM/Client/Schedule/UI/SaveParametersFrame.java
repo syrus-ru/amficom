@@ -12,7 +12,7 @@ import javax.swing.*;
 import com.syrus.AMFICOM.CORBA.General.TestReturnType;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
@@ -22,13 +22,13 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 public class SaveParametersFrame extends JInternalFrame implements
 		OperationListener {
 
-//	private ApplicationContext	aContext;
-	private Dispatcher			dispatcher;
-	private JPanel				panel;
+	//	private ApplicationContext aContext;
+	private Dispatcher		dispatcher;
+	private JPanel			panel;
 
-	private JRadioButton		allResultsButton;
-	private JRadioButton		recognizedEventsButton;
-	private JRadioButton		measurementIdButton;
+	private JRadioButton	allResultsButton;
+	private JRadioButton	recognizedEventsButton;
+	private JRadioButton	measurementIdButton;
 
 	/** 
 	 * @todo only for testing mode
@@ -50,7 +50,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 	}
 
 	public SaveParametersFrame(ApplicationContext aContext) {
-//		this.aContext = aContext;
+		//		this.aContext = aContext;
 		init();
 		if (aContext != null) initModule(aContext.getDispatcher());
 	}
@@ -119,7 +119,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.typ);
-		this.dispatcher.register(this, TestRequestFrame.COMMAND_DATA_REQUEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 	}
 
 	private TestReturnType getParameter() {
@@ -133,17 +133,17 @@ public class SaveParametersFrame extends JInternalFrame implements
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (ScheduleMainFrame.DEBUG >= 5)
+		if (SchedulerModel.DEBUG >= 5)
 				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 						+ commandName);
-		if (commandName.equalsIgnoreCase(TestRequestFrame.COMMAND_DATA_REQUEST)) {
+		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			/**
 			 * @todo must send data edit in this form 
 			 */
 			TestReturnType returnType = this.getParameter();
 			dispatcher.notify(new OperationEvent(returnType,
-					TestRequestFrame.DATA_ID_RETURN_TYPE,
-					TestRequestFrame.COMMAND_SEND_DATA));
+					SchedulerModel.DATA_ID_RETURN_TYPE,
+					SchedulerModel.COMMAND_SEND_DATA));
 		} else if (commandName.equals(TestUpdateEvent.typ)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			if (tue.TEST_SELECTED) {

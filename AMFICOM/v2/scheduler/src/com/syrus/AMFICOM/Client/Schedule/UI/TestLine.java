@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TestLine extends JLabel implements ActionListener,
@@ -74,7 +75,7 @@ public class TestLine extends JLabel implements ActionListener,
 		String commandName = e.getActionCommand();
 		System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 				+ commandName);
-		if (commandName.equals(TestRequestFrame.COMMAND_TEST_SAVED_OK)) {
+		if (commandName.equals(SchedulerModel.COMMAND_TEST_SAVED_OK)) {
 			for (Iterator it = unsavedTests.keySet().iterator(); it.hasNext();) {
 				Object key = it.next();
 				Test test = (Test) unsavedTests.get(key);
@@ -253,7 +254,7 @@ public class TestLine extends JLabel implements ActionListener,
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		dispatcher.register(this, TestRequestFrame.COMMAND_TEST_SAVED_OK);
+		dispatcher.register(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
 	}
 
 	private void jbInit() throws Exception {

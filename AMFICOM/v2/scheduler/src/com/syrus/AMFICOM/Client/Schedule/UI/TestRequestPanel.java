@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -56,12 +56,12 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestRequestFrame.COMMAND_DATA_REQUEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		this.dispatcher.register(this, TestParametersPanel.COMMAND_CHANGE_KIS);
 		this.dispatcher.register(this,
 				TestParametersPanel.COMMAND_CHANGE_ME_TYPE);
-		this.dispatcher.register(this, TestRequestFrame.COMMAND_CREATE_TEST);
-		this.dispatcher.register(this, TestRequestFrame.COMMAND_APPLY_TEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CREATE_TEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_APPLY_TEST);
 		//this.dispatcher.register(this, TestUpdateEvent.typ);
 
 	}
@@ -69,10 +69,10 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		//Object obj = ae.getSource();
-		if (ScheduleMainFrame.DEBUG >= 5)
+		if (SchedulerModel.DEBUG >= 5)
 				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 						+ commandName);
-		if (commandName.equalsIgnoreCase(TestRequestFrame.COMMAND_DATA_REQUEST)) {
+		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			/**
 			 * @todo must send data edit in this form 
 			 */
@@ -80,7 +80,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 
 			dispatcher.notify(new OperationEvent(
 					testRequest == null ? (Object) "" : (Object) testRequest, //$NON-NLS-1$
-					0, TestRequestFrame.COMMAND_SEND_DATA));
+					0, SchedulerModel.COMMAND_SEND_DATA));
 		} else if (commandName.equals(TestParametersPanel.COMMAND_CHANGE_KIS)) {
 			//kisId = (String) obj;
 			//System.out.println("kisId:" + kisId);
@@ -88,9 +88,9 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 				.equals(TestParametersPanel.COMMAND_CHANGE_ME_TYPE)) {
 			//meId = (String) obj;
 			//System.out.println("meId:" + meId);
-		} else if (commandName.equals(TestRequestFrame.COMMAND_CREATE_TEST)) {
+		} else if (commandName.equals(SchedulerModel.COMMAND_CREATE_TEST)) {
 			//toCreate = true;
-		} else if (commandName.equals(TestRequestFrame.COMMAND_APPLY_TEST)) {
+		} else if (commandName.equals(SchedulerModel.COMMAND_APPLY_TEST)) {
 			//toCreate = false;
 		}
 		//		else if (commandName.equals(TestUpdateEvent.typ)) {

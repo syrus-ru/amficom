@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.text.*;
+import java.io.IOException;
 import java.util.*;
 
 import javax.swing.*;
@@ -17,63 +17,39 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Schedule.UI.*;
 import com.syrus.AMFICOM.Client.Scheduler.General.*;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.io.*;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
-	public static final int			DEBUG			= 3;
+	private ApplicationContext	aContext;
 
-	public ApplicationContext		aContext;
+	private Dispatcher			dispatcher		= new Dispatcher();
 
-	private static SimpleDateFormat	sdf				= new java.text.SimpleDateFormat(
-															"dd.MM.yyyy HH:mm:ss");
+	JPanel						mainPanel		= new JPanel();
 
-	private Dispatcher				dispatcher		= new Dispatcher();
+	ScheduleMainToolBar			toolBar			= new ScheduleMainToolBar();
+	JScrollPane					scrollPane		= new JScrollPane();
+	JViewport					viewport		= new JViewport();
+	JDesktopPane				desktopPane		= new JDesktopPane();
 
-	//Checker checker;
+	JPanel						statusBarPanel	= new JPanel();
 
-	//  ColorManager cManager = new ColorManager();
-	JPanel							mainPanel		= new JPanel();
+	StatusBarModel				statusBar		= new StatusBarModel(0);
+	ScheduleMainMenuBar			menuBar			= new ScheduleMainMenuBar();
 
-	ScheduleMainToolBar				toolBar			= new ScheduleMainToolBar();
-
-	JScrollPane						scrollPane		= new JScrollPane();
-
-	JViewport						viewport		= new JViewport();
-
-	JDesktopPane					desktopPane		= new JDesktopPane();
-
-	JPanel							statusBarPanel	= new JPanel();
-
-	StatusBarModel					statusBar		= new StatusBarModel(0);
-
-	ScheduleMainMenuBar				menuBar			= new ScheduleMainMenuBar();
-
-	PlanFrame						planFrame;
-	TestParametersFrame				paramsFrame;
-	TestRequestFrame				propsFrame;
-	TimeParametersFrame				timeFrame;
-	ElementsTreeFrame				treeFrame;
-	SaveParametersFrame				saveFrame;
-	TableFrame						tableFrame;
+	PlanFrame					planFrame;
+	TestParametersFrame			paramsFrame;
+	TestRequestFrame			propsFrame;
+	TimeParametersFrame			timeFrame;
+	ElementsTreeFrame			treeFrame;
+	SaveParametersFrame			saveFrame;
+	TableFrame					tableFrame;
 
 	public ScheduleMainFrame(ApplicationContext aContext) {
 		super();
 		setContext(aContext);
 
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Environment.addWindow(this);
-	}
-
-	public ScheduleMainFrame() {
-		this(new ApplicationContext());
-	}
-
-	private void jbInit() throws Exception {
 		this.addComponentListener(new ScheduleMainFrame_this_componentAdapter(
 				this));
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -140,8 +116,18 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		setSize(frameSize);
 		setLocation(0, 0);
 
-		IniFile ini = new IniFile("schedule.ini");
-		Pool.put("inifile", "schedule", ini);
+		try {
+			IniFile ini = new IniFile("schedule.ini");
+			Pool.put("inifile", "schedule", ini);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+
+		Environment.addWindow(this);
+	}
+
+	public ScheduleMainFrame() {
+		this(new ApplicationContext());
 	}
 
 	private void initModule() {
@@ -264,7 +250,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (DEBUG >= 5)
+		if (SchedulerModel.DEBUG >= 5)
 				System.out.println(getClass().getName() + " > commandName:"
 						+ commandName + "\t" + ae.getClass().getName());
 		if (commandName.equals(StatusMessageEvent.type)) {
@@ -287,8 +273,10 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 					statusBar
 							.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", sdf.format(new Date(aContext
-							.getSessionInterface().getLogonTime())));
+					statusBar.setText("session",
+							ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(
+									aContext.getSessionInterface()
+											.getLogonTime())));
 					statusBar.setText("user", aContext.getSessionInterface()
 							.getUser());
 				}
@@ -405,9 +393,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
-		aContext.getDispatcher()
-				.notify(
-						new StatusMessageEvent(I18N.getString("Loading_BD")));
+		aContext.getDispatcher().notify(
+				new StatusMessageEvent(I18N.getString("Loading_BD")));
 		//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
@@ -423,8 +410,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		sdsi.LoadEvaluationTypes();
 
 		aContext.getDispatcher().notify(
-				new StatusMessageEvent(I18N
-						.getString("Loding_BD_finished")));
+				new StatusMessageEvent(I18N.getString("Loding_BD_finished")));
 
 		treeFrame.init();
 

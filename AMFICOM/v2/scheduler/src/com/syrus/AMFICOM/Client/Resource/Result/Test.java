@@ -6,7 +6,6 @@ import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.AMFICOM.Client.Survey.Result.UI.TestDisplayModel;
 
@@ -63,7 +62,7 @@ public class Test extends ObjectResource implements Serializable {
 	 */
 	private transient TestTimeStamps			time_stamps;
 
-	private transient TimeStamp_dep					timeStamp;
+	private transient TimeStamp_dep				timeStamp;
 
 	private transient ClientTest_Transferable	transferable;
 	private String								userId					= "";
@@ -459,8 +458,6 @@ public class Test extends ObjectResource implements Serializable {
 		this.duration = transferable.duration;
 		this.changed = false;
 		//System.out.println("testID:" + id + " setLocalFromTransferable()");
-		if (ScheduleMainFrame.DEBUG >= 5) System.out.println("testID:" + id);
-
 		//		arguments = new Vector();
 		//		for (int i=0; i<transferable.arguments.length; i++)
 		//			arguments.add(new Parameter(transferable.arguments[i]));
@@ -724,25 +721,17 @@ public class Test extends ObjectResource implements Serializable {
 
 			if (this.temporal_type
 					.equals(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME)) {
-				if (ScheduleMainFrame.DEBUG >= 6)
-						System.out.println("TEST_TEMPORAL_TYPE_ONETIME");
 				timeStamp.setType(TimeStamp_dep.TIMESTAMPTYPE_ONETIME);
 			} else if (this.temporal_type
 					.equals(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL)) {
-				if (ScheduleMainFrame.DEBUG >= 6)
-						System.out.println("TEST_TEMPORAL_TYPE_PERIODICAL");
 				timeStamp.setType(TimeStamp_dep.TIMESTAMPTYPE_PERIODIC);
 
 				long start = this.start_time;
 				long end = this.time_stamps.ptpars().end_time;
 				long interval = this.time_stamps.ptpars().dt;
-				if (ScheduleMainFrame.DEBUG >= 6)
-						System.out.println("interval:" + interval);
 				long min = interval / (60 * 1000);
 				long hour = interval / (60 * 60 * 1000);
 				if ((min > 0) && (min < 60)) {
-					if (ScheduleMainFrame.DEBUG >= 6)
-							System.out.println("add each " + min + " min.");
 					timeStamp.setPeriodStart(start);
 					timeStamp.setPeriodEnd(end);
 					timeStamp.setPeriod(Calendar.MINUTE, (int) min);
@@ -750,8 +739,6 @@ public class Test extends ObjectResource implements Serializable {
 					timeStamp.addTestTime(0, 0, 0);
 				}
 				if ((hour > 0) && (hour < 24)) {
-					if (ScheduleMainFrame.DEBUG >= 6)
-							System.out.println("add each " + hour + " hour.");
 					timeStamp.setPeriodStart(start);
 					timeStamp.setPeriodEnd(end);
 					timeStamp.setPeriod(Calendar.HOUR, (int) hour);

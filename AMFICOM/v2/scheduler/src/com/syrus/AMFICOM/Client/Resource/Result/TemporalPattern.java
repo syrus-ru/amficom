@@ -98,9 +98,12 @@ public class TemporalPattern {
 				//SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 				// //$NON-NLS-1$
 				if (hours.isAll()) {
-					desc.append(hours.toString());
+					desc.append(minutes.toString());					
 					desc.append(" ");
-					desc.append(minutes.toString());
+					desc.append(I18N.getString("of"));
+					desc.append(" ");
+					desc.append(hours.toString());
+					
 				} else {
 					ArrayList list = new ArrayList();
 					for (int h = 0; h < hours.host.length; h++) {
@@ -633,13 +636,14 @@ public class TemporalPattern {
 		TemporalPattern ts = new TemporalPattern();
 		Calendar c = Calendar.getInstance();
 		ts.setStartPeriod(c.getTimeInMillis() - 1000 * 60 * 30);
-		ts.setEndPeriod(c.getTimeInMillis() + 1000 * 60 * 60 * 24 * 8);
+		ts.setEndPeriod(c.getTimeInMillis() + 1000 * 60 * 60 * 1);
 
 		//ts.addTemplate("*/10 */2,13 * * *"); //$NON-NLS-1$
 		//ts.addTemplate("12,5-8 * * * *"); //$NON-NLS-1$
 		//ts.addTemplate("*/20 * * 0,4,5 */2,0,6"); //$NON-NLS-1$
 		//ts.addTemplate("*/20 0-9 */2 2,4,5 0,6");
-		ts.addTemplate("20 9 * * *");
+		ts.addTemplate("20 * * * *");
+		ts.addTemplate("*/3 * * * *");
 		ts.printTimes();
 
 	}
@@ -742,6 +746,10 @@ public class TemporalPattern {
 		System.out.println("endTime ::" + new Date(getEndPeriod()));
 		for (int i = 0; i < times.length; i++) {
 			System.out.println(new Date(t[i]).toString());
+		}
+		for(Iterator it=templates.values().iterator();it.hasNext();){
+			TimeLine line =(TimeLine)it.next();
+			System.out.println(line.getDescription());
 		}
 	}
 

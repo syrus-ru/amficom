@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
@@ -73,14 +73,17 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 							if (apt.test_type_ids.contains(testType.getId())) {
 								ObjectResourceTreeNode kisNode = new ObjectResourceTreeNode(
 										kis, kis.getName(), true,
-										(ImageIcon) UIStorage.TESTING_ICON, false);
+										(ImageIcon) UIStorage.TESTING_ICON,
+										false);
 								testTypeNode.add(kisNode);
 								for (int i = 0; i < kis.access_ports.size(); i++) {
 									AccessPort aport = (AccessPort) kis.access_ports
 											.get(i);
 									{
 										ObjectResourceTreeNode accessPortNode = new ObjectResourceTreeNode(
-												aport, aport.getName(), true,
+												aport,
+												aport.getName(),
+												true,
 												(ImageIcon) UIStorage.PORT_ICON,
 												false);
 										kisNode.add(accessPortNode);
@@ -181,8 +184,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		}
 
 		public ImageIcon getNodeIcon(ObjectResourceTreeNode node) {
-			if (node != null)
-				return null;
+			if (node != null) return null;
 			return null;
 		}
 
@@ -194,13 +196,13 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			return root;
 		}
 
-				public void nodeAfterSelected(ObjectResourceTreeNode node) {
-					// nothing to do 
-				}
-		
-				public void nodeBeforeExpanded(ObjectResourceTreeNode node) {
-					// nothing to do 					
-				}
+		public void nodeAfterSelected(ObjectResourceTreeNode node) {
+			// nothing to do
+		}
+
+		public void nodeBeforeExpanded(ObjectResourceTreeNode node) {
+			// nothing to do
+		}
 
 	}
 
@@ -261,8 +263,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			JOptionPane
 					.showMessageDialog(
 							this,
-							I18N
-									.getString("Do_not_choose_Measurement_element"), I18N.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+							I18N.getString("Do_not_choose_Measurement_element"), I18N.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.OK_OPTION);
 			parameters = null;
 		}
@@ -275,7 +276,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 	public void operationPerformed(OperationEvent oe) {
 		String commandName = oe.getActionCommand();
-		if (ScheduleMainFrame.DEBUG >= 5)
+		if (SchedulerModel.DEBUG >= 5)
 				System.out.println(getClass().getName() + " commandName:" //$NON-NLS-1$
 						+ commandName);
 		if (commandName.equals(TreeDataSelectionEvent.type)) {
@@ -293,24 +294,24 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				// I don't understand
 			}
 		} else if (commandName
-				.equalsIgnoreCase(TestRequestFrame.COMMAND_DATA_REQUEST)) {
+				.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 
 			HashMap param = getParameters();
 			if (param != null) {
 				dispatcher.notify(new OperationEvent(param,
-						TestRequestFrame.DATA_ID_ELEMENTS,
-						TestRequestFrame.COMMAND_SEND_DATA));
+						SchedulerModel.DATA_ID_ELEMENTS,
+						SchedulerModel.COMMAND_SEND_DATA));
 			}
 		} else if (commandName.equals(TestUpdateEvent.typ)) {
 			if (!skipTestUpdate) {
 				TestUpdateEvent tue = (TestUpdateEvent) oe;
 				if (tue.TEST_SELECTED) {
-					if (ScheduleMainFrame.DEBUG >= 5)
+					if (SchedulerModel.DEBUG >= 5)
 							System.out
 									.println("commandName.equals(TestUpdateEvent.typ)"); //$NON-NLS-1$
 					Test test = tue.test;
-					TestType testType = (TestType) Pool.get(TestType.typ,
-							test.getTestTypeId());
+					TestType testType = (TestType) Pool.get(TestType.typ, test
+							.getTestTypeId());
 					//System.out.println("testType:" + testType.id + "\t" +
 					// testType.name);
 					KIS kis = (KIS) Pool.get(KIS.typ, test.getKisId());
@@ -421,7 +422,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TreeDataSelectionEvent.type);
 		this.dispatcher.register(this, TestUpdateEvent.typ);
-		this.dispatcher.register(this, TestRequestFrame.COMMAND_DATA_REQUEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 	}
 
 	private void jbInit() throws Exception {

@@ -11,7 +11,7 @@ import javax.swing.event.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
@@ -117,7 +117,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.typ);
-		this.dispatcher.register(this, TestRequestFrame.COMMAND_DATA_REQUEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 	}
 
 	public void setTestRequest(TestRequest treq) {
@@ -513,7 +513,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					createButton.setEnabled(false);
 					applyButton.setEnabled(false);
 					dispatcher.notify(new OperationEvent("", 0,
-							TestRequestFrame.COMMAND_APPLY_TEST));
+							SchedulerModel.COMMAND_APPLY_TEST));
 					/**
 					 * @todo does we need enable create button always ?
 					 */
@@ -529,7 +529,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					createButton.setEnabled(false);
 					applyButton.setEnabled(false);
 					dispatcher.notify(new OperationEvent("", 0,
-							TestRequestFrame.COMMAND_CREATE_TEST));
+							SchedulerModel.COMMAND_CREATE_TEST));
 					createButton.setEnabled(true);
 					applyButton.setEnabled(true);
 				}
@@ -575,18 +575,18 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (ScheduleMainFrame.DEBUG >= 5)
+		if (SchedulerModel.DEBUG >= 5)
 				System.out.println(getClass().getName() + " commandName: "
 						+ commandName);
-		if (commandName.equalsIgnoreCase(TestRequestFrame.COMMAND_DATA_REQUEST)) {
+		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			/**
 			 * @todo must send data edit in this form 
 			 */
 			TimeStamp_dep timeStamp = this.getTimeStamp();
 			if (timeStamp != null)
 					dispatcher.notify(new OperationEvent(timeStamp,
-							TestRequestFrame.DATA_ID_TIMESTAMP,
-							TestRequestFrame.COMMAND_SEND_DATA));
+							SchedulerModel.DATA_ID_TIMESTAMP,
+							SchedulerModel.COMMAND_SEND_DATA));
 		} else if (commandName.equals(TestUpdateEvent.typ)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			this.test = tue.test;

@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -35,17 +35,17 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	// "RemoveParamFrame";
 	//	public static final String COMMAND_REMOVE_3A_FRAME = "Remove3aFrame";
 	public static final boolean		DEBUG						= true;
-	public static final String		COMMAND_CHANGE_PARAM_PANEL	= "ChangeParamPanel"; //$NON-NLS-1$
-	public static final String		COMMAND_ADD_PARAM_PANEL		= "AddParamPanel"; //$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_PORT_TYPE	= "ChangePortType"; //$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_TEST_TYPE	= "ChangeTestType"; //$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_ME_TYPE		= "ChangeMEType"; //$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_KIS			= "ChangeKIS"; //$NON-NLS-1$
+	public static final String		COMMAND_CHANGE_PARAM_PANEL	= "ChangeParamPanel";		//$NON-NLS-1$
+	public static final String		COMMAND_ADD_PARAM_PANEL		= "AddParamPanel";			//$NON-NLS-1$
+	public static final String		COMMAND_CHANGE_PORT_TYPE	= "ChangePortType";		//$NON-NLS-1$
+	public static final String		COMMAND_CHANGE_TEST_TYPE	= "ChangeTestType";		//$NON-NLS-1$
+	public static final String		COMMAND_CHANGE_ME_TYPE		= "ChangeMEType";			//$NON-NLS-1$
+	public static final String		COMMAND_CHANGE_KIS			= "ChangeKIS";				//$NON-NLS-1$
 	//public static final String COMMAND_ADD_PARAM_PANEL = "ParamPanel";
-	public static final String		TEST_TYPE_TRACE_AND_ANALYSE	= "trace_and_analyse"; //$NON-NLS-1$
-	public static final String		TEST_TYPE_VOICE_ANALYSE		= "voice_analyse"; //$NON-NLS-1$
-	public static final String		PARAMETER_PARAMETER			= "Parameter"; //$NON-NLS-1$
-	public static final String		PARAMETERS_PANEL_PREFIX		= "PARAMETERS_PANEL"; //$NON-NLS-1$
+	public static final String		TEST_TYPE_TRACE_AND_ANALYSE	= "trace_and_analyse";		//$NON-NLS-1$
+	public static final String		TEST_TYPE_VOICE_ANALYSE		= "voice_analyse";			//$NON-NLS-1$
+	public static final String		PARAMETER_PARAMETER			= "Parameter";				//$NON-NLS-1$
+	public static final String		PARAMETERS_PANEL_PREFIX		= "PARAMETERS_PANEL";		//$NON-NLS-1$
 
 	private Dispatcher				dispatcher;
 	private ApplicationContext		aContext;
@@ -71,7 +71,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	ObjectResourceListBox			testSetups;
 	private HashMap					testMap;
 
-	private static final String		PATTERN_PANEL_NAME			= "PATTERN_PANEL"; //$NON-NLS-1$
+	private static final String		PATTERN_PANEL_NAME			= "PATTERN_PANEL";			//$NON-NLS-1$
 
 	private HashMap					testPanels					= new HashMap();
 
@@ -146,7 +146,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		//		this.dispatcher.register(this, COMMAND_VISUAL_TEST_PARAMS);
 		//		this.dispatcher.register(this, COMMAND_EXT_AFTER_USUAL_ROOT_FRAME);
 		////
-		this.dispatcher.register(this, TestRequestFrame.COMMAND_DATA_REQUEST);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		this.dispatcher.register(this, COMMAND_CHANGE_PARAM_PANEL);
 		this.dispatcher.register(this, COMMAND_ADD_PARAM_PANEL);
 		this.dispatcher.register(this, COMMAND_CHANGE_TEST_TYPE);
@@ -159,21 +159,21 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		patternRadioButton = UIStorage.createRadioButton(I18N
 				.getString("UsePattern"), new AbstractAction() { //$NON-NLS-1$
 
-			public void actionPerformed(ActionEvent e) {
-				CardLayout cl = (CardLayout) (switchPanel.getLayout());
-				cl.show(switchPanel, PATTERN_PANEL_NAME);
-				revalidate();
-			}
-		});
+					public void actionPerformed(ActionEvent e) {
+						CardLayout cl = (CardLayout) (switchPanel.getLayout());
+						cl.show(switchPanel, PATTERN_PANEL_NAME);
+						revalidate();
+					}
+				});
 		paramsRadioButton = UIStorage.createRadioButton(I18N
 				.getString("UseParameters"), new AbstractAction() { //$NON-NLS-1$
 
-			public void actionPerformed(ActionEvent e) {
-				CardLayout cl = (CardLayout) (switchPanel.getLayout());
-				cl.show(switchPanel, currentParametersPanelName);
-				revalidate();
-			}
-		});
+					public void actionPerformed(ActionEvent e) {
+						CardLayout cl = (CardLayout) (switchPanel.getLayout());
+						cl.show(switchPanel, currentParametersPanelName);
+						revalidate();
+					}
+				});
 		paramsRadioButton.setEnabled(false);
 		ButtonGroup group = new ButtonGroup();
 		group.add(patternRadioButton);
@@ -195,11 +195,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		gbc.weighty = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		patternPanel.setBorder(BorderFactory.createEtchedBorder());
-		useAnalysisBox = new JCheckBox(I18N
-				.getString("PerformAnalys"), true); //$NON-NLS-1$
+		useAnalysisBox = new JCheckBox(I18N.getString("PerformAnalys"), true); //$NON-NLS-1$
 		patternPanel.add(useAnalysisBox, gbc);
-		final JLabel analysisLabel = new JLabel(I18N
-				.getString("Analysis")); //$NON-NLS-1$
+		final JLabel analysisLabel = new JLabel(I18N.getString("Analysis")); //$NON-NLS-1$
 		patternPanel.add(analysisLabel, gbc);
 		patternPanel.add(analysisComboBox, gbc);
 		final JLabel evaluationLabel = new JLabel(I18N
@@ -315,9 +313,11 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		if (parameters == null) parameters = new HashMap();
 		TestSetup ts = (TestSetup) testSetups.getSelectedObjectResource();
 		if (ts == null) {
-			JOptionPane.showMessageDialog(this,
-					I18N.getString("Do_not_choose_measurement_pattern"), I18N.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
-					JOptionPane.OK_OPTION);
+			JOptionPane
+					.showMessageDialog(
+							this,
+							I18N.getString("Do_not_choose_measurement_pattern"), I18N.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+							JOptionPane.OK_OPTION);
 			parameters = null;
 			return;
 		}
@@ -345,16 +345,17 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		ApplicationModel aModel = aContext.getApplicationModel();
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-		if (ScheduleMainFrame.DEBUG >= 5)
+		if (SchedulerModel.DEBUG >= 5)
 				System.out.println(getClass().getName() + " commandName:" //$NON-NLS-1$
 						+ commandName);
-		if (commandName.equalsIgnoreCase(TestRequestFrame.COMMAND_DATA_REQUEST)) {
+		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			if (paramsRadioButton.isSelected()) {
 				TestArgumentSet tas = ((ParametersTestPanel) (testPanels
 						.get(currentParametersPanelName))).getParameters();
-				dispatcher.notify(new OperationEvent(tas,
-						TestRequestFrame.DATA_ID_PARAMETERS,
-						TestRequestFrame.COMMAND_SEND_DATA));
+				if (tas != null)
+						dispatcher.notify(new OperationEvent(tas,
+								SchedulerModel.DATA_ID_PARAMETERS,
+								SchedulerModel.COMMAND_SEND_DATA));
 			} else if (patternRadioButton.isSelected()) {
 				this.getParameters();
 				if (parameters != null) {
@@ -365,19 +366,19 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 							.get(EvaluationType.typ);
 					dispatcher.notify(new OperationEvent(
 							(ts == null) ? (Object) "" : (Object) ts, //$NON-NLS-1$
-							TestRequestFrame.DATA_ID_PARAMETERS_PATTERN,
-							TestRequestFrame.COMMAND_SEND_DATA));
+							SchedulerModel.DATA_ID_PARAMETERS_PATTERN,
+							SchedulerModel.COMMAND_SEND_DATA));
 					//if (analysisType != null)
 					dispatcher.notify(new OperationEvent(
 							(analysisType == null) ? (Object) "" //$NON-NLS-1$
 									: (Object) analysisType,
-							TestRequestFrame.DATA_ID_PARAMETERS_ANALYSIS,
-							TestRequestFrame.COMMAND_SEND_DATA));
+							SchedulerModel.DATA_ID_PARAMETERS_ANALYSIS,
+							SchedulerModel.COMMAND_SEND_DATA));
 					dispatcher.notify(new OperationEvent(
 							(evaluationType == null) ? (Object) "" //$NON-NLS-1$
 									: (Object) evaluationType,
-							TestRequestFrame.DATA_ID_PARAMETERS_EVALUATION,
-							TestRequestFrame.COMMAND_SEND_DATA));
+							SchedulerModel.DATA_ID_PARAMETERS_EVALUATION,
+							SchedulerModel.COMMAND_SEND_DATA));
 				}
 			}
 
@@ -443,24 +444,27 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		//testSetups.setSelected(selectedTs);
 		if (test != null) {
 			//System.out.println("test.test_setup_id:" + test.test_setup_id);
-			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ,
-					test.getTestSetupId());
+			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ, test
+					.getTestSetupId());
 			if (testsetup != null) {
 				//orList.setSelected(testsetup);
 				//System.out.println("selected:" + testsetup.id);
 				testSetups.setSelected(testsetup);
 				patternRadioButton.doClick();
 
-				if ((test.getEvalution() != null) || (test.getAnalysis() != null)) {
+				if ((test.getEvalution() != null)
+						|| (test.getAnalysis() != null)) {
 					if (!useAnalysisBox.isSelected()) useAnalysisBox.doClick();
 				}
 				if (test.getEvalution() != null) {
 					//System.out.println("test.evalution isn't null");
-					selectComboBox(evaluationComboBox, test.getEvalution().getTypeId());
+					selectComboBox(evaluationComboBox, test.getEvalution()
+							.getTypeId());
 				}
 				if (test.getAnalysis() != null) {
 					//System.out.println("test.analysis isn't null");
-					selectComboBox(analysisComboBox, test.getAnalysis().getTypeId());
+					selectComboBox(analysisComboBox, test.getAnalysis()
+							.getTypeId());
 				}
 
 			}

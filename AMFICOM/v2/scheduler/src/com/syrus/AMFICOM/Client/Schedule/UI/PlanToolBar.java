@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.Evaluation;
 import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
 import com.syrus.AMFICOM.Client.Resource.Result.TestRequest;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
@@ -111,15 +111,15 @@ class PlanToolBar extends JPanel {
 
 	void apply_changes() {
 		saveTest();
-		Calendar date_cal = Calendar.getInstance();
-		date_cal.setTime((Date) dateSpinner.getValue());
-		Calendar time_cal = Calendar.getInstance();
-		time_cal.setTime((Date) timeSpinner.getValue());
+		Calendar date = Calendar.getInstance();
+		date.setTime((Date) dateSpinner.getValue());
+		Calendar time = Calendar.getInstance();
+		time.setTime((Date) timeSpinner.getValue());
 
-		date_cal.set(Calendar.HOUR_OF_DAY, time_cal.get(Calendar.HOUR_OF_DAY));
-		date_cal.set(Calendar.MINUTE, time_cal.get(Calendar.MINUTE));
+		date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
+		date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
 
-		panel.updateDate(date_cal.getTime(), scaleComboBox.getSelectedIndex());
+		panel.updateDate(date.getTime(), scaleComboBox.getSelectedIndex());
 	}
 
 	private void jbInit() throws Exception {
@@ -194,18 +194,18 @@ class PlanToolBar extends JPanel {
 
 		box.add(new JLabel(I18N.getString("Detalization"))); //$NON-NLS-1$
 		box.add(Box.createHorizontalStrut(4));
-//		{
-//			int width = 0;
-//			FontMetrics fm = scaleComboBox.getFontMetrics(scaleComboBox
-//					.getFont());
-//			for (int i = 0; i < scales.length; i++) {
-//				int w = fm.stringWidth(scales[i]);
-//				width = (width > w) ? width : w;
-//			}
-//			width += 30;
-//			Dimension d = new Dimension(width, H);
-//			UIStorage.setRigidSize(scaleComboBox, d);
-//		}
+		//		{
+		//			int width = 0;
+		//			FontMetrics fm = scaleComboBox.getFontMetrics(scaleComboBox
+		//					.getFont());
+		//			for (int i = 0; i < scales.length; i++) {
+		//				int w = fm.stringWidth(scales[i]);
+		//				width = (width > w) ? width : w;
+		//			}
+		//			width += 30;
+		//			Dimension d = new Dimension(width, H);
+		//			UIStorage.setRigidSize(scaleComboBox, d);
+		//		}
 
 		box.add(scaleComboBox);
 		box.add(Box.createHorizontalStrut(10));
@@ -357,7 +357,7 @@ class PlanToolBar extends JPanel {
 					ObjectResource obj = (ObjectResource) table.get(key);
 					if (obj instanceof TestArgumentSet) {
 						TestArgumentSet tas = (TestArgumentSet) obj;
-						if (ScheduleMainFrame.DEBUG >= 5)
+						if (SchedulerModel.DEBUG >= 5)
 								System.out.println("saveTestArgumentSet("
 										+ tas.getId() + ")");
 						if (CREATE_ALLOW) {
@@ -366,7 +366,7 @@ class PlanToolBar extends JPanel {
 						}
 					} else if (obj instanceof Analysis) {
 						Analysis an = (Analysis) obj;
-						if (ScheduleMainFrame.DEBUG >= 5)
+						if (SchedulerModel.DEBUG >= 5)
 								System.out.println("createAnalysis("
 										+ an.getId() + ");");
 						if (CREATE_ALLOW) {
@@ -375,7 +375,7 @@ class PlanToolBar extends JPanel {
 						}
 					} else if (obj instanceof Evaluation) {
 						Evaluation ev = (Evaluation) obj;
-						if (ScheduleMainFrame.DEBUG >= 5)
+						if (SchedulerModel.DEBUG >= 5)
 								System.out.println("createEvaluation("
 										+ ev.getId() + ")");
 						if (CREATE_ALLOW) {
@@ -396,12 +396,12 @@ class PlanToolBar extends JPanel {
 						//System.out.println("list.size():" + list.size());
 						for (Iterator it2 = list.iterator(); it2.hasNext();) {
 							ids[j++] = (String) it2.next();
-							if (ScheduleMainFrame.DEBUG >= 5)
+							if (SchedulerModel.DEBUG >= 5)
 									System.out.println("ids[" + (j - 1) + "]="
 											+ ids[j - 1]);
 						}
 						//System.out.println("j:" + j);
-						if (ScheduleMainFrame.DEBUG >= 5)
+						if (SchedulerModel.DEBUG >= 5)
 								System.out.println("RequestTest("
 										+ testRequest.getId() + ")");
 						if (CREATE_ALLOW) {
@@ -412,19 +412,20 @@ class PlanToolBar extends JPanel {
 					} else if (obj instanceof Test) {
 						// nothing ???
 						Test test = (Test) obj;
-						if (ScheduleMainFrame.DEBUG >= 5)
+						if (SchedulerModel.DEBUG >= 5)
 								System.out.println("test:" + test.getId());
 						test.setChanged(false);
 					}
-					if (ScheduleMainFrame.DEBUG >= 5)
+					if (SchedulerModel.DEBUG >= 5)
 							System.out.println("#" + i + " " + key + " "
 									+ obj.getClass().getName());
 				}
 			}
 		}
-		aContext.getDispatcher().notify(
-				new OperationEvent("", 0,
-						TestRequestFrame.COMMAND_TEST_SAVED_OK));
+		aContext.getDispatcher()
+				.notify(
+						new OperationEvent("", 0,
+								SchedulerModel.COMMAND_TEST_SAVED_OK));
 	}
 
 }

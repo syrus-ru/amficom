@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
@@ -40,7 +40,7 @@ public class TimeParametersFrame extends JInternalFrame implements
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (ScheduleMainFrame.DEBUG >= 3)
+		if (SchedulerModel.DEBUG >= 3)
 				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 						+ commandName);
 		//		int id = ae.getID();
