@@ -6,4 +6,4 @@ LIB=../lib
 ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/classes12.jar
 APPCLASSPATH=$LIB/cmserver.jar:$LIB/cmserver_interface.jar:$LIB/measurement.jar:$LIB/configuration.jar:$LIB/general.jar:$LIB/util.jar
 
-exec $JAVA -server -Djava.library.path=$TRANSCEIVER:$DADARA -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.cmserver.ClientMeasurementServer
+exec $JAVA -server -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.cmserver.ClientMeasurementServer
