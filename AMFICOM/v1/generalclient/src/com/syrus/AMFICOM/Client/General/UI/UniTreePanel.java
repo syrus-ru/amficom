@@ -25,15 +25,12 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 */
 package com.syrus.AMFICOM.Client.General.UI;
 
-import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -107,6 +104,7 @@ public class UniTreePanel extends JPanel
 				tree_treeWillExpand(e);
 			}
 			public void treeWillCollapse(TreeExpansionEvent e) {
+				//nothing
 			}
 		});
 //		tree.setBorder(BorderFactory.createEtchedBorder());
@@ -142,12 +140,12 @@ public class UniTreePanel extends JPanel
 			return;
 		}
 		this.otm = otm;
-		root = otm.getRoot();
-		root.removeAllChildren();
+		root = otm.getRoot();		
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		otm.nodeBeforeExpanded(root);
 		Vector vec1 = otm.getChildNodes(root);
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		root.removeAllChildren();
 		for (int i = 0; i < vec1.size(); i++)
 		{
 			ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) vec1.elementAt(i);
@@ -157,7 +155,7 @@ public class UniTreePanel extends JPanel
 		}
 		tm = new DefaultTreeModel(root);
 		tree.setModel(tm);
-		tree.updateUI();
+		tree.revalidate();
 	}
 
 	public JTree getTree()
