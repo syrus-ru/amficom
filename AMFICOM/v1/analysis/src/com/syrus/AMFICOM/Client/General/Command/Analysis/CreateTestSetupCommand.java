@@ -5,12 +5,9 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
 import com.syrus.io.BellcoreStructure;
 
 public class CreateTestSetupCommand extends VoidCommand
@@ -49,7 +46,7 @@ public class CreateTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		TestSetup _ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+		TestSetup _ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 		if (_ts == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -71,11 +68,11 @@ public class CreateTestSetupCommand extends VoidCommand
 		TestSetup ts = new TestSetup();
 		ts.setName(ret);
 		ts.settestTypeId(_ts.getTestTypeId());
-		ts.setId(dataSource.GetUId(TestSetup.typ));
+		ts.setId(dataSource.GetUId(TestSetup.TYPE));
 		ts.setTestArgumentSetId(_ts.getTestArgumentSetId());
 
 		bs.test_setup_id = ts.getId();
-		Pool.put(TestSetup.typ, ts.getId(), ts);
+		Pool.put(TestSetup.TYPE, ts.getId(), ts);
 
 		aContext.getDispatcher().notify(new RefChangeEvent(traceid,
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));

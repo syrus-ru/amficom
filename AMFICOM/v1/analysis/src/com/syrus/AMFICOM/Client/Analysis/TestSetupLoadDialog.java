@@ -1,37 +1,18 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.*;
+import java.util.List;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
 import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
 import com.syrus.io.BellcoreStructure;
 
 public class TestSetupLoadDialog extends JDialog implements OperationListener
@@ -223,14 +204,13 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 					for (int i = 0; i < ids.length; i++)
 						dsi.loadTestSetup(ids[i]);
 
-					Hashtable testsHt = new Hashtable();
-
-					Hashtable ht = Pool.getHash(TestSetup.typ);
+					Map testsHt = new HashMap();
+					Map ht = Pool.getHash(TestSetup.TYPE);
 					if(ht != null)
 					{
-						for(Enumeration e = ht.elements(); e.hasMoreElements(); )
+						for(Iterator it = ht.values().iterator(); it.hasNext(); )
 						{
-							TestSetup t = (TestSetup)e.nextElement();
+							TestSetup t = (TestSetup)it.next();
 							String[] me_ids = t.getMonitoredElementIds();
 							for (int i = 0; i < me_ids.length; i++)
 								if(me_ids[i].equals(me_id))
@@ -241,7 +221,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 						}
 					}
 
-					ObjectResourceSorter sorter = TestSetup.getDefaultSorter();
+					ObjectResourceSorter sorter = StubResource.getDefaultSorter();
 					sorter.setDataSet(testsHt);
 					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{

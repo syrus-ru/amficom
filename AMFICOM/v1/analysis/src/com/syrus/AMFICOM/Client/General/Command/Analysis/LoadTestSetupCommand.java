@@ -9,7 +9,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.io.BellcoreStructure;
 
 public class LoadTestSetupCommand extends VoidCommand

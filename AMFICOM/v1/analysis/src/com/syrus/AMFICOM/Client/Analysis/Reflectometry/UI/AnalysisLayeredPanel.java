@@ -1,22 +1,15 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 
+import java.awt.Toolkit;
+import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.JToggleButton;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
 
 public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
 {
@@ -183,9 +176,9 @@ class AnalysisToolBar extends TraceEventsToolBar
 		return buttons;
 	}
 
-	protected Hashtable createGraphButtons()
+	protected Map createGraphButtons()
 	{
-		Hashtable buttons = new Hashtable();
+		Map buttons = super.createGraphButtons();
 
 		buttons.put(
 				loss,
@@ -269,14 +262,11 @@ class AnalysisToolBar extends TraceEventsToolBar
 				true));
 
 		ButtonGroup group = new ButtonGroup();
-		for (Enumeration enum = buttons.elements(); enum.hasMoreElements();)
-		{
-			AbstractButton button = (AbstractButton)enum.nextElement();
-			group.add(button);
-		}
+		group.add(lossTButton);
+		group.add(reflectionTButton);
+		group.add(noAnalysisTButton);
 
 		noAnalysisTButton.doClick();
-		buttons.putAll(super.createGraphButtons());
 		return buttons;
 	}
 

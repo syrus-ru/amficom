@@ -1,23 +1,10 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JTable;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.*;
 
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 

@@ -3,13 +3,12 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import java.io.*;
 import java.util.Properties;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.io.*;

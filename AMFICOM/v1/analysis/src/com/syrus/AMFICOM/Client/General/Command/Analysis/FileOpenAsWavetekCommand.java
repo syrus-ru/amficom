@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import java.awt.Cursor;
 import java.io.*;
 import java.util.Properties;
 
+import java.awt.Cursor;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;

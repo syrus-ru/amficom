@@ -1,49 +1,19 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.Font;
+import javax.swing.*;
+import javax.swing.table.*;
 
-import javax.swing.JTable;
-import javax.swing.ListCellRenderer;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultCellEditor;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.JViewport;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableModel;
-
-import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MinuitAnalyseCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.CriteriaSet;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-
+import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.io.BellcoreStructure;
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import oracle.jdeveloper.layout.*;
 
 public class AnalysisSelectionFrame extends ATableFrame
 																		implements OperationListener
@@ -103,7 +73,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблона нет)");
 					else
 					{
-						TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+						TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблон: " +
 										 (ts.getName().equals("") ? "(без имени)" : ts.getName()) + ")");
 					}
@@ -122,7 +92,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 					setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблона нет)");
 				else
 				{
-					TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+					TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 					setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблон: " +
 									 (ts.getName().equals("") ? ts.getId() : ts.getName()) + ")");
 

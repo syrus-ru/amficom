@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
-import javax.swing.*;
+import javax.swing.JFrame;
 
 import com.syrus.AMFICOM.Client.Analysis.*;
 import com.syrus.AMFICOM.Client.General.Checker;
@@ -124,17 +124,17 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			{
 				ts = new TestSetup();
 				ts.settestTypeId(test.getTestTypeId());
-				ts.setId(dataSource.GetUId(TestSetup.typ));
+				ts.setId(dataSource.GetUId(TestSetup.TYPE));
 				ts.setTestArgumentSetId(test.getTestArgumentSetId());
 
 				bs.test_setup_id = ts.getId();
-				Pool.put(TestSetup.typ, ts.getId(), ts);
+				Pool.put(TestSetup.TYPE, ts.getId(), ts);
 			}
 			else
 			{
 				dataSource.loadTestSetup(test.getTestSetupId());
 				bs.test_setup_id = test.getTestSetupId();
-				ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+				ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 			}
 
 			AnalysisUtil.load_CriteriaSet(dataSource, ts);

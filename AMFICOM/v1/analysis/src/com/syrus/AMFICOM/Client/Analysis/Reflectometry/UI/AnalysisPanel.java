@@ -1,19 +1,10 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
-import java.awt.SystemColor;
+import java.awt.*;
 import java.awt.event.MouseEvent;
-
 import javax.swing.SwingUtilities;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class AnalysisPanel extends MapMarkersPanel

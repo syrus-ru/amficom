@@ -1,22 +1,11 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
-
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class ReflectogramEventsPanel extends TraceEventsPanel
 {

@@ -1,39 +1,16 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JToolBar;
-import javax.swing.JViewport;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.Threshold;
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import com.syrus.AMFICOM.analysis.dadara.*;
+import oracle.jdeveloper.layout.*;
 
 public class ThresholdsSelectionFrame extends ATableFrame
 																			implements OperationListener

@@ -2,8 +2,6 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.AnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;

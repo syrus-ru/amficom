@@ -1,11 +1,15 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Color;
 import java.io.*;
 import java.util.*;
 
+import java.awt.Color;
+
 public class ColorManager
 {
+	private ColorManager()
+			{}
+
 	static class Col
 	{
 		String name;
@@ -20,13 +24,13 @@ public class ColorManager
 	private static String propertiesFileName = "colors.properties";
 	private static Properties properties;
 
-	static Hashtable traceColorTable = new Hashtable(25);  //список всех доступных цветов
+	static Map traceColorTable = new HashMap(25);  //список всех доступных цветов
 																												 //в виде (IDцвета, ЦВЕТ)
-	static Hashtable freeTraceColors	= new Hashtable(7);  //список цветов не занятых трассами
+	static Map freeTraceColors	= new HashMap(7);  //список цветов не занятых трассами
 																												 //в виде (IDцвета, ЦВЕТ)
-	static Hashtable busyTraceColors	= new Hashtable();   //список цветов занятых трассами
+	static Map busyTraceColors	= new HashMap();   //список цветов занятых трассами
 																												 //в виде (IDтрассы, IDцвета)
-	static Hashtable randomTraceColors	= new Hashtable(); //список сгенерированных цветов
+	static Map randomTraceColors	= new HashMap(); //список сгенерированных цветов
 																												 //в виде (IDтрассы, ЦВЕТ)
 
 	static Col[] defaultcolors = new Col[] {
@@ -90,10 +94,10 @@ public class ColorManager
 			String key;
 			String value;
 			// если в инишнике есть другие значения - пишем их вместо дефолтных
-			Enumeration keys = properties.keys();
-			while (keys.hasMoreElements())
+			Iterator keys = properties.keySet().iterator();
+			while (keys.hasNext())
 			{
-				key = (String)keys.nextElement();
+				key = (String)keys.next();
 				value = properties.getProperty(key);
 				if (value.length() != 0)
 					traceColorTable.put(key, new Color(Integer.parseInt(value)));
@@ -138,7 +142,7 @@ public class ColorManager
 		//пытаемся найти свободный цвет в списке
 		if (!freeTraceColors.isEmpty())
 		{
-			colId = (String)freeTraceColors.keys().nextElement();
+			colId = (String)freeTraceColors.keySet().iterator().next();
 			busyTraceColors.put(id, colId);
 			freeTraceColors.remove(colId);
 			return (Color)traceColorTable.get(colId);
@@ -200,13 +204,13 @@ public class ColorManager
 
 	public static void saveIni()
 	{
-		Enumeration keys = traceColorTable.keys();
+		Iterator keys = traceColorTable.keySet().iterator();
 		String key;
 		try
 		{
-			while (keys.hasMoreElements())
+			while (keys.hasNext())
 			{
-				key = (String)keys.nextElement();
+				key = (String)keys.next();
 				properties.setProperty(key, String.valueOf(((Color)traceColorTable.get(key)).getRGB()));
 			}
 			properties.store(new FileOutputStream(propertiesFileName), null);

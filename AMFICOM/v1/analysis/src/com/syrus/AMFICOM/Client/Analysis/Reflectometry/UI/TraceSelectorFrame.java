@@ -1,31 +1,16 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.io.BellcoreStructure;
 
 public class TraceSelectorFrame extends JInternalFrame

@@ -1,28 +1,12 @@
 package com.syrus.AMFICOM.Client.Analysis.Report;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import javax.swing.*;
+import javax.swing.table.*;
 
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Report.*;
-
-import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
-
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScaledGraphPanel;
-
-import java.util.Enumeration;
-import javax.swing.JComponent;
-import javax.swing.table.TableModel;
-
-import java.util.Vector;
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.awt.Dimension;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Result.*;
 
 abstract public class ESAPEReportModel extends APOReportModel
 {
@@ -153,7 +137,7 @@ abstract public class ESAPEReportModel extends APOReportModel
 			 || rt.templateType.equals(ReportTemplate.rtt_Prediction)
 			 || rt.templateType.equals(ReportTemplate.rtt_Survey))
 		{
-      super.setData(rt,aReport);
+			super.setData(rt,aReport);
 		}
 	}
 }

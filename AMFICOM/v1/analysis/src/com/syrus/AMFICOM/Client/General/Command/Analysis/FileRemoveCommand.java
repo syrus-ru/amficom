@@ -1,11 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.io.BellcoreStructure;
 
 public class FileRemoveCommand extends VoidCommand

@@ -1,13 +1,12 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.util.*;
+
 import java.awt.Toolkit;
 import java.awt.event.*;
-import java.util.Hashtable;
-
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 
 public class MapThresholdsLayeredPanel extends MapMarkersLayeredPanel
 {
@@ -64,9 +63,9 @@ class MapThresholdsToolBar extends MapMarkersToolBar
 		return buttons;
 	}
 
-	protected Hashtable createGraphButtons()
+	protected Map createGraphButtons()
 	{
-		Hashtable buttons = new Hashtable();
+		Map buttons = new HashMap();
 
 		buttons.put(
 				thresholds,

@@ -2,19 +2,13 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.CriteriaSet;
-import com.syrus.AMFICOM.Client.Resource.Result.Etalon;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-import com.syrus.AMFICOM.Client.Resource.Result.ThresholdSet;
-
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
 
@@ -96,10 +90,10 @@ public class SaveTestSetupAsCommand extends VoidCommand
 		if (s == null || s.equals(""))
 			return;
 
-		TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+		TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 		TestSetup newts = new TestSetup();
-		newts.setId(aContext.getDataSourceInterface().GetUId(TestSetup.typ));
-		Pool.put(TestSetup.typ, newts.getId(), newts);
+		newts.setId(aContext.getDataSourceInterface().GetUId(TestSetup.TYPE));
+		Pool.put(TestSetup.TYPE, newts.getId(), newts);
 		newts.setName(s);
 		bs.test_setup_id = newts.getId();
 
@@ -113,7 +107,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 		if ((type & SaveTestSetupCommand.THRESHOLDS) != 0)
 		{
-			ThresholdSet tset = (ThresholdSet)Pool.get(ThresholdSet.typ, ts.getThresholdSetId());
+			ThresholdSet tset = (ThresholdSet)Pool.get(ThresholdSet.TYPE, ts.getThresholdSetId());
 			ThresholdSet newtset = AnalysisUtil.createDefaultThresholdSet(
 					dataSource, (ReflectogramEvent[])Pool.get("eventparams", traceid));
 			newts.setThresholdSetId(newtset.getId());

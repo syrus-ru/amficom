@@ -1,20 +1,12 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.*;
-import java.awt.SystemColor;
-import java.awt.event.ComponentEvent;
-import java.awt.Component;
 import java.util.*;
 
-import javax.swing.BorderFactory;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.JPanel;
-import javax.swing.event.*;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import oracle.jdeveloper.layout.*;
 
 public class ResizableLayeredPanel extends JPanel
 {
@@ -54,9 +46,8 @@ public class ResizableLayeredPanel extends JPanel
 		this.setBorder(BorderFactory.createLoweredBevelBorder());
 		this.setLayout (new BorderLayout());
 
-		Hashtable commands = new Hashtable();
 		toolbar = createToolBar();
-		commands.putAll(toolbar.createGraphButtons());
+		Map commands = toolbar.createGraphButtons();
 
 		String[] buttons = toolbar.getButtons();
 		for (int i = 0; i < buttons.length; i++)
@@ -253,6 +244,8 @@ class ToolBarPanel extends JToolBar
 
 	protected static final String separator = "separator";
 
+	protected Map actions = new HashMap();
+
 	protected static String[] buttons = new String[]
 	{
 	};
@@ -283,9 +276,9 @@ class ToolBarPanel extends JToolBar
 		return buttons;
 	}
 
-	protected Hashtable createGraphButtons()
+	protected Map createGraphButtons()
 	{
-		return new Hashtable();
+		return actions;
 	}
 
 	AbstractButton createToolButton(

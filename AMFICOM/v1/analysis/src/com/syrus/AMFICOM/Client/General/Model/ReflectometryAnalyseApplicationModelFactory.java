@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
 public class ReflectometryAnalyseApplicationModelFactory
-																			extends AnalyseApplicationModelFactory
+		extends AnalyseApplicationModelFactory
 {
 
 	public ReflectometryAnalyseApplicationModelFactory()

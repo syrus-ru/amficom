@@ -1,23 +1,12 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.event.MouseEvent;
-
 import javax.swing.SwingUtilities;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.AnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;
-//import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-//import com.syrus.AMFICOM.Client.Analysis.MathRef;
 
 public class HistogrammPanel extends ScaledGraphPanel
 {

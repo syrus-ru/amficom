@@ -2,11 +2,9 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.io.BellcoreStructure;
 
 public class TraceMakeCurrentCommand extends VoidCommand

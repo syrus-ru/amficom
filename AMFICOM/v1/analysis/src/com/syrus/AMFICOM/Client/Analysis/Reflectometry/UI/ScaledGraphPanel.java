@@ -1,12 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Stroke;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
 
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 

@@ -1,16 +1,11 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BasicStroke;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+
+import com.syrus.AMFICOM.Client.General.Event.*;
 
 public class MapMarkersPanel extends ThresholdsPanel
 {

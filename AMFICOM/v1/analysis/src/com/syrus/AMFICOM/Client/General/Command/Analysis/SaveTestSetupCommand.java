@@ -2,18 +2,14 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
-
 
 public class SaveTestSetupCommand extends VoidCommand
 {
@@ -78,7 +74,7 @@ public class SaveTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+		TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 		if (ts.getTestArgumentSetId().length() == 0)
 		{
 			JOptionPane.showMessageDialog(

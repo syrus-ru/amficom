@@ -1,12 +1,8 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.io.BellcoreStructure;
 
 public class HistogrammFrame extends ScalableFrame implements OperationListener

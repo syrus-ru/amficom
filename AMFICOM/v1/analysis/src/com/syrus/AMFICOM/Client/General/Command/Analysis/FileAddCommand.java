@@ -79,10 +79,10 @@ public class FileAddCommand extends VoidCommand
 			String id = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			if (Pool.getHash("bellcorestructure") != null )
 			{
-				Enumeration enum = Pool.getHash("bellcorestructure").keys();
-				while (enum.hasMoreElements())
+				Iterator it = Pool.getHash("bellcorestructure").keySet().iterator();
+				while (it.hasNext())
 				{
-					if (((String)enum.nextElement()).equals(id))
+					if (((String)it.next()).equals(id))
 					{
 						JOptionPane cDialog = new JOptionPane();
 						int ret = cDialog.showConfirmDialog (

@@ -1,21 +1,12 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.*;
-import java.util.*;
+import java.util.Map;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JScrollBar;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
 
 public class ScalableLayeredPanel extends ResizableLayeredPanel
 {
@@ -304,9 +295,9 @@ class ScalableToolBar extends ToolBarPanel
 		return buttons;
 	}
 
-	protected Hashtable createGraphButtons()
+	protected Map createGraphButtons()
 	{
-		Hashtable buttons = new Hashtable();
+		Map buttons = super.createGraphButtons();
 
 		buttons.put(
 				ex,
@@ -389,7 +380,6 @@ class ScalableToolBar extends ToolBarPanel
 				},
 				true));
 
-		buttons.putAll(super.createGraphButtons());
 		return buttons;
 	}
 

@@ -1,10 +1,8 @@
 package com.syrus.AMFICOM.Client.Analysis.Report;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import java.util.*;
+
+import com.syrus.AMFICOM.Client.General.Lang.*;
 
 /**
  * <p>Title: </p>

@@ -1,8 +1,9 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.event.ComponentEvent;
 import java.io.IOException;
 import java.util.*;
+
+import java.awt.event.*;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.*;

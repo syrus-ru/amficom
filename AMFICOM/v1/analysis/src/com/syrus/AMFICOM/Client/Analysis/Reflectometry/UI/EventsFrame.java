@@ -1,18 +1,17 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
 import java.util.Vector;
 
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 

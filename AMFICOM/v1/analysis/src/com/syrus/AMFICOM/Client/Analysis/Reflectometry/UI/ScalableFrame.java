@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.Hashtable;
+import java.util.*;
 
 public class ScalableFrame extends SimpleResizableFrame
 {
-	protected Hashtable panels = new Hashtable();
+	protected Map panels = new HashMap();
 
 	public ScalableFrame (ResizableLayeredPanel panel)
 	{
@@ -44,7 +44,7 @@ public class ScalableFrame extends SimpleResizableFrame
 		if (id.equals("all"))
 		{
 			((ScalableLayeredPanel)panel).removeAllGraphPanels();
-			panels = new Hashtable();
+			panels = new HashMap();
 		}
 		else
 		{
@@ -66,7 +66,7 @@ public class ScalableFrame extends SimpleResizableFrame
 
 	public void setGraph (ScaledGraphPanel p, boolean is_reversed_y, String id)
 	{
-		panels = new Hashtable();
+		panels = new HashMap();
 		panels.put(id, p);
 		super.setGraph(p, is_reversed_y, id);
 		p.select_by_mouse = true;

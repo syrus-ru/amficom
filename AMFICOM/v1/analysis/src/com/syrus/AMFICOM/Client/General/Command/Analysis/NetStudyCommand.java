@@ -1,8 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.WeightsDialog;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 
 public class NetStudyCommand extends VoidCommand
 {

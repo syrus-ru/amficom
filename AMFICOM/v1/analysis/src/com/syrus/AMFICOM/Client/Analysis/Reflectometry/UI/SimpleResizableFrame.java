@@ -1,11 +1,8 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
-
-import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class SimpleResizableFrame extends JInternalFrame
 {

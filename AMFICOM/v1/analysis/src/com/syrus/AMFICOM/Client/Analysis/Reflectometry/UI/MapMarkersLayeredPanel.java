@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.util.*;
+
 import java.awt.Toolkit;
 import java.awt.event.*;
-import java.util.Hashtable;
-
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -188,9 +188,9 @@ class MapMarkersToolBar extends TraceEventsToolBar
 		return buttons;
 	}
 
-	protected Hashtable createGraphButtons()
+	protected Map createGraphButtons()
 	{
-		Hashtable buttons = new Hashtable();
+		Map buttons = new HashMap();
 
 		buttons.put(
 				createMarker,

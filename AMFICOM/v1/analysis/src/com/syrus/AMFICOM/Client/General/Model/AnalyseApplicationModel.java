@@ -1,9 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptySurveyDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
+import com.syrus.AMFICOM.Client.Resource.*;
 
 public class AnalyseApplicationModel extends ApplicationModel
 {

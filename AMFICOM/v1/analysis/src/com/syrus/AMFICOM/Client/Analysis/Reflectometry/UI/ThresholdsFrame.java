@@ -3,12 +3,11 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.io.IOException;
 import java.util.*;
 
-
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
@@ -16,7 +15,7 @@ import com.syrus.util.ByteArray;
 public class ThresholdsFrame extends SimpleResizableFrame implements OperationListener
 {
 	private Dispatcher dispatcher;
-	Hashtable traces = new Hashtable();
+	Map traces = new HashMap();
 
 	public ThresholdsFrame(Dispatcher dispatcher)
 	{
@@ -187,7 +186,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		if (id.equals("all"))
 		{
 			((ThresholdsLayeredPanel)panel).removeAllGraphPanels();
-			traces = new Hashtable();
+			traces = new HashMap();
 		}
 		else
 		{

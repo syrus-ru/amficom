@@ -1,25 +1,15 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.util.Map;
+
 import java.awt.Toolkit;
 import java.awt.event.*;
-import java.util.*;
+import javax.swing.*;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JToggleButton;
-
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.Threshold;
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
 {
@@ -187,9 +177,9 @@ class ThresholdsToolBar extends TraceEventsToolBar
 		return buttons;
 	}
 
-	protected Hashtable createGraphButtons()
+	protected Map createGraphButtons()
 	{
-		Hashtable buttons = new Hashtable();
+		Map buttons = super.createGraphButtons();
 
 		buttons.put(
 				eW,
@@ -288,7 +278,6 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				},
 				true));
 
-		buttons.putAll(super.createGraphButtons());
 		return buttons;
 	}
 

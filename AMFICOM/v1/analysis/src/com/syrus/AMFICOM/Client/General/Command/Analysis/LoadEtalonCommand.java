@@ -39,7 +39,7 @@ public class LoadEtalonCommand extends VoidCommand
 	public void execute()
 	{
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-		TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+		TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 
 		if (bs.test_setup_id.equals(""))
 		{

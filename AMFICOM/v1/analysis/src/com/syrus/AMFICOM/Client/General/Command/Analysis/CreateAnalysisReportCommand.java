@@ -1,16 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Command.OpenTypedTemplateCommand;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
+import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.Report.AMTReport;
-
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ATableFrame;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleResizableFrame;
 
 public class CreateAnalysisReportCommand extends VoidCommand
 {
@@ -21,7 +16,7 @@ public class CreateAnalysisReportCommand extends VoidCommand
 	private ApplicationContext aContext;
 	private ArrayList tableFrames = new ArrayList();
 	private ArrayList panels = new ArrayList();
-  private String type = "";
+	private String type = "";
 
 	public CreateAnalysisReportCommand(ApplicationContext aContext)
 	{
@@ -41,9 +36,9 @@ public class CreateAnalysisReportCommand extends VoidCommand
 			SimpleResizableFrame rf = (SimpleResizableFrame)it.next();
 			rc.setParameter(PANEL, rf);
 		}
-  
-    rc.type = this.type;
-    
+
+		rc.type = this.type;
+
 		return rc;
 	}
 

@@ -1,10 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.SystemColor;
-import java.awt.Dimension;
-
+import java.awt.*;
 import javax.swing.JPanel;
 
 public class SimpleGraphPanel extends JPanel

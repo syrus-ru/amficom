@@ -1,20 +1,13 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.util.Map;
+
 import java.awt.Toolkit;
 import java.awt.event.*;
-import java.util.*;
-
-import javax.swing.ImageIcon;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
 
 public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements OperationListener
 {
@@ -147,9 +140,9 @@ class TraceEventsToolBar extends ScalableToolBar
 		return buttons;
 	}
 
-	protected Hashtable createGraphButtons()
+	protected Map createGraphButtons()
 	{
-		Hashtable buttons = new Hashtable();
+		Map buttons = super.createGraphButtons();
 
 		buttons.put(
 				events,
@@ -185,7 +178,6 @@ class TraceEventsToolBar extends ScalableToolBar
 				true));
 
 		eventsTButton.doClick();
-		buttons.putAll(super.createGraphButtons());
 		return buttons;
 	}
 

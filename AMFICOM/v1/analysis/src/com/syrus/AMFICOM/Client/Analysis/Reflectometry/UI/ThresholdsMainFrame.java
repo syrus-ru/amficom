@@ -1,75 +1,23 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateTestSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileAddCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsBellcoreCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsWavetekCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTestSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveAnalysisCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.ArrangeWindowCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.ShowFrameCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
-
+import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Command.Session.*;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.analysis.AnalysisManager;
 import com.syrus.io.BellcoreStructure;
 
@@ -571,18 +519,18 @@ public class ThresholdsMainFrame extends JFrame
 						aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
 						aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
 					}
-					Enumeration enum = Pool.getHash("bellcorestructure").keys();
-					String nextId = (String)enum.nextElement();
+					Iterator it = Pool.getHash("bellcorestructure").keySet().iterator();
+					String nextId = (String)it.next();
 					if (nextId.equals("primarytrace"))
 					{
-						if (!enum.hasMoreElements())
+						if (!it.hasNext())
 						{
 							aModel.setEnabled("menuFileRemoveCompare", false);
 							aModel.setEnabled("menuTraceRemoveCompare", false);
 							aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
 						}
 						else
-				nextId = (String)enum.nextElement();
+							nextId = (String)it.next();
 					}
 					internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
 				}

@@ -1,17 +1,11 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractButton;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class AnalyseMainMenuBar extends JMenuBar implements ApplicationModelListener
 {

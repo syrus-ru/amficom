@@ -1,12 +1,9 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class TraceEventsPanel extends ScaledGraphPanel
 {

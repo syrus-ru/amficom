@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -9,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.AnalysisType;
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.*;
 
@@ -68,7 +68,7 @@ public class SaveAnalysisCommand extends VoidCommand
 
 		RefAnalysis refanalysis = (RefAnalysis)Pool.get("refanalysis", traceid);
 		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", traceid);
-		TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+		TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 
 		String s = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(),

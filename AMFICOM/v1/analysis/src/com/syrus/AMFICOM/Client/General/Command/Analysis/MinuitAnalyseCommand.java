@@ -1,20 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
-import com.syrus.AMFICOM.Client.General.Checker;
+
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-
-//import com.syrus.AMFICOM.Client.Analysis.HistoAnalysis.WorkWithReflectoArray;
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.AnalysisManager;
-//import com.syrus.AMFICOM.analysis.dadara.AnalysResult;
-//import com.syrus.AMFICOM.analysis.dadara.EventReader;
 import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class MinuitAnalyseCommand extends VoidCommand

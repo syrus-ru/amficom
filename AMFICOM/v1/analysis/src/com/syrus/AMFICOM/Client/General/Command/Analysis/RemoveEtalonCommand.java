@@ -1,9 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+
 public class RemoveEtalonCommand extends VoidCommand
 {
 	ApplicationContext aContext;
