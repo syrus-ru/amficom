@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.8 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.9 2005/02/01 15:14:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,21 +19,20 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.*;
+import com.syrus.AMFICOM.mapview.Selection;
+import com.syrus.AMFICOM.mapview.VoidElement;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
-import com.syrus.AMFICOM.mapview.Selection;
-import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
  * Стратегия управления топологическим узлом
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/01/31 12:19:19 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/01 15:14:50 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
