@@ -14,16 +14,25 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 public class EvaluationType_Database extends StorableObject_Database {
-	public static final String MODE_IN = "IN";
-	public static final String MODE_THRESHOLD = "THS";
-	public static final String MODE_ETALON = "ETA";
-	public static final String MODE_OUT = "OUT";
 
-	private EvaluationType fromStorableObject(StorableObject storableObject) throws Exception {
+	public static final String	MODE_IN							= "IN";
+	public static final String	MODE_THRESHOLD					= "THS";
+	public static final String	MODE_ETALON						= "ETA";
+	public static final String	MODE_OUT						= "OUT";
+
+	public static final String	COLUMN_CODENAME					= "codename";
+	public static final String	COLUMN_DESCRIPTION				= "description";
+
+	public static final String	LINK_COLUMN_EVALUATION_TYPE_ID	= "evaluation_type_id";
+
+	private EvaluationType fromStorableObject(StorableObject storableObject)
+			throws Exception {
 		if (storableObject instanceof EvaluationType)
-			return (EvaluationType)storableObject;
+			return (EvaluationType) storableObject;
 		else
-			throw new Exception("EvaluationType_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception(
+					"EvaluationType_Database.fromStorableObject | Illegal Storable Object: "
+							+ storableObject.getClass().getName());
 	}
 
 	public void retrieve(StorableObject storableObject) throws Exception {
@@ -32,38 +41,63 @@ public class EvaluationType_Database extends StorableObject_Database {
 		this.retrieveParameterTypes(evaluationType);
 	}
 
-	private void retrieveEvaluationType(EvaluationType evaluationType) throws Exception {
-		String evaluation_type_id_str = evaluationType.getId().toString();
-		String sql = "SELECT "
-			+ DatabaseDate.toQuerySubString("created") + ", " 
-			+ DatabaseDate.toQuerySubString("modified") + ", "
-			+ "creator_id, "
-			+ "modifier_id, "
-			+ "codename, "
-			+ "description"
-			+ " FROM " + ObjectEntities.EVALUATIONTYPE_ENTITY
-			+ " WHERE id = " + evaluation_type_id_str;
+	private void retrieveEvaluationType(EvaluationType evaluationType)
+			throws Exception {
+		String evaluation_type_id_str = evaluationType.getId().toSQLString();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_SELECT);
+			buffer.append(DatabaseDate.toQuerySubString(COLUMN_CREATED));
+			buffer.append(COMMA);
+			buffer.append(DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
+			buffer.append(COMMA);
+			buffer.append(COLUMN_CREATOR_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_MODIFIER_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_CODENAME);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_DESCRIPTION);
+			buffer.append(SQL_FROM);
+			buffer.append(ObjectEntities.EVALUATIONTYPE_ENTITY);
+			buffer.append(SQL_WHERE);
+			buffer.append(COLUMN_ID);
+			buffer.append(EQUALS);
+			buffer.append(evaluation_type_id_str);
+			sql = buffer.toString();
+		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EvaluationType_Database.retrieveEvaluationType | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage(
+					"EvaluationType_Database.retrieveEvaluationType | Trying: "
+							+ sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				evaluationType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
-																		 DatabaseDate.fromQuerySubString(resultSet, "modified"),
-																		 new Identifier(resultSet.getLong("creator_id")),
-																		 new Identifier(resultSet.getLong("modifier_id")),
-																		 resultSet.getString("codename"),
-																		 resultSet.getString("description"));
+				evaluationType.setAttributes(DatabaseDate.fromQuerySubString(
+						resultSet, COLUMN_CREATED), DatabaseDate
+						.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				/**
+				 * @todo when change DB Identifier model ,change getString() to
+				 *       getLong()
+				 */
+				new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+				/**
+				 * @todo when change DB Identifier model ,change getString() to
+				 *       getLong()
+				 */
+				new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+						resultSet.getString(COLUMN_CODENAME), resultSet
+								.getString(COLUMN_DESCRIPTION));
 			else
-				throw new Exception("No such evaluation type: " + evaluation_type_id_str);
-		}
-		catch (SQLException sqle) {
-			String mesg = "EvaluationType_Database.retrieveEvaluationType | Cannot retrieve evaluation type " + evaluation_type_id_str;
+				throw new Exception("No such evaluation type: "
+						+ evaluation_type_id_str);
+		} catch (SQLException sqle) {
+			String mesg = "EvaluationType_Database.retrieveEvaluationType | Cannot retrieve evaluation type "
+					+ evaluation_type_id_str;
 			throw new Exception(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -71,54 +105,74 @@ public class EvaluationType_Database extends StorableObject_Database {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
+			} catch (SQLException sqle1) {
 			}
-			catch (SQLException sqle1) {}
 		}
 	}
 
-	private void retrieveParameterTypes(EvaluationType evaluationType) throws Exception {
+	private void retrieveParameterTypes(EvaluationType evaluationType)
+			throws Exception {
 		ArrayList in_par_typs = new ArrayList();
 		ArrayList threshold_par_typs = new ArrayList();
 		ArrayList etalon_par_typs = new ArrayList();
 		ArrayList out_par_typs = new ArrayList();
 
-		String evaluation_type_id_str = evaluationType.getId().toString();
-		String sql = "SELECT "
-			+ "parameter_type_id, "
-			+ "parameter_mode"
-			+ " FROM " + ObjectEntities.EVATYPPARTYPLINK_ENTITY
-			+ " WHERE evaluation_type_id = " + evaluation_type_id_str;
+		String evaluation_type_id_str = evaluationType.getId().toSQLString();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_SELECT);
+			buffer.append(LINK_COLUMN_PARAMETER_TYPE_ID);
+			buffer.append(COMMA);
+			buffer.append(LINK_COLUMN_PARAMETER_MODE);
+			buffer.append(SQL_FROM);
+			buffer.append(ObjectEntities.EVATYPPARTYPLINK_ENTITY);
+			buffer.append(SQL_WHERE);
+			buffer.append(LINK_COLUMN_EVALUATION_TYPE_ID);
+			buffer.append(EQUALS);
+			buffer.append(evaluation_type_id_str);
+			sql = buffer.toString();
+		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EvaluationType_Database.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage(
+					"EvaluationType_Database.retrieveParameterTypes | Trying: "
+							+ sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			String parameter_mode;
-			long parameter_type_id_code;
+			/**
+			 * @todo when change DB Identifier model ,change String to long
+			 */
+			String parameter_type_id_code;
 			while (resultSet.next()) {
-				parameter_mode = resultSet.getString("parameter_mode");
-				parameter_type_id_code = resultSet.getLong("parameter_type_id");
+				parameter_mode = resultSet
+						.getString(LINK_COLUMN_PARAMETER_MODE);
+				/**
+				 * @todo when change DB Identifier model ,change setString() to
+				 *       setLong()
+				 */
+				parameter_type_id_code = resultSet
+						.getString(LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameter_mode.equals(MODE_IN))
 					in_par_typs.add(new Identifier(parameter_type_id_code));
+				else if (parameter_mode.equals(MODE_THRESHOLD))
+					threshold_par_typs.add(new Identifier(
+							parameter_type_id_code));
+				else if (parameter_mode.equals(MODE_ETALON))
+					etalon_par_typs.add(new Identifier(parameter_type_id_code));
+				else if (parameter_mode.equals(MODE_OUT))
+					out_par_typs.add(new Identifier(parameter_type_id_code));
 				else
-					if (parameter_mode.equals(MODE_THRESHOLD))
-						threshold_par_typs.add(new Identifier(parameter_type_id_code));
-					else
-						if (parameter_mode.equals(MODE_ETALON))
-							etalon_par_typs.add(new Identifier(parameter_type_id_code));
-						else
-							if (parameter_mode.equals(MODE_OUT))
-								out_par_typs.add(new Identifier(parameter_type_id_code));
-							else
-								Log.errorMessage("EvaluationType_Database.retrieveParameterTypes | ERROR: Unknown parameter mode for parameter_type_id " + parameter_type_id_code);
+					Log
+							.errorMessage("EvaluationType_Database.retrieveParameterTypes | ERROR: Unknown parameter mode for parameter_type_id "
+									+ parameter_type_id_code);
 			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "EvaluationType_Database.retrieveParameterTypes | Cannot retrieve parameter types for evaluation type " + evaluation_type_id_str;
+		} catch (SQLException sqle) {
+			String mesg = "EvaluationType_Database.retrieveParameterTypes | Cannot retrieve parameter types for evaluation type "
+					+ evaluation_type_id_str;
 			throw new Exception(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -126,17 +180,19 @@ public class EvaluationType_Database extends StorableObject_Database {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
+			} catch (SQLException sqle1) {
 			}
-			catch (SQLException sqle1) {}
 		}
 		in_par_typs.trimToSize();
 		threshold_par_typs.trimToSize();
 		etalon_par_typs.trimToSize();
 		out_par_typs.trimToSize();
-		evaluationType.setParameterTypes(in_par_typs, threshold_par_typs, etalon_par_typs, out_par_typs);
+		evaluationType.setParameterTypes(in_par_typs, threshold_par_typs,
+				etalon_par_typs, out_par_typs);
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject,
+			int retrieve_kind, Object arg) throws Exception {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
@@ -149,12 +205,10 @@ public class EvaluationType_Database extends StorableObject_Database {
 		try {
 			this.insertEvaluationType(evaluationType);
 			this.insertParameterTypes(evaluationType);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			try {
 				connection.rollback();
-			}
-			catch (SQLException sqle) {
+			} catch (SQLException sqle) {
 				Log.errorMessage("Exception in rolling back");
 				Log.errorException(sqle);
 			}
@@ -162,112 +216,194 @@ public class EvaluationType_Database extends StorableObject_Database {
 		}
 		try {
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			Log.errorMessage("Exception in commiting");
 			Log.errorException(sqle);
 		}
 	}
 
-	private void insertEvaluationType(EvaluationType evaluationType) throws Exception {
-		String evaluation_type_id_str = evaluationType.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.EVALUATIONTYPE_ENTITY
-			+ " (id, codename, description)"
-			+ " VALUES ("
-			+ evaluation_type_id_str + ", "
-			+ DatabaseDate.toUpdateSubString(evaluationType.getCreated()) + ", "
-			+ DatabaseDate.toUpdateSubString(evaluationType.getModified()) + ", "
-			+ evaluationType.getCreatorId().toString() + ", "
-			+ evaluationType.getModifierId().toString() + ", '"
-			+ evaluationType.getCodename() + "', '"
-			+ evaluationType.getDescription()
-			+ "')";
+	private void insertEvaluationType(EvaluationType evaluationType)
+			throws Exception {
+		String evaluation_type_id_str = evaluationType.getId().toSQLString();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
+			buffer.append(ObjectEntities.EVALUATIONTYPE_ENTITY);
+			buffer.append(OPEN_BRACKET);
+			buffer.append(COLUMN_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_CODENAME);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_DESCRIPTION);
+			buffer.append(CLOSE_BRACKET);
+			buffer.append(SQL_VALUES);
+			buffer.append(OPEN_BRACKET);
+			buffer.append(evaluation_type_id_str);
+			buffer.append(COMMA);
+			buffer.append(DatabaseDate.toUpdateSubString(evaluationType
+					.getCreated()));
+			buffer.append(COMMA);
+			buffer.append(DatabaseDate.toUpdateSubString(evaluationType
+					.getModified()));
+			buffer.append(COMMA);
+			buffer.append(evaluationType.getCreatorId().toSQLString());
+			buffer.append(COMMA);
+			buffer.append(evaluationType.getModifierId().toSQLString());
+			buffer.append(COMMA);
+			buffer.append(APOSTOPHE);
+			buffer.append(evaluationType.getCodename());
+			buffer.append(APOSTOPHE);
+			buffer.append(COMMA);
+			buffer.append(APOSTOPHE);
+			buffer.append(evaluationType.getDescription());
+			buffer.append(APOSTOPHE);
+			buffer.append(CLOSE_BRACKET);
+			sql = buffer.toString();
+		}
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EvaluationType_Database.insertEvaluationType | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage(
+					"EvaluationType_Database.insertEvaluationType | Trying: "
+							+ sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-		}
-		catch (SQLException sqle) {
-			String mesg = "EvaluationType_Database.insertEvaluationType | Cannot insert evaluation type " + evaluation_type_id_str;
+		} catch (SQLException sqle) {
+			String mesg = "EvaluationType_Database.insertEvaluationType | Cannot insert evaluation type "
+					+ evaluation_type_id_str;
 			throw new Exception(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
+			} catch (SQLException sqle1) {
 			}
-			catch (SQLException sqle1) {}
 		}
 	}
 
-	private void insertParameterTypes(EvaluationType evaluationType) throws Exception {
+	private void insertParameterTypes(EvaluationType evaluationType)
+			throws Exception {
 		ArrayList in_par_typs = evaluationType.getInParameterTypes();
-		ArrayList threshold_par_typs = evaluationType.getThresholdParameterTypes();
+		ArrayList threshold_par_typs = evaluationType
+				.getThresholdParameterTypes();
 		ArrayList etalon_par_typs = evaluationType.getEtalonParameterTypes();
 		ArrayList out_par_typs = evaluationType.getOutParameterTypes();
-		long evaluation_type_id_code = evaluationType.getId().getCode();
-		String sql = "INSERT INTO " + ObjectEntities.EVATYPPARTYPLINK_ENTITY
-			+ " (evaluation_type_id, parameter_type_id, parameter_mode)"
-			+ " VALUES (?, ?, ?)";
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
+		String evaluation_type_id_code = evaluationType.getId().getCode();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
+			buffer.append(ObjectEntities.EVATYPPARTYPLINK_ENTITY);
+			buffer.append(OPEN_BRACKET);
+			buffer.append(LINK_COLUMN_EVALUATION_TYPE_ID);
+			buffer.append(COMMA);
+			buffer.append(LINK_COLUMN_PARAMETER_TYPE_ID);
+			buffer.append(COMMA);
+			buffer.append(LINK_COLUMN_PARAMETER_MODE);
+			buffer.append(CLOSE_BRACKET);
+			buffer.append(SQL_VALUES);
+			buffer.append(OPEN_BRACKET);
+			buffer.append(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			buffer.append(CLOSE_BRACKET);
+			sql = buffer.toString();
+		}
 		PreparedStatement preparedStatement = null;
-		long parameter_type_id_code = 0;
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
+		String parameter_type_id_code = null;
 		String parameter_mode = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator iterator = in_par_typs.iterator(); iterator.hasNext();) {
-				preparedStatement.setLong(1, evaluation_type_id_code);
-				parameter_type_id_code = ((Identifier)iterator.next()).getCode();
-				preparedStatement.setLong(2, parameter_type_id_code);
+				preparedStatement.setString(1, evaluation_type_id_code);
+				parameter_type_id_code = ((Identifier) iterator.next())
+						.getCode();
+				preparedStatement.setString(2, parameter_type_id_code);
 				parameter_mode = MODE_IN;
 				preparedStatement.setString(3, parameter_mode);
-				Log.debugMessage("EvaluationType_Database.insertParameterTypes | Inserting parameter type " + parameter_type_id_code + " of parameter mode '" + parameter_mode + "' for evaluation type " + evaluation_type_id_code, Log.DEBUGLEVEL05);
+				Log.debugMessage(
+						"EvaluationType_Database.insertParameterTypes | Inserting parameter type "
+								+ parameter_type_id_code
+								+ " of parameter mode '" + parameter_mode
+								+ "' for evaluation type "
+								+ evaluation_type_id_code, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
-			for (Iterator iterator = threshold_par_typs.iterator(); iterator.hasNext();) {
-				preparedStatement.setLong(1, evaluation_type_id_code);
-				parameter_type_id_code = ((Identifier)iterator.next()).getCode();
-				preparedStatement.setLong(2, parameter_type_id_code);
+			for (Iterator iterator = threshold_par_typs.iterator(); iterator
+					.hasNext();) {
+				preparedStatement.setString(1, evaluation_type_id_code);
+				parameter_type_id_code = ((Identifier) iterator.next())
+						.getCode();
+				preparedStatement.setString(2, parameter_type_id_code);
 				parameter_mode = MODE_THRESHOLD;
 				preparedStatement.setString(3, parameter_mode);
-				Log.debugMessage("EvaluationType_Database.insertParameterTypes | Inserting parameter type " + parameter_type_id_code + " of parameter mode '" + parameter_mode + "' for evaluation type " + evaluation_type_id_code, Log.DEBUGLEVEL05);
+				Log.debugMessage(
+						"EvaluationType_Database.insertParameterTypes | Inserting parameter type "
+								+ parameter_type_id_code
+								+ " of parameter mode '" + parameter_mode
+								+ "' for evaluation type "
+								+ evaluation_type_id_code, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
-			for (Iterator iterator = etalon_par_typs.iterator(); iterator.hasNext();) {
-				preparedStatement.setLong(1, evaluation_type_id_code);
-				parameter_type_id_code = ((Identifier)iterator.next()).getCode();
-				preparedStatement.setLong(2, parameter_type_id_code);
+			for (Iterator iterator = etalon_par_typs.iterator(); iterator
+					.hasNext();) {
+				preparedStatement.setString(1, evaluation_type_id_code);
+				parameter_type_id_code = ((Identifier) iterator.next())
+						.getCode();
+				preparedStatement.setString(2, parameter_type_id_code);
 				parameter_mode = MODE_ETALON;
 				preparedStatement.setString(3, parameter_mode);
-				Log.debugMessage("EvaluationType_Database.insertParameterTypes | Inserting parameter type " + parameter_type_id_code + " of parameter mode '" + parameter_mode + "' for evaluation type " + evaluation_type_id_code, Log.DEBUGLEVEL05);
+				Log.debugMessage(
+						"EvaluationType_Database.insertParameterTypes | Inserting parameter type "
+								+ parameter_type_id_code
+								+ " of parameter mode '" + parameter_mode
+								+ "' for evaluation type "
+								+ evaluation_type_id_code, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
-			for (Iterator iterator = out_par_typs.iterator(); iterator.hasNext();) {
-				preparedStatement.setLong(1, evaluation_type_id_code);
-				parameter_type_id_code = ((Identifier)iterator.next()).getCode();
-				preparedStatement.setLong(2, parameter_type_id_code);
+			for (Iterator iterator = out_par_typs.iterator(); iterator
+					.hasNext();) {
+				preparedStatement.setString(1, evaluation_type_id_code);
+				parameter_type_id_code = ((Identifier) iterator.next())
+						.getCode();
+				preparedStatement.setString(2, parameter_type_id_code);
 				parameter_mode = MODE_OUT;
 				preparedStatement.setString(3, parameter_mode);
-				Log.debugMessage("EvaluationType_Database.insertParameterTypes | Inserting parameter type " + parameter_type_id_code + " of parameter mode '" + parameter_mode + "' for evaluation type " + evaluation_type_id_code, Log.DEBUGLEVEL05);
+				Log.debugMessage(
+						"EvaluationType_Database.insertParameterTypes | Inserting parameter type "
+								+ parameter_type_id_code
+								+ " of parameter mode '" + parameter_mode
+								+ "' for evaluation type "
+								+ evaluation_type_id_code, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "EvaluationType_Database.insertParameterTypes | Cannot insert parameter type " + parameter_type_id_code + " of parameter mode '" + parameter_mode + "' for evaluation type " + evaluation_type_id_code;
+		} catch (SQLException sqle) {
+			String mesg = "EvaluationType_Database.insertParameterTypes | Cannot insert parameter type "
+					+ parameter_type_id_code
+					+ " of parameter mode '"
+					+ parameter_mode
+					+ "' for evaluation type "
+					+ evaluation_type_id_code;
 			throw new Exception(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
+			} catch (SQLException sqle1) {
 			}
-			catch (SQLException sqle1) {}
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
+	public void update(StorableObject storableObject, int update_kind,
+			Object obj) throws Exception {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (update_kind) {
 			default:
@@ -276,48 +412,69 @@ public class EvaluationType_Database extends StorableObject_Database {
 	}
 
 	public void delete(EvaluationType evaluationType) {
-		String evaluation_type_id_str = evaluationType.getId().toString();
+		String evaluation_type_id_str = evaluationType.getId().toSQLString();
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			statement.executeUpdate("DELETE FROM " + ObjectEntities.EVATYPPARTYPLINK_ENTITY + " WHERE evaluation_type_id = " + evaluation_type_id_str);
-			statement.executeUpdate("DELETE FROM " + ObjectEntities.EVALUATIONTYPE_ENTITY + " WHERE id = " + evaluation_type_id_str);
+			statement.executeUpdate(SQL_DELETE_FROM
+					+ ObjectEntities.EVATYPPARTYPLINK_ENTITY + SQL_WHERE
+					+ LINK_COLUMN_EVALUATION_TYPE_ID + EQUALS
+					+ evaluation_type_id_str);
+			statement.executeUpdate(SQL_DELETE_FROM
+					+ ObjectEntities.EVALUATIONTYPE_ENTITY + SQL_WHERE
+					+ COLUMN_ID + EQUALS + evaluation_type_id_str);
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
-				if(statement != null)
+				if (statement != null)
 					statement.close();
 				statement = null;
+			} catch (SQLException ex) {
 			}
-			catch(SQLException _ex) { }
 		}
 	}
 
-	public static EvaluationType retrieveForCodename(String codename) throws Exception {
-		String sql = "SELECT "
-			+ "id"
-			+ " FROM " + ObjectEntities.EVALUATIONTYPE_ENTITY
-			+ " WHERE codename = '" + codename + "'";
+	public static EvaluationType retrieveForCodename(String codename)
+			throws Exception {
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_SELECT);
+			buffer.append(COLUMN_ID);
+			buffer.append(SQL_FROM);
+			buffer.append(ObjectEntities.EVALUATIONTYPE_ENTITY);
+			buffer.append(SQL_WHERE);
+			buffer.append(COLUMN_CODENAME);
+			buffer.append(EQUALS);
+			buffer.append(APOSTOPHE);
+			buffer.append(codename);
+			buffer.append(APOSTOPHE);
+			sql = buffer.toString();
+		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("EvaluationType_Database.retrieveForCodename | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage(
+					"EvaluationType_Database.retrieveForCodename | Trying: "
+							+ sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
-				return new EvaluationType(new Identifier(resultSet.getLong("id")));
-			else
-				throw new Exception("No evaluation type with codename: '" + codename + "'");
-		}
-		catch (SQLException sqle) {
-			String mesg = "EvaluationType_Database.retrieveForCodename | Cannot retrieve evaluation type with codename: '" + codename + "'";
+			if (resultSet.next()) {
+				/**
+				 * @todo when change DB Identifier model ,change getString() to
+				 *       getLong()
+				 */
+				return new EvaluationType(new Identifier(resultSet
+						.getString(COLUMN_ID)));
+			} else
+				throw new Exception("No evaluation type with codename: '"
+						+ codename + "'");
+		} catch (SQLException sqle) {
+			String mesg = "EvaluationType_Database.retrieveForCodename | Cannot retrieve evaluation type with codename: '"
+					+ codename + "'";
 			throw new Exception(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -325,8 +482,8 @@ public class EvaluationType_Database extends StorableObject_Database {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
+			} catch (SQLException sqle1) {
 			}
-			catch (SQLException sqle1) {}
 		}
 	}
 }
