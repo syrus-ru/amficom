@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.6 2004/09/23 10:05:30 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.7 2004/09/27 07:39:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/23 10:05:30 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 07:39:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -64,82 +64,14 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 
 	protected String mapProtoId = "";
 
-	public static String[][] exportColumns = null;
+	protected static String[][] exportColumns = null;
 
-	public String[][] getExportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[11][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_PROTO_ID;
-			exportColumns[4][0] = COLUMN_X;
-			exportColumns[5][0] = COLUMN_Y;
-			exportColumns[6][0] = COLUMN_CITY;
-			exportColumns[7][0] = COLUMN_STREET;
-			exportColumns[8][0] = COLUMN_BUILDING;
-			exportColumns[9][0] = COLUMN_COEF;
-			exportColumns[10][0] = COLUMN_IMAGE_ID;
-		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = getMapProtoId();
-		exportColumns[4][1] = String.valueOf(getAnchor().x);
-		exportColumns[5][1] = String.valueOf(getAnchor().y);
-		exportColumns[6][1] = getCity();
-		exportColumns[7][1] = getStreet();
-		exportColumns[8][1] = getBuilding();
-		exportColumns[9][1] = String.valueOf(scaleCoefficient);
-		exportColumns[10][1] = getImageId();
-		
-		return exportColumns;
-	}
-	
-	public void setColumn(String field, String value)
-	{
-		if(field.equals(COLUMN_ID))
-			setId(value);
-		else
-		if(field.equals(COLUMN_NAME))
-			setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			setDescription(value);
-		else
-		if(field.equals(COLUMN_PROTO_ID))
-			setMapProtoId(value);
-		else
-		if(field.equals(COLUMN_X))
-			anchor.x = Double.parseDouble(value);
-		else
-		if(field.equals(COLUMN_Y))
-			anchor.y = Double.parseDouble(value);
-		else
-		if(field.equals(COLUMN_CITY))
-			setCity(value);
-		else
-		if(field.equals(COLUMN_STREET))
-			setStreet(value);
-		else
-		if(field.equals(COLUMN_BUILDING))
-			setBuilding(value);
-		else
-		if(field.equals(COLUMN_COEF))
-			setScaleCoefficient(Double.parseDouble(value));
-		else
-		if(field.equals(COLUMN_IMAGE_ID))
-			setImageId( imageId);
-	}
-	
 	public MapSiteNodeElement()
 	{
 		attributes = new HashMap();
 		selected = false;
-		setScaleCoefficient(1.0D);
 		setImageId("pc");
+		setScaleCoefficient(1.0D);
 
 		transferable = new MapSiteElement_Transferable();
 	}
@@ -181,8 +113,8 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		if(map != null)
 			mapId = map.getId();
 		attributes = new HashMap();
-		setScaleCoefficient(coef);
 		setImageId( imageId);
+		setScaleCoefficient(coef);
 		selected = false;
 
 		transferable = new MapSiteElement_Transferable();
@@ -338,6 +270,74 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		mapProtoId = msnes.mapProtoId;
 	}
 
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[11][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PROTO_ID;
+			exportColumns[4][0] = COLUMN_X;
+			exportColumns[5][0] = COLUMN_Y;
+			exportColumns[6][0] = COLUMN_CITY;
+			exportColumns[7][0] = COLUMN_STREET;
+			exportColumns[8][0] = COLUMN_BUILDING;
+			exportColumns[9][0] = COLUMN_COEF;
+			exportColumns[10][0] = COLUMN_IMAGE_ID;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getMapProtoId();
+		exportColumns[4][1] = String.valueOf(getAnchor().x);
+		exportColumns[5][1] = String.valueOf(getAnchor().y);
+		exportColumns[6][1] = getCity();
+		exportColumns[7][1] = getStreet();
+		exportColumns[8][1] = getBuilding();
+		exportColumns[9][1] = String.valueOf(scaleCoefficient);
+		exportColumns[10][1] = getImageId();
+		
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
+		else
+		if(field.equals(COLUMN_PROTO_ID))
+			setMapProtoId(value);
+		else
+		if(field.equals(COLUMN_X))
+			anchor.x = Double.parseDouble(value);
+		else
+		if(field.equals(COLUMN_Y))
+			anchor.y = Double.parseDouble(value);
+		else
+		if(field.equals(COLUMN_CITY))
+			setCity(value);
+		else
+		if(field.equals(COLUMN_STREET))
+			setStreet(value);
+		else
+		if(field.equals(COLUMN_BUILDING))
+			setBuilding(value);
+		else
+		if(field.equals(COLUMN_COEF))
+			setScaleCoefficient(Double.parseDouble(value));
+		else
+		if(field.equals(COLUMN_IMAGE_ID))
+			setImageId( imageId);
+	}
+	
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);

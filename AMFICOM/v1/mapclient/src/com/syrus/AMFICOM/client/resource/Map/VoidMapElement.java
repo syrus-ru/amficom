@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.8 2004/09/23 10:05:30 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.9 2004/09/27 07:39:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,13 +18,14 @@ import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Пустой элемент 
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/09/23 10:05:30 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/27 07:39:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -41,11 +42,12 @@ public final class VoidMapElement extends StubResource implements MapElement
 
 	public String[][] getExportColumns()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public void setColumn(String field, String value)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public static VoidMapElement getInstance(Map map)
@@ -71,7 +73,12 @@ public final class VoidMapElement extends StubResource implements MapElement
 		throw new UnsupportedOperationException();
 	}
 
-	public void paint(Graphics g)
+	public boolean isVisible(Rectangle2D.Double visibleBounds)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		throw new UnsupportedOperationException();
 	}

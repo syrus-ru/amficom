@@ -18,6 +18,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -48,6 +49,12 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	
 	public static final String IMAGE_NAME = "mark";
 	public static final String IMAGE_PATH = "images/mark.gif";
+
+	static
+	{
+		MapPropertiesManager.setOriginalImage(IMAGE_NAME, new ImageIcon(IMAGE_PATH).getImage());
+	}
+
 
 	protected String linkId = "";
 	protected double distance = 0.0;
@@ -128,7 +135,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		this.map = map;
 		this.link = link;
 		this.linkId = link.getId();
-		setImage(IMAGE_PATH);
+		setImageId(IMAGE_NAME);
 		
 		if(map != null)
 			mapId = map.getId();
@@ -148,28 +155,28 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		attributes = new HashMap();
 	}
 
-	public Image getImage()
-	{
-		return icon;
-	}
+//	public Image getImage()
+//	{
+//		return icon;
+//	}
 	
 	/**
 	 * установить идентификатор изображения, по которому определяется 
 	 * пиктограмма
 	 */
-	public void setImage(String iconPath)
-	{
-		imageId = iconPath;
-
-		int width = (int )Math.round(getBounds().getWidth());
-		int height = (int )Math.round(getBounds().getHeight());
-		ImageIcon imageIcon = new ImageIcon(iconPath);
-		icon = imageIcon.getImage().getScaledInstance(
-			width,
-			height,
-			Image.SCALE_SMOOTH);
-		loadImage(icon);
-	}
+//	public void setImage(String iconPath)
+//	{
+//		imageId = iconPath;
+//
+//		int width = (int )Math.round(getBounds().getWidth());
+//		int height = (int )Math.round(getBounds().getHeight());
+//		ImageIcon imageIcon = new ImageIcon(iconPath);
+//		icon = imageIcon.getImage().getScaledInstance(
+//			width,
+//			height,
+//			Image.SCALE_SMOOTH);
+//		loadImage(icon);
+//	}
 
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
@@ -374,9 +381,12 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	}
 
 	//рисуем маркер
-	public void paint (Graphics g)
+	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		super.paint(g);
+		if(!isVisible(visibleBounds))
+			return;
+
+		super.paint(g, visibleBounds);
 
 		MapCoordinatesConverter converter = getMap().getConverter();
 

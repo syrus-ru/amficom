@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.13 2004/09/23 10:05:29 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.14 2004/09/27 07:39:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,6 +30,7 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -44,7 +45,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/09/23 10:05:29 $
+ * @version $Revision: 1.14 $, $Date: 2004/09/27 07:39:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -375,18 +376,39 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	
 	protected boolean selectionVisible = false;
 
-	public void paint(Graphics g, Stroke stroke, Color color, boolean selectionVisible)
+	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
+		boolean vis = false;
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		{
+			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
+			if(nodelink.isVisible(visibleBounds))
+			{
+				vis = true;
+				break;
+			}
+		}
+		return vis;
+	}
+
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
+	{
+		if(!isVisible(visibleBounds))
+			return;
+
 		this.selectionVisible = selectionVisible;
 		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
-			nodelink.paint(g, stroke, color);
+			nodelink.paint(g, visibleBounds, stroke, color);
 		}
 	}
 
-	public void paint(Graphics g)
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
+		if(!isVisible(visibleBounds))
+			return;
+
 		BasicStroke stroke = (BasicStroke )this.getStroke();
 		Stroke str = new BasicStroke(
 				this.getLineSize(),
@@ -397,7 +419,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 				stroke.getDashPhase());
 		Color color = getColor();
 
-		paint(g, str, color, false);
+		paint(g, visibleBounds, str, color, false);
 	}
 
 	/**

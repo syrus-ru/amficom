@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.11 2004/09/23 10:05:29 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.12 2004/09/27 07:39:57 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,6 +30,7 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -41,7 +42,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/09/23 10:05:29 $
+ * @version $Revision: 1.12 $, $Date: 2004/09/27 07:39:57 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -272,12 +273,21 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		return isSelected() || getMap().getPhysicalLink(getPhysicalLinkId()).isSelectionVisible();
 	}
 
+	public boolean isVisible(Rectangle2D.Double visibleBounds)
+	{
+		return visibleBounds.contains(getStartNode().getAnchor()) 
+			|| visibleBounds.contains(getEndNode().getAnchor());
+	}
+
 	/**
 	 * –исуем NodeLink взависимости от того выбрана она или нет,
 	 * а так же если она выбрана выводим еЄ рамер
 	 */
-	public void paint (Graphics g)
+	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
 	{
+		if(!isVisible(visibleBounds))
+			return;
+
 		BasicStroke basistroke;
 		Color color;
 		int lineSize;
@@ -294,7 +304,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 				basistroke.getDashArray(), 
 				basistroke.getDashPhase());
 
-		paint(g, str, color);
+		paint(g, visibleBounds, str, color);
 
 		MapCoordinatesConverter converter = getMap().getConverter();
 		Point from = converter.convertMapToScreen(startNode.getAnchor());
@@ -339,8 +349,11 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		}
 	}
 
-	public void paint (Graphics g, Stroke stroke, Color color)
+	public void paint (Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color)
 	{
+		if(!isVisible(visibleBounds))
+			return;
+
 		MapCoordinatesConverter converter = getMap().getConverter();
 
 		Point from = converter.convertMapToScreen(startNode.getAnchor());

@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.6 2004/09/23 10:05:29 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.7 2004/09/27 07:39:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -32,7 +33,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/23 10:05:29 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 07:39:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -127,11 +128,16 @@ public final class MapLinkProtoElement
 		return modified;
 	}
 
-	public void paint(Graphics g)
+	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
 		throw new UnsupportedOperationException();
 	}
-	
+
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
+	{
+		throw new UnsupportedOperationException();
+	}
+
 	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
 		throw new UnsupportedOperationException();

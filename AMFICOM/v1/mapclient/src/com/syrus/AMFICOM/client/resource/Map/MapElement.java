@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.7 2004/09/23 10:05:29 krupenn Exp $
+ * $Id: MapElement.java,v 1.8 2004/09/27 07:39:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  *  Интерфейс для всех элементов карты. Нужен для определения координат
@@ -23,7 +24,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/09/23 10:05:29 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/27 07:39:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -33,7 +34,7 @@ public interface MapElement
 	/**
 	 * отрисовка элемента
 	 */
-	void paint (Graphics g);
+	void paint (Graphics g, Rectangle2D.Double visibleBounds);
 
 	/**
 	 * поучить идентификатор элемента
@@ -67,6 +68,8 @@ public interface MapElement
 	 * полем mouseTolerancy
 	 */
 	boolean isMouseOnThisObject(Point currentMousePoint);
+
+	boolean isVisible(Rectangle2D.Double visibleBounds);
 
 	/**
 	 * панель свойств элемента

@@ -13,6 +13,7 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -151,8 +152,26 @@ public class MapPipePathElement extends MapLinkElement
 		return mppe;
 	}
 
-	public void paint(Graphics g)
+	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
+		boolean vis = false;
+		for(Iterator it = getLinks().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			if(link.isVisible(visibleBounds))
+			{
+				vis = true;
+				break;
+			}
+		}
+		return vis;
+	}
+
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
+	{
+		if(!isVisible(visibleBounds))
+			return;
+
 		BasicStroke stroke = (BasicStroke )this.getStroke();
 		Stroke str = new BasicStroke(
 				this.getLineSize(), 
@@ -166,7 +185,7 @@ public class MapPipePathElement extends MapLinkElement
 		for(Iterator it = getLinks().iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			link.paint(g, str, color, false);
+			link.paint(g, visibleBounds, str, color, false);
 		}
 	}
 

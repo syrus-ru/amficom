@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.4 2004/09/23 10:05:29 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.5 2004/09/27 07:39:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,13 +13,20 @@ package com.syrus.AMFICOM.Client.Map;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
+import com.syrus.AMFICOM.Client.Resource.ImageResource;
 import com.syrus.io.IniFile;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.MediaTracker;
 import java.awt.SystemColor;
 import java.awt.geom.Point2D;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Класс управляет инициализацией картографического отображения.
@@ -35,7 +42,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/23 10:05:29 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 07:39:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -314,6 +321,99 @@ public final class MapPropertiesManager
         }
 	}
 
+	/** объекты, необходимые для отрисовки пиктограмм */
+    private static final Component component = new Component() {};
+    private static final MediaTracker tracker = new MediaTracker(component);
+    private static int mediaTrackerID = 0;
+
+	private static Map originalImages = new HashMap();
+	private static Map scaledImages = new HashMap();
+
+	public static void setOriginalImage(String imageId, Image image)
+	{
+		originalImages.put(imageId, image);
+	}
+
+	public static void setScaledImageSize(String imageId, int width, int height)
+	{
+		Image img = getScaledImage(imageId);
+		if(img.getWidth(null) != width
+			|| img.getHeight(null) != height)
+		{
+			img = getImage(imageId);
+			img = img.getScaledInstance(
+				width,
+				height,
+				Image.SCALE_SMOOTH);
+			scaledImages.put(imageId, img);
+			loadImage(img);
+		}
+	}
+
+	public static Image getImage(String imageId)
+	{
+		Image img = (Image )originalImages.get(imageId);
+		if(img == null)
+		{
+			ImageResource ir = ImageCatalogue.get(imageId);
+			img = ir.getImage();
+			originalImages.put(imageId, img);
+			loadImage(img);
+		}
+		return img;
+	}
+
+	public static Image getScaledImage(String imageId)
+	{
+		Image img = (Image )scaledImages.get(imageId);
+		if(img == null)
+		{
+			img = getImage(imageId);
+			scaledImages.put(imageId, img);
+		}
+		return img;
+	}
+
+	/**
+	 * обеспечивает подгрузку пиктограммы для мгновенного ее отображения
+	 */
+    private static final void loadImage(Image image) 
+	{
+		synchronized(tracker) 
+		{
+            int id = getNextID();
+
+			tracker.addImage(image, id);
+			try 
+			{
+				tracker.waitForID(id, 0);
+			} 
+			catch (InterruptedException e) 
+			{
+				System.out.println("INTERRUPTED while loading Image");
+			}
+			tracker.removeImage(image, id);
+		}
+    }
+
+	/**
+	 * получить идентификатор для подгрузки пиктограммы
+	 */
+    private static final int getNextID() 
+	{
+        synchronized(tracker) 
+		{
+            return ++mediaTrackerID;
+        }
+    }
+
+
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 
 	public static void setTextBackground(Color _textBackground)
 	{

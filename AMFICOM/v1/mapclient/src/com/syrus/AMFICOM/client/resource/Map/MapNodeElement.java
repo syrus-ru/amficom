@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.8 2004/09/23 10:05:29 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.9 2004/09/27 07:39:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,7 +42,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/09/23 10:05:29 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/27 07:39:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -56,25 +57,25 @@ public abstract class MapNodeElement extends StubResource
 	/** максимальный размер элемента */
 	public static final Rectangle MAX_BOUNDS = new Rectangle(40, 40);
 
-	/** Размер пиктограммы в экранных координатах */
-	protected Rectangle bounds = new Rectangle(DEFAULT_BOUNDS);
-
 	/** коэффициент масштабирования пиктограммы по умолчанию */
 	public static final double DEFAULT_SCALE_COEFFICIENT = 1.0;
-
-	/** коэффициент масштабирования пиктограммы */
-	double scaleCoefficient = DEFAULT_SCALE_COEFFICIENT;
 
 	/** пиктограмма по умолчанию */	
 	public static final String DEFAULT_IMAGE = "images/pc.gif";
 	
+	/** коэффициент масштабирования пиктограммы */
+	protected double scaleCoefficient = DEFAULT_SCALE_COEFFICIENT;
+
+	/** Размер пиктограммы в экранных координатах */
+	protected Rectangle bounds = new Rectangle(DEFAULT_BOUNDS);
+
 	protected Map map;
 
 	/** флаг выделения элемента */
 	protected boolean selected = false;
 
 	/** пиктограмма */
-	protected Image icon;
+//	protected Image icon;
 
 	protected String id = "";
 	protected String name = "";
@@ -94,9 +95,9 @@ public abstract class MapNodeElement extends StubResource
 	protected boolean alarmState = false;
 	
 	/** объекты, необходимые для отрисовки пиктограмм */
-    private static final Component component = new Component() {};
-    private static final MediaTracker tracker = new MediaTracker(component);
-    private static int mediaTrackerID = 0;
+//    private static final Component component = new Component() {};
+//    private static final MediaTracker tracker = new MediaTracker(component);
+//    private static int mediaTrackerID = 0;
 
 	/** флаг того, что элемент удален */
 	protected boolean removed = false;
@@ -149,11 +150,12 @@ public abstract class MapNodeElement extends StubResource
 		}
 		setBounds(new Rectangle(w, h));
 
-		icon = getImage().getScaledInstance(
-			w,
-			h,
-			Image.SCALE_SMOOTH);
-		loadImage(icon);
+		MapPropertiesManager.setScaledImageSize(getImageId(), w, h);
+//		icon = getImage().getScaledInstance(
+//			w,
+//			h,
+//			Image.SCALE_SMOOTH);
+//		loadImage(icon);
 	}
 	
 	/**
@@ -177,13 +179,14 @@ public abstract class MapNodeElement extends StubResource
 	 */
 	public Image getImage()
 	{
-		ImageResource ir = ImageCatalogue.get(imageId);
-		if(ir == null)
-		{
-			ImageIcon imageIcon = new ImageIcon(DEFAULT_IMAGE);
-			return imageIcon.getImage();
-		}
-		return ir.getImage();
+		return MapPropertiesManager.getScaledImage(getImageId());
+//		ImageResource ir = ImageCatalogue.get(imageId);
+//		if(ir == null)
+//		{
+//			ImageIcon imageIcon = new ImageIcon(DEFAULT_IMAGE);
+//			return imageIcon.getImage();
+//		}
+//		return ir.getImage();
 	}
 
 	/**
@@ -194,13 +197,13 @@ public abstract class MapNodeElement extends StubResource
 	{
 		imageId = iconPath;
 
-		int width = (int )Math.round(getBounds().getWidth());
-		int height = (int )Math.round(getBounds().getHeight());
-		icon = getImage().getScaledInstance(
-			width,
-			height,
-			Image.SCALE_SMOOTH);
-		loadImage(icon);
+//		int width = (int )Math.round(getBounds().getWidth());
+//		int height = (int )Math.round(getBounds().getHeight());
+//		icon = getImage().getScaledInstance(
+//			width,
+//			height,
+//			Image.SCALE_SMOOTH);
+//		loadImage(icon);
 	}
 
 	/**
@@ -272,9 +275,17 @@ public abstract class MapNodeElement extends StubResource
 	{
 		return getMap().getDomainId();
 	}
-	
-	public void paint (Graphics g)
+
+	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
+		return visibleBounds.contains(getAnchor());
+	}
+
+	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
+	{
+		if(!isVisible(visibleBounds))
+			return;
+		
 		MapCoordinatesConverter converter = getMap().getConverter();
 		
 		Point p = converter.convertMapToScreen(getAnchor());
@@ -286,7 +297,8 @@ public abstract class MapNodeElement extends StubResource
 		int height = getBounds().height;
 
 		pg.drawImage(
-				icon,
+//				icon,
+				getImage(),
                 p.x - width / 2,
                 p.y - height / 2,
                 null);
@@ -472,43 +484,43 @@ public abstract class MapNodeElement extends StubResource
 		setName(mnes.name);
 		setDescription(mnes.description);
 		setImageId(mnes.imageId);
-		icon = mnes.icon;
+//		icon = mnes.icon;
 		setAnchor(mnes.anchor);
 		optimizerAttribute = mnes.optimizerAttribute;
 		attributes = new HashMap(mnes.attributes);
 	}
 
-	/**
-	 * обеспечивает подгрузку пиктограммы для мгновенного ее отображения
-	 */
-    protected final void loadImage(Image image) 
-	{
-		synchronized(tracker) 
-		{
-            int id = getNextID();
-
-			tracker.addImage(image, id);
-			try 
-			{
-				tracker.waitForID(id, 0);
-			} 
-			catch (InterruptedException e) 
-			{
-				System.out.println("INTERRUPTED while loading Image");
-			}
-			tracker.removeImage(image, id);
-		}
-    }
-
-	/**
-	 * получить идентификатор для подгрузки пиктограммы
-	 */
-    private int getNextID() 
-	{
-        synchronized(tracker) 
-		{
-            return ++mediaTrackerID;
-        }
-    }
+//	/**
+//	 * обеспечивает подгрузку пиктограммы для мгновенного ее отображения
+//	 */
+//    protected final void loadImage(Image image) 
+//	{
+//		synchronized(tracker) 
+//		{
+//            int id = getNextID();
+//
+//			tracker.addImage(image, id);
+//			try 
+//			{
+//				tracker.waitForID(id, 0);
+//			} 
+//			catch (InterruptedException e) 
+//			{
+//				System.out.println("INTERRUPTED while loading Image");
+//			}
+//			tracker.removeImage(image, id);
+//		}
+//    }
+//
+//	/**
+//	 * получить идентификатор для подгрузки пиктограммы
+//	 */
+//    private int getNextID() 
+//	{
+//        synchronized(tracker) 
+//		{
+//            return ++mediaTrackerID;
+//        }
+//    }
 
 }
