@@ -139,7 +139,7 @@ void findNoiseArray(double *data, double *out, int size)
 	double *temp = new double[size]; // здесь временно будет сглаженная р/г
 	assert(temp);
 
-	prf_b("findNoiseArray: enter");
+	//prf_b("findNoiseArray: enter");
 
 	const int width = NETTESTWIDTH;
 	// mlen должно получиться четным
@@ -149,7 +149,7 @@ void findNoiseArray(double *data, double *out, int size)
 	int mofs = mlen / 2 - 1;
 	double gist[nsam];
 
-	prf_b("findNoiseArray: #1");
+	//prf_b("findNoiseArray: #1");
 
 	assert(size > mlen); // XXX
 	int i;
@@ -176,7 +176,7 @@ void findNoiseArray(double *data, double *out, int size)
 		//fprintf(stdout, "%d %g %g\n", io, dv, dy2dB(ya[io], dv));
 		out[i + mofs] = dy2dB(y0, dv);
 	}
-	prf_b("findNoiseArray: #2");
+	//prf_b("findNoiseArray: #2");
 
     // расширяем до краев массива
 	for (i = 0; i < mofs; i++)
@@ -220,14 +220,16 @@ void findNoiseArray(double *data, double *out, int size)
 		//fprintf(stdout,"%d %g\n", i, out[i]);
 	}
 
-	prf_b("findNoiseArray: done");
+	//prf_b("findNoiseArray: done");
 
+	/*
 	FILE *f = fopen ("noise.tmp", "w");
 	assert(f);
 	for (i = 0; i < size; i++)
 		fprintf(f, "%d %g %g %g\n", i, data[i], out[i], temp[i]);
 	fclose(f);
+	*/
 
 	delete[] temp;
-	prf_b("findNoiseArray: exiting");
+	//prf_b("findNoiseArray: exiting");
 }

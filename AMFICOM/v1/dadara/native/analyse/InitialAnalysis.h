@@ -9,15 +9,12 @@
 //#include "EPList2.h"
 #include "../Common/ArrList.h"
 
-#define debug_VCL
-
-//#define debug_lines // !!! отрисовка вспомогательных линий
 //---------------------------------------------------------------------------------------------------------------
 class InitialAnalysis
 {
 public:
 #ifdef debug_lines
-	static const int sz = 100000;
+	static const int sz = 1000000;
 	int cou;
     double xs[sz], xe[sz], ys[sz], ye[sz], col[sz];//использовалось дл€ отладки при рисованити пр€мых
 #endif
@@ -38,7 +35,7 @@ public:
 
 	int getEventSize();
 	int getEventsCount();
-    ArrList& getEvents(){return *events_lp;}
+    ArrList& getEvents(){return *events;}
 #ifndef debug_VCL
 private:
 #endif
@@ -54,7 +51,7 @@ private:
 #ifdef debug_VCL
     double* f_tmp; //!!! массив дл€ временного хранени€ обработанной рефлектограммы ( исользуетс€ при отладке )
 #endif
-    ArrList* events_lp; // список всех событий
+    ArrList* events; // список всех событий
 //Parameters of the analysis (criteria);
 	double minimalThreshold;
 	double minimalWeld;
@@ -65,6 +62,7 @@ private:
 	double formFactor;
 
     int wlet_width; // ширина вейвлета
+    int reflectiveSize;// максимальна€ ширина коннектора
 
 	int lastNonZeroPoint;
 	double wletMeanValue; // среднее значение образа рефлектограммы
@@ -73,24 +71,23 @@ private:
 	int getLastPoint();
 
 	// вычислить коэфф "a" и "b" пр€мой y=ax+b, минимизирующей RMS
-    void calc_rms_line(double *arr, int beg, int end, double& a, double& b);// (c) Vit 
+    void calc_rms_line(double *arr, int beg, int end, double& a, double& b);// (c) Vit
 
 	// заполнить массив шума (шум не посто€нен, поэтому используем массив дл€ описани€ значен€ шума в каждой точке)
 	void fillNoiseArray(double *y, int N, double Neff, double *outNoise);
 	void getNoise(double *noise, int freq);
 
 	void performTransformation(double *y, int begin, int end, double *trans, int freq, double norma);
-	double calcWletMeanValue(double* f, double from, double to, int columns);// вычислить самое попул€рное значение ф-ции 
+	double calcWletMeanValue(double* f, double from, double to, int columns);// вычислить самое попул€рное значение ф-ции
 	void centerWletImage(double* f_wlet);
     void findAllWletSplashes(double* f_wlet, ArrList& splashes);
     void findEventsBySplashes(ArrList&  splashes);
     void deleteAllEventsAfterLastConnector();
     void addLinearPartsBetweenEvents();
     void correctAllConnectorsFronts(double *arr);
-    void correctAllSpliceCoords(double *arr);
+    void correctAllSpliceCoords(); // ф-€ ѕќ–“»“ вейвлет образ !  (так как использует тот же массив дл€ хранени€ образа на другом масштабе)
+    void correctSpliceCoords(int n);
     void excludeShortLinesBetweenConnectors(double* data, int evSizeC);
-//	void sewLinearParts();
-//	void correctEnd();
 
 //Wavelet constants;
 private:

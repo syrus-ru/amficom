@@ -1,13 +1,6 @@
-// Histogramm.cpp: implementation of the Histogramm class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #include "Histogramm.h"
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
+#include <assert.h>
+//----------------------------------------------------------------------------------------------------
 Histogramm::Histogramm(double down_limit, double up_limit, int nBins)
 {
 	if (down_limit > up_limit)
@@ -21,48 +14,41 @@ Histogramm::Histogramm(double down_limit, double up_limit, int nBins)
 	this->down_limit = down_limit;
 	this->nBins	= nBins;
 }
-
+//----------------------------------------------------------------------------------------------------
 Histogramm::~Histogramm()
-{
-	delete histo;
+{	delete histo;
 }
-
-void Histogramm::init(double* data, int data_length, int start, int end)
-{
+//----------------------------------------------------------------------------------------------------
+void Histogramm::init(double* data, int start, int end)
+{	assert(start>=0 && end>=0);
 	histo = new double[nBins];
-
     int i;
 	for (i = 0; i < nBins; i++)
-		histo[i] = 0;
-
-	double deriv_delta = (up_limit - down_limit) / (double)nBins;
-
-	int N;
-	for (i = max(0, start); i <= min (end, data_length-1); i++)
-	{
-		N = (int)((data[i] - down_limit) / deriv_delta + 0.5);
-		if (N >= 0 && N < nBins)
-			histo[N]++;
+	{	histo[i] = 0;
+    }
+	double delta = (up_limit - down_limit) / (double)nBins;
+	for (i = start; i < end; i++)
+	{ 	int N = (int)((data[i] - down_limit) / delta );
+		if (N >= 0 && N < nBins)// всё, что не оппало в указанный при создании гистограммы интервал, не учитывается
+		{	histo[N]++;
+        }
 	}
 }
-
+//----------------------------------------------------------------------------------------------------
 int Histogramm::getMaximumIndex()
-{
-	int center = 0;
+{	int center = 0;
 	double max = histo[0];
 	for (int i = 1; i < nBins; i++)
 		if (max < histo[i])
-		{
-			max = histo[i];
+		{	max = histo[i];
 			center = i;
 		}
 	return center;
 }
-
+//----------------------------------------------------------------------------------------------------
 double Histogramm::getMaximumValue()
-{
-	double deriv_delta = (up_limit - down_limit) / (double)nBins;
+{   double delta = (up_limit - down_limit) / (double)nBins;
 	int max_index = getMaximumIndex();
-	return down_limit + (max_index + 0.5) * deriv_delta;
+	return down_limit + max_index*delta;
 }
-
+//----------------------------------------------------------------------------------------------------
