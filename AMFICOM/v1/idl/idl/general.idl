@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.45 2005/01/13 12:08:38 arseniy Exp $
+ * $Id: general.idl,v 1.46 2005/01/14 18:14:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -200,12 +200,12 @@ module corba {
 		wstring field_string;
 		StringFieldSort sort;
 	};
-	
+
 	struct LinkedIdsCondition_Transferable {
-			short	entity_code;
-			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
-			com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable linked_ids;		
+		short	entity_code;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable linked_ids;		
 	};
+
 };
 };
 };
