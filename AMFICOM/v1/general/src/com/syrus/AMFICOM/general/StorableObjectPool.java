@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.48 2005/03/28 16:48:06 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.49 2005/03/29 11:32:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/03/28 16:48:06 $
+ * @version $Revision: 1.49 $, $Date: 2005/03/29 11:32:27 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -460,9 +460,6 @@ public abstract class StorableObjectPool {
 			}
 			collection.addAll(loadedList);
 		}
-
-		if (collection == null)
-			collection = Collections.EMPTY_LIST;
 
 		return collection;
 	}
