@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.38 2004/10/25 06:55:13 max Exp $
+ * $Id: configuration.idl,v 1.39 2004/10/25 09:45:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -390,6 +390,12 @@ module corba {
 	typedef sequence <MonitoredElement_Transferable> MonitoredElementSeq_Transferable;
 
 ///////////////////// Link /////////////////////
+	enum LinkSort{
+		LINKSORT_LINK,
+		LINKSORT_CABLELINK,
+		LINKSORT_CABLELINK_THREAD
+	};
+
 	struct Link_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 	  	long long created;
@@ -400,15 +406,21 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 		
 		wstring name;
-		wstring description;		
+		wstring description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;		
+		
+		LinkSort sort;		
+		
 		wstring inventoryNo;
 		wstring supplier;
 		wstring supplierCode;
+		
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable link_id;
+		wstring color;
+		wstring mark;		
 	};
-	
-	typedef sequence <Link_Transferable> LinkSeq_Transferable;
 
+	typedef sequence <Link_Transferable> LinkSeq_Transferable;
 //////////////// Conditions //////////////
 
 	struct DomainCondition_Transferable {

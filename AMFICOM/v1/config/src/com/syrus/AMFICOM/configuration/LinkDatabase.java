@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.1 2004/10/22 13:03:43 bob Exp $
+ * $Id: LinkDatabase.java,v 1.2 2004/10/25 09:44:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,15 +31,16 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/22 13:03:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/25 09:44:20 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class LinkDatabase extends StorableObjectDatabase {
 	// table :: Link
-	//	 type_id VARCHAR2(32) NOT NULL,
     public static final String COLUMN_TYPE_ID       = "type_id";
+    // sort NUMBER(2,0),
+    public static final String COLUMN_SORT  = "sort";
     // name VARCHAR2(64) NOT NULL,
     public static final String COLUMN_NAME  = "name";
     // description VARCHAR2(256),
@@ -50,6 +51,13 @@ public class LinkDatabase extends StorableObjectDatabase {
     public static final String COLUMN_SUPPLIER      = "supplier";
     // supplier_code VARCHAR2(64),
     public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
+    // link_id VARCHAR2(32),
+    public static final String COLUMN_LINK_ID       = "link_id";
+    // color VARCHAR(32),
+    public static final String COLUMN_COLOR = "color";
+    // mark VARCHAR(32),
+    public static final String COLUMN_MARK  = "mark";
+
 
 	
 	private String updateColumns;
@@ -74,11 +82,15 @@ public class LinkDatabase extends StorableObjectDatabase {
 			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_TYPE_ID + COMMA
+				+ COLUMN_SORT + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_INVENTORY_NO + COMMA
 				+ COLUMN_SUPPLIER + COMMA
-				+ COLUMN_SUPPLIER_CODE;
+				+ COLUMN_SUPPLIER_CODE + COMMA
+				+ COLUMN_LINK_ID + COMMA
+				+ COLUMN_COLOR + COMMA
+				+ COLUMN_MARK;
 		}
 		return this.updateColumns;
 	}
@@ -86,6 +98,10 @@ public class LinkDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateColumns == null){
 			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -100,26 +116,40 @@ public class LinkDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		Link link = fromStorableObject(storableObject);
+		String inventoryNo = link.getInventoryNo();
+		String supplier = link.getSupplier();
+		String supplierCode = link.getSupplierCode();
+		Identifier linkId = link.getLinkId();
+		String color = link.getColor();
+		String mark = link.getMark();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ link.getDomainId().toSQLString() + COMMA
 			+ link.getType().getId().toSQLString() + COMMA
+			+ link.getSort().value() + COMMA
 			+ APOSTOPHE + link.getName() + APOSTOPHE + COMMA
 			+ APOSTOPHE + link.getDescription() + APOSTOPHE + COMMA
-			+ APOSTOPHE + link.getInventoryNo() + APOSTOPHE + COMMA
-			+ APOSTOPHE + link.getSupplier() + APOSTOPHE + COMMA
-			+ APOSTOPHE + link.getSupplierCode() + APOSTOPHE + COMMA;
+			+ APOSTOPHE + (inventoryNo != null ? inventoryNo : "") + APOSTOPHE + COMMA
+			+ APOSTOPHE + (supplier != null ? supplier : "") + APOSTOPHE + COMMA
+			+ APOSTOPHE + (supplierCode != null ? supplierCode : "") + APOSTOPHE + COMMA
+			+ (linkId != null ? linkId.toSQLString() : Identifier.getNullSQLString()) + COMMA
+			+ APOSTOPHE + (color != null ? color : "") + APOSTOPHE + COMMA
+			+ APOSTOPHE + (mark != null ? mark : "") + APOSTOPHE;
 		return sql;
 	}
 	
 	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
+		return super.getUpdateColumns() + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_TYPE_ID + COMMA
+			+ COLUMN_SORT + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_INVENTORY_NO + COMMA
 			+ COLUMN_SUPPLIER + COMMA
-			+ COLUMN_SUPPLIER_CODE
+			+ COLUMN_SUPPLIER_CODE + COMMA
+			+ COLUMN_LINK_ID + COMMA
+			+ COLUMN_COLOR + COMMA
+			+ COLUMN_MARK
 			+ SQL_FROM + ObjectEntities.LINK_ENTITY
 			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
@@ -132,13 +162,18 @@ public class LinkDatabase extends StorableObjectDatabase {
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			Identifier linkId = link.getLinkId();
 			preparedStatement.setString( ++i , link.getDomainId().getCode());
 			preparedStatement.setString( ++i, link.getType().getId().getCode());
+			preparedStatement.setInt( ++i, link.getSort().value());
 			preparedStatement.setString( ++i, link.getName());
 			preparedStatement.setString( ++i, link.getDescription());
 			preparedStatement.setString( ++i, link.getInventoryNo());
 			preparedStatement.setString( ++i, link.getSupplier());
 			preparedStatement.setString( ++i, link.getSupplierCode());
+			preparedStatement.setString( ++i, (linkId != null ? linkId.getCode() : ""));
+			preparedStatement.setString( ++i, link.getColor());
+			preparedStatement.setString( ++i, link.getMark());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("LinkDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -155,7 +190,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
 			link = new Link(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null,
-									   null, null, null, null, null);			
+									   null, null, null, null, null, 0, null, null, null);			
 		}
 		String name = resultSet.getString(COLUMN_NAME);
 		String description = resultSet.getString(COLUMN_DESCRIPTION);
@@ -188,7 +223,14 @@ public class LinkDatabase extends StorableObjectDatabase {
 														linkType,
 														(inventoryNo != null) ? inventoryNo : "",
 														(supplier != null) ? supplier : "",
-														(supplierCode != null) ? supplierCode : "");
+														(supplierCode != null) ? supplierCode : "",
+														resultSet.getInt(COLUMN_SORT),
+														/**
+														* @todo when change DB Identifier model ,change getString() to getLong()
+														*/
+														new Identifier(resultSet.getString(COLUMN_LINK_ID)),
+														resultSet.getString(COLUMN_COLOR),
+														resultSet.getString(COLUMN_MARK));
 
 		
 		return link;
@@ -295,3 +337,5 @@ public class LinkDatabase extends StorableObjectDatabase {
 		return list;
 	}
 }
+
+
