@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.7 2004/07/06 12:49:04 bass Exp $
+# $Id: Makefile,v 1.8 2004/07/06 14:16:00 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -7,10 +7,9 @@
 MODULE_NAME = general_v1
 
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
-
-ARCHFILE=general.tar.gz
 
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
@@ -30,8 +29,7 @@ $(LIBNAME): .mach
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		-classpath $(AMFICOMCLASSPATH)$(CLASSDIR) \
-		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/general/*.java
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -39,8 +37,7 @@ $(LIBNAME): .mach
 		$(IDL2JAVAFLAGS) \
 		$(IDLDIR)/general.idl
 	$(JAVAC) \
-		$(JAVACFLAGS) \
-		$(JAVAC_WARNOFF_FLAG) \
+		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(AMFICOMCLASSPATH) \
 		$(SRCDIR)/com/syrus/AMFICOM/general/corba/*.java
 	touch $@
