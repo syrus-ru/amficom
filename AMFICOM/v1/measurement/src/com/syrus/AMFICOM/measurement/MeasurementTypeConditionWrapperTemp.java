@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeConditionWrapperTemp.java,v 1.1 2005/03/16 08:16:21 max Exp $
+ * $Id: MeasurementTypeConditionWrapperTemp.java,v 1.2 2005/03/17 09:29:40 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/16 08:16:21 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/17 09:29:40 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -33,9 +33,9 @@ public class MeasurementTypeConditionWrapperTemp implements ConditionWrapperTemp
 	
 	private Collection initialCollection;
 		
-	private final static String CODENAME = "search by field \"CODENAME\"";
-	private final static String PORTTYPE = "search by MeasurementPortTypes";
-	private final static String PARAMTYPE = "search by ParameterTypes";
+	private static final String CODENAME = "search by field \"CODENAME\"";
+	private static final String PORTTYPE = "search by MeasurementPortTypes";
+	private static final String PARAMTYPE = "search by ParameterTypes";
 		
 	private String[] keys = {StorableObjectWrapper.COLUMN_CODENAME,
 			MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
@@ -78,6 +78,10 @@ public class MeasurementTypeConditionWrapperTemp implements ConditionWrapperTemp
 		} else {
 			throw new IllegalDataException("MeasurementTypeConditionWrapper.getLinkedObject | Wrong key");
 		}
+	}
+	
+	public Collection getInitialEntities() {
+		return initialCollection;
 	}
 	
 	public String[] getInitialNames() {
