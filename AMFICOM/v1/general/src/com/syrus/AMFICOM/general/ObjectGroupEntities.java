@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.9 2005/01/13 14:16:11 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.10 2005/01/25 06:35:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/13 14:16:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/01/25 06:35:27 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public final class ObjectGroupEntities {
@@ -209,5 +209,9 @@ public final class ObjectGroupEntities {
 
 	public static String getGroupName(final short entityCode) {
 		return codeToString(getGroupCode(entityCode));
+	}
+	
+	public static String getPackageName(final short entityCode) {
+		return "com.syrus.AMFICOM." + getGroupName(entityCode).toLowerCase().replaceAll("group$", "");
 	}
 }
