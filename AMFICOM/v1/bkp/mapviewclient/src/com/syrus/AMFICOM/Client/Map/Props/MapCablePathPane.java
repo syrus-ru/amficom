@@ -1,14 +1,9 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.Client.Map.Props.MapCablePathBindPanel;
-import com.syrus.AMFICOM.Client.Map.Props.MapCablePathGeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.BorderLayout;
 
@@ -52,7 +47,7 @@ public class MapCablePathPane extends JPanel implements ObjectResourceProperties
 		setObjectResource(path);
 	}
 	
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);

@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-//import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
@@ -13,12 +12,10 @@ import java.util.Iterator;
 public final class MapCablePathBinding extends HashMap
 {
 	private MapCablePathElement cablePath;
-//	private Map map;
 	
 	public MapCablePathBinding(MapCablePathElement cablePath)
 	{
 		this.cablePath = cablePath;
-//		map = cablePath.getMap();
 	}
 
 	public MapCablePathBinding(MapCablePathBinding mcpb)
@@ -41,13 +38,6 @@ public final class MapCablePathBinding extends HashMap
 	public CableChannelingItem getCCI(MapPhysicalLinkElement link)
 	{
 		return (CableChannelingItem )(super.get(link));
-//		for(Iterator it = super.entrySet().iterator(); it.hasNext();)
-//		{
-//			CableChannelingItem cci = (CableChannelingItem )it.next();
-//			if(cci.physicalLinkId.equals(link.getId()))
-//				return cci;
-//		}
-//		return null;
 	}
 	
 	public Object get(Object key)
@@ -78,6 +68,17 @@ public final class MapCablePathBinding extends HashMap
 		
 		return cci;
 	}
+
+	public void setCablePath(MapCablePathElement cablePath)
+	{
+		this.cablePath = cablePath;
+	}
+
+	public MapCablePathElement getCablePath()
+	{
+		return cablePath;
+	}
+
 /*
 	public MapNodeElement getStartUnbound(MapNodeElement pathStart)
 	{
@@ -179,15 +180,5 @@ public final class MapCablePathBinding extends HashMap
 		return link;
 	}
 */
-
-	public void setCablePath(MapCablePathElement cablePath)
-	{
-		this.cablePath = cablePath;
-	}
-
-	public MapCablePathElement getCablePath()
-	{
-		return cablePath;
-	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.13 2004/10/15 14:09:21 krupenn Exp $
+ * $Id: MapView.java,v 1.14 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,9 +15,6 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemePathCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCablePathCommandAtomic;
-import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveMeasurementPathCommandAtomic;
-import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
@@ -27,11 +24,9 @@ import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
@@ -55,7 +50,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/10/15 14:09:21 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/19 11:48:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.4 2004/10/09 13:34:24 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.5 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,12 +14,10 @@ package com.syrus.AMFICOM.Client.Map.Strategy;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
@@ -37,7 +35,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/09 13:34:24 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/19 11:48:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -77,7 +75,6 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
 		
 		MapState mapState = logicalNetLayer.getMapState();
-		Map map = unbound.getMap();
 
 		int mouseMode = mapState.getMouseMode();
 		int actionMode = mapState.getActionMode();

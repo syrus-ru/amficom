@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.8 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MapSelection.java,v 1.9 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,15 +13,14 @@ package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
 import com.syrus.AMFICOM.Client.Resource.Map.*;
-
 import com.syrus.AMFICOM.Client.Resource.StubResource;
+
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,7 +31,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/19 11:48:28 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.3 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.4 2004/10/19 11:48:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,18 +13,15 @@ package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
 import com.ofx.base.SxEnvironment;
 import com.ofx.component.swing.JMapViewer;
-import com.ofx.mapViewer.SxInvalidNameException;
 import com.ofx.mapViewer.SxMapLayerInterface;
 import com.ofx.mapViewer.SxMapViewer;
 import com.ofx.mapViewer.SxMarkerLayer;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.Client.Map.ObjectFX.OfxLogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 import com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapKeyAdapter;
@@ -52,7 +49,7 @@ import javax.swing.ToolTipManager;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -103,7 +100,11 @@ public class OfxNetMapViewer extends NetMapViewer
 
 	public void init()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "init()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"init()");
 		
 		super.init();
 		
@@ -120,7 +121,7 @@ public class OfxNetMapViewer extends NetMapViewer
 		{
 			lnl = new OfxLogicalNetLayer(this);
 
-//			lnl.getMapState().setActionMode(com.syrus.AMFICOM.Client.Map.MapState.DRAW_ACTION_MODE);
+//			lnl.getMapState().setActionMode(MapState.DRAW_ACTION_MODE);
 
 			dtl = new MapDropTargetListener(lnl);
 			dropTarget = new DropTarget( jMapViewer.getMapCanvas(), dtl);
@@ -155,7 +156,11 @@ public class OfxNetMapViewer extends NetMapViewer
 
 	public void saveConfig()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "saveConfig()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"saveConfig()");
 		
 		MapPropertiesManager.setCenter(lnl.getCenter());
 		MapPropertiesManager.setZoom(lnl.getScale());
@@ -170,7 +175,11 @@ public class OfxNetMapViewer extends NetMapViewer
 	//Установить карту
 	public void setConnection(MapConnection conn)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setConnection(" + conn + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setConnection(" + conn + ")");
 		
 		this.mapConnection = conn;
 		
@@ -184,7 +193,11 @@ public class OfxNetMapViewer extends NetMapViewer
 	
 	public void setMap( String dataBasePath , String dataBaseView )
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMap(" + dataBasePath  + ", " + dataBaseView + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setMap(" + dataBasePath  + ", " + dataBaseView + ")");
 		
 		try
 		{
@@ -197,7 +210,8 @@ public class OfxNetMapViewer extends NetMapViewer
 			anSxMapViewer.addLayer( "Network layer", lnl.spatialLayer);
 			try 
 			{
-				SxMarkerLayer markerLayer = (SxMarkerLayer) anSxMapViewer.getLayer(SxMapLayerInterface.MARKER);
+				SxMarkerLayer markerLayer = (SxMarkerLayer) 
+						anSxMapViewer.getLayer(SxMapLayerInterface.MARKER);
 				markerLayer.listenForMapEvents( false );
 				markerLayer.setEnabled(false);
 			} 
@@ -217,7 +231,11 @@ public class OfxNetMapViewer extends NetMapViewer
 
 	public void closeMap()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "closeMap()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"closeMap()");
 		
 		SxEnvironment.singleton().getQuery().close();
 		jMapViewer.closeSession();

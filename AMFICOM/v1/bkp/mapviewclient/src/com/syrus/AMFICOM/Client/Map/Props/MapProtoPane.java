@@ -1,29 +1,24 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ImagesDialog;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Insets;
-
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -42,7 +37,7 @@ public final class MapProtoPane extends JPanel implements ObjectResourceProperti
 
 	MapNodeProtoElement proto;
 
-	String image_id;
+	String imageId;
 	private JLabel imageLabel = new JLabel();
 	private JPanel imagePanel = new JPanel();
 	private JButton imageButton = new JButton();
@@ -69,7 +64,7 @@ public final class MapProtoPane extends JPanel implements ObjectResourceProperti
 		return instance;
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModel.getString("Properties"));
@@ -119,7 +114,7 @@ public final class MapProtoPane extends JPanel implements ObjectResourceProperti
 			descTextArea.setEnabled(false);
 			descTextArea.setText("");
 
-			image_id = "";
+			imageId = "";
 			imagePanel.removeAll();
 			imageButton.setEnabled(false);
 		}
@@ -130,9 +125,9 @@ public final class MapProtoPane extends JPanel implements ObjectResourceProperti
 			descTextArea.setEnabled(true);
 			descTextArea.setText(proto.getDescription());
 
-			image_id = proto.getImageId();
+			imageId = proto.getImageId();
 			imagePanel.removeAll();
-			ImageResource ir = ImageCatalogue.get(image_id);
+			ImageResource ir = ImageCatalogue.get(imageId);
 			imagePanel.add(new JLabel(new ImageIcon(ir.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH))));
 			imagePanel.revalidate();
 			imageButton.setEnabled(true);
@@ -147,7 +142,7 @@ public final class MapProtoPane extends JPanel implements ObjectResourceProperti
 	private void changeImage()
 	{
 		ImagesDialog frame = new ImagesDialog(aContext);
-		frame.setImageResource(ImageCatalogue.get(image_id));
+		frame.setImageResource(ImageCatalogue.get(imageId));
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = frame.getSize();
@@ -162,7 +157,7 @@ public final class MapProtoPane extends JPanel implements ObjectResourceProperti
 		{
 			imagePanel.removeAll();
 			ImageResource ir = frame.getImageResource();
-			image_id = ir.getId();
+			imageId = ir.getId();
 			imagePanel.add(new JLabel(new ImageIcon(ir.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH))));
 			imagePanel.revalidate();
 		}
@@ -174,16 +169,13 @@ public final class MapProtoPane extends JPanel implements ObjectResourceProperti
 		{
 			proto.setName(nameTextField.getText());
 			proto.setDescription(descTextArea.getText());
-			proto.setImageId(image_id);
+			proto.setImageId(imageId);
 			return true;
 		} 
 		catch (Exception ex) 
 		{
 			ex.printStackTrace();
 		} 
-		finally 
-		{
-		}
 		
 		return false;
 	}

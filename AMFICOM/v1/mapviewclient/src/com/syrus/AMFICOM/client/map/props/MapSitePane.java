@@ -1,19 +1,14 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import java.util.Iterator;
 
 public final class MapSitePane extends JPanel implements ObjectResourcePropertiesPane
 {
@@ -44,7 +39,7 @@ public final class MapSitePane extends JPanel implements ObjectResourcePropertie
 		return instance;
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);

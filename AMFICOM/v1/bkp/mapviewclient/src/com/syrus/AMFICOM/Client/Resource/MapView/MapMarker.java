@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.10 2004/10/15 14:09:21 krupenn Exp $
+ * $Id: MapMarker.java,v 1.11 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,36 +11,28 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
-import com.syrus.AMFICOM.Client.Resource.StubResource;
-
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
-import java.util.Hashtable;
-
-import javax.swing.ImageIcon;
 
 /**
  * Название: Маркер связывания оптической дистанции Lo, полученной      * 
@@ -63,7 +55,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/15 14:09:21 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/19 11:48:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.7 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.8 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
@@ -29,11 +28,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
-import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
-
-import java.util.List;
 import java.util.Set;
+
 import javax.swing.SwingUtilities;
 
 /**
@@ -41,7 +38,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/19 11:48:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -86,8 +83,6 @@ public final class MapVoidElementStrategy implements  MapStrategy
 		int mouseMode = mapState.getMouseMode();
 		int actionMode = mapState.getActionMode();
 		int operationMode = mapState.getOperationMode();
-
-		Point point = me.getPoint();
 
 		if(SwingUtilities.isLeftMouseButton(me))
 		{
@@ -153,15 +148,20 @@ public final class MapVoidElementStrategy implements  MapStrategy
 			while (e.hasNext() )
 			{
 				MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.next();
-				Point p;
 				if (
-					selectionRect.contains(logicalNetLayer.convertMapToScreen(nodeLink.getStartNode().getAnchor())) 
-					&& selectionRect.contains(logicalNetLayer.convertMapToScreen(nodeLink.getEndNode().getAnchor())))
-			   {
+					selectionRect.contains(
+						logicalNetLayer.convertMapToScreen(
+							nodeLink.getStartNode().getAnchor())) 
+					&& selectionRect.contains(
+						logicalNetLayer.convertMapToScreen(
+							nodeLink.getEndNode().getAnchor())))
+				{
 					nodeLink.setSelected(true);
 				}
 				else
+				{
 					nodeLink.setSelected(false);
+				}
 			}
 		}
 		else
@@ -174,13 +174,16 @@ public final class MapVoidElementStrategy implements  MapStrategy
 				for(Iterator it2 = link.getNodeLinks().iterator(); it2.hasNext();)
 				{
 					MapNodeLinkElement nodeLink = (MapNodeLinkElement )it2.next();
-					Point p;
 					if (! (
-						selectionRect.contains(logicalNetLayer.convertMapToScreen(nodeLink.getStartNode().getAnchor())) 
-						&& selectionRect.contains(logicalNetLayer.convertMapToScreen(nodeLink.getEndNode().getAnchor()))))
-				   {
+						selectionRect.contains(
+							logicalNetLayer.convertMapToScreen(
+								nodeLink.getStartNode().getAnchor())) 
+						&& selectionRect.contains(
+							logicalNetLayer.convertMapToScreen(
+								nodeLink.getEndNode().getAnchor()))))
+					{
 						select = false;
-				   }
+					}
 				}
 				link.setSelected(select);
 			}

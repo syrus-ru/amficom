@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.3 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.UI;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -22,8 +23,6 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -84,7 +83,7 @@ import javax.swing.ImageIcon;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -485,14 +484,14 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 
 				if (!s.elements.isEmpty())
 				{
-					boolean has_schemes = false;
-					boolean has_elements = false;
+					boolean hasSchemes = false;
+					boolean hasElements = false;
 					for (Iterator it = s.elements.iterator(); it.hasNext();)
 					{
 						SchemeElement el = (SchemeElement )it.next();
 						if (el.getInternalSchemeId().length() == 0)
 						{
-							has_elements = true;
+							hasElements = true;
 							break;
 						}
 					}
@@ -502,14 +501,14 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 						SchemeElement el = (SchemeElement )it.next();
 						if (el.getInternalSchemeId().length() != 0)
 						{
-							has_schemes = true;
+							hasSchemes = true;
 							break;
 						}
 					}
 					
-					if (has_schemes)
+					if (hasSchemes)
 						vec.add(new MapSchemeTreeNode(Scheme.typ, "Вложенные схемы", true));
-					if (has_elements)
+					if (hasElements)
 						vec.add(new MapSchemeTreeNode(SchemeElement.typ, "Вложенные элементы", true));
 				}
 				if (!s.links.isEmpty())

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.12 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.13 2004/10/19 11:48:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,17 +36,17 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
-import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -70,7 +70,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.13 $, $Date: 2004/10/19 11:48:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

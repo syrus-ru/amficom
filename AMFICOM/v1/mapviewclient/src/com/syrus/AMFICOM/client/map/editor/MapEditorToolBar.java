@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.3 2004/09/18 13:57:52 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.4 2004/10/19 11:48:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,10 +13,9 @@ package com.syrus.AMFICOM.Client.Map.Editor;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -27,13 +26,14 @@ import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
+import java.awt.event.ActionListener;
 
 /**
  * Панель инструментов модуля "Редактор топологических схем" 
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/18 13:57:52 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -52,8 +52,8 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 	JButton menuMapViewOpen = new JButton();
 	JButton menuMapViewSave = new JButton();
 
-	public final static int img_siz = 16;
-	public final static int btn_siz = 24;
+	public final static int imgSize = 16;
+	public final static int btnSize = 24;
 
 	public MapEditorToolBar()
 	{
@@ -71,13 +71,19 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 
 	private void jbInit()
 	{
-		MapToolBar_this_actionAdapter actionAdapter =
-				new MapToolBar_this_actionAdapter(this);
+		ActionListener actionAdapter =
+			new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					buttonActionPerformed(e);
+				}
+			};
 
-		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
+		Dimension buttonSize = new Dimension(btnSize, btnSize);
 
 		sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		sessionOpen.setMaximumSize(buttonSize);
 		sessionOpen.setPreferredSize(buttonSize);
 		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
@@ -85,7 +91,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		sessionOpen.addActionListener(actionAdapter);
 
 		buttonCloseSession.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_session.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		buttonCloseSession.setMaximumSize(buttonSize);
 		buttonCloseSession.setPreferredSize(buttonSize);
 		buttonCloseSession.setToolTipText(LangModel.getString("menuSessionClose"));
@@ -93,7 +99,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 //		buttonCloseSession.addActionListener(actionAdapter);
 
 		menuSessionDomain.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/domains.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		menuSessionDomain.setMaximumSize(buttonSize);
 		menuSessionDomain.setPreferredSize(buttonSize);
 		menuSessionDomain.setToolTipText(LangModel.getString("menuSessionDomain"));
@@ -101,7 +107,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 //		menuSessionDomain.addActionListener(actionAdapter);
 
 		menuMapNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		menuMapNew.setMaximumSize(buttonSize);
 		menuMapNew.setPreferredSize(buttonSize);
 		menuMapNew.setToolTipText(LangModelMap.getString("menuMapNew"));
@@ -109,7 +115,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapNew.addActionListener(actionAdapter);
 
 		menuMapOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		menuMapOpen.setMaximumSize(buttonSize);
 		menuMapOpen.setPreferredSize(buttonSize);
 		menuMapOpen.setToolTipText(LangModelMap.getString("menuMapOpen"));
@@ -117,7 +123,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapOpen.addActionListener(actionAdapter);
 
 		menuMapSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		menuMapSave.setMaximumSize(buttonSize);
 		menuMapSave.setPreferredSize(buttonSize);
 		menuMapSave.setToolTipText(LangModelMap.getString("menuMapSave"));
@@ -125,7 +131,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapSave.addActionListener(actionAdapter);
 
 		menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newview.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		menuMapViewNew.setMaximumSize(buttonSize);
 		menuMapViewNew.setPreferredSize(buttonSize);
 		menuMapViewNew.setToolTipText(LangModelMap.getString("menuMapViewNew"));
@@ -133,7 +139,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapViewNew.addActionListener(actionAdapter);
 
 		menuMapViewOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openview.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		menuMapViewOpen.setMaximumSize(buttonSize);
 		menuMapViewOpen.setPreferredSize(buttonSize);
 		menuMapViewOpen.setToolTipText(LangModelMap.getString("menuMapViewOpen"));
@@ -141,7 +147,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapViewOpen.addActionListener(actionAdapter);
 
 		menuMapViewSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/saveview.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		menuMapViewSave.setMaximumSize(buttonSize);
 		menuMapViewSave.setPreferredSize(buttonSize);
 		menuMapViewSave.setToolTipText(LangModelMap.getString("menuMapViewSave"));
@@ -197,30 +203,13 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapViewSave.setEnabled(aModel.isEnabled("menuMapViewSave"));
 	}
 
-	public void this_actionPerformed(ActionEvent e)
+	public void buttonActionPerformed(ActionEvent e)
 	{
 		if(aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
 		Command command = aModel.getCommand(s);
-//		command = (Command )command.clone();
 		command.execute();
-	}
-}
-
-class MapToolBar_this_actionAdapter implements java.awt.event.ActionListener
-{
-	MapEditorToolBar adaptee;
-
-	MapToolBar_this_actionAdapter(MapEditorToolBar adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-//		System.out.println("MapToolBar: actionPerformed");
-		adaptee.this_actionPerformed(e);
 	}
 }

@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
@@ -12,10 +11,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
-import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeModel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
@@ -60,10 +57,10 @@ public final class MapSchemeTreePanel extends JPanel
 	JButton menuSchemeAddToView = new JButton();
 	JButton menuSchemeRemoveFromView = new JButton();
 
-	public final static int img_siz = 16;
-	public final static int btn_siz = 24;
+	public final static int imgSize = 16;
+	public final static int btnSize = 24;
 
-	static final Dimension buttonSize = new Dimension(btn_siz, btn_siz);
+	static final Dimension buttonSize = new Dimension(btnSize, btnSize);
 
 	public MapSchemeTreePanel()
 	{
@@ -83,7 +80,7 @@ public final class MapSchemeTreePanel extends JPanel
 		setContext(aContext);
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		this.setLayout(borderLayout1);
 
@@ -108,7 +105,7 @@ public final class MapSchemeTreePanel extends JPanel
 		bindButtonsPanel.add(placeAllButton, BorderLayout.EAST);
 
 		menuSchemeAddToView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtoview.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		menuSchemeAddToView.setMaximumSize(buttonSize);
 		menuSchemeAddToView.setPreferredSize(buttonSize);
 		menuSchemeAddToView.setToolTipText(LangModelMap.getString("menuSchemeAddToView"));
@@ -121,7 +118,7 @@ public final class MapSchemeTreePanel extends JPanel
 			});
 
 		menuSchemeRemoveFromView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefromview.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
 		menuSchemeRemoveFromView.setMaximumSize(buttonSize);
 		menuSchemeRemoveFromView.setPreferredSize(buttonSize);
 		menuSchemeRemoveFromView.setToolTipText(LangModelMap.getString("menuSchemeRemoveFromView"));
@@ -244,8 +241,6 @@ public final class MapSchemeTreePanel extends JPanel
 	private void placeAll()
 	{
 		ObjectResourceTreeNode ortn;
-		ObjectResourceTreeNode node;
-		Enumeration enum;
 
 		Dispatcher disp = aContext.getDispatcher();
 		if(disp == null)

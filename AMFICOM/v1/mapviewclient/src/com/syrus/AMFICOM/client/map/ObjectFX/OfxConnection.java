@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.2 2004/10/19 11:48:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ import com.ofx.base.SxEnvironment;
 import com.ofx.base.SxProperties;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-
 import com.syrus.AMFICOM.Client.Map.MapConnection;
 
 import java.util.Vector;
@@ -23,7 +22,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/19 11:48:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -40,12 +39,20 @@ public class OfxConnection extends MapConnection
 	
 	public OfxConnection()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "SpatialConnection()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"constructor call", 
+				getClass().getName(), 
+				"SpatialConnection()");
 	}
 	
 	public OfxConnection( String dataBasePath, String dataBaseView)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "SpatialConnection(" + dataBasePath + ", " + dataBaseView + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"constructor call", 
+				getClass().getName(), 
+				"SpatialConnection(" + dataBasePath + ", " + dataBaseView + ")");
 		
 		this.setPath(dataBasePath);
 		this.setView(dataBaseView);
@@ -53,14 +60,23 @@ public class OfxConnection extends MapConnection
 
 	public void setPath(String path)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setPath(" + path + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setPath(" + path + ")");
 		
 		this.dataBasePath = path;
 	}
 	
 	public void setView(String name)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setView(" + name + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setView(" + name + ")");
+
 		this.dataBaseView = name;
 	}
 
@@ -76,14 +92,19 @@ public class OfxConnection extends MapConnection
 
 	public boolean connect()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "connect()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"connect()");
 		
 		String sessionName = OFX_DATABASE_PREFIX + dataBasePath;
 		
         SxProperties.singleton().setProperty("ofx.userName", dbUserName);
         SxProperties.singleton().setProperty("ofx.password", dbPassword);
         com.ofx.query.SxQueryInterface qsi = SxEnvironment.singleton().getQuery();
-        Vector theProperties = SxEnvironment.singleton().getProperties().getQuerySessionOpenProperties();
+        Vector theProperties = 
+			SxEnvironment.singleton().getProperties().getQuerySessionOpenProperties();
         String dbType = (String)theProperties.elementAt(0);
         String dbURL = (String)theProperties.elementAt(3);
         String jdbcDriverClass = (String)theProperties.elementAt(4);
@@ -112,11 +133,19 @@ public class OfxConnection extends MapConnection
         boolean result = false;
         try 
 		{
-            result = qsi.openSession(dbType, sessionName, dbUserName, dbPassword, dbURL, jdbcDriverClass, sdoAdminUserName);
+            result = qsi.openSession(
+					dbType, 
+					sessionName, 
+					dbUserName, 
+					dbPassword, 
+					dbURL, 
+					jdbcDriverClass, 
+					sdoAdminUserName);
         }
         catch(Exception ex) 
 		{
-            System.out.println("Exception occurred opening database named: " + sessionName + " exception: " + ex);
+            System.out.println("Exception occurred opening database named: " 
+					+ sessionName + " exception: " + ex);
         }
         if(!result)
             System.out.println("Unable to open; Check log file for details.");
@@ -132,7 +161,11 @@ public class OfxConnection extends MapConnection
 	
 	public boolean release()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "release()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"release()");
 		
 		return true;
 	}

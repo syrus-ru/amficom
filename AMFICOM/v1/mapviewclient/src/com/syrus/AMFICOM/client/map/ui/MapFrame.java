@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.5 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: MapFrame.java,v 1.6 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,18 +13,17 @@ package com.syrus.AMFICOM.Client.Map.UI;
 import com.syrus.AMFICOM.Client.General.Event.CatalogNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.Module;
-
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.HandPanCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.MapModeCommand;
@@ -40,7 +39,6 @@ import com.syrus.AMFICOM.Client.Map.MapConnection;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.Client.Map.UI.MapToolBar;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
@@ -66,7 +64,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/19 11:48:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -187,8 +185,8 @@ public class MapFrame extends JInternalFrame
 		this.getContentPane().add(toolBarPanel, BorderLayout.NORTH);
 		this.getContentPane().add(mapPanel, BorderLayout.CENTER);
 
-		this.addComponentListener(new MapMainFrame_this_componentAdapter(this));
-		this.addInternalFrameListener(new MapMainFrame_this_internalFrameAdapter(this));
+		this.addComponentListener(new MapMainFrameComponentAdapter(this));
+		this.addInternalFrameListener(new MapMainFrameInternalFrameAdapter(this));
 	}
 	
 	/**
@@ -340,12 +338,6 @@ public class MapFrame extends JInternalFrame
 		setCommands(aModel);
 		aModel.addListener(mapToolBar);
 		mapToolBar.setModel(aModel);
-/*
-		if (aContext.getApplicationModel().isEnabled("mapActionShowProto"))
-			elementPaneToolBar.setVisible(true);
-		else
-			elementPaneToolBar.setVisible(false);
-*/
 	    aModel.fireModelChanged();
 	}
 
@@ -488,13 +480,11 @@ public class MapFrame extends JInternalFrame
 		if(map == null)
 		{
 			lnl().setMap( null);
-			elementPaneToolBar.setEnableDisablePanel(false);
 			mapToolBar.setEnableDisablePanel(false);
 		}
 		else
 		{
 			lnl().setEnabled(true);
-			elementPaneToolBar.setEnableDisablePanel(true);
 			mapToolBar.setEnableDisablePanel(true);
 
 			createFromPool( map, mapViewer.lnl);
@@ -560,7 +550,7 @@ public class MapFrame extends JInternalFrame
 		return getMapViewer().getLogicalNetLayer().getMapView();
 	}
 
-	void this_internalFrameActivated(InternalFrameEvent e)
+	void thisInternalFrameActivated(InternalFrameEvent e)
 	{
 //		this.grabFocus();
 		getMapViewer().getVisualComponent().grabFocus();
@@ -575,14 +565,14 @@ public class MapFrame extends JInternalFrame
 			}
 	}
 
-	void this_internalFrameClosed(InternalFrameEvent e)
+	void thisInternalFrameClosed(InternalFrameEvent e)
 	{
 		if(aContext.getDispatcher() != null)
 			aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 		closeMap();
 	}
 
-	void this_internalFrameDeactivated(InternalFrameEvent e)
+	void thisInternalFrameDeactivated(InternalFrameEvent e)
 	{
 		if(aContext.getDispatcher() != null)
 		{
@@ -591,17 +581,17 @@ public class MapFrame extends JInternalFrame
 		}
 	}
 
-	void this_internalFrameOpened(InternalFrameEvent e)
+	void thisInternalFrameOpened(InternalFrameEvent e)
 	{
 //		this.grabFocus();
 		getMapViewer().getVisualComponent().grabFocus();
 	}
 
-	void this_componentShown(ComponentEvent e)
+	void thisComponentShown(ComponentEvent e)
 	{
 	}
 
-	void this_componentHidden(ComponentEvent e)
+	void thisComponentHidden(ComponentEvent e)
 	{
 		if(aContext.getDispatcher() != null)
 			aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
@@ -622,49 +612,49 @@ public class MapFrame extends JInternalFrame
 		super.doDefaultCloseAction();
     }
 
-	private class MapMainFrame_this_componentAdapter extends java.awt.event.ComponentAdapter
+	private class MapMainFrameComponentAdapter extends java.awt.event.ComponentAdapter
 	{
 		MapFrame adaptee;
 	
-		MapMainFrame_this_componentAdapter(MapFrame adaptee)
+		MapMainFrameComponentAdapter(MapFrame adaptee)
 		{
 			this.adaptee = adaptee;
 		}
 	
 		public void componentShown(ComponentEvent e)
 		{
-			adaptee.this_componentShown(e);
+			adaptee.thisComponentShown(e);
 		}
 	
 		public void componentHidden(ComponentEvent e)
 		{
-			adaptee.this_componentHidden(e);
+			adaptee.thisComponentHidden(e);
 		}
 	}
 	
-	private class MapMainFrame_this_internalFrameAdapter extends javax.swing.event.InternalFrameAdapter
+	private class MapMainFrameInternalFrameAdapter extends javax.swing.event.InternalFrameAdapter
 	{
 		MapFrame adaptee;
 	
-		MapMainFrame_this_internalFrameAdapter(MapFrame adaptee)
+		MapMainFrameInternalFrameAdapter(MapFrame adaptee)
 		{
 			this.adaptee = adaptee;
 		}
 		public void internalFrameActivated(InternalFrameEvent e)
 		{
-			adaptee.this_internalFrameActivated(e);
+			adaptee.thisInternalFrameActivated(e);
 		}
 		public void internalFrameClosed(InternalFrameEvent e)
 		{
-			adaptee.this_internalFrameClosed(e);
+			adaptee.thisInternalFrameClosed(e);
 		}
 		public void internalFrameDeactivated(InternalFrameEvent e)
 		{
-			adaptee.this_internalFrameDeactivated(e);
+			adaptee.thisInternalFrameDeactivated(e);
 		}
 		public void internalFrameOpened(InternalFrameEvent e)
 		{
-			adaptee.this_internalFrameOpened(e);
+			adaptee.thisInternalFrameOpened(e);
 		}
 	}
 	

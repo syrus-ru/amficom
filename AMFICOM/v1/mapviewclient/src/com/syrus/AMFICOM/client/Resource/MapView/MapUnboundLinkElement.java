@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundLinkElement.java,v 1.6 2004/10/06 09:27:28 krupenn Exp $
+ * $Id: MapUnboundLinkElement.java,v 1.7 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,36 +11,25 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Stroke;
-
 import java.awt.geom.Rectangle2D;
-import java.io.Serializable;
 
-import java.util.Iterator;
+import java.io.Serializable;
 
 /**
  * элемент линии 
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/06 09:27:28 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/19 11:48:28 $
  * @module
  * @author $Author: krupenn $
  * @see

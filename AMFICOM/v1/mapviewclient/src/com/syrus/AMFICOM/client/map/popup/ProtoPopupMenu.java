@@ -1,11 +1,9 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteNodeCommandBundle;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementLabel;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

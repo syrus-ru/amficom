@@ -40,7 +40,7 @@ public final class MarkPopupMenu extends MapPopupMenu
 		this.mark = (MapMarkElement )me;
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		removeMenuItem.setText(LangModelMap.getString("Delete"));
 		removeMenuItem.addActionListener(new ActionListener()

@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.5 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,21 +11,20 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
+import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
@@ -44,7 +43,7 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/19 11:48:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -64,7 +63,6 @@ public final class MapDropTargetListener implements DropTargetListener
 		ObjectResource or = null;
 
 		Point point = dtde.getLocation();
-		Point2D.Double dPoint = logicalNetLayer.convertScreenToMap(point);
 
 		if ( logicalNetLayer.getMapView() != null)
 		{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.7 2004/10/01 16:36:55 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.8 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenu;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenuManager;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
-import com.syrus.AMFICOM.Client.Map.UI.MapNodeLinkSizeField;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
@@ -33,8 +32,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
-
-import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -48,7 +45,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/01 16:36:55 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/19 11:48:28 $
  * @module
  * @author $Author: krupenn $
  * @see

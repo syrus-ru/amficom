@@ -1,21 +1,19 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public final class SimpleMapElementController implements ObjectResourceController 
 {
@@ -26,9 +24,6 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 	private static SimpleMapElementController instance;
 
 	private List keys;
-
-	private Map statusMap;
-	private Map values;
 
 	private SimpleMapElementController() 
 	{

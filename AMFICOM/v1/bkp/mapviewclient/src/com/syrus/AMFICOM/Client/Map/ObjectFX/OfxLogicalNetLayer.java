@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.2 2004/09/27 07:41:34 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.3 2004/10/19 11:48:27 krupenn Exp $
  *
  * Syrus Systems
  * Íàó÷íî-òåõíè÷åñêèé öåíòð
@@ -18,7 +18,6 @@ import com.ofx.query.SxQueryResultInterface;
 import com.ofx.repository.SxSpatialObject;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
@@ -26,11 +25,10 @@ import com.syrus.AMFICOM.Client.Map.SpatialObject;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
+
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -44,7 +42,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/27 07:41:34 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 11:48:27 $
  * @module Üôç_ì2
  * @author $Author: krupenn $
  * @see
@@ -64,8 +62,13 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	public OfxLogicalNetLayer(NetMapViewer viewer)
 	{
 		super();
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"constructor call", 
+				getClass().getName(), 
+				"SpatialLogicalNetLayer(" + viewer + ")");
+
 		spatialLayer = new AMFICOMSxMapLayer(this);
-		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "SpatialLogicalNetLayer(" + viewer + ")");
 		setMapViewer(viewer);
 	}
 
@@ -120,7 +123,11 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setCenter(Point2D.Double center)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCenter(" + center.x + ", " + center.y + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setCenter(" + center.x + ", " + center.y + ")");
 
 		spatialViewer.setCenter(center.x, center.y);
 	}
@@ -152,7 +159,11 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void release()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "release()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"release()");
 		
 		spatialLayer.release();
 	}
@@ -171,7 +182,11 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setCursor(Cursor cursor)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCursor(" + cursor.toString() + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setCursor(" + cursor.toString() + ")");
 		
 		spatialViewer.getMapCanvas().setCursor(cursor);
 	}
@@ -189,7 +204,11 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setScale(double scale)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setScale(" + scale + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setScale(" + scale + ")");
 		
 		spatialViewer.setScale(scale);
 		updateZoom();
@@ -200,7 +219,11 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void scaleTo(double scaleÑoef)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "scaleTo(" + scaleÑoef + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"scaleTo(" + scaleÑoef + ")");
 		
 		spatialViewer.setScale(spatialViewer.getScale() * scaleÑoef);
 		updateZoom();
@@ -211,7 +234,11 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomIn()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "zoomIn()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"zoomIn()");
 		
 		spatialViewer.zoomIn();
 		updateZoom();
@@ -222,7 +249,11 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomOut()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "zoomOut()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"zoomOut()");
 		
 		spatialViewer.zoomOut();
 		updateZoom();
@@ -239,7 +270,9 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 
 	public void handDragged(MouseEvent me)
 	{
-		java.awt.Point point = new Point(me.getX() - startPoint.x, me.getY() - startPoint.y);
+		java.awt.Point point = new Point(
+				me.getX() - startPoint.x, 
+				me.getY() - startPoint.y);
 		spatialViewer.getMapCanvas().setBufferOffset(point);
 		spatialViewer.getMapCanvas().repaint();
 	}
@@ -251,7 +284,11 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setMapViewer(NetMapViewer mapViewer)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMapViewer(" + mapViewer + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setMapViewer(" + mapViewer + ")");
 		
 		super.setMapViewer(mapViewer);
 		
@@ -350,20 +387,21 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		{
 		} 
 	}
+
+	class AMFICOMSxMapLayer extends SxMapLayer
+	{
+		LogicalNetLayer lnl = null;
+		
+		public AMFICOMSxMapLayer(LogicalNetLayer lnl)
+		{
+			super();
+			this.lnl = lnl;
+		}
+		
+		public void paint(Graphics g)
+		{
+			lnl.paint(g);
+		}
+	}
 }
 
-class AMFICOMSxMapLayer extends SxMapLayer
-{
-	LogicalNetLayer lnl = null;
-	
-	public AMFICOMSxMapLayer(LogicalNetLayer lnl)
-	{
-		super();
-		this.lnl = lnl;
-	}
-	
-	public void paint(Graphics g)
-	{
-		lnl.paint(g);
-	}
-}

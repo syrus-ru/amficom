@@ -1,14 +1,13 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -45,7 +44,7 @@ public class MapCablePathGeneralPanel extends JPanel implements ObjectResourcePr
 
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModel.getString("Properties"));
@@ -112,9 +111,6 @@ public class MapCablePathGeneralPanel extends JPanel implements ObjectResourcePr
 		{
 			ex.printStackTrace();
 		} 
-		finally 
-		{
-		}
 		
 		return false;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.3 2004/09/16 12:00:43 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,15 +12,12 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 
 import java.awt.FlowLayout;
-import java.awt.Image;
 
 import java.util.Iterator;
 
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
@@ -28,7 +25,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/16 12:00:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -62,7 +59,6 @@ public final class MapElementsBarPanel extends JPanel
 	
 	public void setProtoElements()
 	{
-		ImageIcon ii;
 		MapElementLabel mel;
 		MapNodeProtoElement mpe;
 
@@ -91,27 +87,5 @@ public final class MapElementsBarPanel extends JPanel
 		MapFrame mf = MapFrame.getMapMainFrame();
 		return mf.getMapViewer().getLogicalNetLayer().getTopologicalProtos();
 	}
-/*
-	private java.util.List getMapProtoElements()
-	{
-		ArrayList panelElements = new ArrayList();
-		List ls;
-		ls = Pool.getList(MapNodeProtoElement.typ);
-		if(ls != null)
-			for(Iterator it = ls.iterator(); it.hasNext();)
-			{
-				try 
-				{
-					MapNodeProtoElement mpe = (MapNodeProtoElement )it.next();
-					if(mpe.isTopological())
-						panelElements.add(mpe);
-				} 
-				catch (Exception ex) 
-				{
-				} 
-			}
-		return panelElements;
-	}
-*/
 }
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.3 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,15 +10,12 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.UI.NodeSizePanel;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,12 +24,10 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-
 import javax.swing.JToolBar;
-import oracle.jdeveloper.layout.XYConstraints;
+
 import oracle.jdeveloper.layout.XYLayout;
 
 /**
@@ -40,7 +35,7 @@ import oracle.jdeveloper.layout.XYLayout;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -78,7 +73,6 @@ public final class MapToolBar extends JToolBar
 
 	private static Dimension buttonSize = new Dimension(24, 24);
 	private static Dimension fieldSize = new Dimension(60, 24);
-	private XYLayout xYLayout1 = new XYLayout();
 
 	public NodeSizePanel sp;
 	

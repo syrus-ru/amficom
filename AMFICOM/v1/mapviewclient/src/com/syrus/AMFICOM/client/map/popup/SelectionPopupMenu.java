@@ -2,28 +2,25 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.MapView.*;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.swing.JMenuItem;
-import java.util.Iterator;
-import javax.swing.JOptionPane;
 
 public final class SelectionPopupMenu extends MapPopupMenu 
 {

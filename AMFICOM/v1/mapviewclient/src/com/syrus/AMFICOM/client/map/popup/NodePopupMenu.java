@@ -1,21 +1,13 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
-import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteNodeCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.util.List;
 import javax.swing.JMenuItem;
 
 public final class NodePopupMenu extends MapPopupMenu 

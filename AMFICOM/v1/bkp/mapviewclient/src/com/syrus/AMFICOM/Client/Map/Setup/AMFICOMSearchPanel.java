@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.3 2004/10/18 15:33:00 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,19 +11,17 @@
 package com.syrus.AMFICOM.Client.Map.Setup;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -51,7 +49,7 @@ import javax.swing.table.JTableHeader;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
  * @author $Author: krupenn $
  * @see
  */

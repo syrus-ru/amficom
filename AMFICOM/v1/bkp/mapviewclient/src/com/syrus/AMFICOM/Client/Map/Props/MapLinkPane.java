@@ -1,20 +1,12 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import com.syrus.AMFICOM.Client.Map.Props.MapLinkBindPanel;
-import com.syrus.AMFICOM.Client.Map.Props.MapLinkGeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import java.awt.BorderLayout;
 
-import java.util.Iterator;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -55,7 +47,7 @@ public final class MapLinkPane extends JPanel implements ObjectResourcePropertie
 		setObjectResource(maplink);
 	}
 	
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);

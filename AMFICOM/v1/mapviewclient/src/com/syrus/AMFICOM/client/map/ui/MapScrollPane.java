@@ -1,5 +1,5 @@
 /**
- * $Id: MapScrollPane.java,v 1.3 2004/09/30 13:38:11 krupenn Exp $
+ * $Id: MapScrollPane.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 
 /**
  * Класс выполняет функции прокрутки в окне обозревателя карты с помощью
@@ -23,7 +22,7 @@ import javax.swing.JScrollBar;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/30 13:38:11 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

@@ -6,18 +6,14 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
 import java.util.ArrayList;
 import java.util.Arrays;

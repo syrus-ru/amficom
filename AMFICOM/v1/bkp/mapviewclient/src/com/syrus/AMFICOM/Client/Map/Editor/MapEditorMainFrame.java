@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.3 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.4 2004/10/19 11:48:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,28 +23,19 @@ import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
 import com.syrus.AMFICOM.Client.General.ConnectionInterface;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.Module;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapExportCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapImportCommand;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
-import com.syrus.io.IniFile;
-
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorCloseMapCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorCloseViewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorNewMapCommand;
@@ -64,10 +55,18 @@ import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapSetupCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapWindowCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapEditorAddSchemeToViewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapEditorRemoveSchemeFromViewCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapExportCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapImportCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Object.Domain;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
+import com.syrus.io.IniFile;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -96,7 +95,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -172,7 +171,7 @@ public class MapEditorMainFrame extends JFrame
 			{
 				public void componentShown(ComponentEvent e)
 				{
-					this_componentShown(e);
+					thisComponentShown(e);
 				}
 			});
 //		this.addComponentListener(new MapMDIMain_this_componentAdapter(this));
@@ -799,7 +798,7 @@ public class MapEditorMainFrame extends JFrame
 		return internalDispatcher;
 	}
 
-	void this_componentShown(ComponentEvent e)
+	void thisComponentShown(ComponentEvent e)
 	{
 		initModule();
 		desktopPane.setPreferredSize(desktopPane.getSize());

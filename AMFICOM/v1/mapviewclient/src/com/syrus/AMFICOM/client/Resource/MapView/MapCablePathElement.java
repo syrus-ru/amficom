@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.13 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.14 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
@@ -22,8 +20,6 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathBinding;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
@@ -33,9 +29,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
-
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -50,7 +46,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/19 11:48:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -373,8 +369,8 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		if(topLen == 0.0D)
 			return 1.0;
 
-		double Kd = phLen / topLen;
-		return Kd;
+		double kd = phLen / topLen;
+		return kd;
 	}
 
 	/**

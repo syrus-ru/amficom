@@ -2,7 +2,6 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 public interface MapElementPropertiesController
 	extends ObjectResourcePropertiesController

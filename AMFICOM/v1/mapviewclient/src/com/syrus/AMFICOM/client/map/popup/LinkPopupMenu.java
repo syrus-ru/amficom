@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Action.*;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkCommandAtomic;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JMenuItem;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkCommandAtomic;
 
 public final class LinkPopupMenu extends MapPopupMenu 
 {

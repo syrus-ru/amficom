@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.UI.ColorComboBox;
 import com.syrus.AMFICOM.Client.General.UI.LineThickComboBox;
+import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 
 import java.awt.Dimension;
@@ -19,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 
 public class MapOptionsDialog extends JDialog 
 {

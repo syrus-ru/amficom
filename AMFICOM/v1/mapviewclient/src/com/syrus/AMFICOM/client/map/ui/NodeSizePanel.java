@@ -1,5 +1,5 @@
 /**
- * $Id: NodeSizePanel.java,v 1.3 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: NodeSizePanel.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
 
 /**
@@ -32,7 +31,7 @@ import oracle.jdeveloper.layout.XYLayout;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -40,7 +39,6 @@ import oracle.jdeveloper.layout.XYLayout;
 public final class NodeSizePanel extends JPanel 
 {
 	private LogicalNetLayer lnl;
-	private XYLayout xYLayout1 = new XYLayout();
 	private JButton leftButton = new JButton();
 	private JButton rightButton = new JButton();
 
@@ -74,11 +72,7 @@ public final class NodeSizePanel extends JPanel
 
 	private void jbInit()
 	{
-//		this.setLayout(xYLayout1);
 		this.setLayout(new BorderLayout());
-//		setPreferredSize(new Dimension(60, 27));
-//		setMinimumSize(new Dimension(60, 27));
-//		setMaximumSize(new Dimension(60, 27));
 
 	    ImageIcon icon1 = new ImageIcon("images/farther.gif");
 		leftButton.setIcon(icon1);

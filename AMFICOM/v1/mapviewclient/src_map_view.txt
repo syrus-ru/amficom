@@ -168,7 +168,6 @@ src\com\syrus\AMFICOM\Client\Map\Strategy\MapStrategyManager.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\MapUnboundNodeElementStrategy.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\MapVoidElementStrategy.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\VoidStrategy.java
-src\com\syrus\AMFICOM\Client\Map\UI\ElementPaneToolBar.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapController.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapDropTargetListener.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapElementLabel.java
