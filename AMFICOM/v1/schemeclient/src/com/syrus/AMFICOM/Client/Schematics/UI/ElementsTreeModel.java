@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
@@ -296,9 +295,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					DomainCondition condition = new DomainCondition(domain,
+					LinkedIdsCondition condition = new LinkedIdsCondition(domain_id,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
 					Collection groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 

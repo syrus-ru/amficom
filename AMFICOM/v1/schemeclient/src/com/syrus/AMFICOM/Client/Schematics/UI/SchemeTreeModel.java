@@ -10,14 +10,11 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -402,9 +399,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					DomainCondition condition = new DomainCondition(domain,
+					LinkedIdsCondition condition = new LinkedIdsCondition(domain_id,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
 					List groups = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 

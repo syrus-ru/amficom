@@ -12,8 +12,6 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
@@ -230,9 +228,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					DomainCondition condition = new DomainCondition(domain,
+					LinkedIdsCondition condition = new LinkedIdsCondition(domain_id,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
 					List groups = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 

@@ -8,8 +8,6 @@ import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
@@ -94,9 +92,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 			if (s.equals("root")) {
 				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 						getAccessIdentifier().domain_id);
-				Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-						domain_id, true);
-				DomainCondition condition = new DomainCondition(domain, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
 				Collection groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 				for (Iterator it = groups.iterator(); it.hasNext(); )

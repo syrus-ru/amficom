@@ -8,8 +8,6 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.Schematics.UI.SchemeController;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
@@ -34,9 +32,7 @@ public class SchemeOpenCommand extends VoidCommand
 
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-			DomainCondition condition = new DomainCondition(domain, ObjectEntities.SCHEME_ENTITY_CODE);
+			LinkedIdsCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.SCHEME_ENTITY_CODE);
 			List schemes = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			mcd.setContents(schemes);
 		}

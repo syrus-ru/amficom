@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
@@ -150,9 +149,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 			try {
 				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 						getAccessIdentifier().domain_id);
-				Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-						domain_id, true);
-				StorableObjectCondition condition = new DomainCondition(domain, ObjectEntities.ME_ENTITY_CODE);
+				StorableObjectCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.ME_ENTITY_CODE);
 				Collection mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				for (Iterator it = mes.iterator(); it.hasNext(); ) {
 					MonitoredElement monitoredelement = (MonitoredElement)it.next();
