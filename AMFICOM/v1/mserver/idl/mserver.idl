@@ -112,6 +112,11 @@ module corba {
 
 
 
+		configuration::corba::KISSeq_Transferable transmitKISs(in general::corba::IdentifierSeq_Transferable ids_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+
+
 
 		configuration::corba::KISSeq_Transferable transmitKISsButIdsByCondition(
 						in general::corba::IdentifierSeq_Transferable ids_Transferable,

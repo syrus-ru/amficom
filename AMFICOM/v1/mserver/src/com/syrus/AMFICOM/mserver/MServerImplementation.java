@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.40 2005/04/01 21:37:10 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.41 2005/04/04 14:13:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -101,7 +101,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/04/01 21:37:10 $
+ * @version $Revision: 1.41 $, $Date: 2005/04/04 14:13:13 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -667,6 +667,30 @@ public class MServerImplementation extends MServerPOA {
 		}
 	}
 
+
+
+
+
+	public KIS_Transferable[] transmitKISs(Identifier_Transferable[] ids_Transferable) throws AMFICOMRemoteException {
+		java.util.Set ids = Identifier.fromTransferables(ids_Transferable);
+
+		java.util.Set objects = null;
+		try {
+			objects = ConfigurationStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		KIS_Transferable[] transferables = new KIS_Transferable[objects.size()];
+		int i = 0;
+		KIS kis;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			kis = (KIS) it.next();
+			transferables[i] = (KIS_Transferable) kis.getTransferable();
+		}
+		return transferables;
+	}
 
 
 
