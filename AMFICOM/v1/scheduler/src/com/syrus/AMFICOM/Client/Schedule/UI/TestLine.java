@@ -254,7 +254,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 					Test test = (Test) it.next();
 					if (test.isChanged())
 						continue;
-					if ((this.selectedTest == null) || (!this.selectedTest.getId().equals(test.getId()))) {
+					if ((this.selectedTest != null) && (this.selectedTest.getId().equals(test.getId()))) {
 						switch (test.getStatus().value()) {
 							case TestStatus._TEST_STATUS_COMPLETED:
 								color = COLOR_COMPLETED_SELECTED;
@@ -355,16 +355,21 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 						Collection testMeasurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 							linkedIdsCondition, true);
 						List measurementTestList = new LinkedList();
-						for (Iterator iter = testMeasurements.iterator(); iter.hasNext();) {
-							Measurement measurement = (Measurement) iter.next();
-							TestTimeLine testTimeLine = new TestTimeLine();
-							testTimeLine.test = test;
-							testTimeLine.startTime = measurement.getStartTime().getTime();
-							testTimeLine.duration = measurement.getDuration();
-							testTimeLine.haveMeasurement = true;
-							measurementTestList.add(testTimeLine);
+						if (testMeasurements.isEmpty()) {
+							for (Iterator iter = testMeasurements.iterator(); iter.hasNext();) {
+								Measurement measurement = (Measurement) iter.next();
+								TestTimeLine testTimeLine = new TestTimeLine();
+								testTimeLine.test = test;
+								testTimeLine.startTime = measurement.getStartTime().getTime();
+								testTimeLine.duration = measurement.getDuration();
+								testTimeLine.haveMeasurement = true;
+								measurementTestList.add(testTimeLine);
+							}
+							this.measurements.put(test.getId(), measurementTestList);
+						} else {
+							this.measurements.put(test.getId(), null);
 						}
-						this.measurements.put(test.getId(), measurementTestList);
+
 					} catch (ApplicationException e) {
 						SchedulerModel.showErrorMessage(this, e);
 					}
@@ -421,6 +426,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 							testTimeLine.startTime = test.getStartTime().getTime();
 							testTimeLine.duration = (test.getEndTime() != null) ? test.getEndTime().getTime()
 									- testTimeLine.startTime : 0;
+							measurementTestList.add(testTimeLine);
 							break;
 
 					}
