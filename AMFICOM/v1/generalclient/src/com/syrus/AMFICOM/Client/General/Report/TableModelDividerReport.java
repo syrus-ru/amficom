@@ -66,13 +66,16 @@ class TMDRTableModel extends DividableTableModel
 		width = model.getColumnCount();
 		length = model.getRowCount();
 
-		for (int i = 0; i < width; i++)
-			if (!model.getColumnName(i).equals(""))
-			{
-				viewColumnNames = true;
-				length++;
-				break;
-			}
+    for (int i = 0; i < width; i++)
+    {
+      String curColName = model.getColumnName(i);
+      if ((curColName != null) && (!curColName.equals("")))
+      {
+        viewColumnNames = true;
+        length++;
+        break;
+      }
+    }
 	}
 
 	public int getColumnCount()
