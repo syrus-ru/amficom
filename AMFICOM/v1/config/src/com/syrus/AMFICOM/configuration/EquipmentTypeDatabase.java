@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.25 2004/12/10 16:07:30 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.26 2004/12/14 13:43:34 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/10 16:07:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2004/12/14 13:43:34 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -41,8 +41,14 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_CODENAME				= "codename";
 	public static final String COLUMN_DESCRIPTION			= "description";
 	public static final String COLUMN_NAME = "name";
-
-	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
+	//   manufacturer VARCHAR2(64),
+    private static final int SIZE_MANUFACTURER_COLUMN = 64; 
+    public static final String COLUMN_MANUFACTURER  = "manufacturer";
+    // manufacturer_code VARCHAR2(64),
+    private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
+    public static final String COLUMN_MANUFACTURER_CODE     = "manufacturer_code";
+	
+    public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
 	private static String columns;
 	private static String updateMultiplySQLValues;
@@ -56,6 +62,8 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
+            + QUESTION + COMMA
+            + QUESTION + COMMA
 			+ QUESTION;
 		}
 	return updateMultiplySQLValues;
@@ -65,8 +73,10 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION;
+				+ COLUMN_DESCRIPTION + COMMA
+                + COLUMN_NAME + COMMA
+				+ COLUMN_MANUFACTURER + COMMA
+                + COLUMN_MANUFACTURER_CODE;
 		}
 		return columns;
 	}
@@ -77,7 +87,9 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getManufacturerCode(), SIZE_MANUFACTURER_CODE_COLUMN) + APOSTOPHE;
 		return sql;
 	}
 	
@@ -104,6 +116,8 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 			DatabaseString.setString(preparedStatement, ++i, equipmentType.getCodename(), SIZE_CODENAME_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, equipmentType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, equipmentType.getName(), SIZE_NAME_COLUMN);
+            DatabaseString.setString(preparedStatement, ++i, equipmentType.getManufacturer(), SIZE_MANUFACTURER_COLUMN);
+            DatabaseString.setString(preparedStatement, ++i, equipmentType.getManufacturerCode(), SIZE_MANUFACTURER_CODE_COLUMN);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("EquipmentDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -116,7 +130,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		EquipmentType equipmentType = storableObject == null ? null : fromStorableObject(storableObject);
 		if (equipmentType == null){
-			equipmentType = new EquipmentType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null);			
+			equipmentType = new EquipmentType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null, null);			
 		}
 		equipmentType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -124,7 +138,9 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+                                    DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER)),
+                                    DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER_CODE)));
 
 		
 		return equipmentType;
