@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbGeneral.sqlj,v 1.1.2.2 2004/08/20 17:12:08 bass Exp $
+ * $Id: AMFICOMdbGeneral.sqlj,v 1.1.2.3 2004/08/23 11:43:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,33 +22,24 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:08 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/23 11:43:50 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class AMFICOMdbGeneral
-{
+final class AMFICOMdbGeneral {
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-	public static void CheckUserPrivileges(AccessIdentity_Transferable accessIdentity)
-		throws AMFICOMRemoteException
-	{
-
-		try
-		{
+	static void checkUserPrivileges(AccessIdentity_Transferable accessIdentity) throws AMFICOMRemoteException {
+		try {
 			#sql {
-				update AMFICOM.LOGGEDUSERS
-					set ACCESSED = SYSDATE
-					where ID = :(accessIdentity.sess_id)
+				UPDATE amficom.loggedusers SET accessed = SYSDATE WHERE id = :(accessIdentity.sess_id)
 			};
-			#sql { commit };
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(
-					Constants.ERROR_INSUFFICIENT_PRIVILEGES,
-					"Ошибка пользователя: " + e.getMessage());
+			#sql {
+				COMMIT
+			};
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_INSUFFICIENT_PRIVILEGES, "Ошибка пользователя: " + sqle.getMessage());
 		}
 	}
 

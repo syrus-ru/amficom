@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatadbInterfaceSave.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
+ * $Id: TestDatadbInterfaceSave.sqlj,v 1.1.2.3 2004/08/23 11:43:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,118 +8,37 @@
 
 package com.syrus.AMFICOM.server.object;
 
+import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.General.TestRequestStatus;
+import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.server.ResourcedbInterface;
-import java.sql.*;
-import oracle.sql.BLOB;
+import com.syrus.AMFICOM.server.measurement.Test;
+import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/23 11:43:51 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class TestDatadbInterfaceSave
-{
-	protected TestDatadbInterfaceSave()
-	{
+final class TestDatadbInterfaceSave {
+	private TestDatadbInterfaceSave() {
 	}
 
-	public static int saveTestArgument(
-			String argCodeName,
-			String test_id,
-			byte[] val)
-	{
-		String test_type_id = "";
-		String test_type_argument_id = "";
-		BLOB blob;
-		return Constants.ERROR_NO_ERROR;
-	}
+	static void requestTest(AccessIdentity_Transferable accessIdentity, ClientTestRequest_Transferable clientTestRequest, ClientTest_Transferable[] clientTestSeq) throws AMFICOMRemoteException {
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
-	public static int saveTestTimeStamp(
-			Timestamp date,
-			String test_id)
-	{
-		System.out.println("Inserting date = " + date.getTime() + ", " + date.toString());
-		try
-		{
-			String id_v = ResourcedbInterface.getUId("testtimestamp");
-
+		try {
 			#sql {
-				INSERT INTO testtimetablestamps (test_id, time_stamp, id)
-					VALUES (:test_id, :date, :id_v)};
-			#sql { commit };
-		}
-		catch (SQLException e)
-		{
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			return Constants.ERROR_SAVING;
-		}
-		catch(Exception ex)
-		{
-			System.out.println("error generating ttstamp: " + ex.getMessage());
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int saveTestRequest(
-			String domain_id,
-			ClientTestRequest_Transferable treq)
-	{
-		System.out.println("Saving test request " + treq.id);
-		try
-		{
-			#sql
-			{
-				insert into AMFICOM.TESTREQUESTS(
-						ID,
-						NAME,
-						STATUS,
-						CREATED,
-						USER_ID,
-						DOMAIN_ID)
-				values(
-					:(treq.id),
-					:(treq.name),
-					:(TestRequestStatus._TEST_REQUEST_STATUS_SHEDULED),
-					SYSDATE,
-					:(treq.user_id),
-					:domain_id )
+				INSERT INTO amficom.testrequests(id, name, status, created, user_id, domain_id) VALUES (:(clientTestRequest.id), :(clientTestRequest.name), :(TestRequestStatus._TEST_REQUEST_STATUS_SHEDULED), SYSDATE, :(clientTestRequest.user_id), :(accessIdentity.domain_id))
 			};
-			#sql { commit };
+			#sql {
+				COMMIT
+			};
+			for (int i = 0; i < clientTestSeq.length; i++)
+				new Test(clientTestSeq[i]);
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, sqle.getMessage());
 		}
-		catch(SQLException e)
-		{
-			System.out.println("Error - test request exists!" + ": " + e.getMessage());
-			e.printStackTrace();
-			return Constants.ERROR_SAVING;
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int saveTests(ClientTest_Transferable[] tests)
-	{
-		int i;
-		int len;
-		Timestamp ts_start_time;
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int removeTests(String[] tests)
-	{
-		int i;
-		int len;
-		Timestamp ts_start_time;
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int updateTests(ClientTest_Transferable[] tests)
-	{
-		int i;
-		int len;
-		Timestamp ts_start_time;
-		return Constants.ERROR_NO_ERROR;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMServer.java,v 1.1.2.2 2004/08/20 17:12:08 bass Exp $
+ * $Id: AMFICOMServer.java,v 1.1.2.3 2004/08/23 11:43:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,17 +26,23 @@ import com.syrus.AMFICOM.CORBA._AMFICOMImplBase;
 import com.syrus.AMFICOM.server.*;
 import com.syrus.AMFICOM.server.event.AlarmType;
 import com.syrus.AMFICOM.server.measurement.*;
+import com.syrus.util.database.DatabaseConnection;
 import java.sql.SQLException;
 import java.util.Vector;
 import org.omg.CORBA.*;
+import org.omg.CORBA.StringHolder;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:08 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/23 11:43:50 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class AMFICOMServer extends _AMFICOMImplBase
-{
+public class AMFICOMServer extends _AMFICOMImplBase {
+	static {
+		DatabaseConnection.setConnection(DefaultContext.getDefaultContext().getConnection());
+	}
+
 	/**
 	 * Открыть новую сессию взаимодействия оператора ИСМ с РИСД и провести
 	 * процедуры идентификации и аутентификации пользователя по имени
@@ -803,13 +809,16 @@ public class AMFICOMServer extends _AMFICOMImplBase
 				alarm_id);
 	}
 
-	public int SetUserAlarm(
-			AccessIdentity_Transferable accessIdentity,
-			String source_id,
-			String descriptor)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.SetUserAlarm(accessIdentity, source_id, descriptor);
+	/**
+	 * @param accessIdentity
+	 * @param sourceId
+	 * @param descriptor
+	 * @return 
+	 * @throws AMFICOMRemoteException
+	 */
+	public int SetUserAlarm(AccessIdentity_Transferable accessIdentity, String sourceId, String descriptor) throws AMFICOMRemoteException {
+		SurveydbInterfaceSave.setUserAlarm(accessIdentity, sourceId, descriptor);
+		return Constants.ERROR_NO_ERROR;
 	}
 
 	public int GetAlarmIdsForMonitoredElement(
@@ -1459,26 +1468,27 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			testseq);
 	}
 
-	public int GetAlarmedTests(
-			AccessIdentity_Transferable accessIdentity,
-			ResourceDescriptorSeq_TransferableHolder testids)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.GetAlarmedTests(
-			accessIdentity,
-			testids);
+	/**
+	 * @param accessIdentity
+	 * @param resourceDescriptorSeq
+	 * @return 
+	 * @throws AMFICOMRemoteException
+	 */
+	public int GetAlarmedTests(AccessIdentity_Transferable accessIdentity, ResourceDescriptorSeq_TransferableHolder resourceDescriptorSeq) throws AMFICOMRemoteException {
+		TestDatadbInterfaceLoad.getAlarmedTests(accessIdentity, resourceDescriptorSeq);
+		return Constants.ERROR_NO_ERROR;
 	}
 
-	public int RequestTest(
-			AccessIdentity_Transferable accessIdentity,
-			ClientTestRequest_Transferable treq,
-			ClientTest_Transferable[] testseq)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.RequestTest(
-			accessIdentity,
-			treq,
-			testseq);
+	/**
+	 * @param accessIdentity
+	 * @param clientTestRequest
+	 * @param clientTestSeq
+	 * @return 
+	 * @throws AMFICOMRemoteException
+	 */
+	public int RequestTest(AccessIdentity_Transferable accessIdentity, ClientTestRequest_Transferable clientTestRequest, ClientTest_Transferable[] clientTestSeq) throws AMFICOMRemoteException {
+		TestDatadbInterfaceSave.requestTest(accessIdentity, clientTestRequest, clientTestSeq);
+		return Constants.ERROR_NO_ERROR;
 	}
 
 	public int QueryResource(

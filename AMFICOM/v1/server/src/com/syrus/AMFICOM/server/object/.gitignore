@@ -56,7 +56,6 @@ SurveydbInterfaceLoad3.java
 SurveydbInterfaceLoad5.java
 SurveydbInterfaceSave.java
 SurveydbInterfaceSave2.java
-TestDatadbInterfaceLoad.java
 TestDatadbInterfaceSave.java
 TestTriggers.java
 *.generated.java

@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbInterface.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: AMFICOMdbInterface.sqlj,v 1.1.2.2 2004/08/23 11:43:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,25 +25,19 @@ import com.syrus.AMFICOM.filter.LogicSchemeBase;
 import com.syrus.AMFICOM.server.*;
 import com.syrus.AMFICOM.server.event.*;
 import com.syrus.AMFICOM.server.measurement.*;
-import com.syrus.util.database.DatabaseConnection;
 import java.io.*;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import org.omg.CORBA.StringHolder;
-import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/23 11:43:50 $
  * @author $Author: bass $
  * @module server_v1
  */
 final class AMFICOMdbInterface {
 	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-
-	static {
-		DatabaseConnection.setConnection(DefaultContext.getDefaultContext().getConnection());
-	}
 
 	private AMFICOMdbInterface() {
 	}
@@ -51,14 +45,10 @@ final class AMFICOMdbInterface {
 	static int Logon(String username, byte[] password, String ior, AccessIdentity_TransferableHolder accessIdentity) throws AMFICOMRemoteException {
 		return AMFICOMdbGeneral.Logon(username, password, ior, accessIdentity);
 	}
-
-	static void CheckUserPrivileges(AccessIdentity_Transferable accessIdentity) throws AMFICOMRemoteException {
-		AMFICOMdbGeneral.CheckUserPrivileges(accessIdentity);
-	}
-
+	
 	static int Logoff(AccessIdentity_Transferable accessIdentity) throws AMFICOMRemoteException {
 		try {
-			CheckUserPrivileges(accessIdentity);
+			AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 			return AMFICOMdbGeneral.Logoff(accessIdentity);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -67,14 +57,12 @@ final class AMFICOMdbInterface {
 	}
 
 	static int GetLoggedUserIds(AccessIdentity_Transferable accessIdentity, wstringSeqHolder userids) throws AMFICOMRemoteException {
-		System.out.println("CheckUserPrivileges " + accessIdentity.sess_id);
-		CheckUserPrivileges(accessIdentity);
-		System.out.println("get logged users ");
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		return AMFICOMdbGeneral.GetLoggedUserIds(accessIdentity, userids);
 	}
 
 	static int ChangePassword(AccessIdentity_Transferable accessIdentity, byte[] oldpassword, byte[] newpassword) throws AMFICOMRemoteException {
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		return AMFICOMdbGeneral.ChangePassword(accessIdentity, oldpassword, newpassword);
 	}
 
@@ -88,7 +76,7 @@ final class AMFICOMdbInterface {
 			CommandPermissionAttributesSeq_TransferableHolder execseq,
 			UserSeq_TransferableHolder userseq)
 			throws AMFICOMRemoteException {
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -133,7 +121,7 @@ final class AMFICOMdbInterface {
 			OperatorProfileSeq_TransferableHolder profileseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -160,7 +148,7 @@ final class AMFICOMdbInterface {
 			UserSeq_TransferableHolder userseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		Vector img_ids = new Vector();
@@ -183,7 +171,7 @@ final class AMFICOMdbInterface {
 			CommandPermissionAttributesSeq_TransferableHolder execseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -206,7 +194,7 @@ final class AMFICOMdbInterface {
 			User_Transferable[] userseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -244,7 +232,7 @@ final class AMFICOMdbInterface {
 			String[] userseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -276,7 +264,7 @@ final class AMFICOMdbInterface {
 			AgentSeq_TransferableHolder agentseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -305,7 +293,7 @@ final class AMFICOMdbInterface {
 			AgentSeq_TransferableHolder agentseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -331,7 +319,7 @@ final class AMFICOMdbInterface {
 			Agent_Transferable[] agentseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -354,7 +342,7 @@ final class AMFICOMdbInterface {
 			String[] agentseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -383,7 +371,7 @@ final class AMFICOMdbInterface {
 			MapPathElementSeq_TransferableHolder pathseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -441,7 +429,7 @@ final class AMFICOMdbInterface {
 			MapPathElementSeq_TransferableHolder pathseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -494,7 +482,7 @@ final class AMFICOMdbInterface {
 			MapPathElementSeq_TransferableHolder pathseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -560,7 +548,7 @@ final class AMFICOMdbInterface {
 			MapPathElementSeq_TransferableHolder pathseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -620,7 +608,7 @@ final class AMFICOMdbInterface {
 			MapPathElement_Transferable[] pathseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -669,7 +657,7 @@ final class AMFICOMdbInterface {
 			MapPathElement_Transferable[] pathseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -706,7 +694,7 @@ final class AMFICOMdbInterface {
 			MapPathProtoElementSeq_TransferableHolder pathseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -749,7 +737,7 @@ final class AMFICOMdbInterface {
 			MapPathProtoElementSeq_TransferableHolder pathseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -787,7 +775,7 @@ final class AMFICOMdbInterface {
 			MapProtoElement_Transferable[] protos)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		ret = ResourcedbInterface.saveImages(images);
@@ -808,7 +796,7 @@ final class AMFICOMdbInterface {
 			String[] proto_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		ret = MapdbInterfaceProto.removeProtoGroups(group_ids);
@@ -826,7 +814,7 @@ final class AMFICOMdbInterface {
 			SchemeProtoElementSeq_TransferableHolder elementseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -846,7 +834,7 @@ final class AMFICOMdbInterface {
 			SchemeProtoElementSeq_TransferableHolder elementseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -865,7 +853,7 @@ final class AMFICOMdbInterface {
 			SchemeProtoElement_Transferable[] elementseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -883,7 +871,7 @@ final class AMFICOMdbInterface {
 			String[] element_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -899,7 +887,7 @@ final class AMFICOMdbInterface {
 			SchemeSeq_TransferableHolder elementseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -919,7 +907,7 @@ final class AMFICOMdbInterface {
 			SchemeSeq_TransferableHolder elementseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -938,7 +926,7 @@ final class AMFICOMdbInterface {
 			Scheme_Transferable[] elementseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -959,7 +947,7 @@ final class AMFICOMdbInterface {
 			String[] scheme_element_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -987,7 +975,7 @@ final class AMFICOMdbInterface {
 			String[] pathseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1028,7 +1016,7 @@ final class AMFICOMdbInterface {
 			String[] pathseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1058,7 +1046,7 @@ final class AMFICOMdbInterface {
 			ElementAttributeTypeSeq_TransferableHolder attrseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1074,7 +1062,7 @@ final class AMFICOMdbInterface {
 			ElementAttributeTypeSeq_TransferableHolder attrseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1090,7 +1078,7 @@ final class AMFICOMdbInterface {
 			ElementAttributeSeq_TransferableHolder attrseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1114,7 +1102,7 @@ final class AMFICOMdbInterface {
 			ElementAttributeSeq_TransferableHolder attrseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1139,7 +1127,7 @@ final class AMFICOMdbInterface {
 			EventSeq_TransferableHolder eventseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1193,7 +1181,7 @@ final class AMFICOMdbInterface {
 			EventSeq_TransferableHolder eventseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1254,7 +1242,7 @@ final class AMFICOMdbInterface {
 			EventSeq_TransferableHolder eventseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1341,7 +1329,7 @@ final class AMFICOMdbInterface {
 	}
 
 	static int GetMessages(AccessIdentity_Transferable accessIdentity, MessageSeq_TransferableHolder messageseq) throws AMFICOMRemoteException {
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		messageseq.value = new Message_Transferable[0];
 		return Constants.ERROR_NO_ERROR;
 	}
@@ -1351,7 +1339,7 @@ final class AMFICOMdbInterface {
 			Alarm_Transferable alarm)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1379,7 +1367,7 @@ final class AMFICOMdbInterface {
 			String alarm_id)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1396,18 +1384,13 @@ final class AMFICOMdbInterface {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int SetUserAlarm(AccessIdentity_Transferable accessIdentity, String source_id, String descriptor) throws AMFICOMRemoteException {
-		CheckUserPrivileges(accessIdentity);
-		return SurveydbInterfaceSave2.userAlarm(source_id, descriptor);
-	}
-
 	static int GetAlarmIdsForMonitoredElement(AccessIdentity_Transferable accessIdentity, String me_id, ResourceDescriptorSeq_TransferableHolder alarmids) throws AMFICOMRemoteException {
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		return MaintenancedbInterface.GetAlarmIdsForMonitoredElement(me_id, alarmids);
 	}
 
 	static int LoadMaintenanceData(AccessIdentity_Transferable accessIdentity, EventSourceTypeSeq_TransferableHolder est, AlertingMessageSeq_TransferableHolder am, AlertingMessageUserSeq_TransferableHolder amu) throws AMFICOMRemoteException {
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		Vector vec = MaintenancedbInterface.getEventSourceTypes();
 		est.value = new EventSourceType_Transferable[vec.size()];
 		vec.copyInto(est.value);
@@ -1426,7 +1409,7 @@ final class AMFICOMdbInterface {
 			AlertingMessageUser_Transferable []amu)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		for(int i = 0; i < am.length; i++)
 			MaintenancedbInterface.saveAlertingMessages(am[i]);
 		for(int i = 0; i < amu.length; i++)
@@ -1439,7 +1422,7 @@ final class AMFICOMdbInterface {
 			String amu_id)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		MaintenancedbInterface.removeAlertingMessageUser(amu_id);
 		return Constants.ERROR_NO_ERROR;
 	}
@@ -1450,7 +1433,7 @@ final class AMFICOMdbInterface {
 			StringHolder id)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		try
 		{
@@ -1470,7 +1453,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder desc)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		Vector vec = getResourceDescriptors(type);
 		desc.value = new ResourceDescriptor_Transferable[vec.size()];
@@ -1541,7 +1524,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptor_TransferableHolder desc)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		desc.value = getResourceDescriptor(type, id);
 		if(desc.value == null)
@@ -1649,7 +1632,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder desc)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		Vector vec = getResourceDescriptors(type);
 		Vector vec3 = new Vector();
@@ -1673,7 +1656,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder desc)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		desc.value = new ResourceDescriptor_Transferable[0];
@@ -1702,7 +1685,7 @@ final class AMFICOMdbInterface {
 	}
 
 	static int GetDomainResourceDescriptors(AccessIdentity_Transferable accessIdentity, String type, ResourceDescriptorSeq_TransferableHolder resourceDescriptorSeq) throws AMFICOMRemoteException {
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		String id_s = null;
 		String where_s = null;
@@ -1767,7 +1750,7 @@ final class AMFICOMdbInterface {
 			ClientResultSeq_TransferableHolder resultseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1807,7 +1790,7 @@ final class AMFICOMdbInterface {
 			ClientResultSeq_TransferableHolder resultseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1854,7 +1837,7 @@ final class AMFICOMdbInterface {
 			ClientTestRequestSeq_TransferableHolder treqseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1871,7 +1854,7 @@ final class AMFICOMdbInterface {
 			ClientTestSeq_TransferableHolder testseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1899,7 +1882,7 @@ final class AMFICOMdbInterface {
 			ClientTestSeq_TransferableHolder testseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -1933,7 +1916,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder desc)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		Vector vec1 = getResourceDescriptors("testonetime");
 		ResourceDescriptor_Transferable[] desc1 = new ResourceDescriptor_Transferable[vec1.size()];
@@ -1953,7 +1936,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder desc)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		Vector vec1 = getResourceDescriptors("test");
 		ResourceDescriptor_Transferable[] desc1 = new ResourceDescriptor_Transferable[vec1.size()];
@@ -2063,7 +2046,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder testids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		return SurveydbInterfaceLoad.GetTestIdsForMonitoredElement(me_id, testids);
@@ -2074,7 +2057,7 @@ final class AMFICOMdbInterface {
 			ClientAnalysisSeq_TransferableHolder analysisseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2102,7 +2085,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder analysisids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2143,7 +2126,7 @@ final class AMFICOMdbInterface {
 			ClientModelingSeq_TransferableHolder modelingseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2170,7 +2153,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder modelingids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2211,7 +2194,7 @@ final class AMFICOMdbInterface {
 			ClientEvaluationSeq_TransferableHolder evaluationseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2238,7 +2221,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder evaluationids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2280,7 +2263,7 @@ final class AMFICOMdbInterface {
 			ClientTestSeq_TransferableHolder testseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2318,50 +2301,6 @@ final class AMFICOMdbInterface {
 		return ret;
 	}
 
-	static int GetAlarmedTests(
-			AccessIdentity_Transferable accessIdentity,
-			ResourceDescriptorSeq_TransferableHolder testids)
-		throws AMFICOMRemoteException
-	{
-		CheckUserPrivileges(accessIdentity);
-
-		int ret = Constants.ERROR_NO_ERROR;
-
-		testids.value = new ResourceDescriptor_Transferable[0];
-
-		ret = TestDatadbInterfaceLoad.getAlarmedTests(accessIdentity.domain_id, testids);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		return ret;
-	}
-
-	static int RequestTest(
-			AccessIdentity_Transferable accessIdentity,
-			ClientTestRequest_Transferable treq,
-			ClientTest_Transferable[] testseq)
-		throws AMFICOMRemoteException
-	{
-		CheckUserPrivileges(accessIdentity);
-
-		int ret = Constants.ERROR_NO_ERROR;
-
-		ret = TestDatadbInterfaceSave.saveTestRequest(accessIdentity.domain_id, treq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-
-		try
-		{
-			for(int i = 0; i < testseq.length; i++)
-				new Test(testseq[i]);
-		}
-		catch(SQLException ex)
-		{
-			ex.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, "Невозможно создать задание на тест: " + ex.getMessage());
-		}
-		return ret;
-	}
-
 	static int QueryResource(
 			AccessIdentity_Transferable accessIdentity,
 			String parameter_id,
@@ -2369,7 +2308,7 @@ final class AMFICOMdbInterface {
 			String parameter_type_id)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		String a_id = ResourcedbInterface.getUId("resourcequery");
 		try
@@ -2401,7 +2340,7 @@ final class AMFICOMdbInterface {
 			String[] testids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2424,7 +2363,7 @@ final class AMFICOMdbInterface {
 			ClientTest_Transferable[] testseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2455,7 +2394,7 @@ final class AMFICOMdbInterface {
 			ClientResult_TransferableHolder result)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2517,7 +2456,7 @@ final class AMFICOMdbInterface {
 			ClientResultSeq_TransferableHolder results)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2545,7 +2484,7 @@ final class AMFICOMdbInterface {
 			ClientResultSeq_TransferableHolder results)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2574,7 +2513,7 @@ final class AMFICOMdbInterface {
 			long end_time)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2630,7 +2569,7 @@ final class AMFICOMdbInterface {
 			String test_setup_id)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2691,7 +2630,7 @@ final class AMFICOMdbInterface {
 			ClientResult_TransferableHolder result)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2717,7 +2656,7 @@ final class AMFICOMdbInterface {
 			ClientResultSeq_TransferableHolder results)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2745,7 +2684,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptor_TransferableHolder result)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		result.value = new ResourceDescriptor_Transferable();
 		ClientResult_TransferableHolder resulth = new ClientResult_TransferableHolder();
@@ -2762,7 +2701,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder results)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2790,7 +2729,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder results)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2818,7 +2757,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptor_TransferableHolder result)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2845,7 +2784,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder results)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		results.value = new ResourceDescriptor_Transferable[0];
@@ -2872,7 +2811,7 @@ final class AMFICOMdbInterface {
 			ClientResult_TransferableHolder result)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -2895,7 +2834,7 @@ final class AMFICOMdbInterface {
 			ClientResult_Transferable result)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		try
@@ -2925,7 +2864,7 @@ final class AMFICOMdbInterface {
 			ClientResult_Transferable result)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		try
@@ -2955,7 +2894,7 @@ final class AMFICOMdbInterface {
 			ClientResult_Transferable result)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		try
@@ -2984,7 +2923,7 @@ final class AMFICOMdbInterface {
 			ResultSetSeq_TransferableHolder resultsets)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		int ret = Constants.ERROR_NO_ERROR;
 
 		resultsets.value = new ResultSet_Transferable[0];
@@ -3001,7 +2940,7 @@ final class AMFICOMdbInterface {
 			ResultSetSeq_TransferableHolder resultsets)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		int ret = Constants.ERROR_NO_ERROR;
 
 		resultsets.value = new ResultSet_Transferable[0];
@@ -3018,7 +2957,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder result_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		int ret = Constants.ERROR_NO_ERROR;
 
 		result_ids.value = new ResourceDescriptor_Transferable[0];
@@ -3036,7 +2975,7 @@ final class AMFICOMdbInterface {
 			ResourceDescriptorSeq_TransferableHolder result_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		int ret = Constants.ERROR_NO_ERROR;
 
 		result_ids.value = new ResourceDescriptor_Transferable[0];
@@ -3053,7 +2992,7 @@ final class AMFICOMdbInterface {
 			GlobalParameterTypeSeq_TransferableHolder params)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		GlobalParameterType_Transferable[] gp = new GlobalParameterType_Transferable[0];
@@ -3069,7 +3008,7 @@ final class AMFICOMdbInterface {
 			GlobalParameterTypeSeq_TransferableHolder params)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		GlobalParameterType_Transferable[] gp = new GlobalParameterType_Transferable[0];
@@ -3084,7 +3023,7 @@ final class AMFICOMdbInterface {
 			TestTypeSeq_TransferableHolder ttypeseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3114,7 +3053,7 @@ final class AMFICOMdbInterface {
 			TestTypeSeq_TransferableHolder ttypeseq)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3141,7 +3080,7 @@ final class AMFICOMdbInterface {
 			AnalysisTypeSeq_TransferableHolder atypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3170,7 +3109,7 @@ final class AMFICOMdbInterface {
 			AnalysisTypeSeq_TransferableHolder atypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3196,7 +3135,7 @@ final class AMFICOMdbInterface {
 			EvaluationTypeSeq_TransferableHolder etypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3225,7 +3164,7 @@ final class AMFICOMdbInterface {
 			EvaluationTypeSeq_TransferableHolder etypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3252,7 +3191,7 @@ final class AMFICOMdbInterface {
 			ModelingTypeSeq_TransferableHolder mtypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3282,7 +3221,7 @@ final class AMFICOMdbInterface {
 			ModelingTypeSeq_TransferableHolder mtypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3309,7 +3248,7 @@ final class AMFICOMdbInterface {
 			ClientCriteriaSetSeq_TransferableHolder css)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3324,7 +3263,7 @@ final class AMFICOMdbInterface {
 			ClientThresholdSetSeq_TransferableHolder tss)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3339,7 +3278,7 @@ final class AMFICOMdbInterface {
 			ClientEtalonSeq_TransferableHolder ets)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3562,7 +3501,7 @@ final class AMFICOMdbInterface {
 			CableLinkTypeSeq_TransferableHolder cablelinktypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3619,7 +3558,7 @@ final class AMFICOMdbInterface {
 			CableLinkTypeSeq_TransferableHolder cablelinktypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3662,7 +3601,7 @@ final class AMFICOMdbInterface {
 			TransmissionPathTypeSeq_TransferableHolder pathtypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3691,7 +3630,7 @@ final class AMFICOMdbInterface {
 			TransmissionPathTypeSeq_TransferableHolder pathtypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3718,7 +3657,7 @@ final class AMFICOMdbInterface {
 			String[] clt_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		ret = NetDirectorydbInterfaceRemove.removePortTypes(pt_ids);
@@ -3744,7 +3683,7 @@ final class AMFICOMdbInterface {
 			String[] tpt_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		ret = ISMDirectorydbInterfaceRemove.removeAccessPortTypes(apt_ids);
@@ -3770,7 +3709,7 @@ final class AMFICOMdbInterface {
 			CableLinkType_Transferable[] cablelinktypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		ret = NetDirectorydbInterfaceSave.savePortTypes(porttypes);
@@ -3801,7 +3740,7 @@ final class AMFICOMdbInterface {
 			TransmissionPathType_Transferable[] pathtypes)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		ret = ISMDirectorydbInterfaceSave.saveAccessPortTypes(aporttypes);
@@ -3826,7 +3765,7 @@ final class AMFICOMdbInterface {
 			TestPortSeq_TransferableHolder testports)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3876,7 +3815,7 @@ final class AMFICOMdbInterface {
 			TestPortSeq_TransferableHolder testports)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3923,7 +3862,7 @@ final class AMFICOMdbInterface {
 			AccessPortSeq_TransferableHolder accessports)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -3980,7 +3919,7 @@ final class AMFICOMdbInterface {
 			AccessPortSeq_TransferableHolder accessports)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -4027,7 +3966,7 @@ final class AMFICOMdbInterface {
 			TestPort_Transferable[] testports)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -4064,7 +4003,7 @@ final class AMFICOMdbInterface {
 			AccessPort_Transferable[] accessports)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 
@@ -4098,7 +4037,7 @@ final class AMFICOMdbInterface {
 			String[] cl_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		ret = NetdbInterfaceRemove.removeLinks(l_ids);
@@ -4131,7 +4070,7 @@ final class AMFICOMdbInterface {
 			String[] ap_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
 		ret = ISMdbInterfaceRemove.removeAccessPorts(ap_ids);
@@ -4152,7 +4091,7 @@ final class AMFICOMdbInterface {
 			ReportTemplate_Transferable[] rts)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		for(int i = 0; i < rts.length; i++)
 		{
 			try
@@ -4206,7 +4145,7 @@ final class AMFICOMdbInterface {
 			String[] reportTemplate_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		for(int i = 0; i < reportTemplate_ids.length; i++)
 			try
@@ -4226,7 +4165,7 @@ final class AMFICOMdbInterface {
 			SchemeOptimizeInfo_Transferable soi)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		try
 		{
 				new SchemeOptimizeInfo(soi);
@@ -4243,7 +4182,7 @@ final class AMFICOMdbInterface {
 			AccessIdentity_Transferable accessIdentity)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		try
 		{
 			return SchemeOptimizeInfo.getSOIs();
@@ -4260,7 +4199,7 @@ final class AMFICOMdbInterface {
 			String[] soi_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		try
 		{
 			for(int i = 0; i < soi_ids.length; i++)
@@ -4281,7 +4220,7 @@ final class AMFICOMdbInterface {
 			SchemeMonitoringSolution_Transferable sol)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		try
 		{
 				new SchemeMonitoringSolution(sol);
@@ -4298,7 +4237,7 @@ final class AMFICOMdbInterface {
 			AccessIdentity_Transferable accessIdentity)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		try
 		{
 			return SchemeMonitoringSolution.getSMSs();
@@ -4315,7 +4254,7 @@ final class AMFICOMdbInterface {
 			String[] sol_ids)
 		throws AMFICOMRemoteException
 	{
-		CheckUserPrivileges(accessIdentity);
+		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 		try
 		{
 			for(int i = 0; i < sol_ids.length; i++)
