@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.2 2005/03/22 09:35:25 bob Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.3 2005/03/22 14:57:51 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,23 @@ package com.syrus.AMFICOM.Client.General.Model;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/22 09:35:25 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/22 14:57:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */
 public interface AnalysisResourceKeys extends ResourceKeys {
+	
+	String COLOR_EVENTS_NEW = "com.syrus.AMFICOM.color.analisys.events.new";
+	String COLOR_EVENTS_LOSS_CHANGED = "com.syrus.AMFICOM.color.analisys.events.losschanged";
+	String COLOR_EVENTS_AMPLITUDE_CHANGED = "com.syrus.AMFICOM.color.analisys.events.amplitudechanged";
+	String COLOR_EVENTS = "com.syrus.AMFICOM.color.analisys.events";
+	
+	String COLOR_EVENTS_NEW_SELECTED = "com.syrus.AMFICOM.color.analisys.events.newSelected";
+	String COLOR_EVENTS_LOSS_CHANGED_SELECTED = "com.syrus.AMFICOM.color.analisys.events.losschangedSelected";
+	String COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED = "com.syrus.AMFICOM.color.analisys.events.amplitudechangedSelected";
+	String COLOR_EVENTS_SELECTED = "com.syrus.AMFICOM.color.analisys.eventsSelected";
+
 
 	String	ICON_ANALYSIS_MINI					= "com.syrus.AMFICOM.icon.analisys.mainmini";
 	String	ICON_SURVEY_MINI					= "com.syrus.AMFICOM.icon.survey.mainmini";

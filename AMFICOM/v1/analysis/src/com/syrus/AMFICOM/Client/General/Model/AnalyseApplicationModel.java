@@ -1,6 +1,7 @@
 
 package com.syrus.AMFICOM.Client.General.Model;
 
+import java.awt.Color;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
@@ -136,6 +137,20 @@ public class AnalyseApplicationModel extends ApplicationModel {
 			"images/events.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_MODELED, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/modeled.gif")));
+		
+		UIManager.put(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED, Color.MAGENTA);
+		UIManager.put(AnalysisResourceKeys.COLOR_EVENTS_NEW, Color.RED);
+		
+		UIManager.put(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED, Color.ORANGE);
+		UIManager.put(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED, Color.CYAN);		
+		// maybe yellow is better that cyan?
+		
+		UIManager.put(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED, Color.ORANGE);
+		UIManager.put(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED, Color.CYAN); 
+		// maybe yellow is better that cyan?
+		
+		UIManager.put(AnalysisResourceKeys.COLOR_EVENTS, Color.BLACK);
+		UIManager.put(AnalysisResourceKeys.COLOR_EVENTS_SELECTED, Color.BLACK);
 	}
 	/*
 	 * public DataSourceInterface getDataSource(SessionInterface si) { String

@@ -1,17 +1,42 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.SystemColor;
+
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.General.UI.ATable;
+import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
+import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
@@ -430,34 +455,48 @@ class EventTableRenderer extends ADefaultTableCellRenderer
 
 
 
-	public Component getTableCellRendererComponent(JTable table, Object value,
-												boolean isSelected, boolean hasFocus, int row, int column)
-	{
+	public Component getTableCellRendererComponent(	JTable table,
+													Object value,
+													boolean isSelected,
+													boolean hasFocus,
+													int row,
+													int column) {
 		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		
-		boolean isCurrent = table.getSelectedRow() == row;
-		
+
+		Color color = null;
 		if (containsRow(row, newEventsList))
-		    c.setForeground(isCurrent ? Color.MAGENTA : Color.RED);
-		else if (containsRow(row, lossChangedEventsList) || containsRow(row, amplitudeChangedEventsList))
-		    c.setForeground(isCurrent ? Color.ORANGE : Color.CYAN); // maybe yellow is better that cyan?
+			color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED) : UIManager
+					.getColor(AnalysisResourceKeys.COLOR_EVENTS_NEW);
+		else if (containsRow(row, lossChangedEventsList))
+			color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED)
+					: UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED);
+		else if (containsRow(row, amplitudeChangedEventsList))
+			color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED)
+					: UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED);
 		else
-		    c.setForeground(isCurrent ? Color.WHITE : Color.BLACK);
+			color = isSelected ? UIManager.getColor(AnalysisResourceKeys.COLOR_EVENTS_SELECTED) : UIManager
+					.getColor(AnalysisResourceKeys.COLOR_EVENTS);
+
+		if (color != null) {
+			c.setForeground(color);
+		}
 
 		return c;
 	}
 
-	private boolean containsRow(int row, int []array)
-	{
-		if(array == null)
+	private boolean containsRow(int row,
+								int[] array) {
+		boolean result = false;
+		if (array == null)
 			return false;
 
-		for(int i=0; i<array.length; i++)
-		{
-			if(array[i] == row)
-				return true;
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == row) {
+				result = true;
+				break;
+			}
 		}
-		return false;
+		return result;
 	}
 }
 
