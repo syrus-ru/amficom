@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.99 2005/02/16 13:40:09 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.100 2005/02/17 08:08:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/02/16 13:40:09 $
+ * @version $Revision: 1.100 $, $Date: 2005/02/17 08:08:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -523,12 +523,12 @@ public abstract class StorableObjectDatabase {
 
 			Map linkedEntityIdsMap = new HashMap();
 			Identifier storabeObjectId;
-			List linkedEntityIds;
+			Collection linkedEntityIds;
 			while (resultSet.next()) {
 				storabeObjectId = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
-				linkedEntityIds = (List) linkedEntityIdsMap.get(storabeObjectId);
+				linkedEntityIds = (Collection) linkedEntityIdsMap.get(storabeObjectId);
 				if (linkedEntityIds == null) {
-					linkedEntityIds = new LinkedList();
+					linkedEntityIds = new HashSet();
 					linkedEntityIdsMap.put(storabeObjectId, linkedEntityIds);
 				}
 				linkedEntityIds.add(DatabaseIdentifier.getIdentifier(resultSet, linkedIdColumnName));
