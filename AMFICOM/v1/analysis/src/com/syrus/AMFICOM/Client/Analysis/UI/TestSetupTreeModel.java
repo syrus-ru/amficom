@@ -10,13 +10,8 @@ import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 
-// base class changed by saa on Stas's direction
-// from com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel
-// to com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel
-
-//import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-//import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
 
@@ -109,7 +104,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 					Identifier domainId = ((RISDSessionInfo)aContext.getSessionInterface()).getDomainIdentifier();
 					try
 					{
-						Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+						Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(domainId, true);
 
 						StorableObjectCondition mSetupCondition = new DomainCondition(domain, ObjectEntities.MS_ENTITY_CODE);
 						List mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(mSetupCondition, true);
