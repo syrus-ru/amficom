@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventSource.java,v 1.1 2005/02/11 12:01:27 arseniy Exp $
+ * $Id: TestEventSource.java,v 1.2 2005/02/14 13:19:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,12 +15,10 @@ import junit.framework.Test;
 
 import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/11 12:01:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/14 13:19:56 $
  * @author $Author: arseniy $
  * @module event_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: CommonEventTest.java,v 1.3 2005/02/11 18:42:17 arseniy Exp $
+ * $Id: CommonEventTest.java,v 1.4 2005/02/14 13:19:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,10 @@
  */
 package com.syrus.AMFICOM.event;
 
-import javax.security.auth.login.Configuration;
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
@@ -47,13 +50,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/11 18:42:17 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/14 13:19:56 $
  * @author $Author: arseniy $
  * @module event_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: TestEvent.java,v 1.1 2005/02/08 20:07:28 arseniy Exp $
+ * $Id: TestEvent.java,v 1.2 2005/02/14 13:19:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,9 +7,8 @@
  */
 package com.syrus.AMFICOM.event;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import junit.framework.Test;
 
@@ -26,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/08 20:07:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/14 13:19:56 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -47,9 +46,9 @@ public class TestEvent extends CommonEventTest {
 				OperationSort.OPERATION_EQUALS,
 				new Short(ObjectEntities.EVENTTYPE_ENTITY_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
-		List eventTypes = EventStorableObjectPool.getStorableObjectsByCondition(tc, true);
+		Collection eventTypes = EventStorableObjectPool.getStorableObjectsByCondition(tc, true);
 		System.out.println("Retrieved: " + eventTypes.size() + "event types");
-		EventType eventType = (EventType) eventTypes.get(0);
+		EventType eventType = (EventType) eventTypes.iterator().next();
 
 		String description = "test event";
 
@@ -62,7 +61,7 @@ public class TestEvent extends CommonEventTest {
 				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		CompoundCondition cc = new CompoundCondition(tc1, CompoundConditionSort.OR, tc2);
-		List parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(cc, true);
+		Collection parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(cc, true);
 		System.out.println("Retrieved: " + parameterTypes.size() + "parameter types");
 		ParameterType pt, pt1 = null, pt2 = null;
 		for (Iterator it = parameterTypes.iterator(); it.hasNext();) {

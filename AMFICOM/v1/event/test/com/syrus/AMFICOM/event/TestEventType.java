@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventType.java,v 1.3 2005/02/08 20:27:30 arseniy Exp $
+ * $Id: TestEventType.java,v 1.4 2005/02/14 13:19:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 package com.syrus.AMFICOM.event;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.Test;
@@ -16,19 +15,19 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/08 20:27:30 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/14 13:19:56 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -68,7 +67,7 @@ public class TestEventType extends CommonEventTest {
 				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		CompoundCondition cc = new CompoundCondition(tc1, CompoundConditionSort.OR, tc2);
-		List parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(cc, true);
+		List parameterTypes = (List) GeneralStorableObjectPool.getStorableObjectsByCondition(cc, true);
 
 		EventType eventType = EventType.createInstance(creatorId,
 				codename,
@@ -107,7 +106,7 @@ public class TestEventType extends CommonEventTest {
 			assertEquals("data type of parameter type for event type '" + eventType.getId() + "'", parameterType1.getDataType(), parameterType2.getDataType());
 		}
 
-		eventType.insert();
+		EventDatabaseContext.eventTypeDatabase.update(eventType, creatorId, StorableObjectDatabase.UPDATE_FORCE);
 	}
 
 //	public void testDelete() throws ApplicationException {
