@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.36 2005/03/31 16:04:41 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.37 2005/04/01 17:41:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,16 +40,15 @@ import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
+import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/03/31 16:04:41 $
+ * @version $Revision: 1.37 $, $Date: 2005/04/01 17:41:12 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
-//	protected static Identifier mcmId;
-	protected static Object lock;
 	
 	private long lastRefresh = 0;
 	
@@ -57,10 +56,6 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	 * refresh timeout
 	 */
 	private long refreshTimeout;
-	
-	static {
-		lock = new Object();
-	}
 	
 	public CMServerMeasurementObjectLoader(long refreshTimeout) {
 		this.refreshTimeout = refreshTimeout;
@@ -100,49 +95,36 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			return new Measurement(id);
 		}
 		catch (ObjectNotFoundException e) {
-			Log.debugMessage("Measurement '" + id + "' not found in database; trying to load from MCM", Log.DEBUGLEVEL08);
+			Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurement | Measurement '" + id
+					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
+			Measurement measurement = null;
 
-			Set mcmIds = ClientMeasurementServer.mcmConnectionManager.getMCMIds();
-			synchronized (mcmIds) {
-				Identifier mcmId;
-				com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-				for (Iterator it = mcmIds.iterator(); it.hasNext();) {
-					mcmId = (Identifier) it.next();
-					try {
-						mcmRef = ClientMeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId);
-					}
-					catch (CommunicationException ce) {
-						continue;
-					}
+			MServer mServerRef = ClientMeasurementServer.getVerifiedMServerReference();
+			try {
+				Measurement_Transferable transferable = mServerRef.transmitMeasurement((Identifier_Transferable) id.getTransferable());
+				measurement = new Measurement(transferable);
+				Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurement | Measurement '" + id
+						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
+			}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+					throw new ObjectNotFoundException("Measurement '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve measurement '" + id + "' from Measurement Server -- " + are.message);
+			}
+			catch (Throwable throwable) {
+				Log.errorException(throwable);
+			}
 
-					try {
-						Measurement_Transferable transferable = mcmRef.transmitMeasurement((Identifier_Transferable) id.getTransferable());
-						Measurement measurement = new Measurement(transferable);
-
-						try {
-							MeasurementDatabaseContext.getMeasurementDatabase().insert(measurement);
-						}
-						catch (ApplicationException ae) {
-							Log.errorException(ae);
-						}
-
-						Log.debugMessage("Measurement '" + id + "' loaded from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
-						return measurement;						
-					}
-					catch (AMFICOMRemoteException are) {
-						if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-							Log.debugMessage("Measurement '" + id + "' not found in MCM '" + mcmId + "' database", Log.DEBUGLEVEL08);
-						else
-							Log.errorMessage("Exception while loading measurement '" + id + "' from MCM '" + mcmId + "' database");
-					}
-					catch (Throwable throwable) {
-						Log.errorException(throwable);
-					}
-
-				}	//for (Iterator it = mcmIds.iterator(); it.hasNext();)
-			}	//synchronized (mcmIds)
-
-			throw new ObjectNotFoundException("Measurement '" + id + "' not found on any MCM");
+			if (measurement != null) {
+				try {
+					MeasurementDatabaseContext.getMeasurementDatabase().insert(measurement);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				return measurement;
+			}
+			throw new ObjectNotFoundException("Measurement '" + id + "' not found on Measurement Server");
 		}	//catch (ObjectNotFoundException e)
 	}
 
@@ -152,49 +134,35 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			return new Analysis(id);
 		}
 		catch (ObjectNotFoundException e) {
-			Log.debugMessage("Analysis '" + id + "' not found in database; trying to load from MCM", Log.DEBUGLEVEL08);
+			Log.debugMessage("CMServerMeasurementObjectLoader.loadAnalysis | Analysis '" + id + "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
+			Analysis analysis = null;
 
-			Set mcmIds = ClientMeasurementServer.mcmConnectionManager.getMCMIds();
-			synchronized (mcmIds) {
-				Identifier mcmId;
-				com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-				for (Iterator it = mcmIds.iterator(); it.hasNext();) {
-					mcmId = (Identifier) it.next();
-					try {
-						mcmRef = ClientMeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId);
-					}
-					catch (CommunicationException ce) {
-						continue;
-					}
+			MServer mServerRef = ClientMeasurementServer.getVerifiedMServerReference();
+			try {
+				Analysis_Transferable transferable = mServerRef.transmitAnalysis((Identifier_Transferable) id.getTransferable());
+				analysis = new Analysis(transferable);
+				Log.debugMessage("CMServerMeasurementObjectLoader.loadAnalysis | Analysis '" + id + "' loaded from MeasurementServer",
+						Log.DEBUGLEVEL08);
+			}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+					throw new ObjectNotFoundException("Analysis '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve analysis '" + id + "' from Measurement Server -- " + are.message);
+			}
+			catch (Throwable throwable) {
+				Log.errorException(throwable);
+			}
 
-					try {
-						Analysis_Transferable transferable = mcmRef.transmitAnalysis((Identifier_Transferable) id.getTransferable());
-						Analysis analysis = new Analysis(transferable);
-
-						try {
-							MeasurementDatabaseContext.getAnalysisDatabase().insert(analysis);
-						}
-						catch (ApplicationException ae) {
-							Log.errorException(ae);
-						}
-
-						Log.debugMessage("Analysis '" + id + "' loaded from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
-						return analysis;						
-					}
-					catch (AMFICOMRemoteException are) {
-						if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-							Log.debugMessage("Analysis '" + id + "' not found in MCM '" + mcmId + "' database", Log.DEBUGLEVEL08);
-						else
-							Log.errorMessage("Exception while loading analysis '" + id + "' from MCM '" + mcmId + "' database");
-					}
-					catch (Throwable throwable) {
-						Log.errorException(throwable);
-					}
-
-				}	//for (Iterator it = mcmIds.iterator(); it.hasNext();)
-			}	//synchronized (mcmIds)
-
-			throw new ObjectNotFoundException("Analysis '" + id + "' not found on any MCM");
+			if (analysis != null) {
+				try {
+					MeasurementDatabaseContext.getAnalysisDatabase().insert(analysis);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				return analysis;
+			}
+			throw new ObjectNotFoundException("Analysis '" + id + "' not found on Measurement Server");
 		}	//catch (ObjectNotFoundException e)
 	}
 
@@ -204,64 +172,51 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			return new Evaluation(id);
 		}
 		catch (ObjectNotFoundException e) {
-			Log.debugMessage("Evaluation '" + id + "' not found in database; trying to load from MCM", Log.DEBUGLEVEL08);
+			Log.debugMessage("CMServerMeasurementObjectLoader.loadEvaluation | Evaluation '" + id
+					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
+			Evaluation evaluation = null;
 
-			Set mcmIds = ClientMeasurementServer.mcmConnectionManager.getMCMIds();
-			synchronized (mcmIds) {
-				Identifier mcmId;
-				com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-				for (Iterator it = mcmIds.iterator(); it.hasNext();) {
-					mcmId = (Identifier) it.next();
-					try {
-						mcmRef = ClientMeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId);
-					}
-					catch (CommunicationException ce) {
-						continue;
-					}
+			MServer mServerRef = ClientMeasurementServer.getVerifiedMServerReference();
+			try {
+				Evaluation_Transferable transferable = mServerRef.transmitEvaluation((Identifier_Transferable) id.getTransferable());
+				evaluation = new Evaluation(transferable);
+				Log.debugMessage("CMServerMeasurementObjectLoader.loadEvaluation | Evaluation '" + id + "' loaded from MeasurementServer",
+						Log.DEBUGLEVEL08);
+			}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+					throw new ObjectNotFoundException("Evaluation '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve evaluation '" + id + "' from Measurement Server -- " + are.message);
+			}
+			catch (Throwable throwable) {
+				Log.errorException(throwable);
+			}
 
-					try {
-						Evaluation_Transferable transferable = mcmRef.transmitEvaluation((Identifier_Transferable) id.getTransferable());
-						Evaluation evaluation = new Evaluation(transferable);
-
-						try {
-							MeasurementDatabaseContext.getEvaluationDatabase().insert(evaluation);
-						}
-						catch (ApplicationException ae) {
-							Log.errorException(ae);
-						}
-
-						Log.debugMessage("Evaluation '" + id + "' loaded from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
-						return evaluation;						
-					}
-					catch (AMFICOMRemoteException are) {
-						if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-							Log.debugMessage("Evaluation '" + id + "' not found in MCM '" + mcmId + "' database", Log.DEBUGLEVEL08);
-						else
-							Log.errorMessage("Exception while loading evaluation '" + id + "' from MCM '" + mcmId + "' database");
-					}
-					catch (Throwable throwable) {
-						Log.errorException(throwable);
-					}
-
-				}	//for (Iterator it = mcmIds.iterator(); it.hasNext();)
-			}	//synchronized (mcmIds)
-
-			throw new ObjectNotFoundException("Evaluation '" + id + "' not found on any MCM");
+			if (evaluation != null) {
+				try {
+					MeasurementDatabaseContext.getEvaluationDatabase().insert(evaluation);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				return evaluation;
+			}
+			throw new ObjectNotFoundException("Evaluation '" + id + "' not found on Measurement Server");
 		}	//catch (ObjectNotFoundException e)
 	}
 
 
 
 
-	public Collection loadAnalyses(Collection ids) throws ApplicationException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
-		Collection objects;
+	public Set loadMeasurements(Set ids) throws RetrieveObjectException {
+		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
+		Set objects;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
-			String mesg = "CMServerMeasurementObjectLoader.loadAnalyses | Cannot load objects from database: " + ide.getMessage();
+			String mesg = "Cannot load objects from database: " + ide.getMessage();
 			throw new RetrieveObjectException(mesg, ide);
 		}
 
@@ -275,57 +230,37 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		if (loadIds.isEmpty())
 			return objects;
 
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = Identifier.createTransferables(loadIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 		Set loadedObjects = new HashSet();
 
-		Set mcmIds = ClientMeasurementServer.mcmConnectionManager.getMCMIds();
-		synchronized (mcmIds) {
-			Identifier mcmId;
-			com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-			Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
-			Set mcmLoadedObjects;
-			for (Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();) {
-				mcmId = (Identifier) it.next();
+		try {
+			MServer mServerRef = ClientMeasurementServer.getVerifiedMServerReference();
+			Measurement_Transferable[] transferables = mServerRef.transmitMeasurements(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
 				try {
-					mcmRef = ClientMeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId);
+					loadedObjects.add(new Measurement(transferables[i]));
 				}
-				catch (CommunicationException ce) {
-					continue;
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
 				}
-
-				mcmLoadedObjects = null;
-				try {
-					Analysis_Transferable[] transferables = mcmRef.transmitAnalyses(loadIdsT);
-
-					mcmLoadedObjects = new HashSet(transferables.length);
-					for (int i = 0; i < transferables.length; i++) {
-						loadIds.remove(new Identifier(transferables[i].header.id));
-						try {
-							mcmLoadedObjects.add(new Analysis(transferables[i]));
-						}
-						catch (CreateObjectException coe) {
-							Log.errorException(coe);
-						}
-					}
-
-					if (!loadIds.isEmpty())
-						loadIdsT = Identifier.createTransferables(loadIds);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalyses | Cannot load objects from MCM + '"
-							+ mcmId + "' database -- " + are.message);
-				}
-				catch (Throwable throwable) {
-					Log.errorException(throwable);
-				}
-
-				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
-					Log.debugMessage("CMServerMeasurementObjectLoader.loadAnalyses | Loaded " + mcmLoadedObjects.size()
-							+ " objects from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
-					loadedObjects.addAll(mcmLoadedObjects);
-				}
-
-			}	//for (Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();)
-		}	//synchronized (mcmIds)
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurements | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
 
 		if (!loadedObjects.isEmpty()) {
 			objects.addAll(loadedObjects);
@@ -341,15 +276,15 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return objects;
 	}
 
-	public Collection loadEvaluations(Collection ids) throws ApplicationException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
-		Collection objects;
+	public Set loadAnalyses(Set ids) throws RetrieveObjectException {
+		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
+		Set objects;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
-			String mesg = "CMServerMeasurementObjectLoader.loadEvaluations | Cannot load objects from database: " + ide.getMessage();
+			String mesg = "Cannot load objects from database: " + ide.getMessage();
 			throw new RetrieveObjectException(mesg, ide);
 		}
 
@@ -363,57 +298,37 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		if (loadIds.isEmpty())
 			return objects;
 
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = Identifier.createTransferables(loadIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 		Set loadedObjects = new HashSet();
 
-		Set mcmIds = ClientMeasurementServer.mcmConnectionManager.getMCMIds();
-		synchronized (mcmIds) {
-			Identifier mcmId;
-			com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-			Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
-			Set mcmLoadedObjects;
-			for (Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();) {
-				mcmId = (Identifier) it.next();
+		try {
+			MServer mServerRef = ClientMeasurementServer.getVerifiedMServerReference();
+			Analysis_Transferable[] transferables = mServerRef.transmitAnalyses(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
 				try {
-					mcmRef = ClientMeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId);
+					loadedObjects.add(new Analysis(transferables[i]));
 				}
-				catch (CommunicationException ce) {
-					continue;
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
 				}
-
-				mcmLoadedObjects = null;
-				try {
-					Evaluation_Transferable[] transferables = mcmRef.transmitEvaluations(loadIdsT);
-
-					mcmLoadedObjects = new HashSet(transferables.length);
-					for (int i = 0; i < transferables.length; i++) {
-						loadIds.remove(new Identifier(transferables[i].header.id));
-						try {
-							mcmLoadedObjects.add(new Evaluation(transferables[i]));
-						}
-						catch (CreateObjectException coe) {
-							Log.errorException(coe);
-						}
-					}
-
-					if (!loadIds.isEmpty())
-						loadIdsT = Identifier.createTransferables(loadIds);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluations | Cannot load objects from MCM + '"
-							+ mcmId + "' database -- " + are.message);
-				}
-				catch (Throwable throwable) {
-					Log.errorException(throwable);
-				}
-
-				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
-					Log.debugMessage("CMServerMeasurementObjectLoader.loadEvaluations | Loaded " + mcmLoadedObjects.size()
-							+ " objects from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
-					loadedObjects.addAll(mcmLoadedObjects);
-				}
-
-			}	//for (Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();)
-		}	//synchronized (mcmIds)
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalyses | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
 
 		if (!loadedObjects.isEmpty()) {
 			objects.addAll(loadedObjects);
@@ -429,15 +344,15 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return objects;
 	}
 
-	public Collection loadMeasurements(Collection ids) throws ApplicationException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
-		Collection objects;
+	public Set loadEvaluations(Set ids) throws RetrieveObjectException {
+		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
+		Set objects;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
-			String mesg = "CMServerMeasurementObjectLoader.loadMeasurements | Cannot load objects from database: " + ide.getMessage();
+			String mesg = "Cannot load objects from database: " + ide.getMessage();
 			throw new RetrieveObjectException(mesg, ide);
 		}
 
@@ -451,144 +366,37 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		if (loadIds.isEmpty())
 			return objects;
 
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = Identifier.createTransferables(loadIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 		Set loadedObjects = new HashSet();
 
-		Set mcmIds = ClientMeasurementServer.mcmConnectionManager.getMCMIds();
-		synchronized (mcmIds) {
-			Identifier mcmId;
-			com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-			Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
-			Set mcmLoadedObjects;
-			for (Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();) {
-				mcmId = (Identifier) it.next();
-				try {
-					mcmRef = ClientMeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId);
-				}
-				catch (CommunicationException ce) {
-					continue;
-				}
-
-				mcmLoadedObjects = null;
-				try {
-					Measurement_Transferable[] transferables = mcmRef.transmitMeasurements(loadIdsT);
-
-					mcmLoadedObjects = new HashSet(transferables.length);
-					for (int i = 0; i < transferables.length; i++) {
-						loadIds.remove(new Identifier(transferables[i].header.id));
-						try {
-							mcmLoadedObjects.add(new Measurement(transferables[i]));
-						}
-						catch (CreateObjectException coe) {
-							Log.errorException(coe);
-						}
-					}
-
-					if (!loadIds.isEmpty())
-						loadIdsT = Identifier.createTransferables(loadIds);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurements | Cannot load objects from MCM + '"
-							+ mcmId + "' database -- " + are.message);
-				}
-				catch (Throwable throwable) {
-					Log.errorException(throwable);
-				}
-
-				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
-					Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurements | Loaded " + mcmLoadedObjects.size()
-							+ " objects from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
-					loadedObjects.addAll(mcmLoadedObjects);
-				}
-
-			}	//for (Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();)
-		}	//synchronized (mcmIds)
-
-		if (!loadedObjects.isEmpty()) {
-			objects.addAll(loadedObjects);
-
-			try {
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-
-		return objects;
-	}
-
-
-
-
-
-	public Collection loadAnalysesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
-		Collection objects;
 		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "CMServerMeasurementObjectLoader.loadAnalysesButIds | Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
-
-		Identifier id;
-		Collection loadButIds = new HashSet(ids);
-		for (Iterator it = objects.iterator(); it.hasNext();) {
-			id = ((StorableObject) it.next()).getId();
-			loadButIds.add(id);
-		}
-
-		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
-		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-
-		Collection loadedObjects = new HashSet();
-
-		Set mcmIds = ClientMeasurementServer.mcmConnectionManager.getMCMIds();
-		synchronized (mcmIds) {
-			Identifier mcmId;
-			com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-			Set mcmLoadedObjects;
-			for (Iterator it = mcmIds.iterator(); it.hasNext();) {
-				mcmId = (Identifier) it.next();
+			MServer mServerRef = ClientMeasurementServer.getVerifiedMServerReference();
+			Evaluation_Transferable[] transferables = mServerRef.transmitEvaluations(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
 				try {
-					mcmRef = ClientMeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId);
+					loadedObjects.add(new Evaluation(transferables[i]));
 				}
-				catch (CommunicationException ce) {
-					continue;
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
 				}
-
-				mcmLoadedObjects = null;
-				try {
-					Analysis_Transferable[] transferables = mcmRef.transmitAnalysesButIdsByCondition(loadButIdsT, conditionT);
-
-					mcmLoadedObjects = new HashSet(transferables.length);
-					for (int i = 0; i < transferables.length; i++) {
-						try {
-							mcmLoadedObjects.add(new Analysis(transferables[i]));
-						}
-						catch (CreateObjectException coe) {
-							Log.errorException(coe);
-						}
-					}
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalysesButIds | Cannot retrieve objects from MCM '"
-							+ mcmId + "' database -- " + are.message);
-				}
-				catch (Throwable throwable) {
-					Log.errorException(throwable);
-				}
-
-				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
-					Log.debugMessage("CMServerMeasurementObjectLoader.loadAnalysesButIds | Loaded " + mcmLoadedObjects.size()
-							+ " objects from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
-					loadedObjects.addAll(mcmLoadedObjects);
-				}
-
-			}	//for (Iterator it = mcmIds.iterator(); it.hasNext();)
-		}	//synchronized (mcmIds)
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluations | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
 
 		if (!loadedObjects.isEmpty()) {
 			objects.addAll(loadedObjects);
@@ -604,92 +412,13 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		return objects;
 	}
 
-	public Collection loadEvaluationsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
-		Collection objects;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "CMServerMeasurementObjectLoader.loadEvaluationsButIds | Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
 
-		Identifier id;
-		Collection loadButIds = new HashSet(ids);
-		for (Iterator it = objects.iterator(); it.hasNext();) {
-			id = ((StorableObject) it.next()).getId();
-			loadButIds.add(id);
-		}
 
-		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
-		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
-		Collection loadedObjects = new HashSet();
 
-		Set mcmIds = ClientMeasurementServer.mcmConnectionManager.getMCMIds();
-		synchronized (mcmIds) {
-			Identifier mcmId;
-			com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-			Set mcmLoadedObjects;
-			for (Iterator it = mcmIds.iterator(); it.hasNext();) {
-				mcmId = (Identifier) it.next();
-				try {
-					mcmRef = ClientMeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId);
-				}
-				catch (CommunicationException ce) {
-					continue;
-				}
-
-				mcmLoadedObjects = null;
-				try {
-					Evaluation_Transferable[] transferables = mcmRef.transmitEvaluationsButIdsByCondition(loadButIdsT, conditionT);
-
-					mcmLoadedObjects = new HashSet(transferables.length);
-					for (int i = 0; i < transferables.length; i++) {
-						try {
-							mcmLoadedObjects.add(new Evaluation(transferables[i]));
-						}
-						catch (CreateObjectException coe) {
-							Log.errorException(coe);
-						}
-					}
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Cannot retrieve objects from MCM '"
-							+ mcmId + "' database -- " + are.message);
-				}
-				catch (Throwable throwable) {
-					Log.errorException(throwable);
-				}
-
-				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
-					Log.debugMessage("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Loaded " + mcmLoadedObjects.size()
-							+ " objects from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
-					loadedObjects.addAll(mcmLoadedObjects);
-				}
-
-			}	//for (Iterator it = mcmIds.iterator(); it.hasNext();)
-		}	//synchronized (mcmIds)
-
-		if (!loadedObjects.isEmpty()) {
-			objects.addAll(loadedObjects);
-
-			try {
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-
-		return objects;
-	}
-
-	public Collection loadMeasurementsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
-		Collection objects;
+	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
+		Set objects;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
 		}
@@ -706,55 +435,173 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			loadButIds.add(id);
 		}
 
-		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
+		Identifier_Transferable[] loadButIdsT = null;
+		try {
+			loadButIdsT = Identifier.createTransferables(loadButIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
-		Collection loadedObjects = new HashSet();
+		Set loadedObjects = new HashSet();
 
-		Set mcmIds = ClientMeasurementServer.mcmConnectionManager.getMCMIds();
-		synchronized (mcmIds) {
-			Identifier mcmId;
-			com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-			Set mcmLoadedObjects;
-			for (Iterator it = mcmIds.iterator(); it.hasNext();) {
-				mcmId = (Identifier) it.next();
+		try {
+			MServer mServerRef = ClientMeasurementServer.getVerifiedMServerReference();
+			Measurement_Transferable[] transferables = mServerRef.transmitMeasurementsButIdsByCondition(loadButIdsT, conditionT);
+			for (int i = 0; i < transferables.length; i++) {
 				try {
-					mcmRef = ClientMeasurementServer.mcmConnectionManager.getVerifiedMCMReference(mcmId);
+					loadedObjects.add(new Measurement(transferables[i]));
 				}
-				catch (CommunicationException ce) {
-					continue;
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
 				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
 
-				mcmLoadedObjects = null;
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+
+		return objects;
+	}
+
+	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
+		Set objects;
+		try {
+			objects = database.retrieveButIdsByCondition(ids, condition);
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			String mesg = "CMServerMeasurementObjectLoader.loadAnalysesButIds | Cannot load objects from database: " + ide.getMessage();
+			throw new RetrieveObjectException(mesg, ide);
+		}
+
+		Identifier id;
+		Collection loadButIds = new HashSet(ids);
+		for (Iterator it = objects.iterator(); it.hasNext();) {
+			id = ((StorableObject) it.next()).getId();
+			loadButIds.add(id);
+		}
+
+		Identifier_Transferable[] loadButIdsT = null;
+		try {
+			loadButIdsT = Identifier.createTransferables(loadButIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
+
+		Set loadedObjects = new HashSet();
+
+		try {
+			MServer mServerRef = ClientMeasurementServer.getVerifiedMServerReference();
+			Analysis_Transferable[] transferables = mServerRef.transmitAnalysesButIdsByCondition(loadButIdsT, conditionT);
+			for (int i = 0; i < transferables.length; i++) {
 				try {
-					Measurement_Transferable[] transferables = mcmRef.transmitMeasurementsButIdsByCondition(loadButIdsT, conditionT);
+					loadedObjects.add(new Analysis(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalysesButIds | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
 
-					mcmLoadedObjects = new HashSet(transferables.length);
-					for (int i = 0; i < transferables.length; i++) {
-						try {
-							mcmLoadedObjects.add(new Measurement(transferables[i]));
-						}
-						catch (CreateObjectException coe) {
-							Log.errorException(coe);
-						}
-					}
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Cannot retrieve objects from MCM '"
-							+ mcmId + "' database -- " + are.message);
-				}
-				catch (Throwable throwable) {
-					Log.errorException(throwable);
-				}
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
 
-				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
-					Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Loaded " + mcmLoadedObjects.size()
-							+ " objects from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
-					loadedObjects.addAll(mcmLoadedObjects);
-				}
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
 
-			}	//for (Iterator it = mcmIds.iterator(); it.hasNext();)
-		}	//synchronized (mcmIds)
+		return objects;
+	}
+
+	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
+		Set objects;
+		try {
+			objects = database.retrieveButIdsByCondition(ids, condition);
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			String mesg = "CMServerMeasurementObjectLoader.loadEvaluationsButIds | Cannot load objects from database: " + ide.getMessage();
+			throw new RetrieveObjectException(mesg, ide);
+		}
+
+		Identifier id;
+		Collection loadButIds = new HashSet(ids);
+		for (Iterator it = objects.iterator(); it.hasNext();) {
+			id = ((StorableObject) it.next()).getId();
+			loadButIds.add(id);
+		}
+
+		Identifier_Transferable[] loadButIdsT = null;
+		try {
+			loadButIdsT = Identifier.createTransferables(loadButIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
+
+		Set loadedObjects = new HashSet();
+
+		try {
+			MServer mServerRef = ClientMeasurementServer.getVerifiedMServerReference();
+			Evaluation_Transferable[] transferables = mServerRef.transmitEvaluationsButIdsByCondition(loadButIdsT, conditionT);
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new Evaluation(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
 
 		if (!loadedObjects.isEmpty()) {
 			objects.addAll(loadedObjects);
