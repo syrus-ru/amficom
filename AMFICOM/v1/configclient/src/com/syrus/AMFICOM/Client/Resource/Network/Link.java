@@ -1,89 +1,36 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: описание линии связи                                       * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.2                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Resource\Network\Link.java                             * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
 package com.syrus.AMFICOM.Client.Resource.Network;
 
 import java.io.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.Network.*;
+import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.Network.Link_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
 
 public class Link extends StubResource implements Serializable
 {
-	private static final long serialVersionUID = 01L;
+	private static final long serialVersionUID = 02L;
 	public static final String typ = "link";
 
 	public Link_Transferable transferable;
 
 	public String id = "";
 	public String name = "";
-	public String type_id = "";
+	public String typeId = "";
 	public String description = "";
 
-	public String inventory_nr = "";
+	public String inventoryNr = "";
 	public String manufacturer = "";
-	public String manufacturer_code = "";
+	public String manufacturerCode = "";
 	public String supplier = "";
-	public String supplier_code = "";
+	public String supplierCode = "";
 
-	public String link_class = "";
-
-	public String start_equipment_id = "";
-	public String start_port_id = "";
-	public String end_equipment_id = "";
-	public String end_port_id = "";
-
-	public String image_id = "";
-	public String domain_id = "";
+	public String domainId = "";
 	public long modified;
 
-	public double optical_length = 0.0;
-	public double physical_length = 0.0;
-
 	public Map characteristics = new HashMap();
-
-//	public Equipment start_equipment;
-//	public Port start_port;
-//	public Equipment end_equipment;
-//	public Port end_port;
-//	public Link holder;
-//	public LinkHolder holder_holder;
-//	public Hashtable holders;
 
 	public Link()
 	{
@@ -96,37 +43,15 @@ public class Link extends StubResource implements Serializable
 		setLocalFromTransferable();
 	}
 
-//	public Link(MapPhysicalLinkElement mple, Port start_port, Port end_port)
-	public Link(LinkType linktype, Port start_port, Port end_port)
+	public Link(LinkType linktype)
 	{
-//		LinkType linktype = (LinkType )Pool.get(LinkType.typ, mple.link_type_id);
-
 		id = "new_id";
 		name = id;
-		type_id = linktype.id;
+		typeId = linktype.getId();
 		description = "link " + linktype.name;
 
-		inventory_nr = "";
 		manufacturer = linktype.manufacturer;
-		manufacturer_code = linktype.manufacturer_code;
-		supplier = "";
-		supplier_code = "";
-
-		link_class = linktype.link_class;
-
-		if(start_port != null)
-		{
-			start_equipment_id = start_port.equipment_id;
-			start_port_id = start_port.id;
-		}
-
-		if(end_port != null)
-		{
-			end_equipment_id = end_port.equipment_id;
-			end_port_id = end_port.id;
-		}
-
-		image_id = linktype.image_id;
+		manufacturerCode = linktype.manufacturerCode;
 
 		transferable = new Link_Transferable();
 	}
@@ -134,19 +59,11 @@ public class Link extends StubResource implements Serializable
 	public Link(
 			String id,
 			String name,
-			String type_id)
-//			Equipment start_equipment,
-//			Port start_port,
-//			Equipment end_equipment,
-//			Port end_port)
+			String typeId)
 	{
 		this.id = id;
 		this.name = name;
-		this.type_id = type_id;
-//		this.start_equipment_id = start_equipment_id;
-//		this.start_port_id = start_port_id;
-//		this.end_equipment_id = end_equipment_id;
-//		this.end_port_id = end_port_id;
+		this.typeId = typeId;
 
 		transferable = new Link_Transferable();
 	}
@@ -155,43 +72,16 @@ public class Link extends StubResource implements Serializable
 	{
 		id = transferable.id;
 		name = transferable.name;
-		type_id = transferable.type_id;
+		typeId = transferable._typeId;
 
 		description = transferable.description;
-		inventory_nr = transferable.inventory_nr;
+		inventoryNr = transferable.inventoryNr;
 		manufacturer = transferable.manufacturer;
-		manufacturer_code = transferable.manufacturer_code;
+		manufacturerCode = transferable.manufacturerCode;
 		supplier = transferable.supplier;
-		supplier_code = transferable.supplier_code;
-
-		link_class = transferable.link_class;
-
-		start_equipment_id = transferable.start_equipment_id;
-		start_port_id = transferable.start_port_id;
-		end_equipment_id = transferable.end_equipment_id;
-		end_port_id = transferable.end_port_id;
-
-		image_id = transferable.image_id;
-		domain_id = transferable.domain_id;
+		supplierCode = transferable.supplierCode;
+		domainId = transferable.domainId;
 		modified = transferable.modified;
-
-		try
-		{
-			optical_length = Double.parseDouble(transferable.optical_length);
-		}
-		catch (Exception ex)
-		{
-			optical_length = 0.0;
-		}
-
-		try
-		{
-			physical_length = Double.parseDouble(transferable.physical_length);
-		}
-		catch (Exception ex)
-		{
-			physical_length = 0.0;
-		}
 
 		for(int i = 0; i < transferable.characteristics.length; i++)
 			characteristics.put(transferable.characteristics[i].type_id, new Characteristic(transferable.characteristics[i]));
@@ -201,28 +91,17 @@ public class Link extends StubResource implements Serializable
 	{
 		transferable.id = id;
 		transferable.name = name;
-		transferable.type_id = type_id;
+		transferable._typeId = typeId;
 
 		transferable.description = description;
-		transferable.inventory_nr = inventory_nr;
+		transferable.inventoryNr = inventoryNr;
 		transferable.manufacturer = manufacturer;
-		transferable.manufacturer_code = manufacturer_code;
+		transferable.manufacturerCode = manufacturerCode;
 		transferable.supplier = supplier;
-		transferable.supplier_code = supplier_code;
+		transferable.supplierCode = supplierCode;
 
-		transferable.link_class = link_class;
-
-		transferable.start_equipment_id = start_equipment_id;
-		transferable.start_port_id = start_port_id;
-		transferable.end_equipment_id = end_equipment_id;
-		transferable.end_port_id = end_port_id;
-
-		transferable.image_id = image_id;
-		transferable.domain_id = domain_id;
+		transferable.domainId = domainId;
 		transferable.modified = modified;
-
-		transferable.optical_length = String.valueOf(optical_length);
-		transferable.physical_length = String.valueOf(physical_length);
 
 		int l = this.characteristics.size();
 		int i = 0;
@@ -252,7 +131,7 @@ public class Link extends StubResource implements Serializable
 
 	public String getDomainId()
 	{
-		return domain_id;
+		return domainId;
 	}
 
 	public long getModified()
@@ -289,22 +168,13 @@ public class Link extends StubResource implements Serializable
 		out.writeObject(id);
 		out.writeObject(name);
 		out.writeObject(description);
-		out.writeObject(type_id);
-		out.writeObject(inventory_nr);
+		out.writeObject(typeId);
+		out.writeObject(inventoryNr);
 		out.writeObject(manufacturer);
-		out.writeObject(manufacturer_code);
+		out.writeObject(manufacturerCode);
 		out.writeObject(supplier);
-		out.writeObject(supplier_code);
-		out.writeObject(link_class);
-
-		out.writeObject(start_equipment_id);
-		out.writeObject(start_port_id);
-		out.writeObject(end_equipment_id);
-		out.writeObject(end_port_id);
-		out.writeObject(image_id);
-		out.writeObject(domain_id);
-		out.writeDouble(optical_length);
-		out.writeDouble(physical_length);
+		out.writeObject(supplierCode);
+		out.writeObject(domainId);
 		out.writeLong(modified);
 		out.writeObject(characteristics);
 	}
@@ -315,22 +185,13 @@ public class Link extends StubResource implements Serializable
 		id = (String )in.readObject();
 		name = (String )in.readObject();
 		description = (String )in.readObject();
-		type_id = (String )in.readObject();
-		inventory_nr = (String )in.readObject();
+		typeId = (String )in.readObject();
+		inventoryNr = (String )in.readObject();
 		manufacturer = (String )in.readObject();
-		manufacturer_code = (String )in.readObject();
+		manufacturerCode = (String )in.readObject();
 		supplier = (String )in.readObject();
-		supplier_code = (String )in.readObject();
-		link_class = (String )in.readObject();
-
-		start_equipment_id = (String )in.readObject();
-		start_port_id = (String )in.readObject();
-		end_equipment_id = (String )in.readObject();
-		end_port_id = (String )in.readObject();
-		image_id = (String )in.readObject();
-		domain_id = (String )in.readObject();
-		optical_length = in.readDouble();
-		physical_length = in.readDouble();
+		supplierCode = (String )in.readObject();
+		domainId = (String )in.readObject();
 		modified = in.readLong();
 		characteristics = (Map )in.readObject();
 

@@ -71,11 +71,11 @@ public class LinkDisplayModel extends StubDisplayModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(l.getName());
 		if(col_id.equals("type_id"))
-			return new TextFieldEditor(Pool.getName("linktype", l.type_id));
-		if(col_id.equals("start_equipment_id"))
-			return new TextFieldEditor(Pool.getName("kisequipment", l.start_equipment_id));
-		if(col_id.equals("end_equipment_id"))
-			return new TextFieldEditor(Pool.getName("kisequipment", l.end_equipment_id));
+			return new TextFieldEditor(Pool.getName("linktype", l.typeId));
+//		if(col_id.equals("start_equipment_id"))
+//			return new TextFieldEditor(Pool.getName("kisequipment", l.start_equipment_id));
+//		if(col_id.equals("end_equipment_id"))
+//			return new TextFieldEditor(Pool.getName("kisequipment", l.end_equipment_id));
 		return null;
 	}
 

@@ -1,48 +1,12 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Описание порта оборудования                                * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.2                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Resource\Network\Port.java                             * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
 package com.syrus.AMFICOM.Client.Resource.Network;
 
 import java.io.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.Network.*;
+import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.Network.Port_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
 
 public class Port extends StubResource implements Serializable
 {
@@ -54,13 +18,13 @@ public class Port extends StubResource implements Serializable
 	public String id = "";
 	public String name = "";
 	public String description = "";
-	public String interface_id = "";
-	public String address_id = "";
-	public String local_id = "";
-	public String type_id = "";
-	public String equipment_id = "";
-
-	public String domain_id = "";
+	public String interfaceId = "";
+	public String addressId = "";
+	public String localId = "";
+	public String typeId = "";
+	public String equipmentId = "";
+	public String domainId = "";
+	public long modified;
 
 	public Map characteristics = new HashMap();
 
@@ -74,15 +38,14 @@ public class Port extends StubResource implements Serializable
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
-
+/*
 	public Port(PortType portType, Equipment eq)
 	{
-		type_id = portType.id;
+		typeId = portType.getId();
 		name = "noname";
-		description = "port " + portType.codename;
-		equipment_id = eq.id;
-		interface_id = portType.interface_id;
-		id = eq.id + "." + "new_id";
+		equipmentId = eq.getId();
+		interfaceId = portType.interfaceId;
+		id = eq.getId() + "." + "new_id";
 
 		transferable = new Port_Transferable();
 	}
@@ -97,7 +60,7 @@ public class Port extends StubResource implements Serializable
 		id = kis.id + "." + "new_id";
 
 		transferable = new Port_Transferable();
-	}
+	}*/
 /*
 	public Port(MapConnectionPoint mcpe, Equipment eq)
 	{
@@ -138,20 +101,20 @@ public class Port extends StubResource implements Serializable
 			String id,
 			String name,
 			String description,
-			String interface_id,
-			String address_id,
-			String local_id,
-			String type_id,
-			String equipment_id)
+			String interfaceId,
+			String addressId,
+			String localId,
+			String typeId,
+			String equipmentId)
 	{
 		this.id = id;
 		this.name = name;
 		this.description = description;
-		this.interface_id = interface_id;
-		this.address_id = address_id;
-		this.local_id = local_id;
-		this.type_id = type_id;
-		this.equipment_id = equipment_id;
+		this.interfaceId = interfaceId;
+		this.addressId = addressId;
+		this.localId = localId;
+		this.typeId = typeId;
+		this.equipmentId = equipmentId;
 
 		transferable = new Port_Transferable();
 	}
@@ -161,15 +124,12 @@ public class Port extends StubResource implements Serializable
 		id = transferable.id;
 		name = transferable.name;
 		description = transferable.description;
-		interface_id = transferable.interface_id;
-		address_id = transferable.address_id;
-		local_id = transferable.local_id;
-		type_id = transferable.type_id;
-		equipment_id = transferable.equipment_id;
-		domain_id = transferable.domain_id;
-
-//		for(int i = 0; i < transferable.characteristics.length; i++)
-//			characteristics.put(transferable.characteristics[i].id, new Characteristic(transferable.characteristics[i]));
+		interfaceId = transferable.interfaceId;
+		addressId = transferable.addressId;
+		localId = transferable.localId;
+		typeId = transferable._typeId;
+		equipmentId = transferable.equipmentId;
+		domainId = transferable.domainId;
 
 		for(int i = 0; i < transferable.characteristics.length; i++)
 			characteristics.put(transferable.characteristics[i].type_id, new Characteristic(transferable.characteristics[i]));
@@ -180,12 +140,12 @@ public class Port extends StubResource implements Serializable
 		transferable.id = id;
 		transferable.name = name;
 		transferable.description = description;
-		transferable.interface_id = interface_id;
-		transferable.address_id = address_id;
-		transferable.local_id = local_id;
-		transferable.type_id = type_id;
-		transferable.equipment_id = equipment_id;
-		transferable.domain_id = domain_id;
+		transferable.interfaceId = interfaceId;
+		transferable.addressId = addressId;
+		transferable.localId = localId;
+		transferable._typeId = typeId;
+		transferable.equipmentId = equipmentId;
+		transferable.domainId = domainId;
 
 		int l = this.characteristics.size();
 		int i = 0;
@@ -215,7 +175,7 @@ public class Port extends StubResource implements Serializable
 
 	public String getDomainId()
 	{
-		return domain_id;
+		return domainId;
 	}
 
 	public void updateLocalFromTransferable()
@@ -248,11 +208,11 @@ public class Port extends StubResource implements Serializable
 			id,
 			name,
 			description,
-			interface_id,
-			address_id,
-			local_id,
-			type_id,
-			equipment_id);
+			interfaceId,
+			addressId,
+			localId,
+			typ,
+			equipmentId);
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
@@ -260,12 +220,12 @@ public class Port extends StubResource implements Serializable
 		out.writeObject(id);
 		out.writeObject(name);
 		out.writeObject(description);
-		out.writeObject(interface_id);
-		out.writeObject(address_id);
-		out.writeObject(local_id);
-		out.writeObject(type_id);
-		out.writeObject(equipment_id);
-		out.writeObject(domain_id);
+		out.writeObject(interfaceId);
+		out.writeObject(addressId);
+		out.writeObject(localId);
+		out.writeObject(typeId);
+		out.writeObject(equipmentId);
+		out.writeObject(domainId);
 		out.writeObject(characteristics);
 	}
 
@@ -275,12 +235,12 @@ public class Port extends StubResource implements Serializable
 		id = (String )in.readObject();
 		name = (String )in.readObject();
 		description = (String )in.readObject();
-		interface_id = (String )in.readObject();
-		address_id = (String )in.readObject();
-		local_id = (String )in.readObject();
-		type_id = (String )in.readObject();
-		equipment_id = (String )in.readObject();
-		domain_id = (String )in.readObject();
+		interfaceId = (String )in.readObject();
+		addressId = (String )in.readObject();
+		localId = (String )in.readObject();
+		typeId = (String )in.readObject();
+		equipmentId = (String )in.readObject();
+		domainId = (String )in.readObject();
 		characteristics = (Map )in.readObject();
 
 		transferable = new Port_Transferable();

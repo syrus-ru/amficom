@@ -66,9 +66,9 @@ public class CablePortDisplayModel extends StubDisplayModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(p.getName());
 		if(col_id.equals("type_id"))
-			return new TextFieldEditor(Pool.getName("cableporttype", p.type_id));
+			return new TextFieldEditor(Pool.getName("cableporttype", p.typeId));
 		if(col_id.equals("equipment_id"))
-			return new TextFieldEditor(Pool.getName("kisequipment", p.equipment_id));
+			return new TextFieldEditor(Pool.getName("kisequipment", p.equipmentId));
 		return null;
 	}
 

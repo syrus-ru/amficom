@@ -71,7 +71,7 @@ public class EquipmentDisplayModel extends StubDisplayModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(eq.getName());
 		if(col_id.equals("type_id"))
-			return new TextFieldEditor(Pool.getName("equipmenttype", eq.type_id));
+			return new TextFieldEditor(Pool.getName("equipmenttype", eq.typeId));
 		if(col_id.equals("longitude"))
 			return new TextFieldEditor( String.valueOf(eq.longitude) );
 		if(col_id.equals("latitude"))
