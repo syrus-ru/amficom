@@ -12,6 +12,9 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewRemoveSchemeCommand;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
@@ -228,7 +231,7 @@ public final class MapSchemeTreePanel extends JPanel
 
 	protected void initTree()
 	{
-		model = new MapSchemeTreeModel(null, aContext.getDataSource());
+		model = new MapSchemeTreeModel(null);
 		setPanel(new UniTreePanel(aContext.getDispatcher(), aContext, model));
 	}
 
@@ -290,11 +293,13 @@ public final class MapSchemeTreePanel extends JPanel
 
 	private void addToView()
 	{
-		DataSourceInterface dataSource = aContext.getDataSource();
-
 		if(mapView == null)
 			return;
-
+		
+		MapViewAddSchemeCommand command = (MapViewAddSchemeCommand )
+			aContext.getApplicationModel().getCommand("menuMapViewAddScheme");
+		command.execute();
+/*
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapOpening")));
@@ -339,7 +344,8 @@ public final class MapSchemeTreePanel extends JPanel
 
 			if(!mapView.getSchemes().contains(retObj))
 			{
-				mapView.addScheme((Scheme )retObj);
+				MapViewController controller = getLogicalNetLayer().getMapViewController();
+				controller.addScheme((Scheme )retObj);
 				Dispatcher disp = aContext.getDispatcher();
 				if(disp != null)
 				{
@@ -354,15 +360,21 @@ public final class MapSchemeTreePanel extends JPanel
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));
 		}
+*/
 	}
 	
 	private void removeFromView()
 	{
+		MapViewRemoveSchemeCommand command = (MapViewRemoveSchemeCommand )
+			aContext.getApplicationModel().getCommand("menuMapViewRemoveScheme");
+		command.execute();
+/*
 		ObjectResourceTreeNode node = (ObjectResourceTreeNode )
 				treePanel.getTree().getSelectionPath().getLastPathComponent();
 		Scheme scheme = (Scheme )node.getObject();
 
-		mapView.removeScheme(scheme);
+		MapViewController controller = getLogicalNetLayer().getMapViewController();
+		controller.removeScheme(scheme);
 
 
 		Dispatcher disp = aContext.getDispatcher();
@@ -378,6 +390,7 @@ public final class MapSchemeTreePanel extends JPanel
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("Finished")));
+*/
 	}
 
 	public void valueChanged(TreeSelectionEvent e)

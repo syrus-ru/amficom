@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveCommand.java,v 1.8 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapSaveCommand.java,v 1.9 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/01 11:34:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -61,11 +61,6 @@ public class MapSaveCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSource();
-
-		if(dataSource == null)
-			return;
-			
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapSaving")));

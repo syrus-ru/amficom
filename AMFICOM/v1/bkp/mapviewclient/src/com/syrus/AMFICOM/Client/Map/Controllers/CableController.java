@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.3 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: CableController.java,v 1.4 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import java.util.Iterator;
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 11:34:56 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
@@ -86,7 +86,7 @@ public final class CableController extends AbstractLinkController
 		boolean isv = cpath.isSelected();
 		if(!isv)
 		{
-			for(Iterator it = getLogicalNetLayer().getMapViewController().getMeasurementPaths(cpath).iterator(); it.hasNext();)
+			for(Iterator it = getLogicalNetLayer().getMapView().getMeasurementPaths(cpath).iterator(); it.hasNext();)
 			{
 				MeasurementPath mp = (MeasurementPath)it.next();
 				MeasurementPathController mpc = (MeasurementPathController)getLogicalNetLayer().getMapViewController().getController(mp);

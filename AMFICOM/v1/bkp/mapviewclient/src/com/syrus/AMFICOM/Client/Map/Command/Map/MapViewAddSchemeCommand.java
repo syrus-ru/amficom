@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.2 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.3 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.SchemeController;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -41,7 +42,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 11:34:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -70,6 +71,9 @@ public class MapViewAddSchemeCommand extends VoidCommand
 		
 		if(mapFrame == null)
 			return;
+
+		MapViewController controller = mapFrame.getMapViewer()
+			.getLogicalNetLayer().getMapViewController();
 	
 		MapView mapView = mapFrame.getMapView();
 	
@@ -120,7 +124,7 @@ public class MapViewAddSchemeCommand extends VoidCommand
 
 			if(!mapView.getSchemes().contains(retObj))
 			{
-				mapView.addScheme((Scheme )retObj);
+				controller.addScheme((Scheme )retObj);
 				aContext.getDispatcher().notify(new MapEvent(
 						mapView,
 						MapEvent.MAP_VIEW_CHANGED));

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewRemoveSchemeCommand.java,v 1.2 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.3 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.SchemeController;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -33,7 +34,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 11:34:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -56,6 +57,9 @@ public class MapViewRemoveSchemeCommand extends VoidCommand
 		if(mapFrame == null)
 			return;
 	
+		MapViewController controller = mapFrame.getMapViewer()
+			.getLogicalNetLayer().getMapViewController();
+
 		MapView mapView = mapFrame.getMapView();
 	
 		if(mapView == null)
@@ -83,7 +87,7 @@ public class MapViewRemoveSchemeCommand extends VoidCommand
 
 		Scheme scheme = (Scheme )mcd.getReturnObject();
 
-		mapFrame.getMapView().removeScheme(scheme);
+		controller.removeScheme(scheme);
 		mapFrame.getContext().getDispatcher().notify(new MapEvent(
 				mapFrame.getMapView(),
 				MapEvent.MAP_VIEW_CHANGED));

@@ -1,5 +1,5 @@
 /**
- * $Id: MapModeCommand.java,v 1.10 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: MapModeCommand.java,v 1.11 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/01 11:34:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -66,7 +66,7 @@ public class MapModeCommand extends VoidCommand
 				
 				if(modeString.equals(MapApplicationModel.MODE_PATH))
 				{
-					for(Iterator it = logicalNetLayer.getMapViewController().getMeasurementPaths().iterator(); it.hasNext();)
+					for(Iterator it = logicalNetLayer.getMapView().getMeasurementPaths().iterator(); it.hasNext();)
 					{
 						MeasurementPath mpath = 
 							(MeasurementPath)it.next();

@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.8 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.9 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.8 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/01 11:34:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -205,7 +205,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 	
 			// проверить все кабельные пути, прохидящие по линии,
 			// и добавить новую линию
-			for(Iterator it = logicalNetLayer.getMapViewController().getCablePaths(link).iterator(); it.hasNext();)
+			for(Iterator it = mapView.getCablePaths(link).iterator(); it.hasNext();)
 			{
 				CablePath cablePath = (CablePath)it.next();
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.6 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.7 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewSaveAsCommand;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
@@ -27,7 +28,7 @@ import javax.swing.JDesktopPane;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/01 11:34:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -65,17 +66,22 @@ public class MapEditorSaveViewAsCommand extends VoidCommand
 		if(mvsac.getResult() == RESULT_OK)
 		{
 			MapView newMapView = mvsac.getNewMapView();
+			MapView oldMapView = mapFrame.getMapView();
 			
-			newMapView.setMap(mapFrame.getMapView().getMap());
-			
-			for(Iterator it = mapFrame.getMapView().getSchemes().iterator(); it.hasNext();)
-			{
-				newMapView.addScheme((Scheme )it.next());
-			}
-		
+			MapViewController controller = mapFrame.getMapViewer()
+				.getLogicalNetLayer().getMapViewController();
+
 			if (mapFrame != null)
 			{
-				mapFrame.setMapView(newMapView);
+				controller.setMapView(newMapView);
+			
+				controller.setMap(oldMapView.getMap());
+				
+				for(Iterator it = oldMapView.getSchemes().iterator(); it.hasNext();)
+				{
+					controller.addScheme((Scheme )it.next());
+				}
+		
 				mapFrame.setTitle( 
 					LangModelMap.getString("MapView") + " - " + newMapView.getName());
 			}

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.7 2005/01/30 15:38:18 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.8 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,7 @@ import javax.swing.table.JTableHeader;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/01 11:34:56 $
  * @author $Author: krupenn $
  * @see
  */
@@ -285,7 +285,7 @@ import javax.swing.table.JTableHeader;
 	 */
 	private void doCenter()
 	{
-		mmf.getMapViewer().getLogicalNetLayer().getMapViewController().deselectAll();
+		mmf.getMapViewer().getLogicalNetLayer().getMapView().deselectAll();
 
 		int[] selection = table.getSelectedRows();
 		for (int i = 0; i < selection.length; i++)

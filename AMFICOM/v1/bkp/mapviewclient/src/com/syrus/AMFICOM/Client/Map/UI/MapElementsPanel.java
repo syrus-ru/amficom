@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.13 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.14 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -59,7 +59,7 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/01/31 12:19:19 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/01 11:34:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -312,7 +312,7 @@ public final class MapElementsPanel extends JPanel
 				dataSet = map.getPhysicalLinks();
 			else
 			if(selection.equals(ELEMENTS_PATH))
-				dataSet = logicalNetLayer.getMapViewController().getMeasurementPaths();
+				dataSet = logicalNetLayer.getMapView().getMeasurementPaths();
 			else
 			if(selection.equals(ELEMENTS_NODE))
 				dataSet = map.getTopologicalNodes();
@@ -321,13 +321,13 @@ public final class MapElementsPanel extends JPanel
 				dataSet = map.getMarks();
 			else
 			if(selection.equals(ELEMENTS_MARKER))
-				dataSet = logicalNetLayer.getMapViewController().getMarkers();
+				dataSet = logicalNetLayer.getMapView().getMarkers();
 			else
 			if(selection.equals(ELEMENTS_COLLECTOR))
 				dataSet = map.getCollectors();
 			else
 			if(selection.equals(ELEMENTS_CABLE))
-				dataSet = logicalNetLayer.getMapViewController().getCablePaths();
+				dataSet = logicalNetLayer.getMapView().getCablePaths();
 //			else
 //			if(selection.equals(SchemeElement.typ))
 //			{

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.14 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.15 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/01 11:34:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -75,7 +75,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		
 		// если удаляется сетевой узел (не непривязанный элемент),
 		// необходимо проверить все кабельные пути, включающие его
-		for(Iterator it = getLogicalNetLayer().getMapViewController().getCablePaths(node).iterator(); it.hasNext();)
+		for(Iterator it = mapView.getCablePaths(node).iterator(); it.hasNext();)
 		{
 			CablePath cablePath = (CablePath)it.next();
 			
@@ -364,7 +364,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 
 		// отдельный список для удаления		
 		List cablePaths = new LinkedList();
-		cablePaths.addAll(getLogicalNetLayer().getMapViewController().getCablePaths(unbound));
+		cablePaths.addAll(mapView.getCablePaths(unbound));
 		
 		for(Iterator it = cablePaths.iterator(); it.hasNext();)
 		{
@@ -393,7 +393,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 			return;
 
-		getLogicalNetLayer().getMapViewController().removeMarker(node);
+		getLogicalNetLayer().getMapView().removeMarker(node);
 	}
 
 	public void execute()

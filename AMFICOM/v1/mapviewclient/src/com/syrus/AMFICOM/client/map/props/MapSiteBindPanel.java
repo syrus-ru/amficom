@@ -174,7 +174,7 @@ public final class MapSiteBindPanel
 				{
 					DefaultMutableTreeNode node2 = (DefaultMutableTreeNode )node.getChildAt(j);
 					SchemeCableLink scl = (SchemeCableLink )node2.getUserObject();
-					CablePath cablePath = getLogicalNetLayer().getMapViewController().findCablePath(scl);
+					CablePath cablePath = mapView.findCablePath(scl);
 
 					UnPlaceSchemeCableLinkCommand command = new UnPlaceSchemeCableLinkCommand(cablePath);
 					command.setLogicalNetLayer(getLogicalNetLayer());
@@ -205,7 +205,7 @@ public final class MapSiteBindPanel
 
 		unboundElements.add(scl);
 	
-		CablePath cablePath = getLogicalNetLayer().getMapViewController().findCablePath(scl);
+		CablePath cablePath = mapView.findCablePath(scl);
 
 		List pathLinks = cablePath.getLinks();
 		List siteLinks = mapView.getMap().getPhysicalLinksAt(site);
@@ -314,10 +314,11 @@ public final class MapSiteBindPanel
 				
 				MapView mapView = getLogicalNetLayer().getMapView();
 
-				crossingPanel.setCable(getLogicalNetLayer().getMapViewController().findCablePath(scl));
+				crossingPanel.setCable(mapView.findCablePath(scl));
 
-				AbstractNode mne[] = getLogicalNetLayer().getMapViewController().getSideNodes(scl);
-				sen = !(mne[0].equals(site)) && !(mne[1].equals(site));
+				AbstractNode startNode = mapView.getStartNode(scl);
+				AbstractNode endNode = mapView.getEndNode(scl);
+				sen = !(startNode.equals(site)) && !(endNode.equals(site));
 			}
 			else
 			{
@@ -433,7 +434,7 @@ public final class MapSiteBindPanel
 				Scheme scheme = (Scheme )it.next();
 				schemeElements.addAll(SchemeUtils.getTopLevelElements(scheme));
 			}
-			List cableElementsTransit = getLogicalNetLayer().getMapViewController().getCablePaths(site);
+			List cableElementsTransit = mapView.getCablePaths(site);
 			List cableElementsDropped = new LinkedList();
 			for(Iterator it = cableElementsTransit.iterator(); it.hasNext();)
 			{

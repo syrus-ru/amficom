@@ -234,13 +234,3 @@ src\com\syrus\AMFICOM\Client\Map\UI\NodeSizePanel.java
 src\com\syrus\AMFICOM\Client\Map\UI\SchemeController.java
 src\com\syrus\AMFICOM\Client\Map\UI\SimpleMapElementController.java
 src\com\syrus\AMFICOM\Client\Resource\MapView\MapView.java
-src\com\syrus\AMFICOM\mapview\AlarmMarker.java
-src\com\syrus\AMFICOM\mapview\CablePath.java
-src\com\syrus\AMFICOM\mapview\CablePathBinding.java
-src\com\syrus\AMFICOM\mapview\EventMarker.java
-src\com\syrus\AMFICOM\mapview\Marker.java
-src\com\syrus\AMFICOM\mapview\MeasurementPath.java
-src\com\syrus\AMFICOM\mapview\Selection.java
-src\com\syrus\AMFICOM\mapview\UnboundLink.java
-src\com\syrus\AMFICOM\mapview\UnboundNode.java
-src\com\syrus\AMFICOM\mapview\VoidElement.java

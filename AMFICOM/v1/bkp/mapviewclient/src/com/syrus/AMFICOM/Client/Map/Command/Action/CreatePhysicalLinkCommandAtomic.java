@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.6 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.7 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.map.Map;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/01 11:34:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -64,8 +64,6 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		DataSourceInterface dataSource = aContext.getDataSource();
-		
 		try
 		{
 			link = PhysicalLink.createInstance(

@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.10 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.11 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 
+import com.syrus.AMFICOM.mapview.MapView;
 import java.awt.geom.Point2D;
 
 import java.util.Iterator;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.map.Map;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/01 11:34:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -57,6 +58,8 @@ public class CenterSelectionCommand extends VoidCommand
 			return;
 
 		MapElement me;
+		
+		MapView mapView = logicalNetLayer.getMapView();
 
 		int count = 0;
 		DoublePoint point = new DoublePoint(0.0, 0.0);
@@ -64,7 +67,7 @@ public class CenterSelectionCommand extends VoidCommand
 		double x = 0.0D;
 		double y = 0.0D;
 
-		for(Iterator it = logicalNetLayer.getMapView().getMap().getNodes().iterator(); it.hasNext();)
+		for(Iterator it = mapView.getMap().getNodes().iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			if(me.isSelected())
@@ -76,7 +79,7 @@ public class CenterSelectionCommand extends VoidCommand
 			}
 		}
 
-		for(Iterator it = logicalNetLayer.getMapViewController().getMarkers().iterator(); it.hasNext();)
+		for(Iterator it = mapView.getMarkers().iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			if(me.isSelected())
@@ -88,7 +91,7 @@ public class CenterSelectionCommand extends VoidCommand
 			}
 		}
 
-		for(Iterator it = logicalNetLayer.getMapView().getMap().getNodeLinks().iterator(); it.hasNext();)
+		for(Iterator it = mapView.getMap().getNodeLinks().iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			if(me.isSelected())
@@ -100,7 +103,7 @@ public class CenterSelectionCommand extends VoidCommand
 			}
 		}
 
-		for(Iterator it = logicalNetLayer.getMapView().getMap().getPhysicalLinks().iterator(); it.hasNext();)
+		for(Iterator it = mapView.getMap().getPhysicalLinks().iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			if(me.isSelected())
@@ -112,7 +115,7 @@ public class CenterSelectionCommand extends VoidCommand
 			}
 		}
 
-		for(Iterator it = logicalNetLayer.getMapViewController().getCablePaths().iterator(); it.hasNext();)
+		for(Iterator it = mapView.getCablePaths().iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			if(me.isSelected())
@@ -124,7 +127,7 @@ public class CenterSelectionCommand extends VoidCommand
 			}
 		}
 
-		for(Iterator it = logicalNetLayer.getMapViewController().getMeasurementPaths().iterator(); it.hasNext();)
+		for(Iterator it = mapView.getMeasurementPaths().iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			if(me.isSelected())

@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.12 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.13 2005/02/01 11:34:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.Iterator;
  *  принадлежит данный узел, делится на 2 части
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/01 11:34:55 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -122,7 +122,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 		newLink.setType(link.getType());
 
 		// single cpath, as long as link is UnboundLink
-		CablePath cpath = (CablePath)(getLogicalNetLayer().getMapViewController().getCablePaths(link).get(0));
+		CablePath cpath = (CablePath)(mapView.getCablePaths(link).get(0));
 		CableController cableController = (CableController )
 			getLogicalNetLayer().getMapViewController().getController(cpath);
 		

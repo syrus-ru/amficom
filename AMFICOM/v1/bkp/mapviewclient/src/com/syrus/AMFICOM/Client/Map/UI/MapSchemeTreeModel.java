@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.7 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.8 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -81,7 +81,7 @@ import javax.swing.ImageIcon;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:18 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/01 11:34:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -94,23 +94,11 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 	public static final String CABLE_BRANCH = "schemecablelink";
 	public static final String PATH_BRANCH = "schemepath";
 
-	DataSourceInterface dsi;
 	MapView mv;
 
-	public MapSchemeTreeModel(DataSourceInterface dsi)
+	public MapSchemeTreeModel(MapView mv)
 	{
-		setDataSource(dsi);
-	}
-
-	public MapSchemeTreeModel(MapView mv, DataSourceInterface dsi)
-	{
-		this(dsi);
 		setMapView(mv);
-	}
-	
-	public void setDataSource(DataSourceInterface dsi)
-	{
-		this.dsi = dsi;
 	}
 	
 	public void setMapView(MapView mv)

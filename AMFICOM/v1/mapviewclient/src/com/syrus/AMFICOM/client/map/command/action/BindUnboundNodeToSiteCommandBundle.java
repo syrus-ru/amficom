@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.11 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.12 2005/02/01 11:34:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/01 11:34:55 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -74,7 +74,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 		map = mapView.getMap();
 		
 		// список кабельных путей, включающий привязываемый элемент
-		List cablePaths = logicalNetLayer.getMapViewController().getCablePaths(unbound);
+		List cablePaths = mapView.getCablePaths(unbound);
 		
 		// обновляются концевые узлы кабельных путей
 		for(Iterator it = cablePaths.iterator(); it.hasNext();)

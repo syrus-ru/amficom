@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.24 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.25 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.24 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.25 $, $Date: 2005/02/01 11:34:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -295,7 +295,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		Identifier creatorId = new Identifier(
 			getLogicalNetLayer().getContext().getSessionInterface().getAccessIdentifier().user_id);
 			
-		PhysicalLinkType collectorType = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
+		PhysicalLinkType collectorType = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.COLLECTOR);
 
 		Collector prevCollector = logicalNetLayer.getMapView().getMap().getCollector(mple);
 		if(prevCollector != null)

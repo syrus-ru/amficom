@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.39 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.40 2005/02/01 11:34:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import java.util.Set;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.39 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.40 $, $Date: 2005/02/01 11:34:55 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -409,7 +409,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			setScale(mapView.getScale());
 			setCenter(mapView.getCenter());
 
-			Iterator e = getMapViewController().getAllElements().iterator();
+			Iterator e = mapView.getAllElements().iterator();
 			while (e.hasNext())
 			{
 				MapElement mapElement = (MapElement )e.next();
@@ -667,7 +667,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		if (getMapState().getShowMode() == MapState.SHOW_MEASUREMENT_PATH)
 		{
 			elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
-			for(Iterator it = getMapViewController().getMeasurementPaths().iterator(); it.hasNext();)
+			for(Iterator it = mapView.getMeasurementPaths().iterator(); it.hasNext();)
 			{
 				MeasurementPath mpath = 
 					(MeasurementPath)it.next();
@@ -694,7 +694,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		if (getMapState().getShowMode() == MapState.SHOW_CABLE_PATH)
 		{
 			elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
-			for(Iterator it = getMapViewController().getCablePaths().iterator(); it.hasNext();)
+			for(Iterator it = mapView.getCablePaths().iterator(); it.hasNext();)
 			{
 				CablePath cpath = 
 					(CablePath)it.next();
@@ -854,7 +854,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		else
 		if(ae.getActionCommand().equals(MapEvent.DESELECT_ALL))
 		{
-			getMapViewController().deselectAll();
+			mapView.deselectAll();
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED))
@@ -944,7 +944,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MeasurementPath path;
 				try
 				{
-					path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
+					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
 				}
 				catch (CommunicationException e)
 				{
@@ -966,7 +966,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						path,
 						mne.getMeId(),
 						LangModelMap.getString("Marker"));
-					getMapViewController().addMarker(marker);
+					mapView.addMarker(marker);
 
 					MarkerController mc = (MarkerController)getMapViewController().getController(marker);
 					mc.moveToFromStartLo(marker, mne.getDistance());
@@ -978,7 +978,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MeasurementPath path;
 				try
 				{
-					path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
+					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
 				}
 				catch (CommunicationException e)
 				{
@@ -1000,7 +1000,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						path,
 						mne.getMeId(),
 						LangModelMap.getString("Event"));
-					getMapViewController().addMarker(marker);
+					mapView.addMarker(marker);
 
 					MarkerController mc = (MarkerController)getMapViewController().getController(marker);
 
@@ -1013,7 +1013,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MeasurementPath path;
 				try
 				{
-					path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
+					path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
 				}
 				catch (CommunicationException e)
 				{
@@ -1029,7 +1029,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				AlarmMarker marker = null;
 				if(path != null)
 				{
-					for(Iterator it = getMapViewController().getMarkers().iterator(); it.hasNext();)
+					for(Iterator it = mapView.getMarkers().iterator(); it.hasNext();)
 					{
 						try
 						{
@@ -1052,7 +1052,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 							path,
 							mne.getMeId(),
 							LangModelMap.getString("Alarm"));
-						getMapViewController().addMarker(marker);
+						mapView.addMarker(marker);
 					}
 					else
 					{
@@ -1087,7 +1087,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 			if(mne.isDataMarkerMoved())
 			{
-				Marker marker = getMapViewController().getMarker(mne.getMarkerId());
+				Marker marker = mapView.getMarker(mne.getMarkerId());
 				if(marker != null)
 				{
 					if(marker.getPathDecompositor() == null)
@@ -1101,23 +1101,23 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 			if(mne.isDataMarkerSelected())
 			{
-				Marker marker = getMapViewController().getMarker(mne.getMarkerId());
+				Marker marker = mapView.getMarker(mne.getMarkerId());
 				if(marker != null)
 					marker.setSelected(true);
 			}
 			else
 			if(mne.isDataMarkerDeselected())
 			{
-				Marker marker = getMapViewController().getMarker(mne.getMarkerId());
+				Marker marker = mapView.getMarker(mne.getMarkerId());
 				if(marker != null)
 					marker.setSelected(false);
 			}
 			else
 			if(mne.isDataMarkerDeleted())
 			{
-				Marker marker = getMapViewController().getMarker(mne.getMarkerId());
+				Marker marker = mapView.getMarker(mne.getMarkerId());
 				if(marker != null)
-					getMapViewController().removeMarker(marker);
+					mapView.removeMarker(marker);
 				if(marker instanceof AlarmMarker)
 				{
 					AlarmMarker amarker = (AlarmMarker)marker;
@@ -1207,7 +1207,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 					for(int i = 0; i < ses.length; i++)
 					{
-						SiteNode site = getMapViewController().findElement(ses[i]);
+						SiteNode site = mapView.findElement(ses[i]);
 						if(site != null)
 							site.setSelected(true);
 					}
@@ -1219,7 +1219,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					
 					for(int i = 0; i < sps.length; i++)
 					{
-						MeasurementPath mmp = getMapViewController().findMeasurementPath(sps[i]);
+						MeasurementPath mmp = mapView.findMeasurementPath(sps[i]);
 						if(mmp != null)
 							mmp.setSelected(true);
 					}
@@ -1230,7 +1230,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
 					for(int i = 0; i < scs.length; i++)
 					{
-						CablePath mcp = getMapViewController().findCablePath(scs[i]);
+						CablePath mcp = mapView.findCablePath(scs[i]);
 						if(mcp != null)
 							mcp.setSelected(true);
 					}
@@ -1242,7 +1242,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 					for(int i = 0; i < ses.length; i++)
 					{
-						SiteNode site = getMapViewController().findElement(ses[i]);
+						SiteNode site = mapView.findElement(ses[i]);
 						if(site != null)
 							site.setSelected(false);
 					}
@@ -1254,7 +1254,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 					for(int i = 0; i < sps.length; i++)
 					{
-						MeasurementPath mmp = getMapViewController().findMeasurementPath(sps[i]);
+						MeasurementPath mmp = mapView.findMeasurementPath(sps[i]);
 						if(mmp != null)
 							mmp.setSelected(false);
 					}
@@ -1265,7 +1265,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
 					for(int i = 0; i < scs.length; i++)
 					{
-						CablePath mcp = getMapViewController().findCablePath(scs[i]);
+						CablePath mcp = mapView.findCablePath(scs[i]);
 						if(mcp != null)
 							mcp.setSelected(false);
 					}
@@ -1468,7 +1468,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		
 		//Здесь пробегаемся по всем элементам и если на каком-нибудь из них курсор
 		//то устанавливаем его текущим элементом
-		Iterator e = getMapViewController().getAllElements().iterator();
+		Iterator e = mapView.getAllElements().iterator();
 		while (e.hasNext())
 		{
 			MapElement mapElement = (MapElement )e.next();
@@ -1492,7 +1492,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					else
 					if ( showMode == MapState.SHOW_CABLE_PATH)
 					{
-						Iterator it = getMapViewController().getCablePaths((NodeLink)mapElement).iterator();
+						Iterator it = mapView.getCablePaths((NodeLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (CablePath)it.next();
@@ -1505,7 +1505,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					else
 					if ( showMode == MapState.SHOW_MEASUREMENT_PATH)
 					{
-						Iterator it = getMapViewController().getMeasurementPaths((NodeLink)mapElement).iterator();
+						Iterator it = mapView.getMeasurementPaths((NodeLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (MeasurementPath)it.next();
@@ -1521,7 +1521,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				{
 					if ( showMode == MapState.SHOW_CABLE_PATH)
 					{
-						Iterator it = getMapViewController().getCablePaths((PhysicalLink)mapElement).iterator();
+						Iterator it = mapView.getCablePaths((PhysicalLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (CablePath)it.next();
@@ -1530,7 +1530,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					else
 					if ( showMode == MapState.SHOW_MEASUREMENT_PATH)
 					{
-						Iterator it = getMapViewController().getMeasurementPaths((PhysicalLink)mapElement).iterator();
+						Iterator it = mapView.getMeasurementPaths((PhysicalLink)mapElement).iterator();
 						if(it.hasNext())
 						{
 							curME = (MeasurementPath)it.next();
@@ -1550,7 +1550,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deselectAll()");
 
-		Iterator e = getMapViewController().getAllElements().iterator();
+		Iterator e = mapView.getAllElements().iterator();
 		while ( e.hasNext())
 		{
 			MapElement mapElement = (MapElement)e.next();
@@ -1566,7 +1566,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "selectAll()");
 		
-		Iterator e = getMapViewController().getAllElements().iterator();
+		Iterator e = mapView.getAllElements().iterator();
 
 		while(e.hasNext())
 		{

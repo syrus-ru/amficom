@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCablePathCommandAtomic.java,v 1.8 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: CreateCablePathCommandAtomic.java,v 1.9 2005/02/01 11:34:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/01 11:34:55 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -71,8 +71,6 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 		
-		DataSourceInterface dataSource = aContext.getDataSource();
-		
 		try
 		{
 			cp = com.syrus.AMFICOM.mapview.CablePath.createInstance(
@@ -81,7 +79,7 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 					endNode, 
 					logicalNetLayer.getMapView());
 	
-			logicalNetLayer.getMapViewController().addCablePath(cp);
+			logicalNetLayer.getMapView().addCablePath(cp);
 		}
 		catch (ApplicationException e)
 		{
@@ -91,12 +89,12 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 	
 	public void redo()
 	{
-		logicalNetLayer.getMapViewController().addCablePath(cp);
+		logicalNetLayer.getMapView().addCablePath(cp);
 	}
 	
 	public void undo()
 	{
-		logicalNetLayer.getMapViewController().removeCablePath(cp);
+		logicalNetLayer.getMapView().removeCablePath(cp);
 	}
 }
 

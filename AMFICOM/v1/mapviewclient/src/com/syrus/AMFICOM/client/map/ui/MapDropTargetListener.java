@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.12 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.13 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/01/31 12:19:19 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/01 11:34:56 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -124,7 +124,7 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	protected void schemeElementDropped(SchemeElement se, Point point)
 	{
-		SiteNode site = logicalNetLayer.getMapViewController().findElement(se);
+		SiteNode site = logicalNetLayer.getMapView().findElement(se);
 		if(site != null)
 		{
 			if(site instanceof UnboundNode)
@@ -154,16 +154,17 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	protected void schemeCableLinkDropped(SchemeCableLink scl, Point point)
 	{
-		CablePath cp = logicalNetLayer.getMapViewController().findCablePath(scl);
+		CablePath cp = logicalNetLayer.getMapView().findCablePath(scl);
 		if(cp != null)
 		{
 			cp.setSelected(true);
 		}
 		else
 		{
-			SiteNode[] mne = logicalNetLayer.getMapViewController().getSideNodes(scl);
+			SiteNode startNode = logicalNetLayer.getMapView().getStartNode(scl);
+			SiteNode endNode = logicalNetLayer.getMapView().getEndNode(scl);
 	
-			if(mne[0] == null || mne[1] == null)
+			if(startNode == null || endNode == null)
 			{
 				JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(), 

@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.3 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.4 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
@@ -38,7 +39,7 @@ import java.util.Iterator;
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 11:34:56 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController
@@ -226,11 +227,12 @@ public final class MeasurementPathController extends AbstractLinkController
 	public MapElement getMapElement(MeasurementPath path, PathElement pe)
 	{
 		MapElement me = null;
+		MapView mapView = getLogicalNetLayer().getMapView();
 		switch(pe.type().value())
 		{
 			case Type._SCHEME_ELEMENT:
 				SchemeElement se = (SchemeElement )pe.abstractSchemeElement();
-				SiteNode site = getLogicalNetLayer().getMapViewController().findElement(se);
+				SiteNode site = mapView.findElement(se);
 				if(site != null)
 				{
 					me = site;
@@ -240,8 +242,8 @@ public final class MeasurementPathController extends AbstractLinkController
 				SchemeLink link = (SchemeLink )pe.abstractSchemeElement();
 				SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().scheme(), link.sourceSchemePort().schemeDevice());
 				SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().scheme(), link.targetSchemePort().schemeDevice());
-				SiteNode ssite = getLogicalNetLayer().getMapViewController().findElement(sse);
-				SiteNode esite = getLogicalNetLayer().getMapViewController().findElement(ese);
+				SiteNode ssite = mapView.findElement(sse);
+				SiteNode esite = mapView.findElement(ese);
 				if(ssite != null && ssite.equals(esite))
 				{
 					me = ssite;
@@ -249,7 +251,7 @@ public final class MeasurementPathController extends AbstractLinkController
 				break;
 			case Type._SCHEME_CABLE_LINK:
 				SchemeCableLink clink = (SchemeCableLink )pe.abstractSchemeElement();
-				CablePath cp = getLogicalNetLayer().getMapViewController().findCablePath(clink);
+				CablePath cp = mapView.findCablePath(clink);
 				if(cp != null)
 				{
 					me = cp;

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.8 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.9 2005/02/01 11:34:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
  * Разместить сетевой элемент на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/01 11:34:56 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -95,8 +95,6 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 				.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			return;
 		
-		DataSourceInterface dataSource = aContext.getDataSource();
-	
 		if(coordinatePoint == null)
 			coordinatePoint = logicalNetLayer.convertScreenToMap(point);
 		
