@@ -15,13 +15,12 @@ struct TTDX
 {
 	int thId; // номер порога либо -1 если порог не повлиял
 	void set(int thId);
-	int get();
 	//void operator= (TTDX &that); // use default
 };
 
 struct TTDY
 {
-	int thId; // номер левого порога (-1: отчего-то не определено)
+	int thId; // >=0, номер левого порога
 	double nextWei; // вес соседа справа (должен быть строго 0 для самого правого порога)
 	void set(int thId, double nextWei);
 	int getNearest();

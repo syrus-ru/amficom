@@ -17,10 +17,6 @@ void TTDX::set(int thId)
 {
 	this->thId = thId;
 }
-int TTDX::get()
-{
-	return thId;
-}
 /*
 void TTDX::operator= (TTDX &that)
 {
@@ -327,7 +323,7 @@ void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thN
 			{
 #if CANTTDXDY
 				if (ttdyOut)
-					ttdyOut[i].set(curLTn, 0);
+					ttdyOut[i].set(curLTn, 0); // NB: это гарантирует, что ttdyOut[i].thId будет всегда >= 0
 #endif
 				unpk[i] += thY[curLTn].dy;
 				continue;
@@ -721,7 +717,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 	if (thCheckPosition >= xMin && thCheckPosition <= xMax)
 	{
 		if (wannaDXDY == 1)
-			ret = ttdxOut[thCheckPosition - xMin].get();
+			ret = ttdxOut[thCheckPosition - xMin].thId;
 		if (wannaDXDY == 2)
 			ret = ttdyOut[thCheckPosition - xMin].getNearest();
 	}
