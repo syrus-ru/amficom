@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.38 2004/11/10 10:11:58 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.39 2004/11/10 10:33:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/11/10 10:11:58 $
+ * @version $Revision: 1.39 $, $Date: 2004/11/10 10:33:43 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -432,7 +432,8 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 	
-	protected void checkAndUpdateEntities(List localStorableObjects, boolean force) throws IllegalDataException, UpdateObjectException, VersionCollisionException{
+	protected void checkAndUpdateEntities(List localStorableObjects, boolean force) throws IllegalDataException, 
+				UpdateObjectException, VersionCollisionException{
 		
 		List idsList = new LinkedList();
 		for(Iterator it=localStorableObjects.iterator();it.hasNext();){
@@ -453,6 +454,7 @@ public abstract class StorableObjectDatabase {
 		
 		List insertList = null;
 		List updateList = null;		
+		StringBuffer versionCollisions = null;
 		
 		for(Iterator localIter=localStorableObjects.iterator();localIter.hasNext();){
 			StorableObject localStorableObject = (StorableObject)localIter.next();
@@ -486,8 +488,13 @@ public abstract class StorableObjectDatabase {
 						updateList = new LinkedList();
 					updateList.add(localStorableObject);
 				} else{
-					String msg = getEnityName() + "Database.checkAndUpdateEntity | " + getEnityName() + " conflict version ";
-					throw new VersionCollisionException(msg);
+					String msg = getEnityName() + "Database.checkAndUpdateEntity | conflict version for '" 
+							+ storableObject.getId().getCode() +'\'';
+					if (versionCollisions == null)
+						versionCollisions = new StringBuffer();
+					else 
+						versionCollisions.append('\n');
+					versionCollisions.append(msg);					
 				}
 
 			}
@@ -505,7 +512,8 @@ public abstract class StorableObjectDatabase {
 		if (updateList!=null)
 			updateEntities(updateList);
 		
-		
+		if (versionCollisions != null && versionCollisions.length() > 0)
+			throw new VersionCollisionException(versionCollisions.toString());		
 	}
 
 	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
