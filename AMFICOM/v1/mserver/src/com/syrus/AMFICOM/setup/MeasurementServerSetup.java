@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.31 2005/03/24 17:02:39 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.32 2005/04/01 21:47:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,10 @@
 
 package com.syrus.AMFICOM.setup;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.Domain;
@@ -71,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/03/24 17:02:39 $
+ * @version $Revision: 1.32 $, $Date: 2005/04/01 21:47:42 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -351,7 +349,7 @@ public final class MeasurementServerSetup {
 			Identifier mPortId,
 			Identifier transmissionPathId) {
 		try {
-			Collection mdmIds = new ArrayList(1);
+			java.util.Set mdmIds = new HashSet(1);
 			mdmIds.add(transmissionPathId);
 			MonitoredElement monitoredElement = MonitoredElement.createInstance(creatorId,
 					domainId,
@@ -382,13 +380,13 @@ public final class MeasurementServerSetup {
 	}
 
 	private static void createParameterTypes(Identifier creatorId) {
-		List inParTyps;
-		List criParTyps;
-		List etaParTyps;
-		List thrParTyps;
-		List outParTyps;
+		java.util.Set inParTyps;
+		java.util.Set criParTyps;
+		java.util.Set etaParTyps;
+		java.util.Set thrParTyps;
+		java.util.Set outParTyps;
 
-		inParTyps = new ArrayList(6);
+		inParTyps = new HashSet(6);
 		inParTyps.add(createParameterType(creatorId,
 				ParameterTypeCodenames.TRACE_WAVELENGTH,
 				"For reflectometry",
@@ -411,7 +409,7 @@ public final class MeasurementServerSetup {
 				"For reflectometry",
 				"Number of averages",
 				DataType.DATA_TYPE_LONG));
-		outParTyps = new ArrayList(1);
+		outParTyps = new HashSet(1);
 		ParameterType parTypRefl = createParameterType(creatorId,
 				ParameterTypeCodenames.REFLECTOGRAMMA,
 				"For reflectometry",
@@ -420,9 +418,9 @@ public final class MeasurementServerSetup {
 		outParTyps.add(parTypRefl);
 		Identifier measurementTypeId = createMeasurementType(creatorId, MeasurementType.CODENAME_REFLECTOMETRY, "Reflectometry", inParTyps, outParTyps);
 
-		inParTyps = new ArrayList(1);
+		inParTyps = new HashSet(1);
 		inParTyps.add(parTypRefl);
-		criParTyps = new ArrayList(10);
+		criParTyps = new HashSet(10);
 		criParTyps.add(createParameterType(creatorId,
 				ParameterTypeCodenames.WAVELET_TYPE,
 				"For DADARA analysis",
@@ -468,14 +466,14 @@ public final class MeasurementServerSetup {
 				"For DADARA analysis",
 				"strategy",
 				DataType.DATA_TYPE_INTEGER));
-		etaParTyps = new ArrayList(1);
+		etaParTyps = new HashSet(1);
 		ParameterType parTypEtalonEventArr = createParameterType(creatorId,
 				ParameterTypeCodenames.DADARA_ETALON_EVENTS,
 				"For DADARA analysis",
 				"Etalon event array",
 				DataType.DATA_TYPE_RAW);
 		etaParTyps.add(parTypEtalonEventArr);
-		outParTyps = new ArrayList(1);
+		outParTyps = new HashSet(1);
 		ParameterType parTypEventArr = createParameterType(creatorId,
 				ParameterTypeCodenames.DADARA_EVENTS,
 				"For DADARA analysis",
@@ -491,17 +489,17 @@ public final class MeasurementServerSetup {
 				outParTyps,
 				Collections.singleton(measurementTypeId));
 
-		inParTyps = new ArrayList(1);
+		inParTyps = new HashSet(1);
 		inParTyps.add(parTypRefl);
-		thrParTyps = new ArrayList(1);
+		thrParTyps = new HashSet(1);
 		thrParTyps.add(createParameterType(creatorId,
 				ParameterTypeCodenames.DADARA_THRESHOLDS,
 				"For DADARA analysis",
 				"Thresholds",
 				DataType.DATA_TYPE_RAW));
-		etaParTyps = new ArrayList(1);
+		etaParTyps = new HashSet(1);
 		etaParTyps.add(parTypEtalonEventArr);
-		outParTyps = new ArrayList(1);
+		outParTyps = new HashSet(1);
 		outParTyps.add(createParameterType(creatorId,
 				ParameterTypeCodenames.DADARA_ALARMS,
 				"For DADARA analysis",
@@ -518,47 +516,47 @@ public final class MeasurementServerSetup {
 	}
 
 	private static void checkParameterTypes() {
-		ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
-		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase());
-		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase());
-		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase());
+		ParameterTypeDatabase parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
+		AnalysisTypeDatabase analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		EvaluationTypeDatabase evaluationTypeDatabase = MeasurementDatabaseContext.getEvaluationTypeDatabase();
+		MeasurementTypeDatabase measurementTypeDatabase = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 
 		try {
-			Collection parameterTypes = parameterTypeDatabase.retrieveAll();
+			java.util.Set parameterTypes = parameterTypeDatabase.retrieveAll();
 			ParameterType pt;
 			for (Iterator i = parameterTypes.iterator(); i.hasNext();) {
 				pt = (ParameterType) i.next();
 				System.out.println("id: " + pt.getId() + ", codename: " + pt.getCodename() + ", name: " + pt.getName());
 			}
 
-			Collection measurementTypes = measurementTypeDatabase.retrieveAll();
+			java.util.Set measurementTypes = measurementTypeDatabase.retrieveAll();
 			MeasurementType mt;
 			for (Iterator i = measurementTypes.iterator(); i.hasNext();) {
 				mt = (MeasurementType) i.next();
 				System.out.println("id: " + mt.getId() + ", codename: " + mt.getCodename() + ", description: " + mt.getDescription());
-				Collection inp = mt.getInParameterTypes();
+				java.util.Set inp = mt.getInParameterTypes();
 				for (Iterator j = inp.iterator(); j.hasNext();) {
 					System.out.println("	in par id: " + ((ParameterType) j.next()).getId());
 				}
 			}
 
-			Collection analysisTypes = analysisTypeDatabase.retrieveButIdsByCondition(null, new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE));
+			java.util.Set analysisTypes = analysisTypeDatabase.retrieveButIdsByCondition(null, new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE));
 			AnalysisType at;
 			for (Iterator i = analysisTypes.iterator(); i.hasNext();) {
 				at = (AnalysisType) i.next();
 				System.out.println("id: " + at.getId() + ", codename: " + at.getCodename() + ", description: " + at.getDescription());
-				Collection inp = at.getInParameterTypes();
+				java.util.Set inp = at.getInParameterTypes();
 				for (Iterator j = inp.iterator(); j.hasNext();) {
 					System.out.println("	in par id: " + ((ParameterType) j.next()).getId());
 				}
 			}
 
-			Collection evaluationTypes = evaluationTypeDatabase.retrieveAll();
+			java.util.Set evaluationTypes = evaluationTypeDatabase.retrieveAll();
 			EvaluationType et;
 			for (Iterator i = evaluationTypes.iterator(); i.hasNext();) {
 				et = (EvaluationType) i.next();
 				System.out.println("id: " + et.getId() + ", codename: " + et.getCodename() + ", description: " + et.getDescription());
-				Collection inp = et.getInParameterTypes();
+				java.util.Set inp = et.getInParameterTypes();
 				for (Iterator j = inp.iterator(); j.hasNext();) {
 					System.out.println("	in par id: " + ((ParameterType) j.next()).getId());
 				}
@@ -588,15 +586,15 @@ public final class MeasurementServerSetup {
 	private static Identifier createMeasurementType(Identifier creatorId,
 			String codename,
 			String description,
-			Collection inParameterTypes,
-			Collection outParameterTypes) {
+			java.util.Set inParameterTypes,
+			java.util.Set outParameterTypes) {
 		try {
 			MeasurementType measurementType = MeasurementType.createInstance(creatorId,
 					codename,
 					description,
 					inParameterTypes,
 					outParameterTypes,
-					new ArrayList());
+					new HashSet());
 			MeasurementDatabaseContext.getMeasurementTypeDatabase().insert(measurementType);
 			return measurementType.getId();
 		}
@@ -609,11 +607,11 @@ public final class MeasurementServerSetup {
 	private static void createAnalysisType(Identifier creatorId,
 			String codename,
 			String description,
-			Collection inParameterTypes,
-			Collection criParameterTypes,
-			Collection etaParameterTypes,
-			Collection outParameterTypes,
-			Collection measurementTypeIds) {
+			java.util.Set inParameterTypes,
+			java.util.Set criParameterTypes,
+			java.util.Set etaParameterTypes,
+			java.util.Set outParameterTypes,
+			java.util.Set measurementTypeIds) {
 		try {
 			AnalysisType analysisType = AnalysisType.createInstance(creatorId,
 					codename,
@@ -633,11 +631,11 @@ public final class MeasurementServerSetup {
 	private static void createEvaluationType(Identifier creatorId,
 			String codename,
 			String description,
-			Collection inParameterTypes,
-			Collection thrParameterTypes,
-			Collection etaParameterTypes,
-			Collection outParameterTypes,
-			Collection measurementTypeIds) {
+			java.util.Set inParameterTypes,
+			java.util.Set thrParameterTypes,
+			java.util.Set etaParameterTypes,
+			java.util.Set outParameterTypes,
+			java.util.Set measurementTypeIds) {
 		try {
 			EvaluationType evaluationType = EvaluationType.createInstance(creatorId,
 					codename,
@@ -655,12 +653,12 @@ public final class MeasurementServerSetup {
 	}
 
 	private static void createTests(Identifier creatorId, MonitoredElement monitoredElement) {
-		List meIds = new ArrayList(1);
+		java.util.Set meIds = new HashSet(1);
 		meIds.add(monitoredElement.getId());
 		Set parameterSet = createParameterSet(creatorId, meIds);
 		Set criteriaSet = createCriteriaSet(creatorId, meIds);
 		MeasurementSetup measurementSetup = createMeasurementSetup(creatorId, parameterSet, null, null, null, meIds);
-		List msIds = new ArrayList(1);
+		java.util.Set msIds = new HashSet(1);
 		msIds.add(measurementSetup.getId());
 		createOnetimeTest(creatorId, monitoredElement, msIds);
 
@@ -669,8 +667,8 @@ public final class MeasurementServerSetup {
 		createPeriodicalTest(creatorId, temporalPattern, monitoredElement, msIds);
 	}
 
-	private static Set createParameterSet(Identifier creatorId, List monitoredElementIds) {
-		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase());
+	private static Set createParameterSet(Identifier creatorId, java.util.Set monitoredElementIds) {
+		ParameterTypeDatabase parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
 
 		try {
 			TypicalCondition tc = new TypicalCondition(ParameterTypeCodenames.TRACE_WAVELENGTH, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
@@ -718,8 +716,8 @@ public final class MeasurementServerSetup {
 		}
 	}
 
-	private static Set createCriteriaSet(Identifier creatorId, List monitoredElementIds) {
-		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase());
+	private static Set createCriteriaSet(Identifier creatorId, java.util.Set monitoredElementIds) {
+		ParameterTypeDatabase parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
 		try {
 			TypicalCondition tc = new TypicalCondition(ParameterTypeCodenames.WAVELET_TYPE,
 					OperationSort.OPERATION_EQUALS,
@@ -813,7 +811,7 @@ public final class MeasurementServerSetup {
 			Set criteriaSet,
 			Set thresholdSet,
 			Set etalon,
-			List monitoredElementIds) {
+			java.util.Set monitoredElementIds) {
 		try {
 			MeasurementSetup mSetup = MeasurementSetup.createInstance(creatorId,
 					parameterSet,
@@ -846,10 +844,10 @@ public final class MeasurementServerSetup {
 		}
 	}
 
-	private static Test createOnetimeTest(Identifier creatorId, MonitoredElement monitoredElement, List measurementSetupIds) {
-		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase());
-		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase());
-		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase());
+	private static Test createOnetimeTest(Identifier creatorId, MonitoredElement monitoredElement, java.util.Set measurementSetupIds) {
+		AnalysisTypeDatabase analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		EvaluationTypeDatabase evaluationTypeDatabase = MeasurementDatabaseContext.getEvaluationTypeDatabase();
+		MeasurementTypeDatabase measurementTypeDatabase = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		try {
 			TypicalCondition tc = new TypicalCondition(MeasurementType.CODENAME_REFLECTOMETRY, OperationSort.OPERATION_EQUALS, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
 			MeasurementType measurementType = (MeasurementType) measurementTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
@@ -884,10 +882,10 @@ public final class MeasurementServerSetup {
 	private static Test createPeriodicalTest(Identifier creatorId,
 			TemporalPattern temporalPattern,
 			MonitoredElement monitoredElement,
-			List measurementSetupIds) {
-		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase());
-		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase());
-		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase());
+			java.util.Set measurementSetupIds) {
+		AnalysisTypeDatabase analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		EvaluationTypeDatabase evaluationTypeDatabase = MeasurementDatabaseContext.getEvaluationTypeDatabase();
+		MeasurementTypeDatabase measurementTypeDatabase = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		try {
 			TypicalCondition tc = new TypicalCondition(MeasurementType.CODENAME_REFLECTOMETRY, OperationSort.OPERATION_EQUALS, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
 			MeasurementType measurementType = (MeasurementType) measurementTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
