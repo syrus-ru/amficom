@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.10 2005/03/14 14:19:50 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.11 2005/03/15 08:22:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/14 14:19:50 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/15 08:22:40 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -670,7 +670,6 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 					this.y = mouseY;
 					this.dx = this.linkItem.x - mouseX;
 					this.dy = this.linkItem.y - mouseY;
-					this.fireSelectionChanged();
 				} else {
 					this.selectedItem = null;
 					this.selectedItems.clear();
@@ -729,6 +728,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 				try {
 					this.linkItem.addChild(this.selectedItem);
 				} catch (UnsupportedOperationException uoe) {
+					uoe.printStackTrace();
 					JOptionPane.showMessageDialog(this, uoe.getMessage(), "Error", JOptionPane.OK_OPTION);
 				}
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.1 2005/03/10 15:17:48 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.2 2005/03/15 08:22:40 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -40,7 +41,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/10 15:17:48 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/15 08:22:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -84,13 +85,15 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 	SelectionListener[]				selectionListeners	= new SelectionListener[0];
 
 	public LogicalTreeUI(List rootItems) {
-		this.rootItems = rootItems;
+		this.addItems(rootItems);
 	}
 
 	void addItem(	DefaultMutableTreeNode parent,
 					Item item) {
 		if (parent == null) {
 			parent = this.root;
+			if (this.root == null)
+				this.root = new DefaultMutableTreeNode(".");
 		}
 		DefaultMutableTreeNode node = this.addObject(parent, item);
 		if (item.getChildren() != null) {
@@ -124,7 +127,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 	private void addChangeListener(List items) {
 		for (Iterator it = items.iterator(); it.hasNext();) {
 			Item item = (Item) it.next();
-			item.addChangeListener(this.itemListener);
+			item.addChangeListener(this.getItemListener());
 			List children = item.getChildren();
 			if (children != null)
 				this.addChangeListener(children);
@@ -133,23 +136,40 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
 	private DefaultMutableTreeNode addObject(	DefaultMutableTreeNode parent,
 												Object child) {
-		return addObject(parent, child, false);
+		return addObject(parent, child, true);
 	}
 
-	private DefaultMutableTreeNode addObject(	DefaultMutableTreeNode parent,
+	private DefaultMutableTreeNode addObject(	DefaultMutableTreeNode parent1,
 												Object child,
 												boolean shouldBeVisible) {
-		DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
+		final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
 
-		if (parent == null) {
-			parent = this.root;
+		if (parent1 == null) {
+			parent1 = this.root;
 		}
+		final DefaultMutableTreeNode parent = parent1;
+		if (this.treeModel == null)
+			this.treeModel = new DefaultTreeModel(this.root);
 
-		this.treeModel.insertNodeInto(childNode, parent, parent.getChildCount());
+		SwingUtilities.invokeLater(new Runnable() {
+
+			public void run() {
+				LogicalTreeUI.this.treeModel.insertNodeInto(childNode, parent, parent.getChildCount());
+			}
+		});
 
 		// Make sure the user can see the lovely new node.
 		if (shouldBeVisible) {
-			this.tree.scrollPathToVisible(new TreePath(childNode.getPath()));
+			if (this.tree != null) {
+				final JTree tree1 = this.tree;
+				SwingUtilities.invokeLater(new Runnable() {
+
+					public void run() {
+
+						tree1.scrollPathToVisible(new TreePath(childNode.getPath()));
+					}
+				});
+			}
 		}
 		return childNode;
 	}
@@ -232,14 +252,12 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
 	public JTree getTree() {
 		if (this.tree == null) {
-			this.root = new DefaultMutableTreeNode(".");
-			this.treeModel = new DefaultTreeModel(this.root);
+			if (this.treeModel == null)
+				this.treeModel = new DefaultTreeModel(this.root);
 			this.tree = new JTree(this.treeModel);
 			this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 			this.tree.setRootVisible(true);
-			for (Iterator it = this.rootItems.iterator(); it.hasNext();) {
-				this.addItem(null, (Item) it.next());
-			}
+			this.tree.setDragEnabled(true);
 
 			this.tree.addTreeSelectionListener(new TreeSelectionListener() {
 
@@ -265,20 +283,46 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 			});
 
 			this.tree.setCellRenderer(new ItemTreeCellRenderer());
+
+		}
+		return this.tree;
+	}
+
+	public void addItems(List rootItems) {
+		this.rootItems = rootItems;
+		for (Iterator it = this.rootItems.iterator(); it.hasNext();) {
+			this.addItem(null, (Item) it.next());
+		}
+		this.addChangeListener(this.rootItems);
+	}
+
+	public void removeAll() {
+		for (int i = 0; i < this.root.getChildCount(); i++) {
+			this.root.remove(i);
+		}
+	}
+
+	private ItemListener getItemListener() {
+		if (this.itemListener == null) {
 			this.itemListener = new ItemListener() {
 
-				public void addChildPerformed(	Item source,
-												Item childItem) {
-					DefaultMutableTreeNode itemNode = getItemNode(null, childItem);
-					if (itemNode != null) {
-						MutableTreeNode parent = (MutableTreeNode) (itemNode.getParent());
-						if (parent != null) {
-							LogicalTreeUI.this.treeModel.removeNodeFromParent(itemNode);
-							itemNode = getItemNode(null, source);
-							addItem(itemNode, childItem);
-						}
-					}
+				public void addChildPerformed(	final Item source,
+												final Item childItem) {
+					SwingUtilities.invokeLater(new Runnable() {
 
+						public void run() {
+
+							DefaultMutableTreeNode itemNode = getItemNode(null, childItem);
+							if (itemNode != null) {
+								MutableTreeNode parent = (MutableTreeNode) (itemNode.getParent());
+								if (parent != null) {
+									LogicalTreeUI.this.treeModel.removeNodeFromParent(itemNode);
+									itemNode = getItemNode(null, source);
+									addItem(itemNode, childItem);
+								}
+							}
+						}
+					});
 				}
 
 				public void addParentPerformed(	Item source,
@@ -286,17 +330,22 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 					// nothing else
 				}
 
-				public void removeChildPerformed(	Item source,
-													Item childItem) {
-					DefaultMutableTreeNode itemNode = getItemNode(null, childItem);
-					if (itemNode != null) {
-						MutableTreeNode parent = (MutableTreeNode) (itemNode.getParent());
-						if (parent != null) {
-							LogicalTreeUI.this.treeModel.removeNodeFromParent(itemNode);
-							addItem(null, childItem);
-							return;
+				public void removeChildPerformed(	final Item source,
+													final Item childItem) {
+					SwingUtilities.invokeLater(new Runnable() {
+
+						public void run() {
+
+							final DefaultMutableTreeNode itemNode = getItemNode(null, childItem);
+							if (itemNode != null) {
+								MutableTreeNode parent = (MutableTreeNode) (itemNode.getParent());
+								if (parent != null) {
+									LogicalTreeUI.this.treeModel.removeNodeFromParent(itemNode);
+									addItem(null, childItem);
+								}
+							}
 						}
-					}
+					});
 
 				}
 
@@ -305,21 +354,22 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 					// nothing else
 				}
 			};
-
-			this.addChangeListener(this.rootItems);
 		}
-		return this.tree;
+		return this.itemListener;
 	}
 
-	// If expand is true, expands all nodes in the tree.
-	// Otherwise, collapses all nodes in the tree.
+	/**
+	 * @param expand
+	 *            is true, expands all nodes in the tree, Otherwise, collapses
+	 *            all nodes in the tree.
+	 */
 	public void expandAll(boolean expand) {
 		// Traverse tree from root
 		expandAll(new TreePath(this.root), expand);
 	}
 
-	public void selectedItems(Collection items) {
-		TreePath[] treePaths = new TreePath[items.size()];
+	public void selectedItems(final Collection items) {
+		final TreePath[] treePaths = new TreePath[items.size()];
 		this.tree.clearSelection();
 		int i = 0;
 		for (Iterator it = items.iterator(); it.hasNext(); i++) {
@@ -329,12 +379,18 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 			int j = objects.length;
 			for (Iterator iter = treePath.iterator(); iter.hasNext();) {
 				Item item2 = (Item) iter.next();
-				objects[--j] = this.getItemNode(null, item2);
+				objects[--j] = getItemNode(null, item2);
 			}
 			objects[--j] = this.root;
 			treePaths[i] = new TreePath(objects);
 		}
-		this.tree.setSelectionPaths(treePaths);
+		final JTree tree1 = this.tree;
+		SwingUtilities.invokeLater(new Runnable() {
+
+			public void run() {
+				tree1.setSelectionPaths(treePaths);
+			}
+		});
 	}
 
 	private List getTreePath(	List objects,

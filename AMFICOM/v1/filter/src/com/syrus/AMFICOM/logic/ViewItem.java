@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.5 2005/03/14 14:19:36 bob Exp $
+ * $Id: ViewItem.java,v 1.6 2005/03/15 08:22:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.Map;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/14 14:19:36 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/15 08:22:40 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -108,17 +108,19 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 				+ childItem.getName(), Log.FINEST);
 		if (this.children == null)
 			this.children = new LinkedList();
-		if (this.service || this.getChildrenCount() < this.sourceItem.getMaxChildrenCount()) {
-			ViewItem viewItem;
-			if (childItem instanceof ViewItem) {
-				viewItem = (ViewItem) childItem;
-			} else
-				viewItem = (ViewItem) item2ItemViewMap.get(childItem);
+		
+		ViewItem viewItem;
+		if (childItem instanceof ViewItem) {
+			viewItem = (ViewItem) childItem;
+		} else
+			viewItem = (ViewItem) item2ItemViewMap.get(childItem);
 
-			if (checkForRecursion(viewItem, this)) { throw new UnsupportedOperationException(
-																								"Recursion isn't supported."); }
-			if (this.children.contains(viewItem))
-				return;
+		if (checkForRecursion(viewItem, this)) { throw new UnsupportedOperationException(
+																							"Recursion isn't supported."); }
+		if (this.children.contains(viewItem))
+			return;
+
+		if (this.service || this.getChildrenCount() < this.sourceItem.getMaxChildrenCount()) {
 
 			this.children.add(viewItem);
 			this.sortedChildren = false;
