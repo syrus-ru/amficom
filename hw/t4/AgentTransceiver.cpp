@@ -16,7 +16,7 @@ AgentTransceiver::AgentTransceiver(char* kis_id,
 //Create task FIFO 
 	this->taskFifoName = new char[MAXLENPATH];
 	strcpy(this->taskFifoName, (const char*)FIFOROOTPATH);
-	strcat(this->taskFifoName, "/taskChannel");
+	strcat(this->taskFifoName, "/task");
 	strcat(this->taskFifoName, (const char*)kis_id);
 	strcat(this->taskFifoName, (const char*)getenv("USER"));
 	mknod(this->taskFifoName, S_IFIFO|0600, 0);
@@ -24,7 +24,7 @@ AgentTransceiver::AgentTransceiver(char* kis_id,
 //Create report FIFO
 	this->reportFifoName = new char[MAXLENPATH];
 	strcpy(this->reportFifoName, (const char*)FIFOROOTPATH);
-	strcat(this->reportFifoName, "/reportChannel");
+	strcat(this->reportFifoName, "/report");
 	strcat(this->reportFifoName, (const char*)kis_id);
 	strcat(this->reportFifoName, (const char*)getenv("USER"));
 	mknod(this->reportFifoName, S_IFIFO|0600, 0);

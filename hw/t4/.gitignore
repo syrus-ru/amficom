@@ -7,3 +7,6 @@ t4
 *.gz
 hlam
 tcpdump
+nttrace_data
+reflectogramma
+t5.trc

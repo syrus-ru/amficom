@@ -717,9 +717,9 @@ void* RTUTransceiver::run(void* args) {
 			 * Create ResultSegment and put it in front of the Report Queue
 			 */
 				bmeasurement_id = measurementSegment->getMeasurementId()->clone();
-				databa = new char[13];
-				sprintf(databa, "reflectogramm");
-				bname = new ByteArray(13, databa);
+				databa = new char[14];//databa = new char[13];
+				sprintf(databa, "reflectogramma");//sprintf(databa, "reflectogramm");
+				bname = new ByteArray(14, databa);//bname = new ByteArray(13, databa);
 
 				unsigned int b_s;
 				get_bellcore_data(mesgcomm+3, length-3, (unsigned char*&)databa, b_s);
