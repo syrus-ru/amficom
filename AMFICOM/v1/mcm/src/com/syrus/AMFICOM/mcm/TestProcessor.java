@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.32 2004/12/07 18:59:52 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.33 2005/01/17 09:03:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -34,8 +33,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/07 18:59:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/01/17 09:03:33 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -64,7 +63,6 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(this.test.getMonitoredElement().getMeasurementPortId(), true);
 			Identifier kisId = mp.getKISId();
-			KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(kisId, true);
 
 			this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);
 			if (this.transceiver == null) {
@@ -72,7 +70,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 				this.stopInit();
 			}
 
-			if (! MeasurementControlModule.iAm.getKISs().contains(kis)) {
+			if (! MeasurementControlModule.iAm.getKISIds().contains(kisId)) {
 				Log.errorMessage("TestProcessor<init> | Invalid kis: '" + kisId + "'");
 				this.stopInit();
 			}

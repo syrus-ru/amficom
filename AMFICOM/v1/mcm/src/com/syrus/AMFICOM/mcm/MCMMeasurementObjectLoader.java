@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.13 2004/12/22 12:01:34 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.14 2005/01/17 09:03:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,12 +43,12 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/12/22 12:01:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/01/17 09:03:33 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
-public final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
+final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 	public ParameterType loadParameterType(Identifier id) throws RetrieveObjectException, CommunicationException {
 		ParameterType parameterType = null;
