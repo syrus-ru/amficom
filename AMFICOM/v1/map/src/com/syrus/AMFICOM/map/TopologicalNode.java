@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.15 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.16 2005/02/02 14:48:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import java.util.List;
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/01/27 14:43:37 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/02 14:48:45 $
  * @module map_v1
  */
 public class TopologicalNode extends AbstractNode {
@@ -333,24 +333,37 @@ public class TopologicalNode extends AbstractNode {
 			this.active = active;					
 	}
 
+	/**
+	 * Установить флаг возможности привязки топологического узла к 
+	 * сетевому и/или непривязанному узлу.
+	 * @param canBind флаг овзможности привязки
+	 */
 	public void setCanBind(boolean canBind)
 	{
 		this.canBind = canBind;
 	}
 
 
+	/**
+	 * Получить флаг возможности привязки топологического узла к 
+	 * сетевому и/или непривязанному узлу.
+	 * @return флаг овзможности привязки
+	 */
 	public boolean isCanBind()
 	{
 		return this.canBind;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public MapElementState getState()
 	{
 		return new TopologicalNodeState(this);
 	}
 
 	/**
-	 * восстановить состояние
+	 * {@inheritDoc}
 	 */
 	public void revert(MapElementState state)
 	{
@@ -375,6 +388,9 @@ public class TopologicalNode extends AbstractNode {
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public java.util.Map getExportMap() {
 		if(exportMap == null)
 			exportMap = new HashMap();		

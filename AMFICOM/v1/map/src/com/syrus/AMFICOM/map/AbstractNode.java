@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNode.java,v 1.9 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: AbstractNode.java,v 1.10 2005/02/02 14:48:45 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -28,7 +28,7 @@ import java.util.List;
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/01/27 14:43:37 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/02 14:48:45 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -317,42 +317,66 @@ public abstract class AbstractNode
 		return returnList;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Map getMap()
 	{
 		return this.map;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMap(Map map)
 	{
 		this.map = map;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isSelected()
 	{
 		return this.selected;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
 		getMap().setSelected(this, selected);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setAlarmState(boolean alarmState)
 	{
 		this.alarmState = alarmState;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean getAlarmState()
 	{
 		return this.alarmState;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isRemoved()
 	{
 		return this.removed;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setRemoved(boolean removed)
 	{
 		this.removed = removed;

@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.20 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: NodeLink.java,v 1.21 2005/02/02 14:48:45 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -44,7 +44,7 @@ import java.util.List;
  * не живут сами по себе, а вход€т в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/01/27 14:43:37 $
+ * @version $Revision: 1.21 $, $Date: 2005/02/02 14:48:45 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements Characterized, MapElement {
@@ -358,37 +358,58 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Map getMap()
 	{
 		return this.map;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMap(Map map)
 	{
 		this.map = map;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isSelected()
 	{
 		return this.selected;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
 		getMap().setSelected(this, selected);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setAlarmState(boolean alarmState)
 	{
 		this.alarmState = alarmState;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean getAlarmState()
 	{
 		return getPhysicalLink().getAlarmState();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public DoublePoint getLocation()
 	{
 		return new DoublePoint(
@@ -396,11 +417,17 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 			(getStartNode().getLocation().getY() + getEndNode().getLocation().getY()) / 2);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public MapElementState getState()
 	{
 		return new NodeLinkState(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void revert(MapElementState state)
 	{
 		NodeLinkState mnles = (NodeLinkState)state;
@@ -423,11 +450,17 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isRemoved()
 	{
 		return this.removed;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setRemoved(boolean removed)
 	{
 		this.removed = removed;

@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.19 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: Collector.java,v 1.20 2005/02/02 14:48:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.util.List;
  * в него линий. Линии не обязаны быть связными.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/01/27 14:43:37 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/02 14:48:45 $
  * @module map_v1
  */
 public class Collector 
@@ -295,6 +295,9 @@ public class Collector
 		super.currentVersion = super.getNextVersion();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public DoublePoint getLocation()
 	{
 		int count = 0;
@@ -335,57 +338,90 @@ public class Collector
 		return length;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isRemoved()
 	{
 		return this.removed;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setRemoved(boolean removed)
 	{
 		this.removed = removed;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isSelected()
 	{
 		return this.selected;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
 		getMap().setSelected(this, selected);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Map getMap()
 	{
 		return this.map;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMap(Map map)
 	{
 		this.map = map;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setAlarmState(boolean alarmState)
 	{
 		this.alarmState = alarmState;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean getAlarmState()
 	{
 		return this.alarmState;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public MapElementState getState()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void revert(MapElementState state)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public java.util.Map getExportMap() {
 		if (exportMap == null)
 			exportMap = new HashMap();

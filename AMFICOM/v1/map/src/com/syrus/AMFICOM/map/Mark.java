@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.16 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: Mark.java,v 1.17 2005/02/02 14:48:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import java.util.ListIterator;
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/01/27 14:43:37 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/02 14:48:45 $
  * @module map_v1
  */
 public class Mark extends AbstractNode implements Characterized {
@@ -341,31 +341,53 @@ public class Mark extends AbstractNode implements Characterized {
 		this.building = building;					
 	}
 
+	/**
+	 * Установить фрагмент, на который помещается метка.
+	 * @param nodeLink фрагмент линии
+	 */
 	public void setNodeLink(NodeLink nodeLink)
 	{
 		this.nodeLink = nodeLink;
 	}
 
+	/**
+	 * Установить фрагмент, на котором находится метка.
+	 * @return фрагмент линии
+	 */
 	public NodeLink getNodeLink()
 	{
 		return this.nodeLink;
 	}
 
+	/**
+	 * Установить начальный узел фрагмента, на котором находится метка.
+	 * @param startNode узел
+	 */
 	public void setStartNode(AbstractNode startNode)
 	{
 		this.startNode = startNode;
 	}
 
+	/**
+	 * Получить начальный узел фрагмента, на котором находится метка.
+	 * @return узел
+	 */
 	public AbstractNode getStartNode()
 	{
 		return this.startNode;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public DoublePoint getLocation()
 	{
 		return (DoublePoint)this.location.clone();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setLocation(DoublePoint location)
 	{
 		super.setLocation(location);
@@ -439,31 +461,53 @@ public class Mark extends AbstractNode implements Characterized {
 		return this.sizeInDoubleLt;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <br>Suppress since mark cannot be an end node
+	 */
 	public List getNodeLinks()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <br>Suppress since mark cannot be an end node
+	 */
 	public NodeLink getOtherNodeLink(NodeLink nl)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <br>Suppress since mark cannot be an end node
+	 */
 	public List getPhysicalLinks()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <br>Suppress since mark cannot be an end node
+	 */
 	public List getOppositeNodes()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public MapElementState getState()
 	{
 		return new NodeState(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void revert(MapElementState state)
 	{
 		NodeState mnes = (NodeState )state;
@@ -473,6 +517,9 @@ public class Mark extends AbstractNode implements Characterized {
 		setLocation(mnes.location);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public java.util.Map getExportMap() {
 		if(exportMap == null)
 			exportMap = new HashMap();		

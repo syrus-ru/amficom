@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.15 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: Map.java,v 1.16 2005/02/02 14:48:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.util.Set;
  * линиях, коллекторов (объединяющих в себе линии).
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/01/27 14:43:37 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/02 14:48:45 $
  * @module map_v1
  */
 public class Map extends StorableObject {
@@ -754,6 +754,11 @@ public class Map extends StorableObject {
 			this.selectedElements.remove(me);
 	}
 
+	/**
+	 * Возвращает описывающий элемент набор параметров,
+	 * который используется для экспорта.
+	 * @return хэш-таблица параметров элемента
+	 */
 	public java.util.Map getExportMap() {
 		if(exportMap == null)
 			exportMap = new HashMap();		

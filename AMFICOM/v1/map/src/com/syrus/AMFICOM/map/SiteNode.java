@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.15 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: SiteNode.java,v 1.16 2005/02/02 14:48:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import java.util.List;
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/01/27 14:43:37 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/02 14:48:45 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -349,6 +349,9 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			this.building = building;					
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public MapElementState getState()
 	{
 		return new SiteNodeState(this);
@@ -380,6 +383,9 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public java.util.Map getExportMap() {
 		if(exportMap == null)
 			exportMap = new HashMap();		

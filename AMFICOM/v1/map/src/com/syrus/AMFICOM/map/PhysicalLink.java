@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.21 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.22 2005/02/02 14:48:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import java.util.List;
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/01/27 14:43:37 $
+ * @version $Revision: 1.22 $, $Date: 2005/02/02 14:48:45 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -672,7 +672,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	public List getSortedNodes()
 	{
 		if(!this.nodeLinksSorted)
-			return null;
+			return Collections.EMPTY_LIST;
 		return this.sortedNodes;
 	}
 
@@ -757,7 +757,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 
 	/**
-	 * получить наличие сигнала тревоги
+	 * {@inheritDoc}
 	 */
 	public boolean getAlarmState()
 	{
@@ -765,7 +765,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 
 	/**
-	 * Установить наличие сигнала тревоги
+	 * {@inheritDoc}
 	 */
 	public void setAlarmState(boolean alarmState) 
 	{
@@ -773,7 +773,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 
 	/**
-	 * получить флаг удаления элемента
+	 * {@inheritDoc}
 	 */
 	public boolean isRemoved()
 	{
@@ -781,29 +781,41 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 	
 	/**
-	 * установить флаг удаления элемента
+	 * {@inheritDoc}
 	 */
 	public void setRemoved(boolean removed)
 	{
 		this.removed = removed;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isSelected()
 	{
 		return this.selected;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
 		getMap().setSelected(this, selected);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Map getMap()
 	{
 		return this.map;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMap(Map map)
 	{
 		this.map = map;
@@ -823,6 +835,9 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public DoublePoint getLocation()
 	{
 		int count = 0;
@@ -846,11 +861,17 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return point;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public MapElementState getState()
 	{
 		return new PhysicalLinkState(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void revert(MapElementState state)
 	{
 		PhysicalLinkState mples = (PhysicalLinkState)state;
@@ -893,6 +914,9 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.selectionVisible;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public java.util.Map getExportMap() {
 		if(exportMap == null)
 			exportMap = new HashMap();		
