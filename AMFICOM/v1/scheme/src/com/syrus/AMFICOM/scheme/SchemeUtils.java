@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.16 2005/03/25 18:00:37 bass Exp $
+ * $Id: SchemeUtils.java,v 1.17 2005/03/25 18:12:11 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,14 +9,14 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.corba.PathElementType;
+import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 import java.util.*;
 
 /**
  * Functionality will be partially moved to {@link PathElement}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/03/25 18:00:37 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/25 18:12:11 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -76,10 +76,10 @@ public class SchemeUtils {
 
 	public static double getKu(PathElement pe)
 	{
-		switch (pe.getPathElementType().value())
+		switch (pe.getPathElementKind().value())
 		{
-			case PathElementType._SCHEME_CABLE_LINK:
-			case PathElementType._SCHEME_LINK:
+			case PathElementKind._SCHEME_CABLE_LINK:
+			case PathElementKind._SCHEME_LINK:
 				AbstractSchemeLink link = (AbstractSchemeLink)pe.getAbstractSchemeElement();
 				return link.opticalLength() / link.physicalLength();
 			default:
@@ -413,9 +413,9 @@ public class SchemeUtils {
 
 	public static double getOpticalLength(PathElement pe)
 	{
-		switch (pe.getPathElementType().value()) {
-			case PathElementType._SCHEME_CABLE_LINK:
-			case PathElementType._SCHEME_LINK:
+		switch (pe.getPathElementKind().value()) {
+			case PathElementKind._SCHEME_CABLE_LINK:
+			case PathElementKind._SCHEME_LINK:
 				return ((AbstractSchemeLink)pe.getAbstractSchemeElement()).opticalLength();
 			default:
 				return 0;
@@ -424,9 +424,9 @@ public class SchemeUtils {
 
 	public static void setOpticalLength(PathElement pe, double d)
 	{
-		switch (pe.getPathElementType().value()) {
-			case PathElementType._SCHEME_CABLE_LINK:
-			case PathElementType._SCHEME_LINK:
+		switch (pe.getPathElementKind().value()) {
+			case PathElementKind._SCHEME_CABLE_LINK:
+			case PathElementKind._SCHEME_LINK:
 				((AbstractSchemeLink)pe.getAbstractSchemeElement()).opticalLength(d);
 		}
 	}
@@ -442,9 +442,9 @@ public class SchemeUtils {
 
 	public static double getPhysicalLength(PathElement pe)
 	{
-		switch (pe.getPathElementType().value()) {
-			case PathElementType._SCHEME_CABLE_LINK:
-			case PathElementType._SCHEME_LINK:
+		switch (pe.getPathElementKind().value()) {
+			case PathElementKind._SCHEME_CABLE_LINK:
+			case PathElementKind._SCHEME_LINK:
 				return ((AbstractSchemeLink)pe.getAbstractSchemeElement()).
 						physicalLength();
 			default:
@@ -454,9 +454,9 @@ public class SchemeUtils {
 
 	public static void setPhysicalLength(PathElement pe, double d)
 	{
-		switch (pe.getPathElementType().value()) {
-			case PathElementType._SCHEME_CABLE_LINK:
-			case PathElementType._SCHEME_LINK:
+		switch (pe.getPathElementKind().value()) {
+			case PathElementKind._SCHEME_CABLE_LINK:
+			case PathElementKind._SCHEME_LINK:
 				((AbstractSchemeLink)pe.getAbstractSchemeElement()).physicalLength(d);
 		}
 	}

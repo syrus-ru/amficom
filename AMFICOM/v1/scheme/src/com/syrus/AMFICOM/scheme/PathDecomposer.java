@@ -1,5 +1,5 @@
 /*
- * $Id: PathDecomposer.java,v 1.4 2005/03/25 18:00:37 bass Exp $
+ * $Id: PathDecomposer.java,v 1.5 2005/03/25 18:12:11 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,12 @@ package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
-import com.syrus.AMFICOM.scheme.corba.PathElementType;
+import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/25 18:00:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/25 18:12:11 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -217,7 +217,7 @@ public final class PathDecomposer {
 	 */
 	public PathElement getPreviousNode(PathElement pathElement)
 	{
-		if (pathElement.getPathElementType() == PathElementType.SCHEME_ELEMENT && hasOpticalPort(pathElement))
+		if (pathElement.getPathElementKind() == PathElementKind.SCHEME_ELEMENT && hasOpticalPort(pathElement))
 			return pathElement;
 
 		List links = Arrays.asList(this.schemePath.links());
@@ -227,7 +227,7 @@ public final class PathDecomposer {
 			for (ListIterator it = links.listIterator(index); it.hasPrevious();)
 			{
 				pathElement = (PathElement)it.previous();
-				if (pathElement.getPathElementType() == PathElementType.SCHEME_ELEMENT && hasOpticalPort(pathElement))
+				if (pathElement.getPathElementKind() == PathElementKind.SCHEME_ELEMENT && hasOpticalPort(pathElement))
 					return pathElement;
 			}
 		}
@@ -239,7 +239,7 @@ public final class PathDecomposer {
 	 * @todo Make formal parameter final: parameters shouldn't be reassigned.
 	 */
 	public PathElement getNextNode(PathElement pathElement) {
-		if (pathElement.getPathElementType() == PathElementType.SCHEME_ELEMENT && hasOpticalPort(pathElement))
+		if (pathElement.getPathElementKind() == PathElementKind.SCHEME_ELEMENT && hasOpticalPort(pathElement))
 			return pathElement;
 
 		List links = Arrays.asList(this.schemePath.links());
@@ -247,7 +247,7 @@ public final class PathDecomposer {
 		if (index != -1) {
 			for (ListIterator it = links.listIterator(index); it.hasNext();) {
 				pathElement = (PathElement)it.next();
-				if (pathElement.getPathElementType() == PathElementType.SCHEME_ELEMENT && hasOpticalPort(pathElement))
+				if (pathElement.getPathElementKind() == PathElementKind.SCHEME_ELEMENT && hasOpticalPort(pathElement))
 					return pathElement;
 			}
 		}

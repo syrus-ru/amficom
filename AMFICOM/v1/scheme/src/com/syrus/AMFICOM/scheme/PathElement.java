@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.4 2005/03/25 18:00:37 bass Exp $
+ * $Id: PathElement.java,v 1.5 2005/03/25 18:12:11 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.PathElementType;
+import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 import com.syrus.util.Log;
 import java.util.*;
 
@@ -21,38 +21,38 @@ import java.util.*;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/25 18:00:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/25 18:12:11 $
  * @module scheme_v1
  */
 public final class PathElement extends AbstractCloneableStorableObject implements Describable {
 	private static final long serialVersionUID = 3905799768986038576L;
 
 	/**
-	 * Depending on {@link #pathElementType}, may reference either
+	 * Depending on {@link #pathElementKind}, may reference either
 	 * {@link SchemePort} or {@link SchemeCablePort}. Empty if type is other
-	 * than {@link PathElementType#SCHEME_ELEMENT}.
+	 * than {@link PathElementKind#SCHEME_ELEMENT}.
 	 */
 	private Identifier endAbstractSchemePortId;
 
-	private PathElementType pathElementType;
+	private PathElementKind pathElementKind;
 
 	/**
 	 * Empty if type is other than
-	 * {@link PathElementType#SCHEME_CABLE_LINK}.
+	 * {@link PathElementKind#SCHEME_CABLE_LINK}.
 	 */
 	private Identifier schemeCableThreadId;
 
 	/**
-	 * Empty if type is other than {@link PathElementType#SCHEME_LINK}.
+	 * Empty if type is other than {@link PathElementKind#SCHEME_LINK}.
 	 */
 	private Identifier schemeLinkId;
 
 	private int sequentialNumber;
 
 	/**
-	 * Depending on {@link #pathElementType}, may reference either
+	 * Depending on {@link #pathElementKind}, may reference either
 	 * {@link SchemePort} or {@link SchemeCablePort}. Empty if type is other
-	 * than {@link PathElementType#SCHEME_ELEMENT}.
+	 * than {@link PathElementKind#SCHEME_ELEMENT}.
 	 */
 	private Identifier startAbstractSchemePortId;
 
@@ -84,7 +84,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		throw new UnsupportedOperationException();
 	}
 
-	public static PathElement createInstance(final Identifier creatorId, final PathElementType pathElementType)
+	public static PathElement createInstance(final Identifier creatorId, final PathElementKind pathElementType)
 			throws CreateObjectException {
 		assert creatorId != null;
 		try {
@@ -111,12 +111,12 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public AbstractSchemeElement getAbstractSchemeElement() {
-		switch (this.pathElementType.value()) {
-			case PathElementType._SCHEME_CABLE_LINK:
+		switch (this.pathElementKind.value()) {
+			case PathElementKind._SCHEME_CABLE_LINK:
 				return getSchemeCableLink();
-			case PathElementType._SCHEME_ELEMENT:
+			case PathElementKind._SCHEME_ELEMENT:
 				return getSchemeElement();
-			case PathElementType._SCHEME_LINK:
+			case PathElementKind._SCHEME_LINK:
 				return getSchemeCableLink();
 			default:
 				throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
@@ -138,7 +138,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public AbstractSchemePort getEndAbstractSchemePort() {
-		if (this.pathElementType.value() != PathElementType._SCHEME_ELEMENT)
+		if (this.pathElementKind.value() != PathElementKind._SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert this.endAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !this.endAbstractSchemePortId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.OBJECT_BADLY_INITIALIZED;
@@ -165,8 +165,8 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		return getAbstractSchemeElement().getParentScheme();
 	}
 
-	public PathElementType getPathElementType() {
-		return this.pathElementType;
+	public PathElementKind getPathElementKind() {
+		return this.pathElementKind;
 	}
 
 	public SchemeCableLink getSchemeCableLink() {
@@ -174,7 +174,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public SchemeCableThread getSchemeCableThread() {
-		if (this.pathElementType.value() != PathElementType._SCHEME_CABLE_LINK)
+		if (this.pathElementKind.value() != PathElementKind._SCHEME_CABLE_LINK)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert this.schemeCableThreadId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !this.schemeCableThreadId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.OBJECT_BADLY_INITIALIZED;
@@ -197,7 +197,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public SchemeLink getSchemeLink() {
-		if (this.pathElementType.value() != PathElementType._SCHEME_LINK)
+		if (this.pathElementKind.value() != PathElementKind._SCHEME_LINK)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert this.schemeLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !this.schemeLinkId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.OBJECT_BADLY_INITIALIZED;
@@ -218,7 +218,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public AbstractSchemePort getStartAbstractSchemePort() {
-		if (this.pathElementType.value() != PathElementType._SCHEME_ELEMENT)
+		if (this.pathElementKind.value() != PathElementKind._SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert this.startAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !this.startAbstractSchemePortId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.OBJECT_BADLY_INITIALIZED;
@@ -242,12 +242,12 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public void setAbstractSchemeElement(final AbstractSchemeElement abstractSchemeElement) {
-		switch (this.pathElementType.value()) {
-			case PathElementType._SCHEME_CABLE_LINK:
+		switch (this.pathElementKind.value()) {
+			case PathElementKind._SCHEME_CABLE_LINK:
 				setSchemeCableLink((SchemeCableLink) abstractSchemeElement);
-			case PathElementType._SCHEME_ELEMENT:
+			case PathElementKind._SCHEME_ELEMENT:
 				setSchemeElement((SchemeElement) abstractSchemeElement);
-			case PathElementType._SCHEME_LINK:
+			case PathElementKind._SCHEME_LINK:
 				setSchemeLink((SchemeLink) abstractSchemeElement);
 			default:
 				throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
@@ -262,7 +262,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public void setEndAbstractSchemePort(final AbstractSchemePort endAbstractSchemePort) {
-		if (this.pathElementType.value() != PathElementType._SCHEME_ELEMENT)
+		if (this.pathElementKind.value() != PathElementKind._SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert endAbstractSchemePort != null: ErrorMessages.NON_NULL_EXPECTED;
 		/*
@@ -300,7 +300,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 *             for {@link #createInstance(Identifier, PathElementType)}
 	 *             at object creation time.
 	 */
-	public void setPathElementType(final PathElementType pathElementType) {
+	public void setPathElementKind(final PathElementKind pathElementType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -309,7 +309,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public void setSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		if (this.pathElementType.value() != PathElementType._SCHEME_CABLE_LINK)
+		if (this.pathElementKind.value() != PathElementKind._SCHEME_CABLE_LINK)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert schemeCableThread != null: ErrorMessages.NON_NULL_EXPECTED;
 		final Identifier newSchemeCableThreadId = schemeCableThread.getId();
@@ -326,7 +326,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public void setSchemeLink(final SchemeLink schemeLink) {
-		if (this.pathElementType.value() != PathElementType._SCHEME_LINK)
+		if (this.pathElementKind.value() != PathElementKind._SCHEME_LINK)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert schemeLink != null: ErrorMessages.NON_NULL_EXPECTED;
 		final Identifier newSchemeLinkId = schemeLink.getId();
@@ -344,7 +344,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public void setStartAbstractSchemePort(final AbstractSchemePort startAbstractSchemePort) {
-		if (this.pathElementType.value() != PathElementType._SCHEME_ELEMENT)
+		if (this.pathElementKind.value() != PathElementKind._SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		assert startAbstractSchemePort != null: ErrorMessages.NON_NULL_EXPECTED;
 		/*
