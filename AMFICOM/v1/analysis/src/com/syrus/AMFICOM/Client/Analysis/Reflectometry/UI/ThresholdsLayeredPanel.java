@@ -67,7 +67,7 @@ implements OperationListener, bsHashChangeListener
 				{
 					if(rue.analysisPerformed())
 					{
-						ModelTraceManager mtm = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY);
+						ModelTraceManager mtm = Heap.getMTMPrimary();
 						((ThresholdsPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
 						((ThresholdsPanel)panel).updateTrace(mtm);
 						updScale2fitCurrentEv(.2, 1.);

@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.10 2005/04/01 12:40:26 saa Exp $
+ * $Id: Heap.java,v 1.11 2005/04/01 12:52:57 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/04/01 12:40:26 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/01 12:52:57 $
  * @module
  */
 public class Heap
@@ -64,17 +64,11 @@ public class Heap
 		dialogHash.put(key, dialog);
 	}
 
-	public static ModelTraceManager getMTMByKey(String key) {
-		return (ModelTraceManager)MTMHash.get(key);
-	}
 	public static ModelTraceManager getMTMPrimary() {
 		return (ModelTraceManager)MTMHash.get(PRIMARY_TRACE_KEY);
 	}
 	public static ModelTraceManager getMTMEtalon() {
 		return (ModelTraceManager)MTMHash.get(ETALON_TRACE_KEY);
-	}
-	public static void setMTMByKey(String key, ModelTraceManager mtm) {
-		MTMHash.put(key, mtm);
 	}
 	public static void setMTMPrimary(ModelTraceManager mtm) {
 		MTMHash.put(PRIMARY_TRACE_KEY, mtm);
@@ -193,15 +187,11 @@ public class Heap
 	}
 	public static boolean hasEventParamsForPrimaryTrace() // XXX
 	{
-		return getMTMByKey(PRIMARY_TRACE_KEY) != null; // XXX
+		return getMTMPrimary() != null; // XXX
 	}
 	public static boolean hasEventParamsForEtalonTrace() // XXX
 	{
-		return getMTMByKey(ETALON_TRACE_KEY) != null; // XXX
-	}
-	public static boolean hasEventParamsForTrace(String key) // XXX
-	{
-		return getMTMByKey(key) != null; // XXX
+		return getMTMEtalon() != null; // XXX
 	}
 	
 	// dispatcher stuff

@@ -142,9 +142,9 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			p = new ThresholdsPanel(panel, dispatcher, y, deltaX);
-			ModelTraceManager mtm = Heap.getMTMByKey(id);
+			ModelTraceManager mtm = Heap.getMTMPrimary();
 			((ThresholdsPanel)p).updateTrace(mtm);
-			((ThresholdsPanel)p).updEvents(id);
+			((ThresholdsPanel)p).updEvents(Heap.PRIMARY_TRACE_KEY);
 			((ThresholdsPanel)p).updateNoiseLevel();
 			((ThresholdsPanel)p).draw_min_trace_level = true;
 		}
