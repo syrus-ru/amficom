@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.19 2005/03/10 15:24:13 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.20 2005/03/11 10:58:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/10 15:24:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/03/11 10:58:19 $
+ * @author $Author: bob $
  * @module event_v1
  */
 
@@ -58,37 +58,33 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		return ObjectEntities.EVENTTYPE_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA 
+			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA 
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		EventType eventType = this.fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseString.setString(preparedStatement, ++i, eventType.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, eventType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		return i;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, eventType.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, eventType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		return startParameterNumber;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA 
+			updateMultipleSQLValues = QUESTION + COMMA 
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		EventType eventType = this.fromStorableObject(storableObject);		
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
-			+ APOSTOPHE + DatabaseString.toQuerySubString(eventType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(eventType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 
 			+ APOSTOPHE + DatabaseString.toQuerySubString(eventType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return sql;
 	}
