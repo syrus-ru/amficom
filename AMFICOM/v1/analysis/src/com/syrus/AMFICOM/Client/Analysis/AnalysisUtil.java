@@ -54,13 +54,13 @@ public class AnalysisUtil
 			if (ts.getCriteriaSetId().length() == 0)
 			{
 				cs = createDefaultCriteriaSet(dataSource);
-				Pool.put(CriteriaSet.typ, cs.getId(), cs);
+				Pool.put(CriteriaSet.TYPE, cs.getId(), cs);
 				ts.setCriteriaSetId(cs.getId());
 			}
 			else
 			{
 				dataSource.LoadCriteriaSets(new String[] {ts.getCriteriaSetId()});
-				cs = (CriteriaSet)Pool.get(CriteriaSet.typ, ts.getCriteriaSetId());
+				cs = (CriteriaSet)Pool.get(CriteriaSet.TYPE, ts.getCriteriaSetId());
 				setParamsFromCriteriaSet(cs);
 			}
 		}
@@ -100,7 +100,7 @@ public class AnalysisUtil
 			else
 			{
 				dataSource.LoadThresholdSets(new String[] {ts.getThresholdSetId()});
-				thrs = (ThresholdSet)Pool.get(ThresholdSet.typ, ts.getThresholdSetId());
+				thrs = (ThresholdSet)Pool.get(ThresholdSet.TYPE, ts.getThresholdSetId());
 				setParamsFromThresholdsSet(thrs, ep);
 			}
 		}
@@ -125,8 +125,8 @@ public class AnalysisUtil
 
 		dataSource.LoadEtalons(new String[] {ts.getEthalonId()});
 		dataSource.LoadTestArgumentSets(new String[] {ts.getTestArgumentSetId()});
-		Etalon et = (Etalon)Pool.get(Etalon.typ, ts.getEthalonId());
-		TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.typ, ts.getTestArgumentSetId());
+		Etalon et = (Etalon)Pool.get(Etalon.TYPE, ts.getEthalonId());
+		TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.TYPE, ts.getTestArgumentSetId());
 
 		ReflectogramEvent[] events=null;
 		BellcoreStructure bsEt=null;
@@ -138,7 +138,7 @@ public class AnalysisUtil
 			{
 				events = ReflectogramEvent.fromByteArray(p.getValue());
 				Pool.put("eventparams", ETALON, events);
-				Pool.put(TestArgumentSet.typ, ETALON, metas);
+				Pool.put(TestArgumentSet.TYPE, ETALON, metas);
 			}
 			else if (p.getCodename().equals(REFLECTOGRAMM))
 			{
@@ -163,7 +163,7 @@ public class AnalysisUtil
 	public static CriteriaSet createDefaultCriteriaSet(DataSourceInterface dataSource)
 	{
 		CriteriaSet cs = new CriteriaSet();
-		cs.setId(dataSource.GetUId(CriteriaSet.typ));
+		cs.setId(dataSource.GetUId(CriteriaSet.TYPE));
 		cs.setAnalysisTypeId(AnalysisUtil.DADARA);
 		cs.setCreatedBy(dataSource.getSession().getUserId());
 
@@ -262,7 +262,7 @@ public class AnalysisUtil
 			for (int i = 0; i < defaultMinuitParams.length; i++)
 				minuitInitialParams[i] = defaultMinuitParams[i];
 
-			Pool.put(CriteriaSet.typ, cs.getId(), cs);
+			Pool.put(CriteriaSet.TYPE, cs.getId(), cs);
 		}
 		catch (IOException ex)
 		{
@@ -274,7 +274,7 @@ public class AnalysisUtil
 	public static Etalon createEtalon(DataSourceInterface dataSource, ReflectogramEvent[] ep)
 	{
 		Etalon et = new Etalon();
-		et.setId(dataSource.GetUId(Etalon.typ));
+		et.setId(dataSource.GetUId(Etalon.TYPE));
 		et.setTypeId(AnalysisUtil.DADARA);
 
 		Parameter p1 = new Parameter();
@@ -294,18 +294,18 @@ public class AnalysisUtil
 		p2.setCodename(REFLECTOGRAMM);
 		et.getEthalonParameterList().add(p2);
 
-		Pool.put(Etalon.typ, et.getId(), et);
+		Pool.put(Etalon.TYPE, et.getId(), et);
 		return et;
 	}
 
 	public static ThresholdSet createDefaultThresholdSet(DataSourceInterface dataSource, ReflectogramEvent[] ep)
 	{
 		ThresholdSet ts = new ThresholdSet();
-		ts.setId(dataSource.GetUId(ThresholdSet.typ));
+		ts.setId(dataSource.GetUId(ThresholdSet.TYPE));
 		ts.setEvaluationTypeId(AnalysisUtil.DADARA);
 		ts.setCreatedBy(dataSource.getSession().getUserId());
 
-		EvaluationType etype = (EvaluationType)Pool.get(EvaluationType.typ, ts.getEvaluationTypeId());
+		EvaluationType etype = (EvaluationType)Pool.get(EvaluationType.TYPE, ts.getEvaluationTypeId());
 		ActionParameterType apt = (ActionParameterType)etype.getSortedThresholds().get("dadara_thresholds");
 
 		Threshold[] threshs = new Threshold[ep.length];
@@ -349,7 +349,7 @@ public class AnalysisUtil
 			ex.printStackTrace();
 		}
 
-		Pool.put(ThresholdSet.typ, ts.getId(), ts);
+		Pool.put(ThresholdSet.TYPE, ts.getId(), ts);
 		return ts;
 	}
 
@@ -389,20 +389,20 @@ public class AnalysisUtil
 	{
 		try
 		{
-			TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+			TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 			CriteriaSet cs;
 
 			if (ts.getCriteriaSetId().equals(""))
 			{
 				cs = createDefaultCriteriaSet(dataSource);
-				Pool.put(CriteriaSet.typ, cs.getId(), cs);
+				Pool.put(CriteriaSet.TYPE, cs.getId(), cs);
 
 				ts.setAnalysisTypeId(AnalysisUtil.DADARA);
 				ts.setCriteriaSetId(cs.getId());
 			}
 			else
 			{
-				cs = (CriteriaSet)Pool.get(CriteriaSet.typ, ts.getCriteriaSetId());
+				cs = (CriteriaSet)Pool.get(CriteriaSet.TYPE, ts.getCriteriaSetId());
 				setCriteriaSetFromParams(cs);
 			}
 			dataSource.saveCriteriaSet(cs.getId());
@@ -421,7 +421,7 @@ public class AnalysisUtil
 	{
 		try
 		{
-			TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+			TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 
 			// save etalon and attach to monitored element
 			Etalon et;
@@ -429,18 +429,18 @@ public class AnalysisUtil
 			if (ts.getEthalonId().length() == 0)
 			{
 				et = createEtalon(dataSource, ep);
-				Pool.put(Etalon.typ, et.getId(), et);
+				Pool.put(Etalon.TYPE, et.getId(), et);
 
 				ts.setEthalonId(et.getId());
 				ts.setEvaluationTypeId(AnalysisUtil.DADARA);
 			}
 			else
 			{
-				et = (Etalon)Pool.get(Etalon.typ, ts.getEthalonId());
+				et = (Etalon)Pool.get(Etalon.TYPE, ts.getEthalonId());
 				if (et == null)
 				{
 					et = createEtalon(dataSource, ep);
-					Pool.put(Etalon.typ, et.getId(), et);
+					Pool.put(Etalon.TYPE, et.getId(), et);
 
 					ts.setEthalonId(et.getId());
 					ts.setEvaluationTypeId(AnalysisUtil.DADARA);
@@ -465,20 +465,20 @@ public class AnalysisUtil
 	{
 		try
 		{
-			TestSetup tset = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
+			TestSetup tset = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
 			ThresholdSet ts;
 
 			if (tset.getThresholdSetId().length() == 0)
 			{
 				ts = createDefaultThresholdSet(dataSource, ep);
-				Pool.put(ThresholdSet.typ, ts.getId(), ts);
+				Pool.put(ThresholdSet.TYPE, ts.getId(), ts);
 				setThresholdsSetFromParams(ts);
 				tset.setThresholdSetId(ts.getId());
 				tset.setEvaluationTypeId(AnalysisUtil.DADARA);
 			}
 			else
 			{
-				ts = (ThresholdSet)Pool.get(ThresholdSet.typ, tset.getThresholdSetId());
+				ts = (ThresholdSet)Pool.get(ThresholdSet.TYPE, tset.getThresholdSetId());
 				setThresholdsSetFromParams(ts);
 			}
 			dataSource.saveThresholdSet(ts.getId());

@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -183,7 +183,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 
 		private void setDomainIntoTitle()
 		{
-			String name = Pool.getName("domain", domainID);
+			String name = ((ObjectResource)Pool.get("domain", domainID)).getName();
 			if(name != null)
 				setTitle("Выберите рефлектограмму" + " ("+name+")");
 		}
@@ -244,7 +244,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 			String name = null;
 			if(type != null && type.equals("modeling"))
 			{
-				name = Pool.getName(Modeling.typ, r.getModelingId());
+				name = ((ObjectResource)Pool.get(Modeling.TYPE, r.getModelingId())).getName();
 			}
 
 			if(name != null)
@@ -270,7 +270,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 				if (param.getGpt().getId().equals(AnalysisUtil.REFLECTOGRAMM))
 					bs = new BellcoreReader().getData(param.getValue());
 			}
-			Test test = (Test)Pool.get(Test.typ, res.getTestId());
+			Test test = (Test)Pool.get(Test.TYPE, res.getTestId());
 			if(test != null)
 				bs.monitored_element_id = test.getMonitoredElementId();
 			bs.title = res.getName();
@@ -337,11 +337,11 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 								 return;
 							 }
 
-			if(Pool.get(TestSetup.typ, test.test_setup_id) == null) // if test setup is not loaded - to load it;
+			if(Pool.get(TestSetup.TYPE, test.test_setup_id) == null) // if test setup is not loaded - to load it;
 			{
 				dsi.loadTestSetup(test.test_setup_id);
 			}
-			TestSetup testSetup = (TestSetup)Pool.get(TestSetup.typ, test.test_setup_id);
+			TestSetup testSetup = (TestSetup)Pool.get(TestSetup.TYPE, test.test_setup_id);
 
 								if(testSetup == null) // checking of the correct test setup;
 								{
@@ -513,19 +513,19 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 			{
 				new ConfigDataSourceImage(dsi).LoadISM();
 			}
-			else if(s.equals(Modeling.typ))
+			else if(s.equals(Modeling.TYPE))
 			{
 				dsi.GetModelings();
 			}
 			else if(s.equals("predictionresult"))
 			{
-				Vector v = new Vector();
-				Hashtable h = Pool.getHash(Modeling.typ);
+				List v = new ArrayList();
+				Map h = Pool.getMap(Modeling.TYPE);
 				if(h != null)
 				{
-					for(Enumeration e = h.elements(); e.hasMoreElements();)
+					for(Iterator it = h.values().iterator(); it.hasNext();)
 					{
-						Modeling m = (Modeling)e.nextElement();
+						Modeling m = (Modeling)it.next();
 						if(m.getTypeId().equals("optprognosis"))// && m.getDomainId().equals(domainID))
 						{
 							String resultID = new SurveyDataSourceImage(dsi).GetModelingResult(m.getId());
@@ -537,13 +537,13 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals("modelingresult"))
 			{
-				Vector v = new Vector();
-				Hashtable h = Pool.getHash(Modeling.typ);
+				List v = new ArrayList();
+				Map h = Pool.getMap(Modeling.TYPE);
 				if(h != null)
 				{
-					for(Enumeration e = h.elements(); e.hasMoreElements();)
+					for(Iterator it = h.values().iterator(); it.hasNext();)
 					{
-						Modeling m = (Modeling)e.nextElement();
+						Modeling m = (Modeling)it.next();
 						if(m.getTypeId().equals(AnalysisUtil.DADARA))// && m.getDomainId().equals(domainID))
 						{
 							String resultID = new SurveyDataSourceImage(dsi).GetModelingResult(m.getId());
@@ -618,7 +618,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 			{
 				return Result.class;
 			}
-			else if(s.equals(Test.typ)) //Profile;
+			else if(s.equals(Test.TYPE)) //Profile;
 			{
 				return Test.class;
 			}
@@ -639,11 +639,9 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 
 	}
 
-
-
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		ObjectResourceTreeNode ortn;
 
 		if(node.getObject() instanceof String)
@@ -654,10 +652,10 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 			{
 				ortn = new ObjectResourceTreeNode(MonitoredElement.typ, "Пути тестирования", true);
 				vec.add(ortn);
-				ortn = new ObjectResourceTreeNode(Modeling.typ, "Модели рефлектограмм", true);
+				ortn = new ObjectResourceTreeNode(Modeling.TYPE, "Модели рефлектограмм", true);
 				vec.add(ortn);
 			}
-			else if(s.equals(Modeling.typ))
+			else if(s.equals(Modeling.TYPE))
 			{
 				ortn = new ObjectResourceTreeNode("predictionresult", "Прогнозируемые рефлектограммы", true);
 				vec.add(ortn);
@@ -668,10 +666,10 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 			{
 				for(int i=0; i<predictionResultIds.length; i++)
 				{
-					Result r = (Result)Pool.get(Result.typ, predictionResultIds[i]);
+					Result r = (Result)Pool.get(Result.TYPE, predictionResultIds[i]);
 					if(r != null)
 					{
-						Modeling m = (Modeling)Pool.get(Modeling.typ, r.getModelingId());
+						Modeling m = (Modeling)Pool.get(Modeling.TYPE, r.getModelingId());
 						if(m != null)
 						{
 							ortn = new ObjectResourceTreeNode(r, m.getName(), true, getIcon("predictionresult"), true);
@@ -684,10 +682,10 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 			{
 				for(int i=0; i<modelingResultIds.length; i++)
 				{
-					Result r = (Result)Pool.get(Result.typ, modelingResultIds[i]);
+					Result r = (Result)Pool.get(Result.TYPE, modelingResultIds[i]);
 					if(r != null)
 					{
-						Modeling m = (Modeling)Pool.get(Modeling.typ, r.getModelingId());
+						Modeling m = (Modeling)Pool.get(Modeling.TYPE, r.getModelingId());
 						if(m != null)
 						{
 							ortn = new ObjectResourceTreeNode(r, m.getName(), true, getIcon("modelingresult"), true);
@@ -699,7 +697,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 			else if(s.equals(MonitoredElement.typ))
 			{
 				ObjectResourceSorter sorter = MonitoredElement.getDefaultSorter();
-				sorter.setDataSet(Pool.getHash(MonitoredElement.typ));
+				sorter.setDataSet(Pool.getMap(MonitoredElement.typ));
 
 				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
@@ -717,14 +715,14 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 			ObjectResource or = (ObjectResource )node.getObject();
 			if(or instanceof MonitoredElement)
 			{
-					Hashtable testsHt = new Hashtable();
+					Map testsHt = new HashMap();
 					MonitoredElement me = (MonitoredElement)or;
-					Hashtable ht = Pool.getHash(Test.typ);
+					Map ht = Pool.getMap(Test.TYPE);
 					if(ht != null)
 					{
-						for(Enumeration e = ht.elements(); e.hasMoreElements(); )
+						for(Iterator it = ht.values().iterator(); it.hasNext(); )
 						{
-							Test t = (Test)e.nextElement();
+							Test t = (Test)it.next();
 							if(t.getMonitoredElementId().equals(me.id))// && t.getDomainId().equals(domainID))
 							{
 								testsHt.put(t.getId(), t);
@@ -738,7 +736,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
 						Test t = (Test)it.next();
-						ortn = new ObjectResourceTreeNode(t, t.getName(), true, getIcon(Test.typ));
+						ortn = new ObjectResourceTreeNode(t, t.getName(), true, getIcon(Test.TYPE));
 						vec.add(ortn);
 					}
 			}
@@ -751,7 +749,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
 					Result r = (Result)it.next();
-					ortn = new ObjectResourceTreeNode(r, r.getName(), true, getIcon(Result.typ), true);
+					ortn = new ObjectResourceTreeNode(r, r.getName(), true, getIcon(Result.TYPE), true);
 					vec.add(ortn);
 				}
 			}
@@ -770,19 +768,19 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 
 	private ImageIcon getIcon(String typ)
 	{
-		if(typ.equals(Modeling.typ))
+		if(typ.equals(Modeling.TYPE))
 		{
 			return new ImageIcon(Toolkit.getDefaultToolkit().
 													 getImage("images/model_mini.gif").
 													 getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 		}
-		else if(typ.equals(Test.typ))
+		else if(typ.equals(Test.TYPE))
 		{
 			return new ImageIcon(Toolkit.getDefaultToolkit().
 													 getImage("images/testir1.gif").
 													 getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 		}
-		else if(typ.equals(Result.typ))
+		else if(typ.equals(Result.TYPE))
 		{
 			return new ImageIcon(Toolkit.getDefaultToolkit().
 													 getImage("images/result.gif").
