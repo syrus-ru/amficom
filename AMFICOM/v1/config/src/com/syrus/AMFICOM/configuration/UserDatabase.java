@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.18 2004/10/19 14:23:08 bob Exp $
+ * $Id: UserDatabase.java,v 1.19 2004/10/20 06:29:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.syrus.AMFICOM.configuration.corba.StringFieldSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -28,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/10/19 14:23:08 $
+ * @version $Revision: 1.19 $, $Date: 2004/10/20 06:29:19 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -207,12 +208,27 @@ public class UserDatabase extends StorableObjectDatabase {
 		return retrieveByIdsOneQuery(null, condition);
 	}
 	
+	private List retrieveByName(String name) throws RetrieveObjectException, IllegalDataException{
+		String condition = COLUMN_NAME + EQUALS 
+						+ APOSTOPHE + name + APOSTOPHE;
+		
+		return retrieveByIdsOneQuery(null, condition);
+	}
+	
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
 		 List list = null;
 		 if (condition instanceof StringFieldCondition){
 		 	StringFieldCondition stringFieldCondition = (StringFieldCondition) condition;
-		 	list = retrieveByLogin(stringFieldCondition.getString());
+		 	switch(stringFieldCondition.getSort().value()){
+		 		case StringFieldSort._STRINGSORT_BASE:
+		 		case StringFieldSort._STRINGSORT_USERLOGIN:
+		 			list = retrieveByLogin(stringFieldCondition.getString());
+		 			break;
+		 		case StringFieldSort._STRINGSORT_USERNAME:
+		 			list = retrieveByName(stringFieldCondition.getString());
+		 			break;
+		 	}
 		 } else {
 		 	Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
 		 	list = this.retrieveButIds(ids);

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.1 2004/10/13 12:59:21 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.2 2004/10/20 06:29:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/13 12:59:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/20 06:29:19 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -156,22 +156,22 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		}
 
 		LinkedIdsCondition_Transferable transferable = new LinkedIdsCondition_Transferable();
-		Identifier_Transferable[] linkedId_Transferable;
+		Identifier_Transferable[] linkedIdTransferable;
 		if (this.linkedIds != null) {
-			linkedId_Transferable = new Identifier_Transferable[this.linkedIds.size()];
+			linkedIdTransferable = new Identifier_Transferable[this.linkedIds.size()];
 			int i = 0;
 
 			for (Iterator it = this.linkedIds.iterator(); it.hasNext(); i++) {
 				Identifier id = (Identifier) it.next();
-				linkedId_Transferable[i] = (Identifier_Transferable) id.getTransferable();
+				linkedIdTransferable[i] = (Identifier_Transferable) id.getTransferable();
 			}
 		} else {
-			linkedId_Transferable = new Identifier_Transferable[1];
-			linkedId_Transferable[0] = (Identifier_Transferable) this.identifier.getTransferable();
+			linkedIdTransferable = new Identifier_Transferable[1];
+			linkedIdTransferable[0] = (Identifier_Transferable) this.identifier.getTransferable();
 		}
 
 		transferable.domain_id = (Identifier_Transferable) this.domain.getId().getTransferable();
-		transferable.linked_ids = linkedId_Transferable;
+		transferable.linked_ids = linkedIdTransferable;
 		transferable.entity_code = s;
 
 		return transferable;

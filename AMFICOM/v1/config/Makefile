@@ -62,6 +62,7 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPortDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/StringFieldCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkedIdsCondition.java
 	touch $@

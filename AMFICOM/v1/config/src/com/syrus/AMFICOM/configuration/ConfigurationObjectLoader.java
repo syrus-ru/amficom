@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.12 2004/10/03 12:43:06 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.13 2004/10/20 06:29:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/10/03 12:43:06 $
+ * @version $Revision: 1.13 $, $Date: 2004/10/20 06:29:19 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -124,68 +124,68 @@ public interface ConfigurationObjectLoader {
 
     List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
     
-	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void savePortType(PortType portType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void savePortType(PortType portType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+//	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveUser(User user, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveUser(User user, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveDomain(Domain domain, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveDomain(Domain domain, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveServer(Server server, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveServer(Server server, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveMCM(MCM mcm, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMCM(MCM mcm, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveEquipment(Equipment equipment, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveEquipment(Equipment equipment, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void savePort(Port port, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void savePort(Port port, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveKIS(KIS kis, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveKIS(KIS kis, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveCharacteristicTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCharacteristicTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveEquipmentTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveEquipmentTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void savePortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void savePortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveMeasurementPortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMeasurementPortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+//	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveUsers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveUsers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveDomains(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveDomains(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveServers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveServers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveMCMs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMCMs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveEquipments(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveEquipments(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void savePorts(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void savePorts(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveTransmissionPaths(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveTransmissionPaths(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveKISs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveKISs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveMeasurementPorts(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMeasurementPorts(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	public void saveMonitoredElements(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMonitoredElements(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 }
