@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeOptimizeInfo.java,v 1.3 2005/03/17 18:17:27 bass Exp $ Copyright ¿
+ * $Id: SchemeOptimizeInfo.java,v 1.4 2005/03/22 17:31:55 bass Exp $ Copyright ¿
  * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/22 17:31:55 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -252,7 +252,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	/**
 	 * @param newScheme
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#scheme(com.syrus.AMFICOM.scheme.corba.Scheme)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#setParentScheme(com.syrus.AMFICOM.scheme.corba.Scheme)
 	 */
 	public void scheme(Scheme newScheme) {
 		throw new UnsupportedOperationException();
@@ -264,7 +264,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	/**
 	 * @param newSchemeMonitoringSolution
-	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#schemeMonitoringSolution(com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#setCurrentSchemeMonitoringSolution(com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution)
 	 */
 	public void schemeMonitoringSolution(
 			SchemeMonitoringSolution newSchemeMonitoringSolution) {

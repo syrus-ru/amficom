@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElement.java,v 1.4 2005/03/21 16:46:50 bass Exp $
+ * $Id: SchemeElement.java,v 1.5 2005/03/22 17:31:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/21 16:46:50 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/22 17:31:55 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -85,22 +85,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
-	 */
-	public void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean alarmed() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void alarmed(boolean alarmed) {
-		throw new UnsupportedOperationException();
-	}
-
 	public SchemePath alarmedPath() {
 		throw new UnsupportedOperationException();
 	}
@@ -149,13 +133,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
-	 */
-	public Collection getCharacteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
@@ -192,14 +169,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
-	 */
-	public void removeCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
 	public KIS getKis() {
 		throw new UnsupportedOperationException();
 	}
@@ -208,14 +177,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param newRtuImpl
 	 */
 	public void setKis(KIS newRtuImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Scheme scheme() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void scheme(Scheme scheme) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -255,22 +216,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public void schemeLinks(SchemeLink[] schemeLinks) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
-	 */
-	public void setCharacteristics(Collection characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
-	 */
-	public void setCharacteristics0(Collection characteristics) {
 		throw new UnsupportedOperationException();
 	}
 

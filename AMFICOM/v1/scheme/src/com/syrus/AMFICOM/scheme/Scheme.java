@@ -1,7 +1,7 @@
 /*
- * $Id: Scheme.java,v 1.3 2005/03/17 18:17:27 bass Exp $
+ * $Id: Scheme.java,v 1.4 2005/03/22 17:31:55 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -12,50 +12,40 @@ import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
+import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 import java.util.*;
 
 /**
+ * #02 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/22 17:31:55 $
  * @module scheme_v1
  */
 public final class Scheme extends AbstractCloneableDomainMember implements Describable, SchemeCellContainer {
 	private static final long serialVersionUID = 3257289136389173298L;
 
-	protected Identifier mapId = null;
-
-	protected Identifier schemeCableLinkIds[] = null;
-
-	/**
-	 * Takes non-null value at pack time.
-	 */
-	protected Identifier schemeCellId = null;
-
-	protected Identifier schemeElementIds[] = null;
-
-	protected Identifier schemeLinkIds[] = null;
-
-	protected Identifier schemeMonitoringSolutionId = null;
-
-	protected Identifier symbolId = null;
-
-	protected int thisHeight = 0;
-
-	protected String thisLabel = null;
-
-	protected Type thisType = null;
-
-	protected int thisWidth = 0;
-
-	/**
-	 * Takes non-null value at pack time.
-	 */
-	protected Identifier ugoCellId = null;
+	private Identifier currentSchemeMonitoringSolutionId;
 
 	private String description;
 
+	private int height;
+
+	private String label;
+
+	private Identifier mapId;
+
 	private String name;
+
+	private Identifier schemeCellId;
+
+	private SchemeKind schemeKind;
+
+	private Identifier symbolId;
+
+	private Identifier ugoCellId;
+
+	private int width;
 
 	Scheme(final Identifier id) {
 		super(id);
@@ -107,12 +97,32 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
+	public void addSchemeCableLink(final SchemeCableLink schemeCableLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeElement(final SchemeElement schemeElement) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeLink(final SchemeLink schemeLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
+		throw new UnsupportedOperationException();
+	}
+
 	public Object clone() {
 		final Scheme scheme = (Scheme) super.clone();
 		/**
 		 * @todo Update the newly created object.
 		 */
 		return scheme;
+	}
+
+	public SchemeMonitoringSolution getCurrentSchemeMonitoringSolution() {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -130,6 +140,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		return this.description;
 	}
 
+	public int getHeight() {
+		throw new UnsupportedOperationException();
+	}
+
+	public String getLabel() {
+		throw new UnsupportedOperationException();
+	}
+
 	public Map getMap() {
 		throw new UnsupportedOperationException();
 	}
@@ -142,80 +160,96 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		return this.name;
 	}
 
+	public Collection getSchemeCableLinks() {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getSchemeCell()
+	 * @deprecated
+	 */
+	public SchemeCableLink[] getSchemeCableLinksAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
 		throw new UnsupportedOperationException();
 	}
 
+	public Collection getSchemeElements() {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#getSymbol()
+	 * @deprecated
+	 */
+	public SchemeElement[] getSchemeElementsAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	public SchemeKind getSchemeKind() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeLinks() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public SchemeLink[] getSchemeLinksAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeOptimizeInfos() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @see TransferableObject#getTransferable()
 	 */
 	public Object getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getUgoCell()
+	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
 		throw new UnsupportedOperationException();
 	}
 
-	public int height() {
+	public int getWidth() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void height(int height) {
+	public void removeSchemeCableLink(final SchemeCableLink schemeCableLink) {
 		throw new UnsupportedOperationException();
 	}
 
-	public String label() {
+	public void removeSchemeElement(final SchemeElement schemeElement) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void label(String label) {
+	public void removeSchemeLink(final SchemeLink schemeLink) {
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeCableLink[] schemeCableLinks() {
+	public void removeSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void schemeCableLinks(SchemeCableLink[] schemeCableLinks) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeElement[] schemeElements() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void schemeElements(SchemeElement[] schemeElements) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeLink[] schemeLinks() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void schemeLinks(SchemeLink[] schemeLinks) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeMonitoringSolution schemeMonitoringSolution() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void schemeMonitoringSolution(
-			SchemeMonitoringSolution schemeMonitoringSolution) {
+	public void setCurrentSchemeMonitoringSolution(final SchemeMonitoringSolution currentSchemeMonitoringSolution) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -229,6 +263,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			return;
 		this.description = description;
 		this.changed = true;
+	}
+
+	public void setHeight(final int height) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setLabel(final String label) {
+		throw new UnsupportedOperationException();
 	}
 
 	public void setMap(final Map map) {
@@ -247,47 +289,48 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.changed = true;
 	}
 
+	public void setSchemeCableLinks(final Collection schemeCableLinks) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * @param schemeCellImpl
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setSchemeCell(SchemeImageResource)
+	 * @see SchemeCellContainer#setSchemeCell(SchemeImageResource)
 	 */
 	public void setSchemeCell(SchemeImageResource schemeCellImpl) {
 		throw new UnsupportedOperationException();
 	}
 
+	public void setSchemeElements(final Collection schemeElements) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemeKind(final SchemeKind schemeKind) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemeLinks(final Collection schemeLinks) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemeOptimizeInfos(final Collection schemeOptimizeInfos) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * @param symbolImpl
-	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
 	 */
 	public void setSymbol(BitmapImageResource symbolImpl) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param ugoCellImpl
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setUgoCell(SchemeImageResource)
+	 * @see SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
 	public void setUgoCell(SchemeImageResource ugoCellImpl) {
 		throw new UnsupportedOperationException();
 	}
 
-	public Type type() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newType
-	 * @see com.syrus.AMFICOM.scheme.Scheme#type(com.syrus.AMFICOM.scheme.corba.SchemePackage.Type)
-	 */
-	public void type(Type newType) {
-		throw new UnsupportedOperationException();
-	}
-
-	public int width() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void width(int width) {
+	public void setWidth(final int width) {
 		throw new UnsupportedOperationException();
 	}
 

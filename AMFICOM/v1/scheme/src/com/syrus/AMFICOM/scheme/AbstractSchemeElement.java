@@ -1,13 +1,16 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.3 2005/03/17 18:17:27 bass Exp $
- * Copyright ¿ 2004 Syrus Systems. Dept. of Science & Technology. Project:
- * AMFICOM.
+ * $Id: AbstractSchemeElement.java,v 1.4 2005/03/22 17:31:55 bass Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import java.util.Date;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import java.util.*;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -15,7 +18,7 @@ import java.util.Date;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/22 17:31:55 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -23,13 +26,15 @@ public abstract class AbstractSchemeElement extends
 		Characterizable {
 	static final long serialVersionUID = 4644766113809681630L;
 
-	protected Identifier characteristicIds[] = null;
+	private transient boolean alarmed;
 
-	protected Identifier schemeId = null;
+	private Collection characteristics;
 
 	private String description;
 
 	private String name;
+
+	private Identifier parentSchemeId;
 
 	/**
 	 * @param id
@@ -53,30 +58,87 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
-	 * Transient attribute
+	 * @param characteristic
+	 * @see Characterizable#addCharacteristic(Characteristic)
 	 */
-	public abstract boolean alarmed();
+	public final void addCharacteristic(final Characteristic characteristic) {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
-	 * Transient attribute
+	 * @see Characterizable#getCharacteristics()
 	 */
-	public abstract void alarmed(boolean newAlarmed);
+	public final Collection getCharacteristics() {
+		throw new UnsupportedOperationException();
+	}
+
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public final String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public final String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
 
 	/**
 	 * Getter returns scheme parent to this scheme link or scheme cable link
 	 * or scheme element.
 	 * 
-	 * @see #schemeId
+	 * @see #parentSchemeId
 	 */
-	public abstract Scheme scheme();
+	public final Scheme getParentScheme() {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
-	 * Getter returns scheme parent to this scheme link or scheme cable link
-	 * or scheme element.
-	 * 
-	 * @see #schemeId
+	 * Transient attribute
 	 */
-	public abstract void scheme(Scheme newScheme);
+	public final boolean isAlarmed() {
+		return this.alarmed;
+	}
+
+	/**
+	 * @param characteristic
+	 * @see Characterizable#removeCharacteristic(Characteristic)
+	 */
+	public final void removeCharacteristic(final Characteristic characteristic) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Transient attribute
+	 */
+	public final void setAlarmed(boolean alarmed) {
+		this.alarmed = alarmed;
+	}
+
+	/**
+	 * @param characteristics
+	 * @see Characterizable#setCharacteristics(Collection)
+	 */
+	public final void setCharacteristics(final Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see Characterizable#setCharacteristics0(Collection)
+	 */
+	public final void setCharacteristics0(final Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * @see Describable#setDescription(String)
@@ -88,14 +150,6 @@ public abstract class AbstractSchemeElement extends
 			return;
 		this.description = description;
 		this.changed = true;
-	}
-
-	/**
-	 * @see Describable#getDescription()
-	 */
-	public final String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.description;
 	}
 
 	/**
@@ -111,10 +165,12 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
-	 * @see Namable#getName()
+	 * Getter returns scheme parent to this scheme link or scheme cable link
+	 * or scheme element.
+	 * 
+	 * @see #parentSchemeId
 	 */
-	public final String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.name;
+	public final void setParentScheme(final Scheme parentScheme) {
+		throw new UnsupportedOperationException();
 	}
 }

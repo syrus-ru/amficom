@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeLink.java,v 1.3 2005/03/17 12:52:55 bass Exp $
+ * $Id: SchemeLink.java,v 1.4 2005/03/22 17:31:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 12:52:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/22 17:31:55 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -54,29 +54,6 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 */
 	public void setAbstractLinkType(
 			AbstractLinkType newAbstractLinkTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
-	 */
-	public void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean alarmed() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void alarmed(boolean alarmed) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
-	 */
-	public Collection getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -129,38 +106,6 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	public void physicalLength(double physicalLength) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
-	 */
-	public void removeCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Scheme scheme() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void scheme(Scheme scheme) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
-	 */
-	public void setCharacteristics(Collection characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
-	 */
-	public void setCharacteristics0(Collection characteristics) {
 		throw new UnsupportedOperationException();
 	}
 

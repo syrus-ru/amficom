@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.11 2005/03/22 11:29:22 bass Exp $
+ * $Id: SchemeUtils.java,v 1.12 2005/03/22 17:31:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
  * Functionality will be partially moved to {@link PathElement}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/22 11:29:22 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/22 17:31:55 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -89,7 +89,7 @@ public class SchemeUtils {
 
 	public static SchemeElement getSchemeElementByDevice(Scheme scheme, SchemeDevice device)
 	{
-		SchemeElement[] elements = scheme.schemeElements();
+		SchemeElement[] elements = scheme.getSchemeElementsAsArray();
 		for (int i = 0; i < elements.length; i++)
 			if (Arrays.asList(elements[i].schemeDevices()).contains(device))
 				return elements[i];
@@ -112,14 +112,14 @@ public class SchemeUtils {
 	public static Collection getTopologicalElements(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
-		for (int i = 0; i < scheme.schemeElements().length; i++) {
-			SchemeElement el = scheme.schemeElements()[i];
+		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
+			SchemeElement el = scheme.getSchemeElementsAsArray()[i];
 			if (el.internalScheme() == null)
 				ht.add(el);
 			else {
 				Scheme sc = el.internalScheme();
-				if (sc.type().value() ==
-						com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK) {
+				if (sc.getSchemeKind().value() ==
+						com.syrus.AMFICOM.scheme.corba.SchemeKind._CABLE_SUBNETWORK) {
 					for (Iterator it = getTopologicalElements(sc).iterator(); it.hasNext(); )
 						ht.add(it.next());
 				}
@@ -134,14 +134,14 @@ public class SchemeUtils {
 	public static Collection getTopologicalCableLinks(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
-		ht.addAll(Arrays.asList(scheme.schemeCableLinks()));
+		ht.addAll(Arrays.asList(scheme.getSchemeCableLinksAsArray()));
 
-		for (int i = 0; i < scheme.schemeElements().length; i++) {
-			SchemeElement el = scheme.schemeElements()[i];
+		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
+			SchemeElement el = scheme.getSchemeElementsAsArray()[i];
 			if (el.internalScheme() != null) {
 				Scheme sc = el.internalScheme();
-				if (sc.type().value() ==
-						com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK) {
+				if (sc.getSchemeKind().value() ==
+						com.syrus.AMFICOM.scheme.corba.SchemeKind._CABLE_SUBNETWORK) {
 					for (Iterator inner = getTopologicalCableLinks(sc).iterator(); inner.hasNext(); )
 						ht.add(inner.next());
 				}
@@ -154,10 +154,10 @@ public class SchemeUtils {
 	public static Collection getAllCableLinks(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
-		ht.addAll(Arrays.asList(scheme.schemeCableLinks()));
+		ht.addAll(Arrays.asList(scheme.getSchemeCableLinksAsArray()));
 
-		for (int i = 0; i < scheme.schemeElements().length; i++) {
-			SchemeElement el = scheme.schemeElements()[i];
+		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
+			SchemeElement el = scheme.getSchemeElementsAsArray()[i];
 			if (el.internalScheme() != null) {
 				Scheme sc = el.internalScheme();
 				for (Iterator inner = getAllCableLinks(sc).iterator(); inner.hasNext(); )
@@ -171,14 +171,14 @@ public class SchemeUtils {
 	public static Collection getTopologicalPaths(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
-		ht.addAll(Arrays.asList(scheme.schemeMonitoringSolution().schemePaths()));
+		ht.addAll(Arrays.asList(scheme.getCurrentSchemeMonitoringSolution().schemePaths()));
 
-		for (int i = 0; i < scheme.schemeElements().length; i++) {
-			SchemeElement el = scheme.schemeElements()[i];
+		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
+			SchemeElement el = scheme.getSchemeElementsAsArray()[i];
 			if (el.internalScheme() != null) {
 				Scheme sc = el.internalScheme();
-				if (sc.type().value() ==
-						com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK) {
+				if (sc.getSchemeKind().value() ==
+						com.syrus.AMFICOM.scheme.corba.SchemeKind._CABLE_SUBNETWORK) {
 					for (Iterator inner = getTopologicalPaths(sc).iterator(); inner.hasNext(); )
 						ht.add(inner.next());
 				}
@@ -189,12 +189,12 @@ public class SchemeUtils {
 
 	public static SchemeElement getTopologicalElement(Scheme scheme, SchemeElement element)
 	{
-		if (Arrays.asList(scheme.schemeElements()).contains(element))
+		if (Arrays.asList(scheme.getSchemeElementsAsArray()).contains(element))
 			return element;
 
-		for(int i = 0; i < scheme.schemeElements().length; i++) // Search inner elements
+		for(int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) // Search inner elements
 		{
-			SchemeElement el = scheme.schemeElements()[i];
+			SchemeElement el = scheme.getSchemeElementsAsArray()[i];
 			if (el.internalScheme() == null)
 			{
 				if (getAllChildElements(el).contains(element))
@@ -202,16 +202,16 @@ public class SchemeUtils {
 			}
 		}
 
-		for(int i = 0; i < scheme.schemeElements().length; i++)  // Search inner schemes
+		for(int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)  // Search inner schemes
 		{
-			SchemeElement el = scheme.schemeElements()[i];
+			SchemeElement el = scheme.getSchemeElementsAsArray()[i];
 			if (el.internalScheme() != null)
 			{
 				final Scheme innerScheme = el.internalScheme();
 				final SchemeElement innerSchemeElement = getTopologicalElement(innerScheme, element);
 				if (innerSchemeElement != null)
 				{
-					if (innerScheme.type().value() == com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK)
+					if (innerScheme.getSchemeKind().value() == com.syrus.AMFICOM.scheme.corba.SchemeKind._CABLE_SUBNETWORK)
 						return innerSchemeElement;
 					return element;
 				}
@@ -238,14 +238,14 @@ public class SchemeUtils {
 
 	public static Collection getTopLevelElements(Scheme scheme)
 	{
-		return Arrays.asList(scheme.schemeElements());
+		return Arrays.asList(scheme.getSchemeElementsAsArray());
 	}
 
 	public static Collection getAllTopLevelElements(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
-		for (int i = 0; i < scheme.schemeElements().length; i++) {
-			SchemeElement el = scheme.schemeElements()[i];
+		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
+			SchemeElement el = scheme.getSchemeElementsAsArray()[i];
 			if (el.internalScheme() == null)
 				ht.add(el);
 			else {
@@ -259,12 +259,12 @@ public class SchemeUtils {
 
 	public static boolean isSchemeContainsLink(Scheme scheme, Identifier link_id)
 	{
-		SchemeLink[] links = scheme.schemeLinks();
+		SchemeLink[] links = scheme.getSchemeLinksAsArray();
 		for (int i = 0; i < links.length; i++) {
 			if (links[i].getId().equals(link_id))
 				return true;
 		}
-		SchemeElement[] elements = scheme.schemeElements();
+		SchemeElement[] elements = scheme.getSchemeElementsAsArray();
 		for (int i = 0; i < elements.length; i++) {
 			if (elements[i].internalScheme() == null) {
 				if (isSchemeElementContainsLink(elements[i], link_id))
@@ -283,10 +283,10 @@ public class SchemeUtils {
 
 	public static boolean isSchemeContainsElement(Scheme scheme, SchemeElement se)
 	{
-		if (Arrays.asList(scheme.schemeElements()).contains(se))
+		if (Arrays.asList(scheme.getSchemeElementsAsArray()).contains(se))
 			return true;
 
-		SchemeElement[] elements = scheme.schemeElements();
+		SchemeElement[] elements = scheme.getSchemeElementsAsArray();
 		for (int i = 0; i < elements.length; i++) {
 			if (elements[i].internalScheme() == null) {
 				if (isSchemeElementContainsElement(elements[i], se))
@@ -367,13 +367,13 @@ public class SchemeUtils {
 
 	public static boolean isSchemeContainsCableLink(Scheme scheme, Identifier cable_link_id)
 	{
-		SchemeCableLink[] links = scheme.schemeCableLinks();
+		SchemeCableLink[] links = scheme.getSchemeCableLinksAsArray();
 		for (int i = 0; i < links.length; i++) {
 			if (links[i].getId().equals(cable_link_id))
 				return true;
 		}
 
-		SchemeElement[] elements = scheme.schemeElements();
+		SchemeElement[] elements = scheme.getSchemeElementsAsArray();
 		for (int i = 0; i < elements.length; i++) {
 			if (elements[i].internalScheme() != null) {
 				Scheme inner = elements[i].internalScheme();

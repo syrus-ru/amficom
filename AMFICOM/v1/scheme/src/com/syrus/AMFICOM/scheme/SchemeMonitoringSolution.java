@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeMonitoringSolution.java,v 1.3 2005/03/17 18:17:27 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.4 2005/03/22 17:31:55 bass Exp $
  * Copyright ¿ 2004 Syrus Systems. Dept. of Science & Technology. Project:
  * AMFICOM.
  */
@@ -11,7 +11,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/22 17:31:55 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -74,7 +74,7 @@ public final class SchemeMonitoringSolution extends
 
 	/**
 	 * @param newScheme
-	 * @see com.syrus.AMFICOM.scheme.SchemeMonitoringSolution#scheme(com.syrus.AMFICOM.scheme.corba.Scheme)
+	 * @see com.syrus.AMFICOM.scheme.SchemeMonitoringSolution#setParentScheme(com.syrus.AMFICOM.scheme.corba.Scheme)
 	 */
 	public void scheme(Scheme newScheme) {
 		throw new UnsupportedOperationException();
