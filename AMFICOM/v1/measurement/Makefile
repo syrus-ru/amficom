@@ -31,6 +31,53 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
+
+SOURCES := com/syrus/AMFICOM/resource/LangModelMeasurement.java \
+		com/syrus/AMFICOM/measurement/DatabaseMeasurementObjectLoader.java \
+		com/syrus/AMFICOM/measurement/MeasurementObjectLoader.java \
+		com/syrus/AMFICOM/measurement/MeasurementStorableObjectPool.java \
+		com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
+		com/syrus/AMFICOM/measurement/ParameterTypeCodenames.java \
+		com/syrus/AMFICOM/measurement/ParameterType.java \
+		com/syrus/AMFICOM/measurement/ParameterTypeDatabase.java \
+		com/syrus/AMFICOM/measurement/ActionType.java \
+		com/syrus/AMFICOM/measurement/MeasurementType.java \
+		com/syrus/AMFICOM/measurement/MeasurementTypeDatabase.java \
+		com/syrus/AMFICOM/measurement/AnalysisType.java \
+		com/syrus/AMFICOM/measurement/AnalysisTypeDatabase.java \
+		com/syrus/AMFICOM/measurement/EvaluationType.java \
+		com/syrus/AMFICOM/measurement/EvaluationTypeDatabase.java \
+		com/syrus/AMFICOM/measurement/ModelingType.java \
+		com/syrus/AMFICOM/measurement/ModelingTypeDatabase.java \
+		com/syrus/AMFICOM/measurement/SetParameter.java \
+		com/syrus/AMFICOM/measurement/Set.java \
+		com/syrus/AMFICOM/measurement/SetDatabase.java \
+		com/syrus/AMFICOM/measurement/Result.java \
+		com/syrus/AMFICOM/measurement/ResultDatabase.java \
+		com/syrus/AMFICOM/measurement/Modeling.java \
+		com/syrus/AMFICOM/measurement/ModelingDatabase.java \
+		com/syrus/AMFICOM/measurement/MeasurementSetup.java \
+		com/syrus/AMFICOM/measurement/MeasurementSetupDatabase.java \
+		com/syrus/AMFICOM/measurement/Action.java \
+		com/syrus/AMFICOM/measurement/Measurement.java \
+		com/syrus/AMFICOM/measurement/MeasurementDatabase.java \
+		com/syrus/AMFICOM/measurement/Analysis.java \
+		com/syrus/AMFICOM/measurement/AnalysisDatabase.java \
+		com/syrus/AMFICOM/measurement/Evaluation.java \
+		com/syrus/AMFICOM/measurement/EvaluationDatabase.java \
+		com/syrus/AMFICOM/measurement/TemporalPattern.java \
+		com/syrus/AMFICOM/measurement/TemporalPatternDatabase.java \
+		com/syrus/AMFICOM/measurement/Test.java \
+		com/syrus/AMFICOM/measurement/TestDatabase.java \
+		com/syrus/AMFICOM/measurement/TemporalCondition.java \
+		com/syrus/AMFICOM/measurement/LinkedIdsCondition.java \
+		com/syrus/AMFICOM/measurement/DomainCondition.java \
+		com/syrus/AMFICOM/measurement/StringFieldCondition.java \
+		com/syrus/AMFICOM/measurement/ResultCondition.java \
+		com/syrus/AMFICOM/measurement/ResultSortCondition.java \
+		com/syrus/AMFICOM/measurement/MeasurementSetupCondition.java
+
+
 $(LIBNAME): .mach
 	cp \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/measurement.properties \
@@ -43,49 +90,7 @@ $(LIBNAME): .mach
 .mach:	.corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/DatabaseMeasurementObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementStorableObjectPool.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterTypeCodenames.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/ActionType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/AnalysisType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/AnalysisTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/EvaluationType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/EvaluationTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/SetParameter.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/Set.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/SetDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/Result.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/Modeling.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/ModelingDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetup.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/Action.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/Measurement.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/Analysis.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/AnalysisDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/Evaluation.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/EvaluationDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPattern.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPatternDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/Test.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/TestDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalCondition.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/LinkedIdsCondition.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/DomainCondition.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/StringFieldCondition.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultCondition.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultSortCondition.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupCondition.java 
-
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 	touch $@
 
 .ora:	$(CLASSDIR)
@@ -115,7 +120,7 @@ clean:	cleanmach cleanora cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/measurement/*.class)
+	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleanora

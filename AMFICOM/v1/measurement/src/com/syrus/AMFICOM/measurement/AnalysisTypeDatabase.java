@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.46 2004/12/27 16:00:05 max Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.47 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/12/27 16:00:05 $
- * @author $Author: max $
+ * @version $Revision: 1.47 $, $Date: 2004/12/27 21:00:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -86,15 +86,14 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}	
 
 	protected String getUpdateMultiplySQLValues(int mode) {
-		if (updateMultiplySQLValues == null){
+		if (updateMultiplySQLValues == null) {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA 
 				+ QUESTION;
 		}
 		return updateMultiplySQLValues;
 	}	
-	
-	
+
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		AnalysisType analysisType = fromStorableObject(storableObject);		
@@ -160,7 +159,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 								if (parameterMode.equals(MODE_OUT))
 									outParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 								else
-									Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeIdCode);
+									Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeIdCode);
 			}
 		}
 		catch (SQLException sqle) {
@@ -194,137 +193,148 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 																	 etalonParTyps,
 																	 outParTyps);
 	}
-    
-    private void retrieveParameterTypesByOneQuery(List analysisTypes) throws RetrieveObjectException {
-    	
-        if ((analysisTypes == null) || (analysisTypes.isEmpty()))
-            return;
-        
-        StringBuffer sql = new StringBuffer(SQL_SELECT
-                + LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-                + LINK_COLUMN_PARAMETER_MODE + COMMA
-                + LINK_COLUMN_ANALYSIS_TYPE_ID
-                + SQL_FROM + ObjectEntities.ANATYPPARTYPLINK_ENTITY
-                + SQL_WHERE + LINK_COLUMN_ANALYSIS_TYPE_ID + SQL_IN + OPEN_BRACKET);
-        int i=1;
-        for (Iterator it = analysisTypes.iterator(); it.hasNext();i++) {
-            AnalysisType analysisType = (AnalysisType)it.next();
-            sql.append(DatabaseIdentifier.toSQLString(analysisType.getId()));
-            if (it.hasNext()){
-                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-                    sql.append(COMMA);
-                else {
-                    sql.append(CLOSE_BRACKET);
-                    sql.append(SQL_OR);
-                    sql.append(LINK_COLUMN_ANALYSIS_TYPE_ID);
-                    sql.append(SQL_IN);
-                    sql.append(OPEN_BRACKET);
-                }                   
-            }
-        }
-        sql.append(CLOSE_BRACKET);
-        
-        Statement statement = null;
-        ResultSet resultSet = null;
-        Connection connection = DatabaseConnection.getConnection();
-        
-        try {
-            statement = connection.createStatement();
-            Log.debugMessage("AnalysisTypeDatabase.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-            resultSet = statement.executeQuery(sql.toString());
-            String parameterMode;
-            Identifier parameterTypeId;
-            Map inParametersMap = new HashMap();
-            Map criteriaParametersMap = new HashMap();
-            Map etalonParametersMap = new HashMap();
-            Map outParametersMap = new HashMap();
-            while (resultSet.next()) {
-                AnalysisType analysisType = null;
-                Identifier analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ANALYSIS_TYPE_ID);
-                for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
-                    AnalysisType analysisTypeToCompare = (AnalysisType) it.next();
-                    if (analysisTypeToCompare.getId().equals(analysisTypeId)){
-                        analysisType = analysisTypeToCompare;
-                        break;
-                    }                   
-                }
-                
-                if (analysisType == null){
-                    String mesg = "AnalysisTypeDatabase.retrieveParameterTypesByOneQuery | Cannot found correspond result for '" + analysisTypeId +"'" ;
-                    throw new RetrieveObjectException(mesg);
-                }
-                    
-                parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-                parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
-                ParameterType parameterType; 
-                if (parameterMode.equals(MODE_IN)) {
-                    parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
-                    List inParameters = (List)inParametersMap.get(analysisType);
-                    if (inParameters == null){
-                        inParameters = new LinkedList();
-                        inParametersMap.put(analysisType, inParameters);
-                    }               
-                    inParameters.add(parameterType);
-                } else if (parameterMode.equals(MODE_CRITERION)) {
-                	parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
-                	List criteriaParameters = (List)criteriaParametersMap.get(analysisType);
-                    if (criteriaParameters == null){
-                        criteriaParameters = new LinkedList();
-                        criteriaParametersMap.put(analysisType, criteriaParameters);
-                    }               
-                    criteriaParameters.add(parameterType);
-                } else if (parameterMode.equals(MODE_ETALON)) {
-                	parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
-                    List etalonParameters = (List)etalonParametersMap.get(analysisType);
-                    if (etalonParameters == null){
-                        etalonParameters = new LinkedList();
-                        etalonParametersMap.put(analysisType, etalonParameters);
-                    }               
-                    etalonParameters.add(parameterType);
-                } else if (parameterMode.equals(MODE_OUT)) {
-                    parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
-                    List outParameters = (List)outParametersMap.get(analysisType);
-                    if (outParameters == null){
-                    	outParameters = new LinkedList();
-                    	outParametersMap.put(analysisType, outParameters);
-                    }
-                } else {
-                	Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeId);
-                }                
-            }
-            for (Iterator iter = analysisTypes.iterator(); iter.hasNext();) {
-                AnalysisType analysisType = (AnalysisType) iter.next();
-                List inParameterpTypes = (List)inParametersMap.get(analysisType);
-                List criteriaParameterpTypes = (List)criteriaParametersMap.get(analysisType);
-                List etalonParameterpTypes = (List)etalonParametersMap.get(analysisType);
-                List outParameterpTypes = (List)inParametersMap.get(analysisType);
-                
-                analysisType.setParameterTypes(inParameterpTypes, criteriaParameterpTypes, etalonParameterpTypes, outParameterpTypes);
-            }            
-        }
-        catch (SQLException sqle) {
-            String mesg = "AnalysisTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for analysis types -- " + sqle.getMessage();
-            throw new RetrieveObjectException(mesg, sqle);
-        }
-        catch (ApplicationException ae) {
-            throw new RetrieveObjectException(ae);
-        }
-        finally {
-            try {
-                if (statement != null)
-                    statement.close();
-                if (resultSet != null)
-                    resultSet.close();
-                statement = null;
-                resultSet = null;
-            }
-            catch (SQLException sqle1) {
-                Log.errorException(sqle1);
-            } finally{
-                DatabaseConnection.releaseConnection(connection);
-            }
-        }        
-    }
+
+	private void retrieveParameterTypesByOneQuery(List analysisTypes) throws RetrieveObjectException {
+		if ((analysisTypes == null) || (analysisTypes.isEmpty()))
+			return;
+
+    StringBuffer sql = new StringBuffer(SQL_SELECT
+				+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
+				+ LINK_COLUMN_PARAMETER_MODE + COMMA
+				+ LINK_COLUMN_ANALYSIS_TYPE_ID
+				+ SQL_FROM + ObjectEntities.ANATYPPARTYPLINK_ENTITY
+				+ SQL_WHERE + LINK_COLUMN_ANALYSIS_TYPE_ID + SQL_IN + OPEN_BRACKET);
+
+		int i = 1;
+		for (Iterator it = analysisTypes.iterator(); it.hasNext(); i++) {
+			AnalysisType analysisType = (AnalysisType)it.next();
+			sql.append(DatabaseIdentifier.toSQLString(analysisType.getId()));
+			if (it.hasNext()) {
+				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+					sql.append(COMMA);
+				else {
+					sql.append(CLOSE_BRACKET);
+					sql.append(SQL_OR);
+					sql.append(LINK_COLUMN_ANALYSIS_TYPE_ID);
+					sql.append(SQL_IN);
+					sql.append(OPEN_BRACKET);
+				}
+			}
+		}
+		sql.append(CLOSE_BRACKET);
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
+
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("AnalysisTypeDatabase.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql.toString());
+			String parameterMode;
+			Identifier parameterTypeId;
+			Map inParametersMap = new HashMap();
+			Map criteriaParametersMap = new HashMap();
+			Map etalonParametersMap = new HashMap();
+			Map outParametersMap = new HashMap();
+			while (resultSet.next()) {
+				AnalysisType analysisType = null;
+				Identifier analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ANALYSIS_TYPE_ID);
+				for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
+					AnalysisType analysisTypeToCompare = (AnalysisType) it.next();
+					if (analysisTypeToCompare.getId().equals(analysisTypeId)){
+						analysisType = analysisTypeToCompare;
+						break;
+					}
+				}
+
+        if (analysisType == null) {
+					String mesg = "AnalysisTypeDatabase.retrieveParameterTypesByOneQuery | Cannot found corresponding entry for '" + analysisTypeId +"'" ;
+					throw new RetrieveObjectException(mesg);
+				}
+
+				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				ParameterType parameterType;
+				if (parameterMode.equals(MODE_IN)) {
+					parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
+					List inParameters = (List)inParametersMap.get(analysisTypeId);
+					if (inParameters == null) {
+						inParameters = new LinkedList();
+						inParametersMap.put(analysisTypeId, inParameters);
+					}
+					inParameters.add(parameterType);
+				}
+				else
+					if (parameterMode.equals(MODE_CRITERION)) {
+						parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
+						List criteriaParameters = (List)criteriaParametersMap.get(analysisTypeId);
+						if (criteriaParameters == null) {
+							criteriaParameters = new LinkedList();
+							criteriaParametersMap.put(analysisTypeId, criteriaParameters);
+						}
+						criteriaParameters.add(parameterType);
+					}
+					else
+						if (parameterMode.equals(MODE_ETALON)) {
+							parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
+							List etalonParameters = (List)etalonParametersMap.get(analysisTypeId);
+							if (etalonParameters == null) {
+								etalonParameters = new LinkedList();
+								etalonParametersMap.put(analysisTypeId, etalonParameters);
+							}
+							etalonParameters.add(parameterType);
+						}
+						else
+							if (parameterMode.equals(MODE_OUT)) {
+								parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
+								List outParameters = (List)outParametersMap.get(analysisTypeId);
+								if (outParameters == null) {
+									outParameters = new LinkedList();
+									outParametersMap.put(analysisTypeId, outParameters);
+								}
+							}
+							else {
+								Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeId);
+							}
+			}
+
+			for (Iterator iter = analysisTypes.iterator(); iter.hasNext();) {
+				AnalysisType analysisType = (AnalysisType) iter.next();
+				Identifier analysisTypeId = analysisType.getId();
+
+				List inParameterpTypes = (List)inParametersMap.get(analysisTypeId);
+				List criteriaParameterpTypes = (List)criteriaParametersMap.get(analysisTypeId);
+				List etalonParameterpTypes = (List)etalonParametersMap.get(analysisTypeId);
+				List outParameterpTypes = (List)inParametersMap.get(analysisTypeId);
+
+        analysisType.setParameterTypes(inParameterpTypes, criteriaParameterpTypes, etalonParameterpTypes, outParameterpTypes);
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "AnalysisTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for analysis types -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally {
+				DatabaseConnection.releaseConnection(connection);
+			}
+		}
+	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 //		AnalysisType analysisType = this.fromStorableObject(storableObject);
@@ -339,15 +349,13 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		this.insertEntity(analysisType);
 		this.insertParameterTypes(analysisType);
 	}
-	
-	
+
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
 		for(Iterator it=storableObjects.iterator();it.hasNext();){
 			AnalysisType analysisType = fromStorableObject((StorableObject)it.next());
 			insertParameterTypes(analysisType);
 		}
-
 	}
 
 	private void insertParameterTypes(AnalysisType analysisType) throws CreateObjectException {
@@ -491,7 +499,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -502,42 +511,41 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
-		
 		List list = null;
-		
 		try {
-			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + codename + APOSTOPHE);
-		}  catch (IllegalDataException ide) {				
+			list = retrieveByIds(null, COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+		}
+		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}
-		
+
 		if ((list == null) || (list.isEmpty()))
-				throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
-		
+			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
+
 		return (AnalysisType) list.get(0);
-		
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {
 		try{
 			return retrieveByIds(null, null);
-		}catch(IllegalDataException ide){
+		}
+		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide);
 		}
 	}
-	
+
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
 			list = retrieveByIdsOneQuery(null, condition);
-		else list = retrieveByIdsOneQuery(ids, condition);
-		
+		else
+			list = retrieveByIdsOneQuery(ids, condition);
+
 		retrieveParameterTypesByOneQuery(list);
-		
+
 		return list;		
 	}	
-	
-	
+
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		AnalysisType analysisType = fromStorableObject(storableObject);
@@ -545,58 +553,57 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		try {
 			DatabaseString.setString(preparedStatement, ++i, analysisType.getCodename(), SIZE_CODENAME_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, analysisType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+		}
+		catch (SQLException sqle) {
+			throw new UpdateObjectException(this.getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
 		return i;
 	}
 
-    private List retrieveButIdsByCriteriaSet(List ids, List criteriaSetIds) throws RetrieveObjectException, IllegalDataException {
-        
-    	
-    	if (criteriaSetIds != null && !criteriaSetIds.isEmpty()){
-	        String condition = new String();
-	        StringBuffer criteriaSetIdNames = new StringBuffer();        
-	        
-	        int i=1;
-	        for (Iterator it = criteriaSetIds.iterator(); it.hasNext();) {
-	            criteriaSetIdNames.append(DatabaseIdentifier.toSQLString((Identifier) it.next()));
-	            if (it.hasNext()){
-	                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-	                    criteriaSetIdNames.append(COMMA);
-	                else {
-	                    criteriaSetIdNames.append(CLOSE_BRACKET);
-	                    criteriaSetIdNames.append(SQL_OR);
-	                    criteriaSetIdNames.append(SetDatabase.LINK_COLUMN_SET_ID);
-	                    criteriaSetIdNames.append(SQL_IN);
-	                    criteriaSetIdNames.append(OPEN_BRACKET);
-	                }                   
-	            }
-	        }
-	        
-	        condition = PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET 
-	                + SQL_SELECT + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-					    + SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames 
-						+ CLOSE_BRACKET
-	                + CLOSE_BRACKET 
-	                + SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + MODE_CRITERION + APOSTOPHE;
-	        
-	        return retrieveByIds( ids, condition);
-    	} 
-    		return Collections.EMPTY_LIST;
-    }
-    
-    
+  private List retrieveButIdsByCriteriaSet(List ids, List criteriaSetIds) throws RetrieveObjectException, IllegalDataException {
+		if (criteriaSetIds != null && !criteriaSetIds.isEmpty()) {
+			String condition = new String();
+			StringBuffer criteriaSetIdNames = new StringBuffer();        
+
+	    int i = 1;
+			for (Iterator it = criteriaSetIds.iterator(); it.hasNext(); i++) {
+				criteriaSetIdNames.append(DatabaseIdentifier.toSQLString((Identifier) it.next()));
+				if (it.hasNext()) {
+					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+						criteriaSetIdNames.append(COMMA);
+					else {
+						criteriaSetIdNames.append(CLOSE_BRACKET);
+						criteriaSetIdNames.append(SQL_OR);
+						criteriaSetIdNames.append(SetDatabase.LINK_COLUMN_SET_ID);
+						criteriaSetIdNames.append(SQL_IN);
+						criteriaSetIdNames.append(OPEN_BRACKET);
+					}
+				}
+			}
+
+	    condition = PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET
+					+ SQL_SELECT + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+					+ SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames
+					+ CLOSE_BRACKET
+					+ CLOSE_BRACKET
+					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + MODE_CRITERION + APOSTOPHE;
+
+			return retrieveByIds(ids, condition);
+		}
+		return Collections.EMPTY_LIST;
+	}
+
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
 		List list = null;
-        if (condition instanceof LinkedIdsCondition){
-            LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-            list = this.retrieveButIdsByCriteriaSet(ids, linkedIdsCondition.getLinkedIds());
-        } else {
-            Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
-            list = this.retrieveButIds(ids);
-        }
-        
-        return list;
+		if (condition instanceof LinkedIdsCondition) {
+			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+			list = this.retrieveButIdsByCriteriaSet(ids, linkedIdsCondition.getLinkedIds());
+		}
+		else {
+			Log.errorMessage(this.getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
+			list = this.retrieveButIds(ids);
+		}
+
+    return list;
 	}
 }

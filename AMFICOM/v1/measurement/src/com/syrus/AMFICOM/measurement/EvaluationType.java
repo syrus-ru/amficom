@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.38 2004/12/09 15:52:53 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.39 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/12/09 15:52:53 $
+ * @version $Revision: 1.39 $, $Date: 2004/12/27 21:00:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -45,7 +45,7 @@ public class EvaluationType extends ActionType {
 	private List etalonParameterTypes;
 	private List outParameterTypes;
 
-	private StorableObjectDatabase	evaluationTypeDatabase;
+	private StorableObjectDatabase evaluationTypeDatabase;
 
 	public EvaluationType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -104,6 +104,7 @@ public class EvaluationType extends ActionType {
 			throw new CreateObjectException(ae);
 		}
 
+		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
 	}	
 	
 	protected EvaluationType(Identifier id,
@@ -114,29 +115,26 @@ public class EvaluationType extends ActionType {
 							 List thresholdParameterTypes,
 							 List etalonParameterTypes,
 							 List outParameterTypes) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		super.codename = codename;
-		super.description = description;
-		
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId,
+					codename,
+					description);
+
 		this.inParameterTypes = new LinkedList();
 		this.setInParameterTypes0(inParameterTypes);
-		
+
 		this.thresholdParameterTypes = new LinkedList();
 		this.setThresholdParameterTypes0(thresholdParameterTypes);
-		
+
 		this.etalonParameterTypes = new LinkedList();
 		this.setEtalonParameterTypes0(etalonParameterTypes);
-		
+
 		this.outParameterTypes = new LinkedList();
 		this.setOutParameterTypes0(outParameterTypes);
 
-		super.currentVersion = super.getNextVersion();
-		
 		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
 	}
 	
@@ -163,14 +161,15 @@ public class EvaluationType extends ActionType {
 
 		try {
 			return new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
-				creatorId,
-				codename,
-				description,
-				inParameterTypes,
-				thresholdParameterTypes,
-				etalonParameterTypes,
-				outParameterTypes);
-		} catch (IllegalObjectEntityException e) {
+										creatorId,
+										codename,
+										description,
+										inParameterTypes,
+										thresholdParameterTypes,
+										etalonParameterTypes,
+										outParameterTypes);
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("EvaluationType.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -184,21 +183,6 @@ public class EvaluationType extends ActionType {
 			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
-
-//	public static EvaluationType getInstance(EvaluationType_Transferable ett) throws CreateObjectException {
-//		EvaluationType evaluationType = new EvaluationType(ett);
-//		
-//		evaluationType.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
-//		try {
-//			if (evaluationType.evaluationTypeDatabase != null)
-//				evaluationType.evaluationTypeDatabase.insert(evaluationType);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
-//		
-//		return evaluationType;
-//	}
 
 	public Object getTransferable() {
 		int i;
@@ -232,11 +216,11 @@ public class EvaluationType extends ActionType {
 											   outParTypeIds);
 	}
 
-    public short getEntityCode() {
-        return ObjectEntities.EVALUATIONTYPE_ENTITY_CODE;
-    }
-    
-    public List getInParameterTypes() {
+  public short getEntityCode() {
+		return ObjectEntities.EVALUATIONTYPE_ENTITY_CODE;
+	}
+
+  public List getInParameterTypes() {
 		return Collections.unmodifiableList(this.inParameterTypes);
 	}
 
@@ -298,6 +282,7 @@ public class EvaluationType extends ActionType {
 		if (thresholdParameterTypes != null)
 	     	this.thresholdParameterTypes.addAll(thresholdParameterTypes);
 	}
+
 	/**
 	 * client setter for thresholdParameterTypes
 	 * 
@@ -314,6 +299,7 @@ public class EvaluationType extends ActionType {
 		if (etalonParameterTypes != null)
 	     	this.etalonParameterTypes.addAll(etalonParameterTypes);
 	}
+
 	/**
 	 * client setter for etalonParameterTypes
 	 * 
@@ -330,6 +316,7 @@ public class EvaluationType extends ActionType {
 		if (outParameterTypes != null)
 	     	this.outParameterTypes.addAll(outParameterTypes);
 	}
+
 	/**
 	 * client setter for outParameterTypes
 	 * 
@@ -340,8 +327,7 @@ public class EvaluationType extends ActionType {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.currentVersion = super.getNextVersion();
 	}
-	
-	
+
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		if (this.inParameterTypes != null)

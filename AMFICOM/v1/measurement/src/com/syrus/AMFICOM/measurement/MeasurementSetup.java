@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.41 2004/12/09 15:52:53 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.42 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/12/09 15:52:53 $
+ * @version $Revision: 1.42 $, $Date: 2004/12/27 21:00:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -58,6 +58,7 @@ public class MeasurementSetup extends StorableObject {
 		super(id);
 
 		this.monitoredElementIds = new LinkedList();
+
 		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
 			this.measurementSetupDatabase.retrieve(this);
@@ -97,7 +98,8 @@ public class MeasurementSetup extends StorableObject {
 		this.monitoredElementIds = new ArrayList(mst.monitored_element_ids.length);
 		for (int i = 0; i < mst.monitored_element_ids.length; i++)
 			this.monitoredElementIds.add(new Identifier(mst.monitored_element_ids[i]));
-		
+
+		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
 	}
 
 	protected MeasurementSetup(Identifier id,
@@ -109,12 +111,11 @@ public class MeasurementSetup extends StorableObject {
 							   String description,
 							   long measurementDuration,
 							   List monitoredElementIds) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId);
 		this.parameterSet = parameterSet;
 		this.criteriaSet = criteriaSet;
 		this.thresholdSet = thresholdSet;

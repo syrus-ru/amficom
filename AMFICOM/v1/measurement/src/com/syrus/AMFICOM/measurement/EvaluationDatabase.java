@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.25 2004/12/08 09:11:37 bob Exp $
+ * $Id: EvaluationDatabase.java,v 1.26 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/08 09:11:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2004/12/27 21:00:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -54,22 +54,22 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		this.retrieveEntity(evaluation);
-	}	
+	}
 
 	protected String getEnityName() {		
 		return ObjectEntities.EVALUATION_ENTITY;
 	}
-	
+
 	protected String getColumns(int mode) {
-		if (columns == null){
+		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ COLUMN_THRESHOLD_SET_ID;
 		}
 		return columns;
-	}	
-	
+	}
+
 	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
@@ -183,24 +183,28 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		return retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids, condition);
 	}
-	
-    private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-        List list = null;
-        
-        String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
-                + SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-                + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
-            + CLOSE_BRACKET;
-        
-        try {
-            list = retrieveButIds(ids, condition);
-        }  catch (IllegalDataException ide) {           
-            Log.debugMessage("EvaluationDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-        }
-        
-        return list;
-    }    
-    
+
+	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+		List list = null;
+
+		String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN
+				+ OPEN_BRACKET
+					+ SQL_SELECT
+					+ COLUMN_ID
+					+ SQL_FROM + ObjectEntities.ME_ENTITY
+					+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
+				+ CLOSE_BRACKET;
+
+		try {
+			list = retrieveButIds(ids, condition);
+		}
+		catch (IllegalDataException ide) {
+			Log.debugMessage("EvaluationDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+		}
+
+		return list;
+	}    
+
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
 		List list = null;

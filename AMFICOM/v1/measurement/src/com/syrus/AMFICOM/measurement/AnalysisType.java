@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.42 2004/12/09 15:52:53 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.43 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/12/09 15:52:53 $
+ * @version $Revision: 1.43 $, $Date: 2004/12/27 21:00:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -103,6 +103,8 @@ public class AnalysisType extends ActionType {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+
+		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 	}
 
 	protected AnalysisType(Identifier id,
@@ -113,32 +115,26 @@ public class AnalysisType extends ActionType {
 						   List criteriaParameterTypes,
 						   List etalonParameterTypes,
 						   List outParameterTypes) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		super.codename = codename;
-		super.description = description;
-		
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId,
+					codename,
+					description);
+
 		this.inParameterTypes = new LinkedList();
 		this.setInParameterTypes0(inParameterTypes);
-		
-		
+
 		this.criteriaParameterTypes = new LinkedList();
 		this.setCriteriaParameterTypes0(criteriaParameterTypes);
-		
-		
+
 		this.etalonParameterTypes = new LinkedList();
 		this.setEtalonParameterTypes0(etalonParameterTypes);
-		
-		
+
 		this.outParameterTypes = new LinkedList();
 		this.setOutParameterTypes0(outParameterTypes);
 
-		super.currentVersion = super.getNextVersion();
-		
 		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 	}
 	
@@ -165,14 +161,15 @@ public class AnalysisType extends ActionType {
 		
 		try {
 			return new AnalysisType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
-				creatorId,
-				codename,
-				description,
-				inParameterTypes,
-				criteriaParameterTypes,
-				etalonParameterTypes,
-				outParameterTypes);
-		} catch (IllegalObjectEntityException e) {
+										creatorId,
+										codename,
+										description,
+										inParameterTypes,
+										criteriaParameterTypes,
+										etalonParameterTypes,
+										outParameterTypes);
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("AnalysisType.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -186,21 +183,6 @@ public class AnalysisType extends ActionType {
 			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
-
-//	public static AnalysisType getInstance(AnalysisType_Transferable att) throws CreateObjectException{
-//		AnalysisType analysisType = new AnalysisType(att);
-//
-//		analysisType.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
-//		try {
-//			if (analysisType.analysisTypeDatabase != null)
-//				analysisType.analysisTypeDatabase.insert(analysisType);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
-//
-//		return analysisType;
-//	}
 	
 	public Object getTransferable() {
 		int i;

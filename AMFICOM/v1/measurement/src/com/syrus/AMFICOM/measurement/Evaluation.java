@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.37 2004/12/24 14:06:14 bob Exp $
+ * $Id: Evaluation.java,v 1.38 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/24 14:06:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2004/12/27 21:00:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -68,7 +68,8 @@ public class Evaluation extends Action {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-		
+
+		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 	}
 
 	protected Evaluation(Identifier id,
@@ -76,19 +77,16 @@ public class Evaluation extends Action {
 						 EvaluationType type,
 						 Identifier monitoredElementId,
 						 Set thresholdSet) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		super.type = type;
-		super.monitoredElementId = monitoredElementId;
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId,
+					type,
+					monitoredElementId);
 
 		this.thresholdSet = thresholdSet;
 
-		super.currentVersion = super.getNextVersion();
-		
 		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.41 2004/12/24 14:06:14 bob Exp $
+ * $Id: Measurement.java,v 1.42 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/12/24 14:06:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.42 $, $Date: 2004/12/27 21:00:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -41,6 +41,7 @@ public class Measurement extends Action {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3544388098013476664L;
+
 	public static final long DEFAULT_MEASUREMENT_DURATION = 3*60*1000;//milliseconds
 	protected static final int RETRIEVE_RESULT = 1;
 	protected static final int UPDATE_STATUS = 1;
@@ -86,27 +87,26 @@ public class Measurement extends Action {
 		this.localAddress = new String(mt.local_address);
 		this.testId = new Identifier(mt.test_id);
 
+		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 	}
 
 	protected Measurement(Identifier id,
 											Identifier creatorId,
 											MeasurementType type,
-											String name,
 											Identifier monitoredElementId,
+											String name,
 											MeasurementSetup setup,
 											Date startTime,
 											String localAddress,
 											Identifier testId) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		super.type = type;
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId,
+					type,
+					monitoredElementId);
 		this.name = name;
-		super.monitoredElementId = monitoredElementId;
-
 		this.setup = setup;
 		this.startTime = startTime;
 		if (this.setup != null)
@@ -115,8 +115,6 @@ public class Measurement extends Action {
 		this.localAddress = localAddress;
 		this.testId = testId;
 
-		super.currentVersion = super.getNextVersion();
-		
 		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 	}
 
@@ -216,8 +214,8 @@ public class Measurement extends Action {
 
 	protected static Measurement createInstance(Identifier creatorId,
 												MeasurementType type,
-												String name,
 												Identifier monitoredElementId,
+												String name,
 												MeasurementSetup setup,
 												Date startTime,
 												String localAddress,
@@ -228,14 +226,14 @@ public class Measurement extends Action {
 
 		try {
 			return new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE),
-				creatorId,
-				type,
-				name,
-				monitoredElementId,
-				setup,
-				startTime,
-				localAddress,
-				testId);
+										creatorId,
+										type,
+										monitoredElementId,
+										name,
+										setup,
+										startTime,
+										localAddress,
+										testId);
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Measurement.createInstance | cannot generate identifier ", e);

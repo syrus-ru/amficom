@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.37 2004/12/24 14:06:14 bob Exp $
+ * $Id: Analysis.java,v 1.38 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/24 14:06:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2004/12/27 21:00:01 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -55,14 +55,11 @@ public class Analysis extends Action {
 		}
 	}
 
-	public short getEntityCode() {
-        return ObjectEntities.ANALYSIS_ENTITY_CODE;
-    }
-    
-    public Analysis(Analysis_Transferable at) throws CreateObjectException {
+  public Analysis(Analysis_Transferable at) throws CreateObjectException {
 		super(at.header,
 			  null,
 			  new Identifier(at.monitored_element_id));
+
 		try {
 			super.type = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
 
@@ -71,6 +68,8 @@ public class Analysis extends Action {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+
+		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 	}
 
 	protected Analysis(Identifier id,
@@ -78,28 +77,29 @@ public class Analysis extends Action {
 					   AnalysisType type,
 					   Identifier monitoredElementId,
 					   Set criteriaSet) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		super.type = type;
-		super.monitoredElementId = monitoredElementId;
-	
-		this.criteriaSet = criteriaSet;
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId,
+					type,
+					monitoredElementId);
 
-		super.currentVersion = super.getNextVersion();
+		this.criteriaSet = criteriaSet;
 		
 		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 
 	}
 
+	public short getEntityCode() {
+		return ObjectEntities.ANALYSIS_ENTITY_CODE;
+	}
+
 	public Object getTransferable() {
 		return new Analysis_Transferable(super.getHeaderTransferable(),
-			(Identifier_Transferable)super.type.getId().getTransferable(),
-			(Identifier_Transferable)super.monitoredElementId.getTransferable(),
-			(Identifier_Transferable)this.criteriaSet.getId().getTransferable());
+									(Identifier_Transferable)super.type.getId().getTransferable(),
+									(Identifier_Transferable)super.monitoredElementId.getTransferable(),
+									(Identifier_Transferable)this.criteriaSet.getId().getTransferable());
 	}
 
 	public Set getCriteriaSet() {
@@ -107,12 +107,12 @@ public class Analysis extends Action {
 	}
 
 	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  AnalysisType type,
-											  Identifier monitoredElementId,
-											  Set criteriaSet) {
+																	Date modified,
+																	Identifier creatorId,
+																	Identifier modifierId,
+																	AnalysisType type,
+																	Identifier monitoredElementId,
+																	Set criteriaSet) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -155,7 +155,8 @@ public class Analysis extends Action {
 				type,
 				monitoredElementId,
 				criteriaSet);
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Analysis.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -169,20 +170,6 @@ public class Analysis extends Action {
 			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
-
-//	public static Analysis getInstance(Analysis_Transferable at) throws CreateObjectException {
-//		Analysis analysis = new Analysis(at);
-//		
-//		analysis.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
-//		try {
-//			if (analysis.analysisDatabase != null)
-//				analysis.analysisDatabase.insert(analysis);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
-//		return analysis;
-//	}	
 	
 	public List getDependencies() {		
 		return Collections.singletonList(this.criteriaSet);

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.72 2004/12/09 15:52:53 arseniy Exp $
+ * $Id: Test.java,v 1.73 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2004/12/09 15:52:53 $
+ * @version $Revision: 1.73 $, $Date: 2004/12/27 21:00:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -92,11 +92,11 @@ public class Test extends StorableObject {
 	public Measurement createMeasurement(Identifier creatorId, Date startTime) throws CreateObjectException {
 			Measurement measurement = Measurement.createInstance(creatorId,
 																								this.measurementType,
+																								this.monitoredElement.getId(),
 																								"created by Test:'"
 																									+ this.getDescription()
 																									+ "' at "
 																									+ DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
-																								this.monitoredElement.getId(),
 																								this.mainMeasurementSetup,
 																								startTime,
 																								this.monitoredElement.getLocalAddress(),
@@ -125,7 +125,7 @@ public class Test extends StorableObject {
 							 MonitoredElement monitoredElement,
 							 int returnType,
 							 String description,
-							 List measurementSetupIds){
+							 List measurementSetupIds) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -255,7 +255,8 @@ public class Test extends StorableObject {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-	
+
+		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 	}
 
 	public void insert() throws CreateObjectException {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.43 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: ModelingType.java,v 1.1 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,11 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -28,36 +25,32 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/27 21:00:01 $
+ * @version $Revision: 1.1 $, $Date: 2004/12/27 21:00:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public class MeasurementType extends ActionType {
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long	serialVersionUID	= 3256726169373062969L;
+public class ModelingType extends ActionType {
+	private static final long serialVersionUID = 7084162116179995833L;
+
 	private List inParameterTypes;
 	private List outParameterTypes;
-	private List measurementPortTypes;
-	
-	private StorableObjectDatabase	measurementTypeDatabase;
 
-	public MeasurementType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	private StorableObjectDatabase modelingTypeDatabase;
+
+	public ModelingType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
 		this.inParameterTypes = new LinkedList();
 		this.outParameterTypes = new LinkedList();
-		this.measurementPortTypes = new LinkedList();
 
-		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
+		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;
 		try {
-			this.measurementTypeDatabase.retrieve(this);
+			this.modelingTypeDatabase.retrieve(this);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
@@ -68,52 +61,39 @@ public class MeasurementType extends ActionType {
 				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
 			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();)
 				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
-			for (Iterator it = this.measurementPortTypes.iterator(); it.hasNext();)
-				ConfigurationStorableObjectPool.putStorableObject((MeasurementPortType) it.next());
 		}
 		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 		}
 	}
 
-	public MeasurementType(MeasurementType_Transferable mtt) throws CreateObjectException {
+	public ModelingType(ModelingType_Transferable mtt) throws CreateObjectException {
 		super(mtt.header,
 			  new String(mtt.codename),
 			  new String(mtt.description));
 
 		try {
-			List inParameterTypeIds = new ArrayList(mtt.in_parameter_type_ids.length);
+			this.inParameterTypes = new ArrayList(mtt.in_parameter_type_ids.length);
 			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
-				inParameterTypeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
-			
-			this.inParameterTypes = MeasurementStorableObjectPool.getStorableObjects(inParameterTypeIds, true);
-			
-			List outParameterTypeIds = new ArrayList(mtt.out_parameter_type_ids.length);
+				this.inParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.in_parameter_type_ids[i]), true));
+
+			this.outParameterTypes = new ArrayList(mtt.out_parameter_type_ids.length);
 			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
-				outParameterTypeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
-			
-			this.outParameterTypes = MeasurementStorableObjectPool.getStorableObjects(outParameterTypeIds, true);
-	
-			List measurementPortTypeIds = new ArrayList(mtt.measurement_port_type_ids.length);
-			for (int i = 0; i < mtt.measurement_port_type_ids.length; i++)
-				measurementPortTypeIds.add(new Identifier(mtt.measurement_port_type_ids[i]));
-			
-			this.measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjects(measurementPortTypeIds, true);
+				this.outParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.out_parameter_type_ids[i]), true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 
-		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
+		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;
 	}
-	
-	protected MeasurementType(Identifier id,
-							  Identifier creatorId,
-							  String codename,
-							  String description,
-							  List inParameterTypes,
-							  List	outParameterTypes,
-							  List measurementPortTypes){
+
+	protected ModelingType(Identifier id,
+							 Identifier creatorId,
+							 String codename,
+							 String description,
+							 List inParameterTypes,
+							 List outParameterTypes) {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
@@ -122,18 +102,15 @@ public class MeasurementType extends ActionType {
 					codename,
 					description);
 
-		this.inParameterTypes = new LinkedList(); 
+		this.inParameterTypes = new LinkedList();
 		this.setInParameterTypes0(inParameterTypes);
-		
+
 		this.outParameterTypes = new LinkedList();
 		this.setOutParameterTypes0(outParameterTypes);
-		
-		this.measurementPortTypes = new LinkedList();
-		this.setMeasurementPortTypes0(measurementPortTypes);
-		
-		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
+
+		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;
 	}
-	
+
 	/**
 	 * create new instance for client
 	 * @param creatorId
@@ -141,35 +118,34 @@ public class MeasurementType extends ActionType {
 	 * @param description
 	 * @param inParameterTypes
 	 * @param outParameterTypes
-	 * @throws CreateObjectException
+	 * @return 
+	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 */
-	public static MeasurementType createInstance(Identifier creatorId,
-												 String codename,
-												 String description,
-												 List inParameterTypes,
-												 List outParameterTypes,
-												 List measurementPortTypes) throws CreateObjectException {
-		if (creatorId == null || codename == null || codename.length() == 0  || description == null)
-			throw new IllegalArgumentException("Argument is 'null'");		
+	public static ModelingType createInstance(Identifier creatorId,
+												String codename,
+												String description,
+												List inParameterTypes,
+												List outParameterTypes) throws CreateObjectException {
+		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
+			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),
+			return new ModelingType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELINGTYPE_ENTITY_CODE),
 										creatorId,
 										codename,
 										description,
 										inParameterTypes,
-										outParameterTypes,
-										measurementPortTypes);
+										outParameterTypes);
 		}
 		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("MeasurementType.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("ModelingType.createInstance | cannot generate identifier ", e);
 		}
 	}
 
 	public void insert() throws CreateObjectException {
 		try {
-			if (this.measurementTypeDatabase != null)
-				this.measurementTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+			if (this.modelingTypeDatabase != null)
+				this.modelingTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -188,25 +164,19 @@ public class MeasurementType extends ActionType {
 		i = 0;
 		for (Iterator iterator = this.outParameterTypes.iterator(); iterator.hasNext();)
 			outParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
-		
-		Identifier_Transferable[] measurementPortTypeIds = new Identifier_Transferable[this.measurementPortTypes.size()];
-		i = 0;
-		for (Iterator iterator = this.measurementPortTypes.iterator(); iterator.hasNext();){
-			MeasurementPortType measurementPortType = (MeasurementPortType) iterator.next();
-			if (measurementPortType != null)
-				measurementPortTypeIds[i++] = (Identifier_Transferable) measurementPortType.getId().getTransferable();
-		}
 
-
-		return new MeasurementType_Transferable(super.getHeaderTransferable(),
-												new String(super.codename),
-												(super.description != null) ? (new String(super.description)) : "",
-												inParTypeIds,	
-												outParTypeIds,
-												measurementPortTypeIds);
+		return new ModelingType_Transferable(super.getHeaderTransferable(),
+											new String(super.codename),
+											(super.description != null) ? (new String(super.description)) : "",
+											inParTypeIds,
+											outParTypeIds);
 	}
-    
-    public List getInParameterTypes() {
+
+  public short getEntityCode() {
+		return ObjectEntities.MODELINGTYPE_ENTITY_CODE;
+	}
+
+  public List getInParameterTypes() {
 		return Collections.unmodifiableList(this.inParameterTypes);
 	}
 
@@ -229,17 +199,17 @@ public class MeasurementType extends ActionType {
 	}
 
 	protected synchronized void setParameterTypes(List inParameterTypes,
-												  List outParameterTypes) {
+																	List outParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
 	}
-	
+
 	protected void setInParameterTypes0(List inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null)
 	     	this.inParameterTypes.addAll(inParameterTypes);
 	}
-	
+
 	/**
 	 * client setter for inParameterTypes
 	 * 
@@ -250,14 +220,13 @@ public class MeasurementType extends ActionType {
 		this.setInParameterTypes0(inParameterTypes);
 		super.currentVersion = super.getNextVersion();		
 	}
-	
-	
+
 	protected void setOutParameterTypes0(List outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null)
 	     	this.outParameterTypes.addAll(outParameterTypes);
 	}
-	
+
 	/**
 	 * client setter for outParameterTypes
 	 * 
@@ -266,26 +235,9 @@ public class MeasurementType extends ActionType {
 	 */
 	public void setOutParameterTypes(List outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
-		super.currentVersion = super.getNextVersion();		
+		super.currentVersion = super.getNextVersion();
 	}
-	
-	
-	protected void setMeasurementPortTypes0(List measurementPortTypes) {
-		this.measurementPortTypes.clear();
-		if (measurementPortTypes != null)
-	     	this.measurementPortTypes.addAll(measurementPortTypes);
-	}
-	
 
-	public void setMeasurementPortTypes(List measurementPortTypes) {
-		this.setMeasurementPortTypes0(measurementPortTypes);
-		super.currentVersion = super.getNextVersion();		
-	}
-	
-	public List getMeasurementPortTypes() {
-		return Collections.unmodifiableList(this.measurementPortTypes);
-	}
-	
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		if (this.inParameterTypes != null)
@@ -293,9 +245,6 @@ public class MeasurementType extends ActionType {
 				
 		if (this.outParameterTypes != null)
 			dependencies.addAll(this.outParameterTypes);
-				
-		if (this.measurementPortTypes != null)
-			dependencies.addAll(this.measurementPortTypes);
 				
 		return dependencies;
 	}

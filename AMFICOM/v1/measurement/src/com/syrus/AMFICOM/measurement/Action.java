@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.15 2004/12/27 09:58:39 arseniy Exp $
+ * $Id: Action.java,v 1.16 2004/12/27 21:00:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/12/27 09:58:39 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/27 21:00:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -28,11 +28,11 @@ public abstract class Action extends StorableObject implements TypedObject {
 	ActionType type;
 	Identifier monitoredElementId;
 
-	public Action(Identifier id) {
+	Action(Identifier id) {
 		super(id);
 	}
 
-	public Action(StorableObject_Transferable transferable,
+	Action(StorableObject_Transferable transferable,
 				  ActionType type,
 				  Identifier monitoredElementId) {
 		super(transferable);
@@ -40,7 +40,7 @@ public abstract class Action extends StorableObject implements TypedObject {
 		this.monitoredElementId = monitoredElementId;
 	}
 	
-	public Action(Identifier id,
+	Action(Identifier id,
 				  Date created,
 				  Date modified,
 				  Identifier creatorId,
@@ -54,6 +54,8 @@ public abstract class Action extends StorableObject implements TypedObject {
 					modifierId);
 		this.type = type;
 		this.monitoredElementId = monitoredElementId;
+
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public StorableObjectType getType() {
