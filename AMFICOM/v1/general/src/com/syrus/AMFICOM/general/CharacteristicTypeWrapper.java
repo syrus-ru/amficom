@@ -1,5 +1,5 @@
 /*
-* $Id: CharacteristicTypeWrapper.java,v 1.1 2005/01/24 15:29:27 bob Exp $
+* $Id: CharacteristicTypeWrapper.java,v 1.2 2005/01/31 14:07:21 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.DataType;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 14:07:21 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -79,23 +79,23 @@ public class CharacteristicTypeWrapper implements Wrapper {
 		if (object instanceof CharacteristicType) {
 			CharacteristicType characteristicType = (CharacteristicType) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return characteristicType.getId().getIdentifierString();
+				return characteristicType.getId();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return Long.toString(characteristicType.getCreated().getTime());
+				return characteristicType.getCreated();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return Long.toString(characteristicType.getModified().getTime());
+				return characteristicType.getModified();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return characteristicType.getCreatorId().getIdentifierString();
+				return characteristicType.getCreatorId();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return characteristicType.getModifierId().getIdentifierString();			
+				return characteristicType.getModifierId();			
 			else if (key.equals(COLUMN_CODENAME))
 				return characteristicType.getCodename();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				return characteristicType.getDescription();
 			else if (key.equals(COLUMN_DATA_TYPE))
-				return Integer.toString(characteristicType.getDataType().value());
+				return new Integer(characteristicType.getDataType().value());
 			else if (key.equals(COLUMN_SORT))
-				return Integer.toString(characteristicType.getSort().value());
+				return new Integer(characteristicType.getSort().value());
 		}
 		return null;
 	}
@@ -108,13 +108,13 @@ public class CharacteristicTypeWrapper implements Wrapper {
 		if (object instanceof CharacteristicType) {
 			CharacteristicType characteristic = (CharacteristicType) object;
 			if (key.equals(COLUMN_CODENAME))
-				characteristic.setCodename0((String)value);
+				characteristic.setCodename((String)value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				characteristic.setDescription0((String)value);
+				characteristic.setDescription((String)value);
 			else if (key.equals(COLUMN_SORT))
-				characteristic.setSort0(CharacteristicTypeSort.from_int(Integer.parseInt((String) value)));
+				characteristic.setSort0(CharacteristicTypeSort.from_int(((Integer)value).intValue()));
 			else if (key.equals(COLUMN_DATA_TYPE))
-				characteristic.setDataType0(DataType.from_int(Integer.parseInt((String) value)));
+				characteristic.setDataType0(DataType.from_int(((Integer)value).intValue()));
 		}
 	}
 

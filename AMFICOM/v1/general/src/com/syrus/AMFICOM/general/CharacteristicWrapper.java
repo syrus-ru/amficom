@@ -1,5 +1,5 @@
 /*
-* $Id: CharacteristicWrapper.java,v 1.1 2005/01/24 15:29:27 bob Exp $
+* $Id: CharacteristicWrapper.java,v 1.2 2005/01/31 14:07:21 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 14:07:21 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -90,29 +90,29 @@ public class CharacteristicWrapper implements Wrapper {
 		if (object instanceof Characteristic) {
 			Characteristic characteristic = (Characteristic) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return characteristic.getId().getIdentifierString();
+				return characteristic.getId();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return Long.toString(characteristic.getCreated().getTime());
+				return characteristic.getCreated();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return Long.toString(characteristic.getModified().getTime());
+				return characteristic.getModified();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return characteristic.getCreatorId().getIdentifierString();
+				return characteristic.getCreatorId();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return characteristic.getModifierId().getIdentifierString();
+				return characteristic.getModifierId();
 			else if (key.equals(COLUMN_TYPE_ID))
-				return characteristic.getType().getId().getIdentifierString();
+				return characteristic.getType();
 			else if (key.equals(COLUMN_NAME))
 				return characteristic.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				return characteristic.getDescription();
 			else if (key.equals(COLUMN_SORT))
-				return Integer.toString(characteristic.getSort().value());
+				return new Integer(characteristic.getSort().value());
 			else if (key.equals(COLUMN_CHARACTERIZED_ID))
-				return characteristic.getCharacterizedId().getIdentifierString();
+				return characteristic.getCharacterizedId();
 			else if (key.equals(COLUMN_EDITABLE))
-				return Boolean.toString(characteristic.isEditable());
+				return new Boolean(characteristic.isEditable());
 			else if (key.equals(COLUMN_VISIBLE))
-				return Boolean.toString(characteristic.isVisible());		
+				return new Boolean(characteristic.isVisible());		
 		}
 		return null;
 	}
@@ -125,25 +125,19 @@ public class CharacteristicWrapper implements Wrapper {
 		if (object instanceof Characteristic) {
 			Characteristic characteristic = (Characteristic) object;
 			if (key.equals(COLUMN_TYPE_ID))
-				try {
-					characteristic.setType0((CharacteristicType)GeneralStorableObjectPool.getStorableObject(new Identifier((String)value), true));
-				} catch (DatabaseException e) {
-					Log.errorMessage("CharacteristicWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				} catch (CommunicationException e) {
-					Log.errorMessage("CharacteristicWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				characteristic.setType((CharacteristicType)value);
 			else if (key.equals(COLUMN_NAME))
-				characteristic.setName0((String)value);
+				characteristic.setName((String)value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				characteristic.setDescription0((String)value);
 			else if (key.equals(COLUMN_SORT))
-				characteristic.setSort0(CharacteristicSort.from_int(Integer.parseInt((String) value)));
+				characteristic.setSort(CharacteristicSort.from_int(Integer.parseInt((String) value)));
 			else if (key.equals(COLUMN_CHARACTERIZED_ID))
-				characteristic.setCharacterizedId0(new Identifier((String)value));
+				characteristic.setCharacterizedId(new Identifier((String)value));
 			else if (key.equals(COLUMN_EDITABLE))
-				characteristic.setEditable0(Boolean.getBoolean((String)value));
+				characteristic.setEditable(((Boolean)value).booleanValue());
 			else if (key.equals(COLUMN_VISIBLE))
-				characteristic.setVisible0(Boolean.getBoolean((String)value));
+				characteristic.setVisible(((Boolean)value).booleanValue());
 		}
 	}
 
