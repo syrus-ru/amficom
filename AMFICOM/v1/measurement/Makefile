@@ -105,7 +105,7 @@ $(LIBNAME): .mach
 	$(JAVAC) $(JAVAC_FLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(ORACLECLASSPATH) \
 		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM//measurement/ora/*.java
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ora/*.java
 	touch $@
 	
 
