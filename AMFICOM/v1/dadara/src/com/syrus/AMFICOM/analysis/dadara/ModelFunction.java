@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.5 $, $Date: 2004/12/28 09:07:15 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/12 18:42:23 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -41,6 +41,24 @@ public class ModelFunction {
 	private static final int FITMODE_SET_SMOOTH = 5; // заменяем сглаживающей кривой -- пока не реализовано
 	
 	public static final int LINK_FIXLEFT = 0x1; // зафиксировать левую точку
+	
+	/**
+	 * @deprecated use only for debugging
+	 * @return Internal data: shape ID
+	 */
+	public int snoopShapeID()
+	{
+		return shapeID;
+	}
+
+	/**
+	 * @deprecated Use only for debugging
+	 * @return Internal data: parameters array
+	 */
+	public double[] snoopPars()
+	{
+		return pars;
+	}
 
 	/**
 	 * Процедура фитировки.

@@ -1,7 +1,7 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/28 09:07:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/12 18:42:23 $
  * @author $Author: saa $
  * @module general_v1
  */
@@ -334,6 +334,18 @@ public class ReflectogramEvent
 	private void refAmplitudeFillCache()
 	{
 		cacheRefAmplitude = mf.funFillArray(begin, 1, end - begin + 1);
+	}
+
+	/**
+	 * @deprecated debug only
+	 */
+	public boolean debug_breaksAt(int x)
+	{
+		// FIXME: it assumes BreakL shape type 
+		for (int i = 0; i < mf.snoopPars().length; i += 2)
+			if (mf.snoopPars()[i] == x)
+				return true;
+		return false;
 	}
 
 	public double refAmplitude(int x)

@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.5 2004/12/28 09:07:15 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.6 2005/01/12 18:42:23 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2004/12/28 09:07:15 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/12 18:42:23 $
  * @module
  */
 
@@ -24,7 +24,8 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 
 public class CoreAnalysisManager
 {
-	protected CoreAnalysisManager() {
+	protected CoreAnalysisManager()
+	{ // empty
 	}
 
 	private static native double[] gauss(double[] y, double center,
@@ -95,7 +96,7 @@ public class CoreAnalysisManager
 	 *   ≈сли null, то не используютс€.
 	 * @return относительна€ величина шума (дЅ) по уровню 3 сигма  
 	 */
-	private static double[] CalcNoiseArray(double[] y, ReflectogramEvent[] ev)
+	private static double[] calcNoiseArray(double[] y, ReflectogramEvent[] ev)
 	{
 		double[] ret = nCalcNoiseArray(y);
 		for (int i = 0; i < ret.length; i++)
@@ -190,9 +191,14 @@ public class CoreAnalysisManager
 				pars[0], pars[4], pars[3], pars[1], pars[2], meanAttenuation,
 				reflSize, nReflSize);
 
+//		// FIXME
+//		ReflectogramEvent ev0 = ep[0];
+// 		ev0.setEnd(ep[ep.length - 1].getEnd());
+//		ep = new ReflectogramEvent[] { ev0 };
+		
 		// определ€ем уровень шума дл€ фитировки
 		//double noiseLevel = calcNoise3s(y);
-		double[] noiseArray = CalcNoiseArray(y, null);
+		double[] noiseArray = calcNoiseArray(y, null);
 
 		// установка параметров фитировки и фитировка
 		// (с определением параметров нужных дл€ расчета потерь и отражени€)
@@ -210,7 +216,7 @@ public class CoreAnalysisManager
 		return ep;
 	}
 
-	private static ReflectogramEvent[] fitTrace(double[] y, double delta_x,
+	private static ReflectogramEvent[] fitTrace(double[] y, double deltaX,
 			ReflectogramEvent[] events, int strategy, double meanAttenuation, double[] noiseArray) {
 		long t0 = System.currentTimeMillis();
 
@@ -249,7 +255,7 @@ public class CoreAnalysisManager
 		return events;
 	}
 	
-	// ќпредел€ет уровень шума в р/г
+	// ќпредел€ет уровень шума в р/г -- старый метод
 	public static double calcNoise3s(double[] y)
 	{
 		return nCalcNoise3s(y);
