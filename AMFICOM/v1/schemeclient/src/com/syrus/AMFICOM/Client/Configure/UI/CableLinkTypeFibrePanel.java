@@ -312,7 +312,8 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 									.iterator()
 									.next();
 							name = ctt.getName();
-						} else
+						} 
+						else
 							name = "fiber";
 					}
 					name = MiscUtil.removeDigitsFromString(name);
@@ -320,50 +321,46 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 					Identifier user_id = new Identifier(((RISDSessionInfo) aContext
 							.getSessionInterface()).getAccessIdentifier().user_id);
 					try {
-						List newCableThreadTypes = new ArrayList(num);
-						newCableThreadTypes.addAll(clt.getCableThreadTypes());
-
 						for (int i = old_num; i < num; i++) {
 							CableThreadType newctt = CableThreadType
 									.createInstance(user_id, codename, "", name + (i + 1),
-											Color.BLACK.getRGB(), link_type);
-							newCableThreadTypes.add(newctt);
+											Color.BLACK.getRGB(), link_type, clt);
 							try {
 								ConfigurationStorableObjectPool.putStorableObject(newctt);
-							} catch (IllegalObjectEntityException e1) {
+							} 
+							catch (IllegalObjectEntityException e1) {
 								throw new CreateObjectException(
-										"Exception while creating CableLinkType by "
-												+ e1.getMessage());
+										"Exception while creating CableLinkType by " + e1.getMessage());
 							}
 						}
-						clt.setCableThreadTypes(newCableThreadTypes);
-					} catch (CreateObjectException ex) {
+					} 
+					catch (CreateObjectException ex) {
 						ex.printStackTrace();
 					}
-				} else if (num < old_num) {
-					List newCableThreadTypes = new ArrayList(num);
-					newCableThreadTypes.addAll(clt.getCableThreadTypes());
+				} 
+				else if (num < old_num) {
 					List toDelete = new LinkedList();
-
+					/**
+					 * TODO! make sort by namr and remove from the end   
+					 */
+					Iterator it = clt.getCableThreadTypes().iterator();
 					for (int i = old_num - 1; i >= num; i--) {
-						// CableTypeThread ctt = (CableTypeThread)clt.cable_threads.get(i);
-						CableThreadType ctt = (CableThreadType) clt.getCableThreadTypes()
-								.get(i);
+						CableThreadType ctt = (CableThreadType)it.next(); 
 						toDelete.add(ctt.getId());
-						newCableThreadTypes.remove(ctt);
 					}
-					clt.setCableThreadTypes(newCableThreadTypes);
 					try {
 						ConfigurationStorableObjectPool.delete(toDelete);
-					} catch (ApplicationException ex) {
+					} 
+					catch (ApplicationException ex) {
 						ex.printStackTrace();
 					}
-				} else
+				} 
+				else
 					modify();
 				setObject(clt);
-			} catch (NumberFormatException ex) {
-				tfNumberText.setText(String.valueOf(clt.getCableThreadTypes()
-						.size()));
+			} 
+			catch (NumberFormatException ex) {
+				tfNumberText.setText(String.valueOf(clt.getCableThreadTypes().size()));
 			}
 		}
 		/*
