@@ -32,6 +32,4 @@ clean:
 	make -C fit clean
 	make -C gauss clean
 	make -C An2 clean
-
-# how to simplify adding new dirs?
-# build becomes dependent on stranger .obj files
+	rm dadara.dll dadara.exp dadara.lib 

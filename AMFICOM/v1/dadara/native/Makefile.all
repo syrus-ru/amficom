@@ -4,4 +4,4 @@ all: $(OBJS)
 	@$(CXX) $(CXX_NOLINK_FLAG) $(CXXFLAGS) $(CPPFLAGS) $(CXX_OUTPUT_FLAG)$@ $<
 
 clean:
-	$(RM) $(OBJS)
+	$(RM) $(OBJS) vc60.idb
