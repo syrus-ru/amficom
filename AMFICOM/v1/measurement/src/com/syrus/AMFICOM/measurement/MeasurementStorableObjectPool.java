@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.34 2004/10/21 08:01:35 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.35 2004/10/25 14:56:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,13 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/10/21 08:01:35 $
+ * @version $Revision: 1.35 $, $Date: 2004/10/25 14:56:33 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -186,6 +187,7 @@ public class MeasurementStorableObjectPool {
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader)
 			throws DatabaseException, CommunicationException {
 		if (objectId != null) {
+			Log.debugMessage("MeasurementStorableObjectPool.getStorableObject | Try get '" + objectId.getIdentifierString() + "'", Log.DEBUGLEVEL05);
 			short objectEntityCode = objectId.getMajor();
 			LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(objectEntityCode));
 			if (objectPool != null) {
@@ -194,11 +196,13 @@ public class MeasurementStorableObjectPool {
 					return storableObject;
 				else {
 					if (useLoader) {
+						Log.debugMessage("MeasurementStorableObjectPool.getStorableObject | Try load '" + objectId.getIdentifierString() + "'", Log.DEBUGLEVEL05);
 						storableObject = loadStorableObject(objectId);
 						if (storableObject != null)
 							try {
 								putStorableObject(storableObject);
 							} catch (IllegalObjectEntityException ioee) {
+								Log.errorMessage("MeasurementStorableObjectPool.getStorableObject | Cannot load '" + objectId.getIdentifierString() + "'");
 								Log.errorException(ioee);
 							}
 					}
@@ -564,10 +568,20 @@ public class MeasurementStorableObjectPool {
 		// cached
 		switch (entityCode) {
 			case ObjectEntities.TEST_ENTITY_CODE:
-				Test test = (Test) storableObject;
-				TestStatus status = test.getStatus();
-				cache = (status.value() == TestStatus._TEST_STATUS_ABORTED)
-						|| (status.value() == TestStatus._TEST_STATUS_ABORTED);
+				{
+					Test test = (Test) storableObject;
+					TestStatus status = test.getStatus();
+					cache = (status.value() == TestStatus._TEST_STATUS_ABORTED)
+							|| (status.value() == TestStatus._TEST_STATUS_ABORTED);
+				}
+				break;
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+				{
+					Measurement measurement = (Measurement)storableObject;
+					MeasurementStatus status = measurement.getStatus();
+					cache = ((status.value() == MeasurementStatus._MEASUREMENT_STATUS_ABORTED) ||  
+							(status.value() == MeasurementStatus._MEASUREMENT_STATUS_COMPLETED));
+				}
 				break;
 			default:
 				cache = true;

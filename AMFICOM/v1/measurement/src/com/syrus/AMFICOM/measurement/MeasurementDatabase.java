@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.30 2004/10/19 07:48:21 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.31 2004/10/25 14:56:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/10/19 07:48:21 $
+ * @version $Revision: 1.31 $, $Date: 2004/10/25 14:56:33 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -355,6 +355,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementDatabase.updateStatus | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
+			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementDatabase.updateStatus | Cannot update status of measurement '" + measurementIdStr + "' -- " + sqle.getMessage();

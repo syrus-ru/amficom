@@ -36,4 +36,8 @@ SOCKET tcp_server (char * hname,char * sname);
 
 SOCKET tcp_client (char * hname,char * sname);
 
+int readNBytesFromTCP (SOCKET s, char * buff, int size, int flags);
+
+int sendNBytesToTCP (SOCKET s, char * buff, int size, int flags);
+
 #endif

@@ -21,13 +21,13 @@ void set_address (char * hostName, char * serviceName,
 	//Пытаемся преобразовать имя хоста в IP-адрес
       hostent * hostInfo = gethostbyname(hostName);
       if (hostInfo == NULL)
-        cout << "Unknown host " << hostName;
+        printf ("Unknown host ",hostName);
       else
         sap->sin_addr = *(in_addr *) hostInfo->h_addr;
     }
   }
   else
-  	//Работа с любым сетевым интерфейсом
+	//Работа с любым сетевым интерфейсом
 	sap->sin_addr.s_addr = htonl(INADDR_ANY);
 
   //Получаем с помощью strtol(...) числовое значение порта
@@ -43,7 +43,7 @@ void set_address (char * hostName, char * serviceName,
 	//(например в etc/services такая строка klmn 767/udp)
     servent * sp = getservbyname (serviceName,protocol);
     if (sp == NULL)
-      cout << "unknown service: " << serviceName;
+      printf ("unknown service: ",serviceName);
     sap->sin_port = sp->s_port;
   }
 }
@@ -63,7 +63,7 @@ SOCKET tcp_server (char * hostName,char * serviceName)
 
   if (listened_socket == INVALID_SOCKET)
   {
-	cout << "Error calling socket(..) for server socket!\n";
+	printf ("Error calling socket(..) for server socket!\n");
     return -1;
   }
 
@@ -76,7 +76,7 @@ SOCKET tcp_server (char * hostName,char * serviceName)
                   (char *)&on,
                   sizeof(on)))
   {
-    cout << "Error calling setsockopt!\n";
+    printf ("Error calling setsockopt!\n");
     return -1;
   }
   //Привязываем адрес интерфейса и номер порта к прослушивающему сокету
@@ -84,7 +84,7 @@ SOCKET tcp_server (char * hostName,char * serviceName)
 	  bind(listened_socket, (struct sockaddr *)&server_peer,sizeof(server_peer));
   if (testValue != 0)
   {
-	cout << "Error binding interface address to the socket.\n";
+	printf ("Error binding interface address to the socket.\n");
     return -1;
   }
 
@@ -92,7 +92,7 @@ SOCKET tcp_server (char * hostName,char * serviceName)
   testValue = listen(listened_socket, 5);
   if (testValue != 0)
   {
-	cout << "Error calling listen.\n";
+	printf ("Error calling listen.\n");
     return -1;
   }
 
@@ -109,15 +109,64 @@ SOCKET tcp_client (char * hname,char * sname)
   client_socket = socket(AF_INET,SOCK_STREAM,0);
   if (client_socket == INVALID_SOCKET)
   {
-    cout << "Error calling socket(...) for client socket!\n";
+    printf ("Error calling socket(...) for client socket!\n");
     return -1;
   }
 
   if (connect (client_socket,(sockaddr *)&peer,sizeof(peer)))
   {
-    cout << "Error calling connect(...) for client socket!\n";
+    printf ("Error calling connect(...) for client socket! ");
+	printf (".\n");
     return -1;
   }
 
   return client_socket;
+}
+
+//Receives parts of data with maximum interval of 3 seconds
+int readNBytesFromTCP (SOCKET s, char * buff, int size, int flags)
+{
+	int bytesRead = 0;
+	int rc;
+	while (bytesRead < size)
+	{
+		timeval tv;
+		tv.tv_sec = 3;
+		tv.tv_usec = 0;
+
+		fd_set in;
+		FD_ZERO (&in);
+		FD_SET (s,&in);
+
+		rc = select (s + 1, &in, NULL, NULL, &tv);
+		if (rc <= 0)
+			break;
+
+		rc = recv(s,buff + bytesRead,size - bytesRead,flags);
+
+		if (rc <= 0)
+			break;
+
+		bytesRead += rc;
+	}
+
+	return bytesRead;
+}
+
+//Sends data by parts
+int sendNBytesToTCP (SOCKET s, char * buff, int size, int flags)
+{
+	int bytesSent = 0;
+	int rc;
+	while (bytesSent < size)
+	{
+		rc = send(s,buff + bytesSent,size - bytesSent,flags);
+
+		if (rc <= 0)
+			break;
+
+		bytesSent += rc;
+	}
+
+	return bytesSent;
 }

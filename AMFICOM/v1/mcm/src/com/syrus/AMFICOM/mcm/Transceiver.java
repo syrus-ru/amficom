@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.26 2004/10/17 14:18:46 bob Exp $
+ * $Id: Transceiver.java,v 1.27 2004/10/25 14:56:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/10/17 14:18:46 $
+ * @version $Revision: 1.27 $, $Date: 2004/10/25 14:56:20 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -112,17 +112,7 @@ public class Transceiver extends SleepButWorkThread {
 	      } else {
 		      if (! this.measurementQueue.isEmpty()) {
 					measurement = (Measurement)this.measurementQueue.get(0);
-					measurementId = measurement.getId();
-					Log.debugMessage("Try to transmit '" + measurement.getId().toString() + "', \n\t"
-									 + "'" + measurement.getType().getCodename() + "', \n\t"
-									 + "'" + measurement.getLocalAddress() + "'.", Log.DEBUGLEVEL07);
-					Log.debugMessage(" ParameterTypeCodenames(" + measurement.getSetup().getParameterTypeCodenames().length 
-									 + ") : ParameterValues(" + measurement.getSetup().getParameterValues().length + ")", Log.DEBUGLEVEL07);
-					for(int i=0;i<measurement.getSetup().getParameterTypeCodenames().length;i++){
-						Log.debugMessage('\'' + measurement.getSetup().getParameterTypeCodenames()[i] + "':'"+
-										 new String(measurement.getSetup().getParameterValues()[i]) +'\'', Log.DEBUGLEVEL07);
-					}
-					
+					measurementId = measurement.getId();					
 					if (this.transmit(
 									  this.socket,
 									  measurement.getId().toString(),
