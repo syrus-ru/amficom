@@ -9,9 +9,11 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Vladimir Dolzhenko
  */
-public class PoolId {
+public class IdentifierPool {
+
 	
-	private PoolId(){
+	
+	private IdentifierPool() {
 		// nothing
 	}
 	
