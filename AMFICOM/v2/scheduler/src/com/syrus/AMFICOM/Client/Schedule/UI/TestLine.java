@@ -534,4 +534,10 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		this.dispatcher.register(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
+	
+	public void unregisterDispatcher(){
+		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
+	}
 }

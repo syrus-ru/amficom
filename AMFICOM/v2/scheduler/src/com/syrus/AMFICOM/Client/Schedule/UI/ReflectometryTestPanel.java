@@ -615,6 +615,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 	}
+	
+	public void unregisterDispatcher() {
+		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+	}
 
 	private void selectCBValue(AComboBox cb, double value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {

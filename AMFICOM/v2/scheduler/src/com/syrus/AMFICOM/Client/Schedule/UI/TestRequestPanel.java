@@ -126,19 +126,19 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
-		//		this.dispatcher.register(this,
-		// TestParametersPanel.COMMAND_CHANGE_KIS);
-		//		this.dispatcher.register(this,
-		// TestParametersPanel.COMMAND_CHANGE_ME_TYPE);
-		//		this.dispatcher.register(this,
-		// TestParametersPanel.COMMAND_CHANGE_TEST_TYPE);
-//		this.dispatcher.register(this, SchedulerModel.COMMAND_CREATE_TEST);
-//		this.dispatcher.register(this, SchedulerModel.COMMAND_APPLY_TEST);
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_REMOVE_TEST);
 
 	}
+	
+	public void unregisterDispatcher(){
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
+		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REMOVE_TEST);		
+	}
+	
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();

@@ -40,6 +40,12 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 	}
+	
+	public void unregisterDispatcher(){
+		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.panel.unregisterDispatcher();
+	}
+	
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();

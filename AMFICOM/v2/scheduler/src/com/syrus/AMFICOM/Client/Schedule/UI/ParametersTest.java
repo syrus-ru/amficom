@@ -26,5 +26,6 @@ public interface ParametersTest {
 	String getPanelName();
 
 	void setTest(Test test);
-
+	
+	void unregisterDispatcher();
 }

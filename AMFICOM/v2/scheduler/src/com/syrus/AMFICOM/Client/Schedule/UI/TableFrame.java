@@ -558,6 +558,12 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		this.dispatcher.register(this, SchedulerModel.COMMAND_NAME_ALL_TESTS);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
+	
+	public void unregisterDispatcher() {
+		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_NAME_ALL_TESTS);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
+	}
 
 	/**
 	 * @return Returns the command.

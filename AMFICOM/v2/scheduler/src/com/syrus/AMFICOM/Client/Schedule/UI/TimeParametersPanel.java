@@ -113,6 +113,11 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 	}
+	
+	public void unregisterDispatcher(){
+		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);		
+	}
 
 	public void setTestRequest(TestRequest treq) {
 		//System.out.println("set Test Request" + treq.getId());

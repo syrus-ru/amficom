@@ -36,6 +36,12 @@ public class TestRequestFrame extends JInternalFrame implements OperationListene
 		this.command = new WindowCommand(this);
 
 	}
+	
+	
+	public void unregisterDispatcher() {
+		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.panel.unregisterDispatcher();
+	}
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();

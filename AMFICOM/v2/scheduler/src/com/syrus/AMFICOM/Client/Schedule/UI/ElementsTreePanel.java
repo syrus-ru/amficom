@@ -479,4 +479,11 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
+	
+	public void unregisterDispatcher() {
+		this.dispatcher.unregister(this, TreeDataSelectionEvent.type);
+		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);		
+	}
 }

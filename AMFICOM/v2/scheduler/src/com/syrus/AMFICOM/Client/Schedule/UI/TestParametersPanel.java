@@ -20,28 +20,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class TestParametersPanel extends JPanel implements OperationListener {
-
-	//	public static final String COMMAND_STOP_ANALYSIS = "StopAnalysis";
-	//	public static final String COMMAND_ME_TYPE = "METype";
-	//	public static final String COMMAND_KIS_TYPE = "KISType";
-	//	public static final String COMMAND_PORT_TYPE = "PortType";
-	//	public static final String COMMAND_VISUAL_TEST_SETUP = "VisualTestSetup";
-	//	public static final String COMMAND_TEST_TYPE = "TestType";
-	//	public static final String COMMAND_TEST_SETUP = "TestSetup";
-	//	public static final String COMMAND_VISUAL_TEST_PARAMS =
-	// "VisualTestParams";
-	//	public static final String COMMAND_EXT_AFTER_USUAL_ROOT_FRAME =
-	// "ExtendedAfterUsual_RootFrame";
-	//	public static final String COMMAND_REMOVE_PARAM_FRAME =
-	// "RemoveParamFrame";
-	//	public static final String COMMAND_REMOVE_3A_FRAME = "Remove3aFrame";
-	//public static final boolean DEBUG = true;
-
-	//public static final String COMMAND_ADD_PARAM_PANEL = "ParamPanel";
-	//public static final String TEST_TYPE_TRACE_AND_ANALYSE =
-	// "trace_and_analyse"; //$NON-NLS-1$
-	//public static final String TEST_TYPE_VOICE_ANALYSE = "voice_analyse";
-	// //$NON-NLS-1$
 	public static final String	PARAMETER_PARAMETER		= "Parameter";											//$NON-NLS-1$
 	public static final String	PARAMETERS_PANEL_PREFIX	= "PARAMETERS_PANEL";									//$NON-NLS-1$
 
@@ -56,10 +34,6 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	ObjectResourceComboBox		evaluationComboBox		= new ObjectResourceComboBox(EvaluationType.typ, true);
 
 	final JPanel				switchPanel				= new JPanel(new CardLayout());
-
-	//	private HashMap objMap = new HashMap();
-	//	private String testTypeId;
-	//	private String meId;
 
 	ObjectResourceListBox		testSetups;
 	private HashMap				testMap;
@@ -87,7 +61,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				.createRadioButton(LangModelSchedule.getString("UsePattern"), new AbstractAction() { //$NON-NLS-1$
 
 										public void actionPerformed(ActionEvent e) {
-											CardLayout cl = (CardLayout) (TestParametersPanel.this.switchPanel.getLayout());
+											CardLayout cl = (CardLayout) (TestParametersPanel.this.switchPanel
+													.getLayout());
 											cl.show(TestParametersPanel.this.switchPanel, PATTERN_PANEL_NAME);
 											revalidate();
 										}
@@ -96,8 +71,10 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				.createRadioButton(LangModelSchedule.getString("UseParameters"), new AbstractAction() { //$NON-NLS-1$
 
 										public void actionPerformed(ActionEvent e) {
-											CardLayout cl = (CardLayout) (TestParametersPanel.this.switchPanel.getLayout());
-											cl.show(TestParametersPanel.this.switchPanel, TestParametersPanel.this.currentParametersPanelName);
+											CardLayout cl = (CardLayout) (TestParametersPanel.this.switchPanel
+													.getLayout());
+											cl.show(TestParametersPanel.this.switchPanel,
+													TestParametersPanel.this.currentParametersPanelName);
 											revalidate();
 										}
 									});
@@ -131,6 +108,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		patternPanel.add(evaluationLabel, gbc);
 		patternPanel.add(this.evaluationComboBox, gbc);
 		this.testMap = new HashMap();
+		patternPanel.add(new JLabel(LangModelSchedule.getString("Patterns")), gbc);
 		this.testSetups = new ObjectResourceListBox();
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
@@ -140,17 +118,23 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				if (ts != null) {
 					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
 					//DataSet dsAnalysis = new DataSet();
-					//dsAnalysis.add((ObjectResource) Pool.get(AnalysisType.typ, ts.getAnalysisTypeId()));
+					//dsAnalysis.add((ObjectResource)
+					// Pool.get(AnalysisType.typ, ts.getAnalysisTypeId()));
 
 					//DataSet dsEvaluation = new DataSet();
-					//dsEvaluation.add((ObjectResource) Pool.get(EvaluationType.typ, ts.getEvaluationTypeId()));
-					//TestParametersPanel.this.analysisComboBox.setContents(dsAnalysis.elements(), true);
+					//dsEvaluation.add((ObjectResource)
+					// Pool.get(EvaluationType.typ, ts.getEvaluationTypeId()));
+					//TestParametersPanel.this.analysisComboBox.setContents(dsAnalysis.elements(),
+					// true);
 					TestParametersPanel.this.analysisComboBox.removeAll();
-					TestParametersPanel.this.analysisComboBox.add((ObjectResource) Pool.get(AnalysisType.typ, ts.getAnalysisTypeId()));
-					
-					//TestParametersPanel.this.evaluationComboBox.setContents(dsEvaluation.elements(), true);
+					TestParametersPanel.this.analysisComboBox.add((ObjectResource) Pool.get(AnalysisType.typ, ts
+							.getAnalysisTypeId()));
+
+					//TestParametersPanel.this.evaluationComboBox.setContents(dsEvaluation.elements(),
+					// true);
 					TestParametersPanel.this.evaluationComboBox.removeAll();
-					TestParametersPanel.this.evaluationComboBox.add((ObjectResource) Pool.get(EvaluationType.typ, ts.getEvaluationTypeId()));
+					TestParametersPanel.this.evaluationComboBox.add((ObjectResource) Pool.get(EvaluationType.typ, ts
+							.getEvaluationTypeId()));
 
 					for (Iterator it = TestParametersPanel.this.testPanels.keySet().iterator(); it.hasNext();) {
 						String key = (String) it.next();
@@ -219,23 +203,26 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		//		this.dispatcher.register(this, COMMAND_KIS_TYPE);
-		//		this.dispatcher.register(this, COMMAND_PORT_TYPE);
-		//		this.dispatcher.register(this, COMMAND_STOP_ANALYSIS);
-		//		this.dispatcher.register(this, COMMAND_REMOVE_PARAM_FRAME);
-		//		this.dispatcher.register(this, COMMAND_REMOVE_3A_FRAME);
-		//		this.dispatcher.register(this, COMMAND_TEST_TYPE);
-		//		this.dispatcher.register(this, COMMAND_ME_TYPE);
-		//		this.dispatcher.register(this, COMMAND_VISUAL_TEST_PARAMS);
-		//		this.dispatcher.register(this, COMMAND_EXT_AFTER_USUAL_ROOT_FRAME);
-		////
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_PARAM_PANEL);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_ADD_PARAM_PANEL);
-		//		this.dispatcher.register(this, COMMAND_CHANGE_TEST_TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_AVAILABLE_ME);
+	}
+	
+	public void unregisterDispatcher() {
+		for(Iterator it=this.testPanels.keySet().iterator();it.hasNext();){
+			Object key = it.next();
+			ParametersTestPanel panel = (ParametersTestPanel)this.testPanels.get(key);
+			panel.unregisterDispatcher();
+		}
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_PARAM_PANEL);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_ADD_PARAM_PANEL);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_AVAILABLE_ME);
 	}
 
 	public void setTest(Test test) {
@@ -391,18 +378,18 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					|| (this.test.getAnalysisId().length() > 0)) {
 				if (!this.useAnalysisBox.isSelected())
 					this.useAnalysisBox.doClick();
-			} else{
+			} else {
 				if (this.useAnalysisBox.isSelected())
-					this.useAnalysisBox.doClick();				
+					this.useAnalysisBox.doClick();
 			}
-			
-			
+
 			if (testsetup != null) {
 				//System.out.println("testsetup:" + testsetup.getId());
 				this.testSetups.setSelected(testsetup);
 				this.patternRadioButton.doClick();
 
-				//System.out.println("getAnalysisId:" + this.test.getAnalysisId());
+				//System.out.println("getAnalysisId:" +
+				// this.test.getAnalysisId());
 
 				if (this.test.getEvalution() != null) {
 					//System.out.println("test.evalution isn't null");

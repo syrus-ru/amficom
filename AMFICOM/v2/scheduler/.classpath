@@ -4,7 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/map.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/administrate.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/analysis.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/configureclient.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/corba.jar"/>
@@ -21,5 +20,6 @@
 	<classpathentry kind="src" path="/generalclient_v1"/>
 	<classpathentry kind="src" path="/filter_v1"/>
 	<classpathentry kind="src" path="/Survey"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/administrate.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

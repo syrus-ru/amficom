@@ -365,7 +365,7 @@ class PlanToolBar extends JPanel {
 						date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
 						date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
 
-						panel.updateDate(date.getTime(), PlanToolBar.this.scaleComboBox.getSelectedIndex());
+						panel.setDate(date.getTime(), PlanToolBar.this.scaleComboBox.getSelectedIndex());
 						PlanToolBar.this.dispatcher
 								.notify(new OperationEvent(new Boolean(false), 0,
 															SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE));

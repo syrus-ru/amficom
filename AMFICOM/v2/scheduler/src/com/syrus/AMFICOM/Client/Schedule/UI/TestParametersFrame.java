@@ -16,8 +16,7 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
-public class TestParametersFrame extends JInternalFrame implements
-		OperationListener {
+public class TestParametersFrame extends JInternalFrame implements OperationListener {
 
 	private ApplicationContext	aContext;
 	private Dispatcher			dispatcher;
@@ -41,16 +40,21 @@ public class TestParametersFrame extends JInternalFrame implements
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
-		this.dispatcher.register(this,
-								 SchedulerModel.COMMAND_CHANGE_PORT_TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_PORT_TYPE);
+	}
+
+	public void unregisterDispatcher() {
+		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_PORT_TYPE);
+		this.panel.unregisterDispatcher();
 	}
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-//		System.out.println(getClass().getName() + "\tcommandName:"
-//				+ commandName);
-//		System.out.println("obj:" + obj.getClass().getName() + "\t" + obj);
+		//		System.out.println(getClass().getName() + "\tcommandName:"
+		//				+ commandName);
+		//		System.out.println("obj:" + obj.getClass().getName() + "\t" + obj);
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
@@ -60,39 +64,31 @@ public class TestParametersFrame extends JInternalFrame implements
 				for (Enumeration e = ports.elements(); e.hasMoreElements();) {
 					AccessPort port = (AccessPort) e.nextElement();
 					//System.out.println("portId:" + port.type_id);
-					if (port.type_id
-							.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
-						if (!this.panel
-								.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
-							this.dispatcher
-									.notify(new OperationEvent(
-											new ReflectometryTestPanel(
-													this.aContext, port, test),
-											0,
-											SchedulerModel.COMMAND_ADD_PARAM_PANEL));
+					if (port.type_id.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
+						if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
+							this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, port,
+																									test), 0,
+																		SchedulerModel.COMMAND_ADD_PARAM_PANEL));
 						}
 					}
 				}
 
 				this.panel.setTest(test);
 			} else {
-//				nothing
+				//				nothing
 			}
-		} else if (commandName
-				.equals(SchedulerModel.COMMAND_CHANGE_PORT_TYPE)) {
+		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_PORT_TYPE)) {
 			AccessPort port = (AccessPort) obj;
-			if (port.type_id
-					.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
-				if (!this.panel
-						.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
-					this.dispatcher.notify(new OperationEvent(
-							new ReflectometryTestPanel(this.aContext, port), 0,
-							SchedulerModel.COMMAND_ADD_PARAM_PANEL));
+			if (port.type_id.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
+				if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
+					this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, port), 0,
+																SchedulerModel.COMMAND_ADD_PARAM_PANEL));
 				}
 			}
 
 		}
 	}
+
 	/**
 	 * @return Returns the command.
 	 */

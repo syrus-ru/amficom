@@ -59,7 +59,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	protected Point					currpos			= new Point();
 
-	protected int					margin			= 14;
+	protected final int				margin			= 14;
 	protected JScrollPane			parent;
 	protected int					scale			= 0;
 	protected Date					scaleEnd;
@@ -245,16 +245,18 @@ public class PlanPanel extends JPanel implements OperationListener {
 					boolean found = false;
 					if (test != null) {
 						long diff = 0;
-//						int scaleIndex = this.toolBar.scaleComboBox.getSelectedIndex();
-//						if ((scaleIndex > 0) && (scaleIndex < SCALES_MS.length))
-//							diff = SCALES_MS[scaleIndex] / 2;
+						//						int scaleIndex =
+						// this.toolBar.scaleComboBox.getSelectedIndex();
+						//						if ((scaleIndex > 0) && (scaleIndex <
+						// SCALES_MS.length))
+						//							diff = SCALES_MS[scaleIndex] / 2;
 						Date date = new Date(test.getStartTime() - diff);
-//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(date));
-//
-//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.timeSpinner.getModel()
-//								.getValue()));
-//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.dateSpinner.getModel()
-//								.getValue()));
+						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(date));
+						//
+						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.timeSpinner.getModel()
+						//								.getValue()));
+						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.dateSpinner.getModel()
+						//								.getValue()));
 
 						this.toolBar.timeSpinner.getModel().setValue(date);
 						this.toolBar.dateSpinner.getModel().setValue(date);
@@ -324,6 +326,11 @@ public class PlanPanel extends JPanel implements OperationListener {
 				this.parent.repaint();
 			}
 		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
+			for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
+				Object key = it.next();
+				TestLine line = (TestLine) this.testLines.get(key);
+				line.unregisterDispatcher();
+			}
 			this.testLines.clear();
 			removeAll();
 			revalidate();
@@ -502,7 +509,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	}
 
-	void updateDate(Date startDate, int scale) {
+	void setDate(Date startDate, int scale) {
 		this.setCursor(UIStorage.WAIT_CURSOR);
 		setScale(scale);
 		setStartDate(startDate);
@@ -511,8 +518,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 		updateTests();
 		this.setCursor(UIStorage.DEFAULT_CURSOR);
 	}
-	
-	void updateTestLines(){
+
+	void updateTestLines() {
 		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
 			Object key = it.next();
 			TestLine line = (TestLine) this.testLines.get(key);
@@ -525,6 +532,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 	void updateScale(double k) {
 		updateScale(k, (int) (this.parent.getViewport().getViewPosition().x + this.parent.getVisibleRect().width
 				* (k * 0.5 - 0.5) - this.margin));
+		//		BoundedRangeModel model =
+		// this.parent.getHorizontalScrollBar().getModel();
 		updateRealScale();
 		this.parent.revalidate();
 	}
@@ -570,6 +579,13 @@ public class PlanPanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_REMOVE_TEST);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_NAME_ALL_TESTS);
+	}
+
+	public void unregisterDispatcher() {
+		this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REMOVE_TEST);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_NAME_ALL_TESTS);
 	}
 
 	private void updateRealScale() {
@@ -655,7 +671,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		// getClass().getName()); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
 		// clear old tests
-		
+
 		/**
 		 * @TODO do testLine update without removing items
 		 */

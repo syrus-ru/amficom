@@ -121,6 +121,11 @@ public class SaveParametersFrame extends JInternalFrame implements OperationList
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 	}
+	
+	public void unregisterDispatcher() {
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
+	}
 
 	private TestReturnType getParameter() {
 		TestReturnType ret = TestReturnType.TEST_RETURN_TYPE_WHOLE;
