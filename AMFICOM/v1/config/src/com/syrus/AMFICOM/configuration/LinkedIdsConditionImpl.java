@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.6 2005/02/24 09:16:16 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.7 2005/03/04 15:07:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/24 09:16:16 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/04 15:07:39 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -55,7 +55,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
-		DomainMember domainMember;
+		DomainMember domainMember = null;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 				domainMember = (Equipment) object;
@@ -71,8 +71,11 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 				break;
 			case ObjectEntities.PORT_ENTITY_CODE:
 				Port port = (Port) object;
-				domainMember = (Equipment) ConfigurationStorableObjectPool.getStorableObject(port.getEquipmentId(),
+				Equipment equipment = (Equipment) ConfigurationStorableObjectPool.getStorableObject(port.getEquipmentId(),
 					true);
+				condition = super.conditionTest(Collections.singleton(equipment.getId()));
+				if (!condition)
+					domainMember = equipment;
 				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				MeasurementPort measurementPort = (MeasurementPort) object;

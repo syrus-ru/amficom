@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.1 2005/02/10 08:20:00 bob Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.2 2005/03/04 15:07:39 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/10 08:20:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/04 15:07:39 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -36,6 +36,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
 				break;				
 			case ObjectEntities.PORT_ENTITY_CODE:
+				/* TODO add query to retrieve ports by equipment id */
 				query = super.getLinkedQuery(PortWrapper.COLUMN_EQUIPMENT_ID, 
 					StorableObjectWrapper.COLUMN_ID, DomainMember.COLUMN_DOMAIN_ID,
 					ObjectEntities.EQUIPMENT_ENTITY);
