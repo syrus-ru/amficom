@@ -298,7 +298,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		if (mtm != null && current_ev != -1)
 		{
 			// XXX - getThreshEditor will generate few unnecessary objects
-			ModelTraceManager.ThreshEditor[] teds = mtm.getThreshEditor(current_ev);
+			ModelTraceManager.ThreshEditor[] teds = mtm.getThreshEditors(current_ev);
 			int current_th = this.jTable.getSelectedColumn() - 1;
 			if (current_th >= 0 && current_th < teds.length)
 				return teds[current_th];
@@ -381,7 +381,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		if (current_ev >= mtm.getNEvents())
 			current_ev = mtm.getNEvents() - 1;
 
-		ModelTraceManager.ThreshEditor[] te = mtm.getThreshEditor(current_ev);
+		ModelTraceManager.ThreshEditor[] te = mtm.getThreshEditors(current_ev);
 		String[] pColumns = new String[te.length + 1];
 		pColumns[0] = LangModelAnalyse.getString("thresholdsKey");
 		for (int i = 1; i < pColumns.length; i++)
@@ -448,7 +448,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		public void setValueAt(Object value, int row, int col) {
 			if (mtm != null && current_ev != -1) {
 				ModelTraceManager.ThreshEditor[] te =
-					mtm.getThreshEditor(current_ev);
+					mtm.getThreshEditors(current_ev);
 				try
 				{
 					te[col - 1].setValue(
