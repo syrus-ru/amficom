@@ -1,14 +1,6 @@
 IDLDIR = idl
 SRCDIR = src
 
-IDLJ = idlj
-IDLJFLAGS = \
-		-fallTIE \
-		-i $(IDLDIR) \
-		-keep \
-		-td $(SRCDIR) \
-		-v
-
 .PHONY: idl
 idl: .idl
 
