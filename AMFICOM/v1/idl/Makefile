@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2004/06/23 11:00:45 arseniy Exp $
+# $Id: Makefile,v 1.7 2004/06/24 13:39:05 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -55,15 +55,15 @@ JIKESFLAGS = \
 	+Pnaming-convention \
 	-nowarn \
 	+T=8
+# -portable and -strict are temporarily removed: AMFICOMServer overrides
+# _execute() and _methods() from _AMFICOMImplBase.
 IDL2JAVAFLAGS = \
 	-C \
 	-H \
 	-no_bind \
 	-no_examples \
 	-narrow_compliance \
-	-portable \
 	-root_dir $(SRCDIR) \
-	-strict \
 	-no_toString
 SQLJFLAGS = \
 	-cache=true \
@@ -180,12 +180,12 @@ $(LIBNAME_OBJECT): .all
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMHolder.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_AMFICOMImplBase.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_portable_stub_AMFICOM.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_st_AMFICOM.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClient.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/AMFICOMClientHolder.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_AMFICOMClientImplBase.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_portable_stub_AMFICOMClient.class
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_st_AMFICOMClient.class
 
 $(LIBNAME_ADMIN): .all
 	$(JAR) cf $@ \
@@ -204,7 +204,7 @@ $(LIBNAME_GENERAL): .all
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/ConstantsHolder.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_ConstantsImplBase.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_portable_stub_Constants.class
+		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/_st_Constants.class
 
 $(LIBNAME_ISM): .all
 	$(JAR) cf $@ \
