@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.19 2005/02/14 10:30:56 bob Exp $
+ * $Id: Map.java,v 1.20 2005/03/01 15:31:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,18 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -20,32 +32,20 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: bob $
- * @version $Revision: 1.19 $, $Date: 2005/02/14 10:30:56 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.20 $, $Date: 2005/03/01 15:31:43 $
  * @module map_v1
  */
-public class Map extends StorableObject {
+public class Map extends DomainMember {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -65,8 +65,6 @@ public class Map extends StorableObject {
 	 * необходимости экспорта
 	 */
 	private static java.util.Map exportMap = null;
-
-	private Identifier				domainId;
 
 	private String					name;
 	private String					description;
@@ -97,13 +95,11 @@ public class Map extends StorableObject {
 	}
 
 	public Map(Map_Transferable mt) throws CreateObjectException {
-		super(mt.header);
+		super(mt.header, new Identifier(mt.domain_id));
 		this.name = mt.name;
 		this.description = mt.description;
 
 		try {
-			this.domainId = new Identifier(mt.domain_id); 
-				
 			this.siteNodes = new ArrayList(mt.siteNodeIds.length);
 			ArrayList siteNodeIds = new ArrayList(mt.siteNodeIds.length);
 			for (int i = 0; i < mt.siteNodeIds.length; i++)
@@ -186,8 +182,8 @@ public class Map extends StorableObject {
 			new Date(System.currentTimeMillis()),
 			creatorId,
 			creatorId,
-			version);
-		this.domainId = domainId;
+			version,
+			domainId);
 		this.name = name;
 		this.description = description;
 
@@ -282,7 +278,7 @@ public class Map extends StorableObject {
 			collectorIds[i++] = (Identifier_Transferable) ((Collector) iterator.next()).getId().getTransferable();
 
 		return new Map_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable)this.domainId.getTransferable(),
+				(Identifier_Transferable)this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
 				siteNodeIds,
@@ -320,19 +316,6 @@ public class Map extends StorableObject {
 		this.setDescription0(description);
 		this.changed = true;
 	}	
-	
-	public Identifier getDomainId() {
-		return this.domainId;
-	}
-	
-	protected void setDomainId0(Identifier domainId) {
-		this.domainId = domainId;
-	}
-	
-	public void setDomainId(Identifier domainId) {
-		this.setDomainId0(domainId);
-		this.changed = true;
-	}
 	
 	public Collection getMarks() {
 		return  Collections.unmodifiableCollection(this.marks);
@@ -435,10 +418,10 @@ public class Map extends StorableObject {
 					modified,
 					creatorId,
 					modifierId,
-					version);
+					version,
+					domainId);
 			this.name = name;
 			this.description = description;
-			this.domainId = domainId;
 	}
 
 	/**
@@ -723,8 +706,8 @@ public class Map extends StorableObject {
 		this.allElements.addAll(this.topologicalNodes);
 		this.allElements.addAll(this.siteNodes);
 
-		this.allElements.addAll(this.physicalLinks);
 		this.allElements.addAll(this.nodeLinks);
+		this.allElements.addAll(this.physicalLinks);
 		this.allElements.addAll(this.collectors);
 
 		return Collections.unmodifiableCollection(this.allElements);
