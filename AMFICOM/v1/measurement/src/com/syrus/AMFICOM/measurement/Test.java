@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.32 2004/08/17 09:04:29 bob Exp $
+ * $Id: Test.java,v 1.33 2004/08/17 10:13:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/08/17 09:04:29 $
+ * @version $Revision: 1.33 $, $Date: 2004/08/17 10:13:09 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -49,9 +49,7 @@ public class Test extends StorableObject {
 		Date startTime;
 		Identifier temporalPatternId;
 
-		private int	discriminator;
-		
-		//private HashCodeGenerator hashCodeGenerator;
+		private int	discriminator;		
 
 		TestTimeStamps(int temporalType,
 									 Date startTime,
@@ -126,14 +124,26 @@ public class Test extends StorableObject {
 		
 		
 		public int hashCode() {
-			if (Test.this.hashCodeGenerator==null)
-				Test.this.hashCodeGenerator = new HashCodeGenerator();
-			else Test.this.hashCodeGenerator.clear();
-			Test.this.hashCodeGenerator.addInt(this.discriminator);
-			Test.this.hashCodeGenerator.addObject(this.startTime);
-			Test.this.hashCodeGenerator.addObject(this.endTime);
-			Test.this.hashCodeGenerator.addObject(this.temporalPatternId);
-			return Test.this.hashCodeGenerator.getResult();
+			HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+			hashCodeGenerator.addInt(this.discriminator);
+			hashCodeGenerator.addObject(this.startTime);
+			hashCodeGenerator.addObject(this.endTime);
+			hashCodeGenerator.addObject(this.temporalPatternId);
+			int result = hashCodeGenerator.getResult(); 
+			return result;
+		}
+		
+		public boolean equals(Object obj) {
+			boolean equals = (this==obj);
+			if ((!equals)&&(obj instanceof TestTimeStamps)){
+				TestTimeStamps stamps = (TestTimeStamps)obj;
+				if ((stamps.discriminator==this.discriminator)&&
+					(stamps.startTime==this.startTime)&&	
+					(stamps.endTime==this.endTime)&&
+					(stamps.temporalPatternId.equals(this.temporalPatternId)))
+					equals = true;
+			}
+			return equals;
 		}
 	}
 
@@ -156,7 +166,6 @@ public class Test extends StorableObject {
 	private MeasurementSetup mainMeasurementSetup;
 	
 	private StorableObjectDatabase	testDatabase;
-	HashCodeGenerator hashCodeGenerator;
 
 	public Test(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -535,22 +544,25 @@ public class Test extends StorableObject {
 	
 	
 	public int hashCode() {
-		if (this.hashCodeGenerator==null)
-			this.hashCodeGenerator = new HashCodeGenerator();
-		else this.hashCodeGenerator.clear();
-		this.hashCodeGenerator.addObject(this.id);
-		this.hashCodeGenerator.addInt(this.timeStamps.hashCode());
-		this.hashCodeGenerator.addObject(this.analysisType);
-		this.hashCodeGenerator.addObject(this.evaluationType);
-		this.hashCodeGenerator.addObject(this.measurementType);
-		this.hashCodeGenerator.addObject(this.monitoredElement);
-		this.hashCodeGenerator.addObject(this.mainMeasurementSetup);
-
-		this.hashCodeGenerator.addObjectArray(this.measurementSetupIds.toArray());
-		this.hashCodeGenerator.addInt(this.returnType);
-		this.hashCodeGenerator.addInt(this.status);		
-		this.hashCodeGenerator.addObject(this.description);
-		return this.hashCodeGenerator.getResult();
+		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+		hashCodeGenerator.addObject(this.id);
+		hashCodeGenerator.addObject(this.created);
+		hashCodeGenerator.addObject(this.creatorId);
+		hashCodeGenerator.addObject(this.modified);
+		hashCodeGenerator.addObject(this.modifierId);
+		hashCodeGenerator.addInt(this.timeStamps.hashCode());
+		hashCodeGenerator.addObject(this.analysisType);
+		hashCodeGenerator.addObject(this.evaluationType);
+		hashCodeGenerator.addObject(this.measurementType);
+		hashCodeGenerator.addObject(this.monitoredElement);
+		hashCodeGenerator.addObject(this.mainMeasurementSetup);
+		hashCodeGenerator.addObjectArray(this.measurementSetupIds.toArray());
+		hashCodeGenerator.addInt(this.returnType);
+		hashCodeGenerator.addInt(this.status);		
+		hashCodeGenerator.addObject(this.description);
+		int result = hashCodeGenerator.getResult();
+		hashCodeGenerator = null;
+		return result;
 	}
 	
 	public boolean equals(Object obj) {
@@ -560,7 +572,11 @@ public class Test extends StorableObject {
 			Test test = (Test)obj;
 			System.out.println(sdf.format(test.getStartTime()));
 			System.out.println(sdf.format(getStartTime()));
-			if (	(test.getId().equals(getId())) &&
+			if (	(test.id.equals(this.id)) &&
+					(this.created.equals(test.created))&&
+					(this.creatorId.equals(test.creatorId))&&
+					(this.modified.equals(test.modified))&&
+					(this.modifierId.equals(test.modifierId))&&
 					( ((test.getStartTime() == null) && (getStartTime() == null) ) 
 							|| (test.getStartTime().getTime()==getStartTime().getTime()) ) &&
 					( ((test.getEndTime() == null) && (getEndTime() == null) ) 
