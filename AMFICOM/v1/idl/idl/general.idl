@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.51 2005/01/21 08:22:58 bob Exp $
+ * $Id: general.idl,v 1.52 2005/02/02 14:07:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -220,31 +220,8 @@ module corba {
 		short	entity_code;
 		IdentifierSeq_Transferable linked_ids;		
 	};
-
-	struct CompoundCondition_Transferable {
-		enum CompoundConditionSort {
-			AND,
-			OR,
-			XOR} sort;
-		/**
-		 * <code>innerConditions</code> must be an array containing 2
-		 * instances of {@link StorableObjectCondition_Transferable}.
-		 */
-		sequence<any, 2> innerConditions;
-	};
-
-	union StorableObjectCondition_Transferable switch(enum StorableObjectConditionSort {
-			STRING_FIELD,
-			LINKED_IDS,
-			COMPOUND}) {
-		case STRING_FIELD:
-			StringFieldCondition_Transferable stringFieldCondition;
-		case LINKED_IDS:
-			LinkedIdsCondition_Transferable linkedIdsCondition;
-		case COMPOUND:
-			CompoundCondition_Transferable compoundCondition;
-	};
 	
+		
 	enum TypicalSort {
 		TYPE_NUMBER_INT,
 		TYPE_NUMBER_LONG,
@@ -265,6 +242,7 @@ module corba {
 		OPERATION_CI_REGEXP
 	};
 	
+	
 	struct TypicalCondition_Transferable {
 		short	entity_code;
 		WString256 key;
@@ -277,6 +255,38 @@ module corba {
 	struct EquivalentCondition_Transferable {
 		short	entity_code;
 	};
+
+	struct CompoundCondition_Transferable {
+		enum CompoundConditionSort {
+			AND,
+			OR,
+			XOR} sort;
+		/**
+		 * <code>innerConditions</code> must be an array containing 2
+		 * instances of {@link StorableObjectCondition_Transferable}.
+		 */
+		sequence<any, 2> innerConditions;
+	};
+
+	union StorableObjectCondition_Transferable switch(enum StorableObjectConditionSort {
+			STRING_FIELD,
+			LINKED_IDS,
+			COMPOUND,
+			TYPICAL,
+			EQUIVALENT}) {
+		case STRING_FIELD:
+			StringFieldCondition_Transferable stringFieldCondition;
+		case LINKED_IDS:
+			LinkedIdsCondition_Transferable linkedIdsCondition;
+		case COMPOUND:
+			CompoundCondition_Transferable compoundCondition;
+		case TYPICAL:
+			TypicalCondition_Transferable typicalCondition;
+		case EQUIVALENT:
+			EquivalentCondition_Transferable equialentCondition;
+		
+	};
+
 };
 };
 };

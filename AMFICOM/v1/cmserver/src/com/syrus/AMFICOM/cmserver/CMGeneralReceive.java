@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.4 2005/02/02 11:36:45 bob Exp $
+ * $Id: CMGeneralReceive.java,v 1.5 2005/02/02 14:07:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServerPOA;
 import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -28,6 +29,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
@@ -42,7 +44,7 @@ import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/02 11:36:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/02 14:07:34 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -51,7 +53,8 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 	private static final long	serialVersionUID	= 4217287655251415892L;
 
-	protected StorableObjectCondition restoreCondition(StorableObjectCondition_Transferable transferable) throws IllegalDataException {
+	protected StorableObjectCondition restoreCondition(StorableObjectCondition_Transferable transferable)
+			throws IllegalDataException {
 		StorableObjectCondition condition = null;
 		switch (transferable.discriminator().value()) {
 			case StorableObjectConditionSort._COMPOUND:
@@ -63,6 +66,18 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 			case StorableObjectConditionSort._STRING_FIELD:
 				condition = new StringFieldCondition(transferable.stringFieldCondition());
 				break;
+			case StorableObjectConditionSort._TYPICAL:
+				condition = new TypicalCondition(transferable.typicalCondition());
+				break;
+			case StorableObjectConditionSort._EQUIVALENT:
+				condition = new EquivalentCondition(transferable.equialentCondition());
+				break;
+			default:
+				String msg = "CMGeneralReceive.restoreCondition | condition class " + transferable.getClass().getName()
+						+ " is not suppoted";
+				Log.errorMessage(msg);
+				throw new IllegalDataException(msg);
+
 		}
 		return condition;
 	}
