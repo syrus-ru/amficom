@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.2 2005/01/24 15:29:27 bob Exp $
+ * $Id: ParameterType.java,v 1.3 2005/01/31 13:52:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 13:52:49 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -180,6 +180,11 @@ public class ParameterType extends StorableObjectType {
 	
 	protected void setDataType0(DataType dataType) {
 		this.dataType = dataType.value();
+	}
+	
+	public void setDataType(DataType dataType) {
+		this.setDataType0(dataType);
+		this.currentVersion = super.getNextVersion();
 	}
 
 	protected synchronized void setAttributes(Date created,
