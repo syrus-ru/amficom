@@ -106,11 +106,12 @@ public final class UIStorage {
 		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = (Graphics2D) img.getGraphics();
 		FontMetrics fm = g2d.getFontMetrics();
-		g2d.setBackground(Color.lightGray);
+		UIDefaults lookAndFeelDefaults = UIManager.getDefaults();
+		g2d.setBackground(lookAndFeelDefaults.getColor("Button.background"));
 		g2d.clearRect(0, 0, w, h);
 		Font font = MONOSPACED_14_FONT;
 		g2d.setFont(font);
-		g2d.setColor(Color.black);
+		g2d.setColor(lookAndFeelDefaults.getColor("Button.foreground"));
 		g2d.drawString(s, w / 4, (h / 2 + fm.getHeight()) / 2);
 		Icon icon = new ImageIcon(img);
 		return icon;

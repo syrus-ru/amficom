@@ -1,5 +1,5 @@
 /*
-* $Id: MeasurementPortItem.java,v 1.1 2005/03/15 11:42:12 bob Exp $
+* $Id: MeasurementPortItem.java,v 1.2 2005/03/16 12:40:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/15 11:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/16 12:40:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -31,5 +31,4 @@ public class MeasurementPortItem extends ElementItem {
 	public String getName() {
 		return ((MeasurementPort)super.object).getName();
 	}
-
 }

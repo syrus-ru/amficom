@@ -4,12 +4,14 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
@@ -24,6 +26,7 @@ import com.syrus.AMFICOM.Client.Schedule.MonitoredElementEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Schedule.item.ElementItem;
+import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -43,14 +46,14 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 
 	private SchedulerModel		schedulerModel;
 
-	private Map					paramMap	= new HashMap();
+	private Map					paramMap						= new HashMap();
 
-	private LogicalTreeUI		treePanel;
+	LogicalTreeUI				treePanel;
 
 	private SelectionListener	selectionListener;
 
 	ApplicationContext			aContext;
-	
+
 	public static final String	ACCESSPORT_NAME_REFLECTOMETER	= "MeasurementPortTypeReflectometry";	//$NON-NLS-1$
 
 	public ElementsTreeFrame(ApplicationContext aContext) {
@@ -129,10 +132,9 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 	}
 
 	public void setElements(Collection elements) {
+		this.treePanel.removeAll(null);
 		this.treePanel.addItems(elements);
-		this.treePanel.getTree().revalidate();
-		this.treePanel.getTree().repaint();
-
+		this.treePanel.expandAll(false);
 	}
 
 	public void init() {
@@ -140,15 +142,26 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 		if (this.treePanel == null) {
 			final Dispatcher dispatcher = this.aContext.getDispatcher();
 			this.treePanel = new LogicalTreeUI();
+			this.treePanel.expandAll(true);
 			this.selectionListener = new SelectionListener() {
 
 				public void selectedItems(Collection items) {
 					for (Iterator it = items.iterator(); it.hasNext();) {
 						ElementItem item = (ElementItem) it.next();
 						Object object = item.getObject();
-						if (object instanceof MeasurementPort) {
-							MeasurementPort port = (MeasurementPort) object;
-							dispatcher.notify(new OperationEvent(port, 0, SchedulerModel.COMMAND_CHANGE_PORT_TYPE));
+						if (object instanceof MeasurementType) {
+							MeasurementTypeItem measurementTypeItem = (MeasurementTypeItem) item;
+							if (!measurementTypeItem.isPopulatedChildren()) {
+								measurementTypeItem.populateChildren();
+								ElementsTreeFrame.this.treePanel.removeAll(measurementTypeItem);
+								List children = measurementTypeItem.getChildren();
+								if (children != null) {
+									for (Iterator iterator = children.iterator(); iterator.hasNext();) {
+										Item item2 = (Item) iterator.next();
+										ElementsTreeFrame.this.treePanel.addItem(measurementTypeItem, item2);
+									}
+								}
+							}
 
 						} else if (object instanceof MonitoredElement) {
 							MonitoredElement me = (MonitoredElement) object;

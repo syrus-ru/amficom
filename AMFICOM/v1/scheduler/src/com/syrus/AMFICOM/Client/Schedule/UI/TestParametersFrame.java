@@ -14,8 +14,12 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 
 public class TestParametersFrame extends JInternalFrame implements OperationListener {
 
@@ -42,25 +46,32 @@ public class TestParametersFrame extends JInternalFrame implements OperationList
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_PORT_TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 	}
 
 	public void unregisterDispatcher() {
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_PORT_TYPE);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 		this.panel.unregisterDispatcher();
 	}
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_PORT_TYPE)) {
-			MeasurementPort port = (MeasurementPort) obj;
-			if (((MeasurementPortType) port.getType()).getCodename().equals(
-				ElementsTreeFrame.ACCESSPORT_NAME_REFLECTOMETER)) {
-				if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
-					this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, port), 0,
-																SchedulerModel.COMMAND_ADD_PARAM_PANEL));
+		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
+			Identifier id = (Identifier) obj;
+			try {
+				MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(id, true);
+				MeasurementPort port = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(me
+						.getMeasurementPortId(), true);
+				if (((MeasurementPortType) port.getType()).getCodename().equals(
+					ElementsTreeFrame.ACCESSPORT_NAME_REFLECTOMETER)) {
+					if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
+						this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, port), 0,
+																	SchedulerModel.COMMAND_ADD_PARAM_PANEL));
+					}
 				}
+			} catch (ApplicationException e) {
+				SchedulerModel.showErrorMessage(this, e);
 			}
 
 		}

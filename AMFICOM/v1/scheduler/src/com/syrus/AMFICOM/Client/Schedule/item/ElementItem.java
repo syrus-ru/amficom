@@ -1,5 +1,5 @@
 /*
- * $Id: ElementItem.java,v 1.1 2005/03/15 11:42:12 bob Exp $
+ * $Id: ElementItem.java,v 1.2 2005/03/16 12:40:04 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/15 11:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/16 12:40:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -32,7 +32,7 @@ public abstract class ElementItem extends AbstractItem {
 	protected ElementItem(Object object) {
 		this.object = object;
 	}
-	
+
 	protected abstract Class getChildenClass();
 
 	public int getMaxChildrenCount() {
@@ -41,8 +41,8 @@ public abstract class ElementItem extends AbstractItem {
 
 	public final int getMaxParentCount() {
 		return 1;
-	}	
-	
+	}
+
 	public Object getObject() {
 		return this.object;
 	}
@@ -53,8 +53,9 @@ public abstract class ElementItem extends AbstractItem {
 
 		if (this.clazz == null)
 			this.clazz = this.getChildenClass();
-		
-		if (childItem.getObject().getClass().equals(this.clazz)) {
+
+		Object object2 = childItem.getObject();
+		if (object2 == null || object2.getClass().equals(this.clazz)) {
 
 			if (this.children == null)
 				this.children = new LinkedList();
@@ -85,8 +86,8 @@ public abstract class ElementItem extends AbstractItem {
 	}
 
 	public void removeChild(Item childItem) {
-		Log.debugMessage("ElementItem.removeChild | this.name: " + this.getName() + "\n\t name: " + childItem.getName(),
-			Log.FINEST);
+		Log.debugMessage(
+			"ElementItem.removeChild | this.name: " + this.getName() + "\n\t name: " + childItem.getName(), Log.FINEST);
 		if (this.children != null) {
 			this.children.remove(childItem);
 		}
@@ -141,7 +142,7 @@ public abstract class ElementItem extends AbstractItem {
 			this.listener[i].removeParentPerformed(this, parent);
 		}
 	}
-	
+
 	public void print(String space) {
 		if (space == null || space.length() == 0)
 			space = "\t";

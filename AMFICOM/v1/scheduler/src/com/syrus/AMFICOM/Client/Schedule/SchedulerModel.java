@@ -76,9 +76,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	public static final String			COMMAND_CHANGE_KIS				= "ChangeKIS";				//$NON-NLS-1$
 	public static final String			COMMAND_CHANGE_ME_TYPE			= "ChangeMEType";			//$NON-NLS-1$
 	public static final String			COMMAND_CHANGE_PARAM_PANEL		= "ChangeParamPanel";		//$NON-NLS-1$
-	public static final String			COMMAND_CHANGE_PORT_TYPE		= "ChangePortType";		//$NON-NLS-1$
 	public static final String			COMMAND_CHANGE_STATUSBAR_STATE	= "ChangeStatusBarState";
-	// public static final String COMMAND_CHANGE_TEST_TYPE = "ChangeTestType";
+
 	// //$NON-NLS-1$
 	public static final String			COMMAND_CLEAN					= "Clean";
 
@@ -87,12 +86,11 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private static final int			FLAG_APPLY						= 1 << 1;
 	private static final int			FLAG_CREATE						= 1 << 2;
 	private ApplicationContext			aContext;
-	private Dispatcher					dispatcher;												// =
-
+	private Dispatcher					dispatcher;
+	
 	private int							flag							= 0;
 
 	private ObjectResourceTreeModel		treeModel;
-
 	private Collection					tests							= new LinkedList();
 	private Test						selectedTest;
 
@@ -236,82 +234,21 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
 
 			LinkedIdsCondition domainCondition = new LinkedIdsCondition(sessionInterface.getDomainIdentifier(),
-																		ObjectEntities.KIS_ENTITY_CODE);
-			Collection kiss = ConfigurationStorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
-			// this.kisEditor.setKISs(kiss);
+																		ObjectEntities.ME_ENTITY_CODE);			
 
-			domainCondition.setEntityCode(ObjectEntities.ME_ENTITY_CODE);
 			Collection monitoredElements = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
 				domainCondition, true);
-			// this.monitoredElementEditor.setMonitoredElementEditors(monitoredElements);
 
 			Collection measurementTypeItems = new ArrayList(measurementTypes.size());
-
-			LinkedIdsCondition measurementPortCondition = null;
-
-			List measurementPortTypeIds = new LinkedList();
-			Map kisMeasurementTypes = new HashMap();
-			Map kisMeasurementPorts = new HashMap();
-			for (Iterator kisIterator = kiss.iterator(); kisIterator.hasNext();) {
-				KIS kis = (KIS) kisIterator.next();
-				if (measurementPortCondition == null)
-					measurementPortCondition = new LinkedIdsCondition(kis.getId(),
-																		ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
-				else
-					measurementPortCondition.setLinkedId(kis.getId());
-
-				Collection measurementPorts = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
-					measurementPortCondition, true);
-				kisMeasurementPorts.put(kis, measurementPorts);
-				for (Iterator it = measurementPorts.iterator(); it.hasNext();) {
-					MeasurementPort measurementPort = (MeasurementPort) it.next();
-
-					MeasurementPortType measurementPortType = (MeasurementPortType) measurementPort.getType();
-					measurementPortTypeIds.add(measurementPortType.getId());
-				}
-
-				LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(
-																				measurementPortTypeIds,
-																				ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-
-				Collection measurementTypesFormeasurementPortType = MeasurementStorableObjectPool
-						.getStorableObjectsByCondition(linkedIdsCondition, true);
-
-				kisMeasurementTypes.put(kis, measurementTypesFormeasurementPortType);
-			}
 
 			for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
 				MeasurementType measurementType = (MeasurementType) iter.next();
 				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType);
 				measurementTypeItems.add(measurementTypeItem);
-				for (Iterator iterator = kisMeasurementTypes.keySet().iterator(); iterator.hasNext();) {
-					KIS kis = (KIS) iterator.next();
-					Collection measurementTypesFormeasurementPortType = (Collection) kisMeasurementTypes.get(kis);
-					if (measurementTypesFormeasurementPortType.contains(measurementType)) {
-						KISItem kisItem = new KISItem(kis);
-						measurementTypeItem.addChild(kisItem);
-						Collection measurementPort = (Collection) kisMeasurementPorts.get(kis);
-						for (Iterator measurementPortIterator = measurementPort.iterator(); measurementPortIterator
-								.hasNext();) {
-							MeasurementPort measurementPort2 = (MeasurementPort) measurementPortIterator.next();
-							MeasurementPortItem measurementPortItem = new MeasurementPortItem(measurementPort2);
-							kisItem.addChild(measurementPortItem);
-							for (Iterator monitoredElementIterator = monitoredElements.iterator(); monitoredElementIterator
-									.hasNext();) {
-								MonitoredElement monitoredElement = (MonitoredElement) monitoredElementIterator.next();
-								if (monitoredElement.getMeasurementPortId().equals(measurementPort2.getId())) {
-									MonitoredElementItem monitoredElementItem = new MonitoredElementItem(
-																											monitoredElement);
-									measurementPortItem.addChild(monitoredElementItem);
-								}
-							}
-						}
-					}
-				}
-
+				measurementTypeItem.setDomainId(sessionInterface.getDomainIdentifier());			
 			}
+			
 			this.elementsViewer.setElements(measurementTypeItems);
-			// this.measurementTypeEditor.setMeasurementTypes(measurementTypes);
 
 			if (!monitoredElements.isEmpty()) {
 				LinkedIdsCondition linkedIdsCondition;
