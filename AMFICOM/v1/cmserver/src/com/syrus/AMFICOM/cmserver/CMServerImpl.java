@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.29 2004/10/04 06:39:38 bob Exp $
+ * $Id: CMServerImpl.java,v 1.30 2004/10/04 13:04:30 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
@@ -34,6 +35,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -76,6 +78,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
+import com.syrus.AMFICOM.measurement.corba.MeasurementCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
@@ -84,18 +87,19 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
+import com.syrus.AMFICOM.measurement.corba.TestCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/10/04 06:39:38 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2004/10/04 13:04:30 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 public class CMServerImpl implements CMServerOperations {
 	
 	private DomainCondition domainCondition;
-
+	
 	////////////////////////////////////////////Measurement Receive
 	// //////////////////////////////////////////////
     public void receiveAnalysis( Analysis_Transferable analysis_Transferable, boolean force,
@@ -259,6 +263,14 @@ public class CMServerImpl implements CMServerOperations {
 					.getMessage());
 		}
 	}
+    
+    public AnalysisType_Transferable[] transmitAnalysisTypesButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     public void receiveEvaluations( Evaluation_Transferable[] evaluation_Transferables, boolean force,
             AccessIdentifier_Transferable accessIdentifier)
@@ -347,6 +359,14 @@ public class CMServerImpl implements CMServerOperations {
 					.getMessage());
 		}
 	}
+        
+    public EvaluationType_Transferable[] transmitEvaluationTypesButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
     
     public void receiveMeasurements( Measurement_Transferable[] measurement_Transferables, boolean force,
             AccessIdentifier_Transferable accessIdentifier)
@@ -1498,6 +1518,14 @@ public class CMServerImpl implements CMServerOperations {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
+    
+    public MeasurementType_Transferable[] transmitMeasurementTypesButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 	public ParameterType_Transferable[] transmitParameterTypes(	Identifier_Transferable[] identifier_Transferables,
 									AccessIdentifier_Transferable accessIdentifier)
@@ -1546,6 +1574,14 @@ public class CMServerImpl implements CMServerOperations {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
+    
+    public ParameterType_Transferable[] transmitParameterTypesButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 	public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] identifier_Transferables,
 							AccessIdentifier_Transferable accessIdentifier)
@@ -1592,7 +1628,27 @@ public class CMServerImpl implements CMServerOperations {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
-
+    
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#transmitAnalysesButIds(com.syrus.AMFICOM.general.corba.Identifier_Transferable[], com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public Analysis_Transferable[] transmitAnalysesButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    public Analysis_Transferable[] transmitAnalysesButIdsCondition(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier,
+            DomainCondition_Transferable domainCondition)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+        
 	public Modeling_Transferable[] transmitModelings(	Identifier_Transferable[] identifier_Transferables,
 								AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
@@ -1641,6 +1697,26 @@ public class CMServerImpl implements CMServerOperations {
 		}
 
 	}
+    
+    public Modeling_Transferable[] transmitModelingsButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#transmitModelingsButIdsCondition(com.syrus.AMFICOM.general.corba.Identifier_Transferable[], com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable, com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable)
+     */
+    public Modeling_Transferable[] transmitModelingsButIdsCondition(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier,
+            DomainCondition_Transferable domainCondition)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 	public Measurement_Transferable[] transmitMeasurements(	Identifier_Transferable[] identifier_Transferables,
 								AccessIdentifier_Transferable accessIdentifier)
@@ -1690,7 +1766,33 @@ public class CMServerImpl implements CMServerOperations {
 		}
 
 	}
-
+    
+    public Measurement_Transferable[] transmitMeasurementsButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    public Measurement_Transferable[] transmitMeasurementsButIdsDomainCondition(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier,
+            DomainCondition_Transferable domainCondition)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    public Measurement_Transferable[] transmitMeasurementsButIdsMeasurementCondition(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier,
+            MeasurementCondition_Transferable measurementCondition)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
 	public MeasurementSetup_Transferable[] transmitMeasurementSetups(	Identifier_Transferable[] identifier_Transferables,
 										AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
@@ -1735,6 +1837,14 @@ public class CMServerImpl implements CMServerOperations {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
+    
+    public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 	public Result_Transferable[] transmitResults(	Identifier_Transferable[] identifier_Transferables,
 							AccessIdentifier_Transferable accessIdentifier)
@@ -1783,6 +1893,23 @@ public class CMServerImpl implements CMServerOperations {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
+    
+    public Result_Transferable[] transmitResultsButIdsCondition(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier,
+            DomainCondition_Transferable domainCondition)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    public Result_Transferable[] transmitResultsButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 	public Measurement_Transferable[] transmitMeasurementForTests(	Identifier_Transferable[] testIds,
 									AccessIdentifier_Transferable accessIdentifier)
@@ -1874,6 +2001,22 @@ public class CMServerImpl implements CMServerOperations {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
+    
+    public Set_Transferable[] transmitSetsButIds(Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    public Set_Transferable[] transmitSetsButIdsCondition(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier,
+            DomainCondition_Transferable domainCondition)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 	public TemporalPattern_Transferable[] transmitTemporalPatterns(	Identifier_Transferable[] identifier_Transferables,
 									AccessIdentifier_Transferable accessIdentifier)
@@ -1922,6 +2065,14 @@ public class CMServerImpl implements CMServerOperations {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
+        
+    public TemporalPattern_Transferable[] transmitTemporalPatternsButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }    
 
 	public Test_Transferable[] transmitTests(	Identifier_Transferable[] identifier_Transferables,
 							AccessIdentifier_Transferable accessIdentifier)
@@ -1970,6 +2121,23 @@ public class CMServerImpl implements CMServerOperations {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
+    
+    public Test_Transferable[] transmitTestsButIds(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    public Test_Transferable[] transmitTestsButIdsCondition(
+            Identifier_Transferable[] ids,
+            AccessIdentifier_Transferable accessIdentifier,
+            TestCondition_Transferable testCondition)
+            throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 	public Test_Transferable[] transmitTestsByTime(	long startTime,
 							long endTime,
