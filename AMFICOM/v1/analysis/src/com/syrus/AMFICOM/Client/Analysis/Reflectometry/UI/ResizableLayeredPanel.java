@@ -301,11 +301,5 @@ class ToolBarPanel extends JToolBar
 		b.setFocusable(false);
 		return b;
 	}
-
-//	public void insert (Component c)
-//	{
-//		add (c, new XYConstraints(position, 0, -1, -1));
-//		position += c.getPreferredSize().width;
-//	}
 }
 
