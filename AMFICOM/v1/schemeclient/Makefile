@@ -1,10 +1,10 @@
 #
-# $Id: Makefile,v 1.2 2004/07/23 11:14:06 arseniy Exp $
+# $Id: Makefile,v 1.3 2004/12/21 09:43:45 cvsadmin Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME = scheme_v1
+MODULE_NAME = schemeclient_v1
 
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
