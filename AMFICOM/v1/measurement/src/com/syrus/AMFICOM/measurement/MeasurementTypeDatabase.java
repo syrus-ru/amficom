@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.31 2004/10/13 07:52:40 bass Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.32 2004/10/13 08:26:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -34,8 +35,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/10/13 07:52:40 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2004/10/13 08:26:49 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -228,7 +229,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
 				measurementPortTypeIdCode = resultSet.getString(LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
-				measurementPortTypes.add((MeasurementPortType) MeasurementStorableObjectPool.getStorableObject(new Identifier(measurementPortTypeIdCode), true));
+				measurementPortTypes.add((MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(measurementPortTypeIdCode), true));
 			}
 		}
 		catch (SQLException sqle) {
