@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.6 2004/12/16 11:50:40 bob Exp $
+ * $Id: MapDatabase.java,v 1.7 2004/12/22 09:51:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/16 11:50:40 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/22 09:51:06 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -322,7 +322,7 @@ public class MapDatabase extends StorableObjectDatabase {
 
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		Collector collector = this.fromStorableObject(storableObject);
+//		Map map = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -448,8 +448,8 @@ public class MapDatabase extends StorableObjectDatabase {
 	
 	        List linkedObjectIds = new ArrayList(linkedObjectList.size());
 	        for (Iterator it = linkedObjectList.iterator(); it.hasNext();) {
-	        	PhysicalLink physicalLink = (PhysicalLink) it.next();
-	            linkedObjectIds.add(physicalLink.getId());
+	        	StorableObject storableObject2 = (StorableObject) it.next();
+	            linkedObjectIds.add(storableObject2.getId());
 			}
 	        
 	        mapIdLinkedObjectIds.put(map.getId(), linkedObjectIds);
