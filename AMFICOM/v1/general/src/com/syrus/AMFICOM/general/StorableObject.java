@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.42 2005/03/15 17:46:14 bass Exp $
+ * $Id: StorableObject.java,v 1.43 2005/03/16 16:36:37 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/03/15 17:46:14 $
+ * @version $Revision: 1.43 $, $Date: 2005/03/16 16:36:37 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -66,8 +66,6 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final long version) {
-		assert id != null && created != null && modified != null
-				&& creatorId != null && modifierId != null;
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
