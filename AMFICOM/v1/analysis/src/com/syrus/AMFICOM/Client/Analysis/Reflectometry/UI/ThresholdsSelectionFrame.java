@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsSelectionFrame extends ATableFrame
@@ -36,6 +37,8 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	JToolBar jToolBar1 = new JToolBar();
 	JButton jButton1 = new JButton();
 	JButton jButton3 = new JButton();
+	JButton jButtonInc = new JButton();
+	JButton jButtonDec = new JButton();
 
 	public ThresholdsSelectionFrame(Dispatcher dispatcher)
 	{
@@ -83,30 +86,76 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			null
 		);
 		jTable = new JTable(tModelEmpty);
+		
+		{	// set up button size
+			JButton[] buttons = new JButton[] { jButton1, jButton3, jButtonInc, jButtonDec };
+			for (int i = 0; i < buttons.length; i++)
+			{
+				buttons[i].setMaximumSize(btn_size);
+				buttons[i].setMinimumSize(btn_size);
+				buttons[i].setPreferredSize(btn_size);
+			}
+		}
 
-		jButton1.setMaximumSize(btn_size);
-		jButton1.setMinimumSize(btn_size);
-		jButton1.setPreferredSize(btn_size);
 		jButton1.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
 		jButton1.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/th_initial.gif")));
-		jButton1.addActionListener(new java.awt.event.ActionListener()
+		jButton1.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				jButton1_actionPerformed(e);
+				if (mtm != null && current_ev != -1)
+				{
+					mtm.setThreshold(current_ev, init_Threshs[current_ev].copy());
+					updThresholds();
+					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+				}
 			}
 		});
 
-		jButton3.setMaximumSize(btn_size);
-		jButton3.setMinimumSize(btn_size);
-		jButton3.setPreferredSize(btn_size);
 		jButton3.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
 		jButton3.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/th_default.gif")));
-		jButton3.addActionListener(new java.awt.event.ActionListener()
+		jButton3.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				jButton3_actionPerformed(e);
+				if (mtm != null && current_ev != -1)
+				{
+					mtm.setDefaultThreshold(current_ev);
+					updThresholds();
+					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+				}
+			}
+		});
+
+		// @todo: add tooltip text and icon
+		jButtonInc.setToolTipText(LangModelAnalyse.getString("increaseThresh"));
+		jButtonInc.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/increaseThresh.gif")));
+		jButtonInc.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				ModelTraceManager.ThreshEditor ted = getCurrentTED();
+				if (ted != null)
+				{
+					ted.increaseValues();
+					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+				}
+			}
+		});
+
+		// @todo: add tooltip text and icon
+		jButtonDec.setToolTipText(LangModelAnalyse.getString("decreaseThresh"));
+		jButtonDec.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/decreaseThresh.gif")));
+		jButtonDec.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				ModelTraceManager.ThreshEditor ted = getCurrentTED();
+				if (ted != null)
+				{
+					ted.decreaseValues();
+					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+				}
 			}
 		});
 
@@ -116,6 +165,8 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		jToolBar1.setFloatable(false);
 		jToolBar1.add(jButton1);
 		jToolBar1.add(jButton3);
+		jToolBar1.add(jButtonDec);
+		jToolBar1.add(jButtonInc);
 
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
@@ -156,6 +207,19 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 
 		updColorModel();
+	}
+
+	protected ThreshEditor getCurrentTED()
+	{
+		if (mtm != null && current_ev != -1)
+		{
+			// XXX - getThreshEditor will generate few unnecessary objects
+			ModelTraceManager.ThreshEditor[] teds = mtm.getThreshEditor(current_ev);
+			int current_th = jTable.getSelectedColumn() - 1;
+			if (current_th >= 0 && current_th < teds.length)
+				return teds[current_th];
+		}
+		return null;
 	}
 
 	private void updColorModel()
@@ -245,26 +309,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				updThresholds();
 				selected_there = false;
 			}
-		}
-	}
-
-	void jButton1_actionPerformed(ActionEvent e)
-	{
-		if (mtm != null && current_ev != -1)
-		{
-			mtm.setThreshold(current_ev, init_Threshs[current_ev].copy());
-			updThresholds();
-			dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-		}
-	}
-
-	void jButton3_actionPerformed(ActionEvent e)
-	{
-		if (mtm != null && current_ev != -1)
-		{
-			mtm.setDefaultThreshold(current_ev);
-			updThresholds();
-			dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 		}
 	}
 

@@ -164,23 +164,15 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 
 class ThresholdsToolBar extends TraceEventsToolBar
 {
-	protected static final String eA = "encreaseAmpl";
-	protected static final String dA = "decreaseAmpl";
-	protected static final String eW = "encreaseWidth";
-	protected static final String dW = "decreaseWidth";
 	protected static final String fitEv = "fit2event";
 	protected static final String allTresh = "allTresholds";
 
 	JButton fitEvButton = new JButton();
-	JButton eAButton = new JButton();
-	JButton dAButton = new JButton();
-	JButton eXButton = new JButton();
-	JButton dXButton = new JButton();
 	protected JToggleButton showThresholdButton = new JToggleButton();
 
 	protected static String[] buttons = new String[]
 	{
-		eA, dA, eW, dW, separator, fitEv, allTresh, separator, ex, dx, ey, dy, fit, separator, modeled
+		fitEv, allTresh, separator, ex, dx, ey, dy, fit, separator, modeled
 	};
 
 	public ThresholdsToolBar (ThresholdsLayeredPanel panel)
@@ -197,70 +189,6 @@ class ThresholdsToolBar extends TraceEventsToolBar
 	{
 		Map buttons = super.createGraphButtons();
 
-		buttons.put(
-				eW,
-				createToolButton(
-				eXButton,
-				btn_size,
-				null,
-				LangModelAnalyse.getString("encreasetx"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/enlargetx.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						eXButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				eA,
-				createToolButton(
-				eAButton,
-				btn_size,
-				null,
-				LangModelAnalyse.getString("encreasety"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/enlargety.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						eAButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				dW,
-				createToolButton(
-				dXButton,
-				btn_size,
-				null,
-				LangModelAnalyse.getString("decreasetx"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reducetx.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						dXButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				dA,
-				createToolButton(
-				dAButton,
-				btn_size,
-				null,
-				LangModelAnalyse.getString("decreasety"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reducety.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						dAButton_actionPerformed(e);
-					}
-				},
-				true));
 		buttons.put(
 				fitEv,
 				createToolButton(
