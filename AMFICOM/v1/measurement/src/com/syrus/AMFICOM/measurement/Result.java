@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.11 2004/08/03 17:16:45 arseniy Exp $
+ * $Id: Result.java,v 1.12 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/03 17:16:45 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -56,15 +56,7 @@ public class Result extends StorableObject {
 					new Date(rt.modified),
 					new Identifier(rt.creator_id),
 					new Identifier(rt.modifier_id));
-		try {
-			this.measurement = new Measurement(new Identifier(rt.measurement_id));
-		}
-		catch (RetrieveObjectException roe) {
-			throw new CreateObjectException(roe.getMessage(), roe);
-		}
-		catch (ObjectNotFoundException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		this.measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
 		this.sort = rt.sort.value();
 		this.alarmLevel = rt.alarm_level.value();
 		switch (this.sort) {
@@ -72,26 +64,10 @@ public class Result extends StorableObject {
 				this.action = this.measurement;
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				try {
-					this.action = new Analysis(new Identifier(rt.analysis_id));
-				}
-				catch (RetrieveObjectException roe) {
-					throw new CreateObjectException(roe.getMessage(), roe);
-				}
-				catch (ObjectNotFoundException e) {
-					throw new CreateObjectException(e.getMessage(), e);
-				}
+				this.action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.analysis_id), true);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				try {
-					this.action = new Evaluation(new Identifier(rt.evaluation_id));
-				}
-				catch (RetrieveObjectException roe) {
-					throw new CreateObjectException(roe.getMessage(), roe);
-				}
-				catch (ObjectNotFoundException e) {
-					throw new CreateObjectException(e.getMessage(), e);
-				}
+				this.action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
 				break;
 			default:
 				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id.toString() + "'");
@@ -150,8 +126,8 @@ public class Result extends StorableObject {
 																	 (Identifier_Transferable)super.creatorId.getTransferable(),
 																	 (Identifier_Transferable)super.modifierId.getTransferable(),
 																	 (Identifier_Transferable)this.measurement.getId().getTransferable(),
-																	 (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable()),
-																	 (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable()),
+																	 (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
+																	 (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
 																	 ResultSort.from_int(this.sort),
 																	 pts,
 																	 AlarmLevel.from_int(this.alarmLevel));

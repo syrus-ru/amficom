@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.9 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: SetParameter.java,v 1.10 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -28,7 +28,7 @@ public class SetParameter implements TransferableObject, TypedObject {
 
 	public SetParameter(Parameter_Transferable pt) {
 		this.id = new Identifier(pt.id);
-		this.type = (ParameterType)MeasurementObjectTypePool.getObjectType(new Identifier(pt.type_id));
+		this.type = (ParameterType)MeasurementStorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
 		this.value = new byte[pt.value.length];
 		for (int i = 0; i < this.value.length; i++)
 			this.value[i] = pt.value[i];

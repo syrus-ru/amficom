@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.13 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.14 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -80,17 +80,17 @@ public class SetDatabase extends StorableObjectDatabase {
 			if (resultSet.next()) {
 				String description = resultSet.getString(COLUMN_DESCRIPTION);
 				set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-								  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-								  /**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/												
-								  new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-								  /**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-								  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-								  resultSet.getInt(COLUMN_SORT),
-								  (description != null)?description:"");
+													DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+													/**
+														* @todo when change DB Identifier model ,change getString() to getLong()
+														*/												
+													new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+													/**
+														* @todo when change DB Identifier model ,change getString() to getLong()
+														*/
+													new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+													resultSet.getInt(COLUMN_SORT),
+													(description != null) ? description : "");
 			}
 			else
 				throw new ObjectNotFoundException("No such set: " + setIdStr);
@@ -138,7 +138,7 @@ public class SetDatabase extends StorableObjectDatabase {
 					/**
 					 * @todo when change DB Identifier model ,change getString() to getLong()
 					 */
-					ParameterType parameterType = (ParameterType)MeasurementObjectTypePool.getObjectType(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)));
+					ParameterType parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)), true);
 					parameter = new SetParameter(/**
 																				* @todo when change DB Identifier model ,change getString() to getLong()
 																				*/

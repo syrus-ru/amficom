@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.11 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.12 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -81,11 +81,11 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				MeasurementType measurementType = (MeasurementType)MeasurementObjectTypePool.getObjectType(new Identifier(resultSet.getString(COLUMN_TYPE_ID)));
+				MeasurementType measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				MeasurementSetup measurementSetup = new MeasurementSetup(new Identifier(resultSet.getString(COLUMN_SETUP_ID)));
+				MeasurementSetup measurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_SETUP_ID)), true);
 				measurement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 											/**
@@ -161,7 +161,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				return new Result(new Identifier(resultSet.getString(COLUMN_ID)));
+				return (Result)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true);
 			}
 			throw new ObjectNotFoundException("No result of sort: " + resultSortNum + " for measurement " + measurementIdStr);
 		}

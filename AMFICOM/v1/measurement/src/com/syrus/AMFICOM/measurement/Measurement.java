@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.17 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: Measurement.java,v 1.18 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -60,17 +60,9 @@ public class Measurement extends Action {
 					new Date(mt.modified),
 					new Identifier(mt.creator_id),
 					new Identifier(mt.modifier_id),
-					(MeasurementType)MeasurementObjectTypePool.getObjectType(new Identifier(mt.type_id)),
+					(MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true),
 					new Identifier(mt.monitored_element_id));
-		try {
-			this.setup = new MeasurementSetup(new Identifier(mt.setup_id));
-		}
-		catch (RetrieveObjectException roe) {
-			throw new CreateObjectException(roe.getMessage(), roe);
-		}
-		catch (ObjectNotFoundException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		this.setup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.setup_id), true);
 		this.startTime = new Date(mt.start_time);
 		this.duration = mt.duration;
 		this.status = mt.status.value();

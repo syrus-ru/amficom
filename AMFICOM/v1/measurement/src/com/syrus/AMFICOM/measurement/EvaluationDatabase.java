@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.9 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.10 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -69,12 +69,12 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				EvaluationType evaluationType = new EvaluationType(new Identifier(resultSet.getString(COLUMN_TYPE_ID)));
+				EvaluationType evaluationType = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
 				/**
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()
 				 */
-				Set thresholdSet = new Set(new Identifier(resultSet.getString(COLUMN_THRESHOLD_SET_ID)));
+				Set thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_THRESHOLD_SET_ID)), true);
 				/**
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()

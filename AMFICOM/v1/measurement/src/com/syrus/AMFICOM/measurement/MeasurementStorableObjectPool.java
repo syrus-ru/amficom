@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.1 2004/08/06 12:05:56 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.2 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,14 @@ import java.util.Map;
 import java.util.Hashtable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectLoader;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.util.LRUMap;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:05:56 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -43,11 +44,12 @@ public class MeasurementStorableObjectPool {
 	private static final int EVALUATIONTYPE_OBJECT_POOL_SIZE = 1;
 
 	private static Map objectPoolMap; /*	Map <String objectEntity, LRUMap objectPool>	*/
+	private static StorableObjectLoader soLoader;
 
 	private MeasurementStorableObjectPool() {
 	}
 
-	public static void init() {
+	public static void init(StorableObjectLoader soLoader1) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 
 		addObjectPool(ObjectEntities.SET_ENTITY, SET_OBJECT_POOL_SIZE);
@@ -65,19 +67,39 @@ public class MeasurementStorableObjectPool {
 		addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY, MEASUREMENTTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY, ANALYSISTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY, EVALUATIONTYPE_OBJECT_POOL_SIZE);
+
+		soLoader = soLoader1;
 	}
 
-	public static void addObjectPool(String objectEntity, int poolSize) {
+	private static void addObjectPool(String objectEntity, int poolSize) {
 		LRUMap objectPool = new LRUMap(poolSize);
 		objectPoolMap.put(objectEntity, objectPool);
 	}
 
-	public static StorableObject getStorableObject(Identifier objectId) throws IllegalObjectEntityException {
-		LRUMap objectPool = (LRUMap)objectPoolMap.get(objectId.getObjectEntity());
+	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) {
+		String objectEntity = objectId.getObjectEntity();
+		LRUMap objectPool = (LRUMap)objectPoolMap.get(objectEntity);
 		if (objectPool != null) {
-			return (StorableObject)objectPool.get(objectId);
+			StorableObject storableObject = (StorableObject)objectPool.get(objectId);
+			if (storableObject != null)
+				return storableObject;
+			else {
+				if (useLoader) {
+					try {
+						storableObject = soLoader.load(objectId);
+						putStorableObject(storableObject);
+					}
+					catch (Exception e) {
+						Log.errorException(e);
+					}
+				}
+				return storableObject;
+			}
 		}
-		throw new IllegalObjectEntityException("Illegal object entity: '" + objectId.getObjectEntity() + "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		else {
+			Log.errorMessage("Cannot find object pool for objectId: '" + objectId.toString() + "' entity: '" + objectEntity + "'");
+			return null;
+		}
 	}
 
 	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.6 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.7 2004/08/06 16:07:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/06 16:07:07 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -67,12 +67,12 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
-				temporalPattern.setAttributes(	DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-												DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-												new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-												new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-												resultSet.getString(COLUMN_DESCRIPTION),
-												cronStrings);
+				temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+																			DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+																			new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+																			new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+																			resultSet.getString(COLUMN_DESCRIPTION),
+																			cronStrings);
 			}
 			else
 				throw new ObjectNotFoundException("No such temporal pattern: " + tpIdStr);

@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.16 2004/07/27 15:52:25 arseniy Exp $
+ * $Id: Analysis.java,v 1.17 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,9 +19,10 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/07/27 15:52:25 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -49,17 +50,9 @@ public class Analysis extends Action {
 					new Date(at.modified),
 					new Identifier(at.creator_id),
 					new Identifier(at.modifier_id),
-					(AnalysisType)MeasurementObjectTypePool.getObjectType(new Identifier(at.type_id)),
+					(AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.type_id), true),
 					new Identifier(at.monitored_element_id));
-		try {
-			this.criteriaSet = new Set(new Identifier(at.criteria_set_id));
-		}
-		catch (RetrieveObjectException roe) {
-			throw new CreateObjectException(roe.getMessage(), roe);
-		}
-		catch (ObjectNotFoundException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		this.criteriaSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
 
 		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 		try {

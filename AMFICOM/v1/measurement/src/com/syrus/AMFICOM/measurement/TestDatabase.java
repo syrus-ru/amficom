@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.13 2004/07/28 16:00:05 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.14 2004/08/06 16:07:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/07/28 16:00:05 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/06 16:07:07 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -122,17 +122,17 @@ public class TestDatabase extends StorableObjectDatabase {
 													 resultSet.getInt(COLUMN_TEMPORAL_TYPE),
 													 DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
 													 DatabaseDate.fromQuerySubString(resultSet, COLUMN_END_TIME),
-													 (temportalPatternID != null)?(new Identifier(temportalPatternID)):null,													 
+													 (temportalPatternID != null) ? (new Identifier(temportalPatternID)) : null,													 
 													 /**
 													   * @todo when change DB Identifier model ,change getString() to getLong()
 													   */
-													 (MeasurementType)MeasurementObjectTypePool.getObjectType(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID))),
-													 (analysisTypeIdCode != null)?((AnalysisType)MeasurementObjectTypePool.getObjectType(new Identifier(analysisTypeIdCode))):null,
-													 (evaluationTypeIdCode != null)?((EvaluationType)MeasurementObjectTypePool.getObjectType(new Identifier(evaluationTypeIdCode))):null,
+													 (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID)), true),
+													 (analysisTypeIdCode != null) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(analysisTypeIdCode), true) : null,
+													 (evaluationTypeIdCode != null) ? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(evaluationTypeIdCode), true) : null,
 													 resultSet.getInt(COLUMN_STATUS),
-													 new MonitoredElement(new Identifier(monitoredElementIdCode)),
+													 null, //!! (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(monitoredElementIdCode), true),
 													 resultSet.getInt(COLUMN_RETURN_TYPE),
-													 (description != null)?description:"");
+													 (description != null) ? description: "");
 			}
 			else
 				throw new ObjectNotFoundException("No such test: " + testIdStr);
@@ -232,17 +232,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				/**
 				  * @todo when change DB Identifier model ,change getString() to getLong()
 				  */
-				try {
-					arraylist.add(new Measurement(new Identifier(resultSet.getString(COLUMN_ID))));
-				}
-				catch (RetrieveObjectException roe) {
-					Log.errorException(roe);
-					continue;
-				}
-				catch (ObjectNotFoundException e) {
-					Log.errorException(e);
-					continue;
-				}
+				arraylist.add((Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
 			}
 		}
 		catch (SQLException sqle) {
@@ -287,7 +277,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			Log.debugMessage("TestDatabase.retrieveLastMeasurement | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				return new Measurement(new Identifier(resultSet.getString(COLUMN_ID)));
+				return (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true);
 			else
 				throw new ObjectNotFoundException("No last measurement for test: " + testIdStr);
 		}

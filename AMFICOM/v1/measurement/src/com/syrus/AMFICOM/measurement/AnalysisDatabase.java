@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.10 2004/07/27 15:52:25 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.11 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/27 15:52:25 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -68,11 +68,11 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				AnalysisType analysisType = new AnalysisType(new Identifier(resultSet.getString(COLUMN_TYPE_ID)));
+				AnalysisType analysisType = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				Set criteriaSet = new Set(new Identifier(resultSet.getString(COLUMN_CRITERIA_SET_ID)));
+				Set criteriaSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_CRITERIA_SET_ID)), true);
 				analysis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 															 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 															/**
@@ -94,8 +94,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such analysis: " + analysisIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisDatabase.retrieve | Cannot retrieve analysis "
-					+ analysisIdStr;
+			String mesg = "AnalysisDatabase.retrieve | Cannot retrieve analysis " + analysisIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.10 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.11 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -89,7 +89,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				Measurement measurement = new Measurement(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)));
+				Measurement measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)), true);
 				int resultSort = resultSet.getInt(COLUMN_SORT);
 				Action action = null;
 				switch (resultSort) {
@@ -100,13 +100,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 						/**
 						 * @todo when change DB Identifier model ,change getString() to getLong()
 						 */
-						action = new Analysis(new Identifier(resultSet.getString(COLUMN_ANALYSIS_ID)));
+						action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ANALYSIS_ID)), true);
 						break;
 					case ResultSort._RESULT_SORT_EVALUATION:
 						/**
 						 * @todo when change DB Identifier model ,change getString() to getLong()
 						 */
-						action = new Evaluation(new Identifier(resultSet.getString(COLUMN_EVALUATION_ID)));
+						action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_EVALUATION_ID)), true);
 						break;
 					default:
 						Log.errorMessage("Unkown sort: " + resultSort + " of result " + resultIdStr);
@@ -172,7 +172,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 					/**
 					 * @todo when change DB Identifier model ,change getString() to getLong()
 					 */
-					ParameterType parameterType = (ParameterType)MeasurementObjectTypePool.getObjectType(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)));
+					ParameterType parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)), true);
 					parameter = new SetParameter(/**
 																				* @todo when change DB Identifier model ,change getString() to getLong()
 																				*/
@@ -369,9 +369,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter " + parameterTypeId.toString() + " for result " + resultIdCode, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase badb = new ByteArrayDatabase(setParameters[i].getValue());
-				badb.saveAsBlob(connection, 
-								ObjectEntities.RESULTPARAMETER_ENTITY, 
-								LINK_COLUMN_VALUE, COLUMN_ID + EQUALS + parameterId.toSQLString());
+				badb.saveAsBlob(connection, ObjectEntities.RESULTPARAMETER_ENTITY, LINK_COLUMN_VALUE, COLUMN_ID + EQUALS + parameterId.toSQLString());
 			}
 			connection.commit();
 		}

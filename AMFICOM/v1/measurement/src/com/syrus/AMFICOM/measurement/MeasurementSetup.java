@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.17 2004/08/03 17:16:45 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.18 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/03 17:16:45 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -61,32 +61,23 @@ public class MeasurementSetup extends StorableObject {
 					new Date(mst.modified),
 					new Identifier(mst.creator_id),
 					new Identifier(mst.modifier_id));
-		try {
-			this.parameterSet = new Set(new Identifier(mst.parameter_set_id));
-			/**
-			 * @todo when change DB Identifier model ,change identifier_string
-			 *       to identifier_code
-			 */
-			this.criteriaSet = (mst.criteria_set_id.identifier_string != null)
-					? (new Set(new Identifier(mst.criteria_set_id))) : null;
-			/**
-			 * @todo when change DB Identifier model ,change identifier_string
-			 *       to identifier_code
-			 */
-			this.thresholdSet = (mst.threshold_set_id.identifier_string != null)
-					? (new Set(new Identifier(mst.threshold_set_id))) : null;
-			/**
-			 * @todo when change DB Identifier model ,change identifier_string
-			 *       to identifier_code
-			 */
-			this.etalon = (mst.etalon_id.identifier_string != null) ? (new Set(new Identifier(mst.etalon_id))) : null;
-		}
-		catch (RetrieveObjectException roe) {
-			throw new CreateObjectException(roe.getMessage(), roe);
-		}
-		catch (ObjectNotFoundException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+
+		this.parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
+		/**
+		 * @todo when change DB Identifier model ,change identifier_string
+		 *       to identifier_code
+		 */
+		this.criteriaSet = (mst.criteria_set_id.identifier_string != "") ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true) : null;
+		/**
+		 * @todo when change DB Identifier model ,change identifier_string
+		 *       to identifier_code
+		 */
+		this.thresholdSet = (mst.threshold_set_id.identifier_string != "") ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true) : null;
+		/**
+		 * @todo when change DB Identifier model ,change identifier_string
+		 *       to identifier_code
+		 */
+		this.etalon = (mst.etalon_id.identifier_string != "") ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true) : null;
 		this.description = new String(mst.description);
 		this.measurementDuration = mst.measurement_duration;
 		this.monitoredElementIds = new ArrayList(mst.monitored_element_ids.length);
@@ -165,14 +156,14 @@ public class MeasurementSetup extends StorableObject {
 		return this.monitoredElementIds.contains(monitoredElementId);
 	}
 
-	public void attachToMonitoredElement(Identifier monitoredElementId, Identifier modifierId)
-			throws UpdateObjectException {
+	public void attachToMonitoredElement(Identifier monitoredElementId, Identifier modifierId) throws UpdateObjectException {
 		if (this.isAttachedToMonitoredElement(monitoredElementId))
 			return;
 		super.modifierId = (Identifier) modifierId.clone();
 		try {
 			this.measurementSetupDatabase.update(this, UPDATE_ATTACH_ME, monitoredElementId);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new UpdateObjectException(
 											"MeasurementSetup.attachToMonitoredElement | Cannot attach measurement setup '"
 													+ this.id + "' to monitored element '" + monitoredElementId
@@ -182,14 +173,14 @@ public class MeasurementSetup extends StorableObject {
 		//this.monitoredElementIds.trimToSize();
 	}
 
-	public void detachFromMonitoredElement(Identifier monitoredElementId, Identifier modifierId)
-			throws UpdateObjectException {
+	public void detachFromMonitoredElement(Identifier monitoredElementId, Identifier modifierId) throws UpdateObjectException {
 		if (!this.isAttachedToMonitoredElement(monitoredElementId))
 			return;
 		super.modifierId = (Identifier) modifierId.clone();
 		try {
 			this.measurementSetupDatabase.update(this, UPDATE_DETACH_ME, monitoredElementId);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new UpdateObjectException(
 											"MeasurementSetup.detachFromMonitoredElement | Cannot dettach measurement setup '"
 													+ this.id + "' from monitored element '" + monitoredElementId
@@ -209,9 +200,9 @@ public class MeasurementSetup extends StorableObject {
 																						 (Identifier_Transferable) super.creatorId.getTransferable(),
 																						 (Identifier_Transferable) super.modifierId.getTransferable(),
 																						 (Identifier_Transferable) this.parameterSet.getId().getTransferable(),
-																						 (this.criteriaSet == null) ? (Identifier_Transferable) this.criteriaSet.getId().getTransferable() : (new Identifier_Transferable()),
-																						 (this.thresholdSet == null) ? (Identifier_Transferable) this.thresholdSet.getId().getTransferable() : (new Identifier_Transferable()),
-																						 (this.etalon == null) ? (Identifier_Transferable) this.etalon.getId().getTransferable() : (new Identifier_Transferable()),
+																						 (this.criteriaSet == null) ? (Identifier_Transferable) this.criteriaSet.getId().getTransferable() : (new Identifier_Transferable("")),
+																						 (this.thresholdSet == null) ? (Identifier_Transferable) this.thresholdSet.getId().getTransferable() : (new Identifier_Transferable("")),
+																						 (this.etalon == null) ? (Identifier_Transferable) this.etalon.getId().getTransferable() : (new Identifier_Transferable("")),
 																						 this.description,
 																						 this.measurementDuration,
 																						 meIds);
@@ -245,17 +236,20 @@ public class MeasurementSetup extends StorableObject {
 		return this.monitoredElementIds;
 	}
 
-	protected synchronized void setAttributes(	Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												Set parameterSet,
-												Set criteriaSet,
-												Set thresholdSet,
-												Set etalon,
-												String description,
-												long measurementDuration) {
-		super.setAttributes(created, modified, creatorId, modifierId);
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						Set parameterSet,
+																						Set criteriaSet,
+																						Set thresholdSet,
+																						Set etalon,
+																						String description,
+																						long measurementDuration) {
+		super.setAttributes(created,
+												modified,
+												creatorId,
+												modifierId);
 		this.parameterSet = parameterSet;
 		this.criteriaSet = criteriaSet;
 		this.thresholdSet = thresholdSet;

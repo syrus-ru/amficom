@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.24 2004/08/03 17:16:45 arseniy Exp $
+ * $Id: Test.java,v 1.25 2004/08/06 16:07:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.KIS;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/08/03 17:16:45 $
+ * @version $Revision: 1.25 $, $Date: 2004/08/06 16:07:07 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -165,43 +165,29 @@ public class Test extends StorableObject {
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.measurementType = (MeasurementType)MeasurementObjectTypePool.getObjectType(new Identifier(tt.measurement_type_id));
+		this.measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.measurement_type_id), true);
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.analysisType = (tt.analysis_type_id.identifier_string != null) ? ((AnalysisType)MeasurementObjectTypePool.getObjectType(new Identifier(tt.analysis_type_id))) : null;
+		this.analysisType = (tt.analysis_type_id.identifier_string != "") ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.analysis_type_id), true) : null;
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.evaluationType = (tt.evaluation_type_id.identifier_string != null)	? ((EvaluationType)MeasurementObjectTypePool.getObjectType(new Identifier(tt.evaluation_type_id))) : null;
+		this.evaluationType = (tt.evaluation_type_id.identifier_string != "")	? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.evaluation_type_id), true) : null;
 		this.status = tt.status.value();
-		try {
-			this.monitoredElement = new MonitoredElement(new Identifier(tt.monitored_element_id));
-		}
-		catch (RetrieveObjectException roe) {
-			throw new CreateObjectException(roe.getMessage(), roe);
-		}
-		catch (ObjectNotFoundException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+//!!
+//		this.monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id), true);
 		this.returnType = tt.return_type.value();
 		this.description = new String(tt.description);
 		this.measurementSetupIds = new ArrayList(tt.measurement_setup_ids.length);
 		for (int i = 0; i < tt.measurement_setup_ids.length; i++)
 			this.measurementSetupIds.add(new Identifier(tt.measurement_setup_ids[i]));
 
-		try {
-			this.mainMeasurementSetup = new MeasurementSetup((Identifier) this.measurementSetupIds.get(0));
-			this.kis = new KIS(this.monitoredElement.getKISId());
-		}
-		catch (RetrieveObjectException roe) {
-			throw new CreateObjectException(roe.getMessage(), roe);
-		}
-		catch (ObjectNotFoundException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		this.mainMeasurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject((Identifier)this.measurementSetupIds.get(0), true);
+//!!
+//		this.kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(this.monitoredElement.getKISId());
 
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 		try {
@@ -384,8 +370,8 @@ public class Test extends StorableObject {
 																 TestTemporalType.from_int(this.temporalType),
 																 this.timeStamps.getTransferable(),
 																 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
-																 (this.analysisType != null) ? (Identifier_Transferable)this.analysisType.getId().getTransferable() : (new Identifier_Transferable()),
-																 (this.evaluationType != null) ? (Identifier_Transferable)this.evaluationType.getId().getTransferable() : (new Identifier_Transferable()),
+																 (this.analysisType != null) ? (Identifier_Transferable)this.analysisType.getId().getTransferable() : (new Identifier_Transferable("")),
+																 (this.evaluationType != null) ? (Identifier_Transferable)this.evaluationType.getId().getTransferable() : (new Identifier_Transferable("")),
 																 TestStatus.from_int(this.status),
 																 (Identifier_Transferable)this.monitoredElement.getId().getTransferable(),
 																 TestReturnType.from_int(this.returnType),
@@ -530,28 +516,13 @@ public class Test extends StorableObject {
 		this.returnType = returnType;
 		this.description = description;
 
-		try {
-			this.kis = new KIS(this.monitoredElement.getKISId());
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.errorException(e);
-		}
+//!!
+//		this.kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(this.monitoredElement.getKISId(), true);
 	}
 
 	protected synchronized void setMeasurementSetupIds(List measurementSetupIds) {
 		this.measurementSetupIds = measurementSetupIds;
 
-		try {
-			this.mainMeasurementSetup = new MeasurementSetup((Identifier) this.measurementSetupIds.get(0));
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		catch (ObjectNotFoundException e) {
-			Log.errorException(e);
-		}
+		this.mainMeasurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject((Identifier)this.measurementSetupIds.get(0), true);
 	}
 }

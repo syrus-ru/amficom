@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.17 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: Evaluation.java,v 1.18 2004/08/06 16:07:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/06 16:07:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -49,18 +49,10 @@ public class Evaluation extends Action {
 					new Date(et.modified),
 					new Identifier(et.creator_id),
 					new Identifier(et.modifier_id),
-					(EvaluationType)MeasurementObjectTypePool.getObjectType(new Identifier(et.type_id)),
+					(EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.type_id), true),
 					new Identifier(et.monitored_element_id));
 
-		try {
-			this.thresholdSet = new Set(new Identifier(et.threshold_set_id));
-		}
-		catch (RetrieveObjectException roe) {
-			throw new CreateObjectException(roe.getMessage(), roe);
-		}
-		catch (ObjectNotFoundException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		this.thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
 
 		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 		try {
