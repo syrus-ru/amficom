@@ -55,8 +55,6 @@ import java.util.Vector;
 
 public class MapDataSourceImage extends DataSourceImage
 {
-	RISDMapDataSource di1;
-
 	protected MapDataSourceImage()
 	{
 	}
@@ -64,7 +62,6 @@ public class MapDataSourceImage extends DataSourceImage
 	public MapDataSourceImage(DataSourceInterface di)
 	{
 		super(di);
-		this.di1 = (RISDMapDataSource )di;
 	}
 
 	public void LoadProtoElements()
@@ -85,9 +82,18 @@ public class MapDataSourceImage extends DataSourceImage
 		if(	ids.size() > 0 ||
 			ids2.size() > 0)
 		{
-			di1.LoadMapProtoElements(
-				(String[] )ids.toArray(), 
-				(String[] )ids2.toArray());
+			if(this.di instanceof RISDMapDataSource)
+			{
+				((RISDMapDataSource )this.di).LoadMapProtoElements(
+					(String[] )ids.toArray(new String[0]), 
+					(String[] )ids2.toArray(new String[0]));
+			}
+			else
+			{
+				((EmptyMapDataSource )this.di).LoadMapProtoElements(
+					(String[] )ids.toArray(new String[0]), 
+					(String[] )ids2.toArray(new String[0]));
+			}
 			save(MapNodeProtoElement.typ);
 			save(MapLinkProtoElement.typ);
 			save(ImageResource.typ, ImageCatalogue.getHash());
@@ -128,7 +134,14 @@ public class MapDataSourceImage extends DataSourceImage
 		Vector ids = filter(Map.typ, desc, true);
 		if(ids.size() > 0)
 		{
-			di1.LoadMaps((String[] )ids.toArray());
+			if(this.di instanceof RISDMapDataSource)
+			{
+				((RISDMapDataSource )this.di).LoadMaps((String[] )ids.toArray());
+			}
+			else
+			{
+				((EmptyMapDataSource )this.di).LoadMaps((String[] )ids.toArray());
+			}
 			save(Map.typ);
 			save(ImageResource.typ, ImageCatalogue.getHash());
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.7 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.8 2004/09/14 14:48:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/14 14:48:26 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -235,10 +235,13 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	{
 		return null;//new MapPhysicalLinkElementDisplayModel();
 	}
-	
-	public static String getPropertyPaneClassName()
+
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"com.syrus.AMFICOM.Client.Map.Props.MapLinkPane";
+
+	public String getPropertyPaneClassName()
 	{
-		return "com.syrus.AMFICOM.Client.Map.Props.MapLinkPane";
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 
 	public static PropertiesPanel getPropertyPane()

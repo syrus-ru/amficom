@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeProtoElement.java,v 1.1 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapNodeProtoElement.java,v 1.2 2004/09/14 14:48:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:26 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -167,9 +167,11 @@ public class MapNodeProtoElement
 		return null;//new MapProtoDisplayModel();
 	}
 
-	public static String getPropertyPaneClassName()
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public String getPropertyPaneClassName()
 	{
-		return "";
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
 	public Object getTransferData(DataFlavor flavor)

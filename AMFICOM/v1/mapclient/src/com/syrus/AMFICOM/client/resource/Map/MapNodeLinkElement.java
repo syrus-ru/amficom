@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.5 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.6 2004/09/14 14:48:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/14 14:48:26 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -195,9 +195,11 @@ public class MapNodeLinkElement extends MapLinkElement implements Serializable
 		return null;//new MapNodeLinkElementDisplayModel();
 	}
 	
-	public static String getPropertyPaneClassName()
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public String getPropertyPaneClassName()
 	{
-		return "";
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
 	public boolean getAlarmState()

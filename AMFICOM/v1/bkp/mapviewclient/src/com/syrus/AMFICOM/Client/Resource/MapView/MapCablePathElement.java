@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.1 2004/09/13 12:33:43 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.2 2004/09/14 14:48:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:51 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -285,9 +285,12 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return null;//new MapPathElementDisplayModel();
 	}
 	
-	public static String getPropertyPaneClassName()
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane";
+
+	public String getPropertyPaneClassName()
 	{
-		return "com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane";
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
 	public static PropertiesPanel getPropertyPane()

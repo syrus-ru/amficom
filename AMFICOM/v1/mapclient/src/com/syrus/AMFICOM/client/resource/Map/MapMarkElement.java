@@ -219,9 +219,11 @@ public class MapMarkElement extends MapNodeElement implements Serializable
 		return null;//new MapMarkElementDisplayModel();
 	}
 
-	public static String getPropertyPaneClassName()
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public String getPropertyPaneClassName()
 	{
-		return "";
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
 /*

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.2 2004/09/14 14:48:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import javax.swing.JToolBar;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:51 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -229,7 +229,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
 		Command command = aModel.getCommand(s);
-		command = (Command )command.clone();
+//		command = (Command )command.clone();
 		command.execute();
 	}
 }

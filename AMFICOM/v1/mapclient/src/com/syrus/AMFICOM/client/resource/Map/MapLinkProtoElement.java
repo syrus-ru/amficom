@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.1 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.2 2004/09/14 14:48:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:26 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -155,9 +155,11 @@ public class MapLinkProtoElement
 		throw new UnsupportedOperationException();
 	}
 
-	public static String getPropertyPaneClassName()
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public String getPropertyPaneClassName()
 	{
-		return null;
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
 	public Object clone(DataSourceInterface dataSource)

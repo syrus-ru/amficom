@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.5 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.6 2004/09/14 14:48:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/14 14:48:26 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -199,9 +199,11 @@ public class MapPhysicalNodeElement extends MapNodeElement implements Serializab
 		return null;//new MapPhysicalNodeElementDisplayModel();
 	}
 
-	public static String getPropertyPaneClassName()
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public String getPropertyPaneClassName()
 	{
-		return "";
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
 	public Rectangle getDefaultBounds()

@@ -44,7 +44,7 @@ public class EmptyMapDataSource
 		super(si);
 	}
 
-	public void LoadMapProtoElements(Vector gids, Vector eids, Vector lids, Vector pids)
+	public void LoadMapProtoElements(String[] eids, String[] lids)
 	{
 		LoadMapProtoElements();
 	}
@@ -224,7 +224,7 @@ public class EmptyMapDataSource
 		LoadAttributeTypes();
 	}
 
-	public void LoadMap(String mc_id)
+	public void LoadMaps(String[] ids)
 	{
 		if(getSession() == null)
 			return;
@@ -258,9 +258,9 @@ public class EmptyMapDataSource
 		}
 	}
 	
-	public void SaveMap(String mc_id)
+	public void SaveMaps(String[] mc_ids)
 	{
-		Map mc = (Map )Pool.get(Map.typ, mc_id);
+		Map mc = (Map )Pool.get(Map.typ, mc_ids[0]);
 
 		if(getSession() == null)
 			return;
