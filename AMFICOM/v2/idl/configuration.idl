@@ -15,6 +15,7 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id;
 		wstring local_address;
 	};
@@ -25,6 +26,7 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id;
 		wstring name;
 		wstring description;
