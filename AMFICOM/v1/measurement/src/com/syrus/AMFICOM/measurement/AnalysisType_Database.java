@@ -162,20 +162,21 @@ public class AnalysisType_Database extends StorableObject_Database {
 	private void insertAnalysisType(AnalysisType analysisType) throws Exception {
 		String analysis_type_id_str = analysisType.getId().toSQLString();
 		String sql = "INSERT INTO " + ObjectEntities.ANALYSISTYPE_ENTITY + " (" 
-				+ COLUMN_ID + COMMA 
-				+ COLUMN_CREATED + COMMA 
-				+ COLUMN_MODIFIED + COMMA 
-				+ COLUMN_CREATOR_ID + COMMA 
-				+ COLUMN_MODIFIER_ID + COMMA
-				+ COLUMN_CODENAME + COMMA 
-				+ COLUMN_DESCRIPTION + ")" 
-				+ " VALUES (" + analysis_type_id_str + COMMA
-				+ DatabaseDate.toUpdateSubString(analysisType.getCreated()) + COMMA
-				+ DatabaseDate.toUpdateSubString(analysisType.getModified()) + COMMA
-				+ analysisType.getCreatorId().toString() + COMMA 
-				+ analysisType.getModifierId().toString() + ", '"
-				+ analysisType.getCodename() + "', '" 
-				+ analysisType.getDescription() + "')";
+			+ COLUMN_ID + COMMA 
+			+ COLUMN_CREATED + COMMA 
+			+ COLUMN_MODIFIED + COMMA 
+			+ COLUMN_CREATOR_ID + COMMA 
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_CODENAME + COMMA 
+			+ COLUMN_DESCRIPTION 
+			+ ") VALUES ("
+			+ analysis_type_id_str + COMMA
+			+ DatabaseDate.toUpdateSubString(analysisType.getCreated()) + COMMA
+			+ DatabaseDate.toUpdateSubString(analysisType.getModified()) + COMMA
+			+ analysisType.getCreatorId().toString() + COMMA 
+			+ analysisType.getModifierId().toString() + ", '"
+			+ analysisType.getCodename() + "', '" 
+			+ analysisType.getDescription() + "')";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();

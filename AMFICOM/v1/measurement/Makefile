@@ -65,9 +65,10 @@ $(LIBNAME): mach
 mach:	.mach
 .mach:	corba ora $(CLASSDIR)
 	$(JAVAC) $(JAVAC_FLAGS) \
-		-classpath $(CLASSDIR):$(APPCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(ORACLECLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPattern.java
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPattern.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPattern_Database.java
 	touch $@
 
 .PHONY:	ora

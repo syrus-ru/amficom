@@ -31,13 +31,13 @@ public class TemporalPattern_Database extends StorableObject_Database {
 	}
 
 	private void retrieveTemporalPattern(TemporalPattern temporalPattern) throws Exception {
-		String tp_id_str = temporalPattern.getId().toString();
+		String tp_id_str = temporalPattern.getId().toSQLString();
 		String sql = "SELECT "
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + ", " 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + ", "
-			+ COLUMN_CREATOR_ID + ", "
-			+ COLUMN_MODIFIER_ID + ", "
-			+ COLUMN_DESCRIPTION + ", "
+			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_VALUE
 			+ " FROM " + ObjectEntities.TEMPORALPATTERN_ENTITY
 			+ " WHERE " + COLUMN_ID + " = " + tp_id_str;
@@ -87,7 +87,7 @@ public class TemporalPattern_Database extends StorableObject_Database {
 	public void insert(StorableObject storableObject) throws Exception {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		try {
-			this.insertTemporalPattern(test);
+			this.insertTemporalPattern(temporalPattern);
 		}
 		catch (Exception e) {
 			try {
@@ -109,7 +109,7 @@ public class TemporalPattern_Database extends StorableObject_Database {
 	}
 
 	private void insertTemporalPattern(TemporalPattern temporalPattern) throws Exception {
-		String tp_id_str = temporalPattern.getId().toString();
+		String tp_id_code = temporalPattern.getId().getCode();
 		String sql = "INSERT INTO " + ObjectEntities.TEMPORALPATTERN_ENTITY + " ("
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
@@ -123,13 +123,18 @@ public class TemporalPattern_Database extends StorableObject_Database {
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			preparedStatement.setString(1, tp_id_str);
+			preparedStatement.setString(1, tp_id_code);
 			preparedStatement.setDate(2, new java.sql.Date(temporalPattern.getCreated().getTime()));
 			preparedStatement.setDate(3, new java.sql.Date(temporalPattern.getModified().getTime()));
-			preparedStatement.setString(4, tp_id_str);
+			preparedStatement.setString(4, temporalPattern.getCreatorId().getCode());
+			preparedStatement.setString(5, temporalPattern.getModifierId().getCode());
+			preparedStatement.setString(6, temporalPattern.getDescription());
+			((OraclePreparedStatement)preparedStatement).setORAData(7, new CronStringArray(temporalPattern.getCronStrings()));
+			Log.debugMessage("TemporalPattern_Database.insertTemporalPattern | Inserting temporal pattern " + tp_id_code, Log.DEBUGLEVEL05);
+			preparedStatement.executeUpdate();
 		}
 		catch (SQLException sqle) {
-			String mesg = "TemporalPattern_Database.insertTest | Cannot insert temporal pattern " + tp_id_str;
+			String mesg = "TemporalPattern_Database.insertTemporalPattern | Cannot insert temporal pattern " + tp_id_code;
 			throw new Exception(mesg, sqle);
 		}
 		finally {
@@ -139,6 +144,14 @@ public class TemporalPattern_Database extends StorableObject_Database {
 				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {}
+		}
+	}
+
+	public void update(StorableObject storableObject, int update_kind, Object arg) throws Exception {
+		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
+		switch (update_kind) {
+			default:
+				break;
 		}
 	}
 }
