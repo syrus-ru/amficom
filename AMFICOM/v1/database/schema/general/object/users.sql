@@ -14,7 +14,8 @@ CREATE TABLE Users(
  CONSTRAINT users_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,
  CONSTRAINT users_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES Users (id) ON DELETE CASCADE,
+ CONSTRAINT users_uk UNIQUE (login)
 );
 
 CREATE SEQUENCE users_seq ORDER;
