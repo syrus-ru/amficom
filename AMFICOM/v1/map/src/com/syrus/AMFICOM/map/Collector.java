@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.9 2004/12/09 16:51:08 bob Exp $
+ * $Id: Collector.java,v 1.10 2004/12/16 10:35:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/09 16:51:08 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/16 10:35:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -103,18 +103,15 @@ public class Collector extends StorableObject implements Characterized {
 		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 	}
 
-	public static Collector getInstance(Collector_Transferable plt) throws CreateObjectException {
-		Collector collector = new Collector(plt);
-
-		collector.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
+	
+	public void insert() throws CreateObjectException {
+		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 		try {
-			if (collector.collectorDatabase != null)
-				collector.collectorDatabase.insert(collector);
+			if (this.collectorDatabase != null)
+				this.collectorDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
-
-		return collector;
 	}
 
 	public List getDependencies() {

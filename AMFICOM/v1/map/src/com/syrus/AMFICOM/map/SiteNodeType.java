@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeType.java,v 1.7 2004/12/03 17:54:58 bob Exp $
+ * $Id: SiteNodeType.java,v 1.8 2004/12/16 10:35:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/03 17:54:58 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/16 10:35:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -105,18 +105,14 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
 	}
 
-	public static SiteNodeType getInstance(SiteNodeType_Transferable sntt) throws CreateObjectException {
-		SiteNodeType siteNodeType = new SiteNodeType(sntt);
-
-		siteNodeType.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
+	public void insert() throws CreateObjectException {
+		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
 		try {
-			if (siteNodeType.siteNodeTypeDatabase != null)
-				siteNodeType.siteNodeTypeDatabase.insert(siteNodeType);
+			if (this.siteNodeTypeDatabase != null)
+				this.siteNodeTypeDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
-
-		return siteNodeType;
 	}
 
 	public List getCharacteristics() {

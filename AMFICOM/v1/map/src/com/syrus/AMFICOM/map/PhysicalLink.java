@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.8 2004/12/09 16:51:08 bob Exp $
+ * $Id: PhysicalLink.java,v 1.9 2004/12/16 10:35:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/09 16:51:08 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/16 10:35:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -154,18 +154,14 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 	}
 
-	public static PhysicalLink getInstance(PhysicalLink_Transferable plt) throws CreateObjectException {
-		PhysicalLink physicalLink = new PhysicalLink(plt);
-
-		physicalLink.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
+	public void insert() throws CreateObjectException {
+		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 		try {
-			if (physicalLink.physicalLinkDatabase != null)
-				physicalLink.physicalLinkDatabase.insert(physicalLink);
+			if (this.physicalLinkDatabase != null)
+				this.physicalLinkDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
-
-		return physicalLink;
 	}
 
 	public List getDependencies() {

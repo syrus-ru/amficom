@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.4 2004/12/01 16:16:03 bob Exp $
+ * $Id: SiteNode.java,v 1.5 2004/12/16 10:35:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/01 16:16:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/16 10:35:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -118,18 +118,14 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
 	}
 
-	public static SiteNode getInstance(SiteNode_Transferable sntt) throws CreateObjectException {
-		SiteNode siteNode = new SiteNode(sntt);
-
-		siteNode.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
+	public void insert() throws CreateObjectException {
+		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
 		try {
-			if (siteNode.siteNodeDatabase != null)
-				siteNode.siteNodeDatabase.insert(siteNode);
+			if (this.siteNodeDatabase != null)
+				this.siteNodeDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
-
-		return siteNode;
 	}
 
 	public List getDependencies() {

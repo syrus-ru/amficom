@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNode.java,v 1.4 2004/12/01 16:16:03 bob Exp $
+ * $Id: TopologicalNode.java,v 1.5 2004/12/16 10:35:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/01 16:16:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/16 10:35:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -102,18 +102,14 @@ public class TopologicalNode extends AbstractNode {
 		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 	}
 
-	public static TopologicalNode getInstance(TopologicalNode_Transferable sntt) throws CreateObjectException {
-		TopologicalNode topologicalNode = new TopologicalNode(sntt);
-
-		topologicalNode.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
+	public void insert() throws CreateObjectException {
+		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 		try {
-			if (topologicalNode.topologicalNodeDatabase != null)
-				topologicalNode.topologicalNodeDatabase.insert(topologicalNode);
+			if (this.topologicalNodeDatabase != null)
+				this.topologicalNodeDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
-
-		return topologicalNode;
 	}
 
 	public List getDependencies() {

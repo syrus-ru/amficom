@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.8 2004/12/09 16:51:08 bob Exp $
+ * $Id: NodeLink.java,v 1.9 2004/12/16 10:35:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/09 16:51:08 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/16 10:35:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -113,18 +113,14 @@ public class NodeLink extends StorableObject implements Characterized {
 		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
 	}
 
-	public static NodeLink getInstance(NodeLink_Transferable nlt) throws CreateObjectException {
-		NodeLink nodeLink = new NodeLink(nlt);
-
-		nodeLink.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
+	public void insert() throws CreateObjectException {
+		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
 		try {
-			if (nodeLink.nodeLinkDatabase != null)
-				nodeLink.nodeLinkDatabase.insert(nodeLink);
+			if (this.nodeLinkDatabase != null)
+				this.nodeLinkDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
-
-		return nodeLink;
 	}
 
 	public List getDependencies() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.5 2004/12/03 17:54:58 bob Exp $
+ * $Id: Map.java,v 1.6 2004/12/16 10:35:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/03 17:54:58 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/16 10:35:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -137,18 +137,15 @@ public class Map extends StorableObject {
 		this.mapDatabase = MapDatabaseContext.getMapDatabase();
 	}
 
-	public static Map getInstance(Map_Transferable mt) throws CreateObjectException {
-		Map map = new Map(mt);
-
-		map.mapDatabase = MapDatabaseContext.getMapDatabase();
+	
+	public void insert() throws CreateObjectException {
+		this.mapDatabase = MapDatabaseContext.getMapDatabase();
 		try {
-			if (map.mapDatabase != null)
-				map.mapDatabase.insert(map);
+			if (this.mapDatabase != null)
+				this.mapDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
-
-		return map;
 	}
 
 	public List getDependencies() {

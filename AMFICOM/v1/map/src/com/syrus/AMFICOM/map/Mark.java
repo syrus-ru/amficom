@@ -1,5 +1,5 @@
 /*
- * $Id: Mark.java,v 1.5 2004/12/03 17:54:58 bob Exp $
+ * $Id: Mark.java,v 1.6 2004/12/16 10:35:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/03 17:54:58 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/16 10:35:05 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -130,18 +130,15 @@ public class Mark extends StorableObject implements Characterized {
 		this.markDatabase = MapDatabaseContext.getMarkDatabase();
 	}
 
-	public static Mark getInstance(Mark_Transferable plt) throws CreateObjectException {
-		Mark mark = new Mark(plt);
-
-		mark.markDatabase = MapDatabaseContext.getMarkDatabase();
+	
+	public void insert() throws CreateObjectException {
+		this.markDatabase = MapDatabaseContext.getMarkDatabase();
 		try {
-			if (mark.markDatabase != null)
-				mark.markDatabase.insert(mark);
+			if (this.markDatabase != null)
+				this.markDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
-
-		return mark;
 	}
 
 	public List getDependencies() {
