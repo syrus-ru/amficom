@@ -71,8 +71,10 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessingException.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java
+
+##		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java
+
 	touch $@
 
 .corba:	$(CLASSDIR)
