@@ -15,8 +15,8 @@ import java.util.ResourceBundle;
  */
 public class I18N {
 
-	private static final String			BUNDLE_NAME			= "survey";
-	private static final String			OLDBUNDLE_NAME		= "oldurveykey";
+	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.Survey.General.survey";
+	private static final String			OLDBUNDLE_NAME		= "com.syrus.AMFICOM.Client.Survey.General.oldsurveykey";
 
 	private static final ResourceBundle	RESOURCE_BUNDLE		= ResourceBundle
 																	.getBundle(BUNDLE_NAME);
@@ -24,7 +24,7 @@ public class I18N {
 																	.getBundle(OLDBUNDLE_NAME);
 
 	public static String getString(String keyName) {
-		System.out.println("keyName:" + keyName);
+		//System.out.println("keyName:" + keyName);
 		keyName = keyName.replaceAll(" ", "_");
 		String string;
 		try {
@@ -34,6 +34,7 @@ public class I18N {
 			string = "!" + keyName + "!";
 			try {
 				key = OLDRESOURCE_BUNDLE.getString(keyName);
+				key = key.replaceAll("\\s+", "");
 			} catch (MissingResourceException ex) {
 				//
 			}
