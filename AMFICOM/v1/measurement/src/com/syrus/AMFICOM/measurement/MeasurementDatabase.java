@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.27 2004/10/05 13:02:17 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.28 2004/10/07 14:27:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,13 +37,14 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/10/05 13:02:17 $
+ * @version $Revision: 1.28 $, $Date: 2004/10/07 14:27:08 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class MeasurementDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_TYPE_ID = "type_id";
+	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
 	public static final String COLUMN_SETUP_ID = "setup_id";
 	public static final String COLUMN_START_TIME = "start_time";
@@ -78,6 +79,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		if (this.updateColumns == null){
 			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ COLUMN_TYPE_ID + COMMA
+				+ COLUMN_NAME + COMMA
 				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ COLUMN_SETUP_ID + COMMA
 				+ COLUMN_START_TIME + COMMA
@@ -99,6 +101,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION;
 		}
 		return this.updateMultiplySQLValues;
@@ -110,6 +113,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		Measurement measurement = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ measurement.getType().getId().toSQLString() + COMMA
+			+ APOSTOPHE + measurement.getName() + APOSTOPHE + COMMA
 			+ measurement.getMonitoredElementId().toSQLString() + COMMA
 			+ measurement.getSetup().getId().toSQLString() + COMMA
 			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA
@@ -130,6 +134,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
 			preparedStatement.setString(++i, measurement.getType().getId().getCode()); 
+			preparedStatement.setString(++i, measurement.getName());
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
@@ -160,6 +165,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	protected String retrieveQuery(String condition){
 		return super.retrieveQuery(condition) + COMMA
 			+ COLUMN_TYPE_ID + COMMA
+			+ COLUMN_NAME + COMMA
 			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 			+ COLUMN_SETUP_ID + COMMA
 			+ DatabaseDate.toQuerySubString(COLUMN_START_TIME) + COMMA
@@ -175,16 +181,19 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		Measurement measurement = (storableObject == null) ?
-				new Measurement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
+				new Measurement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, 
 								   null, null, null, null) : 
 					fromStorableObject(storableObject);		
 		MeasurementType measurementType;
+		String name;
 		MeasurementSetup measurementSetup;
+		
 		try {
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
 			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+			name = resultSet.getString(COLUMN_NAME);
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
@@ -204,6 +213,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 									 */
 									new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 									measurementType,
+									name,
 									/**
 									 * @todo when change DB Identifier model ,change getString() to getLong()
 									 */

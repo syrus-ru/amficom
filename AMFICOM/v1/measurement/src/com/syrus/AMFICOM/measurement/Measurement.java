@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.27 2004/10/06 15:45:15 max Exp $
+ * $Id: Measurement.java,v 1.28 2004/10/07 14:27:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/10/06 15:45:15 $
- * @author $Author: max $
+ * @version $Revision: 1.28 $, $Date: 2004/10/07 14:27:08 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -36,6 +36,7 @@ public class Measurement extends Action {
 	protected static final int RETRIEVE_RESULT = 1;
 	protected static final int UPDATE_STATUS = 1;
 
+	private String name;
 	private MeasurementSetup setup;
 	private Date startTime;
 	private long duration;
@@ -73,6 +74,7 @@ public class Measurement extends Action {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+		this.name = mt.name;
 		this.startTime = new Date(mt.start_time);
 		this.duration = mt.duration;
 		this.status = mt.status.value();
@@ -84,6 +86,7 @@ public class Measurement extends Action {
 	protected Measurement(Identifier id,
 											Identifier creatorId,
 											MeasurementType type,
+											String name,
 											Identifier monitoredElementId,
 											MeasurementSetup setup,
 											Date startTime,
@@ -96,6 +99,7 @@ public class Measurement extends Action {
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
 		super.type = type;
+		this.name = name;
 		super.monitoredElementId = monitoredElementId;
 
 		this.setup = setup;
@@ -132,9 +136,10 @@ public class Measurement extends Action {
 																				super.modified.getTime(),
 																				(Identifier_Transferable)super.creatorId.getTransferable(),
 																				(Identifier_Transferable)super.modifierId.getTransferable(),
-																				(Identifier_Transferable)super.type.getId().getTransferable(),
+																				(Identifier_Transferable)super.type.getId().getTransferable(),																				
 																				(Identifier_Transferable)super.monitoredElementId.getTransferable(),
 																				new String(super.type.getCodename()),
+																				name,
 																				(Identifier_Transferable)this.setup.getId().getTransferable(),
 																				this.startTime.getTime(),
 																				this.duration,
@@ -191,6 +196,7 @@ public class Measurement extends Action {
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						MeasurementType type,
+																						String name,
 																						Identifier monitoredElementId,
 																						MeasurementSetup setup,
 																						Date startTime,
@@ -204,6 +210,7 @@ public class Measurement extends Action {
 												modifierId,
 												type,
 												monitoredElementId);
+		this.name = name;
 		this.setup = setup;
 		this.startTime = startTime;
 		this.duration = duration;
@@ -215,6 +222,7 @@ public class Measurement extends Action {
 	protected static Measurement createInstance(Identifier id,
 																							Identifier creatorId,
 																							MeasurementType type,
+																							String name,
 																							Identifier monitoredElementId,
 																							MeasurementSetup setup,
 																							Date startTime,
@@ -223,6 +231,7 @@ public class Measurement extends Action {
 		return new Measurement(id,
 													 creatorId,
 													 type,
+													 name,
 													 monitoredElementId,
 													 setup,
 													 startTime,
@@ -251,5 +260,13 @@ public class Measurement extends Action {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 }

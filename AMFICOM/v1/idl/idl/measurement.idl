@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.26 2004/10/07 13:57:10 bob Exp $
+ * $Id: measurement.idl,v 1.27 2004/10/07 14:27:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -177,6 +177,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		
 		wstring typeCodename;
+		wstring name;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable setup_id;
 		long long start_time;
