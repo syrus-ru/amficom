@@ -4,6 +4,13 @@
 #include <stdlib.h> // qsort()
 #include "ArrList.h"
 
+#ifdef __unix__
+// XXX:it seems that g++ don't like to delete void*
+#define DELETEVOIDPTR(x) ((void)free(x))
+#else
+#define DELETEVOIDPTR(x) ((void)delete(x))
+#endif
+
 ArrList::ArrList()
 {
 	storage = 0;
@@ -30,7 +37,7 @@ void ArrList::disposeAll()
 	int i;
 	for (i = 0; i < used; i++)
 		if (storage[i])
-			delete storage[i];
+			DELETEVOIDPTR(storage[i]);
 }
 
 void *ArrList::operator[] (int id)
@@ -89,7 +96,7 @@ void ArrList::slowRemove(int pos)
 	assert(pos < used);
 	int i;
     if (storage[pos])
-    	delete storage[pos];
+    	DELETEVOIDPTR(storage[pos]);
     used--;
 	for (i = pos; i < used; i++)
 		storage[i] = storage[i + 1];
