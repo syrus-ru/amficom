@@ -527,7 +527,7 @@ public class PathBuilder
 	private static List findPorts(SchemeDevice dev, DirectionType direction)
 	{
 		List ports = new ArrayList();
-		SchemePort[] schemePorts = dev.schemePorts();
+		SchemePort[] schemePorts = dev.getSchemePortsAsArray();
 		for (int i = 0; i < schemePorts.length; i++)
 		{
 			if (schemePorts[i].directionType().equals(direction))
@@ -539,7 +539,7 @@ public class PathBuilder
 	private static List findCablePorts(SchemeDevice dev, DirectionType direction)
 	{
 		List ports = new ArrayList();
-		SchemeCablePort[] schemeCablePorts = dev.schemeCablePorts();
+		SchemeCablePort[] schemeCablePorts = dev.getSchemeCablePortsAsArray();
 		for (int i = 0; i < schemeCablePorts.length; i++)
 		{
 			if (schemeCablePorts[i].directionType().equals(direction))

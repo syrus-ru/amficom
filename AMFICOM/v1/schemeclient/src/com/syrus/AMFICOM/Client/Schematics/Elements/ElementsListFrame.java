@@ -301,7 +301,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 	{
 		if (dev == null)
 			return;
-		if (dev.schemePorts().length == 0 || dev.schemeCablePorts().length == 0)
+		if (dev.getSchemePortsAsArray().length == 0 || dev.getSchemeCablePortsAsArray().length == 0)
 		{
 			showNoSelection();
 			return;

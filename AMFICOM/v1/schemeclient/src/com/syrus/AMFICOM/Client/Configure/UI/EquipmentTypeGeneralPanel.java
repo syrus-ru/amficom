@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 public class EquipmentTypeGeneralPanel extends GeneralPanel
 {
 	protected EquipmentType equipmentType;
-	protected SchemeProtoElement proto;
+	protected SchemeProtoElement schemeProtoElement;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
 	private JLabel idLabel = new JLabel();
@@ -137,22 +137,19 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 
 	public Object getObject()
 	{
-		return proto;
+		return schemeProtoElement;
 	}
 
 	public void setObject(Object or)
 	{
-		proto = (SchemeProtoElement)or;
-		equipmentType = proto.getEquipmentType();
+		this.schemeProtoElement = (SchemeProtoElement) or;
+		equipmentType = this.schemeProtoElement.getEquipmentType();
 
-		int portsNumber = SchemeUtils.getPorts(proto).size();
-		int cablePortsNumber = SchemeUtils.getCablePorts(proto).size();
+		portsNumberField.setText(Long.toString(this.schemeProtoElement.getSchemePortsRecursively().size()));
+		cabelPortsNumberField.setText(Long.toString(this.schemeProtoElement.getSchemeCablePortsRecursively().size()));
 
-		portsNumberField.setText(Long.toString(portsNumber));
-		cabelPortsNumberField.setText(Long.toString(cablePortsNumber));
-
-		nameField.setText(proto.getName());
-		descTextArea.setText(proto.getDescription());
+		nameField.setText(this.schemeProtoElement.getName());
+		descTextArea.setText(this.schemeProtoElement.getDescription());
 		if (equipmentType != null)
 		{
 			idField.setText(equipmentType.getId().getIdentifierString());
@@ -171,8 +168,8 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 		{
 			if(MiscUtil.validName(nameField.getText()))
 			{
-				proto.setName(nameField.getText());
-				proto.setDescription(descTextArea.getText());
+				schemeProtoElement.setName(nameField.getText());
+				schemeProtoElement.setDescription(descTextArea.getText());
 				if (equipmentType != null)
 				{
 					equipmentType.setName(nameField.getText());

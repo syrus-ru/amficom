@@ -75,7 +75,7 @@ public final class SchemeDeviceController implements ObjectResourceController
 			else if (key.equals(COLUMN_NAME))
 				result = device.getName();
 			else if (key.equals(COLUMN_SCHEME_PORT_IDS)) {
-				SchemePort[] ports = device.schemePorts();
+				SchemePort[] ports = device.getSchemePortsAsArray();
 				List res = new ArrayList(ports.length);
 				for (int i = 0; i < ports.length; i++) {
 					res.add(ports[i].getId().getIdentifierString());
@@ -83,7 +83,7 @@ public final class SchemeDeviceController implements ObjectResourceController
 				result = res;
 			}
 			else if (key.equals(COLUMN_SCHEME_CABLEPORT_IDS)) {
-				SchemeCablePort[] ports = device.schemeCablePorts();
+				SchemeCablePort[] ports = device.getSchemeCablePortsAsArray();
 				List res = new ArrayList(ports.length);
 				for (int i = 0; i < ports.length; i++) {
 					res.add(ports[i].getId().getIdentifierString());

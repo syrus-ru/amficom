@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Iterator;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
@@ -274,21 +275,13 @@ public class ProtoElementPropsPanel extends JPanel
 		updateUI();
 	}
 
-	boolean hasCablePort (SchemeProtoElement proto)
-	{
-		SchemeDevice[] devices = proto.devices();
-		for (int i = 0; i < devices.length; i++)
-		{
-			if (devices[i].schemeCablePorts().length != 0)
+	private boolean hasCablePort(final SchemeProtoElement schemeProtoElement) {
+		for (final Iterator schemeDeviceIterator = schemeProtoElement.getSchemeDevices().iterator(); schemeDeviceIterator.hasNext();)
+			if (((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePortsAsArray().length != 0)
 				return true;
-		}
-
-		SchemeProtoElement[] protos = proto.protoElements();
-		for (int i = 0; i < protos.length; i++)
-		{
-			if (hasCablePort(protos[i]))
+		for (final Iterator schemeProtoElementIterator = schemeProtoElement.getSchemeProtoElements().iterator(); schemeProtoElementIterator.hasNext();)
+			if (hasCablePort((SchemeProtoElement) schemeProtoElementIterator.next()))
 				return true;
-		}
 		return false;
 	}
 

@@ -341,13 +341,13 @@ public class GraphActions
 			if (isPort)
 			{
 				visualPort = addVisualPort(graph, "", new Rectangle(p.x - 6, p.y - 3, 7, 7), dev, DirectionType._OUT);
-				Arrays.asList(dev.getSchemeDevice().schemePorts()).add(((PortCell)visualPort).getSchemePort());
+				Arrays.asList(dev.getSchemeDevice().getSchemePortsAsArray()).add(((PortCell)visualPort).getSchemePort());
 				((PortCell)visualPort).getSchemePort().setName(name);
 			}
 			else
 			{
 				visualPort = addVisualCablePort(graph, "", new Rectangle(p.x - 6, p.y - 3, 7, 7), dev, DirectionType._OUT);
-				Arrays.asList(dev.getSchemeDevice().schemeCablePorts()).add(((CablePortCell)visualPort).getSchemeCablePort());
+				Arrays.asList(dev.getSchemeDevice().getSchemeCablePortsAsArray()).add(((CablePortCell)visualPort).getSchemeCablePort());
 				((CablePortCell)visualPort).getSchemeCablePort().setName(name);
 			}
 			devPort = addPort (graph, "", dev, new Point(u, (int)(u * ( (double)(p.y + 1 - dev_rect.y) / (double)dev_rect.height))));
@@ -360,13 +360,13 @@ public class GraphActions
 			if (isPort)
 			{
 				visualPort = addVisualPort(graph, "", new Rectangle(p.x, p.y - 3, 7, 7), dev, DirectionType._IN);
-				Arrays.asList(dev.getSchemeDevice().schemePorts()).add(((PortCell)visualPort).getSchemePort());
+				Arrays.asList(dev.getSchemeDevice().getSchemePortsAsArray()).add(((PortCell)visualPort).getSchemePort());
 				((PortCell)visualPort).getSchemePort().setName(name);
 			}
 			else
 			{
 				visualPort = addVisualCablePort(graph, "", new Rectangle(p.x, p.y - 3, 7, 7), dev, DirectionType._IN);
-				Arrays.asList(dev.getSchemeDevice().schemeCablePorts()).add(((CablePortCell)visualPort).getSchemeCablePort());
+				Arrays.asList(dev.getSchemeDevice().getSchemeCablePortsAsArray()).add(((CablePortCell)visualPort).getSchemeCablePort());
 				((CablePortCell)visualPort).getSchemeCablePort().setName(name);
 			}
 			devPort = addPort(graph, "", dev, new Point(0, (int)(u * ( (double)(p.y + 1 - dev_rect.y) / (double)dev_rect.height))));

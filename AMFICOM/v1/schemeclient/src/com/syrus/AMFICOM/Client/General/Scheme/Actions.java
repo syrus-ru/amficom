@@ -284,7 +284,7 @@ class DeleteAction extends AbstractAction
 			{
 				SchemeDevice dev = ((DeviceCell)parent).getSchemeDevice();
 				if (dev != null)
-					Arrays.asList(dev.schemePorts()).remove(sp);
+					Arrays.asList(dev.getSchemePortsAsArray()).remove(sp);
 			}
 		}
 	}
@@ -298,7 +298,7 @@ class DeleteAction extends AbstractAction
 			{
 				SchemeDevice dev = ((DeviceCell)parent).getSchemeDevice();
 				if (dev != null)
-					Arrays.asList(dev.schemeCablePorts()).remove(scp);
+					Arrays.asList(dev.getSchemeCablePortsAsArray()).remove(scp);
 			}
 		}
 	}
@@ -553,31 +553,29 @@ class GroupAction extends AbstractAction
 			catch (CreateObjectException ex) {
 				ex.printStackTrace();
 			}
-			SchemeProtoElement proto = SchemeProtoElement.createInstance();
-			proto.setEquipmentType(eqt);
+			SchemeProtoElement schemeProtoElement = SchemeProtoElement.createInstance();
+			schemeProtoElement.setEquipmentType(eqt);
 			try {
 				ConfigurationStorableObjectPool.putStorableObject(eqt);
-				SchemeStorableObjectPool.putStorableObject(proto);
+				SchemeStorableObjectPool.putStorableObject(schemeProtoElement);
 			}
 			catch (IllegalObjectEntityException ex) {
 				ex.printStackTrace();
 			}
-			group.setProtoElementId(proto.getId());
-			proto.setLabel(text);
+			group.setProtoElementId(schemeProtoElement.getId());
+			schemeProtoElement.setLabel(text);
 
 			cells = new_cells.toArray();
 			Map viewMap = new HashMap();
-			List protos = Arrays.asList(proto.protoElements());
-			List devices = Arrays.asList(proto.devices());
-			List links = Arrays.asList(proto.links());
 			for (int i = 0; i < cells.length; i++)
 			{
-				if (cells[i] instanceof DeviceGroup)
-					protos.add(((DeviceGroup)cells[i]).getProtoElement());
-				else if (cells[i] instanceof DeviceCell)
-					devices.add(((DeviceCell)cells[i]).getSchemeDevice());
-				else if (cells[i] instanceof DefaultLink)
-					links.add(((DefaultLink)cells[i]).getSchemeLink());
+				final Object cell = cells[i];
+				if (cell instanceof DeviceGroup)
+					schemeProtoElement.addSchemeProtoElement(((DeviceGroup) cell).getProtoElement());
+				else if (cell instanceof DeviceCell)
+					schemeProtoElement.addSchemeDevice(((DeviceCell) cell).getSchemeDevice());
+				else if (cell instanceof DefaultLink)
+					schemeProtoElement.addSchemeLink(((DefaultLink) cell).getSchemeLink());
 			}
 
 			//make group created unresizable
@@ -591,7 +589,7 @@ class GroupAction extends AbstractAction
 			graph.getGraphLayoutCache().insert(new Object[] { group }, viewMap, null, map, null);
 			graph.setSelectionCell(group);
 
-			proto.getSchemeCell().setData((List)graph.getArchiveableState(new Object[]{group}));
+			schemeProtoElement.getSchemeCell().setData((List)graph.getArchiveableState(new Object[]{group}));
 		}
 	}
 }
@@ -773,9 +771,9 @@ class CreateTopLevelElementAction extends AbstractAction
 	public void actionPerformed(ActionEvent e)
 	{
 		Object[] cells = graph.getAll();
-		DeviceGroup[] groups = GraphActions.findTopLevelGroups(graph, cells);
+		DeviceGroup[] deviceGroups = GraphActions.findTopLevelGroups(graph, cells);
 
-		if (groups.length == 0)
+		if (deviceGroups.length == 0)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Не найдено ни одного компонента", "Ошибка", JOptionPane.OK_OPTION);
 			return;
@@ -821,20 +819,18 @@ class CreateTopLevelElementAction extends AbstractAction
 
 		// Save group as serializable_cell
 		Rectangle oldrect = graph.getCellBounds(cells);
-		SchemeProtoElement proto;
+		SchemeProtoElement schemeProtoElement;
 
-		if (groups.length == 1)
-		{
-			proto = groups[0].getProtoElement();
-		}
+		if (deviceGroups.length == 1)
+			schemeProtoElement = deviceGroups[0].getProtoElement();
 		else
 		{
-			Identifier user_id = new Identifier(((RISDSessionInfo)graph.aContext.getSessionInterface()).getAccessIdentifier().user_id);
-			proto = SchemeProtoElement.createInstance();
+			final Identifier creatorId = new Identifier(((RISDSessionInfo)graph.aContext.getSessionInterface()).getAccessIdentifier().user_id);
+			schemeProtoElement = SchemeProtoElement.createInstance();
 			EquipmentType eqt = null;
 			try {
 				eqt = EquipmentType.createInstance(
-						user_id,
+						creatorId,
 						"",
 						"",
 						"",
@@ -844,16 +840,14 @@ class CreateTopLevelElementAction extends AbstractAction
 			catch (CreateObjectException ex) {
 				ex.printStackTrace();
 			}
-			proto.setEquipmentType(eqt);
-			List protos = Arrays.asList(proto.protoElements());
-			for (int i = 0; i < groups.length; i++)
-				protos.add(groups[i].getProtoElement());
-			DefaultLink[] _links = GraphActions.findTopLevelLinks(graph, cells);
-			List links = Arrays.asList(proto.links());
-			for (int i = 0; i < _links.length; i++)
-				links.add(_links[i].getSchemeLink());
+			schemeProtoElement.setEquipmentType(eqt);
+			for (int i = 0; i < deviceGroups.length; i++)
+				schemeProtoElement.addSchemeProtoElement(deviceGroups[i].getProtoElement());
+			DefaultLink[] defaultLinks = GraphActions.findTopLevelLinks(graph, cells);
+			for (int i = 0; i < defaultLinks.length; i++)
+				schemeProtoElement.addSchemeLink(defaultLinks[i].getSchemeLink());
 
-			SchemeDevice new_dev = SchemeDevice.createInstance();
+			SchemeDevice schemeDevice = SchemeDevice.createInstance();
 			List cablePorts = new ArrayList();
 			List ports = new ArrayList();
 			for (Iterator it = blockports_in.iterator(); it.hasNext();)
@@ -872,13 +866,13 @@ class CreateTopLevelElementAction extends AbstractAction
 				else
 					ports.add(bpc.getSchemePort());
 			}
-			new_dev.schemeCablePorts((SchemeCablePort[])cablePorts.toArray(new SchemeCablePort[cablePorts.size()]));
-			new_dev.schemePorts((SchemePort[])ports.toArray(new SchemePort[ports.size()]));
+			schemeDevice.schemeCablePorts((SchemeCablePort[])cablePorts.toArray(new SchemeCablePort[cablePorts.size()]));
+			schemeDevice.schemePorts((SchemePort[])ports.toArray(new SchemePort[ports.size()]));
 
-			Arrays.asList(proto.devices()).add(new_dev);
+			schemeProtoElement.addSchemeDevice(schemeDevice);
 			try {
 				ConfigurationStorableObjectPool.putStorableObject(eqt);
-				SchemeStorableObjectPool.putStorableObject(proto);
+				SchemeStorableObjectPool.putStorableObject(schemeProtoElement);
 			}
 			catch (IllegalObjectEntityException ex) {
 				ex.printStackTrace();
@@ -895,7 +889,7 @@ class CreateTopLevelElementAction extends AbstractAction
 		v.add(blockports_in);
 		v.add(blockports_out);
 		v.add(oldrect);
-		v.add(proto);
+		v.add(schemeProtoElement);
 
 		graph.dispatcher.notify(new SchemeElementsEvent(this, v, SchemeElementsEvent.UGO_CREATE_EVENT));
 	}
@@ -915,7 +909,7 @@ class CreateUgoAction
 		ArrayList blockports_in = (ArrayList)v.get(0);
 		ArrayList blockports_out = (ArrayList)v.get(1);
 //		Rectangle oldrect = (Rectangle)v.get(2);
-		SchemeProtoElement proto = (SchemeProtoElement)v.get(3);
+		SchemeProtoElement schemeProtoElement = (SchemeProtoElement) v.get(3);
 
 		Object[] old_devs = graph.getRoots();
 		if (old_devs.length == 1 && old_devs[0] instanceof DeviceGroup)
@@ -923,13 +917,13 @@ class CreateUgoAction
 			SchemeProtoElement old_proto = ((DeviceGroup)old_devs[0]).getProtoElement();
 			if (old_proto != null)
 			{
-				proto.setCharacteristics(old_proto.getCharacteristics());
-				proto.setSymbol(old_proto.getSymbol());
-				proto.setLabel(old_proto.getLabel());
+				schemeProtoElement.setCharacteristics(old_proto.getCharacteristics());
+				schemeProtoElement.setSymbol(old_proto.getSymbol());
+				schemeProtoElement.setLabel(old_proto.getLabel());
 //				proto.scheme_proto_group = old_proto.scheme_proto_group;
-				proto.setName(old_proto.getName());
-				proto.setEquipmentType(old_proto.getEquipmentType());
-				EquipmentType eqt = proto.getEquipmentType();
+				schemeProtoElement.setName(old_proto.getName());
+				schemeProtoElement.setEquipmentType(old_proto.getEquipmentType());
+				EquipmentType eqt = schemeProtoElement.getEquipmentType();
 				EquipmentType old_eqt = old_proto.getEquipmentType();
 				eqt.setDescription(old_eqt.getDescription());
 //				eqt.eqClass = old_eqt.eqClass;
@@ -944,7 +938,7 @@ class CreateUgoAction
 				for (Enumeration en = ((DeviceGroup)old_devs[0]).children(); en.hasMoreElements(); ) {
 					Object child = en.nextElement();
 					if (child instanceof DeviceCell) {
-						proto.setLabel((String)((DeviceCell)child).getUserObject());
+						schemeProtoElement.setLabel((String)((DeviceCell)child).getUserObject());
 						break;
 					}
 				}
@@ -961,7 +955,7 @@ class CreateUgoAction
 		Rectangle bounds = new Rectangle(
 				graph.snap(new Point(grid*2, grid*2)),//oldrect.x, oldrect.y
 				graph.snap(new Dimension(grid*4, grid*(max+1))));
-		DefaultGraphCell cell = GraphActions.CreateDeviceAction(graph, proto.getLabel(), bounds, false, Color.black);
+		DefaultGraphCell cell = GraphActions.CreateDeviceAction(graph, schemeProtoElement.getLabel(), bounds, false, Color.black);
 		graph.setSelectionCell(cell);
 		for (int i = 0; i < blockports_out.size(); i++)
 		{
@@ -1030,7 +1024,7 @@ class CreateUgoAction
 				{
 //					((DeviceCell)child).getSchemeDevice().schemePorts() = new ArrayList();
 //					((DeviceCell)child).getSchemeDevice().cableports = new ArrayList();
-					if (proto.getSymbol() != null)
+					if (schemeProtoElement.getSymbol() != null)
 					for (Enumeration en = old_dev.children(); en.hasMoreElements();)
 					{
 						Object ch = en.nextElement();
@@ -1048,11 +1042,11 @@ class CreateUgoAction
 				}
 			}
 		}
-		SchemeProtoElement cloned_proto = group.getProtoElement();
-		if (proto.devices().length == 0)
-			proto.devices(cloned_proto.devices());
-		group.setProtoElementId(proto.getId());
-		proto.getUgoCell().setData((List)graph.getArchiveableState(cells));
+		SchemeProtoElement clonedSchemeProtoElement = group.getProtoElement();
+		if (schemeProtoElement.getSchemeDevices().isEmpty())
+			schemeProtoElement.setSchemeDevices(clonedSchemeProtoElement.getSchemeDevices());
+		group.setProtoElementId(schemeProtoElement.getId());
+		schemeProtoElement.getUgoCell().setData((List)graph.getArchiveableState(cells));
 		graph.setSelectionCells(new Object[0]);
 		//Notifier.selectionNotify(graph.dispatcher, cells, true);
 	}

@@ -54,7 +54,7 @@ public class DevicePropsPanel extends JPanel
 	{
 		this.dev = dev;
 
-		RouteTableModel tmodel = new RouteTableModel(dev.schemePorts());
+		RouteTableModel tmodel = new RouteTableModel(dev.getSchemePortsAsArray());
 		table.setModel(tmodel);
 		table.setDefaultEditor(Object.class, new RouteTableEditor(tmodel));
 		table.setDefaultRenderer(Object.class, new RouteTableRenderer(tmodel));
