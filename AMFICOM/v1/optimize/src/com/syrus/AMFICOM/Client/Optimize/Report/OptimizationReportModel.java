@@ -325,7 +325,7 @@ public class OptimizationReportModel extends APOReportModel
 
 		else if (rp.field.equals(OptimizationReportModel.iterationsHistory))
 		{
-      returnValue = new IterHistoryPanelRenderer(rt.findROforReport(rp));
+      returnValue = new JPanelRenderer(rt.findROforReport(rp));
 		}
 
 		return returnValue;
