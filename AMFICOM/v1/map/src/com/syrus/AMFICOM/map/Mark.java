@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.25 2005/04/05 12:02:16 krupenn Exp $
+ * $Id: Mark.java,v 1.26 2005/04/06 16:03:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 import java.util.SortedSet;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/04/05 12:02:16 $
+ * @version $Revision: 1.26 $, $Date: 2005/04/06 16:03:38 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -417,9 +417,8 @@ public class Mark extends AbstractNode {
 
 		double pathLength = 0;
 
-		SortedSet nodeLinks = getPhysicalLink().getNodeLinks();
-		List list = new ArrayList(nodeLinks);
-		for (ListIterator listIterator = list.listIterator(); listIterator.hasPrevious();) {
+		List nodeLinks = getPhysicalLink().getNodeLinks();
+		for (ListIterator listIterator = nodeLinks.listIterator(); listIterator.hasPrevious();) {
 			NodeLink nl = (NodeLink) listIterator.previous();
 			if (nl == this.nodeLink) {
 				pathLength += nl.getLengthLt() - this.getSizeInDoubleLt();

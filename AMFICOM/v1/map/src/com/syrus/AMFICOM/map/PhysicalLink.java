@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.42 2005/04/05 12:02:16 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.43 2005/04/06 16:03:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,8 +19,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -41,7 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
@@ -55,7 +53,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/04/05 12:02:16 $
+ * @version $Revision: 1.43 $, $Date: 2005/04/06 16:03:38 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -105,13 +103,13 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	private StorableObjectDatabase physicalLinkDatabase;
 
-	private transient SortedSet nodeLinks = null;
-	protected transient Map map;
+	private transient List nodeLinks = null;
+	protected transient Map map = null;
 	protected transient boolean selected = false;
 	protected transient boolean selectionVisible = false;
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
-	protected transient PhysicalLinkBinding binding;
+	protected transient PhysicalLinkBinding binding = null;
 	protected transient List sortedNodes = new LinkedList();
 	protected transient boolean nodeLinksSorted = false;
 
@@ -167,7 +165,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.topToBottom = topToBottom;
 
 		this.characteristics = new HashSet();
-		this.nodeLinks = new TreeSet();
+		this.nodeLinks = new ArrayList();
 
 		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 
@@ -270,12 +268,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
 			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
 
-			this.nodeLinks = new TreeSet();
-			Set nodeLinksIds = new HashSet(plt.nodeLinkIds.length);
-			for (int i = 0; i < plt.nodeLinkIds.length; i++)
-				nodeLinksIds.add(new Identifier(plt.nodeLinkIds[i]));
-			this.nodeLinks.addAll(MapStorableObjectPool.getStorableObjects(nodeLinksIds, true));
-
 			this.characteristics = new HashSet(plt.characteristicIds.length);
 			Set characteristicIds = new HashSet(plt.characteristicIds.length);
 			for (int i = 0; i < plt.characteristicIds.length; i++)
@@ -302,9 +294,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
 
 		i = 0;
-		Identifier_Transferable[] nodeLinkIds = new Identifier_Transferable[this.nodeLinks.size()];
-		for (Iterator iterator = this.nodeLinks.iterator(); iterator.hasNext();)
-			nodeLinkIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] nodeLinkIds = new Identifier_Transferable[0];
 
 		return new PhysicalLink_Transferable(super.getHeaderTransferable(),
 				this.name,
@@ -436,10 +426,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.changed = true;
 	}
 
-	public SortedSet getNodeLinks() {
+	public List getNodeLinks() {
 		if (this.nodeLinks == null || this.nodeLinks.isEmpty())
 			this.nodeLinks = findNodeLinks();
-		return Collections.unmodifiableSortedSet(this.nodeLinks);
+		return Collections.unmodifiableList(this.nodeLinks);
 	}
 
 	public void setNodeLinks(final List nodeLinks) {
@@ -654,27 +644,30 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * Сортировать фрагменты линии по цепочке начиная от начального узла. При
 	 * сортировке фрагментов сортируются также узлы
 	 * 
-	 * @todo getNodeLinks() is unmodifiable so iterator.remove throws Ex
 	 */
 	public void sortNodeLinks() {
 		if (!this.nodeLinksSorted) {
 			AbstractNode smne = this.getStartNode();
-			NodeLink nl = null;
+			NodeLink currentNodeLink = null;
 			LinkedList list = new LinkedList();
 			List nodeList = new LinkedList();
-			int count = getNodeLinks().size();
+
+			List origNodeLinks = new LinkedList();
+			origNodeLinks.addAll(getNodeLinks());
+
+			int count = origNodeLinks.size();
 			for (int i = 0; i < count; i++) {
 				nodeList.add(smne);
 
-				for (Iterator it = getNodeLinks().iterator(); it.hasNext();) {
+				for (Iterator it = origNodeLinks.iterator(); it.hasNext();) {
 					NodeLink nodeLink = (NodeLink) it.next();
 
-					if (!nodeLink.equals(nl)) {
+					if (!nodeLink.equals(currentNodeLink)) {
 						if (nodeLink.getStartNode().equals(smne)) {
 							list.add(nodeLink);
 							it.remove();
 							smne = nodeLink.getEndNode();
-							nl = nodeLink;
+							currentNodeLink = nodeLink;
 							break;
 						}
 						else
@@ -682,7 +675,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 								list.add(nodeLink);
 								it.remove();
 								smne = nodeLink.getStartNode();
-								nl = nodeLink;
+								currentNodeLink = nodeLink;
 								break;
 							}
 					}
@@ -706,12 +699,15 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	public NodeLink nextNodeLink(NodeLink nodeLink) {
 		this.sortNodeLinks();
-		final SortedSet nodeLinksTailSet  = this.nodeLinks.tailSet(nodeLink);
-		if (nodeLinksTailSet.size() == 1)
-			return null;
-		final Iterator nodeLinksIterator = nodeLinksTailSet.iterator();
-		nodeLinksIterator.next();
-		return (NodeLink) nodeLinksIterator.next();
+		for(Iterator iter = this.nodeLinks.iterator(); iter.hasNext();) {
+			NodeLink bufNodeLink = (NodeLink )iter.next();
+			if(bufNodeLink.equals(nodeLink)) {
+				if(iter.hasNext())
+					return (NodeLink )iter.next();
+				return null;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -724,8 +720,14 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	public NodeLink previousNodeLink(NodeLink nodeLink) {
 		this.sortNodeLinks();
-		final SortedSet nodeLinksHeadSet = this.nodeLinks.headSet(nodeLink); 
-		return nodeLinksHeadSet.isEmpty() ? null : (NodeLink) nodeLinksHeadSet.last();
+		NodeLink prevNodeLink = null;
+		for(Iterator iter = this.nodeLinks.iterator(); iter.hasNext();) {
+			NodeLink bufNodeLink = (NodeLink )iter.next();
+			if(bufNodeLink.equals(nodeLink))
+				return prevNodeLink;
+			prevNodeLink = bufNodeLink;
+		}
+		return null;
 	}
 
 	/**
@@ -843,7 +845,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.setStartNode(mples.startNode);
 		this.setEndNode(mples.endNode);
 
-		this.nodeLinks = new TreeSet();
+		this.nodeLinks = new ArrayList(mples.nodeLinks.size());
 		for (Iterator it = mples.nodeLinks.iterator(); it.hasNext();) {
 			NodeLink mnle = (NodeLink) it.next();
 			mnle.setPhysicalLink(this);
@@ -962,7 +964,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	private SortedSet findNodeLinks() {
+	private List findNodeLinks() {
 		return this.map.getNodeLinks(this);
 	}
 

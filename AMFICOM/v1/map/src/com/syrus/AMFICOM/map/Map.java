@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.27 2005/04/05 12:02:16 krupenn Exp $
+ * $Id: Map.java,v 1.28 2005/04/06 16:03:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,14 +11,14 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * линиях, коллекторов (объединяющих в себе линии).
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/04/05 12:02:16 $
+ * @version $Revision: 1.28 $, $Date: 2005/04/06 16:03:38 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -819,8 +819,8 @@ public class Map extends DomainMember {
 		return null;
 	}
 
-	public SortedSet getNodeLinks(PhysicalLink link) {
-		SortedSet nlinks = new TreeSet();
+	public List getNodeLinks(PhysicalLink link) {
+		List nlinks = new ArrayList();
 		for (Iterator it = this.nodeLinks.iterator(); it.hasNext();) {
 			NodeLink nodeLink = (NodeLink) it.next();
 			if (nodeLink.getPhysicalLink().equals(link))
