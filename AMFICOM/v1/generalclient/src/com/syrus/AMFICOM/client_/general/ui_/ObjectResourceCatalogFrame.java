@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogFrame.java,v 1.2 2005/01/31 15:03:06 stas Exp $
+ * $Id: ObjectResourceCatalogFrame.java,v 1.3 2005/03/01 08:55:22 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,23 +13,19 @@ import java.util.List;
 import java.awt.*;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/01/31 15:03:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/01 08:55:22 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogFrame
 		extends JInternalFrame
-		implements OperationListener
 {
 	public ObjectResourceCatalogPanel panel;
-	public ApplicationContext aContext;
 
 	public ObjectResourceCatalogFrame(String title)
 	{
@@ -55,10 +51,7 @@ public class ObjectResourceCatalogFrame
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
 		panel.setContext(aContext);
-		if(aContext != null)
-			aContext.getDispatcher().register(this, TreeDataSelectionEvent.type);
 	}
 
 	public void setContents(List dataSet)
@@ -89,35 +82,6 @@ public class ObjectResourceCatalogFrame
 
 		panel = new ObjectResourceCatalogPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);
-	}
-
-	public void operationPerformed(OperationEvent oe )
-	{
-		if(oe.getActionCommand().equals(TreeDataSelectionEvent.type))
-		{
-			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)oe;
-
-			Class cl = tdse.getDataClass();
-
-			String title;
-			try
-			{
-				java.lang.reflect.Field typField = cl.getField("typ");
-				title = (String )typField.get(cl);
-			}
-			catch(IllegalAccessException iae)
-			{
-				System.out.println("Ошибка определения значения поля typ - " + iae.getMessage());
-				title = "";
-			}
-			catch(Exception e)
-			{
-				System.out.println("Не найден объект ObjectResource - " + e.getMessage());
-				title = "";
-			}
-
-			setTitle(LangModel.getString("node" + title));
-		}
 	}
 
 	public void doDefaultCloseAction()

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.6 2005/02/21 14:23:07 stas Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.7 2005/03/01 08:55:22 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,36 +28,31 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/02/21 14:23:07 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/01 08:55:22 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
 {
-	private static final boolean DEBUG = true;
-
-	/**
-	 * @deprecated Use {@link #getContext()} instead.
-	 */
 	private ApplicationContext aContext;
-	private Dispatcher dispatcher = new Dispatcher();
+	Dispatcher dispatcher = new Dispatcher();
 
-	private JButton filterokButton = new JButton();
-	private JButton filterclearButton = new JButton();
-	private JButton buttonAdd = new JButton();
-	private JButton buttonDelete = new JButton();
-	private JButton buttonProperties = new JButton();
-	private JButton buttonSave = new JButton();
-	private JPanel filterContainingPanel = new JPanel();
-	private JPanel filterButtonPanel = new JPanel();
-	private JPanel buttonsPanel = new JPanel();
-	private JPanel jPanel = new JPanel();
-	private JScrollPane propScrollPane;
-	private JTabbedPane jTabbedPane = new JTabbedPane();
-	private ObjectResourceTable table;
-	private ObjectResourcePropertiesPane propPane = new GeneralPanel();
-	private ObjectResourceFilterPane filterPane = new ObjectResourceFilterPane();
-	private TextIcon enabledPropsIcon = new TextIcon(LangModel.getString("Properties"), jTabbedPane, true);
-	private TextIcon disabledPropsIcon = new TextIcon(LangModel.getString("Properties"), jTabbedPane, false);
+	JButton filterokButton = new JButton();
+	JButton filterclearButton = new JButton();
+	JButton buttonAdd = new JButton();
+	JButton buttonDelete = new JButton();
+	JButton buttonProperties = new JButton();
+	JButton buttonSave = new JButton();
+	JPanel filterContainingPanel = new JPanel();
+	JPanel filterButtonPanel = new JPanel();
+	JPanel buttonsPanel = new JPanel();
+	JPanel jPanel = new JPanel();
+	JScrollPane propScrollPane;
+	JTabbedPane jTabbedPane = new JTabbedPane();
+	ObjectResourceTable table;
+	ObjectResourcePropertiesPane propPane = new GeneralPanel();
+	ObjectResourceFilterPane filterPane = new ObjectResourceFilterPane();
+	TextIcon enabledPropsIcon = new TextIcon(LangModel.getString("Properties"), jTabbedPane, true);
+	TextIcon disabledPropsIcon = new TextIcon(LangModel.getString("Properties"), jTabbedPane, false);
 
 	ObjectResourceController controller;
 
@@ -83,7 +78,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 	/**
 	 * This button has no functionality.
 	 */
-	private JButton buttonCancel = new JButton()
+	JButton buttonCancel = new JButton()
 	{
 		{
 			super.setEnabled(false);
@@ -99,9 +94,9 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		}
 	};
 
-	private List dataSet;
+	List dataSet;
 
-	private boolean sendEvent = false;
+	boolean sendEvent = false;
 
 	public ObjectResourceCatalogPanel()
 	{
@@ -140,23 +135,23 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		if (orcam == null)
 			buttonsPanel.setVisible(false);
 
-		buttonsPanel.setVisible(orcam.PANEL);
+		buttonsPanel.setVisible(ObjectResourceCatalogActionModel.PANEL);
 		buttonsPanel.removeAll();
-		buttonAdd.setVisible(orcam.ADD_BUTTON);
-		buttonCancel.setVisible(orcam.CANCEL_BUTTON);
-		buttonDelete.setVisible(orcam.REMOVE_BUTTON);
-		buttonProperties.setVisible(orcam.PROPS_BUTTON);
-		buttonSave.setVisible(orcam.SAVE_BUTTON);
+		buttonAdd.setVisible(ObjectResourceCatalogActionModel.ADD_BUTTON);
+		buttonCancel.setVisible(ObjectResourceCatalogActionModel.CANCEL_BUTTON);
+		buttonDelete.setVisible(ObjectResourceCatalogActionModel.REMOVE_BUTTON);
+		buttonProperties.setVisible(ObjectResourceCatalogActionModel.PROPS_BUTTON);
+		buttonSave.setVisible(ObjectResourceCatalogActionModel.SAVE_BUTTON);
 
-		if (orcam.ADD_BUTTON)
+		if (ObjectResourceCatalogActionModel.ADD_BUTTON)
 			buttonsPanel.add(buttonAdd);
-		if (orcam.SAVE_BUTTON)
+		if (ObjectResourceCatalogActionModel.SAVE_BUTTON)
 			buttonsPanel.add(buttonSave);
-		if (orcam.REMOVE_BUTTON)
+		if (ObjectResourceCatalogActionModel.REMOVE_BUTTON)
 			buttonsPanel.add(buttonDelete);
-		if (orcam.PROPS_BUTTON)
+		if (ObjectResourceCatalogActionModel.PROPS_BUTTON)
 			buttonsPanel.add(buttonProperties);
-		if (orcam.CANCEL_BUTTON)
+		if (ObjectResourceCatalogActionModel.CANCEL_BUTTON)
 			buttonsPanel.add(buttonCancel);
 	}
 
@@ -165,6 +160,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		if (controller == null)
 			return;
 		this.controller = controller;
+		
 		ObjectResourcePropertiesPane pane = getPropertiesPane(controller);
 		setProp(pane);
 		setController(controller);
@@ -428,7 +424,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		});
 	}
 
-	private void updateSelection()
+	void updateSelection()
 	{
 		int selected = table.getSelectedRow();
 		if (selected != -1) {
@@ -491,7 +487,6 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		else
 			jTabbedPane.setDisabledIconAt(1, disabledPropsIcon);
 		jTabbedPane.setEnabledAt(1, b);
-		jTabbedPane.setSelectedComponent(table);
 		buttonProperties.setEnabled(b);
 		buttonCancel.setEnabled(b);
 		buttonSave.setEnabled(b);
