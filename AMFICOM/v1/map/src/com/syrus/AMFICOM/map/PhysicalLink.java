@@ -1,12 +1,10 @@
 /**
- * $Id: PhysicalLink.java,v 1.30 2005/02/24 15:47:38 bob Exp $
+ * $Id: PhysicalLink.java,v 1.31 2005/02/28 16:13:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -50,8 +48,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: bob $
- * @version $Revision: 1.30 $, $Date: 2005/02/24 15:47:38 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/02/28 16:13:44 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -444,6 +442,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 	
 	public String getName() {
+		if(this.name.length() == 0)
+			return this.startNode.getName() + " " + this.endNode.getName();
 		return this.name;
 	}
 	
@@ -947,7 +947,6 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
   		String typeCodeName = (String) exportMap.get(COLUMN_PROTO_ID);
   		Identifier startNodeId = (Identifier) exportMap.get(COLUMN_START_NODE_ID);
   		Identifier endNodeId = (Identifier) exportMap.get(COLUMN_END_NODE_ID);
-   		List nodeLinkIds = (List) exportMap.get(COLUMN_NODE_LINKS);
   		String city = (String) exportMap.get(COLUMN_CITY);
   		String street = (String) exportMap.get(COLUMN_STREET);
   		String building = (String) exportMap.get(COLUMN_BUILDING);
