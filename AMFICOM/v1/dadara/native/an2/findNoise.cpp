@@ -35,6 +35,9 @@ const double prec0 = 0.001 * 1.5;
 // начальный уровень шума по отношению к макс. уровню сигнала, дБ
 const double MAX_VALUE_TO_INITIAL_DB_NOISE = -10; // -5..-10..-15
 
+// оценка ширины сглаживания белого шума NetTest'ом
+const int NETTESTWIDTH = 16;
+
 static int dfcmp(const void *a, const void *b)
 {
 	const double *x = (const double *)a;
@@ -138,7 +141,7 @@ void findNoiseArray(double *data, double *out, int size)
 
 	prf_b("findNoiseArray: enter");
 
-	const int width = 8;
+	const int width = NETTESTWIDTH;
 	// mlen должно получиться четным
 	const int mlen = width * 10;
 	// -1 здесь для выравнивания x-коорд.
@@ -217,7 +220,6 @@ void findNoiseArray(double *data, double *out, int size)
 		//fprintf(stdout,"%d %g\n", i, out[i]);
 	}
 
-	/*
 	prf_b("findNoiseArray: done");
 
 	FILE *f = fopen ("noise.tmp", "w");
@@ -225,7 +227,6 @@ void findNoiseArray(double *data, double *out, int size)
 	for (i = 0; i < size; i++)
 		fprintf(f, "%d %g %g %g\n", i, data[i], out[i], temp[i]);
 	fclose(f);
-	*/
 
 	delete[] temp;
 	prf_b("findNoiseArray: exiting");
