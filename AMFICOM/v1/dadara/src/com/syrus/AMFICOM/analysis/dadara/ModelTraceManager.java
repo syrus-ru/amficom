@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.20 2005/03/14 12:19:38 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.21 2005/03/14 14:31:05 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/03/14 12:19:38 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/14 14:31:05 $
  * @module
  */
 public class ModelTraceManager
@@ -198,21 +198,6 @@ public class ModelTraceManager
 		return th.getY(x);
 	}
 
-	// для пользовательского интерфейса нужна команда изменения порогов для данного *события*
-	// FIXME: нет ограничения на отрицательные значения порогов
-	public void changeThresholdBy(int nEvent, int key, double dH, int dW)
-	{
-		throw new UnsupportedOperationException();
-//		invalidateThMTByKey(key);
-//		ArrayList tlist = getAllThreshByNEvent(nEvent);
-//		for (int i = 0; i < tlist.size(); i++)
-//		{
-//			throw new UnsupportedOperationException();
-//			//((Thresh )tlist.get(i)).dX[key] += dW; // FIXME
-//			//((Thresh )tlist.get(i)).values[key] += dH;
-//		}
-	}
-
 	/**
 	 * Возвращает номер события, соответствующего данному
 	 * иксу. Если x попадает на границу двух событий,
@@ -365,22 +350,6 @@ public class ModelTraceManager
 		//re[nEvent].setThreshold(th);
 	}
 
-	// FIXME - remove
-	public void changeThresholdType(int nEvent, int thresholdType, double[] y)
-	{
-		throw new UnsupportedOperationException();
-		//createVoidThMFCacheEntry(key);
-		//re[nEvent].changeThresholdType(thresholdType, y);
-	}
-
-	public void setThresholds(Threshold[] th) // FIXME -- remove
-	{
-		throw new UnsupportedOperationException();
-		//invalidateThMFCache();
-//		for (int i = 0; i < re.length && i < th.length; i++)
-//			re[i].setThreshold(th[i]);
-	}
-
 	public void setDefaultThreshold(int nEvent)
 	{
 		throw new UnsupportedOperationException(); // FIXME
@@ -412,7 +381,6 @@ public class ModelTraceManager
 	//@todo: throw exceptions when there are errors
 	public static ModelTraceManager eventsAndTraceFromByteArray(byte[] bar)
 	{
-		//throw new UnsupportedOperationException(); // FIXME
 		try
 		{
 			ByteArrayInputStream bais = new ByteArrayInputStream(bar);
