@@ -72,7 +72,7 @@ public class PathElementsFrame extends AnalysisFrame
 				}
 				setTitle(me.getName());
 			}
-			catch(ApplicationException ex)
+			catch(Exception ex)
 			{
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
 			}
