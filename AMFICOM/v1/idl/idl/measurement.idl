@@ -121,7 +121,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		
 		wstring name;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;		
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;		
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable measurement_type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable argument_set_id;		
 	};

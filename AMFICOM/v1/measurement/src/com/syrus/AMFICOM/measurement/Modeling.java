@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.2 2004/09/24 14:17:15 bob Exp $
+ * $Id: Modeling.java,v 1.3 2004/09/27 06:06:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/24 14:17:15 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 06:06:30 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -31,7 +31,7 @@ import com.syrus.util.HashCodeGenerator;
 public class Modeling extends StorableObject {
 	
 	private String name;
-	private Identifier domainId;
+	private Identifier meId;
 	private MeasurementType measurementType;
 	private Set argumentSet;
 
@@ -51,7 +51,7 @@ public class Modeling extends StorableObject {
 	
 	protected Modeling(Identifier id,
 							 Identifier creatorId,
-							 Identifier domainId,
+							 Identifier meId,
 							 String name,
 							 Set argumentSet){
 		super(id);
@@ -60,7 +60,7 @@ public class Modeling extends StorableObject {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
-		this.domainId = domainId;
+		this.meId = meId;
 		this.name = name;
 		this.argumentSet = argumentSet;
 		
@@ -75,12 +75,12 @@ public class Modeling extends StorableObject {
 
 	public static Modeling createInstance(Identifier id,
 																		Identifier creatorId,
-																		Identifier domainId,
+																		Identifier meId,
 																		String name,
 																		Set argumentSet){
 		return new Modeling(id,
 										creatorId,
-										domainId,
+										meId,
 										name,
 										argumentSet);
 		
@@ -94,7 +94,7 @@ public class Modeling extends StorableObject {
 					new Identifier(mt.creator_id),
 					new Identifier(mt.modifier_id));
 		this.name = mt.name;
-		this.domainId = new Identifier(mt.domain_id);
+		this.meId = new Identifier(mt.monitored_element_id);
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
@@ -138,7 +138,7 @@ public class Modeling extends StorableObject {
 																 (Identifier_Transferable)super.creatorId.getTransferable(),
 																 (Identifier_Transferable)super.modifierId.getTransferable(),
 																 new String(this.name),																 
-																 (Identifier_Transferable)this.domainId.getTransferable(),
+																 (Identifier_Transferable)this.meId.getTransferable(),
 																 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
 																 (Identifier_Transferable)this.argumentSet.getId().getTransferable()
 																 );
@@ -157,7 +157,7 @@ public class Modeling extends StorableObject {
 												creatorId,
 												modifierId);
 		this.name = name;
-		this.domainId = domainId;
+		this.meId = domainId;
 		this.measurementType = measurementType;
 		this.argumentSet = argumentSet;
 	}
@@ -171,7 +171,7 @@ public class Modeling extends StorableObject {
 		hashCodeGenerator.addObject(this.modified);
 		hashCodeGenerator.addObject(this.modifierId);
 		hashCodeGenerator.addObject(this.name);
-		hashCodeGenerator.addObject(this.domainId);
+		hashCodeGenerator.addObject(this.meId);
 		hashCodeGenerator.addObject(this.measurementType);
 		hashCodeGenerator.addObject(this.argumentSet);
 		int result = hashCodeGenerator.getResult();
@@ -191,7 +191,7 @@ public class Modeling extends StorableObject {
 					( ((test.name == null) && (this.name == null) ) 
 							|| (test.name.equals(this.name)) ) &&					
 					(test.getMeasurementType().equals(getMeasurementType())) &&
-					(test.domainId.equals(this.domainId)) &&					 
+					(test.meId.equals(this.meId)) &&					 
 					(test.argumentSet.equals(test.argumentSet)
 					))
 					equals = true;
@@ -202,8 +202,8 @@ public class Modeling extends StorableObject {
 	public Set getArgumentSet() {
 		return this.argumentSet;
 	}
-	public Identifier getDomainId() {
-		return this.domainId;
+	public Identifier getMonitoredElementId() {
+		return this.meId;
 	}
 	public String getName() {
 		return this.name;
