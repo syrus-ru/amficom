@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.1 2005/02/04 14:18:32 bob Exp $
+ * $Id: TestTestCase.java,v 1.2 2005/02/08 11:15:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/04 14:18:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/08 11:15:36 $
  * @author $Author: bob $
  * @module tools
  */
@@ -190,11 +190,11 @@ public class TestTestCase extends AbstractMesurementTestCase {
 		Date date1 = new Date(startDate.getTime() - 1000L * 60L * 60L);
 		Date date2 = new Date(endDate.getTime() + 1000L * 60L * 60L);
 		TypicalCondition typicalCondition = new TypicalCondition(date1, date2, OperationSort.OPERATION_IN_RANGE,
-																	new Short(ObjectEntities.TEST_ENTITY_CODE),
+																	ObjectEntities.TEST_ENTITY_CODE,
 																	TestWrapper.COLUMN_START_TIME);
 
 		TypicalCondition typicalCondition2 = new TypicalCondition(date1, date2, OperationSort.OPERATION_IN_RANGE,
-																	new Short(ObjectEntities.TEST_ENTITY_CODE),
+																	ObjectEntities.TEST_ENTITY_CODE,
 																	TestWrapper.COLUMN_END_TIME);
 
 		CompoundCondition compoundCondition = new CompoundCondition(typicalCondition, CompoundConditionSort.AND,
