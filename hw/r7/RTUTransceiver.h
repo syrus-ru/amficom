@@ -63,6 +63,7 @@ private:
 	static int get_averages_index(const double scans, const WORD otdr_card, const float wave);
 	static int get_index_in_array(float val, float* array, int array_size);
 	static int get_index_in_array(DWORD val, DWORD* array, int array_size);
+	static void print_available_parameters(const WORD otdr_card);
 
 	static const char* PARAMETER_NAME_WAVELENGTH;
 	static const char* PARAMETER_NAME_TRACE_LENGTH;
@@ -93,7 +94,7 @@ private:
 	void print_measurement_parameters() const;
 	void retrieve_plugin_data(unsigned int otdr_card_index);
 	void fill_bellcore_structure(BellcoreStructure*& bs, QPOTDRWaveformHeader* wave_form_header,QPOTDRWaveformData*  wave_form_data) const;
-
+	
 
 	MeasurementQueueT* measurement_queue;
 	ResultQueueT* result_queue;

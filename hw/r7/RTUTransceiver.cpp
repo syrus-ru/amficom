@@ -37,6 +37,9 @@ RTUTransceiver::RTUTransceiver(const unsigned int timewait,
 	this->last_used_com_port = NULL;
 
 	if (this->initialize_OTDR_cards()) {
+
+//		print_available_parameters(this->otdr_cards[0]);
+
 		this->initialize_OTAUs();
 
 		this->state = RTU_STATE_INIT_COMPLETED;
@@ -73,6 +76,7 @@ void RTUTransceiver::start() {
 	pthread_attr_destroy(&pt_attr);
 	this->state = RTU_STATE_READY;
 }
+
 
 
 //########################### Main loop -- run #############################
@@ -804,10 +808,10 @@ int RTUTransceiver::get_averages_index(const double scans, const WORD otdr_card,
 	int ret;
 	int max_averages = QPOTDRGetMaxAverages(otdr_card, wave);
 	if (max_averages > 0) {
-		DWORD* averages = new DWORD[MAX_AVERAGES];
-		QPOTDRGetAvailAverages(otdr_card, wave, averages);
-		ret = get_index_in_array((DWORD)scans, averages, max_averages);
-		delete[] averages;
+		DWORD* avergs = new DWORD[MAX_AVERAGES];
+		QPOTDRGetAvailAverages(otdr_card, wave, avergs);
+		ret = get_index_in_array((DWORD)scans, avergs, max_averages);
+		delete[] avergs;
 	}
 	else {
 		printf("RTUTransceiver | ERROR: QPOTDRGetMaxAverages returned error\n");
@@ -964,4 +968,74 @@ int RTUTransceiver::get_index_in_array(DWORD val, DWORD* array, int array_size) 
 		}
 	}
 	return ret;
+}
+
+
+
+void RTUTransceiver::print_available_parameters(const WORD otdr_card) {
+	int max_waves = QPOTDRGetMaxWaves(otdr_card);
+	if (max_waves <= 0) {
+		printf("RTUTransceiver | ERROR: QPOTDRGetMaxWaves returned error\n");
+		return;
+	}
+
+	int i;
+	float* waves = new float[MAX_WAVES];
+	QPOTDRGetAvailWaves(otdr_card, waves);
+	for (i = 0; i < max_waves; i++) {
+		printf("Wave length: %f\n", waves[i]);
+		int j;
+
+		int max_ranges = QPOTDRGetMaxRanges(otdr_card, waves[i]);
+		if (max_ranges <= 0) {
+			printf("RTUTransceiver | ERROR: QPOTDRGetMaxRanges returned error\n");
+			delete[] waves;
+			return;
+		}
+		float* ranges = new float[MAX_RANGES];
+		QPOTDRGetAvailRanges(otdr_card, waves[i], ranges);
+		for (j = 0; j < max_ranges; j++)
+			printf("\tRange: %f\n", ranges[j]);
+		delete[] ranges;
+
+		int max_pulse_widths = QPOTDRGetMaxPulses(otdr_card, waves[i]);
+		if (max_pulse_widths <= 0) {
+			printf("RTUTransceiver | ERROR: QPOTDRGetMaxPulses returned error\n");
+			delete[] waves;
+			return;
+		}
+		DWORD* pulse_widths = new DWORD[MAX_PULSES];
+		QPOTDRGetAvailPulses(otdr_card, waves[i], pulse_widths);
+		for (j = 0; j < max_pulse_widths; j++)
+			printf("\tPulse width: %u\n", pulse_widths[j]);
+		delete[] pulse_widths;
+
+		float ior = QPOTDRGetDefaultIOR(otdr_card, waves[i]);
+		printf("\t Index of refraction: %f\n", ior);
+
+		int max_averages = QPOTDRGetMaxAverages(otdr_card, waves[i]);
+		if (max_averages <= 0) {
+			printf("RTUTransceiver | ERROR: QPOTDRGetMaxAverages returned error\n");
+			delete[] waves;
+			return;
+		}
+		DWORD* avergs = new DWORD[MAX_AVERAGES];
+		QPOTDRGetAvailAverages(otdr_card, waves[i], avergs);
+		for (j = 0; j < max_averages; j++)
+			printf("\tAverage: %u\n", avergs[j]);
+		delete[] avergs;
+	}
+
+	delete[] waves;
+
+	int max_point_spacings = QPOTDRGetMaxPointSpacings(otdr_card);
+	if (max_point_spacings <= 0) {
+		printf("RTUTransceiver | ERROR: QPOTDRGetMaxPointSpacings returned error\n");
+		return;
+	}
+	float* point_spacings = new float[MAX_SPACINGS];
+	QPOTDRGetAvailSpacings(otdr_card, point_spacings);
+	for (i = 0; i < max_point_spacings; i++)
+		printf("Point spacing: %f\n", point_spacings[i]);
+	delete[] point_spacings;
 }
