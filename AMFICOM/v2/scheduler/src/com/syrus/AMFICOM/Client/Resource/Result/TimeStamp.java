@@ -3,6 +3,14 @@ package com.syrus.AMFICOM.Client.Resource.Result;
 import java.util.*;
 
 public class TimeStamp {
+	public static final int TIMESTAMPTYPE_ONETIME = 1;
+	public static final int TIMESTAMPTYPE_CONTINUOS = 2;
+	public static final int TIMESTAMPTYPE_PERIODIC = 3;
+	
+	private int type = 0; 
+	//private long start;
+	private long periodStart;
+	private long periodEnd;
 	private Time period;
 	//время теста
 	private LinkedList testTime = new LinkedList(); //of DayTime
@@ -12,13 +20,13 @@ public class TimeStamp {
 	public TimeStamp() {
 	}
 
-	public long[] getTestTimes(long start, long periodStart, long periodEnd) {
+	public long[] getTestTimes() {
 		ArrayList list = new ArrayList();
 
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(start);
+		cal.setTimeInMillis(periodStart);
 		//устанавливаем начало отсчета
-		switch (this.period.scale) {
+		switch (this.period.getScale()) {
 			case Calendar.MONTH :
 				cal.set(Calendar.DAY_OF_MONTH, 1);
 				break;
@@ -49,7 +57,7 @@ public class TimeStamp {
 			for (Iterator d_it = testDate.iterator(); d_it.hasNext();) {
 				//устанавливаем день
 				Time t = (Time) d_it.next();
-				cal.add(t.scale, t.value - cal.getMinimum(t.scale));
+				cal.add(t.getScale(), t.getValue() - cal.getMinimum(t.getScale()));
 
 				// запоминаем начало дня
 				long day_t = cal.getTimeInMillis();
@@ -77,9 +85,9 @@ public class TimeStamp {
 			}
 			//прибавляем период
 			if (first)
-				cal.add(period.scale, 1);
+				cal.add(period.getScale(), 1);
 			else
-				cal.add(period.scale, period.value);
+				cal.add(period.getScale(), period.getValue());
 			period_t = cal.getTimeInMillis();
 		}
 
@@ -91,6 +99,9 @@ public class TimeStamp {
 
 	public void setPeriod(int scale, int value) {
 		this.period = new Time(scale, value);
+	}
+	public void setPeriod(Time period){
+		this.period = period;
 	}
 
 	public void addTestTime(int hour, int minute, int second) {
@@ -133,7 +144,7 @@ public class TimeStamp {
 		Time time = null;
 		for (Iterator it = testDate.iterator(); it.hasNext();) {
 			Time t = (Time) it.next();
-			if ((t.scale == scale) && (t.value == value)) {
+			if ((t.getScale() == scale) && (t.getValue() == value)) {
 				time = t;
 				break;
 			}
@@ -142,25 +153,75 @@ public class TimeStamp {
 		return time;
 	}
 
-	private class Time {
-		protected int scale;
-		protected int value;
 
-		Time(int scale, int value) {
-			this.scale = scale;
-			this.value = value;
-		}
+	/**
+	 * @return
+	 */
+	public long getPeriodEnd() {
+		return periodEnd;
 	}
 
-	private class DayTime {
-		int hour;
-		int minute;
-		int second;
+	/**
+	 * @return
+	 */
+	public long getPeriodStart() {
+		return periodStart;
+	}
 
-		DayTime(int hour, int minute, int second) {
-			this.hour = hour;
-			this.minute = minute;
-			this.second = second;
-		}
+//	/**
+//	 * @return
+//	 */
+//	public long getStart() {
+//		return start;
+//	}
+
+	/**
+	 * @param periodEnd
+	 */
+	public void setPeriodEnd(long periodEnd) {
+		this.periodEnd = periodEnd;
+	}
+
+	/**
+	 * @param periodStart
+	 */
+	public void setPeriodStart(long periodStart) {
+		this.periodStart = periodStart;
+	}
+
+//	/**
+//	 * @param start
+//	 */
+//	public void setStart(long start) {
+//		this.start = start;
+//	}
+
+	/**
+	 * @return
+	 */
+	public int getType() {
+		return type;
+	}
+
+	/**
+	 * @param timeStampType
+	 */
+	public void setType(int type) {
+		this.type = type;
+	}
+	
+	public Time getPeriod(){
+		return period;
+	}
+
+	//время теста
+	//private LinkedList testTime = new LinkedList(); //of DayTime
+	public LinkedList getTimeList(){
+		return this.testTime;
+	}
+	//дата теста
+	//private LinkedList testDate = new LinkedList(); //of Time
+	public LinkedList getDateList(){
+		return this.testDate;
 	}
 }
