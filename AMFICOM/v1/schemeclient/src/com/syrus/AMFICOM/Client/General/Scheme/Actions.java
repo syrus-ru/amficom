@@ -169,6 +169,7 @@ class DeleteAction extends AbstractAction
 				{
 					if (cells[i] instanceof PortCell)
 					{
+						new_cells.add(cells[i]);
 						for (Enumeration en = ((PortCell)cells[i]).children(); en.hasMoreElements();)
 						{
 							Port p = (Port)en.nextElement();
@@ -193,8 +194,9 @@ class DeleteAction extends AbstractAction
 							}
 						}
 					}
-					if (cells[i] instanceof CablePortCell)
+					else if (cells[i] instanceof CablePortCell)
 					{
+						new_cells.add(cells[i]);
 						for (Enumeration en = ((CablePortCell)cells[i]).children(); en.hasMoreElements();)
 						{
 							Port p = (Port)en.nextElement();
@@ -219,7 +221,9 @@ class DeleteAction extends AbstractAction
 							}
 						}
 					}
-					new_cells.add(cells[i]);
+					else if (cells[i] instanceof DefaultEdge)
+					{
+					}
 				}
 			}
 			cells = DefaultGraphModel.getDescendants(graph.getModel(),
@@ -1019,13 +1023,16 @@ class CreateSchemeUgoAction
 							DefaultPort dev_port = (DefaultPort)enum.nextElement();
 							if (GraphConstants.getOffset(dev_port.getAttributes()) != null)
 							{
-								DefaultEdge edge = (DefaultEdge)dev_port.edges().next();
-								new_cells.add(edge);
-								Object ell = DefaultGraphModel.getTargetVertex(graph.getModel(), edge);
-								if (ell instanceof PortCell)
-									new_cells.add(ell);
-								else if (ell instanceof CablePortCell)
-									new_cells.add(ell);
+								if (dev_port.edges().hasNext())
+								{
+									DefaultEdge edge = (DefaultEdge)dev_port.edges().next();
+									new_cells.add(edge);
+									Object ell = DefaultGraphModel.getTargetVertex(graph.getModel(), edge);
+									if (ell instanceof PortCell)
+										new_cells.add(ell);
+									else if (ell instanceof CablePortCell)
+										new_cells.add(ell);
+								}
 							}
 						}
 					}

@@ -84,19 +84,22 @@ public class DeviceView extends VertexView
 					Point pos = GraphConstants.getOffset(port.getAttributes());
 					if (pos != null)
 					{
-						Edge edge = (Edge)port.edges().next();
-						if (edge != null)
+						if (port.edges().hasNext())
 						{
-							DefaultPort targetport = (DefaultPort)edge.getTarget();
-							if (targetport != null)
+							Edge edge = (Edge)port.edges().next();
+							if (edge != null)
 							{
-								DefaultGraphCell visualPort = (DefaultGraphCell)targetport.getParent();
-								if (visualPort != null)
+								DefaultPort targetport = (DefaultPort)edge.getTarget();
+								if (targetport != null)
 								{
-									Rectangle rect = GraphConstants.getBounds(visualPort.getAttributes());
+									DefaultGraphCell visualPort = (DefaultGraphCell)targetport.getParent();
+									if (visualPort != null)
+									{
+										Rectangle rect = GraphConstants.getBounds(visualPort.getAttributes());
 
-									Point newpos = new Point(pos.x, (int)(u * ( (double)(rect.y + 4 - bounds.y) / (double)bounds.height)));
-									GraphConstants.setOffset(port.getAttributes(), newpos);
+										Point newpos = new Point(pos.x, (int)(u * ( (double)(rect.y + 4 - bounds.y) / (double)bounds.height)));
+										GraphConstants.setOffset(port.getAttributes(), newpos);
+									}
 								}
 							}
 						}
