@@ -32,6 +32,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainMember.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredDomainMember.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableLinkType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableLinkTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableThread.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableThreadDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
