@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.1 2004/11/15 13:25:51 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.2 2004/11/15 13:32:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,9 +46,9 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/15 13:25:51 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/15 13:32:36 $
  * @author $Author: bob $
- * @module cmserver_v1
+ * @module generalclient_v1
  */
 
 public final class ClientMeasurementObjectLoader implements MeasurementObjectLoader {
