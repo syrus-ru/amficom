@@ -1,5 +1,5 @@
 /*
-* $Id: SiteNodeWrapper.java,v 1.1 2005/01/26 07:19:34 bob Exp $
+* $Id: SiteNodeWrapper.java,v 1.2 2005/01/26 07:54:08 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 07:19:34 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 07:54:08 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -186,7 +186,4 @@ public class SiteNodeWrapper implements Wrapper {
 				}
 		}
 	}
-
-
-
 }
