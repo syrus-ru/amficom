@@ -187,8 +187,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				{
 					DataSet dSet = new DataSet(Pool.getHash(LinkType.typ));
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-					dSet = filter.filter(dSet);
+//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+//					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = LinkType.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
@@ -208,8 +208,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				{
 					DataSet dSet = new DataSet(Pool.getHash(CableLinkType.typ));
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-					dSet = filter.filter(dSet);
+//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+//					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CableLinkType.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
@@ -229,8 +229,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				{
 					DataSet dSet = new DataSet(Pool.getHash(PortType.typ));
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-					dSet = filter.filter(dSet);
+//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+//					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = PortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
@@ -250,8 +250,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				{
 					DataSet dSet = new DataSet(Pool.getHash(CablePortType.typ));
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-					dSet = filter.filter(dSet);
+//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+//					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CablePortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
@@ -294,8 +294,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				{
 					DataSet dSet = new DataSet(Pool.getHash(TransmissionPathType.typ));
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-					dSet = filter.filter(dSet);
+//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+//					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = TransmissionPathType.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
@@ -315,8 +315,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				{
 					DataSet dSet = new DataSet(Pool.getHash(AccessPortType.typ));
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-					dSet = filter.filter(dSet);
+//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+//					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = AccessPortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
