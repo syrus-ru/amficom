@@ -36,14 +36,32 @@ public class I18N {
 				key = OLDRESOURCE_BUNDLE.getString(keyName);
 				key = key.replaceAll("\\s+", "");
 			} catch (MissingResourceException ex) {
-				//
+				// nothing
 			}
+			if (key == null) {
+				try {
+					key = OLDRESOURCE_BUNDLE.getString(keyName + "Text");
+					key = key.replaceAll("\\s+", "");
+				} catch (MissingResourceException ex) {
+					// nothing
+				}
+			}
+			if (key == null) {
+				try {
+					key = OLDRESOURCE_BUNDLE.getString(keyName + "ToolTip");
+					key = key.replaceAll("\\s+", "");
+				} catch (MissingResourceException ex) {
+					// nothing
+				}
+			}
+
 			try {
 				String s = "key '"
 						+ keyName
-						+ "' not found"
-						+ (key == null ? "" : " , but old key '" + key
-								+ "' found.");
+						+ "' "
+						+ (key == null ? "not found"
+								: " is deprecated , use '" + key
+										+ "' key.");
 				throw new Exception(s);
 			} catch (Exception exc) {
 				exc.printStackTrace();
