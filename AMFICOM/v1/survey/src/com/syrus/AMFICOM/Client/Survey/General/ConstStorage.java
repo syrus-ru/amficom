@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 /**
  * @author Vladimir Dolzhenko
  * 
- * Storage for often used variables and constants 
+ * Storage for often used variables and constants
  */
 public interface ConstStorage {
 
@@ -37,5 +37,7 @@ public interface ConstStorage {
 	final String			DATE_FORMAT					= "dd.MM.yy hh:mm:ss";
 	final SimpleDateFormat	SIMPLE_DATE_FORMAT			= new SimpleDateFormat(
 																DATE_FORMAT);
+
+	final String			SYS_DOMAIN					= "sysdomain";
 
 }
