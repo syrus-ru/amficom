@@ -166,13 +166,12 @@ public class KISselectionFrame extends JInternalFrame
 	//  расположить в верхнем правом углу
 	public void place()
 	{  Dimension dim = mdiMain.scrollPane.getSize();
-		 int width = (int)(0.22*dim.width), height = 190;//height = getMinimumSize().height;
+		 int width = (int)(0.22*dim.width), height = 190;// height = getMinimumSize().height;
 		 setBounds( dim.width - width, 0, width, height );
 		 setVisible(true);
-     //  устанавливаем размер шрифта таким, чтобы он полностью помещался по высоте в комбобоксы ( !!! глючит, поэтому закомментил )
-     // this.jComboBox1.setFont(getFont().deriveFont( (float)(this.jComboBox1.getHeight()-8) ));
-     // this.jComboBox2.setFont(getFont().deriveFont( (float)(this.jComboBox2.getHeight()-8) ));
-     // this.jComboBox_wave.setFont(getFont().deriveFont( (float)(this.jComboBox_wave.getHeight()-8) ));
+     //  устанавливаем размер шрифта таким, чтобы он полностью помещался по высоте в комбобоксы 
+     //  Глючит ( уменьшается при ресайзе, и exception если окно минимизировано), поэтому отключено 
+     // this.jComboBox1.setFont(getFont().deriveFont( (float)(this.jComboBox1.getHeight()-8) )); this.jComboBox2.setFont(getFont().deriveFont( (float)(this.jComboBox2.getHeight()-8) ));  this.jComboBox_wave.setFont(getFont().deriveFont( (float)(this.jComboBox_wave.getHeight()-8) ));
 	}
 	//-------------------------------------------------------------------------------------------------------------
 	private void jbInit() throws Exception
