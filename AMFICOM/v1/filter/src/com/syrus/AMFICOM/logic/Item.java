@@ -1,10 +1,10 @@
-/*
-* $Id: Item.java,v 1.3 2005/03/21 08:41:34 bob Exp $
-*
-* Copyright ? 2004 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+/*-
+ * $Id: Item.java,v 1.4 2005/03/23 15:04:49 bass Exp $
+ *
+ * Copyright © 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.logic;
 
@@ -12,8 +12,8 @@ import java.util.List;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/21 08:41:34 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/03/23 15:04:49 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -21,7 +21,7 @@ public interface Item {
 	
 	int getMaxChildrenCount();
 	
-	boolean isParentAllow();
+	boolean allowsParents();
 	
 	String getName();
 	
@@ -29,15 +29,15 @@ public interface Item {
 	
 	List getChildren();
 	
-	void addChild(Item childItem);
+	void addChild(final Item childItem);
 	
-	void setParent(Item parent);
+	void setParent(final Item parent);
 	
 	Item getParent();
 	
-	void addChangeListener(ItemListener itemListener);
+	void addChangeListener(final ItemListener itemListener);
 	
-	void removeChangeListener(ItemListener itemListener);
+	void removeChangeListener(final ItemListener itemListener);
 	
 	boolean isService();
 }

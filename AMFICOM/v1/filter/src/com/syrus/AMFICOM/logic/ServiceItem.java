@@ -25,7 +25,7 @@ public class ServiceItem extends AbstractItem {
 		return Integer.MAX_VALUE;
 	}
 
-	public boolean isParentAllow() {
+	public boolean allowsParents() {
 		return true;
 	}
 

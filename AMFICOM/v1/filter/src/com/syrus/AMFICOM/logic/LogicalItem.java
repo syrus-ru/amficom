@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalItem.java,v 1.5 2005/03/21 08:41:34 bob Exp $
+ * $Id: LogicalItem.java,v 1.6 2005/03/23 15:04:49 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.logic;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/21 08:41:34 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/03/23 15:04:49 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class LogicalItem extends AbstractItem {
@@ -83,7 +83,7 @@ public class LogicalItem extends AbstractItem {
 		return false;
 	}
 	
-	public boolean isParentAllow() {
+	public boolean allowsParents() {
 		return !this.type.equals(ROOT);
 	}	
 

@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUITemp.java,v 1.1 2005/03/15 16:11:44 max Exp $
+ * $Id: LogicalConditionUITemp.java,v 1.2 2005/03/23 15:04:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.AMFICOM.logic.LogicalSchemeUI;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/15 16:11:44 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/03/23 15:04:49 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class LogicalConditionUITemp {
@@ -75,7 +75,7 @@ public class LogicalConditionUITemp {
 
 		
 		
-		this.logicalSchemeUI = new LogicalSchemeUI(Collections.singletonList(logicalConditionScheme.getRootItem()));
+		this.logicalSchemeUI = new LogicalSchemeUI(logicalConditionScheme.getRootItem());
 
 		final LogicalSchemeUI logicalSchemeUI = this.logicalSchemeUI;
 
