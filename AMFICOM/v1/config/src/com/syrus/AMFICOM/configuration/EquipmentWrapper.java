@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.9 2005/04/01 07:57:28 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.10 2005/04/04 07:04:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +18,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/01 07:57:28 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/04 07:04:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -63,7 +62,7 @@ public final class EquipmentWrapper implements StorableObjectWrapper {
 				COLUMN_HW_SERIAL, COLUMN_HW_VERSION, COLUMN_SW_SERIAL, COLUMN_SW_VERSION, COLUMN_INVENTORY_NUMBER,
 				COLUMN_CHARACTERISTICS, ObjectEntities.EQUIPMENTMELINK_ENTITY};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static EquipmentWrapper getInstance() {

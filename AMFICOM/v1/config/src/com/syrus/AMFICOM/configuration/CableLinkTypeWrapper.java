@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.10 2005/04/01 07:57:28 bob Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.11 2005/04/04 07:04:21 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/01 07:57:28 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/04 07:04:21 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -48,7 +47,7 @@ public final class CableLinkTypeWrapper implements StorableObjectWrapper {
 				COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_KIND, COLUMN_MANUFACTURER,
 				COLUMN_MANUFACTURER_CODE, COLUMN_IMAGE_ID, COLUMN_CHARACTERISTICS};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static CableLinkTypeWrapper getInstance() {

@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.7 2005/04/01 11:11:05 bob Exp $
+ * $Id: MapWrapper.java,v 1.8 2005/04/04 07:05:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/01 11:11:05 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/04 07:05:08 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -53,7 +52,7 @@ public class MapWrapper implements StorableObjectWrapper {
 				LINK_COLUMN_COLLECTOR_ID, LINK_COLUMN_MARK_ID, LINK_COLUMN_NODE_LINK_ID, LINK_COLUMN_PHYSICAL_LINK_ID,
 				LINK_COLUMN_SITE_NODE_ID, LINK_COLUMN_TOPOLOGICAL_NODE_ID, LINK_COLUMN_MAP_ID };
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
 	}
 

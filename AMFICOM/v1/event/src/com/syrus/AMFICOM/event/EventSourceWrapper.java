@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceWrapper.java,v 1.1 2005/02/08 20:08:36 arseniy Exp $
+ * $Id: EventSourceWrapper.java,v 1.2 2005/04/04 07:04:31 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,6 @@
  */
 package com.syrus.AMFICOM.event;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +15,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/08 20:08:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/04/04 07:04:31 $
+ * @author $Author: bob $
  * @module event_v1
  */
 public class EventSourceWrapper implements StorableObjectWrapper {
@@ -40,7 +39,7 @@ public class EventSourceWrapper implements StorableObjectWrapper {
 	private EventSourceWrapper() {
 		//private constructor
 		String[] keysArray = new String[] {LINK_FIELD_SOURCE_ENTITY_ID};
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static EventSourceWrapper getInstance() {

@@ -1,5 +1,5 @@
 /*
- * $Id: PortWrapper.java,v 1.6 2005/04/01 07:57:28 bob Exp $
+ * $Id: PortWrapper.java,v 1.7 2005/04/04 07:04:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/01 07:57:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/04 07:04:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -42,7 +41,7 @@ public final class PortWrapper implements StorableObjectWrapper {
 		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_TYPE_ID, COLUMN_SORT, COLUMN_EQUIPMENT_ID,
 				COLUMN_CHARACTERISTICS};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static PortWrapper getInstance() {

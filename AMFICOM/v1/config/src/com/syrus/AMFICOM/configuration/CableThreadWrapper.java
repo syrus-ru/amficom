@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadWrapper.java,v 1.5 2005/02/03 08:37:00 bob Exp $
+ * $Id: CableThreadWrapper.java,v 1.6 2005/04/04 07:04:21 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/04 07:04:21 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -31,7 +30,7 @@ public final class CableThreadWrapper implements StorableObjectWrapper {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, StorableObjectWrapper.COLUMN_TYPE_ID};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static CableThreadWrapper getInstance() {

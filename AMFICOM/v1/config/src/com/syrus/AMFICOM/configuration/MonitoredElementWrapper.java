@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.7 2005/04/01 07:57:28 bob Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.8 2005/04/04 07:04:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,7 +20,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/01 07:57:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/04 07:04:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -48,7 +47,7 @@ public final class MonitoredElementWrapper implements StorableObjectWrapper {
 		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_MEASUREMENT_PORT_ID, COLUMN_SORT, COLUMN_LOCAL_ADDRESS,
 				COLUMN_MONITORED_DOMAIN_MEMBER};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static MonitoredElementWrapper getInstance() {

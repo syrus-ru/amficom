@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceWrapper.java,v 1.2 2005/02/25 12:06:35 bass Exp $
+ * $Id: ImageResourceWrapper.java,v 1.3 2005/04/04 07:06:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.resource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -17,8 +16,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/25 12:06:35 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/04/04 07:06:38 $
+ * @author $Author: bob $
  * @module resource_v1
  */
 public class ImageResourceWrapper implements StorableObjectWrapper {
@@ -35,7 +34,7 @@ public class ImageResourceWrapper implements StorableObjectWrapper {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_SORT, COLUMN_CODENAME, COLUMN_DATA};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
 	}
 
