@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.1 2005/02/08 10:22:15 bob Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.2 2005/02/25 12:06:35 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/08 10:22:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/02/25 12:06:35 $
+ * @author $Author: bass $
  * @module resource_v1
  */
 public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -39,8 +39,8 @@ public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditi
 					return ImageResourceWrapper.COLUMN_SORT;
 				break;
 			default:
-				throw new IllegalDataException("DatabaseTypicalConditionImpl.getColumnName | entity "
-					+ ObjectEntities.codeToString(this.condition.getEntityCode()) + " is not supported.");
+				throw new IllegalDataException("DatabaseTypicalConditionImpl.getColumnName | entity " //$NON-NLS-1$
+					+ ObjectEntities.codeToString(this.condition.getEntityCode()) + " is not supported."); //$NON-NLS-1$
 		}
 		return columnName;
 	}

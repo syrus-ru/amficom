@@ -1,5 +1,5 @@
 /*
- * $Id: XMLResourceObjectLoader.java,v 1.3 2005/02/25 06:47:52 bob Exp $
+ * $Id: XMLResourceObjectLoader.java,v 1.4 2005/02/25 12:06:35 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/25 06:47:52 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/02/25 12:06:35 $
+ * @author $Author: bass $
  * @module resource_v1
  */
 public class XMLResourceObjectLoader implements ResourceObjectLoader {
@@ -36,7 +36,7 @@ public class XMLResourceObjectLoader implements ResourceObjectLoader {
 	private StorableObjectXML	resourceXML;
 
 	public XMLResourceObjectLoader(final File path) {
-		StorableObjectXMLDriver driver = new StorableObjectXMLDriver(path, "resource");
+		StorableObjectXMLDriver driver = new StorableObjectXMLDriver(path, "resource"); //$NON-NLS-1$
 		this.resourceXML = new StorableObjectXML(driver);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.13 2005/02/24 16:10:21 bob Exp $
+ * $Id: ImageResourceDatabase.java,v 1.14 2005/02/25 12:06:35 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.13 $, $Date: 2005/02/24 16:10:21 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/02/25 12:06:35 $
  * @module resource_v1
  */
 
@@ -202,7 +202,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			try {
 				this.updateImage(abstractImageResource);
 			} catch (UpdateObjectException e) {
-				throw new CreateObjectException(getEnityName() + "Database.insert ", e);
+				throw new CreateObjectException(getEnityName() + "Database.insert ", e); //$NON-NLS-1$
 			}
 		}
 	}
@@ -215,7 +215,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				try {
 					this.updateImage(abstractImageResource);
 				} catch (UpdateObjectException e) {
-					throw new CreateObjectException(getEnityName() + "Database.insert ", e);
+					throw new CreateObjectException(getEnityName() + "Database.insert ", e); //$NON-NLS-1$
 				}
 			}
 		}
@@ -259,7 +259,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			try {
 				abstractImageResource = fromStorableObject((AbstractImageResource) it.next());
 			} catch (IllegalDataException e) {
-				throw new UpdateObjectException("ImageResourceDatabase.update | object isn't AbstractImageResource");
+				throw new UpdateObjectException("ImageResourceDatabase.update | object isn't AbstractImageResource"); //$NON-NLS-1$
 			}
 			if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource))
 				updateImage(abstractImageResource);
@@ -340,8 +340,8 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		}
 		throw new RetrieveObjectException(getEnityName() + "Database.updateEntityFromResultSet | wrong sort " + sort);				 //$NON-NLS-1$
 	} catch (SQLException e) {
-		Log.errorMessage("ImageResourceDatabase.updateEntityFromResultSet " + e.getMessage() );
-		throw new RetrieveObjectException("ImageResourceDatabase.updateEntityFromResultSet ", e);
+		Log.errorMessage("ImageResourceDatabase.updateEntityFromResultSet " + e.getMessage() ); //$NON-NLS-1$
+		throw new RetrieveObjectException("ImageResourceDatabase.updateEntityFromResultSet ", e); //$NON-NLS-1$
 	}
 	}
 	
@@ -361,14 +361,14 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				DatabaseString.setString(preparedStatement, ++i, fileImageResource.getFileName(), SIZE_CODENAME_COLUMN);
 				preparedStatement.setInt(++i, ImageResourceSort._FILE);
 			} else if(sort == ImageResourceSort._SCHEME) {
-				DatabaseString.setString(preparedStatement, ++i, "", SIZE_CODENAME_COLUMN);
+				DatabaseString.setString(preparedStatement, ++i, "", SIZE_CODENAME_COLUMN); //$NON-NLS-1$
 				preparedStatement.setInt(++i, ImageResourceSort._SCHEME);
 			} else {
-				throw new IllegalDataException("Unsupported ImageResourse sort =" + sort);
+				throw new IllegalDataException("Unsupported ImageResourse sort =" + sort); //$NON-NLS-1$
 			}			
 		} catch (SQLException sqle) {
 			throw new IllegalDataException(getEnityName()
-					+ "Database.setEntityForPreparedStatement | Error "
+					+ "Database.setEntityForPreparedStatement | Error " //$NON-NLS-1$
 					+ sqle.getMessage(), sqle);
 		}
 		return i;
