@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.4 2005/02/02 15:09:47 arseniy Exp $
+ * $Id: Event.java,v 1.5 2005/02/03 14:45:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,32 +12,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
+import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
+import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
+import com.syrus.AMFICOM.event.corba.EventStatus;
+import com.syrus.AMFICOM.event.corba.Event_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
-import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
-import com.syrus.AMFICOM.event.corba.Event_Transferable;
-import com.syrus.AMFICOM.event.corba.EventStatus;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/02 15:09:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 14:45:15 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -199,10 +199,10 @@ public class Event extends StorableObject implements TypedObject {
 		return Collections.unmodifiableList(this.eventSources);
 	}
 
-	public void updateStatus(EventStatus status, Identifier modifierId) throws UpdateObjectException {
-		this.status = status.value();
+	public void updateStatus(EventStatus status1, Identifier modifierId1) throws UpdateObjectException {
+		this.status = status1.value();
 		super.modified = new Date(System.currentTimeMillis());
-		super.modifierId = (Identifier) modifierId.clone();
+		super.modifierId = (Identifier) modifierId1.clone();
 		try {
 			this.eventDatabase.update(this, UPDATE_STATUS, null);
 		}
@@ -230,7 +230,7 @@ public class Event extends StorableObject implements TypedObject {
 		this.description = description;
 	}
 
-	protected synchronized void setParameters0(EventParameter[] parameters) {
+	protected synchronized void setEventParameters0(EventParameter[] parameters) {
 		this.parameters = parameters;
 	}
 
@@ -238,6 +238,51 @@ public class Event extends StorableObject implements TypedObject {
 		this.eventSources.clear();
 		if (eventSources != null)
 			this.eventSources.addAll(eventSources);
+	}
+
+	/**
+	 * Set new type
+	 * @param type
+	 */
+	public void setType(EventType type) {
+		this.type = type;
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Set new status
+	 * @param status
+	 */
+	public void setStatus(EventStatus status) {
+		this.status = status.value();
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Set new description
+	 * @param description
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Set new array of event parameters
+	 * @param parameters
+	 */
+	public void setEventParameters(EventParameter[] parameters) {
+		this.setEventParameters0(parameters);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Set new list of event sources
+	 * @param eventSources
+	 */
+	public void setEventSources(List eventSources) {
+		this.setEventSources0(eventSources);
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public List getDependencies() {
