@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.8 2004/08/10 19:01:09 arseniy Exp $
+ * $Id: Server.java,v 1.9 2004/08/11 14:48:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,12 +22,14 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/10 19:01:09 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/11 14:48:33 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 
 public class Server extends DomainMember implements Characterized {
+	protected static final int RETRIEVE_MCM_IDS	= 1;
+
 	private String name;
 	private String description;
 	private Identifier userId;
@@ -107,6 +109,15 @@ public class Server extends DomainMember implements Characterized {
 																	 new String(this.description),
 																	 (Identifier_Transferable)this.userId.getTransferable(),
 																	 charIds);
+	}
+
+	public List retrieveMCMIds() throws ObjectNotFoundException, RetrieveObjectException {
+		try {
+			return (List)this.serverDatabase.retrieveObject(this, RETRIEVE_MCM_IDS, null);
+		}
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 	
 	public String getName() {

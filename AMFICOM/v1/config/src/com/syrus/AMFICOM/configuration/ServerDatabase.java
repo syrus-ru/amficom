@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.11 2004/08/11 12:37:30 bob Exp $
+ * $Id: ServerDatabase.java,v 1.12 2004/08/11 14:48:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.ArrayList;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,8 +27,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/11 12:37:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2004/08/11 14:48:33 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -120,9 +122,50 @@ public class ServerDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Server server = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
+			case Server.RETRIEVE_MCM_IDS:
+				return this.retrieveMCMIds(server);
 			default:
 				return null;
 		}
+	}
+
+	private List retrieveMCMIds(Server server) throws ObjectNotFoundException, RetrieveObjectException {
+		List mcmIds = new ArrayList();
+
+		String serverIdStr = server.getId().toSQLString();
+		String sql = SQL_SELECT
+			+ COLUMN_ID
+			+ SQL_FROM + ObjectEntities.MCM_ENTITY
+			+ SQL_WHERE + MCMDatabase.COLUMN_SERVER_ID + EQUALS + serverIdStr;
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("ServerDatabase.retrieveServer | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				mcmIds.add(new Identifier(resultSet.getString(COLUMN_ID)));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "ServerDatabase.retrieveServer | Cannot retrieve server " + serverIdStr;
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return mcmIds;
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
