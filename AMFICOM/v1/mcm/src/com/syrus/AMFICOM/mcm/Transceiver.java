@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.16 2004/08/14 19:37:27 arseniy Exp $
+ * $Id: Transceiver.java,v 1.17 2004/08/15 14:40:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
@@ -24,7 +25,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/14 19:37:27 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/15 14:40:14 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -32,37 +33,46 @@ import com.syrus.util.Log;
 public class Transceiver extends SleepButWorkThread {
 	public static final int KIS_TICK_TIME = 1;
 	public static final int KIS_MAX_FALLS = 10;
+	/*	Error codes for method processFall()	*/
+	public static final int FALL_CODE_TRANSMIT_MEASUREMENT = 1;
+	public static final int FALL_CODE_GENERATE_IDENTIFIER = 2;
 
 	private final String taskFileName;
 	private final String reportFileName;
 	private boolean running;
-	private List measurementQueue;//List <Measurement>
-	private Map processingMeasurements;//Map <Identifier, Measurement>
-	private Map testProcessors;//Map <Measurement, TestProcessor>
+
+	private List measurementQueue;//List <Measurement measurement>
+	private Map testProcessors;//Map <Identifier measurementId, TestProcessor testProcessor>
+	private Map processingMeasurements;//Map <Identifier measurementId, Measurement measurement>
+	private KISReport kisReport;
+
+	/*	Variables for method processFall()	*/
+	private Measurement measurementToRemove;
 
 	static {
 		System.loadLibrary("mcmtransceiver");
 	}
 	
 	public Transceiver(Identifier kisId) {
-		super(ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", KIS_MAX_FALLS));
+		super(ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME) * 1000, ApplicationProperties.getInt("KISMaxFalls", KIS_MAX_FALLS));
 
 		String kisIdStr = kisId.toString();
 		this.taskFileName = "task" + kisIdStr;
     this.reportFileName = "report" + kisIdStr;
-
 		this.running = true;
 		
 		this.measurementQueue = Collections.synchronizedList(new ArrayList());
 		this.processingMeasurements = Collections.synchronizedMap(new Hashtable());
 		this.testProcessors = Collections.synchronizedMap(new Hashtable());
+
+		this.measurementToRemove = null;
 	}
 
 	protected void addMeasurement(Measurement measurement, TestProcessor testProcessor) {
 		Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
 			this.measurementQueue.add(measurement);
-			this.testProcessors.put(measurement, testProcessor);
+			this.testProcessors.put(measurementId, testProcessor);
 		}
 		else
 			Log.errorMessage("Status: " + measurement.getStatus().value() + " of measurement '" + measurementId.toString() + "' not SCHEDULED -- cannot add to queue");
@@ -71,7 +81,6 @@ public class Transceiver extends SleepButWorkThread {
 	public void run() {
 		Measurement measurement = null;
 		Identifier measurementId = null;
-		KISReport kisReport = null;
 		TestProcessor testProcessor = null;
 		Result result;
 		while (this.running) {
@@ -80,7 +89,7 @@ public class Transceiver extends SleepButWorkThread {
 					measurement = (Measurement)this.measurementQueue.get(0);
 					measurementId = measurement.getId();
 				}
-			}//if (measurement == null)
+			}
 			else {
 				if (this.transmit(measurement)) {
 					try {
@@ -98,58 +107,100 @@ public class Transceiver extends SleepButWorkThread {
 				}
 				else {
 					Log.errorMessage("Cannot transmit measurement '" + measurementId.toString() + "'");
+					super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
+					this.measurementToRemove = measurement;
 					super.sleepCauseOfFall();
 				}
-			}//else if (measurement == null)
-			
-			kisReport = this.receive();
-			if (kisReport != null) {
-				measurementId = kisReport.getMeasurementId();
+			}	//else if (measurement == null)
+
+			if (this.kisReport == null) {
+				this.kisReport = this.receive();
+			}
+			else {
+				measurementId = this.kisReport.getMeasurementId();
 				Log.debugMessage("Received report for measurement '" + measurementId.toString() + "'", Log.DEBUGLEVEL03);
 				measurement = (Measurement)this.processingMeasurements.remove(measurementId);
 				if (measurement != null) {
-					testProcessor = (TestProcessor)this.testProcessors.remove(measurement);
-					if  (testProcessor != null) {
+					testProcessor = (TestProcessor)this.testProcessors.remove(measurementId);
+					if (testProcessor != null) {
 						result = null;
 						try {
-							result = kisReport.createResult(measurement);
+							result = this.kisReport.createResult(measurement);
 							measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED,
 																			 MeasurementControlModule.iAm.getUserId());
 							super.clearFalls();
 						}
-						catch (MeasurementException me) {
-							Log.errorException(me);
-							super.sleepCauseOfFall();
-						}
 						catch (IllegalDataException ide) {
 							Log.errorException(ide);
+							this.throwAwayKISReport();
+						}
+						catch (MeasurementException me) {
+							if (me.getCause() instanceof AMFICOMRemoteException) {
+								Log.debugMessage("Cannot get identifier - trying to wait", Log.DEBUGLEVEL03);
+								super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
+								super.sleepCauseOfFall();
+							}
+							else
+								this.throwAwayKISReport();
 						}
 						catch (UpdateObjectException uoe) {
 							Log.errorException(uoe);
 						}
-						if (result != null)
+
+						if (result != null) {
 							testProcessor.addMeasurementResult(result);
-					}
-					else
+							this.kisReport = null;
+						}
+					}	//if (testProcessor != null)
+					else {
 						Log.errorMessage("Cannot find test processor for measurement '" + measurementId.toString() + "'; throwing away it's report");
-				}
-				else
+						this.throwAwayKISReport();
+					}
+				}	//if (measurement != null)
+				else {
 					Log.errorMessage("Cannot find measurement for id '" + measurementId.toString() + "'; throwing away it's report");
-			}
-			
-			
-///*			We need not this as receive() already do it*/
-//			try {
-//				sleep(super.initialTimeToSleep);
-//			}
-//			catch (InterruptedException ie) {
-//				Log.errorException(ie);
-//			}
-		}//while
+					this.throwAwayKISReport();
+				}
+
+				try {
+					sleep(super.initialTimeToSleep);
+				}
+				catch (InterruptedException ie) {
+					Log.errorException(ie);
+				}
+			}	//else if (this.kisReport != null)
+		}
 	}
 
 	protected void processFall() {
-		
+		switch (super.fallCode) {
+			case FALL_CODE_NO_ERROR:
+				break;
+			case FALL_CODE_TRANSMIT_MEASUREMENT:
+				this.removeMeasurement();
+				break;
+			case FALL_CODE_GENERATE_IDENTIFIER:
+				this.throwAwayKISReport();
+				break;
+			default:
+				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+		}
+		super.clearFalls();
+	}
+	
+	private void removeMeasurement() {
+		if (this.measurementToRemove != null) {
+			this.measurementQueue.remove(this.measurementToRemove);
+			this.testProcessors.remove(this.measurementToRemove.getId());
+			this.measurementToRemove = null;
+		}
+	}
+	
+	private void throwAwayKISReport() {
+		if (this.kisReport != null) {
+			Log.debugMessage("Throwing away kis report for measurement '" + this.kisReport.getMeasurementId() + "'", Log.DEBUGLEVEL03);
+			this.kisReport = null;
+		}
 	}
 
 	protected void shutdown() {

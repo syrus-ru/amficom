@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.8 2004/08/14 19:37:27 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.9 2004/08/15 14:40:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,12 +22,16 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/14 19:37:27 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/15 14:40:14 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class OnetimeTestProcessor extends TestProcessor {
+	/*	Error codes for method processFall()	*/
+	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
+	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;
+
 	private Date startTime;
 
 	public OnetimeTestProcessor(Test test) {
@@ -94,8 +98,20 @@ public class OnetimeTestProcessor extends TestProcessor {
 			}
 		}	//while
 	}
-	
+
 	protected void processFall() {
-		super.shutdown();
+		switch (super.fallCode) {
+			case FALL_CODE_NO_ERROR:
+				break;
+			case FALL_CODE_CREATE_IDENTIFIER:
+				super.shutdown();
+				break;
+			case FALL_CODE_CREATE_MEASUREMENT:
+				super.shutdown();
+				break;
+			default:
+				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+		}
+		super.clearFalls();
 	}
 }

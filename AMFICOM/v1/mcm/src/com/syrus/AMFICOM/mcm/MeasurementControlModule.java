@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.20 2004/08/14 19:37:27 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.21 2004/08/15 14:40:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/14 19:37:27 $
+ * @version $Revision: 1.21 $, $Date: 2004/08/15 14:40:13 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -54,6 +54,7 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	public static final int TICK_TIME = 5;
 	public static final int FORWARD_PROCESSING = 2;
 
+	/*	Error codes for method processFall()	(remove results, ...)*/
 	public static final int FALL_CODE_RECEIVE_RESULTS = 1;
 
 	/*	Information about myself*/
@@ -254,7 +255,6 @@ public class MeasurementControlModule extends SleepButWorkThread {
 						super.fallCode = FALL_CODE_RECEIVE_RESULTS;
 						this.resultsToRemove = resultList;
 						super.sleepCauseOfFall();
-						continue;
 					}
 				}
 			}

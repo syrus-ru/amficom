@@ -189,8 +189,8 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(JNIEnv 
 	strcat(fifoName, getenv("USER"));
 	printf("(native - agent - receive) Opening FIFO: %s\n", fifoName);
 
-	fid = env->GetFieldID(transceiver_class, "kis_tick_time", "J");
-	long kis_tick_time = (long)env->GetLongField(obj, fid);
+	fid = env->GetFieldID(transceiver_class, "initialTimeToSleep", "J");
+	unsigned int kis_tick_time = (unsigned int)(((long)env->GetLongField(obj, fid))/1000);
 	int fd;
 	fd_set in;
 	timeval tv;
@@ -207,7 +207,7 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(JNIEnv 
 
 	FD_ZERO(&in);
 	FD_SET(fd, &in);
-	tv.tv_sec = kis_tick_time;
+	tv.tv_sec = (long)kis_tick_time;
 	tv.tv_usec = 0;
 	sel_ret = select(fd + 1, &in, NULL, NULL, &tv);
 	if (sel_ret == 0) {

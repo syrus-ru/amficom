@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.16 2004/08/14 19:37:27 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.17 2004/08/15 14:40:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/14 19:37:27 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/15 14:40:14 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -108,7 +108,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 					MeasurementControlModule.resultList.add(aeResults[i]);
 
 			try {
-				((Measurement)measurementResult.getAction()).updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED,
+				((Measurement)measurementResult.getAction()).updateStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
 																																	MeasurementControlModule.iAm.getUserId());
 			}
 			catch (UpdateObjectException uoe) {
