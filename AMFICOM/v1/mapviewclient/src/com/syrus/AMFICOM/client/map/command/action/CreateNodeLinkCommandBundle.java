@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.2 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.3 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -37,7 +37,7 @@ import java.util.LinkedList;
  * данна€ команда
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/01 15:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -264,6 +264,5 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 				physicalLink, 
 				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 		logicalNetLayer.notifySchemeEvent(physicalLink);
-		logicalNetLayer.notifyCatalogueEvent(physicalLink);
 	}
 }

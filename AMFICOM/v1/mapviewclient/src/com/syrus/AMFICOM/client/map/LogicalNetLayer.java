@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.18 2004/10/29 14:59:52 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.19 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -83,7 +83,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/10/29 14:59:52 $
+ * @version $Revision: 1.19 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -613,7 +613,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MapMeasurementPathElement mpath = 
 					(MapMeasurementPathElement )it.next();
 				mpath.paint(g, visibleBounds);
-				for(Iterator it2 = mpath.getCablePaths().iterator(); it2.hasNext();)
+				
+				// to avoid multiple cicling through scheme elements
+				// use once sorted cable links
+				for(Iterator it2 = mpath.getSortedCablePaths().iterator(); it2.hasNext();)
 				{
 					MapCablePathElement cpath = 
 						(MapCablePathElement )it2.next();
@@ -692,13 +695,14 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 				curNode.paint(pg, visibleBounds);
 		}
-
+/*
 		e = getMapView().getMarkers().iterator();
 		while (e.hasNext())
 		{
 			MapMarker marker = (MapMarker)e.next();
 			marker.paint(pg, visibleBounds);
 		}
+*/
 	}
 
 	/**
@@ -791,20 +795,21 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 			if(selectedElements.size() == 1)
 			{
-				if(getCurrentMapElement() instanceof MapSelection)
-				{
+//				if(getCurrentMapElement() instanceof MapSelection)
+//				{
 					MapElement me = (MapElement )selectedElements.iterator().next();
 					setCurrentMapElement(me);
 					this.sendMapEvent(new MapEvent(me, MapEvent.MAP_ELEMENT_SELECTED));
-				}
+//				}
 			}
 			else
+			//selectedElements.size() == 0
 			{
-				if(getCurrentMapElement() instanceof MapSelection)
-				{
+//				if(getCurrentMapElement() instanceof MapSelection)
+//				{
 					setCurrentMapElement(VoidMapElement.getInstance(getMapView()));
 					this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
-				}
+//				}
 			}
 			repaint();
 		}
@@ -1268,82 +1273,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
-	 * Генерация сообщения о выборке элемента каталога
-	 */
-	public void notifyCatalogueEvent(MapElement mapElement)
-	{
-/*
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "notifyCatalogueEvent(" + mapElement + ")");
-		
-		CatalogNavigateEvent cne;
-		Dispatcher dispatcher = logicalNetLayer.mapMainFrame.aContext.getDispatcher();
-		try 
-		{
-			MapSiteNodeElement mapel = (MapSiteNodeElement )mapElement;
-
-			if(mapel.element_id != null && !mapel.element_id.equals(""))
-			{
-				SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, mapel.element_id);
-				
-				if(se.equipment_id != null && !se.equipment_id.equals(""))
-				{
-					Equipment eq = (Equipment )Pool.get(Equipment.typ, se.equipment_id);
-//					System.out.println("notify CATALOG_EQUIPMENT_SELECTED_EVENT " + eq.getId());
-					cne = new CatalogNavigateEvent(
-						new Equipment[] { eq },
-						CatalogNavigateEvent.CATALOG_EQUIPMENT_SELECTED_EVENT);
-					dispatcher.notify(cne);
-					return;
-				}
-			}
-		} 
-		catch (Exception ex){ }
-
-		try
-		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )mapElement;
-
-			if(link.LINK_ID != null && !link.LINK_ID.equals(""))
-			{
-				SchemeCableLink scl = (SchemeCableLink )Pool.get(SchemeCableLink.typ, link.LINK_ID);
-				
-				if(scl.cable_link_id != null && !scl.cable_link_id.equals(""))
-				{
-					CableLink cl = (CableLink )Pool.get(CableLink.typ, scl.cable_link_id);
-//					System.out.println("notify CATALOG_EQUIPMENT_SELECTED_EVENT " + cl.getId());
-					cne = new CatalogNavigateEvent(
-						new CableLink[] { cl },
-						CatalogNavigateEvent.CATALOG_CABLE_LINK_SELECTED_EVENT);
-					dispatcher.notify(cne);
-					return;
-				}
-			}
-		} 
-		catch (Exception ex){ }
-
-		try 
-		{
-			MapTransmissionPathElement path = (MapTransmissionPathElement )mapElement;
-
-			if(path.PATH_ID != null && !path.PATH_ID.equals(""))
-			{
-				SchemePath sp = (SchemePath )Pool.get(SchemePath.typ, path.PATH_ID);
-				if(sp.path_id != null && !sp.path_id.equals(""))
-				{
-					TransmissionPath tp = (TransmissionPath )Pool.get(TransmissionPath.typ, sp.path_id);
-//					System.out.println("notify CATALOG_PATH_SELECTED_EVENT " + tp.getId());
-					cne = new CatalogNavigateEvent(
-						new TransmissionPath[] { tp }, 
-						CatalogNavigateEvent.CATALOG_PATH_SELECTED_EVENT);
-					dispatcher.notify(cne);
-				}
-			}
-		} 
-		catch (Exception ex){ } 
-*/
-	}
-
-	/**
 	 * Получить текущий выбранный элемент
 	 */
 	public MapElement getCurrentMapElement()
@@ -1365,7 +1294,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		curMapElement.setSelected(true);
 		notifyMapEvent(currentMapElement);
 		notifySchemeEvent(currentMapElement);
-		notifyCatalogueEvent(currentMapElement);
 	}
 
 	/**

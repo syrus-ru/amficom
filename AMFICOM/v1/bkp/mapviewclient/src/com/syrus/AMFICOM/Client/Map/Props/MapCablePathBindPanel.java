@@ -390,7 +390,17 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 	
 	private void clearBinding()
 	{
-//		links.clear();
+		path.clearLinks();
+
+		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
+			path.getStartNode(), path.getEndNode());
+		command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
+		command.execute();
+
+		MapUnboundLinkElement unbound = command.getUnbound();
+		path.addLink(unbound);
+		unbound.setCablePath(path);
+
 		model.fireTableDataChanged();
 		setBindingPanels();
 	}
@@ -484,7 +494,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		}
 		catch (ClassCastException e)
 		{
-			System.out.println("Not binding from start node");
+//			System.out.println("Not binding from start node");
 			selectedStartLink = null;
 		}
 
@@ -535,7 +545,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		}
 		catch (ClassCastException e)
 		{
-			System.out.println("Not binding from end node");
+//			System.out.println("Not binding from end node");
 		}
 		
 		model.setContents(path.getLinks());

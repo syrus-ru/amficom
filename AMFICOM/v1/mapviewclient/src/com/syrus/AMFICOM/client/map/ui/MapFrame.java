@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.9 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapFrame.java,v 1.10 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -69,7 +69,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -452,68 +452,6 @@ public class MapFrame extends JInternalFrame
 	 void setMap( Map map)
 	{
 		getMapViewer().getLogicalNetLayer().setMap(map);
-/*
-		if(animateThread != null)
-			animateThread.stop_running();
-		if(aContext.getDispatcher() != null)
-			if(map != null)
-			{
-//				System.out.println("notify at " + aContext.getDispatcher());
-				aContext.getDispatcher().notify(
-						new MapEvent(getMapView(), MapEvent.MAP_SELECTED));
-			}
-			else
-			{
-				aContext.getDispatcher().notify(
-						new MapEvent(this, MapEvent.MAP_DESELECTED));
-			}
-
-		if(map == null)
-		{
-			lnl().setMap( null);
-			mapToolBar.setEnableDisablePanel(false);
-		}
-		else
-		{
-			lnl().setEnabled(true);
-			mapToolBar.setEnableDisablePanel(true);
-
-			createFromPool( map, mapViewer.lnl);
-			lnl().viewer.setCenter(
-					map.longitude,
-					map.latitude);
-			lnl().setMap( map);
-
-//	mapPanel.mapViewer.lnl.getMap().zoom(map.zoomFactor);
-			mapScrollPane.upDateScroll();
-
-			Iterator e = map.getAllElements().iterator();
-			while (e.hasNext())
-			{
-				MapElement mapElement = (MapElement )e.next();
-				mapElement.setMap( map);
-			}
-
-			e = map.getNodeLinks().iterator();
-			while (e.hasNext())
-			{
-				MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.next();
-				nodeLink.finalUpdate();
-			}
-
-			if(aContext != null)
-				if(aContext.getApplicationModel() != null)
-					if (aContext.getApplicationModel().isEnabled(
-						MapApplicationModel.ACTION_INDICATION))
-				{
-					animateThread = new AnimateThread(lnl());
-					animateThread.start();
-				}
-		}
-
-		lnl().postDirtyEvent();
-		lnl().postPaintEvent();
-*/
 	}
 
 	public void closeMap()

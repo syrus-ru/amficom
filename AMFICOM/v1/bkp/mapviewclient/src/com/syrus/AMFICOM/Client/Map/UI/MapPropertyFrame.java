@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.8 2004/10/29 14:59:52 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.9 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import javax.swing.event.TableModelListener;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/29 14:59:52 $
+ * @version $Revision: 1.9 $, $Date: 2004/11/01 15:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -161,6 +161,7 @@ public final class MapPropertyFrame extends JInternalFrame
 					disp.notify(new MapEvent(or, MapEvent.MAP_VIEW_CHANGED));
 				else
 					disp.notify(new MapEvent(or, MapEvent.MAP_ELEMENT_CHANGED));
+			}
 		}
 	}
 }

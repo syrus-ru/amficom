@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.18 2004/10/29 14:59:52 krupenn Exp $
+ * $Id: MapView.java,v 1.19 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/10/29 14:59:52 $
+ * @version $Revision: 1.19 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -969,6 +969,24 @@ public final class MapView extends StubResource implements Serializable
 //		removedElements.add(ob);
 	}
 
+	public List getMeasurementPaths(MapCablePathElement cpath)
+	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getPaths(" + cpath + ")");
+		
+		LinkedList returnVector = new LinkedList();
+		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
+		{
+			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			if(mp.getSortedCablePaths().contains(cpath))
+				returnVector.add(mp);
+		}
+		return returnVector;
+	}
+
 	public List getMeasurementPaths(MapPhysicalLinkElement mple)
 	{
 		Environment.log(
@@ -981,7 +999,7 @@ public final class MapView extends StubResource implements Serializable
 		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 		{
 			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
-			for(Iterator it2 = mp.getCablePaths().iterator(); it2.hasNext();)
+			for(Iterator it2 = mp.getSortedCablePaths().iterator(); it2.hasNext();)
 			{
 				MapCablePathElement cp = (MapCablePathElement)it2.next();
 				if(cp.getLinks().contains(mple))
@@ -1006,7 +1024,7 @@ public final class MapView extends StubResource implements Serializable
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
 			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
-			for(Iterator it2 = mp.getCablePaths().iterator(); it2.hasNext();)
+			for(Iterator it2 = mp.getSortedCablePaths().iterator(); it2.hasNext();)
 			{
 				MapCablePathElement cp = (MapCablePathElement)it2.next();
 				cp.sortNodes();
@@ -1032,7 +1050,7 @@ public final class MapView extends StubResource implements Serializable
 		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 		{
 			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
-			for(Iterator it2 = mp.getCablePaths().iterator(); it2.hasNext();)
+			for(Iterator it2 = mp.getSortedCablePaths().iterator(); it2.hasNext();)
 			{
 				MapCablePathElement cp = (MapCablePathElement)it2.next();
 				cp.sortNodeLinks();

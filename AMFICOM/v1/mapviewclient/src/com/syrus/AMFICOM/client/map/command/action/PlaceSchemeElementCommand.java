@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.4 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.5 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.awt.geom.Point2D;
  * Разместить c[tvysq элемент на карте в соответствии с привязкой
  * или по координатам
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -127,7 +127,6 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 		logicalNetLayer.setCurrentMapElement(site);
 		logicalNetLayer.notifySchemeEvent(site);
-		logicalNetLayer.notifyCatalogueEvent(site);
 
 	}
 }

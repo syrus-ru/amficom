@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.6 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.7 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/01 15:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -91,43 +91,6 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 			}
 		}
 
-//		for(e  = map.getNodes().iterator();e.hasNext();)
-//		{
-//			MapNodeElement node = (MapNodeElement )e.next();
-//			if (node.isSelected())
-//			{
-//				nodesToDelete.add(node);
-//			}
-//		}
-//
-//		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
-//		{
-//			for(e = map.getNodeLinks().iterator(); e.hasNext();)
-//			{
-//				MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.next();
-//				if (nodeLink.isSelected())
-//				{
-//					MapLinkElement link = map.getPhysicalLink(nodeLink.getPhysicalLinkId());
-//					if(!(link instanceof MapUnboundLinkElement))
-//						nodeLinksToDelete.add(nodeLink);
-//				}
-//			}
-//		}
-//
-//		// при удалении физической линии удаляются все ее фрагменты и 
-//		// топологические узлы
-//		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
-//		{
-//			for(e = map.getPhysicalLinks().iterator(); e.hasNext();)
-//			{
-//				MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.next();
-//				if (link.isSelected() 
-//					&& !(link instanceof MapUnboundLinkElement))
-//				{
-//					linksToDelete.add(link);
-//				}
-//			}
-//		}
 /*
 		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_CABLE_PATH)
 		{

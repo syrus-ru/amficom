@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.5 2004/10/29 14:59:52 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.6 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,7 +57,7 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/29 14:59:52 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -233,7 +233,6 @@ public final class MapElementsPanel extends JPanel
 					performProcessing = false;
 					disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 					logicalNetLayer.notifySchemeEvent(mapE);
-					logicalNetLayer.notifyCatalogueEvent(mapE);
 					performProcessing = true;
 				}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: AnimateThread.java,v 1.1 2004/09/13 12:33:41 krupenn Exp $
+ * $Id: AnimateThread.java,v 1.2 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.util.*;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:41 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -57,18 +57,18 @@ public class AnimateThread
 	
 	public void run()
 	{
-		while (is_running)
-		{
-			try
-			{
-				sleep( timeInterval );
-				MapPropertiesManager.setShowAlarmState(!MapPropertiesManager.isShowAlarmState());
-				logicalNetLayer.repaint();
-			}
-			catch (Exception e)
-			{
-				System.out.println("AnimateThread found: " + e);
-			}
-		}
+//		while (is_running)
+//		{
+//			try
+//			{
+//				sleep( timeInterval );
+//				MapPropertiesManager.setShowAlarmState(!MapPropertiesManager.isShowAlarmState());
+//				logicalNetLayer.repaint();
+//			}
+//			catch (Exception e)
+//			{
+//				System.out.println("AnimateThread found: " + e);
+//			}
+//		}
 	}
 }

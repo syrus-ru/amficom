@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.4 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.5 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.Iterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -137,6 +137,5 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 		logicalNetLayer.setCurrentMapElement(mPath);
 		logicalNetLayer.notifySchemeEvent(mPath);
-		logicalNetLayer.notifyCatalogueEvent(mPath);
 	}
 }

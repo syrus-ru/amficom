@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.6 2004/10/29 14:59:52 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.7 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/29 14:59:52 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -137,20 +137,20 @@ public final class MapMarkerStrategy implements  MapStrategy
 					// calculate cos of an angle between nodelink and mouse motion vector
 
 					// motion vector angle
-					double gamma = Math.atan2(
-							(point.x - anchorPoint.x), 
-							(point.y - anchorPoint.y));
+//					double gamma = Math.atan2(
+//							(point.x - anchorPoint.x), 
+//							(point.y - anchorPoint.y));
 
 					// nodelink angle
-					double betta = Math.atan2(
-							(end.x - start.x), 
-							(end.y - start.y));
+//					double betta = Math.atan2(
+//							(end.x - start.x), 
+//							(end.y - start.y));
 
-					double cosA = Math.cos(gamma - betta);
+//					double cosA = Math.cos(gamma - betta);
 
-//					double cosA = 	( 	(end.x - start.x) * (point.x - anchorPoint.x)
-//							+ (end.y - start.y) * (point.y - anchorPoint.y) ) 
-//						/ (nodeLinkLength * lengthThisToMousePoint);
+					double cosA = ( (end.x - start.x) * (point.x - anchorPoint.x)
+							+ (end.y - start.y) * (point.y - anchorPoint.y) ) 
+						/ (nodeLinkLength * lengthThisToMousePoint);
 
 					lengthFromStartNode = lengthFromStartNode + cosA * lengthThisToMousePoint;
 

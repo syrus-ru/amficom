@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.9 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.10 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
+import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
 import java.awt.Cursor;
@@ -46,7 +47,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/01 15:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -144,6 +145,12 @@ public final class MapMouseListener implements MouseListener
 					MapElement mapElement = logicalNetLayer.getMapElementAtPoint(me.getPoint());
 					MapElement curElement = logicalNetLayer.getCurrentMapElement();
 					if(curElement instanceof MapSelection)
+					{
+						mapElement = curElement;
+					}
+					else
+					if(!(curElement instanceof VoidMapElement) 
+						&& curElement.isMouseOnThisObject(me.getPoint()))
 					{
 						mapElement = curElement;
 					}

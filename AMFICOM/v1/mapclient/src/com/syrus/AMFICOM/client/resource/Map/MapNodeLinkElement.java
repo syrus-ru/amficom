@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.19 2004/10/29 15:00:06 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.20 2004/11/01 15:39:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2004/10/29 15:00:06 $
+ * @version $Revision: 1.20 $, $Date: 2004/11/01 15:39:46 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -340,10 +340,11 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		if (isSelectionVisible())
 		{
 			p.setStroke(MapPropertiesManager.getSelectionStroke());
+			
+			double dx = (to.x - from.x);
+			double dy = (to.y - from.y);
 
-			double length = Math.sqrt( 
-					(from.x - to.x) * (from.x - to.x) 
-					+ (from.y - to.y) * (from.y - to.y) );
+			double length = Math.sqrt( dx * dx + dy * dy );
 
 			// рисуем по линии выделения, которые идут параллельно фрагменту
 			// с отступом 4 и 6 точек с каждой стороны
@@ -351,9 +352,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 			double l1 = 6;
 			
 			// a - угол наклона nodelink
-			double sinA = (from.y - to.y) / length;
+			double sinA = dy / length;
 
-			double cosA = (from.x - to.x) / length;
+			double cosA = dx / length;
 
 			// смещение по x и по y для линии выделения
 			int lxshift = (int )(l * sinA);

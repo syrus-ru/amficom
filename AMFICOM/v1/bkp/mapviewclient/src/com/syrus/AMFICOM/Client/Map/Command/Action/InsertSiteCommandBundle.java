@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.2 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.3 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,7 +31,7 @@ import java.util.Iterator;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -220,7 +220,6 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 		logicalNetLayer.setCurrentMapElement(site);
 		logicalNetLayer.notifySchemeEvent(site);
-		logicalNetLayer.notifyCatalogueEvent(site);
 
 	}
 }

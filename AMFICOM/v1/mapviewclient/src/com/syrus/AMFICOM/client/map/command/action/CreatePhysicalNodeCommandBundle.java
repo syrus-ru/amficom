@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.3 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.4 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import java.awt.geom.Point2D;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -107,7 +107,6 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 		logicalNetLayer.setCurrentMapElement(node);
 		logicalNetLayer.notifySchemeEvent(node);
-		logicalNetLayer.notifyCatalogueEvent(node);
 
 	}
 }

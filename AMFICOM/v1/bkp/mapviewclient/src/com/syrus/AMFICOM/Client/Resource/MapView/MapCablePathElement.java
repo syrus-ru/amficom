@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.17 2004/10/27 15:46:24 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.18 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/10/27 15:46:24 $
+ * @version $Revision: 1.18 $, $Date: 2004/11/01 15:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -247,7 +247,21 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	public boolean isSelectionVisible()
 	{
-		return isSelected();
+		boolean isv = isSelected();
+		if(!isv)
+		{
+			for(Iterator it = getMapView().getMeasurementPaths(this).iterator(); it.hasNext();)
+			{
+				MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+				if(mp.isSelectionVisible())
+				{
+					isv = true;
+					break;
+				}
+			}
+		}
+		return isv;
+//		return isSelected() || getMapView().getMeasurementPaths(this).isSelectionVisible();
 	}
 
 	public boolean isVisible(Rectangle2D.Double visibleBounds)

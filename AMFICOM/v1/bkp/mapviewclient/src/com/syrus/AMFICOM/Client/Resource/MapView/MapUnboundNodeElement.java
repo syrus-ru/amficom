@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElement.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapUnboundNodeElement.java,v 1.5 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/01 15:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -110,6 +110,7 @@ public class MapUnboundNodeElement extends MapSiteNodeElement implements Seriali
 	public void setSchemeElement(SchemeElement schemeElement)
 	{
 		this.schemeElement = schemeElement;
+		setName(schemeElement.getName());
 	}
 
 

@@ -165,54 +165,52 @@ public final class SelectionPopupMenu extends MapPopupMenu
 	{
 		MapNodeProtoElement proto = super.selectNodeProto();
 
-		List nodesToBind = new LinkedList();
-		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+		if(proto != null)
 		{
-			MapElement me = (MapElement )it.next();
-			if(me instanceof MapUnboundNodeElement)
+			List nodesToBind = new LinkedList();
+			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 			{
-				nodesToBind.add(me);
-				it.remove();
-			}
-		}
-
-		if(!nodesToBind.isEmpty())
-		{
-			for(Iterator it = nodesToBind.iterator(); it.hasNext();)
-			{
-				MapUnboundNodeElement un = (MapUnboundNodeElement )it.next();
-				super.convertUnboundNodeToSite(un, proto);
-			}
-		}
-
-		List alreadyBound = new LinkedList();
-		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
-		{
-			MapElement me = (MapElement )it.next();
-			if(me instanceof MapCablePathElement)
-			{
-				MapCablePathElement path = (MapCablePathElement )me;
-				if(!alreadyBound.contains(path))
+				MapElement me = (MapElement )it.next();
+				if(me instanceof MapUnboundNodeElement)
 				{
-					super.generatePathCabling(path, proto);
-					alreadyBound.add(path);
+					nodesToBind.add(me);
+					it.remove();
 				}
 			}
-			else
-			if(me instanceof MapUnboundLinkElement)
+	
+			if(!nodesToBind.isEmpty())
 			{
-				MapCablePathElement path = ((MapUnboundLinkElement )me).getCablePath();
-				if(!alreadyBound.contains(path))
+				for(Iterator it = nodesToBind.iterator(); it.hasNext();)
 				{
-					super.generatePathCabling(path, proto);
-					alreadyBound.add(path);
+					MapUnboundNodeElement un = (MapUnboundNodeElement )it.next();
+					super.convertUnboundNodeToSite(un, proto);
 				}
 			}
-//			else
-//			if(me instanceof MapUnboundNodeElement)
-//			{
-//				super.convertUnboundNodeToSite((MapUnboundNodeElement )me, proto);
-//			}
+	
+			List alreadyBound = new LinkedList();
+			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+			{
+				MapElement me = (MapElement )it.next();
+				if(me instanceof MapCablePathElement)
+				{
+					MapCablePathElement path = (MapCablePathElement )me;
+					if(!alreadyBound.contains(path))
+					{
+						super.generatePathCabling(path, proto);
+						alreadyBound.add(path);
+					}
+				}
+				else
+				if(me instanceof MapUnboundLinkElement)
+				{
+					MapCablePathElement path = ((MapUnboundLinkElement )me).getCablePath();
+					if(!alreadyBound.contains(path))
+					{
+						super.generatePathCabling(path, proto);
+						alreadyBound.add(path);
+					}
+				}
+			}
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapModeCommand.java,v 1.3 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapModeCommand.java,v 1.4 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,13 +15,15 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import java.util.Iterator;
 
 /**
  * Команда переключения режима работы с картой - режимы фрагмента, линии, пути 
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/01 15:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -66,6 +68,16 @@ public class MapModeCommand extends VoidCommand
 				aModel.setSelected(MapApplicationModel.MODE_PATH, false);
 	
 				aModel.setSelected(modeString, true);
+				
+				if(modeString.equals(MapApplicationModel.MODE_PATH))
+				{
+					for(Iterator it = logicalNetLayer.getMapView().getMeasurementPaths().iterator(); it.hasNext();)
+					{
+						MapMeasurementPathElement mpath = 
+							(MapMeasurementPathElement )it.next();
+						mpath.sortPathElements();
+					}
+				}
 	
 				aModel.fireModelChanged();
 	

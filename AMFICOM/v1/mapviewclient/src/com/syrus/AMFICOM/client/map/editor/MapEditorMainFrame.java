@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.6 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.7 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -97,7 +97,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -579,36 +579,6 @@ public class MapEditorMainFrame extends JFrame
 			setTitle(LangModelMap.getString("MapView"));
 		}
 		else
-/*		
-		if (ae.getActionCommand().equals("mapaddschemeelementevent"))
-		{
-			MapMainFrame fr = (MapMainFrame )Pool.get("environment", "mapmainframe");
-			if(fr != null)
-				if(fr.getParent() != null)
-					if(fr.getParent().equals(desktopPane))
-					{
-						String se_id = (String)ae.getSource();
-						SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, se_id);
-						se.unpack();
-
-						SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
-						panel.setGraphSize(new Dimension());
-						SchemeViewerFrame frame = new SchemeViewerFrame(aContext, panel);
-						frame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-						frame.setTitle(se.getName());
-						desktopPane.add(frame);
-
-						Dimension dim = desktopPane.getSize();
-
-						frame.setLocation(0, 0);
-						frame.setSize(dim.width * 4 / 5, dim.height);
-						frame.setVisible(true);
-						frame.toFront();
-						panel.openSchemeElement(se);
-					}
-        }
-		else 
-*/
 		if(ae.getActionCommand().equals(ContextChangeEvent.type))
 		{
 			ContextChangeEvent cce = (ContextChangeEvent )ae;

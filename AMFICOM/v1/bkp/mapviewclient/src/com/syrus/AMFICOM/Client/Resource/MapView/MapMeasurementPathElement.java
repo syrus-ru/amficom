@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.10 2004/10/27 15:46:24 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.11 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/27 15:46:24 $
+ * @version $Revision: 1.11 $, $Date: 2004/11/01 15:40:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -211,7 +211,7 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
 		boolean vis = false;
-		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
+		for(Iterator it = getSortedCablePaths().iterator(); it.hasNext();)
 		{
 			MapCablePathElement cpath = (MapCablePathElement )it.next();
 			if(cpath.isVisible(visibleBounds))
@@ -228,7 +228,7 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		if(!isVisible(visibleBounds))
 			return;
 
-		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
+		for(Iterator it = getSortedCablePaths().iterator(); it.hasNext();)
 		{
 			MapCablePathElement cpath = (MapCablePathElement )it.next();
 			cpath.paint(g, visibleBounds, stroke, color, selectionVisible);
@@ -255,7 +255,7 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 
 	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
-		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
+		for(Iterator it = getSortedCablePaths().iterator(); it.hasNext();)
 		{
 			MapElement me = (MapElement )it.next();
 			if(me.isMouseOnThisObject(currentMousePoint))
@@ -273,7 +273,7 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	public double getLengthLt()
 	{
 		double length = 0;
-		Iterator e = getCablePaths().iterator();
+		Iterator e = getSortedCablePaths().iterator();
 		while( e.hasNext())
 		{
 			MapCablePathElement cpath = (MapCablePathElement )e.next();
@@ -333,42 +333,45 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	// to avoid instantiation of multiple objects
 	protected List unsortedCablePaths = new LinkedList();
 
-	public List getCablePaths()
+	protected List getCablePaths()
 	{
-		unsortedCablePaths.clear();
-		for(Iterator it = schemePath.links.iterator(); it.hasNext();)
+		synchronized(unsortedCablePaths)
 		{
-			PathElement pe = (PathElement )it.next();
-			if(pe.getType() == PathElement.SCHEME_ELEMENT)
+			unsortedCablePaths.clear();
+			for(Iterator it = schemePath.links.iterator(); it.hasNext();)
 			{
-				SchemeElement se = (SchemeElement )pe.getSchemeElement();
-				MapSiteNodeElement site = mapView.findElement(se);
-				if(site != null)
+				PathElement pe = (PathElement )it.next();
+				if(pe.getType() == PathElement.SCHEME_ELEMENT)
 				{
-//					mPath.addCablePath(site);
+					SchemeElement se = (SchemeElement )pe.getSchemeElement();
+					MapSiteNodeElement site = mapView.findElement(se);
+					if(site != null)
+					{
+	//					mPath.addCablePath(site);
+					}
 				}
-			}
-			else
-			if(pe.getType() == PathElement.LINK)
-			{
-				SchemeLink link = (SchemeLink )pe.getSchemeLink();
-				SchemeElement sse = scheme.getSchemeElementByPort(link.sourcePortId);
-				SchemeElement ese = scheme.getSchemeElementByPort(link.targetPortId);
-				MapSiteNodeElement ssite = mapView.findElement(sse);
-				MapSiteNodeElement esite = mapView.findElement(ese);
-				if(ssite == esite)
+				else
+				if(pe.getType() == PathElement.LINK)
 				{
-//					mPath.addCablePath(ssite);
+					SchemeLink link = (SchemeLink )pe.getSchemeLink();
+					SchemeElement sse = scheme.getSchemeElementByPort(link.sourcePortId);
+					SchemeElement ese = scheme.getSchemeElementByPort(link.targetPortId);
+					MapSiteNodeElement ssite = mapView.findElement(sse);
+					MapSiteNodeElement esite = mapView.findElement(ese);
+					if(ssite == esite)
+					{
+	//					mPath.addCablePath(ssite);
+					}
 				}
-			}
-			else
-			if(pe.getType() == PathElement.CABLE_LINK)
-			{
-				SchemeCableLink clink = (SchemeCableLink )pe.getSchemeCableLink();
-				MapCablePathElement cp = mapView.findCablePath(clink);
-				if(cp != null)
+				else
+				if(pe.getType() == PathElement.CABLE_LINK)
 				{
-					unsortedCablePaths.add(cp);
+					SchemeCableLink clink = (SchemeCableLink )pe.getSchemeCableLink();
+					MapCablePathElement cp = mapView.findCablePath(clink);
+					if(cp != null)
+					{
+						unsortedCablePaths.add(cp);
+					}
 				}
 			}
 		}

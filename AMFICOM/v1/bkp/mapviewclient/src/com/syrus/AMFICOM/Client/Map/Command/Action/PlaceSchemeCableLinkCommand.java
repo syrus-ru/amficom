@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.5 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.6 2004/11/01 15:40:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/01 15:40:10 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -175,7 +175,6 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 		logicalNetLayer.setCurrentMapElement(cablePath);
 		logicalNetLayer.notifySchemeEvent(cablePath);
-		logicalNetLayer.notifyCatalogueEvent(cablePath);
 	}
 
 }
