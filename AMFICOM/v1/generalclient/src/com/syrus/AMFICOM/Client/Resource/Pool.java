@@ -38,9 +38,11 @@
 
 package com.syrus.AMFICOM.Client.Resource;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -176,6 +178,21 @@ public class Pool extends Object {
 	public static Hashtable getHash(String objTypeId) {
 		Hashtable result = null;
 		if (objTypeId != null) result = (Hashtable) objHash.get(objTypeId);
+		return result;
+	}
+	
+	/**
+	 * получить список объектов типа objTypeId
+	 * 
+	 * @param objTypeId
+	 *            тип объектов
+	 */
+	public static List getList(String objTypeId) {
+		ArrayList result = new ArrayList();
+		if (objTypeId != null) {
+			Hashtable ht = (Hashtable) objHash.get(objTypeId);
+			result.addAll(ht.values());
+		}		
 		return result;
 	}
 

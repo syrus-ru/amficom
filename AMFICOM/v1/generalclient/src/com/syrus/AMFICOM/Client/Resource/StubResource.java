@@ -48,13 +48,11 @@ import com.syrus.AMFICOM.Client.Resource.Object.ObjectPermissionAttributes;
 
 public class StubResource implements ObjectResource
 {
-	static final public String typ = "stub";
-
 	protected boolean changed = false;
 
 	public boolean isChanged()
 	{
-		return changed;
+		return this.changed;
 	}
 	
 	public void setChanged(boolean changed)
@@ -111,15 +109,9 @@ public class StubResource implements ObjectResource
 	public StubResource()
 	{
 	}
-/*
-	public StubResource(String typ)
-	{
-		super(typ);
-	}
-*/	
 	public String getTyp()
 	{
-		return typ;
+		throw new UnsupportedOperationException();
 	}
 	
 	public Object getTransferable()

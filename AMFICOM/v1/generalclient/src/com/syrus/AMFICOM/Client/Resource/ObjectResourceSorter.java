@@ -1,11 +1,26 @@
+/*
+ * $Id: ObjectResourceSorter.java,v 1.4 2004/08/18 10:34:33 bob Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 package com.syrus.AMFICOM.Client.Resource;
 
 import java.util.*;
 
+/**
+ * @version $Revision: 1.4 $, $Date: 2004/08/18 10:34:33 $
+ * @author $Author: bob $
+ * @module generalclient_v1
+ */
 public abstract class ObjectResourceSorter
 {
-	static public final int SORT_ASCENDING = 0;
-	static public final int SORT_DESCENDING = 1;
+	public static final int SORT_ASCENDING = 0;
+	public static final int SORT_DESCENDING = 1;
+	
+	public static final String COLUMN_TYPE_TIME		=  "time";
+	public static final String COLUMN_TYPE_LONG		=  "long";
 
 	List dataSet;
 
