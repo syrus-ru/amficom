@@ -1,5 +1,5 @@
 /*
- * $Id: ISMdbInterfaceSave.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ * $Id: ISMdbInterfaceSave.sqlj,v 1.3 2004/07/23 06:54:24 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.server.event.EventSource;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/07/23 06:54:24 $
+ * @author $Author: krupenn $
  * @module server_v1
  */
 public class ISMdbInterfaceSave
@@ -294,7 +294,6 @@ public class ISMdbInterfaceSave
 							set
 								NAME = :(paths[i].name),
 								DESCRIPTION = :(paths[i].description),
-								LOCAL_ADDRESS = :(paths[i].local_address),
 								KIS_ID = :(paths[i].KIS_id),
 								DOMAIN_ID = :(paths[i].domain_id),
 								MODIFIED = SYSDATE
@@ -342,7 +341,6 @@ public class ISMdbInterfaceSave
 								ID,
 								NAME,
 								DESCRIPTION,
-								LOCAL_ADDRESS,
 								KIS_ID,
 								MODIFIED,
 								DOMAIN_ID)
@@ -350,7 +348,6 @@ public class ISMdbInterfaceSave
 								 :(paths[i].id),
 								 :(paths[i].name),
 								 :(paths[i].description),
-								 :(paths[i].local_address),
 								 :(paths[i].KIS_id),
 								 SYSDATE,
 								 :(paths[i].domain_id) )

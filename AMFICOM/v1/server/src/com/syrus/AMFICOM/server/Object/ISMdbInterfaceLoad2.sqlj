@@ -1,5 +1,5 @@
 /*
- * $Id: ISMdbInterfaceLoad2.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ * $Id: ISMdbInterfaceLoad2.sqlj,v 1.3 2004/07/23 06:54:24 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/07/23 06:54:24 $
+ * @author $Author: krupenn $
  * @module server_v1
  */
 public class ISMdbInterfaceLoad2
@@ -396,7 +396,6 @@ public class ISMdbInterfaceLoad2
 						NAME,
 						DESCRIPTION,
 						KIS_ID,
-						LOCAL_ADDRESS,
 						MODIFIED,
 						DOMAIN_ID
 					from AMFICOM.TRANSMISSIONPATHS
@@ -420,9 +419,6 @@ public class ISMdbInterfaceLoad2
 				try { It_kis_id = tpIt.kis_id(); }
 				catch(SQLException e) { }
 				if(It_kis_id == null) It_kis_id = "";
-				try { It_local_address = tpIt.local_address(); }
-				catch(SQLException e) { }
-				if(It_local_address == null) It_local_address = "";
 				try { It_modified = tpIt.modified().getTime(); }
 				catch(SQLException e) { }
 				try { It_domain_id = tpIt.domain_id(); }
@@ -757,7 +753,6 @@ public class ISMdbInterfaceLoad2
 		String id,
 		String name,
 		String description,
-		String local_address,
 		String kis_id,
 		Timestamp modified,
 		String domain_id);
