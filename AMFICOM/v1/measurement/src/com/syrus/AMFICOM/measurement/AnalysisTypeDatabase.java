@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.58 2005/02/03 14:57:22 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.59 2005/02/08 11:10:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,34 +8,32 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -43,17 +41,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/02/03 14:57:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/02/08 11:10:19 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
 public class AnalysisTypeDatabase extends StorableObjectDatabase {	
 
 	public static final String LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
-	public static final String PARAMETER_TYPE_ID = "parameter_type_id";
-	public static final String PARAMETER_MODE = "parameter_mode";
-
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
@@ -541,7 +536,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 		return i;
 	}
-
+	
   private List retrieveButIdsByCriteriaSet(List ids, List criteriaSetIds) throws RetrieveObjectException, IllegalDataException {
 		if (criteriaSetIds != null && !criteriaSetIds.isEmpty()) {
 			String condition = new String();
@@ -563,29 +558,15 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				}
 			}
 
-	    condition = PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET
+	    condition = AnalysisTypeWrapper.PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET
 					+ SQL_SELECT + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 					+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames
 					+ CLOSE_BRACKET
 					+ CLOSE_BRACKET
-					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + AnalysisTypeWrapper.MODE_CRITERION + APOSTOPHE;
+					+ SQL_AND + AnalysisTypeWrapper.PARAMETER_MODE + EQUALS + APOSTOPHE + AnalysisTypeWrapper.MODE_CRITERION + APOSTOPHE;
 
 			return this.retrieveByIds(ids, condition);
 		}
 		return Collections.EMPTY_LIST;
-	}
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
-		List list = null;
-		if (condition instanceof LinkedIdsCondition) {
-			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-			list = this.retrieveButIdsByCriteriaSet(ids, linkedIdsCondition.getLinkedIds());
-		}
-		else {
-			Log.errorMessage(this.getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
-			list = this.retrieveButIds(ids);
-		}
-
-    return list;
 	}
 }
