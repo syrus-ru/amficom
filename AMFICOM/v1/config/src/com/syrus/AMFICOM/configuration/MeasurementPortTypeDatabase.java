@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.14 2004/11/19 08:59:52 bob Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.15 2004/11/25 10:44:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,11 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -29,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/19 08:59:52 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/11/25 10:44:55 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -105,6 +108,8 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
 		super.retrieveEntity(measurementPortType);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        measurementPortType.setCharacteristics(characteristicDatabase.retrieveCharacteristics(measurementPortType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE));
 	}
 	
 	protected StorableObject updateEntityFromResultSet(
@@ -181,10 +186,22 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids, String condition)
 			throws IllegalDataException, RetrieveObjectException {
-		if ((ids == null) || (ids.isEmpty()))
-			return super.retrieveByIdsOneQuery( null, condition);
-		return super.retrieveByIdsOneQuery( ids, condition);	
-		//return retriveByIdsPreparedStatement(ids);
+		List list = null; 
+        if ((ids == null) || (ids.isEmpty()))
+            list = retrieveByIdsOneQuery(null, condition);
+        else 
+            list = retrieveByIdsOneQuery(ids, condition);
+        
+        if (list != null) {
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                MeasurementPortType measurementPortType = (MeasurementPortType) iter.next();
+                List characteristics = (List)characteristicMap.get(measurementPortType);
+                measurementPortType.setCharacteristics(characteristics);
+            }
+        }
+        return list;
 	}
 
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,

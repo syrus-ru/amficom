@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.40 2004/11/23 15:24:41 bob Exp $
+ * $Id: KISDatabase.java,v 1.41 2004/11/25 10:44:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -39,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/11/23 15:24:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.41 $, $Date: 2004/11/25 10:44:55 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -120,6 +121,8 @@ public class KISDatabase extends StorableObjectDatabase {
 		KIS kis = this.fromStorableObject(storableObject);
 		super.retrieveEntity(kis);
 		this.retrieveKISMeasurementPortIds(kis);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        kis.setCharacteristics(characteristicDatabase.retrieveCharacteristics(kis.getId(), CharacteristicSort.CHARACTERISTIC_SORT_KIS));
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
@@ -512,9 +515,16 @@ public class KISDatabase extends StorableObjectDatabase {
 		else
 			list = super.retrieveByIdsOneQuery(ids, condition);
 
-    if (list != null) {
+		if (list != null) {
 			retrieveKISMeasurementPortIdsByOneQuery(list);
-			retrieveMonitoredElementsByOneQuery(list);		
+			retrieveMonitoredElementsByOneQuery(list);
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_KIS);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                KIS kis = (KIS) iter.next();
+                List characteristics = (List)characteristicMap.get(kis);
+                kis.setCharacteristics(characteristics);
+            }
 		}
         
 		return list;

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.6 2004/11/19 08:59:52 bob Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.7 2004/11/25 10:44:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,11 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -28,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/19 08:59:52 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2004/11/25 10:44:55 $
+ * @author $Author: max $
  * @module module_name
  */
 
@@ -44,6 +47,8 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
     public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
         TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
         super.retrieveEntity(transmissionPathType);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        transmissionPathType.setCharacteristics(characteristicDatabase.retrieveCharacteristics(transmissionPathType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATHTYPE));
     }
     
     private TransmissionPathType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -180,11 +185,23 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
     
     public List retrieveByIds(List ids, String condition) 
             throws IllegalDataException, RetrieveObjectException {
+        List list = null; 
         if ((ids == null) || (ids.isEmpty()))
-            return super.retrieveByIdsOneQuery(null, condition);
-        return super.retrieveByIdsOneQuery(ids, condition); 
-        //return retriveByIdsPreparedStatement(ids);
+            list = retrieveByIdsOneQuery(null, condition);
+        else 
+            list = retrieveByIdsOneQuery(ids, condition);
+        
+        if (list != null) {
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATHTYPE);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                TransmissionPathType transmissionPathType = (TransmissionPathType) iter.next();
+                List characteristics = (List)characteristicMap.get(transmissionPathType);
+                transmissionPathType.setCharacteristics(characteristics);
+            }
         }
+        return list;
+    }
         
     public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
             IllegalDataException {

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.18 2004/11/19 08:59:52 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.19 2004/11/25 10:44:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,11 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -29,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/11/19 08:59:52 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2004/11/25 10:44:55 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -88,6 +91,8 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		super.retrieveEntity(equipmentType);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        equipmentType.setCharacteristics(characteristicDatabase.retrieveCharacteristics(equipmentType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE));
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
@@ -184,10 +189,20 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids, String condition) 
 			throws IllegalDataException, RetrieveObjectException {
-		if ((ids == null) || (ids.isEmpty()))
-			return super.retrieveByIdsOneQuery(null, condition);
-		return super.retrieveByIdsOneQuery(ids, condition);	
-		//return retriveByIdsPreparedStatement(ids);
+		List list = null;
+        if ((ids == null) || (ids.isEmpty()))
+            list = super.retrieveByIdsOneQuery(null, condition);
+        list = super.retrieveByIdsOneQuery(ids, condition);	
+        if (list != null) {
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                EquipmentType equipmentType = (EquipmentType) iter.next();
+                List characteristics = (List)characteristicMap.get(equipmentType);
+                equipmentType.setCharacteristics(characteristics);
+            }
+        }
+        return list;
 	}
 	
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,

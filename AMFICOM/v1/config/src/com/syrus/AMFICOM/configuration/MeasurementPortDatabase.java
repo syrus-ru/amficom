@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.22 2004/11/19 08:59:52 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.23 2004/11/25 10:44:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,11 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -32,8 +35,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/11/19 08:59:52 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2004/11/25 10:44:55 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -128,18 +131,30 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
-		super.retrieveEntity(measurementPort);	
+		super.retrieveEntity(measurementPort);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        measurementPort.setCharacteristics(characteristicDatabase.retrieveCharacteristics(measurementPort.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT));
 	}
 	
 	public List retrieveByIds(List ids, String condition)
 			throws IllegalDataException, RetrieveObjectException {
 		List list = null;
-		if ((ids == null) || (ids.isEmpty()))
-			list = super.retrieveByIdsOneQuery(null, condition);
-		else 
-			list = super.retrieveByIdsOneQuery(ids, condition);		
-		return list;	
-		//return retriveByIdsPreparedStatement(ids);
+        if ((ids == null) || (ids.isEmpty()))
+            list = super.retrieveByIdsOneQuery(null, condition);
+        else
+            list = super.retrieveByIdsOneQuery(ids, condition);
+
+        if (list != null) {
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                MeasurementPort measurementPort = (MeasurementPort) iter.next();
+                List characteristics = (List)characteristicMap.get(measurementPort);
+                measurementPort.setCharacteristics(characteristics);
+            }
+        }
+        
+        return list;
 	}
 		
 	protected StorableObject updateEntityFromResultSet(

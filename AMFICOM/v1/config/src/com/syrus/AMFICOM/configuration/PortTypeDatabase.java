@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.18 2004/11/16 12:33:17 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.19 2004/11/25 10:44:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,11 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -29,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/11/16 12:33:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2004/11/25 10:44:55 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -89,6 +92,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		PortType portType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(portType);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        portType.setCharacteristics(characteristicDatabase.retrieveCharacteristics(portType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE));
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -166,7 +171,18 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
 			list = retrieveByIdsOneQuery(null, condition);
-		else list = retrieveByIdsOneQuery(ids, condition);		
+		else 
+            list = retrieveByIdsOneQuery(ids, condition);
+        
+        if (list != null) {
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                PortType portType = (PortType) iter.next();
+                List characteristics = (List)characteristicMap.get(portType);
+                portType.setCharacteristics(characteristics);
+            }
+        }
 		return list;
 	}
 	

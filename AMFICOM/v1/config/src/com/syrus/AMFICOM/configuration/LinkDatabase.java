@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.8 2004/11/19 08:59:52 bob Exp $
+ * $Id: LinkDatabase.java,v 1.9 2004/11/25 10:44:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/11/19 08:59:52 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/11/25 10:44:55 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -281,10 +282,14 @@ public class LinkDatabase extends StorableObjectDatabase {
 		else list = super.retrieveByIdsOneQuery(ids, condition);
 		
 		if(list != null) {
-        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-		characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_LINK);
-        }
-        
+			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_LINK);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                Link link = (Link) iter.next();
+                List characteristics = (List)characteristicMap.get(link);
+                link.setCharacteristics(characteristics);
+            }
+        }        
 		return list;
 	}	
 
