@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.13 2004/11/19 23:09:30 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.14 2004/11/24 08:57:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
-import com.syrus.AMFICOM.configuration.KISType;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.MCM;
@@ -64,8 +63,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/11/19 23:09:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2004/11/24 08:57:31 $
+ * @author $Author: max $
  * @module mcm_v1
  */
 
@@ -185,91 +184,6 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		}
 		return measurementPortType;
 	}
-	
-    public KISType loadKISType(Identifier id) throws RetrieveObjectException, CommunicationException {
-        KISType kisType = null;
-        try {
-            kisType = new KISType(id);
-        }
-        catch (ObjectNotFoundException onfe) {
-            Log.debugMessage("KISType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-            try {
-                kisType = KISType.getInstance(MeasurementControlModule.mServerRef.transmitKISType((Identifier_Transferable)id.getTransferable()));
-            }
-            catch (org.omg.CORBA.SystemException se) {
-                Log.errorException(se);
-                MeasurementControlModule.activateMServerReference();
-                throw new CommunicationException("System exception -- " + se.getMessage(), se);
-            }
-            catch (AMFICOMRemoteException are) {
-                if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-                    Log.errorMessage("KISType '" + id + "' not found on server database");
-                else
-                    Log.errorMessage("Cannot retrieve KISType '" + id + "' from server database -- " + are.message);
-            }
-            catch (CreateObjectException coe) {
-                Log.errorException(coe);
-            }
-        }
-        return kisType;
-    }
-    
-//    public LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException {
-//        LinkType linkType = null;
-//        try {
-//            linkType = new LinkType(id);
-//        }
-//        catch (ObjectNotFoundException onfe) {
-//            Log.debugMessage("LinkType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-//            try {
-//                linkType = LinkType.getInstance(MeasurementControlModule.mServerRef.transmitLinkType((Identifier_Transferable)id.getTransferable()));
-//            }
-//            catch (org.omg.CORBA.SystemException se) {
-//                Log.errorException(se);
-//                MeasurementControlModule.activateMServerReference();
-//                throw new CommunicationException("System exception -- " + se.getMessage(), se);
-//            }
-//            catch (AMFICOMRemoteException are) {
-//                if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-//                    Log.errorMessage("LinkType '" + id + "' not found on server database");
-//                else
-//                    Log.errorMessage("Cannot retrieve LinkType '" + id + "' from server database -- " + are.message);
-//            }
-//            catch (CreateObjectException coe) {
-//                Log.errorException(coe);
-//            }
-//        }
-//        return linkType;
-//    }
-
-//	public TransmissionPathType loadTransmissionPathType(Identifier id)
-//			throws DatabaseException, CommunicationException {
-//		TransmissionPathType transmissionPathType = null;
-//        try {
-//            transmissionPathType = new TransmissionPathType(id);
-//        }
-//        catch (ObjectNotFoundException onfe) {
-//            Log.debugMessage("TransmissionPathType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-//            try {
-//                transmissionPathType = TransmissionPathType.getInstance(MeasurementControlModule.mServerRef.transmitTransmissionPathType((Identifier_Transferable)id.getTransferable()));
-//            }
-//            catch (org.omg.CORBA.SystemException se) {
-//                Log.errorException(se);
-//                MeasurementControlModule.activateMServerReference();
-//                throw new CommunicationException("System exception -- " + se.getMessage(), se);
-//            }
-//            catch (AMFICOMRemoteException are) {
-//                if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-//                    Log.errorMessage("TransmissionPathType '" + id + "' not found on server database");
-//                else
-//                    Log.errorMessage("Cannot retrieve TransmissionPathType '" + id + "' from server database -- " + are.message);
-//            }
-//            catch (CreateObjectException coe) {
-//                Log.errorException(coe);
-//            }
-//        }
-//        return transmissionPathType;
-//	}
 	
     public Characteristic loadCharacteristic(Identifier id) throws RetrieveObjectException, CommunicationException {
 		Characteristic characteristic = null;
@@ -1242,11 +1156,6 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		throw new UnsupportedOperationException("method isn't complete");
 		}		
 		
-		public void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}
-
 		public void savePortType(PortType portType, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
@@ -1334,12 +1243,6 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 		}
-
-		public void saveKISTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
-				CommunicationException {
-//			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-		}		
 
 		public void savePortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
@@ -1430,13 +1333,6 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 		}
 		
 		
-		public List loadKISTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
-				CommunicationException {
-//			 TODO method isn't complete
-			throw new UnsupportedOperationException("method isn't complete");
-
-		}
-
 		public List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
@@ -1546,11 +1442,6 @@ public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObj
 
 		public void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 //           TODO method isn't complete
-            throw new UnsupportedOperationException("method isn't complete");
-		}
-
-		public List loadKISTypes(List ids) throws DatabaseException, CommunicationException {
-//          //           TODO method isn't complete
             throw new UnsupportedOperationException("method isn't complete");
 		}
 
