@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.39 2004/10/12 07:43:44 max Exp $
+ * $Id: CMServerImpl.java,v 1.40 2004/10/12 08:07:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -134,7 +134,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/10/12 07:43:44 $
+ * @version $Revision: 1.40 $, $Date: 2004/10/12 08:07:33 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -5635,12 +5635,6 @@ public class CMServerImpl implements CMServerOperations {
             throws AMFICOMRemoteException {
         
         try {
-            Identifier domainId = new Identifier(accessIdentifier.domain_id);
-            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
-            Log.debugMessage("CMServerImpl.transmitModelings | requiere "
-                    + (identifier_Transferables.length == 0 ? "all" : Integer
-                            .toString(identifier_Transferables.length))
-                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
             List list;
             if (identifier_Transferables.length > 0) {
                 List idsList = new ArrayList(identifier_Transferables.length);
@@ -5650,7 +5644,7 @@ public class CMServerImpl implements CMServerOperations {
                 list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new DomainCondition(domainCondition_Transferable), true);
 
             } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.MODELING_ENTITY_CODE), true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new DomainCondition(domainCondition_Transferable), true);
 
             Modeling_Transferable[] transferables = new Modeling_Transferable[list.size()];
             int i = 0;
@@ -5865,51 +5859,7 @@ public class CMServerImpl implements CMServerOperations {
         }
     }
     
-    public Measurement_Transferable[] transmitMeasurementsButIdsCondition(
-            Identifier_Transferable[] identifier_Transferables,
-            AccessIdentifier_Transferable accessIdentifier,
-            LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
-            throws AMFICOMRemoteException {
-        try {
-            List list;
-            if (identifier_Transferables.length > 0) {
-                List idsList = new ArrayList(identifier_Transferables.length);
-                for (int i = 0; i < identifier_Transferables.length; i++)
-                    idsList.add(new Identifier(identifier_Transferables[i]));
-
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
-
-            } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
-
-            Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
-            int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
-                Measurement measurement = (Measurement) it.next();
-                transferables[i] = (Measurement_Transferable) measurement.getTransferable();
-            }
-
-            return transferables;
-
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (IllegalDataException ide) {
-            Log.errorException(ide);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
-                    .getMessage());
-        } catch (IllegalObjectEntityException ioee) {
-            Log.errorException(ioee);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
-                    .getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        }
-    }
-    
-	public MeasurementSetup_Transferable[] transmitMeasurementSetups(	Identifier_Transferable[] identifier_Transferables,
+    public MeasurementSetup_Transferable[] transmitMeasurementSetups(	Identifier_Transferable[] identifier_Transferables,
 										AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
