@@ -1,15 +1,10 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm.Filter;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.Schedule.Filter.*;
+import com.syrus.AMFICOM.Client.Survey.General.I18N;
 import com.syrus.AMFICOM.CORBA.General.*;
 import java.util.*;
 
@@ -44,55 +39,56 @@ public class AlarmFilter extends ObjectResourceFilter
 		return vec;
 	}
 
-	public String getFilterColumnName(String col_id)
+	public String getFilterColumnName(String colId)
 	{
-		if(col_id == null)
-			return "";
-
-		return LangModelSurvey.String(col_id);
-/*		if(col_id.equals("source"))
-			return LangModelSurvey.String("labelsource");
-		if(col_id.equals("type"))
-			return LangModelSurvey.String("labelAlarmType");
-		if(col_id.equals("status"))
-			return LangModelSurvey.String("labelStatus");
-		if(col_id.equals("time"))
-			return LangModelSurvey.String("labelalarmtime");
-		if(col_id.equals("monitoredelement"))
-			return LangModelSurvey.String("labelmonitoredelement");
-		return "";*/
+		String result = null;
+		if(colId == null)
+			result = "";
+		else result = I18N.getString(colId);
+		return result;
+//		if(colId.equals("source"))
+//			return LangModelSurvey.String("labelsource");
+//		if(colId.equals("type"))
+//			return LangModelSurvey.String("labelAlarmType");
+//		if(colId.equals("status"))
+//			return LangModelSurvey.String("labelStatus");
+//		if(colId.equals("time"))
+//			return LangModelSurvey.String("labelalarmtime");
+//		if(colId.equals("monitoredelement"))
+//			return LangModelSurvey.String("labelmonitoredelement");
+//		return "";
 	}
 
-	public String[] getColumnFilterTypes(String col_id)
+	public String[] getColumnFilterTypes(String colId)
 	{
-		if(col_id == null)
+		if(colId == null)
 			return new String[] {};
-		if(col_id.equals("alarm_Source"))
+		if(colId.equals("alarm_Source"))
 			return new String[] {"string", "list"};
-		if(col_id.equals("alarm_Type"))
+		if(colId.equals("alarm_Type"))
 			return new String[] {"list"};
-		if(col_id.equals("alarm_Status"))
+		if(colId.equals("alarm_Status"))
 			return new String[] {"list"};
-		if(col_id.equals("alarm_Time"))
+		if(colId.equals("alarm_Time"))
 			return new String[] {"time"};
-		if(col_id.equals("alarm_Monitoredelement"))
+		if(colId.equals("alarm_Monitoredelement"))
 			return new String[] {"string", "list"};
 
-		if(col_id.equals("alarm_Assigned"))
+		if(colId.equals("alarm_Assigned"))
 			return new String[] {"time"};
-		if(col_id.equals("alarm_Fixed_when"))
+		if(colId.equals("alarm_Fixed_when"))
 			return new String[] {"time"};
-		if(col_id.equals("alarm_Assigned_to"))
+		if(colId.equals("alarm_Assigned_to"))
 			return new String[] {"string", "list"};
-		if(col_id.equals("alarm_Fixed_by"))
+		if(colId.equals("alarm_Fixed_by"))
 			return new String[] {"string", "list"};
 
 		return new String[] {};
 	}
 
-	public FilterPanel getColumnFilterPanel(String col_id, String type)
+	public FilterPanel getColumnFilterPanel(String colId, String type)
 	{
-		if(col_id == null)
+		if(colId == null)
 			return null;
 			if(type.equals("numeric"))
 				return new GeneralEquationFilterPanel();
@@ -103,13 +99,13 @@ public class AlarmFilter extends ObjectResourceFilter
 			if(type.equals("range"))
 				return new GeneralRangeFilterPanel();
 			if(type.equals("list"))
-			{	if(col_id.equals("alarm_Source"))
+			{	if(colId.equals("alarm_Source"))
 					return new GeneralTreeFilterPanel(new AlarmSourceTree());
-				if(col_id.equals("alarm_Monitoredelement"))
+				if(colId.equals("alarm_Monitoredelement"))
 					return new GeneralTreeFilterPanel(new METree());
-				if(col_id.equals("alarm_Type"))
+				if(colId.equals("alarm_Type"))
 					return new GeneralTreeFilterPanel(new AlarmTypeTree());
-				if(col_id.equals("alarm_Status"))
+				if(colId.equals("alarm_Status"))
 					return new GeneralTreeFilterPanel(new AlarmStatusTree());
 			}
 		return null;
@@ -279,7 +275,7 @@ public class AlarmFilter extends ObjectResourceFilter
 			FilterExpression fe = (FilterExpression )getCriteria().get(i);
 			af.addCriterium((FilterExpression )fe.clone());
 		}
-		af.logicScheme = (LogicScheme )logicScheme.clone(af);
+		af.logicScheme = (LogicScheme )this.logicScheme.clone(af);
 		return af;
 	}
 }
