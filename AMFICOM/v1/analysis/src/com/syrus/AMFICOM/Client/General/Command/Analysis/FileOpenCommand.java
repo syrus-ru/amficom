@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import java.awt.Cursor;
@@ -93,7 +94,46 @@ public class FileOpenCommand extends VoidCommand
 		{
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			TraceReader tr = new TraceReader();
-			bs = tr.getData(chooser.getSelectedFile());
+			if (AnalyseMainFrameSimplified.DEBUG) // XXX: saa: probable security bypass
+			{
+				// этот код написан для отладочных целей и предназначен для
+				// считывания рефлектограммы из текстового файла,
+				// если не удается считать с помощью известного формата
+				try
+				{
+					bs = tr.getData(chooser.getSelectedFile());
+				}
+				catch (UnsatisfiedLinkError e)
+				{
+					try
+					{
+						//bs = new BellcoreCreator(new double[] { 30, 30, 30, 22, 21, 20, 19, 10, 1, 1 }).getBS();
+						{
+							FileInputStream fis = new FileInputStream(chooser.getSelectedFile());
+							DataInputStream dis = new DataInputStream(fis);
+							ArrayList al = new ArrayList();
+							String s;
+							while ((s = dis.readLine()) != null)
+								al.add(s);
+							int N = al.size();
+							System.out.println("reading file: N=" + N);
+							double[] dl = new double[N];
+							for (int i = 0; i < N; i++)
+								dl[i] = Double.parseDouble((String )al.get(i));
+							bs = new BellcoreCreator(dl).getBS();
+						}
+					} catch (IOException e1)
+					{
+						// @todo Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+			else
+			{
+				// код, который был "до меня" -- saa
+				bs = tr.getData(chooser.getSelectedFile());
+			}
 			if (bs == null)
 			{
 				bs = tr.getData(chooser.getSelectedFile());
