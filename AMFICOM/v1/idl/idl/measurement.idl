@@ -123,10 +123,9 @@ module corba {
 
 	enum MeasurementStatus {
 		MEASUREMENT_STATUS_SCHEDULED,
-		MEASUREMENT_STATUS_PROCESSING,
-		MEASUREMENT_STATUS_MEASURED,
-		MEASUREMENT_STATUS_ANALYZED,
-		MEASUREMENT_STATUS_EVALUATED,
+		MEASUREMENT_STATUS_ACQUIRING,
+		MEASUREMENT_STATUS_ACQUIRED,
+		MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED,
 		MEASUREMENT_STATUS_COMPLETED,
 		MEASUREMENT_STATUS_ABORTED
 	};
@@ -171,7 +170,7 @@ module corba {
 
 	enum TestStatus {
 		TEST_STATUS_SCHEDULED,	//Сохранён в БД
-		TEST_STATUS_QUEUED,			//Поставлен МУИ в очередь
+//		TEST_STATUS_QUEUED,			//Поставлен МУИ в очередь
 		TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
 		TEST_STATUS_COMPLETED,	//Последнее измерение завершено
 		TEST_STATUS_ABORTED			//Прерван
