@@ -57,8 +57,8 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	protected MapScrollPane scrollPane = null;
 	protected MapImagePanel mapImagePanel = null;
   protected MapJ localMapJ = null;  
-  protected String mapperServletURL = "http://amficom:8081/samples47/servlet/cmapper";
-  protected String mapDefinitionFile = "\\\\amficom\\Mif\\mif1.mdf";
+  protected String mapperServletURL = null;
+  protected String mapDefinitionFile = null;
   
 	public void init()
 	{
@@ -142,32 +142,14 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 * отобразить указанный вид кортографии
 	 * 
 	 */
-//	public void setMap(String dataBasePath, String dataBaseView)
-//	{
-//		try
-//		{
-//			visualMapJ.getMapJ().loadGeoset(
-//					dataBasePath + "\\" + dataBaseView, 
-//					dataBasePath, 
-//					null);
-//
-//			mapImagePanel.add(lnl.logicalLayerMapTool);          
-///*      VisualMapJ visualMapJ;
-//			visualMapJ.add(lnl.logicalLayerMapTool);
-//			lnl.logicalLayerMapTool.setSelected(true);*/
-//	}
-//		catch(Exception e)
-//		{
-//			e.printStackTrace();
-//		}
-//	}
-	public void setMap(String servletURL,String mapDefinitionFile)
+	public void setMap(String mapperServletURL,String mapDefinitionFile)
 	{
-//    this.mapperServletURL = "http://amficom:8081/samples47/servlet/cmapper";
-//    this.mapDefinitionFile = "\\\\amficom\\Mif\\mif.mdf";
+    this.mapDefinitionFile = mapDefinitionFile;
+    this.mapperServletURL = mapperServletURL;    
+    
     this.localMapJ = this.initMapJ(this.mapDefinitionFile);
     this.lnl.setCenter(new DoublePoint(0,0));
-    this.lnl.setScale(100000);
+    this.lnl.setScale(MapPropertiesManager.getZoom());
   }
 
 /**
@@ -228,7 +210,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 			closeMap();
 		}
 		else
-			setMap(conn.getPath(), conn.getView());
+			setMap(conn.getURL(), conn.getPath() + conn.getView());
 	}
 	
 	/**

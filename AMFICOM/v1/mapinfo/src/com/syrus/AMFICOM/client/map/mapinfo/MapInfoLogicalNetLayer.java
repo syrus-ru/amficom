@@ -178,7 +178,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
     {
 			System.out.println("MILNL - Failed setting center.");
     }
-    this.repaint(true);    
   }
 
 	/**
@@ -230,7 +229,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public void repaint(boolean fullRepaint)
 	{
     if (fullRepaint)
-    {  
+    {
       String url = ((MapInfoNetMapViewer)viewer).mapperServletURL;
       url += this.getMapMainParamString();    
   
@@ -333,7 +332,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
     {
       localMapJ.setZoom(z);
       updateZoom();
-      repaint(true);
     }
     catch(Exception exc)
     {
@@ -382,7 +380,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 				to.getY()));
 
       updateZoom();
-      repaint(true);
 		}
 		catch (Exception e)
 		{

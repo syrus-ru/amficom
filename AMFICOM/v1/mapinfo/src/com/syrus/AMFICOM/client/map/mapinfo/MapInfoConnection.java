@@ -7,6 +7,7 @@ public class MapInfoConnection extends MapConnection
 {
 	protected String dataBasePath = "";
 	protected String dataBaseView = "";
+  protected String mapperServletURL = "";
 
 	public MapInfoConnection()
 	{
@@ -81,4 +82,21 @@ public class MapInfoConnection extends MapConnection
 	{
 		return this.dataBaseView;
 	}
+  
+	public void setURL(String mapperURL)
+	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setURL(" + mapperURL + ")");
+
+		this.mapperServletURL = mapperURL;
+	}
+
+	public String getURL()
+	{
+		return this.mapperServletURL;
+	}
+  
 }
