@@ -37,19 +37,19 @@ public class TestFilter extends ObjectResourceFilter {
 		this.filterColumns.add(COLUMN_ALARM);
 
 		this.columnFilterTypes = new HashMap();
-		this.columnFilterTypes.put(COLUMN_KIS, new String[] { COLUMN_FILTER_TYPE_STRING, COLUMN_FILTER_TYPE_LIST});
-		this.columnFilterTypes.put(COLUMN_ME, new String[] { COLUMN_FILTER_TYPE_STRING, COLUMN_FILTER_TYPE_LIST});
-		this.columnFilterTypes.put(COLUMN_TEST_TYPE, new String[] { COLUMN_FILTER_TYPE_LIST});
-		this.columnFilterTypes.put(COLUMN_TEMPORAL_TYPE, new String[] { COLUMN_FILTER_TYPE_LIST});
-		this.columnFilterTypes.put(COLUMN_STATUS, new String[] { COLUMN_FILTER_TYPE_LIST});
-		this.columnFilterTypes.put(COLUMN_TIME, new String[] { COLUMN_FILTER_TYPE_TIME});
-		this.columnFilterTypes.put(COLUMN_ALARM, new String[] { COLUMN_FILTER_TYPE_LIST});
+		this.columnFilterTypes.put(COLUMN_KIS, new String[] { ObjectResourceModel.COLUMN_TYPE_STRING, ObjectResourceModel.COLUMN_TYPE_LIST});
+		this.columnFilterTypes.put(COLUMN_ME, new String[] { ObjectResourceModel.COLUMN_TYPE_STRING, ObjectResourceModel.COLUMN_TYPE_LIST});
+		this.columnFilterTypes.put(COLUMN_TEST_TYPE, new String[] { ObjectResourceModel.COLUMN_TYPE_LIST});
+		this.columnFilterTypes.put(COLUMN_TEMPORAL_TYPE, new String[] { ObjectResourceModel.COLUMN_TYPE_LIST});
+		this.columnFilterTypes.put(COLUMN_STATUS, new String[] { ObjectResourceModel.COLUMN_TYPE_LIST});
+		this.columnFilterTypes.put(COLUMN_TIME, new String[] { ObjectResourceModel.COLUMN_TYPE_TIME});
+		this.columnFilterTypes.put(COLUMN_ALARM, new String[] { ObjectResourceModel.COLUMN_TYPE_LIST});
 
 		this.columnFilterPanel = new HashMap();
-		this.columnFilterPanel.put(COLUMN_FILTER_TYPE_NUMERIC, new GeneralEquationFilterPanel());
-		this.columnFilterPanel.put(COLUMN_FILTER_TYPE_TIME, new GeneralTimeFilterPanel());
-		this.columnFilterPanel.put(COLUMN_FILTER_TYPE_STRING, new GeneralStringFilterPanel());
-		this.columnFilterPanel.put(COLUMN_FILTER_TYPE_RANGE, new GeneralRangeFilterPanel());
+		this.columnFilterPanel.put(ObjectResourceModel.COLUMN_TYPE_NUMERIC, new GeneralEquationFilterPanel());
+		this.columnFilterPanel.put(ObjectResourceModel.COLUMN_TYPE_TIME, new GeneralTimeFilterPanel());
+		this.columnFilterPanel.put(ObjectResourceModel.COLUMN_TYPE_STRING, new GeneralStringFilterPanel());
+		this.columnFilterPanel.put(ObjectResourceModel.COLUMN_TYPE_RANGE, new GeneralRangeFilterPanel());
 
 		Map columnListFilterPanel = new HashMap();
 		columnListFilterPanel.put(COLUMN_KIS, new GeneralTreeFilterPanel(new KISTree()));
@@ -59,7 +59,7 @@ public class TestFilter extends ObjectResourceFilter {
 		columnListFilterPanel.put(COLUMN_STATUS, new GeneralTreeFilterPanel(new StatusTree()));
 		columnListFilterPanel.put(COLUMN_ALARM, new GeneralTreeFilterPanel(new AlarmTree()));
 
-		this.columnFilterPanel.put(COLUMN_FILTER_TYPE_LIST, columnListFilterPanel);
+		this.columnFilterPanel.put(ObjectResourceModel.COLUMN_TYPE_LIST, columnListFilterPanel);
 
 	}
 
@@ -132,12 +132,8 @@ public class TestFilter extends ObjectResourceFilter {
 		String type = (String) vec.elementAt(0);
 		String expId = exp.getId();
 
-		System.out.println("test:" + test.getId());
-		System.out.println("type:" + type);
-		System.out.println("expId:" + expId);
-
-		if (type.equals(COLUMN_FILTER_TYPE_NUMERIC)) {
-			if (expId.equals(COLUMN_FILTER_TYPE_TIME)) {
+		if (type.equals(ObjectResourceModel.COLUMN_TYPE_NUMERIC)) {
+			if (expId.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
 				if (((String) vec.elementAt(1)).equals("=")) {
 					if (test.getStartTime() == Long.parseLong((String) vec.elementAt(2))) {
 						result = true;
@@ -152,21 +148,21 @@ public class TestFilter extends ObjectResourceFilter {
 					}
 				}
 			}
-		} else if (type.equals(COLUMN_FILTER_TYPE_TIME)) {
-			if (expId.equals(COLUMN_FILTER_TYPE_TIME)) {
+		} else if (type.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
+			if (expId.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
 				if (test.getStartTime() > Long.parseLong((String) vec.elementAt(1))
 						&& test.getStartTime() < Long.parseLong((String) vec.elementAt(2))) {
 					result = true;
 				}
 			}
-		} else if (type.equals(COLUMN_FILTER_TYPE_RANGE)) {
-			if (expId.equals(COLUMN_FILTER_TYPE_TIME)) {
+		} else if (type.equals(ObjectResourceModel.COLUMN_TYPE_RANGE)) {
+			if (expId.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
 				if (test.getStartTime() > Long.parseLong((String) vec.elementAt(1))
 						&& test.getStartTime() < Long.parseLong((String) vec.elementAt(2))) {
 					result = true;
 				}
 			}
-		} else if (type.equals(COLUMN_FILTER_TYPE_STRING)) {
+		} else if (type.equals(ObjectResourceModel.COLUMN_TYPE_STRING)) {
 			String substring = (String) vec.elementAt(1);
 			if (expId.equals(COLUMN_KIS)) {
 				String name = Pool.getName(KIS.typ, test.getKisId());
@@ -180,7 +176,7 @@ public class TestFilter extends ObjectResourceFilter {
 					}
 				}
 			}
-		} else if (type.equals(COLUMN_FILTER_TYPE_LIST)) {
+		} else if (type.equals(ObjectResourceModel.COLUMN_TYPE_LIST)) {
 			TreeModelClone tree = (TreeModelClone) vec.elementAt(1);
 			if (expId.equals(COLUMN_KIS)) {
 				FilterTreeNode mmtn = (FilterTreeNode) tree.getRoot();

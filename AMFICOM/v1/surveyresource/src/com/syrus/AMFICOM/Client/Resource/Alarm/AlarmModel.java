@@ -1,19 +1,18 @@
 package com.syrus.AMFICOM.Client.Resource.Alarm;
 
 import java.util.*;
-import java.text.*;
 
 import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 
 public class AlarmModel extends ObjectResourceModel
 {
 	Alarm alarm;
-
-	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
+	
 
 	public AlarmModel(Alarm alarm)
 	{
@@ -47,7 +46,7 @@ public class AlarmModel extends ObjectResourceModel
 //				s = LangModelSurvey.String("label" + String.valueOf(alarm.status));
 			}
 			if(col_id.equals("generated"))
-				s = sdf.format(new Date(alarm.generated));
+				s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(alarm.generated));
 			if(col_id.equals("alarm_type_name"))
 				s = Pool.getName(AlarmType.typ, alarm.type_id);
 			if(col_id.equals("monitored_element_id"))

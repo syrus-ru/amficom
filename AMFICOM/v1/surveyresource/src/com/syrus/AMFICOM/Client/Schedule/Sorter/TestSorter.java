@@ -7,13 +7,13 @@ import java.util.*;
 public class TestSorter extends ObjectResourceSorter
 {
 	String[][] sorted_columns = new String[][]{
-		{COLUMN_KIS_ID, COLUMN_TYPE_STRING},
-		{COLUMN_LOCAL_ID, COLUMN_TYPE_STRING},
-		{COLUMN_START_TIME, COLUMN_TYPE_LONG},
-		{COLUMN_STATUS, COLUMN_TYPE_STRING},
-		{COLUMN_TEMPORAL_TYPE, COLUMN_TYPE_STRING},
-		{COLUMN_TEST_TYPE_ID, COLUMN_TYPE_STRING},
-		{COLUMN_PORT_ID, COLUMN_TYPE_STRING}
+		{ObjectResourceModel.COLUMN_KIS_ID, ObjectResourceModel.COLUMN_TYPE_STRING},
+		{ObjectResourceModel.COLUMN_LOCAL_ID, ObjectResourceModel.COLUMN_TYPE_STRING},
+		{ObjectResourceModel.COLUMN_START_TIME, ObjectResourceModel.COLUMN_TYPE_LONG},
+		{ObjectResourceModel.COLUMN_STATUS, ObjectResourceModel.COLUMN_TYPE_STRING},
+		{ObjectResourceModel.COLUMN_TEMPORAL_TYPE, ObjectResourceModel.COLUMN_TYPE_STRING},
+		{ObjectResourceModel.COLUMN_TEST_TYPE_ID, ObjectResourceModel.COLUMN_TYPE_STRING},
+		{ObjectResourceModel.COLUMN_PORT_ID, ObjectResourceModel.COLUMN_TYPE_STRING}
 		};
 
 	public TestSorter(){

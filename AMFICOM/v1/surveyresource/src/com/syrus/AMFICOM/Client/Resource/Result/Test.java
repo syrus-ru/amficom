@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.1 2004/08/18 13:13:22 bob Exp $
+ * $Id: Test.java,v 1.2 2004/08/19 08:26:57 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems. 
  * Научно-технический центр. 
@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/18 13:13:22 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/19 08:26:57 $
  * @author $Author: bob $
  * @module surveyresource_v1
  */
@@ -113,8 +113,8 @@ public class Test implements ObjectResource, Serializable {
 	public static ObjectResourceSorter getDefaultSorter() {
 		return new ObjectResourceSorter() {
 			
-			private String[][]	sortedColumns	= new String[][] { { ObjectResourceSorter.COLUMN_TYPE_TIME,
-														ObjectResourceSorter.COLUMN_TYPE_LONG}};
+			private String[][]	sortedColumns	= new String[][] { { ObjectResourceModel.COLUMN_TYPE_TIME,
+				ObjectResourceModel.COLUMN_TYPE_LONG}};
 
 			public long getLong(ObjectResource or, String column) {
 				Test test = (Test) or;
