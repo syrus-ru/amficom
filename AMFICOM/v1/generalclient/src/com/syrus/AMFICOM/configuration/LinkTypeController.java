@@ -49,9 +49,9 @@ public final class LinkTypeController implements ObjectResourceController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof LinkType)
+		if (object instanceof AbstractLinkType)
 		{
-			LinkType type = (LinkType)object;
+			AbstractLinkType type = (AbstractLinkType)object;
 			if (key.equals(KEY_NAME))
 				result = type.getName();
 			if (key.equals(KEY_DESCRIPTION))
