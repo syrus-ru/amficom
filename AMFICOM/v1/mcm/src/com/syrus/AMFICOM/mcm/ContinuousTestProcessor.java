@@ -1,5 +1,5 @@
 /*
- * $Id: ContinuousTestProcessor.java,v 1.10 2004/08/14 19:37:27 arseniy Exp $
+ * $Id: ContinuousTestProcessor.java,v 1.11 2004/08/25 11:37:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,14 +10,8 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.NewIdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
@@ -25,8 +19,8 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/14 19:37:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2004/08/25 11:37:37 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 

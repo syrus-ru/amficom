@@ -133,3 +133,6 @@ arch:
 		Makefile \
 		$(IDLDIR)/mcm.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/*.java
+
+lib: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)	

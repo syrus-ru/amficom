@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.20 2004/08/23 20:48:29 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.21 2004/08/25 11:37:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.LinkedList;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -31,8 +33,8 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/23 20:48:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2004/08/25 11:37:37 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -106,37 +108,48 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		Measurement lastMeasurement = null;
 		Result measurementResult = null;
 		try {
-			this.numberOfScheduledMeasurements = this.test.retrieveNumberOfMeasurements();
-			this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
 			lastMeasurement = this.test.retrieveLastMeasurement();
-			switch (lastMeasurement.getStatus().value()) {
-				case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-					this.transceiver.addMeasurement(lastMeasurement, this);
-					break;
-				case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
-					this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
-					break;
-				case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-					measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
-					this.addMeasurementResult(measurementResult);
-					break;
-				case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
-					measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
-					Result analysisResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_ANALYSIS);
-					Result evaluationResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_EVALUATION);
-					MeasurementControlModule.resultList.add(measurementResult);
-					if (analysisResult != null)
-						MeasurementControlModule.resultList.add(analysisResult);
-					if (evaluationResult != null)
-						MeasurementControlModule.resultList.add(evaluationResult);
-					lastMeasurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
-																			 MeasurementControlModule.iAm.getUserId());
-					break;
-			}
 		}
-		catch (DatabaseException de) {
-			Log.errorException(de);
+		catch (ObjectNotFoundException onfe){
+			Log.errorException(onfe);
+		}
+		catch (RetrieveObjectException onfe){
+			Log.errorException(onfe);
 			this.abort();
+		}
+		if (lastMeasurement != null){
+			try{
+				this.numberOfScheduledMeasurements = this.test.retrieveNumberOfMeasurements();
+				this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
+				switch (lastMeasurement.getStatus().value()) {
+					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+						this.transceiver.addMeasurement(lastMeasurement, this);
+						break;
+					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
+						this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
+						break;
+					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
+						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
+						this.addMeasurementResult(measurementResult);
+						break;
+					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
+						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
+						Result analysisResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_ANALYSIS);
+						Result evaluationResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_EVALUATION);
+						MeasurementControlModule.resultList.add(measurementResult);
+						if (analysisResult != null)
+							MeasurementControlModule.resultList.add(analysisResult);
+						if (evaluationResult != null)
+							MeasurementControlModule.resultList.add(evaluationResult);
+						lastMeasurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
+																				 MeasurementControlModule.iAm.getUserId());
+						break;
+				}
+			}
+			catch (DatabaseException de) {
+				Log.errorException(de);
+				this.abort();
+			}
 		}
 	}
 
