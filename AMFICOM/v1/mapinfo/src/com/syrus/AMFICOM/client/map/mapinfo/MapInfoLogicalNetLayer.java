@@ -71,11 +71,15 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
   public void setMapImageSize(int width, int height)
   {
     if ((width > 0) && (height > 0))
+		{
       nmViewer.localMapJ.setDeviceBounds(new DoubleRect(
         0,
         0,
         width,
         height));
+				
+			repaint(true);
+		}		
   }
 
 	/**
