@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.4 2005/01/21 06:49:08 max Exp $
+ * $Id: ARServerImpl.java,v 1.5 2005/02/01 15:09:38 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,10 +11,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.arserver.corba.ARServerPOA;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.StringFieldCondition;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -28,6 +27,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -48,13 +48,16 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/21 06:49:08 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/01 15:09:38 $
  * @author $Author: max $
  * @module arserver_v1
  */
 public class ARServerImpl extends ARServerPOA {
 	
+	private static final long	serialVersionUID	= 3257291335395782967L;
+	
 	private DomainCondition domainCondition;
+	
 	// delete methods
 	public void delete(Identifier_Transferable id_Transferable, 
 			AccessIdentifier_Transferable accessIdentifier)
@@ -80,7 +83,10 @@ public class ARServerImpl extends ARServerPOA {
 			throws AMFICOMRemoteException {
 		Log.debugMessage("ARServerImplementation.deleteList | Trying to delete... ", Log.DEBUGLEVEL03);
 		List idList = new ArrayList(id_Transferables.length);
-        try {
+		for (int i = 0; i < id_Transferables.length; i++) {
+            idList.add(new Identifier(id_Transferables[i]));			
+		}
+		try {
         	ResourceStorableObjectPool.delete(idList);
         } catch (CommunicationException ce) {
             Log.errorException(ce);
@@ -115,8 +121,9 @@ public class ARServerImpl extends ARServerPOA {
 				break;
 			case ImageResourceSort._SCHEME:
 				abstractImageResource = new SchemeImageResource(imageResource_Transferable);
+				break;
 			default:
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO,"Unsupported sort value");
+				throw new AMFICOMRemoteException("Unsupported sort value " + sort.value(), ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO,"Unsupported sort value");
 			}         	
 			ResourceStorableObjectPool.putStorableObject(abstractImageResource);
 			ImageResourceDatabase database = (ImageResourceDatabase) ResourceDatabaseContext.getImageResourceDatabase();
@@ -173,10 +180,11 @@ public class ARServerImpl extends ARServerPOA {
 				case ImageResourceSort._SCHEME:
 					abstractImageResource = new SchemeImageResource(
 							imageResource_Transferables[i]);
+					break;
 				default:
-					throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
+					throw new AMFICOMRemoteException("Unsupported sort value " + sort.value(), ErrorCode.ERROR_RETRIEVE,
 							CompletionStatus.COMPLETED_NO,
-							"Unsupported sort value");
+							"Unsupported sort value " + sort.value());
 				}
 				ResourceStorableObjectPool
 						.putStorableObject(abstractImageResource);
@@ -248,7 +256,7 @@ public class ARServerImpl extends ARServerPOA {
 			throws AMFICOMRemoteException {
 		try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
-            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
             Log.debugMessage("ARServerImpl.transmitImageResources | requiere "
                     + (ids_Transferable.length == 0 ? "all" : Integer
                             .toString(ids_Transferable.length))
@@ -297,7 +305,7 @@ public class ARServerImpl extends ARServerPOA {
             throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
-            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
             Log.debugMessage("ARServerImpl.transmitImageResourcesButIds | requiere "
                     + (identifier_Transferables.length == 0 ? "all" : Integer
                             .toString(identifier_Transferables.length))
