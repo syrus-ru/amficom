@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.1 2004/12/02 15:23:43 bass Exp $
+ * $Id: FileImageResource.java,v 1.2 2004/12/03 19:11:29 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.resource;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.corba.*;
-import java.util.*;
+import java.util.Date;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/12/02 15:23:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/03 19:11:29 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractImageResource {
@@ -22,18 +22,14 @@ public final class FileImageResource extends AbstractImageResource {
 
 	private String fileName;
 
-	private StorableObjectDatabase imageResourceDatabase;
-
 	public FileImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-		this.imageResourceDatabase = ResourceDatabaseContext.getImageResourceDatabase();
-		try {
-			this.imageResourceDatabase.retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
 	}
 
+	/**
+	 * If given a bad argument, will raise an AssertionError if assertions
+	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
+	 */
 	public FileImageResource(final ImageResource_Transferable imageResource) {
 		super(imageResource);
 		final ImageResourceData imageResourceData = imageResource.data;
@@ -79,10 +75,6 @@ public final class FileImageResource extends AbstractImageResource {
 		return fileImageResource;
 	}
 
-	public List getDependencies() {
-		return Collections.EMPTY_LIST;
-	}
-
 	public String getFileName() {
 		return this.fileName;
 	}
@@ -93,12 +85,21 @@ public final class FileImageResource extends AbstractImageResource {
 		return new ImageResource_Transferable(getHeaderTransferable(), imageResourceData);
 	}
 
+	public void setFileName(final String fileName) {
+		this.currentVersion = getNextVersion();
+		setFileName0(fileName);
+	}
+
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final String fileName) {
 		super.setAttributes(created, modified, creatorId, modifierId);
+		this.fileName = fileName;
+	}
+
+	protected void setFileName0(final String fileName) {
 		this.fileName = fileName;
 	}
 }
