@@ -1,5 +1,5 @@
 /*
-* $Id: CollectorWrapper.java,v 1.1 2005/01/25 11:10:23 bob Exp $
+* $Id: CollectorWrapper.java,v 1.2 2005/01/25 11:58:48 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
@@ -25,7 +24,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/25 11:10:23 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/25 11:58:48 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -51,7 +50,7 @@ public class CollectorWrapper implements Wrapper {
 		// empty private constructor
 		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
 				StorableObjectDatabase.COLUMN_MODIFIED, StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIER_ID,
-				COLUMN_NAME, COLUMN_DESCRIPTION, LINK_COLUMN_COLLECTOR_ID, LINK_COLUMN_PHYSICAL_LINK_ID};	
+				COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_CHARACTERISTIC_ID, LINK_COLUMN_PHYSICAL_LINK_ID};	
 	
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
@@ -122,7 +121,7 @@ public class CollectorWrapper implements Wrapper {
 	}
 
 	public void setValue(Object object, String key, Object value) {
-		if (object instanceof CharacteristicType) {
+		if (object instanceof Collector) {
 			Collector collector = (Collector) object;
 			if (key.equals(COLUMN_NAME))
 				collector.setName0((String)value);
