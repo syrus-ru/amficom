@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.5 2005/02/14 15:32:39 arseniy Exp $
+ * $Id: CMGeneralTransmit.java,v 1.6 2005/02/15 09:56:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -38,6 +37,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/14 15:32:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/15 09:56:09 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -731,43 +731,41 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	// Refresh objects from a pool
-	public Identifier_Transferable[] transmitRefreshedGeneralObjects(	StorableObject_Transferable[] storableObjects_Transferables,
-																		AccessIdentifier_Transferable accessIdentifier)
-			throws AMFICOMRemoteException {
+	public Identifier_Transferable[] transmitRefreshedGeneralObjects(StorableObject_Transferable[] storableObjects_Transferables,
+			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
-			Map storableObjectMap = new HashMap();
-			for (int i = 0; i < storableObjects_Transferables.length; i++) {
-				storableObjectMap.put(new Identifier(storableObjects_Transferables[i].id),
-					storableObjects_Transferables[i]);
-			}
+
+			Map storableObjectsTMap = new HashMap();
+			for (int i = 0; i < storableObjects_Transferables.length; i++)
+				storableObjectsTMap.put(new Identifier(storableObjects_Transferables[i].id), storableObjects_Transferables[i]);
+
 			GeneralStorableObjectPool.refresh();
-			Collection storableObjects = GeneralStorableObjectPool.getStorableObjects(new ArrayList(storableObjectMap.keySet()), true);
+			Collection storableObjects = GeneralStorableObjectPool.getStorableObjects(storableObjectsTMap.keySet(), true);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject so = (StorableObject) it.next();
-				StorableObject_Transferable sot = (StorableObject_Transferable) storableObjectMap.get(so.getId());
-				// Checking for confomity
-				Identifier sotCreatorId = new Identifier(sot.creator_id);
-				Identifier sotModifierId = new Identifier(sot.modifier_id);
-				if ((Math.abs(sot.created - so.getCreated().getTime()) < 1000)
-						&& (Math.abs(sot.modified - so.getModified().getTime()) < 1000)
-						&& sotCreatorId.equals(so.getCreatorId()) && sotModifierId.equals(so.getModifierId())) {
+				StorableObject_Transferable sot = (StorableObject_Transferable) storableObjectsTMap.get(so.getId());
+				// Remove objects with older versions as well as objects with the same
+				// versions -- not only with older ones!
+				if (!so.hasNewerVersion(sot.version))
 					it.remove();
-				}
 			}
+
 			int i = 0;
-			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[storableObjects.size()];
-			for (Iterator it = storableObjects.iterator(); it.hasNext(); i++) {
-				StorableObject so = (StorableObject) it.next();
-				identifierTransferables[i] = (Identifier_Transferable) so.getId().getTransferable();
-			}
-			return identifierTransferables;
-		} catch (CommunicationException ce) {
+			Identifier_Transferable[] idsT = new Identifier_Transferable[storableObjects.size()];
+			for (Iterator it = storableObjects.iterator(); it.hasNext(); i++)
+				idsT[i] = (Identifier_Transferable) ((StorableObject) it.next()).getId().getTransferable();
+			Log.debugMessage("CMServer.transmitRefreshedConfigurationObjects | return " + idsT.length + " item(s)", Log.DEBUGLEVEL05);
+			return idsT;
+		}
+		catch (CommunicationException ce) {
 			Log.errorException(ce);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (DatabaseException de) {
+		}
+		catch (DatabaseException de) {
 			Log.errorException(de);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
-		} catch (Throwable e) {
+		}
+		catch (Throwable e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
