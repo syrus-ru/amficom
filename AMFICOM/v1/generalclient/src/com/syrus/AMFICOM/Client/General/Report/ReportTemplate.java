@@ -80,11 +80,14 @@ public class ReportTemplate extends ObjectResource implements Serializable
 	 * <p>Шаблон по моделированию</p>
 	 */
 	static final public String rtt_Modeling = "rtt_Modeling";
-
 	/**
 	 * <p>Шаблон по оптимизации</p>
 	 */
 	static final public String rtt_Optimization = "rtt_Optimization";
+	/**
+	 * <p>Шаблон по схеме</p>
+	 */
+	static final public String rtt_Scheme = "rtt_Scheme";
 	/**
 	 * <p>Все шаблоны</p>
 	 */
@@ -622,6 +625,9 @@ public class ReportTemplate extends ObjectResource implements Serializable
 			this.labels.add(curLabel);
 		}
 
+		// Перекачиваем картинки
+		this.images = new Vector();
+
 		int imagesCount = in.readInt();
 		for (int i = 0; i < imagesCount; i++)
 		{
@@ -648,6 +654,8 @@ public class ReportTemplate extends ObjectResource implements Serializable
 		}
 
 		// Перекачиваем фильтры
+		this.objectResourceFilters = new Vector();
+
 		int filtersCount = in.readInt();
 		for (int i = 0; i < filtersCount; i++)
 		{

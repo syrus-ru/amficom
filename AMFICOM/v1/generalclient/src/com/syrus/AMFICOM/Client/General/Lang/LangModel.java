@@ -82,10 +82,13 @@ public class LangModel {
 			try
 			{
 				string = RESOURCE_BUNDLE.getString(keyName + "Text");
+			}
+			catch (MissingResourceException ex)
+			{
 				try
 				{
 					throw new Exception("key '"
-											  + keyName
+											  + keyName + "Text"
 											  + "' "
 											  + "not found");
 				}
@@ -93,9 +96,6 @@ public class LangModel {
 				{
 					exc.printStackTrace();
 				}
-			}
-			catch (Exception exc)
-			{
 			}
 		}
 		return string;
