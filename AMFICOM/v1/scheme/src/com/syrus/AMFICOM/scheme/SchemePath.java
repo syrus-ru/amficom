@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.8 2005/03/29 15:59:03 bass Exp $
+ * $Id: SchemePath.java,v 1.9 2005/03/30 10:19:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,14 @@ package com.syrus.AMFICOM.scheme;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 import java.util.*;
 
 /**
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/29 15:59:03 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/30 10:19:50 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -279,8 +280,205 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		throw new UnsupportedOperationException();
 	}
 
+	/**********************************************************************
+	 * Non-model methods.                                                 *
+	 **********************************************************************/
+
+	/**
+	 * @param pathElement
+	 * @deprecated
+	 */
+	public PathElement getNextNode(final PathElement pathElement) {
+		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+
+		for (final Iterator pathElementIterator = getPathElements().tailSet(pathElement) .iterator(); pathElementIterator.hasNext();) {
+			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
+			if (pathElement1.getPathElementKind().value() == PathElementKind._SCHEME_ELEMENT && pathElement1.hasOpticalPort())
+				return pathElement1;
+		}
+		return null;
+	}
+
+	/**
+	 * @param pathElement
+	 */
+	public PathElement getNextPathElement(final PathElement pathElement) {
+		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+
+		final SortedSet pathElements  = getPathElements().tailSet(pathElement);
+		if (pathElements.size() == 1)
+			return null;
+		final Iterator pathElementIterator = pathElements.iterator();
+		pathElementIterator.next();
+		return (PathElement) pathElementIterator.next();
+	}
+
+	/**
+	 * @param physicalDistance
+	 */
+	public double getOpticalDistance(final double physicalDistance) {
+		double opticalDistance = .0;
+		double d = .0;
+		for (final Iterator pathElementIterator = getPathElements().iterator(); pathElementIterator.hasNext();) {
+			final PathElement pathElement = (PathElement) pathElementIterator.next();
+			final double physicalLength = SchemeUtils.getPhysicalLength(pathElement);
+			if (d + physicalLength < physicalDistance) {
+				d += physicalLength;
+				opticalDistance += SchemeUtils.getOpticalLength(pathElement);
+			} else {
+				opticalDistance += (physicalDistance - d) * SchemeUtils.getKu(pathElement);
+				break;
+			}
+			
+		}
+		return opticalDistance;
+	}
+
+	/**
+	 * @param pathElement
+	 */
+	public double[] getOpticalDistanceFromStart(final PathElement pathElement) {
+		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+
+		double opticalDistanceFromStart = 0;
+		final SortedSet pathElements = getPathElements();
+		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
+			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
+			if (pathElement1 == pathElement)
+				return new double[]{opticalDistanceFromStart, opticalDistanceFromStart + SchemeUtils.getOpticalLength(pathElement1)};
+			opticalDistanceFromStart += SchemeUtils.getOpticalLength(pathElement1);
+		}
+		/*
+		 * Never.
+		 */
+		return new double[2];
+	}
+
+	/**
+	 * @param opticalDistance
+	 */
+	public PathElement getPathElementByOpticalDistance(final double opticalDistance) {
+		final SortedSet pathElements = getPathElements();
+		if (pathElements.isEmpty())
+			return null;
+
+		double opticalLength = 0;
+		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
+			final PathElement pathElement = (PathElement) pathElementIterator.next();
+			opticalLength += SchemeUtils.getOpticalLength(pathElement);
+			if (opticalLength >= opticalDistance)
+				return pathElement;
+		}
+		return (PathElement) pathElements.last();
+	}
+
+	/**
+	 * @param physicalDistance
+	 * @deprecated
+	 */
+	public PathElement getPathElementByPhysicalDistance(final double physicalDistance) {
+		final SortedSet pathElements = getPathElements();
+		if (pathElements.isEmpty())
+			return null;
+
+		double physicalLength = 0;
+		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
+			final PathElement pathElement = (PathElement) pathElementIterator.next();
+			physicalLength += SchemeUtils.getPhysicalLength(pathElement);
+			if (physicalLength >= physicalDistance)
+				return pathElement;
+		}
+		return (PathElement) pathElements.last();
+	}
+
+	/**
+	 * @param opticalDistance
+	 */
+	public double getPhysicalDistance(final double opticalDistance) {
+		double physicalDistance = .0;
+		double d = .0;
+		for (final Iterator pathElementIterator = getPathElements().iterator(); pathElementIterator.hasNext();) {
+			final PathElement pathElement = (PathElement) pathElementIterator.next();
+			final double opticalLength = SchemeUtils.getOpticalLength(pathElement);
+			if (d + opticalLength < opticalDistance) {
+				d += opticalLength;
+				physicalDistance += SchemeUtils.getPhysicalLength(pathElement);
+			} else {
+				physicalDistance += (opticalDistance - d) / SchemeUtils.getKu(pathElement);
+				break;
+			}
+		}
+		return physicalDistance;
+	}
+
+	/**
+	 * @param pathElement
+	 * @deprecated
+	 */
+	public double[] getPhysicalDistanceFromStart(final PathElement pathElement) {
+		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+
+		double physicalDistanceFromStart = 0;
+		final SortedSet pathElements = getPathElements();
+		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
+			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
+			if (pathElement1 == pathElement)
+				return new double[]{physicalDistanceFromStart, physicalDistanceFromStart + SchemeUtils.getPhysicalLength(pathElement1)};
+			physicalDistanceFromStart += SchemeUtils.getPhysicalLength(pathElement1);
+		}
+		/*
+		 * Never.
+		 */
+		return new double[2];
+	}
+
+	/**
+	 * @param pathElement
+	 * @deprecated
+	 */
+	public PathElement getPreviousNode(final PathElement pathElement) {
+		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+
+		if (pathElement.getPathElementKind().value() == PathElementKind._SCHEME_ELEMENT && pathElement.hasOpticalPort())
+			return pathElement;
+
+		PathElement previousNode = null;
+		for (final Iterator pathElementIterator = getPathElements().headSet(pathElement).iterator(); pathElementIterator.hasNext();) {
+			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
+			if (pathElement1.getPathElementKind().value() == PathElementKind._SCHEME_ELEMENT && pathElement1.hasOpticalPort())
+				previousNode = pathElement1;
+		}
+		return previousNode;
+	}
+
+	/**
+	 * @param pathElement
+	 */
+	public PathElement getPreviousPathElement(final PathElement pathElement) {
+		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		final SortedSet pathElements = getPathElements().headSet(pathElement); 
+		return pathElements.isEmpty() ? null : (PathElement) pathElements.last();
+	}
+
+	/**
+	 * @param pathElement
+	 */
+	public boolean hasNextPathElement(final PathElement pathElement) {
+		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		return pathElement.getSequentialNumber() < getPathElements().size() - 1;
+	}
+
+	/**
+	 * @param pathElement
+	 */
+	public boolean hasPreviousPathElement(final PathElement pathElement) {
+		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		return pathElement.getSequentialNumber() > 0;
+	}
+
 	/**
 	 * @param totalOpticalength
+	 * @deprecated
 	 */
 	public void setTotalOpticalLength(final double totalOpticalength) {
 		final SortedSet pathElements = getPathElements();
@@ -289,6 +487,9 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		setOpticalLength((PathElement) pathElements.first(), (PathElement) pathElements.last(), totalOpticalength);
 	}
 
+	/**
+	 * @param pathElement
+	 */
 	private boolean assertContains(final PathElement pathElement) {
 		final SortedSet pathElements = getPathElements();
 		return pathElements.contains(pathElement)
@@ -303,7 +504,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param endPathElement
 	 * @param opticalLength
 	 */
-	public void setOpticalLength(final PathElement startPathElement, final PathElement endPathElement, final double opticalLength) {
+	private void setOpticalLength(final PathElement startPathElement, final PathElement endPathElement, final double opticalLength) {
 		int greaterThan = endPathElement.compareTo(startPathElement);
 		assert greaterThan != 0;
 		if (greaterThan < 0) {
@@ -333,96 +534,5 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			if (pathElement == endPathElement)
 				break;
 		}
-	}
-
-	public boolean hasPreviousPathElement(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
-		return pathElement.getSequentialNumber() > 0;
-	}
-
-	public boolean hasNextPathElement(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
-		return pathElement.getSequentialNumber() < getPathElements().size() - 1;
-	}
-
-	public PathElement getPreviousPathElement(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
-		final SortedSet pathElements = getPathElements().headSet(pathElement); 
-		return pathElements.isEmpty() ? null : (PathElement) pathElements.last();
-	}
-
-	public PathElement getNextPathElement(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
-
-		final SortedSet pathElements  = getPathElements().tailSet(pathElement);
-		if (pathElements.size() == 1)
-			return null;
-		final Iterator pathElementIterator = pathElements.iterator();
-		pathElementIterator.next();
-		return (PathElement) pathElementIterator.next();
-	}
-
-	public double[] getPhysicalDistanceFromStart(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
-
-		double physicalDistanceFromStart = 0;
-		final SortedSet pathElements = getPathElements();
-		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
-			if (pathElement1 == pathElement)
-				return new double[]{physicalDistanceFromStart, physicalDistanceFromStart + SchemeUtils.getPhysicalLength(pathElement1)};
-			physicalDistanceFromStart += SchemeUtils.getPhysicalLength(pathElement1);
-		}
-		/*
-		 * Never.
-		 */
-		return new double[2];
-	}
-
-	public double[] getOpticalDistanceFromStart(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
-
-		double opticalDistanceFromStart = 0;
-		final SortedSet pathElements = getPathElements();
-		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
-			if (pathElement1 == pathElement)
-				return new double[]{opticalDistanceFromStart, opticalDistanceFromStart + SchemeUtils.getOpticalLength(pathElement1)};
-			opticalDistanceFromStart += SchemeUtils.getOpticalLength(pathElement1);
-		}
-		/*
-		 * Never.
-		 */
-		return new double[2];
-	}
-
-	public PathElement getPathElementByOpticalDistance(final double opticalDistance) {
-		final SortedSet pathElements = getPathElements();
-		if (pathElements.isEmpty())
-			return null;
-
-		double opticalLength = 0;
-		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement = (PathElement) pathElementIterator.next();
-			opticalLength += SchemeUtils.getOpticalLength(pathElement);
-			if (opticalLength >= opticalDistance)
-				return pathElement;
-		}
-		return (PathElement) pathElements.last();
-	}
-
-	public PathElement getPathElementByPhysicalDistance(final double physicalDistance) {
-		final SortedSet pathElements = getPathElements();
-		if (pathElements.isEmpty())
-			return null;
-
-		double physicalLength = 0;
-		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement = (PathElement) pathElementIterator.next();
-			physicalLength += SchemeUtils.getPhysicalLength(pathElement);
-			if (physicalLength >= physicalDistance)
-				return pathElement;
-		}
-		return (PathElement) pathElements.last();
 	}
 }
