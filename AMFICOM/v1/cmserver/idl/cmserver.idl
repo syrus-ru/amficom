@@ -193,7 +193,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::AnalysisTypeButIdsSeq_Transferable transmitAnalysisTypesButIds(
+		com::syrus::AMFICOM::measurement::corba::AnalysisTypeSeq_Transferable transmitAnalysisTypesButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
@@ -202,7 +202,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::EvaluationTypeButIdsSeq_Transferable transmitEvaluationTypesButIds(
+		com::syrus::AMFICOM::measurement::corba::EvaluationTypeSeq_Transferable transmitEvaluationTypesButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);						
@@ -211,7 +211,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::MeasurementTypeButIdsSeq_Transferable transmitMeasurementTypesButIds(
+		com::syrus::AMFICOM::measurement::corba::MeasurementTypeSeq_Transferable transmitMeasurementTypesButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
@@ -220,7 +220,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::ParameterTypeButIdsSeq_Transferable transmitParameterTypesButIds(
+		com::syrus::AMFICOM::measurement::corba::ParameterTypeSeq_Transferable transmitParameterTypesButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
@@ -229,7 +229,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::AnalysisButIdsSeq_Transferable transmitAnalysesButIds(
+		com::syrus::AMFICOM::measurement::corba::AnalysisSeq_Transferable transmitAnalysesButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
@@ -238,7 +238,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::ModelingButIdsSeq_Transferable transmitModelingsButIds(
+		com::syrus::AMFICOM::measurement::corba::ModelingSeq_Transferable transmitModelingsButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
@@ -247,7 +247,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::MeasurementButIdsSeq_Transferable transmitMeasurementsButIds(
+		com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
@@ -256,7 +256,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::MeasurementSetupButIdsSeq_Transferable transmitMeasurementSetupsButIds(
+		com::syrus::AMFICOM::measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetupsButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
@@ -265,7 +265,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable testIds,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::MeasurementButIdsSeq_Transferable transmitMeasurementForTestsButIds(
+		com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable transmitMeasurementForTestsButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable testIds,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
@@ -274,7 +274,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::ResultButIdsSeq_Transferable transmitResultsButIds(
+		com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable transmitResultsButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
@@ -283,7 +283,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::SetButIdsSeq_Transferable transmitSetsButIds(
+		com::syrus::AMFICOM::measurement::corba::SetSeq_Transferable transmitSetsButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
@@ -292,7 +292,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::TemporalPatternButIdsSeq_Transferable transmitTemporalPatternsButIds(
+		com::syrus::AMFICOM::measurement::corba::TemporalPatternSeq_Transferable transmitTemporalPatternsButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);						
@@ -301,7 +301,7 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::TestButIdsSeq_Transferable transmitTestsButIds(
+		com::syrus::AMFICOM::measurement::corba::TestSeq_Transferable transmitTestsButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);		
@@ -310,13 +310,7 @@ module corba {
 			in long long startTime, in long long endTime,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		com::syrus::AMFICOM::measurement::corba::TestButIdsSeq_Transferable transmitTestsByTime(
-			in long long startTime, in long long endTime,
-			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
-			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);		
-
-		
-			
+				
 		
 	};
 };
