@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectTreeNode.java,v 1.2 2005/03/10 07:54:59 stas Exp $
+ * $Id: StorableObjectTreeNode.java,v 1.3 2005/03/10 09:11:37 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,14 +15,13 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/10 07:54:59 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2005/03/10 09:11:37 $
  * @module generalclient_v1
  */
 
 public class StorableObjectTreeNode extends DefaultMutableTreeNode implements MouseListener {
 	private static final long serialVersionUID = 3760850047289668145L;
-	private Object object;
 	private String name;
 	private ImageIcon icon;
 	private boolean expanded = false;
@@ -40,7 +39,7 @@ public class StorableObjectTreeNode extends DefaultMutableTreeNode implements Mo
 	}
 	
 	public StorableObjectTreeNode(Object obj, String name, ImageIcon icon, boolean isFinal) {
-		this.object = obj;
+		super(obj);
 		this.name = name;
 		this.icon = icon;
 		this.setAllowsChildren(!isFinal);
@@ -50,8 +49,11 @@ public class StorableObjectTreeNode extends DefaultMutableTreeNode implements Mo
 		return name;
 	}
 	
+	/**
+	 * @deprecated use getUserObject()
+	 */
 	public Object getObject() {
-		return object;
+		return super.getUserObject();
 	}
 	
 	public Icon getIcon() {
