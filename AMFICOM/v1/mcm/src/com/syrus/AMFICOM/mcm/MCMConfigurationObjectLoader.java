@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.16 2005/01/17 09:03:33 bob Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.17 2005/02/15 15:12:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,8 +36,8 @@ import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathType;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -44,6 +45,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -51,8 +53,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/01/17 09:03:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/02/15 15:12:21 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -66,8 +68,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Equipment type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				equipmentType = new EquipmentType(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable)id.getTransferable()));
-				equipmentType.insert();
+				equipmentType = new EquipmentType(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable) id.getTransferable()));
+				ConfigurationDatabaseContext.getEquipmentTypeDatabase().update(equipmentType, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -75,13 +77,16 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Equipment type '" + id + "' not found on server database");
+					mesg = "Equipment type '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve equipment type '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve equipment type '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return equipmentType;
@@ -95,8 +100,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				portType = new PortType(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable)id.getTransferable()));
-				portType.insert();
+				portType = new PortType(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable) id.getTransferable()));
+				ConfigurationDatabaseContext.getPortTypeDatabase().update(portType, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -104,13 +109,16 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Port type '" + id + "' not found on server database");
+					mesg = "Port type '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve port type '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve port type '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return portType;
@@ -124,8 +132,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Measurement port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				measurementPortType = new MeasurementPortType(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable)id.getTransferable()));
-				measurementPortType.insert();
+				measurementPortType = new MeasurementPortType(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable) id.getTransferable()));
+				ConfigurationDatabaseContext.getMeasurementPortTypeDatabase().update(measurementPortType, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -133,52 +141,20 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Measurement port type '" + id + "' not found on server database");
+					mesg = "Measurement port type '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve measurement port type '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve measurement port type '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return measurementPortType;
 	}
-	
-
-
-//	public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException {
-//		return new PermissionAttributes(id);
-//	}
-
-	//	public Link loadLink(Identifier id) throws DatabaseException, CommunicationException {
-//		Link link = null;
-//		try {
-//			link = new Link(id);
-//		}
-//		catch (ObjectNotFoundException onfe) {
-//			Log.debugMessage("Link '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-//			try {
-//				link = new Link(MeasurementControlModule.mServerRef.transmitLink((Identifier_Transferable)id.getTransferable()));
-//				link.insert();
-//			}
-//			catch (org.omg.CORBA.SystemException se) {
-//				Log.errorException(se);
-//				MeasurementControlModule.activateMServerReference();
-//				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-//			}
-//			catch (AMFICOMRemoteException are) {
-//				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-//					Log.errorMessage("Link '" + id + "' not found on server database");
-//				else
-//					Log.errorMessage("Cannot retrieve Link '" + id + "' from server database -- " + are.message);
-//			}
-//			catch (CreateObjectException coe) {
-//				Log.errorException(coe);
-//			}
-//		}
-//		return link;
-//	}
 
 	public Equipment loadEquipment(Identifier id) throws RetrieveObjectException, CommunicationException {
 		Equipment equipment = null;
@@ -188,8 +164,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Equipment '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				equipment = new Equipment(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable)id.getTransferable()));
-				equipment.insert();
+				equipment = new Equipment(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable) id.getTransferable()));
+				ConfigurationDatabaseContext.getEquipmentDatabase().update(equipment, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -197,13 +173,16 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Equipment '" + id + "' not found on server database");
+					mesg = "Equipment '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve equipment '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve equipment '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return equipment;
@@ -217,8 +196,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				port = new Port(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable)id.getTransferable()));
-				port.insert();
+				port = new Port(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable) id.getTransferable()));
+				ConfigurationDatabaseContext.getPortDatabase().update(port, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -226,13 +205,16 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Port '" + id + "' not found on server database");
+					mesg = "Port '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve port '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve port '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return port;
@@ -246,8 +228,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Transmission path '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				transmissionPath = new TransmissionPath(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable)id.getTransferable()));
-				transmissionPath.insert();
+				transmissionPath = new TransmissionPath(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable) id.getTransferable()));
+				ConfigurationDatabaseContext.getTransmissionPathDatabase().update(transmissionPath, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -255,13 +237,16 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Transmission path '" + id + "' not found on server database");
+					mesg = "Transmission path '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve transmission path '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve transmission path '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return transmissionPath;
@@ -275,8 +260,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("KIS '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				kis = new KIS(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable)id.getTransferable()));
-				kis.insert();
+				kis = new KIS(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable) id.getTransferable()));
+				ConfigurationDatabaseContext.getKISDatabase().update(kis, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -284,18 +269,21 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("KIS '" + id + "' not found on server database");
+					mesg = "KIS '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve KIS '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve KIS '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return kis;
 	}
-    
+
 	public MeasurementPort loadMeasurementPort(Identifier id) throws RetrieveObjectException, CommunicationException {
 		MeasurementPort measurementPort = null;
 		try {
@@ -304,8 +292,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Measurement port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				measurementPort = new MeasurementPort(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable)id.getTransferable()));
-				measurementPort.insert();
+				measurementPort = new MeasurementPort(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable) id.getTransferable()));
+				ConfigurationDatabaseContext.getMeasurementPortDatabase().update(measurementPort, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -313,13 +301,16 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Measurement port '" + id + "' not found on server database");
+					mesg = "Measurement port '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve measurement port '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve measurement port '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return measurementPort;
@@ -333,8 +324,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Monitored element '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				monitoredElement = new MonitoredElement(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable)id.getTransferable()));
-				monitoredElement.insert();
+				monitoredElement = new MonitoredElement(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable) id.getTransferable()));
+				ConfigurationDatabaseContext.getMonitoredElementDatabase().update(monitoredElement, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -342,26 +333,34 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Monitored element '" + id + "' not found on server database");
+					mesg = "Monitored element '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve monitored element '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve monitored element '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return monitoredElement;
 	}	
 
-	public List loadEquipments(List ids) throws DatabaseException, CommunicationException {
+
+
+
+
+	public Collection loadEquipments(Collection ids) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
-		List list;
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		Equipment equipment;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				if(ids.contains(id))
@@ -372,8 +371,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				Log.debugMessage("Equipment '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
 					equipment = new Equipment(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable)id.getTransferable()));
-					equipment.insert();
-					list.add(equipment);
+					collection.add(equipment);
+					loadedObjects.add(equipment);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -381,28 +380,39 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Equipment '" + id + "' not found on server database");
+						mesg = "Equipment '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve equipment '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve equipment '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				//This never be caught
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEquipmentTypes(Collection ids) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-		List list;
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		EquipmentType equipmentType;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				if(ids.contains(id))
@@ -413,8 +423,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				Log.debugMessage("Equipment type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
 					equipmentType = new EquipmentType(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable)id.getTransferable()));
-					equipmentType.insert();
-					list.add(equipmentType);
+					collection.add(equipmentType);
+					loadedObjects.add(equipmentType);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -422,28 +432,39 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Equipment type '" + id + "' not found on server database");
+						mesg = "Equipment type '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve equipment type '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve equipment type '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				//This never be caught
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadKISs(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadKISs(Collection ids) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
-		List list;
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		KIS kis;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				if(ids.contains(id))
@@ -454,8 +475,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				Log.debugMessage("KIS '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
 					kis = new KIS(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable)id.getTransferable()));
-					kis.insert();
-					list.add(kis);
+					collection.add(kis);
+					loadedObjects.add(kis);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -463,28 +484,39 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("KIS '" + id + "' not found on server database");
+						mesg = "KIS '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve KIS '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve KIS '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				//This never be caught
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}	
 
-	public List loadMeasurementPorts(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMeasurementPorts(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
-		List list;
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		MeasurementPort measurementPort;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				if(ids.contains(id))
@@ -495,8 +527,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				Log.debugMessage("Measurement port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
 					measurementPort = new MeasurementPort(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable)id.getTransferable()));
-					measurementPort.insert();
-					list.add(measurementPort);
+					collection.add(measurementPort);
+					loadedObjects.add(measurementPort);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -504,28 +536,39 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Measurement port '" + id + "' not found on server database");
+						mesg = "Measurement port '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve measurement port '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve measurement port '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				//This never be caught
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadMeasurementPortTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMeasurementPortTypes(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase)ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-		List list;
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		MeasurementPortType measurementPortType;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				if(ids.contains(id))
@@ -536,8 +579,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				Log.debugMessage("Measurement port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
 					measurementPortType = new MeasurementPortType(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable)id.getTransferable()));
-					measurementPortType.insert();
-					list.add(measurementPortType);
+					collection.add(measurementPortType);
+					loadedObjects.add(measurementPortType);					
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -545,27 +588,35 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Measurement port type '" + id + "' not found on server database");
+						mesg = "Measurement port type '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve measurement port type '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve measurement port type '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				//This never be caught
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMonitoredElements(Collection ids) throws DatabaseException, CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase)ConfigurationDatabaseContext.getMonitoredElementDatabase();
-		List list;
+		Collection list;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		MonitoredElement monitoredElement;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -580,8 +631,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				Log.debugMessage("Monitored element '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
 					monitoredElement = new MonitoredElement(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable)id.getTransferable()));
-					monitoredElement.insert();
 					list.add(monitoredElement);
+					loadedObjects.add(monitoredElement);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -589,14 +640,20 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Monitored element '" + id + "' not found on server database");
+						mesg = "Monitored element '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve monitored element '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve monitored element '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
@@ -606,14 +663,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		return list;
 	}
 
-	public List loadPorts(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPorts(Collection ids) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase)ConfigurationDatabaseContext.getPortDatabase();
-		List list;
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		Port port;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				if(ids.contains(id))
@@ -624,8 +682,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				Log.debugMessage("Port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
 					port = new Port(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable)id.getTransferable()));
-					port.insert();
-					list.add(port);
+					collection.add(port);
+					loadedObjects.add(port);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -633,31 +691,38 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Port '" + id + "' not found on server database");
+						mesg = "Port '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve port '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve port '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadPortTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPortTypes(Collection ids) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase)ConfigurationDatabaseContext.getPortTypeDatabase();
-		List list;
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		PortType portType;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				if(ids.contains(id))
@@ -668,8 +733,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				Log.debugMessage("Port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
 					portType = new PortType(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable)id.getTransferable()));
-					portType.insert();
-					list.add(portType);
+					collection.add(portType);
+					loadedObjects.add(portType);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -677,31 +742,38 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Port type '" + id + "' not found on server database");
+						mesg = "Port type '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve port type '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve port type '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 	
-	public List loadTransmissionPaths(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadTransmissionPaths(Collection ids) throws DatabaseException, CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase)ConfigurationDatabaseContext.getTransmissionPathDatabase();
-		List list;
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		TransmissionPath transmissionPath;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				if(ids.contains(id))
@@ -712,8 +784,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				Log.debugMessage("Transmission path '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
 					transmissionPath = new TransmissionPath(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable)id.getTransferable()));
-					transmissionPath.insert();
-					list.add(transmissionPath);
+					collection.add(transmissionPath);
+					loadedObjects.add(transmissionPath);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -721,18 +793,27 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Transmission path '" + id + "' not found on server database");
+						mesg = "Transmission path '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve transmission path '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve transmission path '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 
 

@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.2 2005/01/19 20:56:53 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.3 2005/02/15 15:12:20 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,14 +23,16 @@ import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.UserDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -37,7 +40,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/19 20:56:53 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/15 15:12:20 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -51,8 +54,8 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("User '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				user = new User(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable)id.getTransferable()));
-				user.insert();
+				user = new User(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable) id.getTransferable()));
+				AdministrationDatabaseContext.getUserDatabase().update(user, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -60,13 +63,16 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("User '" + id + "' not found on server database");
+					mesg = "User '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve user '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve user '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return user;
@@ -80,8 +86,8 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Domain '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				domain = new Domain(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable)id.getTransferable()));
-				domain.insert();
+				domain = new Domain(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable) id.getTransferable()));
+				AdministrationDatabaseContext.getDomainDatabase().update(domain, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -89,13 +95,16 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Domain '" + id + "' not found on server database");
+					mesg = "Domain '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve domain '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve domain '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return domain;
@@ -109,8 +118,8 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 		catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Server '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
-				server = new Server(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable)id.getTransferable()));
-				server.insert();
+				server = new Server(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable) id.getTransferable()));
+				AdministrationDatabaseContext.getServerDatabase().update(server, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -118,13 +127,16 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Server '" + id + "' not found on server database");
+					mesg = "Server '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve Server '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve Server '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return server;
@@ -139,7 +151,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 			Log.debugMessage("MCM '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 			try {
 				mcm = new MCM(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable()));
-				mcm.insert();
+				AdministrationDatabaseContext.getMCMDatabase().update(mcm, null, StorableObjectDatabase.UPDATE_FORCE);
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
@@ -147,27 +159,34 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
+				String mesg = null;
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("MCM '" + id + "' not found on server database");
+					mesg = "MCM '" + id + "' not found on server database";
 				else
-					Log.errorMessage("Cannot retrieve MCM '" + id + "' from server database -- " + are.message);
+					mesg = "Cannot retrieve MCM '" + id + "' from server database -- " + are.message;
+				Log.errorMessage(mesg);
+				throw new RetrieveObjectException(mesg);
 			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 		return mcm;
 	}
 
 
-	public List loadUsers(List ids) throws DatabaseException, CommunicationException {
+
+
+
+	public Collection loadUsers(Collection ids) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase)AdministrationDatabaseContext.getUserDatabase();
-		List list;
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		User user;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				if(ids.contains(id))
@@ -178,8 +197,8 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 				Log.debugMessage("User '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
 					user = new User(MeasurementControlModule.mServerRef.transmitUser((Identifier_Transferable)id.getTransferable()));
-					user.insert();
-					list.add(user);
+					collection.add(user);
+					loadedObjects.add(user);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -187,43 +206,51 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("User '" + id + "' not found on server database");
+						mesg = "User '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve user '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve user '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				//This never be caught
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadDomains(List ids) throws DatabaseException, CommunicationException {
-		DomainDatabase database = (DomainDatabase)AdministrationDatabaseContext.getDomainDatabase();
-		List list;
+	public Collection loadDomains(Collection ids) throws DatabaseException, CommunicationException {
+		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.getDomainDatabase();
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		Domain domain;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
+				if (ids.contains(id))
 					it.remove();
 			}
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("Domain '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
-					domain = new Domain(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable)id.getTransferable()));
-					domain.insert();
-					list.add(domain);
+					domain = new Domain(MeasurementControlModule.mServerRef.transmitDomain((Identifier_Transferable) id.getTransferable()));
+					collection.add(domain);
+					loadedObjects.add(domain);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -231,43 +258,51 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Domain '" + id + "' not found on server database");
+						mesg = "Domain '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve domain '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve domain '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				//This never be caught
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadServers(List ids) throws DatabaseException, CommunicationException {
-		ServerDatabase database = (ServerDatabase)AdministrationDatabaseContext.getServerDatabase();
-		List list;
+	public Collection loadServers(Collection ids) throws DatabaseException, CommunicationException {
+		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.getServerDatabase();
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		Server server;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
+				if (ids.contains(id))
 					it.remove();
 			}
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("Server '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
-					server = new Server(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable)id.getTransferable()));
-					server.insert();
-					list.add(server);
+					server = new Server(MeasurementControlModule.mServerRef.transmitServer((Identifier_Transferable) id.getTransferable()));
+					collection.add(server);
+					loadedObjects.add(server);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -275,44 +310,51 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Server '" + id + "' not found on server database");
+						mesg = "Server '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve Server '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve Server '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				//This never be caught
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadServers | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadServers | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 
-
-	public List loadMCMs(List ids) throws DatabaseException, CommunicationException {
-		MCMDatabase database = (MCMDatabase)AdministrationDatabaseContext.getMCMDatabase();
-		List list;
+	public Collection loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
+		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getMCMDatabase();
+		Collection collection;
 		List copyOfList;
+		List loadedObjects = new LinkedList();
 		MCM mcm;
 		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
+			collection = database.retrieveByIds(ids, null);
+			copyOfList = new LinkedList(collection);
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
+				if (ids.contains(id))
 					it.remove();
 			}
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("MCM '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
-					mcm = new MCM(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable()));
-					mcm.insert();
-					list.add(mcm);
+					mcm = new MCM(MeasurementControlModule.mServerRef.transmitMCM((Identifier_Transferable) id.getTransferable()));
+					collection.add(mcm);
+					loadedObjects.add(mcm);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -320,21 +362,28 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
+					String mesg = null;
 					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("MCM '" + id + "' not found on server database");
+						mesg = "MCM '" + id + "' not found on server database";
 					else
-						Log.errorMessage("Cannot retrieve MCM '" + id + "' from server database -- " + are.message);
+						mesg = "Cannot retrieve MCM '" + id + "' from server database -- " + are.message;
+					Log.errorMessage(mesg);
+					throw new RetrieveObjectException(mesg);
 				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+			}
+			try {
+				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
+			}
+			catch (VersionCollisionException vce) {
+				//This never be caught
+				Log.errorException(vce);
 			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return collection;
 	}
 
 }
