@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.18 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.19 2005/02/03 16:24:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -50,7 +50,7 @@ import javax.swing.JDesktopPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.18 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/03 16:24:34 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -272,7 +272,7 @@ public class MapImportCommand extends ImportCommand
 			else
 			if(type.equals(NODE_TYPE))
 			{
-				if(field.equals(StorableObjectDatabase.COLUMN_ID))
+				if(field.equals(StorableObjectWrapper.COLUMN_ID))
 					value = super.getClonedId(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, (String )value);
 				else
 				if(field.equals(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID))
