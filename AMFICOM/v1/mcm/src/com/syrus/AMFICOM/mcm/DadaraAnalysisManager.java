@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.15 2004/10/19 08:16:54 max Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.16 2004/10/20 08:43:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
-import com.syrus.AMFICOM.general.BellcoreStructure;
-import com.syrus.AMFICOM.general.BellcoreReader;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.BellcoreReader;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
@@ -40,8 +40,8 @@ import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/19 08:16:54 $
- * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2004/10/20 08:43:47 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
