@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.59 2005/02/11 11:55:22 bob Exp $
+ * $Id: TemporalPattern.java,v 1.60 2005/02/14 10:58:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
@@ -34,8 +33,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/02/11 11:55:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.60 $, $Date: 2005/02/14 10:58:51 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -890,16 +889,6 @@ public class TemporalPattern extends StorableObject {
 			return temporalPattern;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("TemporalPattern.createInstance | cannot generate identifier ", e);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.temporalPatternDatabase != null)
-				this.temporalPatternDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 	

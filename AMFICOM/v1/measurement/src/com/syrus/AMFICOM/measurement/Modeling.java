@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.26 2005/02/11 11:55:22 bob Exp $
+ * $Id: Modeling.java,v 1.27 2005/02/14 10:58:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/02/11 11:55:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2005/02/14 10:58:51 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -103,16 +103,6 @@ public class Modeling extends Action {
 
 		this.modelingDatabase = MeasurementDatabaseContext.modelingDatabase;
 
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.modelingDatabase != null)
-				this.modelingDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
 	}
 
 	public Object getTransferable() {

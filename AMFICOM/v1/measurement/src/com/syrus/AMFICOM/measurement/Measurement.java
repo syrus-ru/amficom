@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.50 2005/02/11 11:55:22 bob Exp $
+ * $Id: Measurement.java,v 1.51 2005/02/14 10:58:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/02/11 11:55:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.51 $, $Date: 2005/02/14 10:58:51 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -119,16 +119,6 @@ public class Measurement extends Action {
 		this.testId = testId;
 
 		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.measurementDatabase != null)
-				this.measurementDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
 	}
 
 	public Object getTransferable() {

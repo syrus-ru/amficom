@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.45 2005/02/11 11:55:22 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.46 2005/02/14 10:58:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/02/11 11:55:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.46 $, $Date: 2005/02/14 10:58:51 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -177,31 +177,6 @@ public class MeasurementSetup extends StorableObject {
 			throw new CreateObjectException("MeasurementSetup.createInstance | cannot generate identifier ", e);
 		}
 	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.measurementSetupDatabase != null)
-				this.measurementSetupDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
-	}
-
-//	public static MeasurementSetup getInstance(MeasurementSetup_Transferable mst) throws CreateObjectException {
-//		MeasurementSetup measurementSetup = new MeasurementSetup(mst);
-//		
-//		measurementSetup.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
-//		try {
-//			if (measurementSetup.measurementSetupDatabase != null)
-//				measurementSetup.measurementSetupDatabase.insert(measurementSetup);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
-//		
-//		return measurementSetup;
-//	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
 		return this.monitoredElementIds.contains(monitoredElementId);
