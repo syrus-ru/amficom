@@ -14,4 +14,4 @@ $LIB/general.jar:\
 $LIB/event.jar:\
 $LIB/util.jar
 
-exec $JAVA -server -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.cmserver.ClientMeasurementServer
+exec $JAVA -Xloggc:./gc -Xmx256m -server -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.cmserver.ClientMeasurementServer
