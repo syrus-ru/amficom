@@ -1,5 +1,5 @@
 /**
- * $Id: ApplicationModel.java,v 1.4 2004/07/28 11:54:51 krupenn Exp $
+ * $Id: ApplicationModel.java,v 1.5 2004/07/28 12:26:15 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -26,7 +26,7 @@ import java.util.Hashtable;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/07/28 11:54:51 $
+ * @version $Revision: 1.5 $, $Date: 2004/07/28 12:26:15 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -39,7 +39,7 @@ public class ApplicationModel
 	 * конструктора без параметров нет, так как элемент определ€етс€ 
 	 * идентификатором
 	 * 
-	 * @version $Revision: 1.4 $, $Date: 2004/07/28 11:54:51 $
+	 * @version $Revision: 1.5 $, $Date: 2004/07/28 12:26:15 $
 	 * @module
 	 * @author $Author: krupenn $
 	 * @see
@@ -545,6 +545,15 @@ public class ApplicationModel
 	public void removeListener(ApplicationModelListener l)
 	{
 		listenerList.remove(ApplicationModelListener.class, l);
+	}
+
+	/**
+	 * проинформировать слушателей о том, что изменилось состо€ние 
+	 * всех элементов модели
+	 */
+	public void fireModelChanged()
+	{
+		fireModelChanged(new String [] { "" });
 	}
 
 	/**
