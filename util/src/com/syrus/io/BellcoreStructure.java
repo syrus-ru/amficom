@@ -1,5 +1,18 @@
+/*
+ * $Id: BellcoreStructure.java,v 1.3 2004/07/07 14:36:44 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.io;
 
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/07/07 14:36:44 $
+ * @author $Author: bass $
+ * @module util
+ */
 public class BellcoreStructure // extends ObjectResource
 {
 	public static final int MAP = 1;

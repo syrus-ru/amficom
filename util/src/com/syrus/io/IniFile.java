@@ -1,15 +1,21 @@
+/*
+ * $Id: IniFile.java,v 1.4 2004/07/07 14:36:44 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.io;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.Vector;
+import java.io.*;
+import java.util.*;
 
 /**
- * @deprecated use Properties
+ * @version $Revision: 1.4 $, $Date: 2004/07/07 14:36:44 $
+ * @author $Author: bass $
+ * @module util
+ * @deprecated use {@link Properties} instead.
  */
 public class IniFile {
 
@@ -72,7 +78,6 @@ public class IniFile {
 
 	/**
 	 * @deprecated remove it when remove all Vectors
-	 *  
 	 */
 	private void findKeys() {
 		this.keys = new Vector();
@@ -84,5 +89,4 @@ public class IniFile {
 			this.values.add(this.properties.getProperty(key));
 		}
 	}
-
 }
