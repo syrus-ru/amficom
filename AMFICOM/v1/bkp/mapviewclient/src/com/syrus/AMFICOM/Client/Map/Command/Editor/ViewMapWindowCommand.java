@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.15 2005/02/24 13:38:42 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.16 2005/02/24 14:37:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
 /**
  * Команда отображает окно карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/24 13:38:42 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/24 14:37:24 $
  * @module mapviewclient_v1
  */
 public class ViewMapWindowCommand extends VoidCommand
@@ -80,16 +80,18 @@ public class ViewMapWindowCommand extends VoidCommand
 	{
 		try
 		{
-			ApplicationContext aC = new ApplicationContext();
-			aC.setApplicationModel(this.factory.create());
-			aC.setSessionInterface(this.aContext.getSessionInterface());
-			aC.setDispatcher(this.dispatcher);
-	
 			this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 			
 			if(this.mapFrame == null)
 			{
+				ApplicationContext aC = new ApplicationContext();
+				aC.setApplicationModel(this.factory.create());
+				aC.setSessionInterface(this.aContext.getSessionInterface());
+				aC.setDispatcher(this.dispatcher);
+	
 				this.mapFrame = new MapFrame();
+				this.mapFrame.setContext(aC);
+
 				this.desktop.add(this.mapFrame);
 				Dimension dim = this.desktop.getSize();
 				this.mapFrame.setLocation(0, 0);
@@ -98,7 +100,6 @@ public class ViewMapWindowCommand extends VoidCommand
 				setMapFrame();
 			}
 	
-			this.mapFrame.setContext(aC);
 			this.mapFrame.setVisible(true);
 			this.dispatcher.notify(new MapEvent(this.mapFrame, MapEvent.MAP_FRAME_SHOWN));
 			this.aContext.getDispatcher().notify(new StatusMessageEvent(
