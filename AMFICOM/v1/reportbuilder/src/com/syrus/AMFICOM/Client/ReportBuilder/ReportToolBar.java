@@ -264,6 +264,7 @@ public class ReportToolBar
 				SelectTemplate.SAVE,
 				mainWindow.layoutWOCPanel.reportTemplate);
 
+    selectTemplateDialog.setSize(400,300);
 		selectTemplateDialog.setLocation(
 				mainWindow.getX() + mainWindow.getWidth() / 2 -
 				selectTemplateDialog.getWidth() / 2,
@@ -296,6 +297,7 @@ public class ReportToolBar
 				SelectTemplate.OPEN,
 				null);
 
+    selectTemplateDialog.setSize(400,300);
 		selectTemplateDialog.setLocation(
 				mainWindow.getX() + mainWindow.getWidth() / 2 -
 				selectTemplateDialog.getWidth() / 2,

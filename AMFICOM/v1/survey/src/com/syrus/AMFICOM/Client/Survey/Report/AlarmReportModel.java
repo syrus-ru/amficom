@@ -236,7 +236,7 @@ public class AlarmReportModel extends ObjectResourceReportModel
 		return af;
 	}
 
-	public void setData(ReportTemplate rt, Object data)
+	public void setData(ReportTemplate rt, AMTReport aReport)
 	{
 	}
 

@@ -248,24 +248,31 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 			else if (s.equals("templateElementRoot"))
 			{
-/*				AlarmReportModel alarmModel = new AlarmReportModel();
+				SchemeReportModel schemeModel = new SchemeReportModel();
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
-					alarmModel,
-					alarmModel.getObjectsName(),
-					true);
-
-				vec.add(ortn);
-				registerSearchableNode("", ortn);*/
-        
-				ObserveReportModel observeModel = new ObserveReportModel();
-				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
-					observeModel,
-					observeModel.getObjectsName(),
+					schemeModel,
+					schemeModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
 				registerSearchableNode("", ortn);
-        
+
+				ortn = new ObjectResourceTreeNode(
+					"EquipmentChars",
+					LangModelConfig.getString("label_equipChars"),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
+
+				MapReportModel mapModel = new MapReportModel();
+				ortn = new ObjectResourceTreeNode(
+					mapModel,
+					mapModel.getObjectsName(),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
@@ -290,19 +297,19 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				vec.add(ortn);
 				registerSearchableNode("", ortn);
 
-				EvaluationReportModel erModel = new EvaluationReportModel();
+				SurveyReportModel srModel = new SurveyReportModel();
 				ortn = new ObjectResourceTreeNode(
-					erModel,
-					erModel.getObjectsName(),
+					srModel,
+					srModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
 				registerSearchableNode("", ortn);
 
-				SurveyReportModel srModel = new SurveyReportModel();
+				EvaluationReportModel erModel = new EvaluationReportModel();
 				ortn = new ObjectResourceTreeNode(
-					srModel,
-					srModel.getObjectsName(),
+					erModel,
+					erModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
@@ -326,19 +333,10 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				vec.add(ortn);
 				registerSearchableNode("", ortn);
 
-				SchemeReportModel schemeModel = new SchemeReportModel();
+				ObserveReportModel observeModel = new ObserveReportModel();
 				ortn = new ObjectResourceTreeNode(
-					schemeModel,
-					schemeModel.getObjectsName(),
-					true);
-
-				vec.add(ortn);
-				registerSearchableNode("", ortn);
-
-				MapReportModel mapModel = new MapReportModel();
-				ortn = new ObjectResourceTreeNode(
-					mapModel,
-					mapModel.getObjectsName(),
+					observeModel,
+					observeModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
@@ -350,14 +348,6 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
-
-				ortn = new ObjectResourceTreeNode(
-					"EquipmentChars",
-					LangModelConfig.getString("label_equipChars"),
-					true);
-
-				vec.add(ortn);
-				registerSearchableNode("", ortn);
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",

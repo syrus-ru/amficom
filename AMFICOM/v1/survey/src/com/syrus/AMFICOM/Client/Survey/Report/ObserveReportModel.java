@@ -132,49 +132,11 @@ public class ObserveReportModel extends APOReportModel
 	}
 
   
-	public void setData(ReportTemplate rt, Object data)
+	public void setData(ReportTemplate rt, AMTReport aReport)
 	{
 		if (rt.templateType.equals(ReportTemplate.rtt_Observe))
 		{
-			AMTReport aReport = (AMTReport) data;
-			for (Iterator it = rt.objectRenderers.iterator(); it.hasNext();)
-			{
-				RenderingObject curRenderer = (RenderingObject)it.next();
-				String itsTableTitle = curRenderer.getReportToRender().field;
-
-				for (Iterator it2 = aReport.tables.iterator(); it2.hasNext();)
-				{
-					AMTReportTable curTable = (AMTReportTable)it2.next();
-					if (curTable.title.equals(itsTableTitle))
-					{
-						try
-						{
-							curRenderer.getReportToRender().setReserve(curTable);
-						}
-						catch (Exception exc)
-						{}
-						break;
-					}
-				}
-
-				if (curRenderer.getReportToRender().getReserve() != null)
-					continue;
-
-				for (Iterator it2 = aReport.panels.iterator(); it2.hasNext();)
-				{
-					AMTReportPanel curPanel = (AMTReportPanel)it2.next();
-					if (curPanel.title.equals(itsTableTitle))
-					{
-						try
-						{
-							curRenderer.getReportToRender().setReserve(curPanel);
-						}
-						catch (Exception exc)
-						{}
-						break;
-					}
-				}
-			}
+      super.setData(rt,aReport);
 		}
 	}
   

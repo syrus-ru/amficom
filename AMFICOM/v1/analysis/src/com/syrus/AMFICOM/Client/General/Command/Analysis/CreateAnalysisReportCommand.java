@@ -41,7 +41,9 @@ public class CreateAnalysisReportCommand extends VoidCommand
 			SimpleResizableFrame rf = (SimpleResizableFrame)it.next();
 			rc.setParameter(PANEL, rf);
 		}
-
+  
+    rc.type = this.type;
+    
 		return rc;
 	}
 

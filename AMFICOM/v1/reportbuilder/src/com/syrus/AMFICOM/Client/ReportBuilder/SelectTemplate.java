@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.ReportBuilder;
 
-
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -236,16 +235,24 @@ public class SelectTemplate extends JDialog
 
 	private void setComboBoxData()
 	{
-		comboData = new String[9];
+		comboData = new String[11];
 		comboData[0] = ReportTemplate.rtt_AllTemplates;
-		comboData[1] = ReportTemplate.rtt_Evaluation;
-		comboData[2] = ReportTemplate.rtt_Analysis;
-		comboData[3] = ReportTemplate.rtt_Prediction;
-		comboData[4] = ReportTemplate.rtt_Modeling;
-		comboData[5] = ReportTemplate.rtt_Survey;
-		comboData[6] = ReportTemplate.rtt_Optimization;
-		comboData[7] = ReportTemplate.rtt_Scheme;
-		comboData[8] = ReportTemplate.rtt_Map;    
+
+		comboData[1] = ReportTemplate.rtt_Scheme;
+		comboData[2] = ReportTemplate.rtt_Map;
+		comboData[3] = ReportTemplate.rtt_Optimization;
+    
+		comboData[4] = ReportTemplate.rtt_Sheduler;        
+    
+		comboData[5] = ReportTemplate.rtt_Analysis;
+		comboData[6] = ReportTemplate.rtt_Survey;    
+		comboData[7] = ReportTemplate.rtt_Evaluation;
+
+		comboData[8] = ReportTemplate.rtt_Prediction;
+		comboData[9] = ReportTemplate.rtt_Modeling;
+
+		comboData[10] = ReportTemplate.rtt_Observe;
+
 
 		for (int i = 0; i < comboData.length; i++)
 			templateTypesComboBox.addItem(LangModelReport.getString(comboData[i]));
