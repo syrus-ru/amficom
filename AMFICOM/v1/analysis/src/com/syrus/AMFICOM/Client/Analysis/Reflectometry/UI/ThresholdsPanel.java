@@ -70,10 +70,29 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		currpos = mev.getPoint();
 		isRbutton = SwingUtilities.isRightMouseButton(mev);
 
-		boolean allThresholds = this.isToPaintAllThresholds();
+		boolean allThresholds = this.isToPaintAllThresholds(); // режим "все пороги"
+		boolean isOutside = false; // true если клик вне x-пределов текущего события
 
-		// если это текущее событие - пытаемся "ухватить" (drag) порог
-		this.c_TH = this.et_mtm.getThresholdHandle(
+		if (!allThresholds) // определяем isOutside
+		{
+			// проверяем, попадает ли X мыши в область текущего события
+			if (this.c_event >= 0)
+			{
+				SimpleReflectogramEvent simpleEvent = this.et_mtm.getSimpleEvent(this.c_event);
+				double currposF = coord2indexF(this.currpos.x);
+				double mouseCouplingF = MOUSE_COUPLING / this.scaleX;
+				if (!(currposF >= simpleEvent.getBegin() - mouseCouplingF
+						&& currposF <= simpleEvent.getEnd() + mouseCouplingF ))
+					isOutside = true;
+			}
+			else
+				isOutside = true; // текущее событие не выбрано
+		}
+
+		// если не isOutside, то пытаемся "ухватить" (drag) порог
+		this.c_TH = isOutside
+			? null
+			: this.et_mtm.getThresholdHandle(
 			coord2indexF(this.currpos.x), // we need float value, without rounding
 			coord2value(this.currpos.y),
 			MOUSE_COUPLING / this.scaleX,
@@ -87,6 +106,10 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		{
 			if (c_event < 0 || !c_TH.isRelevantToNEvent(c_event))
 				c_TH = null;
+		}
+		// проверяем также, чтоб клик сделан в области данного события
+		if (c_TH != null && !allThresholds)
+		{
 		}
 
 		if (this.c_TH != null) {
