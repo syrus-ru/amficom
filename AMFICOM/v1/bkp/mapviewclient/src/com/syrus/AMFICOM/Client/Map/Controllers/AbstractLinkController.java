@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.3 2005/01/24 16:51:32 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.4 2005/01/26 10:17:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,38 +11,34 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import java.awt.Color;
+import java.awt.Stroke;
+import java.util.Iterator;
+import java.util.List;
+
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-
-import java.awt.Color;
-import java.awt.Stroke;
-
-import java.util.Iterator;
-import java.util.List;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
 
 /**
  * линейный элемента карты 
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/24 16:51:32 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/26 10:17:31 $
  * @module
  * @author $Author: krupenn $
  * @see

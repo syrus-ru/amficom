@@ -1,5 +1,5 @@
 /*
- * $Id: MapCloseCommand.java,v 1.6 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapCloseCommand.java,v 1.7 2005/01/26 10:17:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/26 10:17:31 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -48,20 +48,20 @@ public class MapCloseCommand extends VoidCommand
 	{
 //		mapFrame.saveConfig();
 
-		if(map != null)
-		try
-		{
-			// TODO should be 'remove', node 'delete'
-			MapStorableObjectPool.delete(map.getId());
-		}
-		catch (CommunicationException e)
-		{
-			e.printStackTrace();
-		}
-		catch (DatabaseException e)
-		{
-			e.printStackTrace();
-		}
+//		if(map != null)
+//		try
+//		{
+//			// TODO should be 'remove', node 'delete'
+//			MapStorableObjectPool.delete(map.getId());
+//		}
+//		catch (CommunicationException e)
+//		{
+//			e.printStackTrace();
+//		}
+//		catch (DatabaseException e)
+//		{
+//			e.printStackTrace();
+//		}
 
 		setResult(Command.RESULT_OK);
 	}

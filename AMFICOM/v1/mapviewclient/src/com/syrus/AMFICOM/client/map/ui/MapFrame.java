@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.21 2005/01/24 16:51:32 krupenn Exp $
+ * $Id: MapFrame.java,v 1.22 2005/01/26 10:17:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,7 +79,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.21 $, $Date: 2005/01/24 16:51:32 $
+ * @version $Revision: 1.22 $, $Date: 2005/01/26 10:17:31 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -459,7 +459,7 @@ public class MapFrame extends JInternalFrame
 		if(map.isChanged())
 		{
 			String message = "Объект " + map.getName() 
-				+ " [" + LangModelMap.getString("nodemap") + "] "
+				+ " [" + LangModelMap.getString("Map") + "] "
 				+ "изменен. Сохранить?";
 				
 			int ret = JOptionPane.showConfirmDialog(
@@ -533,7 +533,7 @@ public class MapFrame extends JInternalFrame
 		if(mapView.isChanged())
 		{
 			String message = "Объект " + mapView.getName() 
-				+ " [" + LangModel.getString("nodemapview") + "] "
+				+ " [" + LangModel.getString("MapView") + "] "
 				+ "изменен. Сохранить?";
 				
 			int ret = JOptionPane.showConfirmDialog(

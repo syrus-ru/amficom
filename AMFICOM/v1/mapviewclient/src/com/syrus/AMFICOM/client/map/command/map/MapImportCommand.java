@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.16 2005/01/24 16:51:32 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.17 2005/01/26 10:17:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -33,6 +34,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.TopologicalNodeWrapper;
 
 import java.io.File;
 
@@ -48,7 +50,7 @@ import javax.swing.JDesktopPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.16 $, $Date: 2005/01/24 16:51:32 $
+ * @version $Revision: 1.17 $, $Date: 2005/01/26 10:17:31 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -270,10 +272,10 @@ public class MapImportCommand extends ImportCommand
 			else
 			if(type.equals(NODE_TYPE))
 			{
-				if(field.equals(TopologicalNode.COLUMN_ID))
+				if(field.equals(StorableObjectDatabase.COLUMN_ID))
 					value = super.getClonedId(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, (String )value);
 				else
-				if(field.equals(TopologicalNode.COLUMN_PHYSICAL_LINK_ID))
+				if(field.equals(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID))
 					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (String )value);
 			}
 			else
