@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 public class Test_Database extends StorableObject_Database {
+	public static final String COLUMN_CREATED = "created"; 
 
 	private Test fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof Test)
