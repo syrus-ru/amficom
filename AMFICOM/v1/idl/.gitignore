@@ -17,8 +17,6 @@ sqlj.properties
 .idl
 .xtra
 .sqlj
-.project
-.classpath
 .settings
 .nbattrs
 .nbintdb
