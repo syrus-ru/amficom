@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.13 2005/04/04 12:55:27 bob Exp $
+ * $Id: Heap.java,v 1.14 2005/04/06 11:23:24 bob Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: bob $
- * @version $Revision: 1.13 $, $Date: 2005/04/04 12:55:27 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/06 11:23:24 $
  * @module
  */
 public class Heap
@@ -126,6 +126,12 @@ public class Heap
 		Color color = null;
 		System.out.println("id is '" + id + "'");
 		color = (Color) idColorMap.get(id);
+		if (color == null) {
+			color = UIManager.getColor(id);
+			if (color != null) {
+				idColorMap.put(id, color);
+			}
+		}
 		if (color == null) {
 			int i = 0;
 			String id1 = null;
