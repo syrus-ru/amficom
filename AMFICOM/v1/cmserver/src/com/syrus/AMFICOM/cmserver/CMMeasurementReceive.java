@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementReceive.java,v 1.4 2005/02/10 12:09:02 bob Exp $
+ * $Id: CMMeasurementReceive.java,v 1.5 2005/02/14 13:50:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,9 @@ package com.syrus.AMFICOM.cmserver;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -66,8 +67,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/10 12:09:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/02/14 13:50:04 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementReceive extends CMConfigurationReceive {
@@ -87,7 +88,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			Analysis analysis = new Analysis(analysis_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(analysis);
 			AnalysisDatabase analysisDatabase = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
-			analysisDatabase.update(analysis, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			analysisDatabase.update(analysis, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return analysis.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -132,7 +134,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				analysisList.add(analysisType);
 			}
 			AnalysisDatabase analysisDatabase = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
-			analysisDatabase.update(analysisList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			analysisDatabase.update(analysisList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(analysisList);
 		}
 		catch (UpdateObjectException e) {
@@ -173,7 +176,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			AnalysisType analysisType = new AnalysisType(analysisType_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(analysisType);
 			AnalysisTypeDatabase analysisTypeDatabase = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
-			analysisTypeDatabase.update(analysisType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			analysisTypeDatabase.update(analysisType, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return analysisType.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -219,7 +223,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				analysisTypeList.add(analysisType);
 			}
 		AnalysisTypeDatabase analysisTypeDatabase = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
-		analysisTypeDatabase.update(analysisTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		analysisTypeDatabase.update(analysisTypeList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		return super.getListHeaders(analysisTypeList);
 		}
 		catch (UpdateObjectException e) {
@@ -263,7 +268,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			Evaluation evaluation = new Evaluation(evaluation_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(evaluation);
 			EvaluationDatabase evaluationDatabase = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
-			evaluationDatabase.update(evaluation, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			evaluationDatabase.update(evaluation, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return evaluation.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -308,7 +314,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				evaluationList.add(evaluation);
 			}
 			EvaluationDatabase evaluationDatabase = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
-			evaluationDatabase.update(evaluationList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			evaluationDatabase.update(evaluationList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(evaluationList);
 		}
 		catch (UpdateObjectException e) {
@@ -349,7 +356,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			EvaluationType evaluationType = new EvaluationType(evaluationType_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(evaluationType);
 			EvaluationTypeDatabase evaluationTypeDatabase = (EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase();
-			evaluationTypeDatabase.update(evaluationType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			evaluationTypeDatabase.update(evaluationType, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return evaluationType.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -394,7 +402,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				evaluationTypeList.add(evaluationType);
 		}
 		EvaluationTypeDatabase evaluationTypeDatabase = (EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase();
-		evaluationTypeDatabase.update(evaluationTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		evaluationTypeDatabase.update(evaluationTypeList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		return super.getListHeaders(evaluationTypeList);
 		}
 		catch (UpdateObjectException e) {
@@ -435,7 +444,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			Measurement measurement = new Measurement(measurement_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(measurement);
 			MeasurementDatabase measurementDatabase = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
-			measurementDatabase.update(measurement, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			measurementDatabase.update(measurement, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return measurement.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -480,7 +490,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				measurementList.add(measurement);
 			}
 			MeasurementDatabase measurementDatabase = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
-			measurementDatabase.update(measurementList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			measurementDatabase.update(measurementList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(measurementList);
 		}
 		catch (UpdateObjectException e) {
@@ -521,7 +532,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementSetup measurementSetup = new MeasurementSetup(measurementSetup_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(measurementSetup);
 			MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext.getMeasurementSetupDatabase();
-			measurementSetupDatabase.update(measurementSetup, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			measurementSetupDatabase.update(measurementSetup, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return measurementSetup.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -567,7 +579,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				measurementSetupList.add(measurementSetup);
 			}
 		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext.getMeasurementSetupDatabase();
-		measurementSetupDatabase.update(measurementSetupList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		measurementSetupDatabase.update(measurementSetupList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		return super.getListHeaders(measurementSetupList);
 		}
 		catch (UpdateObjectException e) {
@@ -608,7 +621,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			MeasurementType measurementType = new MeasurementType(measurementType_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(measurementType);
 			MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase();
-			measurementTypeDatabase.update(measurementType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			measurementTypeDatabase.update(measurementType, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return measurementType.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -653,7 +667,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				measurementTypeList.add(measurementType);
 			}
 			MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext .getMeasurementTypeDatabase();
-			measurementTypeDatabase.update(measurementTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			measurementTypeDatabase.update(measurementTypeList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(measurementTypeList);
 		}
 		catch (UpdateObjectException e) {
@@ -694,7 +709,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			Modeling modeling = new Modeling(modeling_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(modeling);
 			ModelingDatabase modelingDatabase = (ModelingDatabase) MeasurementDatabaseContext.getModelingDatabase();
-			modelingDatabase.update(modeling, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			modelingDatabase.update(modeling, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return modeling.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -735,7 +751,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			ModelingType modelingType = new ModelingType(modelingType_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(modelingType);
 			ModelingTypeDatabase modelingTypeDatabase = (ModelingTypeDatabase) MeasurementDatabaseContext.getModelingTypeDatabase();
-			modelingTypeDatabase.update(modelingType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			modelingTypeDatabase.update(modelingType, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return modelingType.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -783,8 +800,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			}
 			ModelingTypeDatabase modelingTypeDatabase = (ModelingTypeDatabase) MeasurementDatabaseContext
 					.getModelingTypeDatabase();
-			modelingTypeDatabase.update(modelingTypeList, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			modelingTypeDatabase.update(modelingTypeList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(modelingTypeList);
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -828,8 +845,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				modelingList.add(modeling);
 			}
 			ModelingDatabase modelingDatabase = (ModelingDatabase) MeasurementDatabaseContext.getModelingDatabase();
-			modelingDatabase.update(modelingList, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			modelingDatabase.update(modelingList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(modelingList);
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -866,7 +883,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			Result result = new Result(result_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(result);
 			ResultDatabase resultDatabase = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
-			resultDatabase.update(result, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			resultDatabase.update(result, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return result.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -911,7 +929,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				resultList.add(result);
 			}
 			ResultDatabase resultDatabase = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
-			resultDatabase.update(resultList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			resultDatabase.update(resultList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(resultList);
 		}
 		catch (UpdateObjectException e) {
@@ -952,7 +971,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			Test test = new Test(test_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(test);
 			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
-			testDatabase.update(test, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			testDatabase.update(test, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return test.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -997,7 +1017,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				testList.add(test);
 			}
 			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
-			testDatabase.update(testList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			testDatabase.update(testList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(testList);
 		}
 		catch (UpdateObjectException e) {
@@ -1038,7 +1059,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			TemporalPattern temporalPattern = new TemporalPattern(temporalPattern_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(temporalPattern);
 			TemporalPatternDatabase temporalPatternDatabase = (TemporalPatternDatabase) MeasurementDatabaseContext.getTemporalPatternDatabase();
-			temporalPatternDatabase.update(temporalPattern, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			temporalPatternDatabase.update(temporalPattern, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return temporalPattern.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -1083,7 +1105,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				temporalPatternList.add(temporalPattern);
 			}
 			TemporalPatternDatabase temporalPatternDatabase = (TemporalPatternDatabase) MeasurementDatabaseContext.getTemporalPatternDatabase();
-			temporalPatternDatabase.update(temporalPatternList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			temporalPatternDatabase.update(temporalPatternList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(temporalPatternList);
 		}
 		catch (UpdateObjectException e) {
@@ -1124,7 +1147,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			Set set = new Set(set_Transferable);
 			MeasurementStorableObjectPool.putStorableObject(set);
 			SetDatabase setDatabase = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
-			setDatabase.update(set, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			setDatabase.update(set, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return set.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -1169,7 +1193,8 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 				setList.add(set);
 			}
 			SetDatabase setDatabase = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
-			setDatabase.update(setList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			setDatabase.update(setList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(setList);
 		}
 		catch (UpdateObjectException e) {

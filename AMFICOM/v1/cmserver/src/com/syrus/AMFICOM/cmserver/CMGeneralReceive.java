@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.7 2005/02/10 12:09:02 bob Exp $
+ * $Id: CMGeneralReceive.java,v 1.8 2005/02/14 13:50:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServerPOA;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -23,6 +22,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
@@ -46,8 +47,8 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/10 12:09:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/02/14 13:50:04 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -102,8 +103,8 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 			GeneralStorableObjectPool.putStorableObject(parameterType);
 			ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase) GeneralDatabaseContext
 					.getParameterTypeDatabase();
-			parameterTypeDatabase.update(parameterType, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			parameterTypeDatabase.update(parameterType, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return parameterType.getHeaderTransferable();
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -144,8 +145,8 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 			}
 			ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase) GeneralDatabaseContext
 					.getParameterTypeDatabase();
-			parameterTypeDatabase.update(parameterTypeList, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			parameterTypeDatabase.update(parameterTypeList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return this.getListHeaders(parameterTypeList);
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -178,8 +179,8 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 			GeneralStorableObjectPool.putStorableObject(characteristic);
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext
 					.getCharacteristicDatabase();
-			characteristicDatabase.update(characteristic, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			characteristicDatabase.update(characteristic, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return characteristic.getHeaderTransferable();
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -221,8 +222,8 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext
 					.getCharacteristicDatabase();
-			characteristicDatabase.update(characteristicList, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			characteristicDatabase.update(characteristicList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return this.getListHeaders(characteristicList);
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -260,8 +261,8 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 			GeneralStorableObjectPool.putStorableObject(characteristicType);
 			CharacteristicTypeDatabase characteristicTypeDatabase = (CharacteristicTypeDatabase) GeneralDatabaseContext
 					.getCharacteristicDatabase();
-			characteristicTypeDatabase.update(characteristicType, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			characteristicTypeDatabase.update(characteristicType, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return characteristicType.getHeaderTransferable();
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -301,8 +302,8 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 
 			CharacteristicTypeDatabase characteristicTypeDatabase = (CharacteristicTypeDatabase) GeneralDatabaseContext
 					.getCharacteristicTypeDatabase();
-			characteristicTypeDatabase.update(characteristicTypeList, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			characteristicTypeDatabase.update(characteristicTypeList, new Identifier(accessIdentifier.user_id), force
+					? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return this.getListHeaders(characteristicTypeList);
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
