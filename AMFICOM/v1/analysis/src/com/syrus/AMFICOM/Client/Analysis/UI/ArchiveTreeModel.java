@@ -8,7 +8,6 @@ import java.awt.*;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -16,6 +15,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 
 /*
 |- Архив

@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 
-import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.io.BellcoreStructure;

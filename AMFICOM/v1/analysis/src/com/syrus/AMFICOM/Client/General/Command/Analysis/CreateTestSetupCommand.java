@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 
 public class CreateTestSetupCommand extends VoidCommand
 {

@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.measurement.*;
 
 //import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import com.syrus.AMFICOM.client_.general.ui_.tree.UniTreePanel;
+import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 
 public class TestSetupLoadDialog extends JDialog implements OperationListener
 {
