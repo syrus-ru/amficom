@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.100 2005/02/17 08:08:07 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.101 2005/02/18 16:39:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/02/17 08:08:07 $
+ * @version $Revision: 1.101 $, $Date: 2005/02/18 16:39:47 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -1190,13 +1190,12 @@ public abstract class StorableObjectDatabase {
 	}
 
 	public void delete(Identifier id) throws IllegalDataException {
-		String storableObjectIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			String sql = SQL_DELETE_FROM + this.getEnityName()
-					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + storableObjectIdStr;
+					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
 			Log.debugMessage("StorableObjectDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}

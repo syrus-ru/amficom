@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.15 2005/02/11 18:40:16 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.16 2005/02/18 16:38:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/11 18:40:16 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/18 16:38:39 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -382,9 +382,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			//  delete
 			for (Iterator it = databaseIdCharacteristics.keySet().iterator(); it.hasNext();) {
 				Identifier dbCharacteristicId = (Identifier) it.next();
-				if(!characteristicIds.contains(dbCharacteristicId)) {
-					super.delete(dbCharacteristicId);
-				}
+				if(!characteristicIds.contains(dbCharacteristicId))
+					this.delete(dbCharacteristicId);
 			}
 
 			//  insert or update
