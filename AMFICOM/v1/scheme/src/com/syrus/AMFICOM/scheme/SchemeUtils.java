@@ -1,3 +1,11 @@
+/*
+ * $Id: SchemeUtils.java,v 1.4 2004/12/21 16:50:42 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.*;
@@ -6,6 +14,13 @@ import com.syrus.AMFICOM.general.corba.Identifier;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
+/**
+ * Functionality will be partially moved to {@link PathElement}. 
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/12/21 16:50:42 $
+ * @module scheme_v1
+ */
 public class SchemeUtils
 {
 	private static final char separator = ':';
