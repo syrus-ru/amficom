@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.15 2005/03/28 08:25:13 bass Exp $
+ * $Id: MeasurementPath.java,v 1.16 2005/04/04 13:32:07 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/03/28 08:25:13 $
+ * @version $Revision: 1.16 $, $Date: 2005/04/04 13:32:07 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -154,7 +154,7 @@ public class MeasurementPath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection getCharacteristics() 
+	public Set getCharacteristics() 
 	{
 		return this.schemePath.getCharacteristics();
 	}
@@ -620,9 +620,9 @@ public class MeasurementPath implements MapElement
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(Collection characteristics) {
+	public void setCharacteristics(Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -635,9 +635,9 @@ public class MeasurementPath implements MapElement
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(Collection characteristics) {
+	public void setCharacteristics0(Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 }

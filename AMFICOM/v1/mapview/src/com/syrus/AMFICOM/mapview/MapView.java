@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.18 2005/04/01 13:08:48 bob Exp $
+* $Id: MapView.java,v 1.19 2005/04/04 13:32:07 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -17,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bob $
- * @version $Revision: 1.18 $, $Date: 2005/04/01 13:08:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/04/04 13:32:07 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -109,7 +109,7 @@ public class MapView extends DomainMember {
 		this.scale = mvt.scale;
 		this.defaultScale = mvt.defaultScale;		
 
-		List schemeIds = new ArrayList(mvt.schemeIds.length);
+		Set schemeIds = new HashSet(mvt.schemeIds.length);
 		for (int i = 0; i < mvt.schemeIds.length; i++)
 			schemeIds.add(new Identifier(mvt.schemeIds[i]));
 
@@ -200,7 +200,7 @@ public class MapView extends DomainMember {
 		return dependencies;
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] schemeIdsTransferable = new Identifier_Transferable[this.schemes.size()];
 		for (Iterator iterator = this.schemes.iterator(); iterator.hasNext();)
@@ -238,13 +238,13 @@ public class MapView extends DomainMember {
 		super.changed = true;
 	}
 	
-	protected void setSchemes0(List schemes) {
+	protected void setSchemes0(Set schemes) {
 		this.schemes.clear();
 		if (schemes != null)
 			this.schemes.addAll(schemes);
 	}
 	
-	public void setSchemeIds(List schemeIds) {
+	public void setSchemeIds(Set schemeIds) {
 		this.setSchemes0(schemeIds);
 		super.changed = true;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.9 2005/04/01 13:16:07 bob Exp $
+ * $Id: UnboundNode.java,v 1.10 2005/04/04 13:32:07 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.mapview;
 
 import java.util.Set;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,8 +30,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному 
  * ни к какому элементу топологической схемы.
  * 
- * @author $Author: bob $
- * @version $Revision: 1.9 $, $Date: 2005/04/01 13:16:07 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/04/04 13:32:07 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -210,7 +211,7 @@ public class UnboundNode extends SiteNode
 	 * Suppress since this class is not storable 
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public Object getTransferable()
+	public IDLEntity getTransferable()
 	{
 		throw new UnsupportedOperationException();
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.7 2005/04/01 13:16:07 bob Exp $
+ * $Id: UnboundLink.java,v 1.8 2005/04/04 13:32:07 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.mapview;
 
 import java.util.Set;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
  * Элемент непривязанной линии. Использыется как составляющая честь 
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
- * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/04/01 13:16:07 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/04/04 13:32:07 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -160,7 +161,7 @@ public class UnboundLink extends PhysicalLink
 	 * Suppress since this class is not storable 
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public Object getTransferable()
+	public IDLEntity getTransferable()
 	{
 		throw new UnsupportedOperationException();
 	}

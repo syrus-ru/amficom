@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.8 2005/03/30 10:28:23 bass Exp $
+ * $Id: Marker.java,v 1.9 2005/04/04 13:32:07 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import java.util.*;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * Название: Маркер связывания оптической дистанции Lo, полученной      * 
@@ -51,7 +52,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/03/30 10:28:23 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/04 13:32:07 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -485,7 +486,7 @@ public class Marker extends AbstractNode
 	 * Suppress since this class is not storable 
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public List getDependencies()
+	public Set getDependencies()
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -505,16 +506,16 @@ public class Marker extends AbstractNode
 	 * Suppress since this class is not storable 
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public Object getTransferable()
+	public IDLEntity getTransferable()
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(Collection characteristics) {
+	public void setCharacteristics(Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -527,9 +528,9 @@ public class Marker extends AbstractNode
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(Collection characteristics) {
+	public void setCharacteristics0(Set characteristics) {
 		throw new UnsupportedOperationException();
 	}
 }

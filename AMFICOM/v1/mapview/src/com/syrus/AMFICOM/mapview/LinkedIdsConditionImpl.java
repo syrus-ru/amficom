@@ -1,15 +1,13 @@
-/**
- * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/04/01 13:08:48 bob Exp $
+/*-
+ * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/04/04 13:32:07 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.mapview;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -20,52 +18,48 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $
- * @author $Author: bob $
- * @module map_v1
+ * @version $Revision: 1.4 $
+ * @author $Author: bass $
+ * @module mapview_v1
  */
-class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
-
-	private LinkedIdsConditionImpl(Set linkedIds, Short entityCode) {
+final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
+	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
+		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
 
-	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-		this.linkedIds = Collections.singleton(identifier);
-		this.entityCode = entityCode;
-	}
-
-	private boolean checkDomain(DomainMember domainMember) throws IllegalObjectEntityException {
-		boolean condition;
+	private boolean checkDomain(final DomainMember domainMember) {
+		boolean condition = false;
 		try {
-			Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
-			condition = false;
+			final Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
 			/* if linked ids is domain id */
-			for (Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
-				Identifier id = (Identifier) it.next();
+			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
+				final Identifier id = (Identifier) it.next();
 				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
-					Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
+					final Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.isChild(domain))
 						condition = true;
 
 				}
 
 			}
-		} catch (ApplicationException e) {
-			throw new IllegalObjectEntityException(e.getMessage(), IllegalObjectEntityException.UNKNOWN_ENTITY_CODE);
+		} catch (final ApplicationException ae) {
+			Log.errorException(ae);
 		}
 		return condition;
 	}
 
-	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		DomainMember domainMember;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MAPVIEW_ENTITY_CODE:
-				domainMember = (MapView) object;
+				domainMember = (MapView) storableObject;
 				break;
 			default:
 				throw new UnsupportedOperationException("LinkedIdsConditionImpl.isConditionTrue | entityCode "
@@ -76,18 +70,18 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		return condition;
 	}
 
-	public void setEntityCode(Short entityCode) throws IllegalObjectEntityException {
+	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.MAPVIEW_ENTITY_CODE:
 				this.entityCode = entityCode;
 				break;
 			default:
 				throw new IllegalObjectEntityException("LinkedIdsConditionImpl.setEntityCode | entityCode "
-						+ ObjectEntities.codeToString(entityCode.shortValue()) + " is unknown for this condition", IllegalObjectEntityException.UNKNOWN_ENTITY_CODE);
+						+ ObjectEntities.codeToString(entityCode.shortValue()) + " is unknown for this condition", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 	}
 
-	public boolean isNeedMore(Set collection) {
+	public boolean isNeedMore(final Set storableObjects) {
 		return true;
 	}
 }
