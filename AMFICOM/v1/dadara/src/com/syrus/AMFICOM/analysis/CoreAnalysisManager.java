@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.3 2004/12/20 13:54:50 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.4 2004/12/20 15:47:45 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2004/12/20 13:54:50 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/20 15:47:45 $
  * @module
  */
 
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 
 public class CoreAnalysisManager
 {
-	private CoreAnalysisManager() {
+	protected CoreAnalysisManager() {
 	}
 
 	private static native double[] gauss(double[] y, double center,
