@@ -17,6 +17,9 @@ import javax.swing.Icon;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
+
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 
 public class ResizableLayeredPanel extends JPanel
 {
@@ -72,6 +75,8 @@ public class ResizableLayeredPanel extends JPanel
 
 		this.add(toolbar, BorderLayout.NORTH);
 		this.add(mainPanel, BorderLayout.CENTER);
+		
+		this.mainPanel.setBackground(UIManager.getColor(AnalysisResourceKeys.COLOR_GRAPHICS_BACKGROUND));
 
 		toolbar.setVisible(false);
 
@@ -103,7 +108,7 @@ public class ResizableLayeredPanel extends JPanel
 
 	protected void updColorModel()
 	{
-		mainPanel.setBackground(SystemColor.window);
+//		mainPanel.setBackground(SystemColor.window);
 	}
 
 	public void setGraphPanel(SimpleGraphPanel panel)

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.5 2005/03/23 16:38:46 bob Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.6 2005/03/23 17:00:11 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.Client.General.Model;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/23 16:38:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/23 17:00:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -30,6 +30,7 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	COLOR_CONNECTOR							= "connectColor";
 	String	COLOR_END								= "endColor";
 	String	COLOR_MARKER							= "analysisMarkerColor";
+	String	COLOR_GRAPHICS_BACKGROUND				= "graphicsBackgroundColor";
 
 	String	ICON_ANALYSIS_MINI						= "com.syrus.AMFICOM.icon.analisys.mainmini";
 	String	ICON_SURVEY_MINI						= "com.syrus.AMFICOM.icon.survey.mainmini";

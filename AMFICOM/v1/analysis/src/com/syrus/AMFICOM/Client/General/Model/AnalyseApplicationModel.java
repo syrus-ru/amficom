@@ -163,6 +163,8 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		defaults.put(AnalysisResourceKeys.COLOR_END, new Color(160,32,255));
 		defaults.put(AnalysisResourceKeys.COLOR_MARKER, Color.BLACK);
 		
+		defaults.put(AnalysisResourceKeys.COLOR_GRAPHICS_BACKGROUND, Color.WHITE);
+		
 //		defaults.put("Panel.background", Color.WHITE);
 		defaults.put("Table.background", Color.WHITE);
 		defaults.put("Table.foreground", Color.BLACK);
