@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.64 2004/12/22 17:42:48 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.65 2004/12/27 14:42:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2004/12/22 17:42:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.65 $, $Date: 2004/12/27 14:42:08 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -563,7 +563,8 @@ public abstract class StorableObjectDatabase {
 	}
 	
 	protected void checkAndUpdateEntities(List localStorableObjects, boolean force) throws IllegalDataException, UpdateObjectException, VersionCollisionException {
-
+		if (localStorableObjects == null || localStorableObjects.isEmpty())
+			return;
 		List idsList = new LinkedList();
 		for(Iterator it=localStorableObjects.iterator();it.hasNext();) {
 			StorableObject storableObject = (StorableObject)it.next();
