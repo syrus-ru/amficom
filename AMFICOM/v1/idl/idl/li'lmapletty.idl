@@ -1,5 +1,5 @@
 /*
- * $Id: li'lmapletty.idl,v 1.10 2004/12/09 15:40:02 bob Exp $
+ * $Id: li'lmapletty.idl,v 1.11 2004/12/17 14:49:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -88,9 +88,11 @@ module com {
 
 							general::corba::IdentifierSeq_Transferable characteristicIds;				
 					};
-					
+
 					typedef sequence<SiteNode_Transferable> SiteNodeSeq_Transferable;
-					
+					typedef SiteNode_Transferable SiteNode;
+					typedef sequence<SiteNode> SiteNodeSeq;
+
 					// was MapPhysicalNodeElement
 					// MapPhysicalNodeElement is topological node
 					struct TopologicalNode_Transferable {
