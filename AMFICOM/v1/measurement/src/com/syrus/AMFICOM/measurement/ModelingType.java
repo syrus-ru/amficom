@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.2 2005/01/18 15:21:15 bass Exp $
+ * $Id: ModelingType.java,v 1.3 2005/01/19 20:52:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,12 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Date;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -29,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/18 15:21:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/01/19 20:52:56 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -44,9 +46,6 @@ public class ModelingType extends ActionType {
 
 	public ModelingType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		
-		this.inParameterTypes = new LinkedList();
-		this.outParameterTypes = new LinkedList();
 
 		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;
 		try {
@@ -102,10 +101,10 @@ public class ModelingType extends ActionType {
 					codename,
 					description);
 
-		this.inParameterTypes = new LinkedList();
+		this.inParameterTypes = new ArrayList();
 		this.setInParameterTypes0(inParameterTypes);
 
-		this.outParameterTypes = new LinkedList();
+		this.outParameterTypes = new ArrayList();
 		this.setOutParameterTypes0(outParameterTypes);
 
 		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;

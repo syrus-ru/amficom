@@ -1,14 +1,12 @@
 MODULE_NAME = measurement_v1
 
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-IDLDIR=../idl_v1/idl
+IDLDIR = ../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
-
-HOST=mongol
-SERVICE_NAME=mongol
+HOST = mongol
+SERVICE_NAME = mongol
 
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
@@ -31,15 +29,14 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
+APPCLASSPATH := $(LIBDIR)/configuration.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+
 
 SOURCES := com/syrus/AMFICOM/resource/LangModelMeasurement.java \
 		com/syrus/AMFICOM/measurement/DatabaseMeasurementObjectLoader.java \
 		com/syrus/AMFICOM/measurement/MeasurementObjectLoader.java \
 		com/syrus/AMFICOM/measurement/MeasurementStorableObjectPool.java \
 		com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
-		com/syrus/AMFICOM/measurement/ParameterTypeCodenames.java \
-		com/syrus/AMFICOM/measurement/ParameterType.java \
-		com/syrus/AMFICOM/measurement/ParameterTypeDatabase.java \
 		com/syrus/AMFICOM/measurement/ActionType.java \
 		com/syrus/AMFICOM/measurement/MeasurementType.java \
 		com/syrus/AMFICOM/measurement/MeasurementTypeDatabase.java \

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.43 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.44 2005/01/19 20:52:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,16 +10,16 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Iterator;
-
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/27 21:00:01 $
+ * @version $Revision: 1.44 $, $Date: 2005/01/19 20:52:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
 public class AnalysisType extends ActionType {
 
 	private static final long	serialVersionUID	= 3257284751344874800L;
-	
+
 	private List inParameterTypes;
 	private List criteriaParameterTypes;
 	private List etalonParameterTypes;
@@ -50,11 +50,6 @@ public class AnalysisType extends ActionType {
 	public AnalysisType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new LinkedList();
-		this.criteriaParameterTypes = new LinkedList();
-		this.etalonParameterTypes = new LinkedList();
-		this.outParameterTypes = new LinkedList();
-		
 		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
 			this.analysisTypeDatabase.retrieve(this);
@@ -123,16 +118,16 @@ public class AnalysisType extends ActionType {
 					codename,
 					description);
 
-		this.inParameterTypes = new LinkedList();
+		this.inParameterTypes = new ArrayList();
 		this.setInParameterTypes0(inParameterTypes);
 
-		this.criteriaParameterTypes = new LinkedList();
+		this.criteriaParameterTypes = new ArrayList();
 		this.setCriteriaParameterTypes0(criteriaParameterTypes);
 
-		this.etalonParameterTypes = new LinkedList();
+		this.etalonParameterTypes = new ArrayList();
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 
-		this.outParameterTypes = new LinkedList();
+		this.outParameterTypes = new ArrayList();
 		this.setOutParameterTypes0(outParameterTypes);
 
 		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;

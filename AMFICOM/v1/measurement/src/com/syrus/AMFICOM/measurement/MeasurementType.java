@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.43 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.44 2005/01/19 20:52:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,9 +10,9 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/27 21:00:01 $
+ * @version $Revision: 1.44 $, $Date: 2005/01/19 20:52:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -50,10 +51,6 @@ public class MeasurementType extends ActionType {
 
 	public MeasurementType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		
-		this.inParameterTypes = new LinkedList();
-		this.outParameterTypes = new LinkedList();
-		this.measurementPortTypes = new LinkedList();
 
 		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
@@ -122,13 +119,13 @@ public class MeasurementType extends ActionType {
 					codename,
 					description);
 
-		this.inParameterTypes = new LinkedList(); 
+		this.inParameterTypes = new ArrayList(); 
 		this.setInParameterTypes0(inParameterTypes);
 		
-		this.outParameterTypes = new LinkedList();
+		this.outParameterTypes = new ArrayList();
 		this.setOutParameterTypes0(outParameterTypes);
 		
-		this.measurementPortTypes = new LinkedList();
+		this.measurementPortTypes = new ArrayList();
 		this.setMeasurementPortTypes0(measurementPortTypes);
 		
 		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.47 2005/01/14 18:09:56 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.48 2005/01/19 20:52:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import oracle.sql.BLOB;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.administration.DomainCondition;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -46,7 +47,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/01/14 18:09:56 $
+ * @version $Revision: 1.48 $, $Date: 2005/01/19 20:52:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -169,7 +170,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 											 parameterType,
-											 ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
+											 ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
 				parameters.add(parameter);
 			}
 		}

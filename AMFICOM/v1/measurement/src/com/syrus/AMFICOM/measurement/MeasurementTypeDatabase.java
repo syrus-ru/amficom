@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.51 2004/12/29 15:19:02 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.52 2005/01/19 20:52:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -44,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/12/29 15:19:02 $
+ * @version $Revision: 1.52 $, $Date: 2005/01/19 20:52:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */

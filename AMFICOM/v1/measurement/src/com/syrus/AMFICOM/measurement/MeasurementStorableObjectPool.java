@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.61 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.62 2005/01/19 20:52:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2004/12/27 21:00:01 $
+ * @version $Revision: 1.62 $, $Date: 2005/01/19 20:52:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -34,8 +34,6 @@ import com.syrus.util.Log;
 public class MeasurementStorableObjectPool extends StorableObjectPool {
 
 	private static final int		OBJECT_POOL_MAP_SIZE			= 14;		/* Number of entities  */
-
-	private static final int		PARAMETERTYPE_OBJECT_POOL_SIZE		= 9;
 
 	private static final int		MEASUREMENTTYPE_OBJECT_POOL_SIZE	= 1;
 
@@ -69,9 +67,9 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	private static MeasurementStorableObjectPool instance;
 
 	private MeasurementStorableObjectPool() {
-		// empty
+		// singleton
 	}
-	
+
 	private MeasurementStorableObjectPool(Class cacheMapClass){
 		super(cacheMapClass);
 	}
@@ -88,7 +86,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		try {
 			clazz = Class.forName(cacheClass.getName());
 			instance = new MeasurementStorableObjectPool(clazz);
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
 		}
 		init(mObjectLoader1, size);
@@ -102,7 +101,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 
 		mObjectLoader = mObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, size);
@@ -128,7 +126,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 
 		mObjectLoader = mObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, MEASUREMENTTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, ANALYSISTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, EVALUATIONTYPE_OBJECT_POOL_SIZE);
@@ -173,9 +170,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	protected StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
-			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				storableObject = mObjectLoader.loadParameterType(objectId);
-				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 				storableObject = mObjectLoader.loadMeasurementType(objectId);
 				break;
@@ -222,9 +216,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
 		List storableObjects;
 		switch (entityCode.shortValue()) {
-			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				storableObjects = mObjectLoader.loadParameterTypes(ids);
-				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 				storableObjects = mObjectLoader.loadMeasurementTypes(ids);
 				break;
@@ -273,9 +264,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		List loadedList = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
-			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				loadedList = mObjectLoader.loadParameterTypesButIds(condition, ids);
-				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 				loadedList = mObjectLoader.loadMeasurementTypesButIds(condition, ids);
 				break;
@@ -324,12 +312,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 			boolean alone = (list.size() == 1);			
 
 			switch (code) {
-				case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-					if (alone)
-						mObjectLoader.saveParameterType((ParameterType)list.get(0), force);
-					else 
-						mObjectLoader.saveParameterTypes(list, force);
-					break;
 				case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 					if (alone)
 						mObjectLoader.saveMeasurementType((MeasurementType)list.get(0), force);

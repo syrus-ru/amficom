@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.14 2004/11/19 23:08:59 arseniy Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.15 2005/01/19 20:52:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,14 +17,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/19 23:08:59 $
+ * @version $Revision: 1.15 $, $Date: 2005/01/19 20:52:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public interface MeasurementObjectLoader {
-
-	ParameterType loadParameterType(Identifier id) throws DatabaseException, CommunicationException;
 
 	MeasurementType loadMeasurementType(Identifier id) throws DatabaseException, CommunicationException;
 
@@ -50,7 +48,6 @@ public interface MeasurementObjectLoader {
 
 	TemporalPattern loadTemporalPattern(Identifier id) throws DatabaseException, CommunicationException;
 
-	List loadParameterTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadMeasurementTypes(List ids) throws DatabaseException, CommunicationException;
 
@@ -76,9 +73,8 @@ public interface MeasurementObjectLoader {
 
 	List loadTemporalPatterns(List ids) throws DatabaseException, CommunicationException;
 
-	/* Load Measurement StorableObject but argument ids */
 
-	List loadParameterTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	/* Load Measurement StorableObject but argument ids */
 
 	List loadMeasurementTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
@@ -103,8 +99,7 @@ public interface MeasurementObjectLoader {
 	List loadResultsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadTemporalPatternsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-	
-	void saveParameterType(ParameterType parameterType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+
 
 	void saveMeasurementType(MeasurementType measurementType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
@@ -130,7 +125,6 @@ public interface MeasurementObjectLoader {
 
 	void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveParameterTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveMeasurementTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
@@ -156,7 +150,9 @@ public interface MeasurementObjectLoader {
 
 	void saveTemporalPatterns(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
+
 	java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException;
+
 
 	void delete(Identifier id) throws CommunicationException, DatabaseException;
 

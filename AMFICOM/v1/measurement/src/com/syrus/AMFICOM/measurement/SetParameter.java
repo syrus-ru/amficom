@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.16 2004/12/24 14:50:24 arseniy Exp $
+ * $Id: SetParameter.java,v 1.17 2005/01/19 20:52:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/12/24 14:50:24 $
+ * @version $Revision: 1.17 $, $Date: 2005/01/19 20:52:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */

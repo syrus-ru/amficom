@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.30 2004/12/22 12:02:11 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.31 2005/01/19 20:52:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,17 +10,16 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -29,16 +28,89 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/22 12:02:11 $
+ * @version $Revision: 1.31 $, $Date: 2005/01/19 20:52:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader {
 
-	public ParameterType loadParameterType(Identifier id) throws DatabaseException, CommunicationException {
-		return new ParameterType(id);
+	/**
+	 * delete storable objects of one kind of entity
+	 * @param id
+	 * @param ids
+	 * @throws DatabaseException
+	 */
+	private void delete(Identifier id, List ids) throws DatabaseException {
+		short entityCode = (id != null) ? id.getMajor() : 0;
+		if (id == null) {
+			if (ids.isEmpty())
+				return;
+			Object obj = ids.iterator().next();
+			if (obj instanceof Identifier)
+				entityCode = ((Identifier)obj).getMajor();
+			else
+				if (obj instanceof Identified)
+					entityCode = ((Identified)obj).getId().getMajor();
+		}
+		try {
+			StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(entityCode);
+			if (database != null) {
+				if (id != null)
+					database.delete(id);
+				else
+					if (ids != null && !ids.isEmpty()) {
+						database.delete(ids);
+					}
+			}
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
+			throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
+		}
 	}
+	
+	public void delete(Identifier id) throws DatabaseException, CommunicationException {
+		delete(id, null);		
+	}
+
+	public void delete(List ids) throws DatabaseException, CommunicationException {
+		if (ids == null || ids.isEmpty())
+			return;
+		/**
+		 * TODO: use Trove collection instead java.util.Map 
+		 */
+		Map map = new HashMap();
+
+		/**
+		 * separate objects by kind of entity 
+		 */
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			Object object = it.next();
+			Identifier identifier = null;
+			if (object instanceof Identifier)
+				identifier = (Identifier)object;
+			else
+				if (object instanceof Identified)
+					identifier = ((Identified)object).getId();
+				else
+					throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identified");
+			Short entityCode = new Short(identifier.getMajor());
+			List list = (List)map.get(entityCode);
+			if (list == null) {
+				list = new LinkedList();
+				map.put(entityCode, list);
+			}
+			list.add(object);
+		}
+
+		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
+			Short entityCode = (Short) it.next();
+			List list = (List)map.get(entityCode);
+			delete(null, list);
+		}
+	}
+
 
 	public MeasurementType loadMeasurementType(Identifier id) throws DatabaseException, CommunicationException {
 		return new MeasurementType(id);
@@ -87,6 +159,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	public TemporalPattern loadTemporalPattern(Identifier id) throws DatabaseException, CommunicationException {
 		return new TemporalPattern(id);
 	}
+
+
+  // for multiple objects
 
 	public List loadAnalyses(List ids) throws DatabaseException, CommunicationException {
 		AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
@@ -188,19 +263,6 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadParameterTypes(List ids) throws DatabaseException, CommunicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
@@ -361,18 +423,6 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public List loadParameterTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.loadParameterTypesButIds | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.loadParameterTypesButIds | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
 
 	public List loadResultsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 		ResultDatabase database = (ResultDatabase)MeasurementDatabaseContext.getResultDatabase();
@@ -426,208 +476,6 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public java.util.Set refresh(java.util.Set storableObjects) throws DatabaseException, CommunicationException {
-		if (storableObjects.isEmpty())
-			return Collections.EMPTY_SET;
-
-		short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
-
-		StorableObjectDatabase database = null;
-		try {
-			switch (entityCode) {
-				case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getParameterTypeDatabase();
-					break;
-				case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
-					break;
-				case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
-					break;
-				case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
-					break;
-				case ObjectEntities.SET_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getSetDatabase();
-					break;
-				case ObjectEntities.MODELING_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getModelingDatabase();
-					break;
-				case ObjectEntities.MS_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
-					break;
-				case ObjectEntities.ANALYSIS_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getAnalysisDatabase();
-					break;
-				case ObjectEntities.EVALUATION_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getEvaluationDatabase();
-					break;
-				case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getMeasurementDatabase();
-					break;
-				case ObjectEntities.TEST_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getTestDatabase();
-					break;
-				case ObjectEntities.RESULT_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getResultDatabase();
-					break;
-				case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getTemporalPatternDatabase();
-					break;
-				default:
-					Log.errorMessage("DatabaseMeasumentObjectLoader.refresh | Unknown entity: " + entityCode);                
-			}
-			if (database != null)
-				return database.refresh(storableObjects);
-
-      return Collections.EMPTY_SET;
-		}
-		catch (DatabaseException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage(), e);
-		}
-	}
-
-	public void delete(Identifier id) throws DatabaseException, CommunicationException {
-		delete(id, null);		
-	}
-
-	public void delete(List ids) throws DatabaseException, CommunicationException {
-		if (ids == null || ids.isEmpty())
-			return;
-		/**
-		 * TODO: use Trove collection instead java.util.Map 
-		 */
-		Map map = new HashMap();
-
-		/**
-		 * separate objects by kind of entity 
-		 */
-		for (Iterator it = ids.iterator(); it.hasNext();) {
-			Object object = it.next();
-			Identifier identifier = null;
-			if (object instanceof Identifier)
-				identifier = (Identifier)object;
-			else
-				if (object instanceof Identified)
-					identifier = ((Identified)object).getId();
-				else
-					throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identified");
-			Short entityCode = new Short(identifier.getMajor());
-			List list = (List)map.get(entityCode);
-			if (list == null) {
-				list = new LinkedList();
-				map.put(entityCode, list);
-			}
-			list.add(object);
-
-		}
-
-		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-			Short entityCode = (Short) it.next();
-			List list = (List)map.get(entityCode);
-			delete(null, list);
-		}
-
-	}
-
-	/**
-	 * delete storable objects of one kind of entity
-	 * @param id
-	 * @param ids
-	 * @throws DatabaseException
-	 */
-	private void delete(Identifier id, List ids) throws DatabaseException {
-		short entityCode = (id != null) ? id.getMajor() : 0;
-		if (id == null) {
-			if (ids.isEmpty())
-				return;
-			Object obj = ids.iterator().next();
-			if (obj instanceof Identifier)
-				entityCode = ((Identifier)obj).getMajor();
-			else
-				if (obj instanceof Identified)
-					entityCode = ((Identified)obj).getId().getMajor();
-		}
-		try {
-			StorableObjectDatabase database = null;
-			switch (entityCode) {
-				case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getParameterTypeDatabase();
-					break;
-				case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
-					break;
-				case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
-					break;
-				case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
-					break;
-				case ObjectEntities.SET_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getSetDatabase();
-					break;
-				case ObjectEntities.MODELING_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getModelingDatabase();
-					break;
-				case ObjectEntities.MS_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
-					break;
-				case ObjectEntities.ANALYSIS_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getAnalysisDatabase();
-					break;
-				case ObjectEntities.EVALUATION_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getEvaluationDatabase();
-					break;
-				case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getMeasurementDatabase();
-					break;
-				case ObjectEntities.TEST_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getTestDatabase();
-					break;
-				case ObjectEntities.RESULT_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getResultDatabase();
-					break;
-				case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-					database = MeasurementDatabaseContext.getTemporalPatternDatabase();
-					break;
-				default:
-					Log.errorMessage("DatabaseMeasumentObjectLoader.delete | Unknown entity: " + entityCode);                
-			}
-
-			if (database != null) {
-				if (id != null)
-					database.delete(id);
-				else
-					if (ids != null && !ids.isEmpty()) {
-						database.delete(ids);
-					}
-			}
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
-		}
-	}
-
-	public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, CommunicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
-		try {
-			database.update(parameterType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterType | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterType | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterType | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterType | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterType | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterType | VersionCollisionException: " + e.getMessage());
-		}
-	}
 
 	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase();
@@ -857,24 +705,6 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveParameterTypes(List list, boolean force) throws DatabaseException, CommunicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
-		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterTypes | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterTypes | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterTypes | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterTypes | VersionCollisionException: " + e.getMessage());
-		}
-	}
 
 	public void saveMeasurementTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase();
@@ -1101,6 +931,26 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		catch (VersionCollisionException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveTemporalPattern | VersionCollisionException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTemporalPattern | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+	public java.util.Set refresh(java.util.Set storableObjects) throws DatabaseException, CommunicationException {
+		if (storableObjects.isEmpty())
+			return Collections.EMPTY_SET;
+
+		short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
+
+		try {
+			StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(entityCode);
+
+			if (database != null)
+				return database.refresh(storableObjects);
+
+      return Collections.EMPTY_SET;
+		}
+		catch (DatabaseException e) {
+			Log.errorMessage("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage());
+			throw new DatabaseException("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage(), e);
 		}
 	}
 
