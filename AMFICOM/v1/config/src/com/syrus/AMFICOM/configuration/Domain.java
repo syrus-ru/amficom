@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.16 2004/11/15 15:30:53 bob Exp $
+ * $Id: Domain.java,v 1.17 2004/11/19 13:24:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/11/15 15:30:53 $
+ * @version $Revision: 1.17 $, $Date: 2004/11/19 13:24:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -184,6 +184,10 @@ public class Domain extends DomainMember implements Characterized {
 		 */
 		return this.id.equals(domain.getId());
 	}	
+	
+	public Identifier getParentDomainId(){
+		return super.domainId;
+	}
 	
 	public List getDependencies() {
 		return new LinkedList(this.characteristics);

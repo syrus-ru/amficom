@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.21 2004/11/17 13:39:39 bob Exp $
+ * $Id: DomainDatabase.java,v 1.22 2004/11/19 13:24:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/11/17 13:39:39 $
+ * @version $Revision: 1.22 $, $Date: 2004/11/19 13:24:33 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -99,12 +99,12 @@ public class DomainDatabase extends StorableObjectDatabase {
 		if (domain == null){
 			domain = new Domain(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null);			
 		}
-		Identifier id = DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID);
+		Identifier domainId = DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID);
 		domain.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 							 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-							 id,
+							 domainId,
 							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
 		
