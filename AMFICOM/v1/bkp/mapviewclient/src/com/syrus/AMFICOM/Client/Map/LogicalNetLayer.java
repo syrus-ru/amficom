@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.22 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.23 2004/11/19 14:41:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -83,7 +83,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.22 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.23 $, $Date: 2004/11/19 14:41:23 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -579,6 +579,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		drawLines(p);
 		drawNodes(p);
+		drawSelection(p);
 		drawTempLines(p);
 		
 		// revert graphics to previous settings
@@ -763,6 +764,20 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		{
 			p.setColor(Color.GREEN);
 			p.drawLine(startX, startY, endX, endY);
+		}
+	}
+
+	public void drawSelection(Graphics g)
+	{
+		Graphics2D pg = (Graphics2D )g;
+
+		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
+
+		Iterator e = getMapView().getMap().getSelectedElements().iterator();
+		while (e.hasNext())
+		{
+			MapElement el = (MapElement )e.next();
+			el.paint(pg, visibleBounds);
 		}
 	}
 

@@ -531,7 +531,9 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 			selectedStartLink = (MapPhysicalLinkElement )startLinkComboBox.getSelectedObjectResource();
 			
 			MapUnboundLinkElement unbound = (MapUnboundLinkElement )path.nextLink(startLastBound);
-			addLinkBinding(selectedStartLink, unbound, startNode);
+
+			if(unbound != null)
+				addLinkBinding(selectedStartLink, unbound, startNode);
 		}
 		catch (ClassCastException e)
 		{
@@ -547,7 +549,8 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 			{
 				MapUnboundLinkElement unbound = (MapUnboundLinkElement )path.previousLink(endLastBound);
 
-				addLinkBinding(selectedEndLink, unbound, endNode);
+				if(unbound != null)
+					addLinkBinding(selectedEndLink, unbound, endNode);
 			}
 		}
 		catch (ClassCastException e)
@@ -568,7 +571,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 			addBinding();
 			boolean proceed = false;
 
-			if(startAvailableLinksCount == 1)
+			if(startAvailableLinksCount == 1 && startLinkComboBox.isEnabled())
 			{
 				proceed = true;
 				ComboBoxModel cbmodel = startLinkComboBox.getModel();
@@ -583,7 +586,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 				}
 			}
 
-			if(endAvailableLinksCount == 1)
+			if(endAvailableLinksCount == 1 && endLinkComboBox.isEnabled())
 			{
 				proceed = true;
 				ComboBoxModel cbmodel = endLinkComboBox.getModel();

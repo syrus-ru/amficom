@@ -99,6 +99,7 @@ src\com\syrus\AMFICOM\Client\Map\Command\Navigate\CenterSelectionCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\HandPanCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\MapModeCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\MeasureDistanceCommand.java
+src\com\syrus\AMFICOM\Client\Map\Command\Navigate\MoveFixedCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\MoveToCenterCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\ShowNodesCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\ZoomBoxCommand.java
@@ -161,6 +162,7 @@ src\com\syrus\AMFICOM\Client\Map\Props\MapUnboundLinkPropertiesController.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapViewPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapVoidElementPropertiesController.java
 src\com\syrus\AMFICOM\Client\Map\Props\ObjectResourceLabel.java
+src\com\syrus\AMFICOM\Client\Map\Props\SiteBindingRenderer.java
 src\com\syrus\AMFICOM\Client\Map\Props\TunnelLayout.java
 src\com\syrus\AMFICOM\Client\Map\Report\MapReportModel.java
 src\com\syrus\AMFICOM\Client\Map\Setup\AMFICOMSearchPanel.java

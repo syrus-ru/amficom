@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.15 2004/11/02 17:01:24 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.16 2004/11/19 14:41:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,7 +60,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/11/02 17:01:24 $
+ * @version $Revision: 1.16 $, $Date: 2004/11/19 14:41:23 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -120,8 +120,8 @@ public abstract class MapPopupMenu extends JPopupMenu
 
 		if ( dialog.ifAccept())
 		{
-			MapElementState mes2 = me.getState();
-			if(! mes.equals(mes2))
+//			MapElementState mes2 = me.getState();
+//			if(! mes.equals(mes2))
 			{
 				Dispatcher disp = logicalNetLayer.getContext().getDispatcher();
 				if(disp != null)

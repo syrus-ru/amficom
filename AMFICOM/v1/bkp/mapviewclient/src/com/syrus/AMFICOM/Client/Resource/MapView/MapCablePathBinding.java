@@ -26,7 +26,7 @@ public final class MapCablePathBinding extends HashMap
 
 	public CableChannelingItem getCCI(MapNodeElement node)
 	{
-		for(Iterator it = super.entrySet().iterator(); it.hasNext();)
+		for(Iterator it = super.values().iterator(); it.hasNext();)
 		{
 			CableChannelingItem cci = (CableChannelingItem )it.next();
 			if(cci.startSiteId.equals(node.getId()))
