@@ -78,8 +78,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public static final String		DEFAULT_PULSEWIDTH			= "5000";
 	public static final String		DEFAULT_RESOLUTION			= "8";
 	public static final String		DEFAULT_WAVELENGTH			= "1625";
-	
-	public static final String	TEST_TYPE	= "trace_and_analyse";
+
+	public static final String		TEST_TYPE					= "trace_and_analyse";
 
 	public static final String		CHARACTER_MAX_REFRACTION	= "Max_Coef_Preloml";
 	public static final String		CHARACTER_MIN_REFRACTION	= "Min_Coef_Preloml";
@@ -395,31 +395,32 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	public void setTest(Test test) {
-		this.test = test;
+		if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
+			this.test = test;
+			TestArgumentSet tas = test.getTestArgumentSet();
+			if (tas == null)
+				tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
+			if (tas != null) {
+				setTestArgumentSet(tas);
+			} else {
+				TestSetup testSetup = null;
+				if ((test.getTestSetupId() != null) || (test.getTestSetupId().length() > 0))
+					testSetup = (TestSetup) Pool.get(TestSetup.typ, test.getTestSetupId());
+				if (testSetup == null)
+					testSetup = test.getTestSetup();
+				if (testSetup == null) {
+					if (test.getTestArgumentSetId() != null)
+						tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
+					if (tas == null) {
+						this.aContext.getDataSourceInterface().LoadTestArgumentSets(
+																					new String[] { test
+																							.getTestArgumentSetId()});
+						tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
+					}
+				} else
+					setTestSetup(testSetup);
 
-		TestArgumentSet tas = test.getTestArgumentSet();
-		if (tas == null)
-			tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
-		if (tas != null) {
-			setTestArgumentSet(tas);
-		} else {
-			TestSetup testSetup = null;
-			if ((test.getTestSetupId() != null) || (test.getTestSetupId().length() > 0))
-				testSetup = (TestSetup) Pool.get(TestSetup.typ, test.getTestSetupId());
-			if (testSetup == null)
-				testSetup = test.getTestSetup();
-			if (testSetup == null) {
-				if (test.getTestArgumentSetId() != null)
-					tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
-				if (tas == null) {
-					this.aContext.getDataSourceInterface().LoadTestArgumentSets(
-																				new String[] { test
-																						.getTestArgumentSetId()});
-					tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
-				}
-			} else
-				setTestSetup(testSetup);
-
+			}
 		}
 
 	}

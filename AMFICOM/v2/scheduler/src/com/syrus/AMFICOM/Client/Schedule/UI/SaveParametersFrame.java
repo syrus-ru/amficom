@@ -13,14 +13,14 @@ import com.syrus.AMFICOM.CORBA.General.TestReturnType;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 /**
  * @author Vladimir Dolzhenko
  */
-public class SaveParametersFrame extends JInternalFrame implements
-		OperationListener {
+public class SaveParametersFrame extends JInternalFrame implements OperationListener {
 
 	//	private ApplicationContext aContext;
 	private Dispatcher		dispatcher;
@@ -29,6 +29,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 	private JRadioButton	allResultsButton;
 	private JRadioButton	recognizedEventsButton;
 	private JRadioButton	measurementIdButton;
+	private Test			test;
 
 	/**
 	 * @todo only for testing mode
@@ -52,7 +53,8 @@ public class SaveParametersFrame extends JInternalFrame implements
 	public SaveParametersFrame(ApplicationContext aContext) {
 		//		this.aContext = aContext;
 		init();
-		if (aContext != null) initModule(aContext.getDispatcher());
+		if (aContext != null)
+			initModule(aContext.getDispatcher());
 	}
 
 	private void init() {
@@ -61,58 +63,52 @@ public class SaveParametersFrame extends JInternalFrame implements
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);
-		panel = getPanel();
-		setContentPane(panel);
+		this.panel = getPanel();
+		setContentPane(this.panel);
 
 	}
 
 	private JPanel getPanel() {
-		if (panel == null) {
-			panel = new JPanel(new GridBagLayout());
+		if (this.panel == null) {
+			this.panel = new JPanel(new GridBagLayout());
 			GridBagConstraints gbc = new GridBagConstraints();
 			gbc.fill = GridBagConstraints.BOTH;
 			gbc.weightx = 1.0;
 			gbc.weighty = 0.0;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			allResultsButton = new JRadioButton(LangModelSchedule
-					.getString("AllTestResults")); //$NON-NLS-1$
-			allResultsButton
-					.addActionListener(new java.awt.event.ActionListener() {
+			this.allResultsButton = new JRadioButton(LangModelSchedule.getString("AllTestResults")); //$NON-NLS-1$
+			this.allResultsButton.addActionListener(new java.awt.event.ActionListener() {
 
-						public void actionPerformed(ActionEvent e) {
-							//jButton1_actionPerformed(e);
-						}
-					});
-			recognizedEventsButton = new JRadioButton(LangModelSchedule
-					.getString("Only_recognized_events")); //$NON-NLS-1$
-			recognizedEventsButton
-					.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					//jButton1_actionPerformed(e);
+				}
+			});
+			this.recognizedEventsButton = new JRadioButton(LangModelSchedule.getString("Only_recognized_events")); //$NON-NLS-1$
+			this.recognizedEventsButton.addActionListener(new java.awt.event.ActionListener() {
 
-						public void actionPerformed(ActionEvent e) {
-							//jButton2_actionPerformed(e);
-						}
-					});
-			measurementIdButton = new JRadioButton(LangModelSchedule
-					.getString("Only_Measurement_Id")); //$NON-NLS-1$
-			measurementIdButton
-					.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					//jButton2_actionPerformed(e);
+				}
+			});
+			this.measurementIdButton = new JRadioButton(LangModelSchedule.getString("Only_Measurement_Id")); //$NON-NLS-1$
+			this.measurementIdButton.addActionListener(new java.awt.event.ActionListener() {
 
-						public void actionPerformed(ActionEvent e) {
-							//	jButton3_actionPerformed(e);
-						}
-					});
+				public void actionPerformed(ActionEvent e) {
+					//	jButton3_actionPerformed(e);
+				}
+			});
 			ButtonGroup group = new ButtonGroup();
-			group.add(allResultsButton);
-			group.add(recognizedEventsButton);
-			group.add(measurementIdButton);
-			allResultsButton.setSelected(true);
-			panel.add(allResultsButton, gbc);
-			panel.add(recognizedEventsButton, gbc);
-			panel.add(measurementIdButton, gbc);
+			group.add(this.allResultsButton);
+			group.add(this.recognizedEventsButton);
+			group.add(this.measurementIdButton);
+			this.allResultsButton.setSelected(true);
+			this.panel.add(this.allResultsButton, gbc);
+			this.panel.add(this.recognizedEventsButton, gbc);
+			this.panel.add(this.measurementIdButton, gbc);
 			gbc.weighty = 1.0;
-			panel.add(new JLabel(), gbc);
+			this.panel.add(new JLabel(), gbc);
 		}
-		return panel;
+		return this.panel;
 
 	}
 
@@ -124,40 +120,39 @@ public class SaveParametersFrame extends JInternalFrame implements
 
 	private TestReturnType getParameter() {
 		TestReturnType ret = TestReturnType.TEST_RETURN_TYPE_WHOLE;
-		if (recognizedEventsButton.isSelected())
+		if (this.recognizedEventsButton.isSelected())
 			ret = TestReturnType.TEST_RETURN_TYPE_EVENTS;
-		else if (measurementIdButton.isSelected())
-				ret = TestReturnType.TEST_RETURN_TYPE_REFERENCE;
+		else if (this.measurementIdButton.isSelected())
+			ret = TestReturnType.TEST_RETURN_TYPE_REFERENCE;
 		return ret;
 	}
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
-				+ commandName, getClass().getName());
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			/**
 			 * @todo must send data edit in this form
 			 */
 			TestReturnType returnType = this.getParameter();
-			dispatcher.notify(new OperationEvent(returnType,
-					SchedulerModel.DATA_ID_RETURN_TYPE,
-					SchedulerModel.COMMAND_SEND_DATA));
+			this.dispatcher.notify(new OperationEvent(returnType, SchedulerModel.DATA_ID_RETURN_TYPE,
+													SchedulerModel.COMMAND_SEND_DATA));
 		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			if (tue.testSelected) {
-				TestReturnType returnType = tue.test.getReturnType();
-				if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_WHOLE)) {
-					allResultsButton.doClick();
-				} else if (returnType
-						.equals(TestReturnType.TEST_RETURN_TYPE_EVENTS)) {
-					recognizedEventsButton.doClick();
-				} else if (returnType
-						.equals(TestReturnType.TEST_RETURN_TYPE_REFERENCE)) {
-					measurementIdButton.doClick();
+			Test test = tue.test;
+			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
+				this.test = test;
+				if (tue.testSelected) {
+					TestReturnType returnType = test.getReturnType();
+					if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_WHOLE)) {
+						this.allResultsButton.doClick();
+					} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_EVENTS)) {
+						this.recognizedEventsButton.doClick();
+					} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_REFERENCE)) {
+						this.measurementIdButton.doClick();
+					}
 				}
 			}
-			//this.test = tue.test;
 		}
 	}
 }

@@ -530,7 +530,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		}
 
 		minuteRadioButton.doClick();
-		paramsRadioButton.doClick();		
+		paramsRadioButton.doClick();
 		synchroRadioButton.doClick();
 		periodicalRadioButton.doClick();
 		oneRadioButton.doClick();
@@ -563,60 +563,63 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 														SchedulerModel.COMMAND_SEND_DATA));
 		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			this.test = tue.test;
-			enableTestStatus();
-			/**
-			 * todo set TimeStamp from Test
-			 */
-			if (tue.testSelected) {
+			Test test = tue.test;
+			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {				
+				this.test = tue.test;
+				enableTestStatus();
 				/**
-				 * todo this is ONLY for backward compatibility
+				 * todo set TimeStamp from Test
 				 */
-				//setAllRadioButtonEnabled(true);
-				TimeStamp timeStamp = test.getTimeStamp();
-				{
-					long start = timeStamp.getPeriodStart();
-					long end = timeStamp.getPeriodEnd();
-					Date date = new Date(start);
-					startDateSpinner.getModel().setValue(date);
-					startTimeSpinner.getModel().setValue(date);
-					date.setTime(end);
-					endDateSpinner.getModel().setValue(date);
-					endTimeSpinner.getModel().setValue(date);
-				}
+				if (tue.testSelected) {
+					/**
+					 * todo this is ONLY for backward compatibility
+					 */
+					//setAllRadioButtonEnabled(true);
+					TimeStamp timeStamp = test.getTimeStamp();
+					{
+						long start = timeStamp.getPeriodStart();
+						long end = timeStamp.getPeriodEnd();
+						Date date = new Date(start);
+						startDateSpinner.getModel().setValue(date);
+						startTimeSpinner.getModel().setValue(date);
+						date.setTime(end);
+						endDateSpinner.getModel().setValue(date);
+						endTimeSpinner.getModel().setValue(date);
+					}
 
-				switch (timeStamp.getType()) {
-					case TimeStamp.TIMESTAMPTYPE_ONETIME:
-						oneRadioButton.doClick();
-						break;
-					case TimeStamp.TIMESTAMPTYPE_CONTINUOS:
-						continuosRadioButton.doClick();
-						break;
-					case TimeStamp.TIMESTAMPTYPE_PERIODIC:
-						periodicalRadioButton.doClick();
-						//Time period =timeStamp.getPeriod();
-						if (hourPanel == null)
-							hourRadioButton.doClick();
-						if (dayPanel == null)
-							dayRadioButton.doClick();
-						if (weekPanel == null)
-							weekRadioButton.doClick();
-						if (monthPanel == null)
-							monthRadioButton.doClick();
-						if (minPanel == null)
-							minuteRadioButton.doClick();
-						if (minPanel != null)
-							minPanel.setTimeStamp(timeStamp);
-						if (hourPanel != null)
-							hourPanel.setTimeStamp(timeStamp);
-						if (dayPanel != null)
-							dayPanel.setTimeStamp(timeStamp);
-						if (weekPanel != null)
-							weekPanel.setTimeStamp(timeStamp);
-						if (monthPanel != null)
-							monthPanel.setTimeStamp(timeStamp);
-						break;
+					switch (timeStamp.getType()) {
+						case TimeStamp.TIMESTAMPTYPE_ONETIME:
+							oneRadioButton.doClick();
+							break;
+						case TimeStamp.TIMESTAMPTYPE_CONTINUOS:
+							continuosRadioButton.doClick();
+							break;
+						case TimeStamp.TIMESTAMPTYPE_PERIODIC:
+							periodicalRadioButton.doClick();
+							//Time period =timeStamp.getPeriod();
+							if (hourPanel == null)
+								hourRadioButton.doClick();
+							if (dayPanel == null)
+								dayRadioButton.doClick();
+							if (weekPanel == null)
+								weekRadioButton.doClick();
+							if (monthPanel == null)
+								monthRadioButton.doClick();
+							if (minPanel == null)
+								minuteRadioButton.doClick();
+							if (minPanel != null)
+								minPanel.setTimeStamp(timeStamp);
+							if (hourPanel != null)
+								hourPanel.setTimeStamp(timeStamp);
+							if (dayPanel != null)
+								dayPanel.setTimeStamp(timeStamp);
+							if (weekPanel != null)
+								weekPanel.setTimeStamp(timeStamp);
+							if (monthPanel != null)
+								monthPanel.setTimeStamp(timeStamp);
+							break;
 
+					}
 				}
 			}
 		}
@@ -840,7 +843,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		JList				list;
 
-		java.util.List				time		= new ArrayList();
+		java.util.List		time		= new ArrayList();
 
 		protected HourPanel() {
 			super();
@@ -994,7 +997,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		private JSpinner			daySpin			= new JSpinner(new SpinnerNumberModel(1, 1, 30, 1));
 
-		java.util.List						time			= new ArrayList();
+		java.util.List				time			= new ArrayList();
 
 		JList						list;
 
@@ -1244,7 +1247,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		private JSpinner			weekSpin	= new JSpinner(new SpinnerNumberModel(1, 1, 4, 1));
 
-		java.util.List						time		= new ArrayList();
+		java.util.List				time		= new ArrayList();
 
 		private JCheckBox[]			days;
 
@@ -1455,9 +1458,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		private JSpinner	monthSpin	= new JSpinner(new SpinnerNumberModel(1, 1, 30, 1));
 
-		java.util.List				time		= new ArrayList();
+		java.util.List		time		= new ArrayList();
 
-		java.util.List				days		= new ArrayList();
+		java.util.List		days		= new ArrayList();
 
 		JList				list;
 

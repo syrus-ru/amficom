@@ -35,13 +35,15 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	//	public static final String COMMAND_REMOVE_PARAM_FRAME =
 	// "RemoveParamFrame";
 	//	public static final String COMMAND_REMOVE_3A_FRAME = "Remove3aFrame";
-	//public static final boolean	DEBUG						= true;
-	
+	//public static final boolean DEBUG = true;
+
 	//public static final String COMMAND_ADD_PARAM_PANEL = "ParamPanel";
-	//public static final String	TEST_TYPE_TRACE_AND_ANALYSE	= "trace_and_analyse";									//$NON-NLS-1$
-	//public static final String	TEST_TYPE_VOICE_ANALYSE		= "voice_analyse";										//$NON-NLS-1$
-	public static final String	PARAMETER_PARAMETER			= "Parameter";											//$NON-NLS-1$
-	public static final String	PARAMETERS_PANEL_PREFIX		= "PARAMETERS_PANEL";									//$NON-NLS-1$
+	//public static final String TEST_TYPE_TRACE_AND_ANALYSE =
+	// "trace_and_analyse"; //$NON-NLS-1$
+	//public static final String TEST_TYPE_VOICE_ANALYSE = "voice_analyse";
+	// //$NON-NLS-1$
+	public static final String	PARAMETER_PARAMETER		= "Parameter";											//$NON-NLS-1$
+	public static final String	PARAMETERS_PANEL_PREFIX	= "PARAMETERS_PANEL";									//$NON-NLS-1$
 
 	private Dispatcher			dispatcher;
 	ApplicationContext			aContext;
@@ -50,10 +52,10 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	JRadioButton				paramsRadioButton;
 
 	JCheckBox					useAnalysisBox;
-	ObjectResourceComboBox		analysisComboBox			= new ObjectResourceComboBox(AnalysisType.typ, true);
-	ObjectResourceComboBox		evaluationComboBox			= new ObjectResourceComboBox(EvaluationType.typ, true);
+	ObjectResourceComboBox		analysisComboBox		= new ObjectResourceComboBox(AnalysisType.typ, true);
+	ObjectResourceComboBox		evaluationComboBox		= new ObjectResourceComboBox(EvaluationType.typ, true);
 
-	final JPanel				switchPanel					= new JPanel(new CardLayout());
+	final JPanel				switchPanel				= new JPanel(new CardLayout());
 
 	//	private HashMap objMap = new HashMap();
 	//	private String testTypeId;
@@ -62,9 +64,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	ObjectResourceListBox		testSetups;
 	private HashMap				testMap;
 
-	private static final String	PATTERN_PANEL_NAME			= "PATTERN_PANEL";										//$NON-NLS-1$
+	private static final String	PATTERN_PANEL_NAME		= "PATTERN_PANEL";										//$NON-NLS-1$
 
-	HashMap						testPanels					= new HashMap();
+	HashMap						testPanels				= new HashMap();
 
 	private Test				test;
 
@@ -232,15 +234,17 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	}
 
 	public void setTest(Test test) {
-		this.test = test;
+		if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
+			this.test = test;
 
-		if (this.meList == null)
-			this.meList = new ArrayList();
-		else
-			this.meList.clear();
-		this.meList.add(Pool.get(MonitoredElement.typ, test.getMonitoredElementId()));
-		updateTestSetupList();
-		
+			if (this.meList == null)
+				this.meList = new ArrayList();
+			else
+				this.meList.clear();
+			this.meList.add(Pool.get(MonitoredElement.typ, test.getMonitoredElementId()));
+			updateTestSetupList();
+		}
+
 	}
 
 	private void getParameters() {
@@ -282,7 +286,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 						.getTestArgumentSet();
 				if (tas != null)
 					this.dispatcher.notify(new OperationEvent(tas, SchedulerModel.DATA_ID_PARAMETERS,
-															SchedulerModel.COMMAND_SEND_DATA));
+																SchedulerModel.COMMAND_SEND_DATA));
 			} else if (this.patternRadioButton.isSelected()) {
 				this.getParameters();
 				if (this.parameters != null) {
@@ -290,12 +294,12 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					AnalysisType analysisType = (AnalysisType) this.parameters.get(AnalysisType.typ);
 					EvaluationType evaluationType = (EvaluationType) this.parameters.get(EvaluationType.typ);
 					this.dispatcher.notify(new OperationEvent((ts == null) ? (Object) "" : (Object) ts, //$NON-NLS-1$
-															SchedulerModel.DATA_ID_PARAMETERS_PATTERN,
-															SchedulerModel.COMMAND_SEND_DATA));
+																SchedulerModel.DATA_ID_PARAMETERS_PATTERN,
+																SchedulerModel.COMMAND_SEND_DATA));
 					//if (analysisType != null)
 					this.dispatcher.notify(new OperationEvent((analysisType == null) ? (Object) "" //$NON-NLS-1$
 							: (Object) analysisType, SchedulerModel.DATA_ID_PARAMETERS_ANALYSIS,
-															SchedulerModel.COMMAND_SEND_DATA));
+																SchedulerModel.COMMAND_SEND_DATA));
 					this.dispatcher.notify(new OperationEvent((evaluationType == null) ? (Object) "" //$NON-NLS-1$
 							: (Object) evaluationType, SchedulerModel.DATA_ID_PARAMETERS_EVALUATION,
 																SchedulerModel.COMMAND_SEND_DATA));
@@ -333,7 +337,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			if (this.meList == null)
 				this.meList = new ArrayList();
 			this.meList.clear();
-			this.meList.add(Pool.get(MonitoredElement.typ, meId));			
+			this.meList.add(Pool.get(MonitoredElement.typ, meId));
 			updateTestSetupList();
 		}
 
@@ -350,7 +354,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					TestSetup ts = (TestSetup) tsTable.get(it.next());
 					String[] meIds = ts.getMonitoredElementIds();
 					if (meIds.length == 0) {
-//						System.out.println("meIds.length == 0\t" + ts.getId());
+						//						System.out.println("meIds.length == 0\t" +
+						// ts.getId());
 						this.testMap.put(ts.getId(), ts);
 					} else
 						for (Iterator iter = this.meList.iterator(); iter.hasNext();) {
@@ -358,7 +363,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 							String meId = me.getId();
 							for (int i = 0; i < meIds.length; i++) {
 								if (meIds[i].equals(meId)) {
-//									System.out.println("meId:" + meId + "\t" + ts.getId());
+									//									System.out.println("meId:" + meId + "\t"
+									// + ts.getId());
 									this.testMap.put(ts.getId(), ts);
 								}
 							}
@@ -371,13 +377,13 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			TestSetup ts = (TestSetup) it.next();
 			this.testSetups.add(ts);
 		}
-		
+
 		if (this.test != null) {
 
 			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ, this.test.getTestSetupId());
-			
+
 			if (testsetup != null) {
-				System.out.println("testsetup:"+testsetup.getId());
+				System.out.println("testsetup:" + testsetup.getId());
 				this.testSetups.setSelected(testsetup);
 				this.patternRadioButton.doClick();
 

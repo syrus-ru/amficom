@@ -194,14 +194,17 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				}
 				if (unsavedTests.containsValue(test)) {
 					System.out.println("unsavedTests.contains(test)"); //$NON-NLS-1$
-				} else
+				} else {
+					System.out.println("unsavedTests.put(" + test.getId() + ", test);");
 					unsavedTests.put(test.getId(), test);
+				}
 			} else {
 				System.out.println("test is NOT changed");
 				tests.put(test.getId(), test);
 			}
 			if (allTests == null)
 				allTests = new ArrayList();
+			if (!allTests.contains(test))
 			allTests.add(test);
 			this.revalidate();
 		}
@@ -235,7 +238,19 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	//	}
 
 	public Test getTest(String id) {
-		return (Test) tests.get(id);
+		Test test = (Test) this.tests.get(id);
+		if (test == null) {
+			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
+				Test t = (Test) it.next();
+				if (t.getId().equals(id)) {
+					test = t;
+					break;
+				}
+
+			}
+		}
+
+		return test;
 	}
 
 	public void operationPerformed(OperationEvent e) {
@@ -247,7 +262,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 					Object key = it.next();
 					Test test = (Test) this.unsavedTests.get(key);
 					if (!test.isChanged()) {
-						System.out.println("remove " + key);
+//						System.out.println("remove " + key);
 						this.unsavedTests.remove(key);
 						this.tests.put(test.getId(), test);
 					}
@@ -280,11 +295,10 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			//for (Iterator it = tests.values().iterator(); it.hasNext();) {
 			//			System.out.println(":" + allTests.size() + "\t"
 			//					+ System.currentTimeMillis());
-			for (int i = 0; i < allTests.size(); i++) {
-				//int tmpStatus = curStatus;
-				//Test test = (Test) it.next();
+			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
 				Color color;
-				Test test = (Test) allTests.get(i);
+				Test test = (Test) it.next();
+//				System.out.println("paint:" + test.getId());
 				if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
 					color = COLOR_COMPLETED;
 				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
@@ -296,7 +310,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				} else {
 					color = COLOR_UNRECOGNIZED;
 				}
-				if ((unsavedTests == null) || (!unsavedTests.containsValue(test))) {
+				if ((this.unsavedTests == null) || (!this.unsavedTests.containsValue(test))) {
 					g.setColor(color);
 					drawTestRect(g, test);
 				}
@@ -314,11 +328,21 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	public void removeTest(Test test) {
 		//Test test = (Test) this.tests.get(id);
 		String testId = test.getId();
-		if (this.unsavedTests != null)
+		if (this.unsavedTests != null) {
 			this.unsavedTests.remove(test.getId());
-		if (this.allTests != null)
+//			System.out.println("this.unsavedTests.remove(" + test.getId() + "):"
+//					+ this.unsavedTests.containsKey(test.getId()));
+		}
+		if (this.allTests != null) {
+//			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
+//				Test t = (Test) it.next();
+//				System.out.println(t.getId());
+//			}
 			this.allTests.remove(test);
+//			System.out.println("this.allTests.remove(test):" + this.allTests.contains(test));
+		}
 		this.tests.remove(testId);
+//		System.out.println("this.tests.remove(testId):" + this.tests.containsKey(testId));
 	}
 
 	private void drawTestRect(Graphics g, Test test) {

@@ -8,15 +8,12 @@ import java.util.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.Filter.*;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 import oracle.jdeveloper.layout.*;
@@ -43,56 +40,52 @@ public class PlanPanel extends JPanel implements OperationListener {
 			this.align = align;
 		}
 	}
+	public static final String[]	SCALES			= new String[] {
+			"10 min", "1 hour", "6 hours", "1 day", "1 week", "1 month"};					//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
-	public static final String		COMMAND_NAME_ALL_TESTS	= "AllTests";							//$NON-NLS-1$
-
-	public static final String[]	SCALES					= new String[] {
-			"10 min", "1 hour", "6 hours", "1 day", "1 week", "1 month"};							//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-
-	protected static final Step[]	STEPS					= new Step[] { new Step(Calendar.MINUTE, 1, 10, 6, 1),
+	protected static final Step[]	STEPS			= new Step[] { new Step(Calendar.MINUTE, 1, 10, 6, 1),
 			new Step(Calendar.MINUTE, 10, 60, 5, 5), new Step(Calendar.HOUR_OF_DAY, 1, 6, 6, 1),
 			new Step(Calendar.HOUR_OF_DAY, 4, 24, 4, 2), new Step(Calendar.DAY_OF_MONTH, 1, 7, 4, 1),
-			new Step(Calendar.DAY_OF_MONTH, 5, 30, 5, 1),	};
-	private ApplicationContext		aContext;
+			new Step(Calendar.DAY_OF_MONTH, 5, 30, 5, 1),};
+	protected int					actualScale		= 0;
 
-	protected Calendar				cal						= Calendar.getInstance();
+	protected Calendar				cal				= Calendar.getInstance();
 
-	protected Point					currpos					= new Point();
+	protected Point					currpos			= new Point();
 
-	private Dispatcher				dispatcher;
-
-	private ObjectResourceFilter	filter					= null;
-
-	protected int					margin					= 14;
-	private int						maxZoom					= 50;
+	protected int					margin			= 14;
 	protected JScrollPane			parent;
-	protected int					actualScale				= 0;
-	protected int					scale					= 0;
+	protected int					scale			= 0;
 	protected Date					scaleEnd;
 
 	// rounded start and end time of range displayed
 	protected Date					scaleStart;
 
-	protected SimpleDateFormat		sdf						= new SimpleDateFormat();
+	protected SimpleDateFormat		sdf				= new SimpleDateFormat();
 
-	protected boolean				selectedByMouse			= false;
+	protected boolean				selectedByMouse	= false;
 
 	// real start time including minutes and seconds
-	protected Date					startDate				= new Date(System.currentTimeMillis());
+	protected Date					startDate		= new Date(System.currentTimeMillis());
 
-	protected Point					startpos				= new Point();
-
-	private HashMap					testLines				= new HashMap();
+	protected Point					startpos		= new Point();
 
 	// saved tests, loaded from server
-	private DataSet					tests;
+	//private DataSet tests;
 
 	protected Point					tmppos;
+	private ApplicationContext		aContext;
+
+	private Dispatcher				dispatcher;
+	private int						maxZoom			= 50;
+	private Test					test;
+
+	private HashMap					testLines		= new HashMap();
 
 	private PlanToolBar				toolBar;
 
 	// new tests, which haven't saved yet
-	private ArrayList				unsavedTests;
+	//private ArrayList unsavedTests;
 
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -176,8 +169,6 @@ public class PlanPanel extends JPanel implements OperationListener {
 		});
 
 		initModule(aContext.getDispatcher());
-		filter = new TestFilter();
-
 		setStartDate(new Date(System.currentTimeMillis()));
 		updateRealScale();
 	}
@@ -243,49 +234,70 @@ public class PlanPanel extends JPanel implements OperationListener {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			if (tue.testSelected) {
 				Test test = tue.test;
-				boolean found = false;
-				if (tests != null) {
-					for (Enumeration en = tests.elements(); en.hasMoreElements();) {
-						Test t = (Test) en.nextElement();
-						if (t.getId().equals(test.getId())) {
-							found = true;
-							break;
-						}
-					}
-				}
-				if (unsavedTests.contains(test)) {
-					found = true;
-				}
-				if (!found) {
-					Environment.log(Environment.LOG_LEVEL_INFO, "new test catched"); //$NON-NLS-1$
-					unsavedTests.add(test);
-					{
-						TestLine testLine;
-						if (testLines == null)
-							System.out.println("testLines is null"); //$NON-NLS-1$
-						if (test == null)
-							System.out.println("test is null"); //$NON-NLS-1$
-						else if (test.getMonitoredElementId() == null)
-							System.out.println("test.monitored_element_id is null"); //$NON-NLS-1$
-						if (testLines.containsKey(test.getMonitoredElementId()))
-							testLine = (TestLine) testLines.get(test.getMonitoredElementId());
-						else {
-							String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
-							testLine = new TestLine(aContext,
-							//parent.getViewport(),
-													meName, scaleStart.getTime(), scaleEnd.getTime(), margin / 2);
-							testLine.setPreferredSize(new Dimension(0, 20));
-							testLines.put(test.getMonitoredElementId(), testLine);
-							add(testLine);
-						}
-						testLine.addTest(test);
-
+				if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
+					this.test = test;
+					boolean found = false;
+					//				java.util.List tests = ((SchedulerModel)
+					// this.aContext.getApplicationModel()).getTests();
+					//				java.util.List unsavedTests = ((SchedulerModel)
+					// this.aContext.getApplicationModel()).getUnsavedTests();
+					//				if (tests != null) {
+					//					for (Iterator it = tests.iterator(); it.hasNext();) {
+					//						Test t = (Test) it.next();
+					//						if (t.getId().equals(test.getId())) {
+					//							found = true;
+					//							break;
+					//						}
+					//					}
+					//				}
+					//				if ((unsavedTests != null) &&
+					// (unsavedTests.contains(test)))
+					// {
+					//					found = true;
+					//				}
+					//				
+					found = this.testLines.containsKey(test.getMonitoredElementId());
+					if (found) {
+						TestLine testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
+						System.out.println("testLine found");
+						System.out.println("testLine.getTest(test.getId()):" + testLine.getTest(test.getId()));
+						found = testLine.getTest(test.getId()) != null;
 					}
 
+					System.out.println("found:" + found);
+
+					if (!found) {
+						Environment.log(Environment.LOG_LEVEL_INFO, "new test catched"); //$NON-NLS-1$
+						//unsavedTests.add(test);
+						{
+							TestLine testLine;
+							if (this.testLines == null)
+								Environment.log(Environment.LOG_LEVEL_WARNING, "testLines is null"); //$NON-NLS-1$
+							if (test == null)
+								Environment.log(Environment.LOG_LEVEL_WARNING, "test is null"); //$NON-NLS-1$
+							else if (test.getMonitoredElementId() == null)
+								Environment.log(Environment.LOG_LEVEL_WARNING, "test.monitored_element_id is null"); //$NON-NLS-1$
+							if (this.testLines.containsKey(test.getMonitoredElementId()))
+								testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
+							else {
+								String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
+								testLine = new TestLine(this.aContext,
+								//parent.getViewport(),
+														meName, this.scaleStart.getTime(), this.scaleEnd.getTime(),
+														this.margin / 2);
+								testLine.setPreferredSize(new Dimension(0, 20));
+								this.testLines.put(test.getMonitoredElementId(), testLine);
+								add(testLine);
+							}
+							testLine.addTest(test);
+
+						}
+
+					}
 				}
+				revalidate();
+				this.parent.repaint();
 			}
-			revalidate();
-			this.parent.repaint();
 		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
 			this.testLines.clear();
 			removeAll();
@@ -296,10 +308,14 @@ public class PlanPanel extends JPanel implements OperationListener {
 				Test test = (Test) ae.getSource();
 				Object key = it.next();
 				TestLine line = (TestLine) this.testLines.get(key);
+				//System.out.println("test "+test.getId()+" found at
+				// TestLine");
 				line.removeTest(test);
+				//System.out.println("line.isEmpty():"+line.isEmpty());
 				if (line.isEmpty())
 					remove(line);
 			}
+			repaint();
 			revalidate();
 			this.parent.repaint();
 		}
@@ -313,11 +329,11 @@ public class PlanPanel extends JPanel implements OperationListener {
 					+ " where n determine one of PlanPanel.getSupportedScales() element"); //$NON-NLS-1$
 			return;
 		}
-		scale = n;
+		this.scale = n;
 	}
 
 	public void setStartDate(Date start) {
-		startDate = start;
+		this.startDate = start;
 
 		cal.setTime(start);
 		switch (scale) {
@@ -457,9 +473,58 @@ public class PlanPanel extends JPanel implements OperationListener {
 	void updateDate(Date date, int scale) {
 		setScale(scale);
 		setStartDate(date);
+		SchedulerModel model = (SchedulerModel) aContext.getApplicationModel();
+		model.updateTests(scaleStart.getTime(), scaleEnd.getTime());
 		updateTests();
+	}
+
+	void updateScale(double k) {
+		updateScale(k, (int) (parent.getViewport().getViewPosition().x + parent.getVisibleRect().width
+				* (k * 0.5 - 0.5) - margin));
 		updateRealScale();
 		parent.revalidate();
+	}
+
+	void updateScale(double k, int view_x) {
+		if (getSize().width / parent.getVisibleRect().width >= maxZoom - 1 && k > 1) {
+			parent.repaint();
+			return;
+		}
+
+		if (getSize().width * k > maxZoom * parent.getVisibleRect().width)
+			k = (double) (maxZoom * parent.getVisibleRect().width) / (double) getSize().width;
+
+		setPreferredSize(new Dimension((int) ((getSize().width - 2 * margin) * k), getPreferredSize().height));
+		setSize(new Dimension((int) ((getSize().width - 2 * margin) * k), Math.max(getSize().height,
+																					getPreferredSize().height)));
+		/*
+		 * for (Iterator it = testLines.values().iterator(); it.hasNext();) {
+		 * TestLine testLine = (TestLine)it.next();
+		 * testLine.setPreferredSize(new Dimension(getPreferredSize().width,
+		 * 20)); }
+		 */
+		Point p = new Point((int) ((view_x - margin) * k), view_x);
+		parent.getViewport().setViewPosition(p);
+
+		updateRealScale();
+
+		parent.revalidate();
+	}
+
+	void updateScale2Fit() {
+		setPreferredSize(new Dimension(600, getPreferredSize().height));
+		setSize(new Dimension(600, getPreferredSize().height));
+
+		updateRealScale();
+		parent.revalidate();
+	}
+
+	private void initModule(Dispatcher dispatcher) {
+		//timer.start();
+		this.dispatcher = dispatcher;
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REMOVE_TEST);
 	}
 
 	private void updateRealScale() {
@@ -516,136 +581,9 @@ public class PlanPanel extends JPanel implements OperationListener {
 		}
 	}
 
-	void updateScale(double k) {
-		updateScale(k, (int) (parent.getViewport().getViewPosition().x + parent.getVisibleRect().width
-				* (k * 0.5 - 0.5) - margin));
-	}
-
-	void updateScale(double k, int view_x) {
-		if (getSize().width / parent.getVisibleRect().width >= maxZoom - 1 && k > 1) {
-			parent.repaint();
-			return;
-		}
-
-		if (getSize().width * k > maxZoom * parent.getVisibleRect().width)
-			k = (double) (maxZoom * parent.getVisibleRect().width) / (double) getSize().width;
-
-		setPreferredSize(new Dimension((int) ((getSize().width - 2 * margin) * k), getPreferredSize().height));
-		setSize(new Dimension((int) ((getSize().width - 2 * margin) * k), Math.max(getSize().height,
-																					getPreferredSize().height)));
-		/*
-		 * for (Iterator it = testLines.values().iterator(); it.hasNext();) {
-		 * TestLine testLine = (TestLine)it.next();
-		 * testLine.setPreferredSize(new Dimension(getPreferredSize().width,
-		 * 20)); }
-		 */
-		Point p = new Point((int) ((view_x - margin) * k), view_x);
-		parent.getViewport().setViewPosition(p);
-
-		updateRealScale();
-
-		parent.updateUI();
-	}
-
-	void updateScale2Fit() {
-		setPreferredSize(new Dimension(600, getPreferredSize().height));
-		setSize(new Dimension(600, getPreferredSize().height));
-
-		updateRealScale();
-		parent.updateUI();
-	}
-
-	private void initModule(Dispatcher dispatcher) {
-		unsavedTests = new ArrayList();
-		//timer.start();
-		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.TYPE);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REMOVE_TEST);
-	}
-
-	private void updateTests() {
+	protected void updateTests() {
 		Environment.log(Environment.LOG_LEVEL_INFO, "updateTests", getClass().getName()); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
-		aContext.getDispatcher().notify(
-										new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
-												.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
-		DataSourceInterface dsi = aContext.getDataSourceInterface();
-		if (dsi == null)
-			return;
-
-		//		dsi.GetTests(scaleStart.getTime(), scaleEnd.getTime());
-		SurveyDataSourceImage sDataSrcImg = new SurveyDataSourceImage(dsi);
-		String[] ids = sDataSrcImg.GetTests(scaleStart.getTime(), scaleEnd.getTime());
-
-		SimpleDateFormat lsdf = new SimpleDateFormat("dd.MM.yyyy HH:mm"); //$NON-NLS-1$
-		Environment.log(Environment.LOG_LEVEL_INFO, ids.length + " test(s) found from " //$NON-NLS-1$
-				+ lsdf.format(scaleStart) + " till " //$NON-NLS-1$
-				+ lsdf.format(scaleEnd));
-
-		//выбираем необходимые тесты из пула
-		Hashtable hash = new Hashtable();
-		for (int i = 0; i < ids.length; i++) {
-			Environment.log(Environment.LOG_LEVEL_INFO, "get test#" + ids[i]); //$NON-NLS-1$
-			Test test = (Test) Pool.get(Test.TYPE, ids[i]);
-			//			DataSourceInterface dsi = aContext.getDataSourceInterface();
-			if (test.getAnalysisId().length() > 0) //$NON-NLS-1$
-				dsi.GetAnalysis(test.getAnalysisId());
-			if (test.getEvaluationId().length() > 0) //$NON-NLS-1$
-				dsi.GetEvaluation(test.getEvaluationId());
-			//test.setChanged(false);
-
-			/**
-			 * todo fix problem due to null test
-			 */
-
-			if (test != null) {
-				hash.put(test.getId(), test);
-			} else {
-				Environment.log(Environment.LOG_LEVEL_WARNING, "test " + ids[i] + " is null"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
-		}
-		ObjectResourceDomainFilter ordf = new ObjectResourceDomainFilter(this.aContext.getSessionInterface()
-				.getDomainId());
-
-		System.out.println("this.aContext.getSessionInterface().getDomainId():"
-				+ this.aContext.getSessionInterface().getDomainId());
-
-		tests = new DataSet(hash);
-
-		tests = ordf.filter(tests);
-
-		tests = filter.filter(tests);
-
-		//подгружаем тестреквесты и недостающие тесты
-		HashSet treqs = new HashSet();
-		for (Enumeration en = tests.elements(); en.hasMoreElements();) {
-			Test test = (Test) en.nextElement();
-			treqs.add(test.getRequestId());
-		}
-		dsi.GetRequests();
-		HashSet loadTests = new HashSet();
-		for (Iterator it = treqs.iterator(); it.hasNext();) {
-			TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, (String) it.next());
-			if (treq != null) {
-				//				for (Enumeration en = treq.test_ids.elements();
-				//					en.hasMoreElements();
-				//					) {
-				{
-					java.util.List testIds = treq.getTestIds();
-					for (Iterator it2 = testIds.iterator(); it2.hasNext();) {
-						String testId = (String) it2.next();
-						Environment.log(Environment.LOG_LEVEL_INFO, "test_id:" + testId); //$NON-NLS-1$
-						if (tests.get(testId) == null)
-							loadTests.add(testId);
-					}
-				}
-			}
-		}
-		if (!loadTests.isEmpty())
-			new SurveyDataSourceImage(dsi).GetTests((String[]) loadTests.toArray(new String[loadTests.size()]));
-
 		// clear old tests
 		if (testLines == null)
 			testLines = new HashMap();
@@ -654,21 +592,24 @@ public class PlanPanel extends JPanel implements OperationListener {
 		// and fill with new ones
 
 		removeAll();
-		for (Enumeration en = tests.elements(); en.hasMoreElements();) {
-			TestLine testLine;
-			Test test = (Test) en.nextElement();
-			if (testLines.containsKey(test.getMonitoredElementId()))
-				testLine = (TestLine) testLines.get(test.getMonitoredElementId());
-			else {
-				String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
-				testLine = new TestLine(aContext,
-				//parent.getViewport(),
-										meName, scaleStart.getTime(), scaleEnd.getTime(), margin / 2);
-				testLine.setPreferredSize(new Dimension(0, 20));
-				testLines.put(test.getMonitoredElementId(), testLine);
+		java.util.List tests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
+		if (tests != null) {
+			for (Iterator it = tests.iterator(); it.hasNext();) {
+				TestLine testLine;
+				Test test = (Test) it.next();
+				if (testLines.containsKey(test.getMonitoredElementId()))
+					testLine = (TestLine) testLines.get(test.getMonitoredElementId());
+				else {
+					String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
+					testLine = new TestLine(aContext,
+					//parent.getViewport(),
+											meName, scaleStart.getTime(), scaleEnd.getTime(), margin / 2);
+					testLine.setPreferredSize(new Dimension(0, 20));
+					testLines.put(test.getMonitoredElementId(), testLine);
+				}
+				testLine.addTest(test);
+				add(testLine);
 			}
-			testLine.addTest(test);
-			add(testLine);
 		}
 
 		//adding testlines to panel
@@ -681,8 +622,5 @@ public class PlanPanel extends JPanel implements OperationListener {
 		setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * testLines.values().size()));
 		parent.repaint();
 		//		this.setCursor(UIStorage.DEFAULT_CURSOR);
-		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
-				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
-		dispatcher.notify(new OperationEvent(tests, 0, COMMAND_NAME_ALL_TESTS));
 	}
 }

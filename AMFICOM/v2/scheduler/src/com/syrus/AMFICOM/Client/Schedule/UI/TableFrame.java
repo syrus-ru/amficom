@@ -310,12 +310,14 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 
 		public int getTestRowIndex(Test test) {
-			int rowIndex = 0;
-			for (int i = 0; i < this.testLines.size(); i++) {
-				TestTableRow row = (TestTableRow) this.testLines.get(i);
-				if (row.getTest().equals(test)) {
-					rowIndex = i;
-					break;
+			int rowIndex = -1;
+			if (this.testLines != null) {
+				for (int i = 0; i < this.testLines.size(); i++) {
+					TestTableRow row = (TestTableRow) this.testLines.get(i);
+					if (row.getTest().equals(test)) {
+						rowIndex = i;
+						break;
+					}
 				}
 			}
 			return rowIndex;
@@ -497,9 +499,11 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	JTable				listTable;
 	ApplicationContext	aContext;
 	private JPanel		panel;
-	ArrayList			savedTests;
-	boolean				skipTestUpdate	= false;
-	private ArrayList	unsavedTests;
+	private Test test;
+	//ArrayList savedTests;
+	//boolean				skipTestUpdate	= false;
+
+	//private ArrayList unsavedTests;
 
 	public TableFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -512,26 +516,28 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		String commandName = ae.getActionCommand();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
-			if (!skipTestUpdate) {
-				TestUpdateEvent tue = (TestUpdateEvent) ae;
-				Test test = tue.test;
+			TestUpdateEvent tue = (TestUpdateEvent) ae;
+			Test test = tue.test;
+			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
+				java.util.List savedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
+				java.util.List unsavedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getUnsavedTests();				
+				this.test = test;
 				boolean found = false;
-				if (savedTests != null) {
-					if (savedTests.contains(test))
-						found = true;
-				}
-				if (!found) {
-					if (unsavedTests != null) {
-						if (unsavedTests.contains(test))
-							found = true;
-					}
-				}
+				//				if (savedTests != null) {
+				//					if (savedTests.contains(test))
+				//						found = true;
+				//				}
+				//				if (!found) {
+				//					if (unsavedTests != null) {
+				//						if (unsavedTests.contains(test))
+				//							found = true;
+				//					}
+				//				}
 
-				if (!found) {
+				int rowIndex = ((TestTableModel) this.listTable.getModel()).getTestRowIndex(test);
+
+				if (rowIndex < 0) {
 					if (test.isChanged()) {
-						if (unsavedTests == null)
-							unsavedTests = new ArrayList();
-						unsavedTests.add(test);
 						TestTableModel model = (TestTableModel) listTable.getModel();
 						//model.removeAll();
 						TestTableRow row = new TestTableRow(test);
@@ -540,19 +546,20 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 						listTable.revalidate();
 					} else
 						savedTests.add(test);
-				} else {
-					int row = ((TestTableModel) listTable.getModel()).getTestRowIndex(test);
-					this.listTable.setRowSelectionInterval(row, row);
 				}
+				rowIndex = ((TestTableModel) this.listTable.getModel()).getTestRowIndex(test);
+				this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
+
+			
 			}
 
-		} else if (commandName.equals(PlanPanel.COMMAND_NAME_ALL_TESTS)) {
-			setSavedTests((DataSet) ae.getSource());
+		} else if (commandName.equals(SchedulerModel.COMMAND_NAME_ALL_TESTS)) {
+			setSavedTests();
 		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
-			if (this.savedTests != null)
-				this.savedTests.clear();
-			if (this.unsavedTests != null)
-				this.unsavedTests.clear();
+			//			if (this.savedTests != null)
+			//				this.savedTests.clear();
+			//			if (this.unsavedTests != null)
+			//				this.unsavedTests.clear();
 			TestTableModel model = (TestTableModel) this.listTable.getModel();
 			model.removeAll();
 			this.listTable.removeAll();
@@ -562,22 +569,20 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 	}
 
-	public void setSavedTests(final DataSet tests) {
+	public void setSavedTests() {
 		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
-				if (savedTests == null)
-					savedTests = new ArrayList();
-				TestTableModel model = (TestTableModel) listTable.getModel();
+				TestTableModel model = (TestTableModel) TableFrame.this.listTable.getModel();
 				model.removeAll();
-				for (int i = 0; i < tests.size(); i++) {
-					Test test = (Test) tests.get(i);
-					savedTests.add(test);
+				java.util.List tests = ((SchedulerModel) TableFrame.this.aContext.getApplicationModel()).getTests();
+				for (Iterator it = tests.iterator(); it.hasNext();) {
+					Test test = (Test) it.next();
 					TestTableRow row = new TestTableRow(test);
 					model.addRow(row);
 				}
-				listTable.repaint();
-				listTable.revalidate();
+				TableFrame.this.listTable.repaint();
+				TableFrame.this.listTable.revalidate();
 			}
 		});
 	}
@@ -601,11 +606,11 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 						if (model != null) {
 							//System.out.println("test:" + line.getTest());
 							Test test = line.getTest();
-							TableFrame.this.skipTestUpdate = true;
+							//TableFrame.this.skipTestUpdate = true;
 							TableFrame.this.dispatcher
 									.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
 							//System.out.println("send test:"+test.getId());
-							TableFrame.this.skipTestUpdate = false;
+							//TableFrame.this.skipTestUpdate = false;
 						}
 					} else if (SwingUtilities.isRightMouseButton(evt)) {
 						final int[] rowIndices = table.getSelectedRows();
@@ -723,7 +728,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
-		this.dispatcher.register(this, PlanPanel.COMMAND_NAME_ALL_TESTS);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_NAME_ALL_TESTS);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
 

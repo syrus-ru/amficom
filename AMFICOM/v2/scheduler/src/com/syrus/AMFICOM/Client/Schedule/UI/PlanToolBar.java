@@ -7,20 +7,12 @@ import java.util.*;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.Analysis;
-import com.syrus.AMFICOM.Client.Resource.Result.Evaluation;
-import com.syrus.AMFICOM.Client.Resource.Result.Test;
-import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
-import com.syrus.AMFICOM.Client.Resource.Result.TestRequest;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
@@ -57,29 +49,28 @@ class PlanToolBar extends JPanel {
 		}
 	}
 
-	private static final boolean	CREATE_ALLOW	= true;
-	static final int				H				= 22;
-	private JButton					applyButton		= new JButton();
+	static final int			H				= 22;
+	private JButton				applyButton		= new JButton();
 
-	private JButton					dateButton		= new JButton(UIStorage.CALENDAR_ICON);
-	JSpinner						dateSpinner		= new DateSpinner();
+	private JButton				dateButton		= new JButton(UIStorage.CALENDAR_ICON);
+	JSpinner					dateSpinner		= new DateSpinner();
 
-	private JButton					nowButton		= new JButton(UIStorage.TIME_ICON);
+	private JButton				nowButton		= new JButton(UIStorage.TIME_ICON);
 
-	PlanPanel						panel;
-	private ApplicationContext		aContext;
-	AComboBox						scaleComboBox;
-	JSpinner						timeSpinner		= new TimeSpinner();
+	PlanPanel					panel;
+	//private ApplicationContext	aContext;
+	Dispatcher			dispatcher;
+	AComboBox			scaleComboBox;
+	JSpinner			timeSpinner		= new TimeSpinner();
 
-	private JButton					zoomInButton	= new JButton();
-	private JButton					zoomNoneButton	= new JButton();
-	private JButton					zoomOutButton	= new JButton();
+	private JButton				zoomInButton	= new JButton();
+	private JButton				zoomNoneButton	= new JButton();
+	private JButton				zoomOutButton	= new JButton();
 
 	public PlanToolBar(final ApplicationContext aContext, final PlanPanel panel) {
-		this.aContext = aContext;
-		if (aContext != null) {
-			// nothing
-		}
+		//this.aContext = aContext;		
+		if (aContext != null) 
+			this.dispatcher = aContext.getDispatcher();		
 		this.panel = panel;
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -94,6 +85,8 @@ class PlanToolBar extends JPanel {
 			scales[i] = new String(LangModelSchedule.getString(PlanPanel.SCALES[i]));
 		this.scaleComboBox = new AComboBox(scales);
 		this.scaleComboBox.setSelectedItem(LangModelSchedule.getString("1 week"));
+		panel.setScale(PlanToolBar.this.scaleComboBox.getSelectedIndex());
+		panel.updateTests();
 		this.dateButton.setMargin(UIStorage.INSET_NULL);
 		this.dateButton.setFocusable(false);
 		this.dateButton.setToolTipText(LangModelSchedule.getString("Calendar")); //$NON-NLS-1$
@@ -150,18 +143,6 @@ class PlanToolBar extends JPanel {
 
 		box.add(new JLabel(LangModelSchedule.getString("Detalization"))); //$NON-NLS-1$
 		box.add(Box.createHorizontalStrut(4));
-		//		{
-		//			int width = 0;
-		//			FontMetrics fm = scaleComboBox.getFontMetrics(scaleComboBox
-		//					.getFont());
-		//			for (int i = 0; i < scales.length; i++) {
-		//				int w = fm.stringWidth(scales[i]);
-		//				width = (width > w) ? width : w;
-		//			}
-		//			width += 30;
-		//			Dimension d = new Dimension(width, H);
-		//			UIStorage.setRigidSize(scaleComboBox, d);
-		//		}
 
 		box.add(scaleComboBox);
 		box.add(Box.createHorizontalStrut(10));
@@ -267,7 +248,8 @@ class PlanToolBar extends JPanel {
 				ReportBuilder.invokeAsynchronously(new Runnable() {
 
 					public void run() {
-						PlanToolBar.this.saveTest();
+						PlanToolBar.this.dispatcher.notify(new OperationEvent(new Boolean(false), 0,
+																SchedulerModel.COMMAND_COMMIT_CHANGES));
 						Calendar date = Calendar.getInstance();
 						date.setTime((Date) PlanToolBar.this.dateSpinner.getValue());
 						Calendar time = Calendar.getInstance();
@@ -277,15 +259,13 @@ class PlanToolBar extends JPanel {
 						date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
 
 						panel.updateDate(date.getTime(), PlanToolBar.this.scaleComboBox.getSelectedIndex());
-						aContext.getDispatcher()
-								.notify(
-										new OperationEvent(new Boolean(false), 0,
-															SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE));
+						PlanToolBar.this.dispatcher.notify(new OperationEvent(new Boolean(false), 0,
+																SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE));
 					}
 				}, LangModelSchedule.getString("Updating_tests_from_BD"));
 			}
-		});
-
+		});		
+		
 	}
 
 	public static Icon getColorIcon(Color color) {
@@ -303,123 +283,4 @@ class PlanToolBar extends JPanel {
 		Icon icon = new ImageIcon(img);
 		return icon;
 	}
-
-	//private void jbInit() throws Exception {
-	//}
-
-	void saveTest() {
-		DataSourceInterface dataSource = this.aContext.getDataSourceInterface();
-		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.typ);
-		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.typ);
-		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.typ);
-		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYPE);
-		Hashtable unsavedTest = Pool.getChangedHash(Test.TYPE);
-
-		// remove tests
-		if (unsavedTest != null) {
-			java.util.List deleteTests = new ArrayList();
-			for (Iterator it = unsavedTest.keySet().iterator(); it.hasNext();) {
-				Object key = it.next();
-				Test test = (Test) unsavedTest.get(key);
-				if (test.getDeleted() != 0) {
-					String testId = test.getId();
-					if (test.getStatus().value() != TestStatus._TEST_STATUS_SCHEDULED)
-						deleteTests.add(testId);
-					TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, test.getRequestId());
-					//System.out.println("removing test:" + testId + " from testRequest:" + treq.getId());
-					treq.removeTest(test);
-					Pool.remove(Test.TYPE, testId);
-					unsavedTest.remove(key);
-				}
-
-			}
-			String[] deleteTestIds = (String[]) deleteTests.toArray(new String[deleteTests.size()]);
-			dataSource.RemoveTests(deleteTestIds);
-
-		}
-
-		for (int i = 0; i < 5; i++) {
-			Hashtable table;
-			switch (i) {
-				case 0:
-					table = unsavedTestArgumentSet;
-					break;
-				case 1:
-					table = unsavedAnalysis;
-					break;
-				case 2:
-					table = unsavedEvaluation;
-					break;
-				case 3:
-					table = unsavedTestRequest;
-					break;
-				case 4:
-					table = unsavedTest;
-					break;
-				default:
-					table = null;
-					break;
-			}
-			if (table != null) {
-				Set keys = table.keySet();
-				for (Iterator it = keys.iterator(); it.hasNext();) {
-					String key = (String) it.next();
-					ObjectResource obj = (ObjectResource) table.get(key);
-					if (obj instanceof TestArgumentSet) {
-						TestArgumentSet tas = (TestArgumentSet) obj;
-						Environment.log(Environment.LOG_LEVEL_INFO, "saveTestArgumentSet(" + tas.getId() + ")");
-						if (CREATE_ALLOW) {
-							dataSource.saveTestArgumentSet(tas.getId());
-							tas.setChanged(false);
-						}
-					} else if (obj instanceof Analysis) {
-						Analysis an = (Analysis) obj;
-						Environment.log(Environment.LOG_LEVEL_INFO, "createAnalysis(" + an.getId() + ");");
-						if (CREATE_ALLOW) {
-							dataSource.createAnalysis(an.getId());
-							an.setChanged(false);
-						}
-					} else if (obj instanceof Evaluation) {
-						Evaluation ev = (Evaluation) obj;
-						Environment.log(Environment.LOG_LEVEL_INFO, "createEvaluation(" + ev.getId() + ")");
-						if (CREATE_ALLOW) {
-							dataSource.createEvaluation(ev.getId());
-							ev.setChanged(false);
-						}
-					} else if (obj instanceof TestRequest) {
-						TestRequest testRequest = (TestRequest) obj;
-						//						String[] ids = new
-						// String[testRequest.test_ids.size()];
-						//						for (int j = 0; j < ids.length; j++) {
-						//							ids[j] = (String) testRequest.test_ids.get(j);
-						//							System.out.println("ids[" + j + "]=" + ids[j]);
-						//						}
-						java.util.List list = testRequest.getTestIds();
-						String[] ids = new String[list.size()];
-						int j = 0;
-						//System.out.println("list.size():" + list.size());
-						for (Iterator it2 = list.iterator(); it2.hasNext();) {
-							ids[j++] = (String) it2.next();
-							Environment.log(Environment.LOG_LEVEL_INFO, "ids[" + (j - 1) + "]=" + ids[j - 1]);
-						}
-						//System.out.println("j:" + j);
-						Environment.log(Environment.LOG_LEVEL_INFO, "RequestTest(" + testRequest.getId() + ")");
-						if (CREATE_ALLOW) {
-							testRequest.updateLocalFromTransferable();
-							dataSource.RequestTest(testRequest.getId(), ids);
-							testRequest.setChanged(false);
-						}
-					} else if (obj instanceof Test) {
-						// nothing ???
-						Test test = (Test) obj;
-						Environment.log(Environment.LOG_LEVEL_INFO, "test:" + test.getId());
-						test.setChanged(false);
-					}
-					Environment.log(Environment.LOG_LEVEL_INFO, "#" + i + " " + key + " " + obj.getClass().getName());
-				}
-			}
-		}
-		this.aContext.getDispatcher().notify(new OperationEvent("", 0, SchedulerModel.COMMAND_TEST_SAVED_OK));
-	}
-
 }

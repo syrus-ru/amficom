@@ -229,9 +229,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
-		aContext.setDispatcher(dispatcher);
-		if (aContext.getApplicationModel() == null)
-			aContext.setApplicationModel(new ApplicationModel());
+		aContext.setDispatcher(dispatcher);		
 		setModel(aContext.getApplicationModel());
 	}
 

@@ -132,8 +132,8 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		// TestParametersPanel.COMMAND_CHANGE_ME_TYPE);
 		//		this.dispatcher.register(this,
 		// TestParametersPanel.COMMAND_CHANGE_TEST_TYPE);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_CREATE_TEST);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_APPLY_TEST);
+//		this.dispatcher.register(this, SchedulerModel.COMMAND_CREATE_TEST);
+//		this.dispatcher.register(this, SchedulerModel.COMMAND_APPLY_TEST);
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_REMOVE_TEST);
