@@ -220,7 +220,7 @@ src\com\syrus\AMFICOM\Client\Resource\EmptyDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\ImageCatalogue.java
 src\com\syrus\AMFICOM\Client\Resource\ImageResource.java
 src\com\syrus\AMFICOM\Client\Resource\MyDataFlavor.java
-src\com\syrus\AMFICOM\Client\Resource\MyUtil.java
+src\com\syrus\AMFICOM\Client\Resource\MiscUtil.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResource.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResourceModel.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResourceNameSorter.java

@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
 import com.syrus.AMFICOM.Client.General.UI.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
