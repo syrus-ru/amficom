@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.36 2004/12/07 09:51:11 bass Exp $
+ * $Id: general.idl,v 1.37 2004/12/07 10:11:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -99,10 +99,12 @@ module corba {
 	};
 
 	/**
-	 * If {@link #sort} is {@link StringFieldSort#STRINGSORT_INTEGER}, then
-	 * {@link #field_string}'s value is interpreted as an integer rather than
-	 * a string. Mapping of this value to the specific column in a table
-	 * is entity-specific (i. e. depends on {@link #entity_code}).
+	 * If {@link StringFieldCondition_Transferable#sort} is
+	 * {@link StringFieldSort#STRINGSORT_INTEGER}, then
+	 * {@link StringFieldCondition_Transferable#field_string}'s value is
+	 * interpreted as an integer rather than a string. Mapping of this
+	 * value to the specific column in a table is entity-specific (i. e.
+	 * depends on {@link StringFieldCondition_Transferable#entity_code}).
 	 */
 	struct StringFieldCondition_Transferable {	
 		short entity_code;
