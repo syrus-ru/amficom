@@ -85,19 +85,19 @@ public final class PathElementController implements ObjectResourceController
 			else if (key.equals(COLUMN_NAME))
 				result = pe.getName();
 			else if (key.equals(COLUMN_SEQUENTIAL_NUMBER))
-				result = Integer.toString(pe.sequentialNumber());
+				result = Integer.toString(pe.getSequentialNumber());
 			else if (key.equals(COLUMN_SCHEME_ID))
-				result = pe.scheme().getId().getIdentifierString();
+				result = pe.getParentScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_ELEMENT_ID))
-				result = pe.abstractSchemeElement().getId().getIdentifierString();
+				result = pe.getAbstractSchemeElement().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CABLE_THREAD_ID))
-				result = pe.schemeCableThread().getId().getIdentifierString();
+				result = pe.getSchemeCableThread().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TYPE))
-				result = Integer.toString(pe.type().value());
+				result = Integer.toString(pe.getPathElementKind().value());
 			else if (key.equals(COLUMN_START_ABSTRACT_PORT_ID))
-				result = pe.startAbstractSchemePort().getId().getIdentifierString();
+				result = pe.getStartAbstractSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_END_ABSTRACT_PORT_ID))
-				result = pe.endAbstractSchemePort().getId().getIdentifierString();
+				result = pe.getEndAbstractSchemePort().getId().getIdentifierString();
 
 		}
 		return result;

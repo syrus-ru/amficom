@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.PathDecomposer;
-import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
+import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 
 public final class PathElementsPanel extends AnalysisPanel
 {
@@ -107,7 +107,7 @@ public final class PathElementsPanel extends AnalysisPanel
 
 				if (pe.equals(activePE))
 					g.setColor(Color.RED);
-				else if (pe.type().equals(Type.SCHEME_CABLE_LINK))
+				else if (pe.getPathElementKind().value() == PathElementKind._SCHEME_CABLE_LINK)
 					g.setColor(Color.GREEN);
 				else
 					g.setColor(Color.BLUE);

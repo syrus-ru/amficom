@@ -51,7 +51,7 @@ public class PathBuilder
 				return false;
 			}
 
-			if (pe.getPathElementType() == PathElementType.SCHEME_ELEMENT)
+			if (pe.getPathElementKind() == PathElementKind.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
 //				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
@@ -103,7 +103,7 @@ public class PathBuilder
 			if (pe.getEndAbstractSchemePort() == null)
 				return false;
 
-			if (pe.getPathElementType() == PathElementType.SCHEME_ELEMENT)
+			if (pe.getPathElementKind() == PathElementKind.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
 //				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
@@ -182,7 +182,7 @@ public class PathBuilder
 			}
 
 
-			if (pe.getPathElementType() == PathElementType.SCHEME_ELEMENT)
+			if (pe.getPathElementKind() == PathElementKind.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
 //				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
@@ -244,7 +244,7 @@ public class PathBuilder
 			PathElement pe = (PathElement)lit.previous();
 
 			try {
-				newPE = PathElement.createInstance(creatorId, PathElementType.SCHEME_ELEMENT);
+				newPE = PathElement.createInstance(creatorId, PathElementKind.SCHEME_ELEMENT);
 			} 
 			catch (CreateObjectException e) {
 				Log.errorMessage("Can't create PathElement object " + e.getMessage());
@@ -255,7 +255,7 @@ public class PathBuilder
 			newPE.setSequentialNumber(pe.getSequentialNumber() + 1);
 			newPE.setStartAbstractSchemePort(pe.getEndAbstractSchemePort());
 
-			if (pe.getPathElementType() == PathElementType.SCHEME_LINK)
+			if (pe.getPathElementKind() == PathElementKind.SCHEME_LINK)
 			{
 //				SchemeLink link = (SchemeLink)pe.abstractSchemeElement();
 				SchemePort startPort = (SchemePort)pe.getEndAbstractSchemePort();
@@ -297,7 +297,7 @@ public class PathBuilder
 					state = MULTIPLE_PORTS;
 				// else we couldn't go further
 			}
-			else if (pe.getPathElementType() == PathElementType.SCHEME_CABLE_LINK)
+			else if (pe.getPathElementKind() == PathElementKind.SCHEME_CABLE_LINK)
 			{
 //				SchemeCableLink link = (SchemeCableLink)pe.abstractSchemeElement();
 				SchemeCablePort startPort = (SchemeCablePort)pe.getEndAbstractSchemePort();
@@ -359,7 +359,7 @@ public class PathBuilder
 				return null;
 			}
 			try {
-				newPE = PathElement.createInstance(creatorId, PathElementType.SCHEME_ELEMENT);
+				newPE = PathElement.createInstance(creatorId, PathElementKind.SCHEME_ELEMENT);
 			} 
 			catch (CreateObjectException e) {
 				Log.errorMessage("Can't create PathElement object " + e.getMessage());
@@ -382,7 +382,7 @@ public class PathBuilder
 		if (lit.hasPrevious())
 		{
 			PathElement pe = (PathElement)lit.previous();
-			if (pe.getPathElementType() == PathElementType.SCHEME_ELEMENT)
+			if (pe.getPathElementKind() == PathElementKind.SCHEME_ELEMENT)
 			{
 				SchemeElement se = (SchemeElement)pe.getAbstractSchemeElement();
 
@@ -423,7 +423,7 @@ public class PathBuilder
 
 		PathElement newPE;
 		try {
-			newPE = PathElement.createInstance(creatorId, PathElementType.SCHEME_LINK);
+			newPE = PathElement.createInstance(creatorId, PathElementKind.SCHEME_LINK);
 		} 
 		catch (CreateObjectException e) {
 			Log.errorMessage("Can't create PathElement object " + e.getMessage());
@@ -456,7 +456,7 @@ public class PathBuilder
 		if (lit.hasPrevious())
 		{
 			PathElement pe = (PathElement)lit.previous();
-			if (pe.getPathElementType() == PathElementType.SCHEME_ELEMENT)
+			if (pe.getPathElementKind() == PathElementKind.SCHEME_ELEMENT)
 			{
 				SchemeElement se = (SchemeElement)pe.getAbstractSchemeElement();
 				//если у предыдущего эл-та проставлен endPortId, ищем по нему
@@ -515,7 +515,7 @@ public class PathBuilder
 
 		PathElement newPE;
 		try {
-			newPE = PathElement.createInstance(creatorId, PathElementType.SCHEME_CABLE_LINK);
+			newPE = PathElement.createInstance(creatorId, PathElementKind.SCHEME_CABLE_LINK);
 		} 
 		catch (CreateObjectException e) {
 			Log.errorMessage("Can't create PathElement object " + e.getMessage());

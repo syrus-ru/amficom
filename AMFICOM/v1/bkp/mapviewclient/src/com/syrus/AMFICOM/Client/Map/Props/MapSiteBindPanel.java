@@ -477,7 +477,7 @@ public final class MapSiteBindPanel
 	
 	private boolean startsAt(SchemeCableLink scl, SchemeElement se)
 	{
-		return SchemeUtils.getCablePorts(se).contains(scl.sourceSchemeCablePort())
-			|| SchemeUtils.getCablePorts(se).contains(scl.targetSchemeCablePort());
+		return SchemeUtils.getCablePorts(se).contains(scl.getSourceSchemeCablePort())
+			|| SchemeUtils.getCablePorts(se).contains(scl.getTargetSchemeCablePort());
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.13 2005/03/25 18:07:54 bass Exp $
+ * $Id: MeasurementPath.java,v 1.14 2005/03/25 18:16:48 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.PathElementType;
+import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 
 import java.util.*;
 import java.util.Collections;
@@ -41,7 +41,7 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/03/25 18:07:54 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/25 18:16:48 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -416,9 +416,9 @@ public class MeasurementPath implements MapElement
 			for(int i = 0; i < this.schemePath.links().length; i++)
 			{
 				PathElement pe = this.schemePath.links()[i];
-				switch(pe.getPathElementType().value())
+				switch(pe.getPathElementKind().value())
 				{
-					case PathElementType._SCHEME_ELEMENT:
+					case PathElementKind._SCHEME_ELEMENT:
 						SchemeElement se = (SchemeElement )pe.getAbstractSchemeElement();
 						SiteNode site = this.mapView.findElement(se);
 						if(site != null)
@@ -427,7 +427,7 @@ public class MeasurementPath implements MapElement
 		//					mPath.addCablePath(site);
 						}
 						break;
-					case PathElementType._SCHEME_LINK:
+					case PathElementKind._SCHEME_LINK:
 						SchemeLink link = (SchemeLink )pe.getAbstractSchemeElement();
 						SchemeElement sse = SchemeUtils.getSchemeElementByDevice(this.scheme, link.getSourceSchemePort().getParentSchemeDevice());
 						SchemeElement ese = SchemeUtils.getSchemeElementByDevice(this.scheme, link.getTargetSchemePort().getParentSchemeDevice());
@@ -439,7 +439,7 @@ public class MeasurementPath implements MapElement
 		//					mPath.addCablePath(ssite);
 						}
 						break;
-					case PathElementType._SCHEME_CABLE_LINK:
+					case PathElementKind._SCHEME_CABLE_LINK:
 						SchemeCableLink clink = (SchemeCableLink )pe.getAbstractSchemeElement();
 						CablePath cp = this.mapView.findCablePath(clink);
 						if(cp != null)
