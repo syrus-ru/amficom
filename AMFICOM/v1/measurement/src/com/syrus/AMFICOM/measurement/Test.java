@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.59 2004/10/27 10:24:49 bob Exp $
+ * $Id: Test.java,v 1.60 2004/10/27 14:28:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +16,7 @@ import java.util.Iterator;
 
 import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -43,14 +43,12 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2004/10/27 10:24:49 $
+ * @version $Revision: 1.60 $, $Date: 2004/10/27 14:28:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
-public class Test extends StorableObject {
-	public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
-	
+public class Test extends StorableObject {	
 	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
 	protected static final int		RETRIEVE_LAST_MEASUREMENT	= 2;
 	protected static final int		RETRIEVE_NUMBER_OF_MEASUREMENTS	= 3;
@@ -93,7 +91,7 @@ public class Test extends StorableObject {
 															 this.measurementType,
 															 "create by Test:'" 
 															 + this.getDescription() + "' at "
-															 + SIMPLE_DATE_FORMAT.format(new Date(System.currentTimeMillis())),
+															 + DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
 															 this.monitoredElement.getId(),
 															 this.mainMeasurementSetup,
 															 startTime,
