@@ -10,6 +10,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
 
 public class ParameterType_Database extends StorableObject_Database  {
+	
+	public static final String	COLUMN_CODENAME		= "codename";
+	public static final String	COLUMN_DESCRIPTION	= "description";	
+	public static final String	COLUMN_NAME			= "name";	
 
 	private ParameterType fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof ParameterType)
@@ -21,8 +25,19 @@ public class ParameterType_Database extends StorableObject_Database  {
 	public void retrieve(StorableObject storableObject) throws Exception {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
 
-		String parameter_type_id_str = parameterType.getId().toString();
-		String sql = "SELECT codename, name, description FROM " + ObjectEntities.PARAMETERTYPE_ENTITY + " WHERE id = " + parameter_type_id_str;
+		String parameter_type_id_str = parameterType.getId().toSQLString();
+		String sql = SQL_SELECT
+			+ COLUMN_CODENAME
+			+ COMMA
+			+ COLUMN_NAME
+			+ COMMA
+			+ COLUMN_DESCRIPTION
+			+ SQL_FROM
+			+ ObjectEntities.PARAMETERTYPE_ENTITY
+			+ SQL_WHERE
+			+ COLUMN_ID
+			+ EQUALS
+			+ parameter_type_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -30,9 +45,9 @@ public class ParameterType_Database extends StorableObject_Database  {
 			Log.debugMessage("ParameterType_Database.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				parameterType.setAttributes(resultSet.getString("codename"),
-																		resultSet.getString("name"),
-																		resultSet.getString("description"));
+				parameterType.setAttributes(resultSet.getString(COLUMN_CODENAME),
+											resultSet.getString(COLUMN_NAME),
+											resultSet.getString(COLUMN_DESCRIPTION));
 			else
 				throw new Exception("No such parameter type: " + parameter_type_id_str);
 		}
@@ -73,8 +88,34 @@ public class ParameterType_Database extends StorableObject_Database  {
 		else
 			throw new Exception("ParameterType_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
 
-		String parameter_type_id_str = parameterType.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.PARAMETERTYPE_ENTITY + " (id, codename, name, description) VALUES (" + parameter_type_id_str + ", '" + parameterType.getCodename() + "', '" + parameterType.getName() + "', '" + parameterType.getDescription() + "')";
+		String parameter_type_id_str = parameterType.getId().toSQLString();
+		String sql = SQL_INSERT_INTO
+			+ ObjectEntities.PARAMETERTYPE_ENTITY
+			+ OPEN_BRACKET
+			+ COLUMN_ID
+			+ COMMA
+			+ COLUMN_CODENAME
+			+ COMMA
+			+ COLUMN_NAME
+			+ COMMA
+			+ COLUMN_DESCRIPTION
+			+ CLOSE_BRACKET
+			+ SQL_VALUES
+			+ OPEN_BRACKET
+			+ parameter_type_id_str
+			+ COMMA
+			+ APOSTOPHE
+			+ parameterType.getCodename()
+			+ APOSTOPHE
+			+ COMMA
+			+ APOSTOPHE
+			+ parameterType.getName()
+			+ APOSTOPHE
+			+ COMMA
+			+ APOSTOPHE
+			+ parameterType.getDescription()
+			+ APOSTOPHE
+			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -105,15 +146,28 @@ public class ParameterType_Database extends StorableObject_Database  {
 	}
 
 	public static ParameterType retrieveForCodename(String codename) throws Exception {
-		String sql = "SELECT id FROM " + ObjectEntities.PARAMETERTYPE_ENTITY + " WHERE codename = '" + codename + "'";
+		String sql = SQL_SELECT
+			+ COLUMN_ID
+			+ SQL_FROM
+			+ ObjectEntities.PARAMETERTYPE_ENTITY
+			+ SQL_WHERE
+			+ COLUMN_CODENAME
+			+ EQUALS
+			+ APOSTOPHE
+			+ codename
+			+ APOSTOPHE;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("ParameterType_Database.retrieveForCodename | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
-				return new ParameterType(new Identifier(resultSet.getLong("id")));
+			if (resultSet.next()){
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
+				return new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)));
+			}
 			else
 				throw new Exception("No such parameter type with codename: '" + codename + "'");
 		}
