@@ -10,67 +10,39 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 public class IdentifierGenerator {
-	private static Map entityMap;
-
-	static {
-		entityMap = new HashMap(30);
-
-		addEntity(ObjectEntities.PARAMETERTYPE_ENTITY, ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
-		addEntity(ObjectEntities.MEASUREMENTTYPE_ENTITY, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-		addEntity(ObjectEntities.ANALYSISTYPE_ENTITY, ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-		addEntity(ObjectEntities.EVALUATIONTYPE_ENTITY, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
-
-		addEntity(ObjectEntities.PERMATTR_ENTITY, ObjectEntities.PERMATTR_ENTITY_CODE);
-		addEntity(ObjectEntities.DOMAIN_ENTITY, ObjectEntities.DOMAIN_ENTITY_CODE);
-		addEntity(ObjectEntities.MCM_ENTITY, ObjectEntities.MCM_ENTITY_CODE);
-		addEntity(ObjectEntities.SERVER_ENTITY, ObjectEntities.SERVER_ENTITY_CODE);
-		addEntity(ObjectEntities.USER_ENTITY, ObjectEntities.USER_ENTITY_CODE);
-
-		addEntity(ObjectEntities.ME_ENTITY, ObjectEntities.ME_ENTITY_CODE);
-		addEntity(ObjectEntities.KIS_ENTITY, ObjectEntities.KIS_ENTITY_CODE);
-
-		addEntity(ObjectEntities.SET_ENTITY, ObjectEntities.SET_ENTITY_CODE);
-		addEntity(ObjectEntities.SETPARAMETER_ENTITY, ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		addEntity(ObjectEntities.MS_ENTITY, ObjectEntities.MS_ENTITY_CODE);
-		addEntity(ObjectEntities.MEASUREMENT_ENTITY, ObjectEntities.MEASUREMENT_ENTITY_CODE);
-		addEntity(ObjectEntities.ANALYSIS_ENTITY, ObjectEntities.ANALYSIS_ENTITY_CODE);
-		addEntity(ObjectEntities.EVALUATION_ENTITY, ObjectEntities.EVALUATION_ENTITY_CODE);
-		addEntity(ObjectEntities.TEST_ENTITY, ObjectEntities.TEST_ENTITY_CODE);
-		addEntity(ObjectEntities.RESULT_ENTITY, ObjectEntities.RESULT_ENTITY_CODE);
-		addEntity(ObjectEntities.RESULTPARAMETER_ENTITY, ObjectEntities.RESULTPARAMETER_ENTITY_CODE);
-		addEntity(ObjectEntities.TEMPORALPATTERN_ENTITY, ObjectEntities.TEMPORALPATTERN_ENTITY_CODE);
-	}
 	
 	private IdentifierGenerator() {
 	}
 
-	public static synchronized Identifier generateIdentifier(String entity) throws IllegalObjectEntityException, IdentifierGenerationException {
-		if (entity != null) {
-			String major = generateMajor(entity);
-			long minor = generateMinor(entity);
+	public static synchronized Identifier generateIdentifier(short entityCode) throws IllegalObjectEntityException, IdentifierGenerationException {
+		if (entityCode != ObjectEntities.UNKNOWN_ENTITY_CODE) {
+			short major = generateMajor(entityCode);
+			long minor = generateMinor(entityCode);
 			return new Identifier(major, minor);
 		}
-		throw new IllegalObjectEntityException("Null entity suplied", IllegalObjectEntityException.NULL_ENTITY_CODE);
+		throw new IllegalObjectEntityException("Unknown entity code suplied", IllegalObjectEntityException.UNKNOWN_ENTITY_CODE);
 	}
 
-	public static synchronized Identifier[] generateIdentifierRange(String entity, int range_size) throws IllegalObjectEntityException, IdentifierGenerationException {
-		if (entity != null) {
-			LinkedList linkedlist = new LinkedList();
-			String major = generateMajor(entity);
-			long minor;
-			for (int i = 0; i < range_size; i++) {
-				minor = generateMinor(entity);
-				linkedlist.add(new Identifier(major, minor));
-			}
-			return (Identifier[])linkedlist.toArray(new Identifier[linkedlist.size()]);
+	public static synchronized Identifier[] generateIdentifierRange(short entityCode, int rangeSize) throws IllegalObjectEntityException, IdentifierGenerationException {
+		LinkedList linkedlist = new LinkedList();
+		short major = generateMajor(entityCode);
+		long minor;
+		for (int i = 0; i < rangeSize; i++) {
+			minor = generateMinor(entityCode);
+			linkedlist.add(new Identifier(major, minor));
 		}
-		throw new IllegalObjectEntityException("Null entity suplied", IllegalObjectEntityException.NULL_ENTITY_CODE);
+		return (Identifier[])linkedlist.toArray(new Identifier[linkedlist.size()]);
 	}
 
-	private static String generateMajor(String entity) throws IllegalObjectEntityException {
-		if (entityMap.containsKey(entity))
-			return entity;
-		throw new IllegalObjectEntityException("Unknoun entity: '" + entity + "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+	private static short generateMajor(short entityCode) throws IllegalObjectEntityException {
+		return entityCode;
+	}
+
+	private static long generateMinor(short entityCode) throws IdentifierGenerationException {
+		String entity = ObjectEntities.codeToString(entityCode);
+		if (entity != null)
+			return generateMinor(entity);
+		throw new IdentifierGenerationException("NULL entity");
 	}
 
 	private static long generateMinor(String entity) throws IdentifierGenerationException {
@@ -108,13 +80,5 @@ public class IdentifierGenerator {
 		}
 
 		return minor;
-	}
-
-	private static void addEntity(String entity, short table_code) {
-		Short val = new Short(table_code);
-		if (! entityMap.containsValue(val))
-			entityMap.put(entity, val);
-		else
-			Log.errorMessage("Duplicate table code: " + table_code + " specified for entity: " + entity);
 	}
 }
