@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.8 2004/07/30 12:31:02 arseniy Exp $
+ * $Id: MCM.java,v 1.9 2004/08/09 06:17:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/07/30 12:31:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2004/08/09 06:17:10 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -85,7 +85,8 @@ public class MCM extends DomainMember implements Characterized {
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristicIds.size()];
 		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
+		
+		i = 0;
 		Identifier_Transferable[] kisIds = new Identifier_Transferable[this.kiss.size()];
 		for (Iterator iterator = this.kiss.iterator(); iterator.hasNext();)
 			kisIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.14 2004/08/06 14:56:55 bob Exp $
+ * $Id: Equipment.java,v 1.15 2004/08/09 06:17:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/06 14:56:55 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/09 06:17:10 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -109,19 +109,23 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		Identifier_Transferable[] meIds = new Identifier_Transferable[super.monitoredElementIds.size()];
 		for (Iterator iterator = super.monitoredElementIds.iterator(); iterator.hasNext();)
 			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
+		
+		i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristicIds.size()];
 		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
+		i = 0;		
 		Identifier_Transferable[] pIds = new Identifier_Transferable[this.portIds.size()];
 		for (Iterator iterator = this.portIds.iterator(); iterator.hasNext();)
 			pIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
+		i = 0;
 		Identifier_Transferable[] cportIds = new Identifier_Transferable[this.cablePortIds.size()];
 		for (Iterator iterator = this.cablePortIds.iterator(); iterator.hasNext();)
 			cportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
+		i = 0;
 		Identifier_Transferable[] sportIds = new Identifier_Transferable[this.specialPortIds.size()];
 		for (Iterator iterator = this.specialPortIds.iterator(); iterator.hasNext();)
 			sportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.10 2004/08/04 08:59:27 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.11 2004/08/09 06:17:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/04 08:59:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2004/08/09 06:17:10 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -64,7 +64,7 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	public MonitoredElement_Transferable getTransferable() {
+	public Object getTransferable() {
 		return new MonitoredElement_Transferable((Identifier_Transferable)super.getId().getTransferable(),
 																						 super.created.getTime(),
 																						 super.modified.getTime(),

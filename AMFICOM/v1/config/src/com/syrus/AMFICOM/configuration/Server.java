@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.1 2004/07/30 12:31:02 arseniy Exp $
+ * $Id: Server.java,v 1.2 2004/08/09 06:17:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/07/30 12:31:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2004/08/09 06:17:10 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -84,6 +84,7 @@ public class Server extends DomainMember implements Characterized {
 		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
+		i = 0;
 		Identifier_Transferable[] mcmIds = new Identifier_Transferable[this.mcms.size()];
 		for (Iterator iterator = this.mcms.iterator(); iterator.hasNext();)
 			mcmIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
