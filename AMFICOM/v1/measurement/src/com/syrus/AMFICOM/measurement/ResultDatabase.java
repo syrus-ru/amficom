@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.56 2005/01/27 16:35:36 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.57 2005/01/28 06:51:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,24 +45,12 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/01/27 16:35:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/01/28 06:51:27 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class ResultDatabase extends StorableObjectDatabase {
-
-	//	 measurementId VARCHAR2(32) NOT NULL,
-	public static final String	COLUMN_MEASUREMENT_ID	= "measurement_id";
-	//	 analysisId VARCHAR2(32),
-	public static final String	COLUMN_ANALYSIS_ID	= "analysis_id";
-	//	 evaluationId VARCHAR2(32),
-	public static final String	COLUMN_EVALUATION_ID	= "evaluation_id";
-	//	 modelingId VARCHAR2(32),
-	public static final String	COLUMN_MODELING_ID	= "modeling_id";
-	
-	//	 sort NUMBER(2, 0) NOT NULL,
-	public static final String	COLUMN_SORT		= "sort";
 
 	public static final String	LINK_COLUMN_TYPE_ID	= "type_id";
 	public static final String	LINK_COLUMN_RESULT_ID	= "result_id";
@@ -79,15 +67,15 @@ public class ResultDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			StringBuffer buffer = new StringBuffer(super.getColumns(mode));
 			buffer.append(COMMA);
-			buffer.append(COLUMN_MEASUREMENT_ID);
+			buffer.append(ResultWrapper.COLUMN_MEASUREMENT_ID);
 			buffer.append(COMMA);
-			buffer.append(COLUMN_ANALYSIS_ID);
+			buffer.append(ResultWrapper.COLUMN_ANALYSIS_ID);
 			buffer.append(COMMA);
-			buffer.append(COLUMN_EVALUATION_ID);
+			buffer.append(ResultWrapper.COLUMN_EVALUATION_ID);
 			buffer.append(COMMA);			
-			buffer.append(COLUMN_MODELING_ID);
+			buffer.append(ResultWrapper.COLUMN_MODELING_ID);
 			buffer.append(COMMA);
-			buffer.append(COLUMN_SORT);
+			buffer.append(ResultWrapper.COLUMN_SORT);
 			columns = buffer.toString();
 		}
 		return columns;
@@ -232,12 +220,12 @@ public class ResultDatabase extends StorableObjectDatabase {
 									0,
 									null)
 				: this.fromStorableObject(storableObject);
-		int resultSort = resultSet.getInt(COLUMN_SORT);
+		int resultSort = resultSet.getInt(ResultWrapper.COLUMN_SORT);
 		Action action = null;
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
 				try {
-					action = (Measurement) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID), true);
+					action = (Measurement) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MEASUREMENT_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -245,7 +233,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				try {
-					action = (Analysis) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ANALYSIS_ID), true);
+					action = (Analysis) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_ANALYSIS_ID), true);
 				}
 				catch (Exception e) {
 					throw new RetrieveObjectException(e);
@@ -253,7 +241,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
 				try {
-					action = (Evaluation) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EVALUATION_ID), true);
+					action = (Evaluation) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_EVALUATION_ID), true);
 				}
 				catch (Exception e) {
 					throw new RetrieveObjectException(e);
@@ -261,7 +249,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
 				try {
-					action = (Modeling) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODELING_ID), true);
+					action = (Modeling) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MODELING_ID), true);
 				}
 				catch (Exception e) {
 					throw new RetrieveObjectException(e);
@@ -404,7 +392,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				resultParameters = (List) resultParametersMap.get(resultId);
 
 				if (resultParameters != null)
-					result.setParameters((SetParameter[])resultParameters.toArray(new SetParameter[resultParameters.size()]));
+					result.setParameters0((SetParameter[])resultParameters.toArray(new SetParameter[resultParameters.size()]));
 			}
 			
 		}
@@ -489,7 +477,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Result result = this.fromStorableObject(storableObject);
+//		Result result = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -573,7 +561,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
-		Result result = this.fromStorableObject(storableObject);
+//		Result result = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);
@@ -644,7 +632,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 
-		String condition = COLUMN_MEASUREMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT + COLUMN_ID + SQL_FROM
+		String condition = ResultWrapper.COLUMN_MEASUREMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT + COLUMN_ID + SQL_FROM
 				+ ObjectEntities.MEASUREMENT_ENTITY + SQL_WHERE
 				+ MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
 				+ COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
@@ -667,7 +655,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 		StringBuffer buffer = new StringBuffer();
 		if ((measurementIds != null) && (!measurementIds.isEmpty())) {
-			buffer.append(COLUMN_MEASUREMENT_ID);
+			buffer.append(ResultWrapper.COLUMN_MEASUREMENT_ID);
 			buffer.append(SQL_IN);
 			buffer.append(OPEN_BRACKET);
 			int i = 1;
@@ -692,7 +680,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 						else {
 							buffer.append(CLOSE_BRACKET);
 							buffer.append(SQL_OR);
-							buffer.append(COLUMN_MEASUREMENT_ID);
+							buffer.append(ResultWrapper.COLUMN_MEASUREMENT_ID);
 							buffer.append(SQL_IN);
 							buffer.append(OPEN_BRACKET);
 						}					
