@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.11 2005/01/13 15:16:24 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.12 2005/01/14 10:06:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import java.util.List;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.11 $, $Date: 2005/01/13 15:16:24 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/14 10:06:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -217,37 +217,37 @@ public class MapImportCommand extends ImportCommand
 			if(type.equals(MARK_TYPE))
 			{
 				if(field.equals(Mark.COLUMN_ID))
-					value = super.getClonedId(ObjectEntities.MARK_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.MARK_ENTITY_CODE, (String )value);
 				else
 				if(field.equals(Mark.COLUMN_PHYSICAL_LINK_ID))
-					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (String )value);
 			}
 			else
 			if(type.equals(NODELINK_TYPE))
 			{
 				if(field.equals(NodeLink.COLUMN_ID))
-					value = super.getClonedId(ObjectEntities.NODE_LINK_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.NODE_LINK_ENTITY_CODE, (String )value);
 				else
 				if(field.equals(NodeLink.COLUMN_PHYSICAL_LINK_ID))
-					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (String )value);
 				else
 				if(field.equals(NodeLink.COLUMN_START_NODE_ID))
-					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (String )value);
 				else
 				if(field.equals(NodeLink.COLUMN_END_NODE_ID))
-					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (String )value);
 			}
 			else
 			if(type.equals(LINK_TYPE))
 			{
 				if(field.equals(PhysicalLink.COLUMN_ID))
-					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (String )value);
 				else
 				if(field.equals(PhysicalLink.COLUMN_START_NODE_ID))
-					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (String )value);
 				else
 				if(field.equals(PhysicalLink.COLUMN_END_NODE_ID))
-					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (String )value);
 				else
 				if(field.equals(PhysicalLink.COLUMN_NODE_LINKS))
 				{
@@ -255,7 +255,7 @@ public class MapImportCommand extends ImportCommand
 					List newList = new ArrayList(list.size());
 					for(Iterator it = list.iterator(); it.hasNext();)
 					{
-						Identifier id = (Identifier )it.next();
+						String id = (String )it.next();
 						newList.add(super.getClonedId(ObjectEntities.NODE_LINK_ENTITY_CODE, id));
 					}
 					value = newList;
@@ -265,23 +265,23 @@ public class MapImportCommand extends ImportCommand
 			if(type.equals(NODE_TYPE))
 			{
 				if(field.equals(TopologicalNode.COLUMN_ID))
-					value = super.getClonedId(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, (String )value);
 				else
 				if(field.equals(TopologicalNode.COLUMN_PHYSICAL_LINK_ID))
-					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, (String )value);
 			}
 			else
 			if(type.equals(COLLECTOR_TYPE))
 			{
 				if(field.equals(Collector.COLUMN_ID))
-					value = super.getClonedId(ObjectEntities.COLLECTOR_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.COLLECTOR_ENTITY_CODE, (String )value);
 				if(field.equals(Collector.COLUMN_LINKS))
 				{
 					List list = (List )value;
 					List newList = new ArrayList(list.size());
 					for(Iterator it = list.iterator(); it.hasNext();)
 					{
-						Identifier id = (Identifier )it.next();
+						String id = (String )it.next();
 						newList.add(super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, id));
 					}
 					value = newList;
@@ -291,7 +291,7 @@ public class MapImportCommand extends ImportCommand
 			if(type.equals(SITE_TYPE))
 			{
 				if(field.equals(SiteNode.COLUMN_ID))
-					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (Identifier )value);
+					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (String )value);
 			}
 
 			exportColumns[i][1] = value;
