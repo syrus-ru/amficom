@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.31 2004/10/20 11:17:10 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.32 2004/10/21 13:11:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/10/20 11:17:10 $
+ * @version $Revision: 1.32 $, $Date: 2004/10/21 13:11:14 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -63,6 +63,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     public static final String COLUMN_TRANSMISSION_PATH_ID  = "transmission_path_id";
     // port_id VARCHAR2(32),
     public static final String COLUMN_PORT_ID  = "port_id";
+    // kis_id VARCHAR2(32),
+    public static final String COLUMN_KIS_ID  = "kis_id";
+    
     
     private String updateColumns;
        private String updateMultiplySQLValues;
@@ -88,7 +91,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				+ COLUMN_MCM_ID + COMMA
 				+ COLUMN_EQUIPMENT_ID + COMMA
 				+ COLUMN_TRANSMISSION_PATH_ID + COMMA
-				+ COLUMN_PORT_ID;
+				+ COLUMN_PORT_ID + COMMA
+				+ COLUMN_KIS_ID;
 		}
 		return this.updateColumns;
 	}
@@ -96,6 +100,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     protected String getUpdateMultiplySQLValues() {
     	if (this.updateMultiplySQLValues == null){
     		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -129,11 +134,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString();
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
 				sql = sql + Identifier.getNullSQLString() + COMMA
 					+ characterizedIdStr + COMMA
+					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString() + COMMA
@@ -145,6 +152,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					+ characterizedIdStr + COMMA
 					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString();
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
@@ -153,14 +161,16 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					+ Identifier.getNullSQLString() + COMMA
 					+ characterizedIdStr + COMMA
 					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString();
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_TRANSMISSIONPATH:
 				sql = sql + Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString() + COMMA
-					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA					
 					+ characterizedIdStr + COMMA
+					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString();
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
@@ -169,7 +179,17 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString() + COMMA
 					+ Identifier.getNullSQLString() + COMMA
-					+ characterizedIdStr;
+					+ characterizedIdStr + COMMA
+					+ Identifier.getNullSQLString();
+				break;
+			case CharacteristicSort._CHARACTERISTIC_SORT_KIS:
+				sql = sql + Identifier.getNullSQLString() + COMMA
+				+ Identifier.getNullSQLString() + COMMA
+				+ Identifier.getNullSQLString() + COMMA
+				+ Identifier.getNullSQLString() + COMMA
+				+ Identifier.getNullSQLString() + COMMA
+				+ Identifier.getNullSQLString() + COMMA
+				+ characterizedIdStr;				
 				break;
 			default:
 				throw new UpdateObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
@@ -199,10 +219,12 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, characterizedIdStr);
+					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
@@ -215,12 +237,14 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, characterizedIdStr);
+					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
 					break;
@@ -231,8 +255,19 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, characterizedIdStr);
 					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, characterizedIdStr);
+					preparedStatement.setString( ++i, "");
+					break;
+				case CharacteristicSort._CHARACTERISTIC_SORT_KIS:
+					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
 					preparedStatement.setString( ++i, "");
@@ -273,7 +308,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		+ COLUMN_MCM_ID + COMMA			
 		+ COLUMN_EQUIPMENT_ID + COMMA
 		+ COLUMN_TRANSMISSION_PATH_ID + COMMA
-		+ COLUMN_PORT_ID
+		+ COLUMN_PORT_ID + COMMA
+		+ COLUMN_KIS_ID
 		+ SQL_FROM + ObjectEntities.CHARACTERISTIC_ENTITY
 		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
@@ -336,6 +372,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					*       getLong()
 					*/
 				characterizedId = new Identifier(resultSet.getString(COLUMN_PORT_ID));
+				break;				
+			case CharacteristicSort._CHARACTERISTIC_SORT_KIS:
+				/**
+					* @todo when change DB Identifier model ,change getString() to
+					*       getLong()
+					*/
+				characterizedId = new Identifier(resultSet.getString(COLUMN_KIS_ID));
 				break;
 			default:
 				throw new RetrieveObjectException("Unknown sort: " + sort + " for characteristic: " + characteristic.getId().toString());
@@ -449,6 +492,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
 					buffer.append(COLUMN_PORT_ID);
 					break;
+				case CharacteristicSort._CHARACTERISTIC_SORT_KIS:
+					buffer.append(COLUMN_KIS_ID);
+					break;
 				default:
 					throw new RetrieveObjectException("Unknown sort: " + sort + " for characterized: " + cdIdStr);
 			}
@@ -529,6 +575,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 //					break;
 //				sort = CharacteristicSort.CHARACTERISTIC_SORT_CABLELINK;
 //					break;
+				case ObjectEntities.KIS_ENTITY_CODE:
+					sort = CharacteristicSort.CHARACTERISTIC_SORT_KIS;
+					break;
 			}
 			if (sort != null){
 				list = retrieveCharacteristics(id, sort);

@@ -18,6 +18,7 @@ CREATE TABLE Characteristic (
  equipment_id VARCHAR2(32),
  transmission_path_id VARCHAR2(32),
  port_id VARCHAR2(32),
+ kis_id VARCHAR2(32),
 --
  CONSTRAINT chc_pk PRIMARY KEY (id),
  CONSTRAINT chc_creator_fk FOREIGN KEY (creator_id)
@@ -37,7 +38,12 @@ CREATE TABLE Characteristic (
  CONSTRAINT chc_eqp_fk FOREIGN KEY (equipment_id)
   REFERENCES Equipment (id) ON DELETE CASCADE,
  CONSTRAINT chc_tpath_fk FOREIGN KEY (transmission_path_id)
-  REFERENCES TransmissionPath (id) ON DELETE CASCADE
+  REFERENCES TransmissionPath (id) ON DELETE CASCADE,
+ CONSTRAINT chc_port_fk FOREIGN KEY (port_id)
+  REFERENCES Port (id) ON DELETE CASCADE,
+ CONSTRAINT chc_kis_fk FOREIGN KEY (kis_id)
+  REFERENCES KIS (id) ON DELETE CASCADE,
+ 
 );
 
 CREATE SEQUENCE characteristic_seq ORDER;

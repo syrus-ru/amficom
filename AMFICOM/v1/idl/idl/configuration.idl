@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.33 2004/10/21 12:28:16 bob Exp $
+ * $Id: configuration.idl,v 1.34 2004/10/21 13:11:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -193,7 +193,8 @@ module corba {
 		CHARACTERISTIC_SORT_MEASUREMENTPORT,
 		CHARACTERISTIC_SORT_MONITORINGPORT,
 		CHARACTERISTIC_SORT_LINK,
-		CHARACTERISTIC_SORT_CABLELINK
+		CHARACTERISTIC_SORT_CABLELINK,
+		CHARACTERISTIC_SORT_KIS
 	};
 
 	struct Characteristic_Transferable {
