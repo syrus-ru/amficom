@@ -5,6 +5,7 @@ CREATE TABLE TransmissionPathMELink (
  CONSTRAINT tpathmelink_tpath_fk FOREIGN KEY (transmission_path_id)
   REFERENCES TransmissionPath (id) ON DELETE CASCADE,
  CONSTRAINT tpathmelink_me_fk FOREIGN KEY (monitored_element_id)
-  REFERENCES MonitoredElement (id) ON DELETE CASCADE
+  REFERENCES MonitoredElement (id) ON DELETE CASCADE,
+ CONSTRAINT tpathmelink_uniq UNIQUE (transmission_path_id, monitored_element_id)
 );
 
