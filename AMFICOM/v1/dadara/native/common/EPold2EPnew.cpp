@@ -73,6 +73,7 @@ void EPold2SE(EventParams* epo, SimpleEvent &epn)
 		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_GAIN;
 		break;
 
+	case EventParams_DEADZONE: // fall through
 	case EventParams_REFLECTIVE:
 		epn.type = com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent_REFLECTIVE;
 		break;
