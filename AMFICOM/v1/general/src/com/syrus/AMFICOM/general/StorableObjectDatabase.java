@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.85 2005/02/08 09:12:59 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.86 2005/02/08 10:46:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/02/08 09:12:59 $
+ * @version $Revision: 1.86 $, $Date: 2005/02/08 10:46:43 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -174,70 +174,18 @@ public abstract class StorableObjectDatabase {
 	public void delete(List objects) throws IllegalDataException {
 		if ((objects == null) || (objects.isEmpty()))
 			return;
-		String sql;
-		{
-			StringBuffer buffer = new StringBuffer(SQL_DELETE_FROM);
-			buffer.append(this.getEnityName());
-			buffer.append(SQL_WHERE);
-			buffer.append(OPEN_BRACKET);
-			buffer.append(StorableObjectWrapper.COLUMN_ID);
-			int idsLength = objects.size();
-			if (idsLength == 1) {
-				buffer.append(EQUALS);
-				Object object = objects.iterator().next();
-				Identifier identifier = null;
-				if (object instanceof Identifier)
-					identifier = (Identifier) object;
-				else
-					if (object instanceof Identified)
-						identifier = ((Identified) object).getId();
-					else
-						throw new IllegalDataException("StorableObjectDatabase.delete | Object "
-								+ object.getClass().getName()
-								+ " isn't Identifier or Identified");
-				buffer.append(DatabaseIdentifier.toSQLString(identifier));
-			}
-			else {
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
 
-				int i = 1;
-				for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-					Object object = it.next();
-					Identifier id = null;
-					if (object instanceof Identifier)
-						id = (Identifier) object;
-					else
-						if (object instanceof Identified)
-							id = ((Identified) object).getId();
-						else
-							throw new IllegalDataException("StorableObjectDatabase.delete | Object "
-									+ object.getClass().getName()
-									+ " isn't Identifier or Identified");
-					buffer.append(DatabaseIdentifier.toSQLString(id));
-					if (it.hasNext()) {
-						if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-							buffer.append(COMMA);
-						else {
-							buffer.append(CLOSE_BRACKET);
-							buffer.append(SQL_OR);
-							buffer.append(StorableObjectWrapper.COLUMN_ID);
-							buffer.append(SQL_IN);
-							buffer.append(OPEN_BRACKET);
-						}
-					}
-				}
-				buffer.append(CLOSE_BRACKET);
-			}
-			buffer.append(CLOSE_BRACKET);
+		StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM
+				 + this.getEnityName()
+				 + SQL_WHERE);
+		stringBuffer.append(this.idsInListString(objects, StorableObjectWrapper.COLUMN_ID));
+		String sql = stringBuffer.toString();
 
-			sql = buffer.toString();
-		}
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("StorableObjectDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObjectDatabase.delete(List) | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle1) {
