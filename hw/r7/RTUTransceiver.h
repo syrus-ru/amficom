@@ -17,7 +17,6 @@
 #include "BellcoreWriter.h"
 
 
-
 #define COM_PORT_READ_TIMEOUT (unsigned long)10000
 #define COM_PORT_REPLY_LENGTH (unsigned int)4000
 #define MAX_POSSIBLE_OTAUS (unsigned int)100
