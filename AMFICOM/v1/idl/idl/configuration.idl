@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.56 2004/11/25 10:47:35 max Exp $
+ * $Id: configuration.idl,v 1.57 2004/11/29 08:39:51 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -85,6 +85,13 @@ module corba {
 	typedef TransmissionPathType_Transferable TransmissionPathType;
 	typedef sequence<TransmissionPathType> TransmissionPathTypeSeq;
 
+//////////////////// PortTypeSort ///////////////////
+	enum PortTypeSort {
+		PORTTYPESORT_OPTICAL,
+		PORTTYPESORT_ELECTRICAL,
+		PORTTYPESORT_THERMAL
+	};
+
 /////////////////////// PortType /////////////////////
 	struct PortType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
@@ -92,7 +99,7 @@ module corba {
 		wstring codename;
 		wstring description;
 		wstring name;
-		
+		PortTypeSort sort;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 	
