@@ -71,13 +71,12 @@ public class SimpleGraphPanel extends JPanel
 
 	public void setGraphSize(Dimension d)
 	{
-//		Dimension dim = getSize();
-//		double kx = d.getWidth() / dim.getWidth();
-//		double ky = d.getHeight() / dim.getHeight();
-//		scaleX *= kx;
-//		scaleY *= ky;
+		Dimension dim = getSize();
+		double kx = d.getWidth() / dim.getWidth();
+		double ky = d.getHeight() / dim.getHeight();
+		scaleX *= kx;
+		scaleY *= ky;
 		super.setSize(d);
-//		this.setDefaultScales();
 	}
 
 	public void setDefaultScales()
