@@ -38,4 +38,3 @@ public final class ObjectResourceCatalogActionModel
 		this.cancel_button = cancel_button;
 	}
 }
-

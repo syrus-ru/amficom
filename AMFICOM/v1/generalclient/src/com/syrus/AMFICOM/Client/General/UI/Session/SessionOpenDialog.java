@@ -306,6 +306,3 @@ class SessionOpenDialog_jPanel1_keyAdapter extends java.awt.event.KeyAdapter
 		adaptee.jPanel1_keyPressed(e);
 	}
 }
-
-
-

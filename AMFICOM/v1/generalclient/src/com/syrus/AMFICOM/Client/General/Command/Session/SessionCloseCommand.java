@@ -55,4 +55,3 @@ public class SessionCloseCommand extends VoidCommand
 				ContextChangeEvent.SESSION_CLOSED_EVENT));
 	}
 }
-

@@ -106,5 +106,3 @@ public class MultiRowToolTipUI extends BasicToolTipUI
 		return prefSize;
     }
 }
-
-

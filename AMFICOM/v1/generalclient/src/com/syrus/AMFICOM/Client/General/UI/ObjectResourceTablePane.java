@@ -310,4 +310,3 @@ public class ObjectResourceTablePane extends JScrollPane
 	}
 
 }
-

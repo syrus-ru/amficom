@@ -133,4 +133,3 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 		}
 	}
 }
-

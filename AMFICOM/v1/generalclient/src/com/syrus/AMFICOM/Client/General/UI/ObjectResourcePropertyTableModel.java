@@ -256,4 +256,3 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 	//Clears the table data
 	//--------------------------------------------------------------------------
 }
-

@@ -76,4 +76,3 @@ public class ExitCommand extends VoidCommand implements Command
 	}
 
 }
-

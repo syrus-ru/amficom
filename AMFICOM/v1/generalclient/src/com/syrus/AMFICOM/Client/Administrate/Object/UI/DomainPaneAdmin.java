@@ -245,4 +245,3 @@ public class DomainPaneAdmin extends PropertiesPanel
     repaint();
   }
 }
-

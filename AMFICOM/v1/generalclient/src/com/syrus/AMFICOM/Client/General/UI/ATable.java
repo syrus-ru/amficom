@@ -103,4 +103,3 @@ public class ATable extends JTable
 			jTableHeader.setPreferredSize(new Dimension(jTableHeader.getPreferredSize().width, initialHeight));
 	}
 }
-

@@ -76,4 +76,3 @@ public class Trash extends Object
 		return trashed.elements();
 	}
 }
-

@@ -198,5 +198,3 @@ class SessionInfoDialog_buttonOk_actionAdapter implements java.awt.event.ActionL
 		adaptee.buttonOk_actionPerformed(e);
 	}
 }
-
-

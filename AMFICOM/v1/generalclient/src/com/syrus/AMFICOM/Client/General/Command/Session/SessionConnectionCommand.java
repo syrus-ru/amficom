@@ -122,5 +122,3 @@ public class SessionConnectionCommand extends VoidCommand
 	}
 
 }
-
- 

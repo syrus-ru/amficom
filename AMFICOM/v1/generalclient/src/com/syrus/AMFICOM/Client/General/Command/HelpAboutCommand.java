@@ -31,5 +31,3 @@ public class HelpAboutCommand extends VoidCommand
 		JOptionPane. showMessageDialog(parent, about, "О программе", JOptionPane.PLAIN_MESSAGE);
 	}
 }
-
- 

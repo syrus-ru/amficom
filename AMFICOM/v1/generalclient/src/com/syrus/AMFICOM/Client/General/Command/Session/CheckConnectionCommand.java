@@ -78,4 +78,3 @@ public class CheckConnectionCommand extends VoidCommand
 	}
 
 }
-

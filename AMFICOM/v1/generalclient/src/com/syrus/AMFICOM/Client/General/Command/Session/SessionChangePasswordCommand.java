@@ -87,5 +87,3 @@ public class SessionChangePasswordCommand extends VoidCommand
 	}
 
 }
-
- 

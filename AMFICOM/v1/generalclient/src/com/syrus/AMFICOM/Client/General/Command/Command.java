@@ -67,4 +67,3 @@ public interface Command extends Cloneable
 
 	public int getResult();
 }
-

@@ -292,4 +292,3 @@ public interface DataSourceInterface
 	public void LoadSchemeMonitoringSolutions();
 	public void RemoveSchemeMonitoringSolution(String sol_id);
 }
-

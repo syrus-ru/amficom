@@ -102,4 +102,3 @@ public class SessionDomainCommand extends VoidCommand
 		}
 	}
 }
-

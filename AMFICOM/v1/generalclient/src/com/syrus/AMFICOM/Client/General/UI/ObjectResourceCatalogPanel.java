@@ -774,4 +774,3 @@ class ObjectResourceCatalogPanel_jTabbedPane_changeAdapter
 		adaptee.jTabbedPane_stateChanged(e);
 	}
 }
-

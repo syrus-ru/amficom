@@ -46,5 +46,3 @@ public class AboutBoxPanel extends JPanel
 		        GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 5, 5), 0, 0));
 	}
 }
-
- 

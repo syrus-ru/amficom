@@ -164,4 +164,3 @@ public class ObjectResourceCatalogFrame
 		super.doDefaultCloseAction();
     }
 }
-

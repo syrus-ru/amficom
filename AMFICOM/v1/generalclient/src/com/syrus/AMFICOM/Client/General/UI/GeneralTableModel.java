@@ -277,4 +277,3 @@ public class GeneralTableModel extends AbstractTableModel
 		super.fireTableDataChanged();
 	}
 }
-

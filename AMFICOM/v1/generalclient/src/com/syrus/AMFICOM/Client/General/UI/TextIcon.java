@@ -99,4 +99,3 @@ public class TextIcon extends Object implements Icon
 		g2.setTransform(t);
 	}
 }
-

@@ -121,4 +121,3 @@ public class AComboBox extends JComboBox {
 		}
 	}
 }
-

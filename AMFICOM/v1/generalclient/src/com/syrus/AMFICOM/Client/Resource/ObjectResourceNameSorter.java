@@ -24,4 +24,3 @@ public class ObjectResourceNameSorter extends ObjectResourceSorter
 	}
 
 }
-

@@ -285,4 +285,3 @@ class ChangePasswordDialog_buttonHelp_actionAdapter
 		adaptee.buttonHelp_actionPerformed(e);
 	}
 }
-

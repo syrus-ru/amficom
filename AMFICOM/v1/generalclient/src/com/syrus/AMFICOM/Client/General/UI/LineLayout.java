@@ -101,4 +101,3 @@ public class LineLayout extends Object implements LayoutManager
 	}
 
 }
-

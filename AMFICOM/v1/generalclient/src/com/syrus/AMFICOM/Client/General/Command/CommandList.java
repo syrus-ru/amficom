@@ -182,5 +182,3 @@ public class CommandList extends Object
 		return commands.size();
 	}
 }
-
- 

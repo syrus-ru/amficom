@@ -747,4 +747,3 @@ public class DataSourceImage
 		}
 	}
 }
-

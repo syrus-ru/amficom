@@ -21,4 +21,3 @@ final class DataSourceException extends Exception
 		super(cause);
 	}
 }
-

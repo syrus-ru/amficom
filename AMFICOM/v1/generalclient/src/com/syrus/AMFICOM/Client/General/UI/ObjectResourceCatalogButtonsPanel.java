@@ -241,4 +241,3 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 */
 	}
 }
-

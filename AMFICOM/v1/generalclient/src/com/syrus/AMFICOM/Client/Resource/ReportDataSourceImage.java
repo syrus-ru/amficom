@@ -79,4 +79,3 @@ public class ReportDataSourceImage extends DataSourceImage
 
 	}
 }
-
