@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.24 2004/12/22 12:11:56 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.25 2004/12/22 12:14:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/12/22 12:11:56 $
+ * @version $Revision: 1.25 $, $Date: 2004/12/22 12:14:17 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -169,31 +169,9 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 			mcmRefs.put(mcmId, mcmRef);
 	}
 
-	private static void stopCORBAServer() {
+	private static void deactivateCORBAServer() {
 		try {
 			corbaServer.deactivateServant("CMServer");
-//			ORB orb = JavaSoftORBUtil.getInstance().getORB();
-//
-//			POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-//			rootPOA.the_POAManager().activate();
-//			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
-//
-//			final String hostName = InetAddress.getLocalHost().getCanonicalHostName().replaceAll("\\.", "_");
-//
-//			NameComponent childPath[] = rootNamingCtx.to_name(hostName);
-//
-//			NamingContextExt childNamingCtx;
-//			try {
-//				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx.bind_new_context(childPath));
-//			}
-//			catch (AlreadyBound ab) {
-//				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx.resolve_str(hostName));
-//			}
-//
-//			NameComponent serverPath[] = rootNamingCtx.to_name("CMServer");
-//
-//			childNamingCtx.unbind(serverPath);			
-
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -231,7 +209,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 				Log.errorException(ie);
 			}
 		}
-		stopCORBAServer();
+		deactivateCORBAServer();
 	}
 		
 }
