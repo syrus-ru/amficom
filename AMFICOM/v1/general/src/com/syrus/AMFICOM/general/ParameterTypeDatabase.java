@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.1 2005/01/19 20:43:00 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.2 2005/01/20 09:57:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/19 20:43:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/20 09:57:52 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -205,19 +205,21 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		return i;
 	}	
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
+	public List retrieveByCondition(List ids, StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
 		List list = null;
-		if (condition instanceof StringFieldCondition){
+		if (condition instanceof StringFieldCondition) {
 			StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
-			try{
+			try {
 				ParameterType type = this.retrieveForCodename(stringFieldCondition.getString());
 				list = Collections.singletonList(type);
-			}catch(ObjectNotFoundException e){
+			}
+			catch(ObjectNotFoundException e) {
 				String msg = getEnityName() + "Database.retrieveByCondition | Cannot found object with codename '" + stringFieldCondition.getString() + "'";
 				throw new RetrieveObjectException(msg, e);
 			}
-		} else {
+		}
+		else {
 			Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
 			list = this.retrieveButIds(ids);
 		}

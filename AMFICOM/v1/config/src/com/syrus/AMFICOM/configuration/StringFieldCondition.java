@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.10 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: StringFieldCondition.java,v 1.11 2005/01/20 09:57:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/01/14 18:07:08 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/20 09:57:22 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -47,11 +47,11 @@ public class StringFieldCondition implements StorableObjectCondition {
 		this.sort = sort.value();
 	}
 
-	public StringFieldCondition(String string, short entityCode, StringFieldSort sort){
+	public StringFieldCondition(String string, short entityCode, StringFieldSort sort) {
 		this(string, new Short(entityCode), sort);		
 	}
 	
-	public StringFieldCondition(String string, short entityCode){
+	public StringFieldCondition(String string, short entityCode) {
 		this(string, entityCode, StringFieldSort.STRINGSORT_BASE);		
 	}
 
@@ -66,19 +66,18 @@ public class StringFieldCondition implements StorableObjectCondition {
 
 	public boolean isNeedMore(List list) throws ApplicationException {
 		boolean needMore = true;
-		if(list != null){
+		if (list != null) {
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				Object object = it.next();
-				if (isConditionTrue(object)){
+				if (this.isConditionTrue(object)) {
 					needMore = false;
 					break;
 				}
-				
+
 			}
 		}
 		return needMore;
 	}
-	
 
 	public Short getEntityCode() {
 		return this.entityCode;
