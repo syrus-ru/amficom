@@ -30,6 +30,10 @@ static __int64 clock_at_next_print = clock_loop_print;
 #endif
 
 #if USE_rdtsc
+const double rdtsc_divisor = 3e6; // XXX: for easiest debugging on *my* CPU
+#endif
+
+#if USE_rdtsc
 __int64 rdtsc()
 {
 __int64 v = 0;
@@ -154,7 +158,6 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 		total += pdata[i].total_time;
 #endif
 #if USE_rdtsc
-	const double rdtsc_divisor = 1e6;
 	__int64 total64 = 0;
 	for (i = 0; i < MAX_ID && pdata[i].id; i++)
 		total64 += pdata[i].total_time_64;
