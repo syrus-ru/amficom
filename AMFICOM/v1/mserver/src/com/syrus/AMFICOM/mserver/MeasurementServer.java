@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.9 2004/08/13 17:44:27 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.10 2004/08/14 19:29:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/13 17:44:27 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/14 19:29:29 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -44,7 +44,9 @@ public class MeasurementServer extends SleepButWorkThread {
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final int TICK_TIME = 5;
-	public static final int ERROR_CODE_TRANSMIT_TESTS = 1;
+
+	/*	Error codes for method processError()	(abort tests, ...)*/
+	public static final int FALL_CODE_RECEIVE_TESTS = 1;
 
 	/*	Information about myself*/
 	protected static Server iAm;
@@ -59,8 +61,7 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	private boolean running;
 
-	/*	Variables for method processError()	(abort tests, ...)*/
-	private int errorCode;
+	/*	Variables for method processFall()	(abort tests, ...)*/
 	private Identifier mcmIdToAbortTests;
 	private List testsToAbort;
 
@@ -132,7 +133,6 @@ public class MeasurementServer extends SleepButWorkThread {
 			System.exit(-1);
 		}
 		catch (Exception e) {
-			Log.errorMessage("ERROR");
 			Log.errorException(e);
 		}
 	}
@@ -174,35 +174,42 @@ public class MeasurementServer extends SleepButWorkThread {
 		Test_Transferable[] testsT;
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		while (this.running) {
-			for (Iterator it = mcmTestQueueMap.getMCMIdsIterator(); it.hasNext();) {
-				mcmId = (Identifier)it.next();
-				testQueue = mcmTestQueueMap.getQueue(mcmId);
-				testsT = createTransferables(testQueue);
-				if (testsT != null) {
+			/*	Now Measurement Server can get new tests only from database
+			 * (not through direct CORBA operation).
+			 * Maybe in future remove it*/
+			fillMCMTestQueueMap();
+
+			synchronized (mcmTestQueueMap) {
+				for (Iterator it = mcmTestQueueMap.getMCMIdsIterator(); it.hasNext();) {
+					mcmId = (Identifier)it.next();
+					testQueue = mcmTestQueueMap.getQueue(mcmId);
 					mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)mcmRefs.get(mcmId);
 					if (mcmRef != null) {
-						try {
-							mcmRef.transmitTests(testsT);
-							updateTestsStatus(testQueue, TestStatus.TEST_STATUS_SCHEDULED);
-							super.clearFalls();
-						}
-						catch (org.omg.CORBA.SystemException se) {
-							Log.errorException(se);
-							activateMCMReferenceWithId(mcmId);
-						}
-						catch (AMFICOMRemoteException are) {
-							Log.errorException(are);
-							this.mcmIdToAbortTests = mcmId;
-							this.testsToAbort = testQueue;
-							super.sleepCauseOfFall();
+						testsT = createTransferables(testQueue);
+						if (testsT != null) {
+							try {
+								mcmRef.receiveTests(testsT);
+								updateTestsStatus(testQueue, TestStatus.TEST_STATUS_SCHEDULED);
+								super.clearFalls();
+							}
+							catch (org.omg.CORBA.SystemException se) {
+								Log.errorException(se);
+								activateMCMReferenceWithId(mcmId);
+							}
+							catch (AMFICOMRemoteException are) {
+								Log.errorMessage("Cannot transmit tests: " + are.message + "; sleeping cause of fall");
+								super.fallCode = FALL_CODE_RECEIVE_TESTS;
+								this.mcmIdToAbortTests = mcmId;
+								this.testsToAbort = testQueue;
+								super.sleepCauseOfFall();
+								continue;
+							}
 						}
 					}
-					else {
+					else
 						activateMCMReferenceWithId(mcmId);
-					}
 				}
-			}
-
+			}	//synchronized
 
 			System.out.println(System.currentTimeMillis());
 			try {
@@ -217,16 +224,18 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static void fillMCMTestQueueMap() {
 		Identifier mcmId;
 		List tests = null;
-		for (Iterator it = mcmTestQueueMap.getMCMIdsIterator(); it.hasNext();) {
-			mcmId = (Identifier)it.next();
-			try {
-				tests = TestDatabase.retrieveTestsForMCM(mcmId, TestStatus.TEST_STATUS_NEW);
-			}
-			catch (RetrieveObjectException roe) {
-				Log.errorException(roe);
-			}
-			if (tests != null && !tests.isEmpty()) {
-				mcmTestQueueMap.addTests(mcmId, tests);
+		synchronized (mcmTestQueueMap) {
+			for (Iterator it = mcmTestQueueMap.getMCMIdsIterator(); it.hasNext();) {
+				mcmId = (Identifier)it.next();
+				try {
+					tests = TestDatabase.retrieveTestsForMCM(mcmId, TestStatus.TEST_STATUS_NEW);
+				}
+				catch (RetrieveObjectException roe) {
+					Log.errorException(roe);
+				}
+				if (tests != null && !tests.isEmpty()) {
+					mcmTestQueueMap.addTests(mcmId, tests);
+				}
 			}
 		}
 	}
@@ -236,54 +245,65 @@ public class MeasurementServer extends SleepButWorkThread {
 		if (! testQueue.isEmpty()) {
 			testsT = new Test_Transferable[testQueue.size()];
 			int i = 0;
-			for (Iterator it = testQueue.iterator(); it.hasNext();)
-				testsT[i++] = (Test_Transferable)((Test)it.next()).getTransferable();
+			synchronized (testQueue) {
+				for (Iterator it = testQueue.iterator(); it.hasNext();)
+					testsT[i++] = (Test_Transferable)((Test)it.next()).getTransferable();
+			}
 		}
 		return testsT;
 	}
-	
+
 	private static void updateTestsStatus(List tests, TestStatus status) {
-		for (Iterator it = tests.iterator(); it.hasNext();)
-			((Test)it.next()).setStatus(status);
+		synchronized (tests) {
+			for (Iterator it = tests.iterator(); it.hasNext();)
+				((Test)it.next()).setStatus(status);
+		}
 	}
-	
-	protected void shutdown() {
-		this.running = false;
-		DatabaseConnection.closeConnection();
-	}
-	
-	protected void processError() {
-		switch (this.errorCode) {
-			case ERROR_CODE_TRANSMIT_TESTS:
+
+	protected void processFall() {
+		switch (super.fallCode) {
+			case FALL_CODE_NO_ERROR:
+				break;
+			case FALL_CODE_RECEIVE_TESTS:
 				abortTests();
 				break;
 			default:
-				Log.errorMessage("Unknown error code: " + this.errorCode);
+				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
+		super.clearFalls();
 	}
-	
+
 	private void abortTests() {
-		if (! this.testsToAbort.isEmpty()) {
+		if (this.testsToAbort != null && ! this.testsToAbort.isEmpty()) {
 			mcmTestQueueMap.remove(this.mcmIdToAbortTests, this.testsToAbort);
 			Test test;
-			for (Iterator it = this.testsToAbort.iterator(); it.hasNext();) {
-				test = (Test)it.next();
-				test.setStatus(TestStatus.TEST_STATUS_ABORTED);
+			synchronized (this.testsToAbort) {
+				for (Iterator it = this.testsToAbort.iterator(); it.hasNext();) {
+					test = (Test)it.next();
+					test.setStatus(TestStatus.TEST_STATUS_ABORTED);
+				}
 			}
 			this.mcmIdToAbortTests = null;
 			this.testsToAbort = null;
 		}
 		else
-			Log.errorMessage("abortTests | list is NULL");
+			Log.errorMessage("abortTests | list is NULL or empty");
 	}
-	
+
+	protected void shutdown() {
+		this.running = false;
+		DatabaseConnection.closeConnection();
+	}
+
 	private static class MCMTestQueueMap {
 		private Map queueMap;	//Map <Identifier mcmId, List <Test> >
 
 		MCMTestQueueMap(List mcmIds) {
 			this.queueMap = Collections.synchronizedMap(new HashMap(mcmIds.size()));
-			for (Iterator iterator = mcmIds.iterator(); iterator.hasNext();)
-				this.queueMap.put((Identifier)iterator.next(), Collections.synchronizedList(new LinkedList()));
+			synchronized (mcmIds) {
+				for (Iterator iterator = mcmIds.iterator(); iterator.hasNext();)
+					this.queueMap.put((Identifier)iterator.next(), Collections.synchronizedList(new LinkedList()));
+			}
 		}
 
 		Iterator getMCMIdsIterator() {

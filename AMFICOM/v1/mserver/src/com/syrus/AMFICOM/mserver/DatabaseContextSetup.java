@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.7 2004/08/11 17:28:43 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.8 2004/08/14 19:29:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,21 +30,21 @@ import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
-import com.syrus.AMFICOM.measurement.AnalysisDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
-import com.syrus.AMFICOM.measurement.ResultDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementDatabase;
+import com.syrus.AMFICOM.measurement.AnalysisDatabase;
+import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
+import com.syrus.AMFICOM.measurement.ResultDatabase;
+import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/11 17:28:43 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/14 19:29:29 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
