@@ -1,8 +1,21 @@
+/*
+ * $Id: FileToDirectory.java,v 1.3 2004/12/08 13:47:03 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.io;
 
 import java.io.*;
 import java.util.*;
 
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/12/08 13:47:03 $
+ * @author $Author: bass $
+ * @module util
+ */
 public class FileToDirectory
 {
 	FileInputStream fis;
@@ -119,8 +132,7 @@ public class FileToDirectory
 		String[] s = analyseString (isr.readASCIIString());
 		if (s[0].equals("@type"))
 			return s[1];
-		else
-			return "";
+		return "";
 	}
 
 	protected String[] analyseString (String s)
