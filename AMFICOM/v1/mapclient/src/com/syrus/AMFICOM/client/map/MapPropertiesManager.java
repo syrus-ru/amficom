@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.5 2004/09/27 07:39:57 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.6 2004/09/29 15:02:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.SystemColor;
 import java.awt.geom.Point2D;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ import java.util.Map;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/27 07:39:57 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/29 15:02:14 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -52,14 +53,14 @@ public final class MapPropertiesManager
 	protected static IniFile iniFile;
 	protected static String iniFileName = "Map.properties";//Фаил откуда загружаются данные
 
-	protected static String KEY_MAP_TYPE = "mapType";
-	protected static String KEY_DATA_BASE_PATH = "dataBasePath";
-	protected static String KEY_DATA_BASE_VIEW = "dataBaseView";
-	protected static String KEY_LAST_LONGITUDE = "lastLong";
-	protected static String KEY_LAST_LATITUDE = "lastLat";
-	protected static String KEY_LAST_ZOOM = "lastZoom";
-	protected static String KEY_LAST_VIEW = "lastView";
-	protected static String KEY_LAST_DIRECTORY = "lastDirectory";
+	protected static final String KEY_MAP_TYPE = "mapType";
+	protected static final String KEY_DATA_BASE_PATH = "dataBasePath";
+	protected static final String KEY_DATA_BASE_VIEW = "dataBaseView";
+	protected static final String KEY_LAST_LONGITUDE = "lastLong";
+	protected static final String KEY_LAST_LATITUDE = "lastLat";
+	protected static final String KEY_LAST_ZOOM = "lastZoom";
+	protected static final String KEY_LAST_VIEW = "lastView";
+	protected static final String KEY_LAST_DIRECTORY = "lastDirectory";
 
 	public static final double DEFAULT_ZOOM = 1.0D;
 
@@ -322,8 +323,8 @@ public final class MapPropertiesManager
 	}
 
 	/** объекты, необходимые для отрисовки пиктограмм */
-    private static final Component component = new Component() {};
-    private static final MediaTracker tracker = new MediaTracker(component);
+    private static Component component = new Component() {};
+    private static MediaTracker tracker = new MediaTracker(component);
     private static int mediaTrackerID = 0;
 
 	private static Map originalImages = new HashMap();
