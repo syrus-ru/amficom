@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Map.Command;
 
+import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
 import java.awt.Component;
 
 import javax.swing.JDesktopPane;
@@ -57,6 +58,18 @@ public abstract class MapDesktopCommand
 			if(comp != null
 				&& comp instanceof MapSchemeTreeFrame)
 					return (MapSchemeTreeFrame )comp;
+		}
+		return null;
+	}
+	
+	public static MapViewTreeFrame findMapViewTreeFrame(JDesktopPane desktop)
+	{
+		for(int i = 0; i < desktop.getComponents().length; i++)
+		{
+			Component comp = desktop.getComponent(i);
+			if(comp != null
+				&& comp instanceof MapViewTreeFrame)
+					return (MapViewTreeFrame )comp;
 		}
 		return null;
 	}
