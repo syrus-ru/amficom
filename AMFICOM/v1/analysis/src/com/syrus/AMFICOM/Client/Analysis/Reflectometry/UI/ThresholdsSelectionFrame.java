@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -27,6 +28,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -52,10 +54,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
 	JToolBar jToolBar1 = new JToolBar();
-	JButton jButton1 = new JButton();
-	JButton jButton3 = new JButton();
-	JButton jButtonInc = new JButton();
-	JButton jButtonDec = new JButton();
 
 	public ThresholdsSelectionFrame(Dispatcher dispatcher)
 	{
@@ -104,8 +102,17 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		);
 		jTable = new ATable(tModelEmpty);
 		
+		JButton nalysisInitialButton = new JButton();
+		JButton analysisDefaultsButton = new JButton();
+		JButton increaseThreshButton = new JButton();
+		JButton decreaseThreshButton = new JButton();
+		
+		JButton previuosEventButton = new JButton();
+		JButton nextEventButton = new JButton();
+
 		{	// set up button size
-			JButton[] buttons = new JButton[] { jButton1, jButton3, jButtonInc, jButtonDec };
+			JButton[] buttons = new JButton[] { nalysisInitialButton, analysisDefaultsButton, increaseThreshButton, decreaseThreshButton, previuosEventButton, 
+					nextEventButton};
 			for (int i = 0; i < buttons.length; i++)
 			{
 				buttons[i].setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
@@ -114,9 +121,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			}
 		}
 
-		jButton1.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
-		jButton1.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));
-		jButton1.addActionListener(new ActionListener()
+		nalysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
+		nalysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));
+		nalysisInitialButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -128,24 +135,24 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			}
 		});
 
-		jButton3.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
-		jButton3.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DEFAULT));
-		jButton3.addActionListener(new ActionListener()
+		analysisDefaultsButton.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
+		analysisDefaultsButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DEFAULT));
+		analysisDefaultsButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				if (mtm != null && current_ev != -1)
 				{
 					mtm.setDefaultThreshold(current_ev);
-					updThresholds();
+					updateThresholds();
 					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 				}
 			}
 		});
 
-		jButtonInc.setToolTipText(LangModelAnalyse.getString("increaseThresh"));
-		jButtonInc.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE));
-		jButtonInc.addActionListener(new ActionListener()
+		increaseThreshButton.setToolTipText(LangModelAnalyse.getString("increaseThresh"));
+		increaseThreshButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE));
+		increaseThreshButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -158,9 +165,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			}
 		});
 
-		jButtonDec.setToolTipText(LangModelAnalyse.getString("decreaseThresh"));
-		jButtonDec.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE));
-		jButtonDec.addActionListener(new ActionListener()
+		decreaseThreshButton.setToolTipText(LangModelAnalyse.getString("decreaseThresh"));
+		decreaseThreshButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE));
+		decreaseThreshButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -172,15 +179,40 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				}
 			}
 		});
+		
+		previuosEventButton.setToolTipText(LangModelAnalyse.getString("previuosEvent"));
+		previuosEventButton.setText("<");
+		previuosEventButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				dispatcher.notify(new OperationEvent(this, 0, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT));
+
+			}
+		});
+		
+		nextEventButton.setToolTipText(LangModelAnalyse.getString("nextEvent"));
+		nextEventButton.setText(">");
+		nextEventButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+
+				dispatcher.notify(new OperationEvent(this, 0, AnalyseApplicationModel.SELECT_NEXT_EVENT));
+
+			}
+		});
 
 		this.setContentPane(mainPanel);
 
 		//jToolBar1.setBorderPainted(true);
 		jToolBar1.setFloatable(false);
-		jToolBar1.add(jButton1);
-		jToolBar1.add(jButton3);
-		jToolBar1.add(jButtonDec);
-		jToolBar1.add(jButtonInc);
+		jToolBar1.add(nalysisInitialButton);
+		jToolBar1.add(analysisDefaultsButton);
+		jToolBar1.add(decreaseThreshButton);
+		jToolBar1.add(increaseThreshButton);
+		jToolBar1.add(Box.createRigidArea(UIManager.getDimension(ResourceKeys.SIZE_BUTTON)));
+		jToolBar1.add(previuosEventButton);
+		jToolBar1.add(nextEventButton);
 
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
@@ -275,7 +307,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				//if (id.equals("primarytrace"))
 				{
 					mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id);
-					updThresholds();
+					updateThresholds();
 				}
 			}
 			if(rue.analysisPerformed())
@@ -295,7 +327,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 						// --- тут была попытка сохранить пороги при
 						// замене списка событий, и, в принципе, ее можно бы
 						// доделать, если только она будет делать что-то осмысленное
-						updThresholds();
+						updateThresholds();
 					}
 				}
 			}
@@ -309,17 +341,17 @@ public class ThresholdsSelectionFrame extends ATableFrame
 					    System.out.println("Warning: current_ev out of range");
 					    current_ev = 0;
 					}
-					updThresholds();
+					updateThresholds();
 				}
 			}
 			if(rue.thresholdChanged())
 			{
-				updThresholds();
+				updateThresholds();
 			}
 		}
 	}
 
-	void updThresholds()
+	private void updateThresholds()
 	{
 		if (mtm == null)
 			return;
