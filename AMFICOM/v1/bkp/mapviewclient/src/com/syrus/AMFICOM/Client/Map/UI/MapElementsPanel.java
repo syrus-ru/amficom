@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.5 2004/10/29 14:59:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,7 +57,7 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/29 14:59:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -208,50 +208,36 @@ public final class MapElementsPanel extends JPanel
 	{
 		try
 		{
-			//Если поле выбрано мышью
-			if (mouseSelect)
-			{
-				Dispatcher disp = null;
-				if(aContext != null)
-					disp = aContext.getDispatcher();
+			Dispatcher disp = null;
+			if(aContext != null)
+				disp = aContext.getDispatcher();
 
-				if(doNotify)
+			//Если поле выбрано мышью
+			if (mouseSelect
+				&& doNotify
+				&& disp != null)
+			{
+
+				for(Iterator it = model.getContents().iterator(); it.hasNext();)
 				{
-					if(disp != null)
-					{
-						for(Iterator it = model.getContents().iterator(); it.hasNext();)
-						{
-							MapElement mapE = (MapElement )it.next();
-							performProcessing = false;
-							disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
-							performProcessing = true;
-						}
-					}
+					MapElement mapE = (MapElement )it.next();
+					performProcessing = false;
+					disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
+					performProcessing = true;
 				}
 
 				for (int i = 0; i < table.getSelectedRows().length; i++)
 				{
 					MapElement mapE = (MapElement )model.getObject(table.getSelectedRows()[i]);
 
-					if(doNotify)
-					{
-						if(disp != null)
-						{
-							performProcessing = false;
-							disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-							logicalNetLayer.notifySchemeEvent(mapE);
-							logicalNetLayer.notifyCatalogueEvent(mapE);
-							performProcessing = true;
-						}
-					}
+					performProcessing = false;
+					disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+					logicalNetLayer.notifySchemeEvent(mapE);
+					logicalNetLayer.notifyCatalogueEvent(mapE);
+					performProcessing = true;
 				}
-				mouseSelect = true;
 
-				if(doNotify)
-				{
-					if(disp != null)
-						disp.notify(new MapEvent(this, MapNavigateEvent.MAP_CHANGED));
-				}
+				disp.notify(new MapEvent(this, MapNavigateEvent.MAP_CHANGED));
 			}
 		}
 		catch(Exception e)
@@ -266,7 +252,6 @@ public final class MapElementsPanel extends JPanel
 		//Здесь очищаем выбранные элементы у табли
 		table.clearSelection();
 
-		mouseSelect = true;
 		String selection = (String )typeComboBox.getSelectedItem();
 		List dataSet = new LinkedList();
 
@@ -337,33 +322,36 @@ public final class MapElementsPanel extends JPanel
 		}
 
 		model.setContents(dataSet);
+
+		mouseSelect = true;
+
 		setSelectedObjects();
 	}
 
 	public void setSelectedObjects()
 	{
-	try
-	{
-		//Оновить таблицу
-		mouseSelect = false;
-		//Здесь очищаем выбранные элементы у табли
-		table.clearSelection();
-
-		List dataSet = model.getContents();
-		int i = 0;
-		for(Iterator it = dataSet.iterator(); it.hasNext();)
+		try
 		{
-			MapElement me = (MapElement )it.next();
-			if(me.isSelected())
-	            table.getSelectionModel().addSelectionInterval(i, i);
-			i++;
+			//Оновить таблицу
+			mouseSelect = false;
+			//Здесь очищаем выбранные элементы у табли
+			table.clearSelection();
+	
+			List dataSet = model.getContents();
+			int i = 0;
+			for(Iterator it = dataSet.iterator(); it.hasNext();)
+			{
+				MapElement me = (MapElement )it.next();
+				if(me.isSelected())
+					table.getSelectionModel().addSelectionInterval(i, i);
+				i++;
+			}
+			mouseSelect = true;
 		}
-		mouseSelect = true;
-	}
-    catch(Exception e)
-    {
-		e.printStackTrace();
-    }
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public void setEnabled( boolean b)

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.7 2004/10/15 14:09:21 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.8 2004/10/29 14:59:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,9 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesTable;
@@ -40,7 +42,7 @@ import javax.swing.event.TableModelListener;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/15 14:09:21 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/29 14:59:52 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -123,6 +125,7 @@ public final class MapPropertyFrame extends JInternalFrame
 
 	public void setObjectResource(ObjectResource or)
 	{
+		this.or = or;
 		controller = MapPropsManager.getPropertiesController((MapElement )or);
 		model.setObjectResource(or);
 		model.setController(controller);
@@ -150,7 +153,14 @@ public final class MapPropertyFrame extends JInternalFrame
 		{
 			Dispatcher disp = aContext.getDispatcher();
 			if(disp != null)
-				disp.notify(new MapEvent(this, MapEvent.MAP_CHANGED));
+			{
+				if(or instanceof Map)
+					disp.notify(new MapEvent(or, MapEvent.MAP_CHANGED));
+				else
+				if(or instanceof MapView)
+					disp.notify(new MapEvent(or, MapEvent.MAP_VIEW_CHANGED));
+				else
+					disp.notify(new MapEvent(or, MapEvent.MAP_ELEMENT_CHANGED));
 		}
 	}
 }

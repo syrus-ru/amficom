@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.14 2004/10/26 14:17:39 krupenn Exp $
+ * $Id: MapMarker.java,v 1.15 2004/10/29 14:59:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -64,7 +64,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/10/26 14:17:39 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/29 14:59:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -345,9 +345,9 @@ public class MapMarker extends MapNodeElement
 			(thisX - startNodeX) * (thisX - startNodeX) +
 			(thisY - startNodeY) * (thisY - startNodeY) );
 
-		double cos_b =  (endNodeY - startNodeY) / nodeLinkLength;
+		double sinB =  (endNodeY - startNodeY) / nodeLinkLength;
 
-		double sin_b =  (endNodeX - startNodeX) / nodeLinkLength;
+		double cosB =  (endNodeX - startNodeX) / nodeLinkLength;
 
 		double mousePointX = point.x;
 		double mousePointY = point.y;
@@ -356,18 +356,18 @@ public class MapMarker extends MapNodeElement
 			(mousePointX - thisX) * (mousePointX - thisX) +
 			(mousePointY - thisY) * (mousePointY - thisY) );
 
-		double cos_a = (lengthThisToMousePoint == 0 ) ? 0.0 :
+		double cosA = (lengthThisToMousePoint == 0 ) ? 0.0 :
 			(	(endNodeX - startNodeX) * (mousePointX - thisX) + 
-				(endNodeY - startNodeY)*(mousePointY - thisY) ) /
+				(endNodeY - startNodeY) * (mousePointY - thisY) ) /
 			( nodeLinkLength * lengthThisToMousePoint );
 
-		lengthFromStartNode = lengthFromStartNode + cos_a * lengthThisToMousePoint;
+		lengthFromStartNode = lengthFromStartNode + cosA * lengthThisToMousePoint;
 		
 		return new MapMarker.MotionDescriptor(
-				cos_b,
-				sin_b,
+				cosB,
+				sinB,
 				lengthThisToMousePoint,
-				cos_a,
+				cosA,
 				lengthFromStartNode,
 				nodeLinkLength);
 	}
@@ -501,6 +501,11 @@ public class MapMarker extends MapNodeElement
 		return 0.0D;
 	}
 
+	/**
+	 * returns distance from nodelink starting node to marker's anchor
+	 * in geographical coordinates
+	 * @return 
+	 */
 	public double startToThis()
 	{
 		Point2D.Double from = startNode.getAnchor();
@@ -510,6 +515,11 @@ public class MapMarker extends MapNodeElement
 		return converter.distance(from, to);
 	}
 
+	/**
+	 * returns distance from nodelink ending node to marker's anchor
+	 * in geographical coordinates
+	 * @return 
+	 */
 	public double endToThis()
 	{
 		Point2D.Double from = endNode.getAnchor();
@@ -834,13 +844,13 @@ public class MapMarker extends MapNodeElement
 				(endNodeX - startNodeX) * (endNodeX - startNodeX) +
 				(endNodeY - startNodeY) * (endNodeY - startNodeY) );
 
-		double cos_b = (endNodeY - startNodeY) / nodeLinkLength;
+		double sinB = (endNodeY - startNodeY) / nodeLinkLength;
 
-		double sin_b = (endNodeX - startNodeX) / nodeLinkLength;
+		double cosB = (endNodeX - startNodeX) / nodeLinkLength;
 
 		setAnchor(converter.convertScreenToMap(new Point(
-			(int )Math.round(startNodeX + sin_b * topologicalDistance),
-			(int )Math.round(startNodeY + cos_b * topologicalDistance) ) ) );
+			(int )Math.round(startNodeX + cosB * topologicalDistance),
+			(int )Math.round(startNodeY + sinB * topologicalDistance) ) ) );
 	}
 
 

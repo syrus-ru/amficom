@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.17 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapView.java,v 1.18 2004/10/29 14:59:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.18 $, $Date: 2004/10/29 14:59:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -481,11 +481,11 @@ public final class MapView extends StubResource implements Serializable
 			Scheme sch = (Scheme )getSchemes().get(0);
 			removeScheme(sch);
 		}
-		for(Iterator it = getSchemes().iterator(); it.hasNext();)
-		{
-			Scheme sch = (Scheme )it.next();
-			removeScheme(sch);
-		}
+//		for(Iterator it = getSchemes().iterator(); it.hasNext();)
+//		{
+//			Scheme sch = (Scheme )it.next();
+//			removeScheme(sch);
+//		}
 	}
 
 	public void scanElement(SchemeElement schemeElement)
@@ -1092,7 +1092,7 @@ public final class MapView extends StubResource implements Serializable
 				"method call", 
 				getClass().getName(), 
 				"removeMarkers()");
-		
+		getMap().getNodes().removeAll(markers);
 		markers.clear();
 	}
 
@@ -1108,6 +1108,7 @@ public final class MapView extends StubResource implements Serializable
 				"removeMarker(" + ob + ")");
 
 		markers.remove(ob);
+		getMap().removeNode(ob);
 		ob.setSelected(false);
 	}
 
@@ -1137,6 +1138,7 @@ public final class MapView extends StubResource implements Serializable
 				"addMarker(" + ob + ")");
 
 		markers.add(ob);
+		getMap().addNode(ob);
 	}
 
 	/**

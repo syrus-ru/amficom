@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.18 2004/10/18 12:43:13 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.19 2004/10/29 15:00:06 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -40,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/10/18 12:43:13 $
+ * @version $Revision: 1.19 $, $Date: 2004/10/29 15:00:06 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -350,11 +350,12 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 			double l = 4;
 			double l1 = 6;
 			
-			// a - угол наклона
+			// a - угол наклона nodelink
 			double sinA = (from.y - to.y) / length;
 
 			double cosA = (from.x - to.x) / length;
 
+			// смещение по x и по y дл€ линии выделени€
 			int lxshift = (int )(l * sinA);
 			int lyshift = (int )(l * cosA);
 
@@ -546,9 +547,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 				(end.x - start.x) * (end.x - start.x) +
 				(end.y - start.y) * (end.y - start.y) );
 
-		cosB = (end.y - start.y) / nodeLinkLength;
+		sinB = (end.y - start.y) / nodeLinkLength;
 
-		sinB = (end.x - start.x) / nodeLinkLength;
+		cosB = (end.x - start.x) / nodeLinkLength;
 	}
 	
 	public double getScreenSin()

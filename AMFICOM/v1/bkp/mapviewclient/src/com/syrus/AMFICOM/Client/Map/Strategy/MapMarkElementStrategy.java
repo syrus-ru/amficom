@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.5 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.6 2004/10/29 14:59:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/29 14:59:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -135,20 +135,19 @@ public final class MapMarkElementStrategy implements  MapStrategy
 					mark.getNodeLink().updateLengthLt();
 					double nodeLinkLength =  mark.getNodeLink().getLengthLt();
 					mark.getNodeLink().calcScreenSlope();
-					double cos_b = mark.getNodeLink().getScreenCos();
-					double sin_b = mark.getNodeLink().getScreenSin();
+					double cosB = mark.getNodeLink().getScreenCos();
+					double sinB = mark.getNodeLink().getScreenSin();
 
 					double lengthThisToMousePoint = Math.sqrt( 
 							(point.x - anchorPoint.x) * (point.x - anchorPoint.x) +
 							(point.y - anchorPoint.y) * (point.y - anchorPoint.y) );
 
-					double cos_a = 
+					double cosA = 
 						( 	(end.x - start.x) * (point.x - anchorPoint.y)
 							+ (end.y - start.y) * (point.y - anchorPoint.y) ) 
-						/ nodeLinkLength 
-						* lengthThisToMousePoint;
+						/ (nodeLinkLength * lengthThisToMousePoint);
 
-					lengthFromStartNode = lengthFromStartNode + cos_a * lengthThisToMousePoint;
+					lengthFromStartNode = lengthFromStartNode + cosA * lengthThisToMousePoint;
 
 					if ( lengthFromStartNode > nodeLinkLength )
 					{
@@ -166,8 +165,8 @@ public final class MapMarkElementStrategy implements  MapStrategy
 					mark.setAnchor(
 						converter.convertScreenToMap(
 							new Point(
-								(int)Math.round(start.x + sin_b * ( lengthFromStartNode )),
-								(int)Math.round(start.y + cos_b * ( lengthFromStartNode )) 
+								(int)Math.round(start.x + cosB * ( lengthFromStartNode )),
+								(int)Math.round(start.y + sinB * ( lengthFromStartNode )) 
 							) 
 						) 
 					);

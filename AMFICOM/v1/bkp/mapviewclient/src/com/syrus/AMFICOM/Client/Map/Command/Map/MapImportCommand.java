@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.6 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.7 2004/10/29 14:59:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import java.util.List;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/29 14:59:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -89,7 +89,7 @@ public class MapImportCommand extends ImportCommand
 		String value;
 
 		MapElement me;
-		List loadedObjects = new LinkedList();
+//		List loadedObjects = new LinkedList();
 
 		map = new Map();
 		for (int i = 1; i < exportColumns.length; i++) 
@@ -101,7 +101,7 @@ public class MapImportCommand extends ImportCommand
 			map.setColumn(field, value);
 		}
 		Pool.put(Map.typ, map.getId(), map);
-		loadedObjects.add(map);
+//		loadedObjects.add(map);
 
 		map.setDomainId(aContext.getSessionInterface().getDomainId());
 		map.setUserId(aContext.getSessionInterface().getUserId());
@@ -216,7 +216,7 @@ public class MapImportCommand extends ImportCommand
 				me.setColumn(field, value);
 			}
 			Pool.put(((ObjectResource )me).getTyp(), me.getId(), me);
-			loadedObjects.add(me);
+//			loadedObjects.add(me);
 
 			if(type.equals(MapMarkElement.typ))
 				map.addNode((MapMarkElement )me);
@@ -241,11 +241,13 @@ public class MapImportCommand extends ImportCommand
 
 		super.close();
 
-		for(Iterator it = loadedObjects.iterator(); it.hasNext();)
-		{
-			ObjectResource or = (ObjectResource )it.next();
-			or.updateLocalFromTransferable();
-		}
+		map.updateFromPool();
+
+//		for(Iterator it = loadedObjects.iterator(); it.hasNext();)
+//		{
+//			ObjectResource or = (ObjectResource )it.next();
+//			or.updateLocalFromTransferable();
+//		}
 
 		MapView mv = mapFrame.getMapView();
 		mv.removeSchemes();

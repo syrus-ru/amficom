@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElement.java,v 1.16 2004/10/26 13:25:36 krupenn Exp $
+ * $Id: MapMarkElement.java,v 1.17 2004/10/29 15:00:06 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/10/26 13:25:36 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/29 15:00:06 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -380,8 +380,8 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		this.setAnchor(
 			converter.convertScreenToMap(
 				new Point(
-					(int)Math.round(sp.x + sinB * path),
-					(int)Math.round(sp.y + cosB * path) ) ) );
+					(int)Math.round(sp.x + cosB * path),
+					(int)Math.round(sp.y + sinB * path) ) ) );
 	}
 
 	public String[][] getExportColumns()

@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.7 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.8 2004/10/29 14:59:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/29 14:59:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -103,6 +103,13 @@ public class MapViewSaveCommand extends VoidCommand
 
 			Pool.put( MapView.typ, mapView.getId(), mapView);
 			dataSource.SaveMapView(mapView.getId());
+			
+			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
+			{
+				Scheme scheme = (Scheme )it.next();
+				scheme.setMap(mapView.getMap());
+				dataSource.SaveScheme(scheme.getId());
+			}
 			
 			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
 			{

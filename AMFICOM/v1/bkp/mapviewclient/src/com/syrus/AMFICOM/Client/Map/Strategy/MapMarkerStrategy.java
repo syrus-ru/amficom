@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.5 2004/10/27 15:46:24 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.6 2004/10/29 14:59:52 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -33,7 +33,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/27 15:46:24 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/29 14:59:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -111,9 +111,6 @@ public final class MapMarkerStrategy implements  MapStrategy
 				if ( logicalNetLayer.getContext().getApplicationModel().isEnabled(
 							MapApplicationModel.ACTION_USE_MARKER))
 				{
-					//ѕосылаем сообщение что маркер перемещаетс€
-					marker.notifyMarkerMoved();
-					
 					MapNodeLinkElement nodeLink = marker.getNodeLink();
 					MapNodeElement sn = marker.getStartNode();
 					MapNodeElement en = marker.getEndNode();
@@ -125,25 +122,39 @@ public final class MapMarkerStrategy implements  MapStrategy
 					Point start = converter.convertMapToScreen(sn.getAnchor());
 					Point end = converter.convertMapToScreen(en.getAnchor());
 
-					double lengthFromStartNode = marker.startToThis();
+					double lengthFromStartNode = Math.sqrt( 
+							(anchorPoint.x - start.x) * (anchorPoint.x - start.x) +
+							(anchorPoint.y - start.y) * (anchorPoint.y - start.y) );
 					
-					double nodeLinkLength =  nodeLink.getLengthLt();
+					double nodeLinkLength = Math.sqrt( 
+							(end.x - start.x) * (end.x - start.x) +
+							(end.y - start.y) * (end.y - start.y) );
 
 					double lengthThisToMousePoint = Math.sqrt( 
 							(point.x - anchorPoint.x) * (point.x - anchorPoint.x) +
 							(point.y - anchorPoint.y) * (point.y - anchorPoint.y) );
 
-//					double gamma = Math.atan2((point.x - anchorPoint.x), (point.y - anchorPoint.y));
-//					double betta = Math.atan2((end.x - start.x), (end.y - start.y));
-//					double cos_a = Math.cos(gamma - betta);
+					// calculate cos of an angle between nodelink and mouse motion vector
 
-					double cos_a = 	( 	(end.x - start.x) * (point.x - anchorPoint.x)
-							+ (end.y - start.y) * (point.y - anchorPoint.y) ) 
-						/ (nodeLinkLength * lengthThisToMousePoint);
+					// motion vector angle
+					double gamma = Math.atan2(
+							(point.x - anchorPoint.x), 
+							(point.y - anchorPoint.y));
 
-					lengthFromStartNode = lengthFromStartNode + cos_a * lengthThisToMousePoint;
+					// nodelink angle
+					double betta = Math.atan2(
+							(end.x - start.x), 
+							(end.y - start.y));
 
-					if ( lengthFromStartNode > nodeLinkLength )
+					double cosA = Math.cos(gamma - betta);
+
+//					double cosA = 	( 	(end.x - start.x) * (point.x - anchorPoint.x)
+//							+ (end.y - start.y) * (point.y - anchorPoint.y) ) 
+//						/ (nodeLinkLength * lengthThisToMousePoint);
+
+					lengthFromStartNode = lengthFromStartNode + cosA * lengthThisToMousePoint;
+
+					while(lengthFromStartNode > nodeLinkLength)
 					{
 						nodeLink = marker.nextNodeLink();
 						if(nodeLink == null)
@@ -158,10 +169,16 @@ public final class MapMarkerStrategy implements  MapStrategy
 							marker.setEndNode(en);
 	
 							lengthFromStartNode -= nodeLinkLength;
+
+							start = converter.convertMapToScreen(sn.getAnchor());
+							end = converter.convertMapToScreen(en.getAnchor());
+
+							nodeLinkLength = Math.sqrt( 
+									(end.x - start.x) * (end.x - start.x) +
+									(end.y - start.y) * (end.y - start.y) );
 						}
 					}
-					else
-					if ( lengthFromStartNode < 0 )
+					while(lengthFromStartNode < 0)
 					{
 						nodeLink = marker.previousNodeLink();
 						if(nodeLink == null)
@@ -175,11 +192,21 @@ public final class MapMarkerStrategy implements  MapStrategy
 							marker.setStartNode(sn);
 							marker.setEndNode(en);
 	
-							lengthFromStartNode += nodeLink.getLengthLt();
+							start = converter.convertMapToScreen(sn.getAnchor());
+							end = converter.convertMapToScreen(en.getAnchor());
+
+							nodeLinkLength = Math.sqrt( 
+									(end.x - start.x) * (end.x - start.x) +
+									(end.y - start.y) * (end.y - start.y) );
+
+							lengthFromStartNode += nodeLinkLength;
 						}
 					}
 
 					marker.adjustPosition(lengthFromStartNode);
+
+					//ѕосылаем сообщение что маркер перемещаетс€
+					marker.notifyMarkerMoved();
 				}// MapApplicationModel.ACTION_USE_MARKER
 			}//MapState.MOUSE_DRAGGED
 			else

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.17 2004/10/26 14:17:39 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.18 2004/10/29 14:59:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -83,7 +83,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/10/26 14:17:39 $
+ * @version $Revision: 1.18 $, $Date: 2004/10/29 14:59:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -780,13 +780,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				{
 					sel = new MapSelection(this);
 					setCurrentMapElement(sel);
-					this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
 				}
 				else
 					sel = (MapSelection )getCurrentMapElement();
 
 				sel.clear();
 				sel.addAll(selectedElements);
+				this.sendMapEvent(new MapEvent(sel, MapEvent.MAP_ELEMENT_SELECTED));
 			}
 			else
 			if(selectedElements.size() == 1)
@@ -829,6 +829,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				getMapView().scanCable(((MapCablePathElement )me).getSchemeCableLink());
 				getMapView().scanPaths((Scheme )Pool.get(Scheme.typ, ((MapCablePathElement )me).getSchemeCableLink().getSchemeId()));
 			}
+
+			repaint();
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
@@ -1002,6 +1004,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						me.setSelected(false);
 				}
 			}
+
 			repaint();
 		}
 		else
