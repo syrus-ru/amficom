@@ -259,4 +259,49 @@ public class BellcoreStructure // extends ObjectResource
 			return spec_data.length;
 		}
 	}
+
+	public double getDeltaX()
+	{
+		int n = dataPts.TNDP;
+		return (double)(fxdParams.AR - fxdParams.AO) * 3d / ((double)n * (double)fxdParams.GI/1000d);
+	}
+
+	public double[] getTraceData()
+	{
+		int n = dataPts.TNDP;
+		double[] y = new double[n];
+
+		for (int i = 0; i < dataPts.TPS[0]; i++)
+			y[i] = (double)(65535 - dataPts.DSF[0][i])/1000d;
+
+		correctReflectogramm(y);
+		return y;
+	}
+
+	private void correctReflectogramm(double []data)
+	{
+		int begin = 300;
+		if(begin > data.length / 2)
+			begin = data.length / 2;
+
+		double min = data[begin];
+
+		for(int i = begin; i < data.length; i++)
+			if(data[i] < min)
+				min = data[i];
+
+		if (min != 0)
+			for(int i = 0; i < data.length; i++)
+				data[i] = data[i] - min;
+
+		for(int i = 0; i <= begin; i++)
+			if(data[i] < 0.)
+				data[i] = 0.;
+
+		if(data[0] > 0.001)
+			data[0] = 0.;
+
+		if(data[1] < 0.001)
+			data[1] = data[2] / 2.;
+	}
 }
