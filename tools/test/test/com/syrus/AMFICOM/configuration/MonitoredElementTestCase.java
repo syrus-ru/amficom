@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementTestCase.java,v 1.2 2004/08/25 09:42:39 bob Exp $
+ * $Id: MonitoredElementTestCase.java,v 1.3 2004/08/26 14:14:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package test.com.syrus.AMFICOM.configuration;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/25 09:42:39 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/26 14:14:49 $
  * @author $Author: bob $
  * @module tools
  */
@@ -58,12 +59,16 @@ public class MonitoredElementTestCase extends ConfigureTestCase {
 
 		if (measurementPortList.isEmpty())
 			fail("must be at less one measurement port at db");
+		
+		List monitoredDomainMemberIds = new ArrayList();
 
 		MeasurementPort meaurementPort = (MeasurementPort) measurementPortList.get(0);
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.ME_ENTITY_CODE);
 		
-		MonitoredElement me = MonitoredElement.createInstance(id, creatorId, domainId, meaurementPort.getId(), MonitoredElementSort._MONITOREDELEMENT_SORT_PORT, "testCaseAddress" );
+		MonitoredElement me = MonitoredElement.createInstance(id, creatorId, domainId, meaurementPort.getId(), 
+															  MonitoredElementSort._MONITOREDELEMENT_SORT_PORT,
+															  "testCaseAddress", monitoredDomainMemberIds);
 
 		MonitoredElement me2 = new MonitoredElement((MonitoredElement_Transferable) me
 				.getTransferable());

@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.4 2004/08/25 09:42:39 bob Exp $
+ * $Id: TestTestCase.java,v 1.5 2004/08/26 14:14:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/25 09:42:39 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/26 14:14:49 $
  * @author $Author: bob $
  * @module tools
  */
@@ -102,8 +102,8 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
-		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), new Date(System
-				.currentTimeMillis() + 1000 * 60 * 30), temporalPettern, temporalType, measurementType,
+		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis() + 1000 * 60* 60), new Date(System
+				.currentTimeMillis() + 1000 * 60 * 60 * 14), temporalPettern, temporalType, measurementType,
 						analysisType, evaluationType, me,
 						TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase",
 						measurementSetupIds);
@@ -167,9 +167,6 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		assertEquals(test2, test3);
 
-		/**
-		 * FIXME почему-то тут ооочень долго тормозит...
-		 */
 		if (!list.isEmpty())
 			TestDatabase.delete(test);
 
@@ -213,7 +210,7 @@ public class TestTestCase extends AbstractMesurementTestCase {
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
 		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), new Date(System
-				.currentTimeMillis() + 1000 * 60 * 30), temporalPettern, temporalType, measurementType,
+				.currentTimeMillis() + 1000 * 60 * 60 * 14 ), temporalPettern, temporalType, measurementType,
 						analysisType, evaluationType, me,
 						TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase",
 						measurementSetupIds);
@@ -224,11 +221,8 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		assertEquals(test2, test3);
 
-		/**
-		 * FIXME почему-то тут ооочень долго тормозит...
-		 */
-		if (!list.isEmpty())
-			TestDatabase.delete(test);
+//		if (!list.isEmpty())
+//			TestDatabase.delete(test);
 
 	}
 
