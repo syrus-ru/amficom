@@ -10,66 +10,64 @@ import com.syrus.AMFICOM.Client.Resource.Test.*;
 public class TestSetup extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	/**
-	 * @deprecated
-	 */
+
 	public static final String typ = "testsetup";
 
 	private TestSetup_Transferable transferable;
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */
 	public String id = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */
 	public String name = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public long created = 0;
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public long modified = 0;
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public String created_by = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public String description = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public String test_type_id = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public String test_argument_set_id = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public String analysis_type_id = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public String criteria_set_id = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public String evaluation_type_id = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public String threshold_set_id = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public String etalon_id = "";
 	/**
-	 * @deprecated
+	 * @deprecated use setter/getter pair to access this field
 	 */	
 	public String[] monitored_element_ids;
 
@@ -95,7 +93,7 @@ public class TestSetup extends ObjectResource implements Serializable
 		return id;
 	}
 
-	public static String getTyp()
+	public String getTyp()
 	{
 		return typ;
 	}

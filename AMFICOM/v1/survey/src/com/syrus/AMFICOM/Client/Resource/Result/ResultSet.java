@@ -16,23 +16,48 @@ import java.util.Date;
 public class ResultSet extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
+	
 	public static final String typ = "resultset";
 
 	private ResultSet_Transferable transferable;
-
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public String id = "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public String name = "";
-
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public String domain_id = "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public String comments = "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public boolean active = false;
-
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public long created = 0;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public long modified = 0;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public long start_time = 0;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
 	public long end_time = 0;
 
-	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
+	private static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
 
 	public ResultSet()
 	{
@@ -154,6 +179,102 @@ public class ResultSet extends ObjectResource implements Serializable
 		return new ResultSetModel(this);
 	}
 	
+	/**
+	 * @return Returns the active.
+	 */
+	public boolean isActive() {
+		return active;
+	}
+	/**
+	 * @param active The active to set.
+	 */
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	/**
+	 * @return Returns the comments.
+	 */
+	public String getComments() {
+		return comments;
+	}
+	/**
+	 * @param comments The comments to set.
+	 */
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+	/**
+	 * @return Returns the created.
+	 */
+	public long getCreated() {
+		return created;
+	}
+	/**
+	 * @param created The created to set.
+	 */
+	public void setCreated(long created) {
+		this.created = created;
+	}
+	/**
+	 * @return Returns the domain_id.
+	 */
+	public String getDomain_id() {
+		return domain_id;
+	}
+	/**
+	 * @param domain_id The domain_id to set.
+	 */
+	public void setDomain_id(String domain_id) {
+		this.domain_id = domain_id;
+	}
+	/**
+	 * @return Returns the end_time.
+	 */
+	public long getEnd_time() {
+		return end_time;
+	}
+	/**
+	 * @param end_time The end_time to set.
+	 */
+	public void setEnd_time(long end_time) {
+		this.end_time = end_time;
+	}
+	/**
+	 * @return Returns the modified.
+	 */
+	public long getModified() {
+		return modified;
+	}
+	/**
+	 * @param modified The modified to set.
+	 */
+	public void setModified(long modified) {
+		this.modified = modified;
+	}
+	/**
+	 * @return Returns the start_time.
+	 */
+	public long getStart_time() {
+		return start_time;
+	}
+	/**
+	 * @param start_time The start_time to set.
+	 */
+	public void setStart_time(long start_time) {
+		this.start_time = start_time;
+	}
+	/**
+	 * @param id The id to set.
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+	/**
+	 * @param name The name to set.
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 }
 
 class ResultSetTimeSorter extends ObjectResourceSorter
