@@ -1,0 +1,394 @@
+/*
+ * $Id: SurveydbInterfaceLoad5.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.server.object;
+
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.Survey.*;
+import com.syrus.util.database.ByteArrayDatabase;
+import java.sql.*;
+import java.util.Vector;
+import oracle.jdbc.driver.OracleResultSet;
+import oracle.sql.BLOB;
+import sqlj.runtime.ConnectionContext;
+import sqlj.runtime.ref.DefaultContext;
+
+/**
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class SurveydbInterfaceLoad5
+{
+	protected SurveydbInterfaceLoad5()
+	{
+	}
+
+/*
+	loadActionArguments(
+			"ANALYSISARGUMENTS",
+			"ANALYSIS_ID",
+			"ARGUMENT_TYPE_ID",
+			"ANALYSISTYPEARGUMENTS",
+			"ana1")
+*/
+	public static ClientParameter_Transferable[] loadActionArguments(
+			String argumentTableName,
+			String argumentFieldName,
+			String argumentParameterFieldName,
+			String argumentTypeTableName,
+			String action_id)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_parameter_type_name = "";
+		String It_parameter_type_id = "";
+		String It_data_type = "";
+		String It_arg_id = "";
+
+		byte[] val = new byte[0];
+
+		Vector vector = new Vector();
+		ClientParameter_Transferable[] args = new ClientParameter_Transferable[0];
+		ClientParameter_Transferable arg;
+
+
+		try
+		{
+			ConnectionContext connCtx = DefaultContext.getDefaultContext();
+			Statement statement = null;
+			OracleResultSet resultset = null;
+			Statement statement2 = null;
+			OracleResultSet resultset2 = null;
+System.out.println("Zaebali ");
+			String qry =
+					"select ID, VALUE, " + argumentParameterFieldName +
+					" from AMFICOM." + argumentTableName +
+					" where " + argumentFieldName + " = '" + action_id + "'";
+
+			System.out.println("Executing " + qry);
+			try
+			{
+				statement = connCtx.getConnection().createStatement();
+				resultset = (OracleResultSet )statement.executeQuery(qry);
+				while(resultset.next())
+				{
+					It_arg_id = resultset.getString(argumentParameterFieldName);
+					It_id = resultset.getString("ID");
+					val = ByteArrayDatabase.toByteArray(resultset.getBLOB("VALUE"));
+					System.out.println("retreived id " + It_id + " argID " + It_arg_id);
+
+					String qry2 =
+							"select NAME, CODENAME, PARAMETER_TYPE_ID " +
+							" from AMFICOM." + argumentTypeTableName +
+							" where ID = '" + It_arg_id + "'";
+					System.out.println("Executing " + qry2);
+					try
+					{
+						statement2 = connCtx.getConnection().createStatement();
+						resultset2 = (OracleResultSet )statement.executeQuery(qry2);
+						if(resultset2.next())
+						{
+							It_name = resultset2.getString("NAME");
+							It_codename = resultset2.getString("CODENAME");
+							It_parameter_type_id = resultset2.getString("PARAMETER_TYPE_ID");
+						}
+						else
+						{
+							System.out.println("param does not exist");
+							return args;
+						}
+						resultset2.close();
+					}
+					catch(SQLException sqlexception1)
+					{
+						resultset2.close();
+						System.out.println("Фигня: " + sqlexception1.getMessage());
+						sqlexception1.printStackTrace();
+						return args;
+					}
+					finally
+					{
+						try
+						{
+							if(resultset2 != null)
+								resultset2.close();
+							resultset2 = null;
+							if(statement2 != null)
+								statement2.close();
+							statement2 = null;
+						}
+						catch(SQLException _ex) { }
+					}
+
+					arg = new ClientParameter_Transferable(
+							It_id,
+							It_arg_id,
+							val,
+							It_codename,
+							It_parameter_type_id);
+					vector.add(arg);
+				}
+				resultset.close();
+			}
+			catch(SQLException sqlexception1)
+			{
+				System.out.println("Zhopa: " + sqlexception1.getMessage());
+				sqlexception1.printStackTrace();
+				return args;
+			}
+			finally
+			{
+				try
+				{
+					if(resultset != null)
+						resultset.close();
+					resultset = null;
+					if(statement != null)
+						statement.close();
+					statement = null;
+				}
+				catch(SQLException _ex) { }
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("could not get parameters for " + action_id + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		args = new ClientParameter_Transferable[vector.size()];
+		vector.copyInto(args);
+		return args;
+	}
+
+	public static int loadGlobalParameterTypes(
+			GlobalParameterTypeSeq_TransferableHolder paramtypeseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+		String It_norm = "";
+		String It_value_type_id = "";
+		String It_unit = "";
+		String It_granularity = "";
+		String It_rangehi = "";
+		String It_rangelo = "";
+		String It_formula = "";
+		long It_modified = 0;
+
+		Vector vector = new Vector();
+
+		GlobalParameterType_Transferable ch_t;
+		GlobalParameterType_Transferable[] ch_ts;
+		GlobalParameterTypeIterator chIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql chIt = { select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+						NORM,
+						TYPE_ID,
+						UNIT,
+						GRANULARITY,
+						RANGEHI,
+						RANGELO,
+						FORMULA,
+						MODIFIED
+					from AMFICOM.PARAMETERTYPES
+			};
+
+			while (chIt.next())
+			{
+				try { It_id = chIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = chIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_value_type_id = chIt.type_id(); }
+				catch(SQLException e) { }
+				if(It_value_type_id == null) It_value_type_id = "";
+
+				try { It_modified = chIt.modified().getTime(); }
+				catch(SQLException e) { }
+
+				ch_t = new GlobalParameterType_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_description,
+					It_norm,
+					It_value_type_id,
+					It_unit,
+					It_granularity,
+					It_rangehi,
+					It_rangelo,
+					It_formula,
+					It_modified);
+
+				vector.add(ch_t);
+			}// while(chIt)
+			chIt.close();
+			ch_ts = new GlobalParameterType_Transferable[vector.size()];
+			vector.copyInto(ch_ts);
+			paramtypeseq.value = ch_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(chIt != null) try {
+			chIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading characteristic types: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				chIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int loadGlobalParameterTypes(
+			String[] ids,
+			GlobalParameterTypeSeq_TransferableHolder paramtypeseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+		String It_norm = "";
+		String It_value_type_id = "";
+		String It_unit = "";
+		String It_granularity = "";
+		String It_rangehi = "";
+		String It_rangelo = "";
+		String It_formula = "";
+		long It_modified = 0;
+
+		Vector vector = new Vector();
+
+		GlobalParameterType_Transferable ch_t;
+		GlobalParameterType_Transferable[] ch_ts;
+		GlobalParameterTypeIterator chIt = null;
+		Vector vector2;
+
+		Vector loadvec = new Vector();
+		for(int i = 0; i < ids.length; i++)
+			loadvec.add(ids[i]);
+		try
+		{
+			#sql chIt = { select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+						NORM,
+						TYPE_ID,
+						UNIT,
+						GRANULARITY,
+						RANGEHI,
+						RANGELO,
+						FORMULA,
+						MODIFIED
+					from AMFICOM.PARAMETERTYPES
+			};
+
+			while (chIt.next())
+			{
+				if(! loadvec.contains(chIt.id()))
+					continue;
+
+				try { It_id = chIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = chIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_value_type_id = chIt.type_id(); }
+				catch(SQLException e) { }
+				if(It_value_type_id == null) It_value_type_id = "";
+
+				try { It_modified = chIt.modified().getTime(); }
+				catch(SQLException e) { }
+
+				ch_t = new GlobalParameterType_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_description,
+					It_norm,
+					It_value_type_id,
+					It_unit,
+					It_granularity,
+					It_rangehi,
+					It_rangelo,
+					It_formula,
+					It_modified);
+
+				vector.add(ch_t);
+			}// while(chIt)
+			chIt.close();
+			ch_ts = new GlobalParameterType_Transferable[vector.size()];
+			vector.copyInto(ch_ts);
+			paramtypeseq.value = ch_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(chIt != null) try {
+			chIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading characteristic types: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				chIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+
+	#sql public static iterator IdIterator ( String id );
+
+	#sql public static iterator ActionArgumentIterator(
+		String id,
+		String name,
+		String codename,
+		String parameter_type_id,
+		BLOB value);
+
+	#sql public static iterator GlobalParameterTypeIterator(
+		String id,
+		String name,
+		String codename,
+		String description,
+		String norm,
+		String type_id,
+		String unit,
+		String granularity,
+		String rangehi,
+		String rangelo,
+		String formula,
+		Timestamp modified);
+}

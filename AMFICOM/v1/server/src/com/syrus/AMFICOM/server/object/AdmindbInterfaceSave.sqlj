@@ -1,0 +1,229 @@
+/*
+ * $Id: AdmindbInterfaceSave.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.server.object;
+
+import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.SQLException;
+
+/**
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class AdmindbInterfaceSave
+{
+	protected AdmindbInterfaceSave()
+	{
+	}
+
+	public static int saveServers(Server_Transferable[] serverseq)
+	{
+		int i;
+		int len;
+
+		len = serverseq.length;
+		for (i = 0; i < len; i++)
+		{
+			System.out.println("save server id " + serverseq[i].id +
+					" name " + serverseq[i].name +
+					" contact " + serverseq[i].contact);
+			try
+			{
+				#sql
+				{
+					insert into AMFICOM.SERVERS(
+							ID,
+							NAME,
+							CONTACT,
+							LICENCE_ID,
+							VERSION,
+							LOCATION,
+							HOSTNAME,
+							CREATED,
+							MODIFIED)
+					values(
+						:(serverseq[i].id),
+						:(serverseq[i].name),
+						:(serverseq[i].contact),
+						:(serverseq[i].licence_id),
+						:(serverseq[i].version),
+						:(serverseq[i].location),
+						:(serverseq[i].hostname),
+						SYSDATE,
+						SYSDATE)
+				};
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("server exists - updating...");
+				try
+				{
+					#sql
+					{
+						update AMFICOM.SERVERS set
+								NAME = :(serverseq[i].name),
+								CONTACT = :(serverseq[i].contact),
+								LICENCE_ID = :(serverseq[i].licence_id),
+								MODIFIED = SYSDATE,
+								VERSION = :(serverseq[i].version),
+								LOCATION = :(serverseq[i].location),
+								HOSTNAME = :(serverseq[i].hostname)
+							where ID = :(serverseq[i].id)
+					};
+					#sql { commit };
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("could not save server: " + ex.getMessage());
+					e.printStackTrace();
+					return Constants.ERROR_SAVING;
+				}
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int saveClients(Client_Transferable[] clientseq)
+	{
+		int i;
+		int len;
+
+		len = clientseq.length;
+		for (i = 0; i < len; i++)
+		{
+			System.out.println("save client id " + clientseq[i].id +
+					" name " + clientseq[i].name +
+					" contact " + clientseq[i].contact);
+			try
+			{
+				#sql
+				{
+					insert into AMFICOM.CLIENTS(
+							ID,
+							NAME,
+							CONTACT,
+							LICENCE_ID,
+							VERSION,
+							LOCATION,
+							HOSTNAME,
+							CREATED,
+							MODIFIED)
+					values(
+						:(clientseq[i].id),
+						:(clientseq[i].name),
+						:(clientseq[i].contact),
+						:(clientseq[i].licence_id),
+						:(clientseq[i].version),
+						:(clientseq[i].location),
+						:(clientseq[i].hostname),
+						SYSDATE,
+						SYSDATE)
+				};
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("client exists - updating...");
+				try
+				{
+					#sql
+					{
+						update AMFICOM.CLIENTS set
+								NAME = :(clientseq[i].name),
+								CONTACT = :(clientseq[i].contact),
+								LICENCE_ID = :(clientseq[i].licence_id),
+								MODIFIED = SYSDATE,
+								VERSION = :(clientseq[i].version),
+								LOCATION = :(clientseq[i].location),
+								HOSTNAME = :(clientseq[i].hostname)
+							where ID = :(clientseq[i].id)
+					};
+					#sql { commit };
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("could not save client: " + ex.getMessage());
+					e.printStackTrace();
+					return Constants.ERROR_SAVING;
+				}
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int saveAgents(Agent_Transferable[] agentseq)
+	{
+		int i;
+		int len;
+
+		len = agentseq.length;
+		for (i = 0; i < len; i++)
+		{
+			System.out.println("save agent id " + agentseq[i].id +
+					" name " + agentseq[i].name +
+					" contact " + agentseq[i].contact);
+			try
+			{
+				#sql
+				{
+					insert into AMFICOM.AGENTS(
+							ID,
+							NAME,
+							CONTACT,
+							LICENCE_ID,
+							VERSION,
+							LOCATION,
+							HOSTNAME,
+							CREATED,
+							MODIFIED)
+					values(
+						:(agentseq[i].id),
+						:(agentseq[i].name),
+						:(agentseq[i].contact),
+						:(agentseq[i].licence_id),
+						:(agentseq[i].version),
+						:(agentseq[i].location),
+						:(agentseq[i].hostname),
+						SYSDATE,
+						SYSDATE)
+				};
+				#sql { commit };
+			}
+			catch(SQLException e)
+			{
+				System.out.println("agent exists - updating...");
+				try
+				{
+					#sql
+					{
+						update AMFICOM.AGENTS set
+								NAME = :(agentseq[i].name),
+								CONTACT = :(agentseq[i].contact),
+								LICENCE_ID = :(agentseq[i].licence_id),
+								MODIFIED = SYSDATE,
+								VERSION = :(agentseq[i].version),
+								LOCATION = :(agentseq[i].location),
+								HOSTNAME = :(agentseq[i].hostname)
+							where ID = :(agentseq[i].id)
+					};
+					#sql { commit };
+				}
+				catch(SQLException ex)
+				{
+					System.out.println("could not save agent: " + ex.getMessage());
+					e.printStackTrace();
+					return Constants.ERROR_SAVING;
+				}
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+}

@@ -1,0 +1,1028 @@
+/*
+ * $Id: SchemedbInterfaceProtoLoad.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.server.object;
+
+import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import java.sql.*;
+import java.util.Vector;
+
+/**
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class SchemedbInterfaceProtoLoad
+{
+	protected SchemedbInterfaceProtoLoad()
+	{
+	}
+
+	public static Vector loadDevicePorts(String device_id)
+	{
+		PortIdIterator idIt = null;
+		String sp_id;
+
+		String id;
+		String name;
+		String link_id;
+
+		String port_type_id;
+		String port_id;
+		String direction_type;
+
+		boolean is_access_port;
+		String access_port_type_id;
+		String access_port_id;
+
+		int is_access_port_int;
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+		Vector vector2 = new Vector();
+		Vector vector = new Vector();
+		try
+		{
+			#sql idIt = { select SCHEME_PORT_ID
+				from AMFICOM.SCHEMEDEVICEPORTS
+					where SCHEME_DEVICE_ID = :device_id };
+
+			while (idIt.next())
+			{
+				try
+				{
+					sp_id = idIt.scheme_port_id();
+					#sql { select
+							ID,
+							NAME,
+							PORT_TYPE_ID,
+							PORT_ID,
+							IS_ACCESS_PORT,
+							ACCESS_PORT_TYPE_ID,
+							ACCESS_PORT_ID,
+							DIRECTION_TYPE
+						into
+							:id,
+							:name,
+							:port_type_id,
+							:port_id,
+							:is_access_port_int,
+							:access_port_type_id,
+							:access_port_id,
+							:direction_type
+						from AMFICOM.SCHEMEPORTS
+						where ID = :sp_id
+					};
+
+					if(name == null)
+						name = "";
+					if(port_id == null)
+						port_id = "";
+					if(port_type_id == null)
+						port_type_id = "";
+					if(access_port_type_id == null)
+						access_port_type_id = "";
+					if(access_port_id == null)
+						access_port_id = "";
+					is_access_port = (is_access_port_int == 1);
+					if(direction_type == null)
+						direction_type = "";
+
+					try
+					{
+						#sql { select ID into :link_id
+							from AMFICOM.SCHEMELINKS
+							where SOURCE_PORT_ID = :sp_id
+								or TARGET_PORT_ID = :sp_id
+						};
+					}
+					catch(Exception e)
+					{
+						link_id = "";
+					}
+
+					vector2 = MapdbInterfaceLoad4.loadAttributes(
+							"SCHEMEPORTATTRIBUTES",
+							"SCHEME_PORT_ID",
+							id);
+					attributes = new ElementAttribute_Transferable[vector2.size()];
+					vector2.copyInto(attributes);
+
+					vector.addElement(
+						new SchemePort_Transferable(
+								id,
+								name,
+								device_id,
+								link_id,
+								port_type_id,
+								port_id,
+								is_access_port,
+								access_port_type_id,
+								access_port_id,
+								direction_type,
+								attributes));
+				}
+				catch(SQLException e)
+				{
+					System.out.println("could not get ports for device " + device_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+			}
+			idIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get ports for device " + device_id + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				idIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return vector;
+	}
+
+	public static Vector loadDeviceCablePorts(String device_id)
+	{
+		CablePortIdIterator idIt = null;
+		String sp_id;
+
+		String id;
+		String name;
+		String link_id;
+
+		String cable_port_type_id;
+		String cable_port_id;
+		String direction_type;
+
+		boolean is_access_port;
+		String access_port_type_id;
+		String access_port_id;
+
+		int is_access_port_int;
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+		Vector vector2 = new Vector();
+		Vector vector = new Vector();
+		try
+		{
+			#sql idIt = { select SCHEME_CABLE_PORT_ID
+				from AMFICOM.SCHEMEDEVICECABLEPORTS
+					where SCHEME_DEVICE_ID = :device_id };
+
+			while (idIt.next())
+			{
+				try
+				{
+					sp_id = idIt.scheme_cable_port_id();
+					#sql { select
+							ID,
+							NAME,
+							CABLE_PORT_TYPE_ID,
+							CABLE_PORT_ID,
+							IS_ACCESS_PORT,
+							ACCESS_PORT_TYPE_ID,
+							ACCESS_PORT_ID,
+							DIRECTION_TYPE
+						into
+							:id,
+							:name,
+							:cable_port_type_id,
+							:cable_port_id,
+							:is_access_port_int,
+							:access_port_type_id,
+							:access_port_id,
+							:direction_type
+						from AMFICOM.SCHEMECABLEPORTS
+						where ID = :sp_id
+					};
+
+					if(name == null)
+						name = "";
+					if(cable_port_id == null)
+						cable_port_id = "";
+					if(cable_port_type_id == null)
+						cable_port_type_id = "";
+					if(access_port_type_id == null)
+						access_port_type_id = "";
+					if(access_port_id == null)
+						access_port_id = "";
+					is_access_port = (is_access_port_int == 1);
+					if(direction_type == null)
+						direction_type = "";
+
+					try
+					{
+						#sql { select ID into :link_id
+							from AMFICOM.SCHEMECABLELINKS
+							where SOURCE_PORT_ID = :sp_id
+								or TARGET_PORT_ID = :sp_id
+						};
+					}
+					catch(Exception e)
+					{
+						link_id = "";
+					}
+
+					vector2 = MapdbInterfaceLoad4.loadAttributes(
+							"SCHEMECABLEPORTATTRIBUTES",
+							"SCHEME_CABLE_PORT_ID",
+							id);
+					attributes = new ElementAttribute_Transferable[vector2.size()];
+					vector2.copyInto(attributes);
+
+					vector.addElement(
+						new SchemeCablePort_Transferable(
+								id,
+								name,
+								device_id,
+								link_id,
+								cable_port_type_id,
+								cable_port_id,
+								is_access_port,
+								access_port_type_id,
+								access_port_id,
+								direction_type,
+								attributes));
+				}
+				catch(SQLException e)
+				{
+					System.out.println("could not get cable ports for device " + device_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+			}
+			idIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get cable ports for device " + device_id + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				idIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return vector;
+	}
+
+	public static Object loadSchemePort(String port_id)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_device_id = "";
+		String It_link_id = "";
+
+		String It_port_type_id = "";
+		String It_port_id = "";
+		String It_direction_type = "";
+
+		boolean It_is_access_port = false;
+		String It_access_port_type_id = "";
+		String It_access_port_id = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+		SchemePort_Transferable pt_t;
+		SchemePortIterator ptIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql ptIt = { select
+						ID,
+						NAME,
+						PORT_TYPE_ID,
+						PORT_ID,
+						IS_ACCESS_PORT,
+						ACCESS_PORT_TYPE_ID,
+						ACCESS_PORT_ID,
+						DIRECTION_TYPE
+					from AMFICOM.SCHEMEPORTS
+					where ID = :port_id
+			};
+
+			ptIt.next();
+
+			try { It_id = ptIt.id(); }
+			catch(SQLException e) { }
+			if(It_id == null) It_id = "";
+			try { It_name = ptIt.name(); }
+			catch(SQLException e) { }
+			if(It_name == null) It_name = "";
+			try { It_port_type_id = ptIt.port_type_id(); }
+			catch(SQLException e) { }
+			if(It_port_type_id == null) It_port_type_id = "";
+			try { It_port_id = ptIt.port_id(); }
+			catch(SQLException e) { }
+			if(It_port_id == null) It_port_id = "";
+			try { It_is_access_port = (ptIt.is_access_port() == 0)? false: true; }
+			catch(SQLException e) { }
+			try { It_access_port_type_id = ptIt.access_port_type_id(); }
+			catch(SQLException e) { }
+			if(It_access_port_type_id == null) It_access_port_type_id = "";
+			try { It_access_port_id = ptIt.access_port_id(); }
+			catch(SQLException e) { }
+			if(It_access_port_id == null) It_access_port_id = "";
+			try { It_direction_type = ptIt.direction_type(); }
+			catch(SQLException e) { }
+			if(It_direction_type == null) It_direction_type = "";
+
+			ptIt.close();
+
+			#sql { select ID into :It_link_id
+				from AMFICOM.SCHEMELINKS
+				where SOURCE_PORT_ID = :It_id
+					or TARGET_PORT_ID = :It_id
+			};
+
+			#sql { select SCHEME_DEVICE_ID into :It_device_id
+				from AMFICOM.SCHEMEDEVICEPORTS
+				where SCHEME_PORT_ID = :It_id
+			};
+
+			vector2 = MapdbInterfaceLoad4.loadAttributes(
+					"SCHEMEPORTATTRIBUTES",
+					"SCHEME_PORT_ID",
+					It_id);
+			attributes = new ElementAttribute_Transferable[vector2.size()];
+			vector2.copyInto(attributes);
+
+			pt_t = new SchemePort_Transferable(
+				It_id,
+				It_name,
+				It_device_id,
+				It_link_id,
+				It_port_type_id,
+				It_port_id,
+				It_is_access_port,
+				It_access_port_type_id,
+				It_access_port_id,
+				It_direction_type,
+				attributes);
+			return pt_t;
+		}
+		catch(SQLException e)
+		{
+			if(ptIt != null) try {
+			ptIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading scheme port: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				ptIt.close();
+			}catch(Exception exe) {}
+		}
+		
+	}
+
+	public static Object loadSchemeCablePort(String port_id)
+	{
+		String It_id = "";
+		String It_name = "";
+
+		String It_device_id = "";
+		String It_link_id = "";
+
+		String It_cable_port_type_id = "";
+		String It_cable_port_id = "";
+		String It_direction_type = "";
+
+		boolean It_is_access_port = false;
+		String It_access_port_type_id = "";
+		String It_access_port_id = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+		SchemeCablePort_Transferable pt_t;
+		SchemeCablePortIterator ptIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql ptIt = { select
+						ID,
+						NAME,
+						CABLE_PORT_TYPE_ID,
+						CABLE_PORT_ID,
+						IS_ACCESS_PORT,
+						ACCESS_PORT_TYPE_ID,
+						ACCESS_PORT_ID,
+						DIRECTION_TYPE
+					from AMFICOM.SCHEMECABLEPORTS
+					where ID = :port_id
+			};
+
+			ptIt.next();
+
+			try { It_id = ptIt.id(); }
+			catch(SQLException e) { }
+			if(It_id == null) It_id = "";
+			try { It_name = ptIt.name(); }
+			catch(SQLException e) { }
+			if(It_name == null) It_name = "";
+			try { It_cable_port_type_id = ptIt.cable_port_type_id(); }
+			catch(SQLException e) { }
+			if(It_cable_port_type_id == null) It_cable_port_type_id = "";
+			try { It_cable_port_id = ptIt.cable_port_id(); }
+			catch(SQLException e) { }
+			if(It_cable_port_id == null) It_cable_port_id = "";
+			try { It_is_access_port = (ptIt.is_access_port() == 0)? false: true; }
+			catch(SQLException e) { }
+			try { It_access_port_type_id = ptIt.access_port_type_id(); }
+			catch(SQLException e) { }
+			if(It_access_port_type_id == null) It_access_port_type_id = "";
+			try { It_access_port_id = ptIt.access_port_id(); }
+			catch(SQLException e) { }
+			if(It_access_port_id == null) It_access_port_id = "";
+			try { It_direction_type = ptIt.direction_type(); }
+			catch(SQLException e) { }
+			if(It_direction_type == null) It_direction_type = "";
+
+			ptIt.close();
+
+			#sql { select ID into :It_link_id
+				from AMFICOM.SCHEMECABLELINKS
+				where SOURCE_PORT_ID = :It_id
+					or TARGET_PORT_ID = :It_id
+			};
+
+			#sql { select SCHEME_DEVICE_ID into :It_device_id
+				from AMFICOM.SCHEMEDEVICECABLEPORTS
+				where SCHEME_CABLE_PORT_ID = :It_id
+			};
+
+			vector2 = MapdbInterfaceLoad4.loadAttributes(
+					"SCHEMECABLEPORTATTRIBUTES",
+					"SCHEME_CABLE_PORT_ID",
+					It_id);
+			attributes = new ElementAttribute_Transferable[vector2.size()];
+			vector2.copyInto(attributes);
+
+			pt_t = new SchemeCablePort_Transferable(
+				It_id,
+				It_name,
+				It_device_id,
+				It_link_id,
+				It_cable_port_type_id,
+				It_cable_port_id,
+				It_is_access_port,
+				It_access_port_type_id,
+				It_access_port_id,
+				It_direction_type,
+				attributes);
+			return pt_t;
+		}
+		catch(SQLException e)
+		{
+			if(ptIt != null) try {
+			ptIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading scheme cable port: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				ptIt.close();
+			}catch(Exception exe) {}
+		}
+		
+	}
+
+	public static Object loadSchemeLink(String link_id)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_source_port_id = "";
+		String It_target_port_id = "";
+		String It_link_id = "";
+		String It_link_type_id = "";
+		String It_physical_length = "";
+		String It_optical_length = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		Vector vector = new Vector();
+
+		SchemeLink_Transferable lt_t;
+		SchemeLinkIterator lIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql lIt = { select
+						ID,
+						NAME,
+						LINK_TYPE_ID,
+						LINK_ID,
+						SOURCE_PORT_ID,
+						TARGET_PORT_ID,
+						PHYSICAL_LENGTH,
+						OPTICAL_LENGTH
+					from AMFICOM.SCHEMELINKS
+					where ID = :link_id
+			};
+
+			lIt.next();
+
+			try { It_id = lIt.id(); }
+			catch(SQLException e) { }
+			if(It_id == null) It_id = "";
+			try { It_name = lIt.name(); }
+			catch(SQLException e) { }
+			if(It_name == null) It_name = "";
+			try { It_link_type_id = lIt.link_type_id(); }
+			catch(SQLException e) { }
+			if(It_link_type_id == null) It_link_type_id = "";
+			try { It_link_id = lIt.link_id(); }
+			catch(SQLException e) { }
+			if(It_link_id == null) It_link_id = "";
+			try { It_source_port_id = lIt.source_port_id(); }
+			catch(SQLException e) { }
+			if(It_source_port_id == null) It_source_port_id = "";
+			try { It_target_port_id = lIt.target_port_id(); }
+			catch(SQLException e) { }
+			if(It_target_port_id == null) It_target_port_id = "";
+			try { It_physical_length = lIt.physical_length(); }
+			catch(SQLException e) { }
+			if(It_physical_length == null) It_physical_length = "";
+			try { It_optical_length = lIt.optical_length(); }
+			catch(SQLException e) { }
+			if(It_optical_length == null) It_optical_length = "";
+
+			lIt.close();
+
+			vector2 = MapdbInterfaceLoad4.loadAttributes(
+					"SCHEMELINKATTRIBUTES",
+					"SCHEME_LINK_ID",
+					It_id);
+			attributes = new ElementAttribute_Transferable[vector2.size()];
+			vector2.copyInto(attributes);
+
+			lt_t = new SchemeLink_Transferable(
+				It_id,
+				It_name,
+				It_source_port_id,
+				It_target_port_id,
+				It_link_type_id,
+				It_link_id,
+				It_physical_length,
+				It_optical_length,
+				attributes);
+
+//			System.out.println("loaded link: " + It_id + " (" + link_id + ")");
+			return lt_t;
+		}
+		catch(SQLException e)
+		{
+			if(lIt != null) try {
+			lIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading link: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				lIt.close();
+			}catch(Exception exe) {}
+		}
+		
+	}
+
+	public static Object loadSchemeDevice(String device_id)
+	{
+		String It_id = "";
+		String It_name = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+		SchemeDevice_Transferable d_t;
+		SchemeDeviceIterator dIt = null;
+		Vector vector2;
+
+		SchemePort_Transferable[] ports;
+		SchemeCablePort_Transferable[] cable_ports;
+
+		try
+		{
+			#sql dIt = { select
+						ID,
+						NAME
+					from AMFICOM.SCHEMEDEVICES
+					where ID = :device_id
+			};
+
+			dIt.next();
+
+			try { It_id = dIt.id(); }
+			catch(SQLException e) { }
+			if(It_id == null) It_id = "";
+			try { It_name = dIt.name(); }
+			catch(SQLException e) { }
+			if(It_name == null) It_name = "";
+
+			dIt.close();
+
+			vector2 = loadDevicePorts(It_id);
+			ports = new SchemePort_Transferable[vector2.size()];
+			vector2.copyInto(ports);
+
+			vector2 = loadDeviceCablePorts(It_id);
+			cable_ports = new SchemeCablePort_Transferable[vector2.size()];
+			vector2.copyInto(cable_ports);
+
+			vector2 = MapdbInterfaceLoad4.loadAttributes(
+					"SCHEMEDEVICEATTRIBUTES",
+					"SCHEME_DEVICE_ID",
+					It_id);
+			attributes = new ElementAttribute_Transferable[vector2.size()];
+			vector2.copyInto(attributes);
+
+			d_t = new SchemeDevice_Transferable(
+				It_id,
+				It_name,
+				ports,
+				cable_ports,
+				attributes);
+			return d_t;
+		}
+		catch(SQLException e)
+		{
+			if(dIt != null) try {
+			dIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading device: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				dIt.close();
+			}catch(Exception exe) {}
+		}
+		
+	}
+
+	public static void loadProtoElement(String element_id, Vector protoelements)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_equipment_type_id = "";
+		boolean It_is_top_level = false;
+		String It_scheme_cell_id = "";
+		String It_ugo_cell_id = "";
+		String It_symbol_id = "";
+		String It_label = "";
+		String It_domain_id = "";
+		long It_modified = 0;
+
+		byte[] It_img;
+		byte[] It_img2;
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		SchemeDevice_Transferable[] devices;
+		SchemeLink_Transferable[] links;
+		String[] pe_ids;
+
+		SchemeProtoElement_Transferable e_t;
+		SchemeProtoIterator eIt = null;
+		Vector vector2;
+
+		DeviceIdIterator didIt = null;
+		LinkIdIterator lidIt = null;
+		PEIdIterator pidIt = null;
+
+		try
+		{
+			#sql eIt = { select
+					ID,
+					NAME,
+					EQUIPMENT_TYPE_ID,
+					IS_TOP_LEVEL,
+					SCHEME_CELL_ID,
+					UGO_CELL_ID,
+					SYMBOL_ID,
+					LABEL,
+					MODIFIED,
+					DOMAIN_ID
+				from AMFICOM.SCHEMEPROTOELEMENTS
+				where ID = :element_id
+			};
+
+			eIt.next();
+
+			try { It_id = eIt.id(); }
+			catch(SQLException e) { }
+			if(It_id == null) It_id = "";
+			try { It_name = eIt.name(); }
+			catch(SQLException e) { }
+			if(It_name == null) It_name = "";
+			try { It_equipment_type_id = eIt.equipment_type_id(); }
+			catch(SQLException e) { }
+			if(It_equipment_type_id == null) It_equipment_type_id = "";
+			try { It_is_top_level = (eIt.is_top_level() == 0) ? false : true; }
+			catch(SQLException e) { }
+			try { It_scheme_cell_id = eIt.scheme_cell_id(); }
+			catch(SQLException e) { }
+			if(It_scheme_cell_id == null) It_scheme_cell_id = "";
+			try { It_ugo_cell_id = eIt.ugo_cell_id(); }
+			catch(SQLException e) { }
+			if(It_ugo_cell_id == null) It_ugo_cell_id = "";
+			try { It_symbol_id = eIt.symbol_id(); }
+			catch(SQLException e) { }
+			if(It_symbol_id == null) It_symbol_id = "";
+			try { It_label = eIt.label(); }
+			catch(SQLException e) { }
+			if(It_label == null) It_label = "";
+			try { It_modified = eIt.modified().getTime(); }
+			catch(SQLException e) { }
+			try { It_domain_id = eIt.domain_id(); }
+			catch(SQLException e) { }
+			if(It_domain_id == null) It_domain_id = "";
+
+			eIt.close();
+
+			vector2 = new Vector();
+			try
+			{
+				#sql didIt = { select SCHEME_DEVICE_ID
+						from AMFICOM.SCHEMEPROTOELEMENTDEVICES
+						where SCHEME_PROTO_ELEMENT_ID = :It_id
+				};
+				while(didIt.next())
+				{
+					vector2.add(loadSchemeDevice(didIt.scheme_device_id()));
+				}
+				didIt.close();
+			}
+			catch (Exception e)
+			{
+				didIt.close();
+				System.out.println("Oblazhalis' - " + e.getMessage());
+				e.printStackTrace();
+			}
+			devices = new SchemeDevice_Transferable[vector2.size()];
+			vector2.copyInto(devices);
+
+			vector2 = new Vector();
+			try
+			{
+				#sql lidIt = { select SCHEME_LINK_ID
+						from AMFICOM.SCHEMEPROTOELEMENTLINKS
+						where SCHEME_PROTO_ELEMENT_ID = :It_id
+				};
+				while(lidIt.next())
+				{
+					vector2.add(loadSchemeLink(lidIt.scheme_link_id()));
+				}
+				lidIt.close();
+			}
+			catch (Exception e)
+			{
+				lidIt.close();
+				System.out.println("Oblazhalis' - " + e.getMessage());
+				e.printStackTrace();
+			}
+			links = new SchemeLink_Transferable[vector2.size()];
+			vector2.copyInto(links);
+
+			vector2 = new Vector();
+			try
+			{
+				#sql pidIt = { select SCHEME_PE_ID
+						from AMFICOM.SCHEMEPROTOELEMENTPES
+						where SCHEME_PROTO_ELEMENT_ID = :It_id
+				};
+				while(pidIt.next())
+				{
+					vector2.add(pidIt.scheme_pe_id());
+					loadProtoElement(pidIt.scheme_pe_id(), protoelements);
+				}
+				pidIt.close();
+			}
+			catch (Exception e)
+			{
+				pidIt.close();
+				System.out.println("Oblazhalis' - " + e.getMessage());
+				e.printStackTrace();
+			}
+			pe_ids = new String[vector2.size()];
+			vector2.copyInto(pe_ids);
+
+			try
+			{
+				ImageResource_Transferable im_r = ResourcedbInterface.loadImage(It_scheme_cell_id);
+				if(im_r != null)
+					It_img = im_r.image;
+				else
+					It_img = new byte[0];
+			}
+			catch (Exception e)
+			{
+				System.out.println("Oblazhalis' - " + e.getMessage());
+				e.printStackTrace();
+				It_img = new byte[0];
+			}
+
+			try
+			{
+				ImageResource_Transferable im_r = ResourcedbInterface.loadImage(It_ugo_cell_id);
+				if(im_r != null)
+					It_img2 = im_r.image;
+				else
+					It_img2 = new byte[0];
+			}
+			catch (Exception e)
+			{
+				System.out.println("Oblazhalis' - " + e.getMessage());
+				e.printStackTrace();
+				It_img2 = new byte[0];
+			}
+
+			vector2 = MapdbInterfaceLoad4.loadAttributes(
+					"SCHEMEPROTOELEMENTATTRIBUTES",
+					"SCHEME_PROTO_ELEMENT_ID",
+					It_id);
+			attributes = new ElementAttribute_Transferable[vector2.size()];
+			vector2.copyInto(attributes);
+
+			e_t = new SchemeProtoElement_Transferable(
+				It_id,
+				It_name,
+				It_equipment_type_id,
+				It_domain_id,
+				It_modified,
+				devices,
+				links,
+				pe_ids,
+				It_symbol_id,
+				It_label,
+				It_img2,
+				It_img,
+				attributes);
+			protoelements.add(e_t);
+		}
+		catch(SQLException e)
+		{
+			if(eIt != null) try {
+			eIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading proto element: " + e.getMessage());
+			e.printStackTrace();
+			return;
+		}
+		finally
+		{
+			try {
+				eIt.close();
+			}catch(Exception exe) {}
+		}
+		
+	}
+
+	public static void getProtoElements(
+			String domain_id,
+			SchemeProtoElementSeq_TransferableHolder protos)
+	{
+		SchemeProtoElement_Transferable e_t;
+		SchemeProtoElement_Transferable[] e_ts;
+		IdIterator eIt = null;
+		Vector vector = new Vector();
+
+		try
+		{
+			#sql eIt = { select ID
+					from AMFICOM.SCHEMEPROTOELEMENTS
+					where IS_TOP_LEVEL = 1
+			};
+//					and DOMAIN_ID = :domain_id
+
+			while (eIt.next())
+			{
+				loadProtoElement(eIt.id(), vector);
+			}
+			eIt.close();
+		}
+		catch(Exception e)
+		{
+			if(eIt != null) try {
+			eIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading proto elements: " + e.getMessage());
+			e.printStackTrace();
+		}
+		protos.value = new SchemeProtoElement_Transferable[vector.size()];
+		vector.copyInto(protos.value);
+	}
+
+	public static void getProtoElements(
+			String domain_id,
+			String[] ids,
+			SchemeProtoElementSeq_TransferableHolder protos)
+	{
+		SchemeProtoElement_Transferable e_t;
+		SchemeProtoElement_Transferable[] e_ts;
+		IdIterator eIt = null;
+		Vector vector = new Vector();
+		int is_top_level;
+
+		try
+		{
+			for(int i = 0; i < ids.length; i++)
+			{
+				#sql { select IS_TOP_LEVEL into :is_top_level
+						from AMFICOM.SCHEMEPROTOELEMENTS
+						where ID = :(ids[i])
+				};
+//						and DOMAIN_ID = :domain_id
+				if(is_top_level != 0)
+					loadProtoElement(ids[i], vector);
+			}
+		}
+		catch(Exception e)
+		{
+			System.out.println("error loading proto elements: " + e.getMessage());
+			e.printStackTrace();
+		}
+		protos.value = new SchemeProtoElement_Transferable[vector.size()];
+		vector.copyInto(protos.value);
+	}
+
+
+	#sql public static iterator IdIterator ( String id );
+	#sql public static iterator PortIdIterator ( String scheme_port_id );
+	#sql public static iterator CablePortIdIterator ( String scheme_cable_port_id );
+	#sql public static iterator DeviceIdIterator ( String scheme_device_id );
+	#sql public static iterator LinkIdIterator ( String scheme_link_id );
+	#sql public static iterator PEIdIterator ( String scheme_pe_id );
+
+	#sql public static iterator SchemePortIterator(
+		String id,
+		String name,
+		String port_type_id,
+		String port_id,
+		int is_access_port,
+		String access_port_type_id,
+		String access_port_id,
+		String direction_type);
+
+	#sql public static iterator SchemeCablePortIterator(
+		String id,
+		String name,
+		String cable_port_type_id,
+		String cable_port_id,
+		int is_access_port,
+		String access_port_type_id,
+		String access_port_id,
+		String direction_type);
+
+	#sql public static iterator SchemeLinkIterator(
+		String id,
+		String name,
+		String link_type_id,
+		String link_id,
+		String source_port_id,
+		String target_port_id,
+		String physical_length,
+		String optical_length);
+
+	#sql public static iterator SchemeDeviceIterator(
+		String id,
+		String name);
+
+	#sql public static iterator SchemeProtoIterator(
+		String id,
+		String name,
+		String equipment_type_id,
+		int is_top_level,
+		String scheme_cell_id,
+		String ugo_cell_id,
+		String symbol_id,
+		String label,
+		Timestamp modified,
+		String domain_id);
+}

@@ -1,0 +1,629 @@
+/*
+ * $Id: AdmindbInterfaceLoad.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.server.object;
+
+import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.*;
+import java.util.Vector;
+
+/**
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class AdmindbInterfaceLoad
+{
+	protected AdmindbInterfaceLoad()
+	{
+	}
+
+	public static int loadServers(
+			ServerSeq_TransferableHolder serverseq,
+			String []server_ids)
+	{
+		Vector vec = new Vector();
+		Server_Transferable server;
+		for(int i = 0; i < server_ids.length; i++)
+		{
+			server = loadServer(server_ids[i]);
+			if(server != null)
+				vec.add(server);
+		}
+		serverseq.value = new Server_Transferable[vec.size()];
+		vec.copyInto(serverseq.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static Server_Transferable loadServer(String id)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_version = "";
+		String It_licence_id = "";
+		String It_location = "";
+		String It_contact = "";
+		String It_hostname = "";
+		Timestamp It_created;
+		Timestamp It_modified;
+		int It_sessions = 0;
+
+		Server_Transferable d_t;
+
+		try
+		{
+			#sql {
+				select
+					ID,
+					NAME,
+					CONTACT,
+					LICENCE_ID,
+					VERSION,
+					LOCATION,
+					HOSTNAME,
+					CREATED,
+					MODIFIED
+				into
+					:It_id,
+					:It_name,
+					:It_contact,
+					:It_licence_id,
+					:It_version,
+					:It_location,
+					:It_hostname,
+					:It_created,
+					:It_modified
+				from AMFICOM.SERVERS
+				where ID = :id
+			};
+
+			if(It_id == null) It_id = "";
+			if(It_name == null) It_name = "";
+			if(It_version == null) It_version = "";
+			if(It_licence_id == null) It_licence_id = "";
+			if(It_location == null) It_location = "";
+			if(It_contact == null) It_contact = "";
+			if(It_hostname == null) It_hostname = "";
+			if(It_created == null)
+				It_created = new Timestamp(System.currentTimeMillis());
+			if(It_modified == null)
+				It_modified = new Timestamp(System.currentTimeMillis());
+
+			d_t = new Server_Transferable(
+					It_id,
+					It_name,
+					It_version,
+					It_licence_id,
+					It_location,
+					It_contact,
+					It_hostname,
+					It_created.getTime(),
+					It_modified.getTime(),
+					It_sessions);
+
+			return d_t;
+		}
+		catch(SQLException e)
+		{
+			System.out.println("error loading server " + id + ": " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static int loadServers(
+			ServerSeq_TransferableHolder serverseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_version = "";
+		String It_licence_id = "";
+		String It_location = "";
+		String It_contact = "";
+		String It_hostname = "";
+		long It_created = 0L;
+		long It_modified = 0L;
+		int It_sessions = 0;
+
+		Vector vector = new Vector();
+
+		Server_Transferable d_t;
+		Server_Transferable[] d_ts;
+		ServerIterator dIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql dIt = {
+				select
+					ID,
+					NAME,
+					CONTACT,
+					LICENCE_ID,
+					VERSION,
+					LOCATION,
+					HOSTNAME,
+					CREATED,
+					MODIFIED
+				from AMFICOM.SERVERS
+			};
+
+			while (dIt.next())
+			{
+				try { It_id = dIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = dIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_version = dIt.version(); }
+				catch(SQLException e) { }
+				if(It_version == null) It_version = "";
+				try { It_licence_id = dIt.licence_id(); }
+				catch(SQLException e) { }
+				if(It_licence_id == null) It_licence_id = "";
+				try { It_location = dIt.location(); }
+				catch(SQLException e) { }
+				if(It_location == null) It_location = "";
+				try { It_contact = dIt.contact(); }
+				catch(SQLException e) { }
+				if(It_contact == null) It_contact = "";
+				try { It_hostname = dIt.hostname(); }
+				catch(SQLException e) { }
+				if(It_hostname == null) It_hostname = "";
+				try { It_created = dIt.created().getTime(); }
+				catch(Exception e) { }
+				try { It_modified = dIt.modified().getTime(); }
+				catch(Exception e) { }
+
+				d_t = new Server_Transferable(
+					It_id,
+					It_name,
+					It_version,
+					It_licence_id,
+					It_location,
+					It_contact,
+					It_hostname,
+					It_created,
+					It_modified,
+					It_sessions);
+
+				vector.add(d_t);
+			}// while(dIt)
+			dIt.close();
+			d_ts = new Server_Transferable[vector.size()];
+			vector.copyInto(d_ts);
+			serverseq.value = d_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(dIt != null) try {
+			dIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading servers: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int loadClients(
+			ClientSeq_TransferableHolder clientseq,
+			String []client_ids)
+	{
+		Vector vec = new Vector();
+		Client_Transferable client;
+		for(int i = 0; i < client_ids.length; i++)
+		{
+			client = loadClient(client_ids[i]);
+			if(client != null)
+				vec.add(client);
+		}
+		clientseq.value = new Client_Transferable[vec.size()];
+		vec.copyInto(clientseq.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+	public static Client_Transferable loadClient(String id)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_version = "";
+		String It_licence_id = "";
+		String It_location = "";
+		String It_contact = "";
+		String It_hostname = "";
+		Timestamp It_created;
+		Timestamp It_modified;
+
+		Vector vector = new Vector();
+
+		Client_Transferable d_t;
+		Client_Transferable[] d_ts;
+		ClientIterator dIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql {
+				select
+					ID,
+					NAME,
+					CONTACT,
+					LICENCE_ID,
+					VERSION,
+					LOCATION,
+					HOSTNAME,
+					CREATED,
+					MODIFIED
+				into
+					:It_id,
+					:It_name,
+					:It_contact,
+					:It_licence_id,
+					:It_version,
+					:It_location,
+					:It_hostname,
+					:It_created,
+					:It_modified
+				from AMFICOM.CLIENTS
+				where ID = :id
+			};
+
+			if(It_id == null) It_id = "";
+			if(It_name == null) It_name = "";
+			if(It_version == null) It_version = "";
+			if(It_licence_id == null) It_licence_id = "";
+			if(It_location == null) It_location = "";
+			if(It_contact == null) It_contact = "";
+			if(It_hostname == null) It_hostname = "";
+			if(It_created == null)
+				It_created = new Timestamp(System.currentTimeMillis());
+			if(It_modified == null)
+				It_modified = new Timestamp(System.currentTimeMillis());
+
+			d_t = new Client_Transferable(
+					It_id,
+					It_name,
+					It_version,
+					It_licence_id,
+					It_location,
+					It_contact,
+					It_hostname,
+					It_created.getTime(),
+					It_modified.getTime());
+			return d_t;
+		}
+		catch(SQLException e)
+		{
+			System.out.println("error loading client " + id + ": " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	public static int loadClients(
+			ClientSeq_TransferableHolder clientseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_version = "";
+		String It_licence_id = "";
+		String It_location = "";
+		String It_contact = "";
+		String It_hostname = "";
+		long It_created = 0L;
+		long It_modified = 0L;
+
+		Vector vector = new Vector();
+
+		Client_Transferable d_t;
+		Client_Transferable[] d_ts;
+		ClientIterator dIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql dIt = {
+				select
+					ID,
+					NAME,
+					CONTACT,
+					LICENCE_ID,
+					VERSION,
+					LOCATION,
+					HOSTNAME,
+					CREATED,
+					MODIFIED
+				from AMFICOM.CLIENTS
+			};
+
+			while (dIt.next())
+			{
+				try { It_id = dIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = dIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_version = dIt.version(); }
+				catch(SQLException e) { }
+				if(It_version == null) It_version = "";
+				try { It_licence_id = dIt.licence_id(); }
+				catch(SQLException e) { }
+				if(It_licence_id == null) It_licence_id = "";
+				try { It_location = dIt.location(); }
+				catch(SQLException e) { }
+				if(It_location == null) It_location = "";
+				try { It_contact = dIt.contact(); }
+				catch(SQLException e) { }
+				if(It_contact == null) It_contact = "";
+				try { It_hostname = dIt.hostname(); }
+				catch(SQLException e) { }
+				if(It_hostname == null) It_hostname = "";
+				try { It_created = dIt.created().getTime(); }
+				catch(Exception e) { }
+				try { It_modified = dIt.modified().getTime(); }
+				catch(Exception e) { }
+
+				d_t = new Client_Transferable(
+					It_id,
+					It_name,
+					It_version,
+					It_licence_id,
+					It_location,
+					It_contact,
+					It_hostname,
+					It_created,
+					It_modified);
+
+				vector.add(d_t);
+			}// while(dIt)
+			dIt.close();
+			d_ts = new Client_Transferable[vector.size()];
+			vector.copyInto(d_ts);
+			clientseq.value = d_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(dIt != null) try {
+			dIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading clients: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int loadAgents(
+			AgentSeq_TransferableHolder agentseq,
+			String []agent_ids)
+	{
+		Vector vec = new Vector();
+		Agent_Transferable agent;
+		for(int i = 0; i < agent_ids.length; i++)
+		{
+			agent = loadAgent(agent_ids[i]);
+			if(agent != null)
+				vec.add(agent);
+		}
+		agentseq.value = new Agent_Transferable[vec.size()];
+		vec.copyInto(agentseq.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static Agent_Transferable loadAgent(String id)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_version = "";
+		String It_licence_id = "";
+		String It_location = "";
+		String It_contact = "";
+		String It_hostname = "";
+		Timestamp It_created;
+		Timestamp It_modified;
+
+		Vector vector = new Vector();
+
+		Agent_Transferable d_t;
+		Agent_Transferable[] d_ts;
+		AgentIterator dIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql {
+				select
+					ID,
+					NAME,
+					CONTACT,
+					LICENCE_ID,
+					VERSION,
+					LOCATION,
+					HOSTNAME,
+					CREATED,
+					MODIFIED
+				into
+					:It_id,
+					:It_name,
+					:It_contact,
+					:It_licence_id,
+					:It_version,
+					:It_location,
+					:It_hostname,
+					:It_created,
+					:It_modified
+				from AMFICOM.AGENTS
+				where ID = :id
+			};
+
+			if(It_id == null) It_id = "";
+			if(It_name == null) It_name = "";
+			if(It_version == null) It_version = "";
+			if(It_licence_id == null) It_licence_id = "";
+			if(It_location == null) It_location = "";
+			if(It_contact == null) It_contact = "";
+			if(It_hostname == null) It_hostname = "";
+			if(It_created == null)
+				It_created = new Timestamp(System.currentTimeMillis());
+			if(It_modified == null)
+				It_modified = new Timestamp(System.currentTimeMillis());
+
+			d_t = new Agent_Transferable(
+					It_id,
+					It_name,
+					It_version,
+					It_licence_id,
+					It_location,
+					It_contact,
+					It_hostname,
+					It_created.getTime(),
+					It_modified.getTime());
+			return d_t;
+		}
+		catch(SQLException e)
+		{
+			System.out.println("error loading agent " + id + ": " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static int loadAgents(
+			AgentSeq_TransferableHolder agentseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_version = "";
+		String It_licence_id = "";
+		String It_location = "";
+		String It_contact = "";
+		String It_hostname = "";
+		long It_created = 0L;
+		long It_modified = 0L;
+
+		Vector vector = new Vector();
+
+		Agent_Transferable d_t;
+		Agent_Transferable[] d_ts;
+		AgentIterator dIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql dIt = {
+				select
+					ID,
+					NAME,
+					CONTACT,
+					LICENCE_ID,
+					VERSION,
+					LOCATION,
+					HOSTNAME,
+					CREATED,
+					MODIFIED
+				from AMFICOM.AGENTS
+			};
+
+			while (dIt.next())
+			{
+				try { It_id = dIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = dIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_version = dIt.version(); }
+				catch(SQLException e) { }
+				if(It_version == null) It_version = "";
+				try { It_licence_id = dIt.licence_id(); }
+				catch(SQLException e) { }
+				if(It_licence_id == null) It_licence_id = "";
+				try { It_location = dIt.location(); }
+				catch(SQLException e) { }
+				if(It_location == null) It_location = "";
+				try { It_contact = dIt.contact(); }
+				catch(SQLException e) { }
+				if(It_contact == null) It_contact = "";
+				try { It_hostname = dIt.hostname(); }
+				catch(SQLException e) { }
+				if(It_hostname == null) It_hostname = "";
+				try { It_created = dIt.created().getTime(); }
+				catch(Exception e) { }
+				try { It_modified = dIt.modified().getTime(); }
+				catch(Exception e) { }
+
+				d_t = new Agent_Transferable(
+					It_id,
+					It_name,
+					It_version,
+					It_licence_id,
+					It_location,
+					It_contact,
+					It_hostname,
+					It_created,
+					It_modified);
+
+				vector.add(d_t);
+			}// while(dIt)
+			dIt.close();
+			d_ts = new Agent_Transferable[vector.size()];
+			vector.copyInto(d_ts);
+			agentseq.value = d_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(dIt != null) try {
+			dIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading agents: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	#sql public static iterator ServerIterator(
+		String id,
+		String name,
+		String contact,
+		String licence_id,
+		String version,
+		String location,
+		String hostname,
+		Timestamp created,
+		Timestamp modified);
+
+	#sql public static iterator ClientIterator(
+		String id,
+		String name,
+		String contact,
+		String licence_id,
+		String version,
+		String location,
+		String hostname,
+		Timestamp created,
+		Timestamp modified);
+
+	#sql public static iterator AgentIterator(
+		String id,
+		String name,
+		String contact,
+		String licence_id,
+		String version,
+		String location,
+		String hostname,
+		Timestamp created,
+		Timestamp modified);
+}

@@ -1,0 +1,127 @@
+/*
+ * $Id: ISMdbInterfaceRemove.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.server.object;
+
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.server.event.EventSource;
+import java.sql.SQLException;
+
+/**
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class ISMdbInterfaceRemove
+{
+	protected ISMdbInterfaceRemove()
+	{
+	}
+
+	public static int removeAccessPorts(String[] accessport_ids)
+	{
+		int len = accessport_ids.length;
+		for (int i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql {
+					delete from AMFICOM.ACCESSPORTCHARACTERISTICS
+						where ACCESS_PORT_ID = :(accessport_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.ACCESSPORTS
+						where ID = :(accessport_ids[i])
+				};
+				#sql { commit; };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error saVing accessport: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int removeKISs(String[] kis_ids)
+	{
+		for(int i = 0; i < kis_ids.length; i++)
+		{
+			System.out.println("delete eventsource for kis " + kis_ids[i]);
+			try
+			{
+				EventSource es = new EventSource(EventSource.getIdByObjectId(kis_ids[i]));
+				System.out.println("delete eventsource " + es.getId());
+				es.delete();
+//				EventSource.delete(es);
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error deleting eventsource: " + ex.getMessage());
+				ex.printStackTrace();
+//				return Constants.ERROR_SAVING;
+			}
+		}
+		return NetdbInterfaceRemove.removeEquipments(kis_ids);
+	}
+
+	public static int removeTransmissionPaths(String[] path_ids)
+	{
+		String me_id;
+		int len = path_ids.length;
+		for (int i = 0; i < len; i++)
+		{
+			try
+			{
+				try
+				{
+					#sql {
+						select ID into :me_id
+						from AMFICOM.MONITOREDELEMENTS
+						where PATH_ID = :(path_ids[i])
+					};
+					#sql {
+						delete from AMFICOM.MONITOREDELEMENTATTACHMENTS
+							where MONITORED_ELEMENT_ID = :me_id
+					};
+					#sql {
+						delete from AMFICOM.MONITOREDELEMENTS
+						where PATH_ID = :(path_ids[i])
+					};
+					#sql { commit; };
+				}
+				catch(SQLException e)
+				{
+					System.out.println("removing path - no ME");
+				}
+				#sql {
+					delete from AMFICOM.TRANSMISSIONPATHCHARS
+						where PATH_ID = :(path_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.PATHLINKS
+						where PATH_ID = :(path_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.TRANSMISSIONPATHS
+						where ID = :(path_ids[i])
+				};
+				#sql { commit; };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error saVing path: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+}

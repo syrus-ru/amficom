@@ -1,0 +1,308 @@
+/*
+ * $Id: NetdbInterfaceRemove.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.server.object;
+
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.SQLException;
+import java.util.Vector;
+
+/**
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class NetdbInterfaceRemove
+{
+	protected NetdbInterfaceRemove()
+	{
+	}
+
+	public static int removePorts(String[] port_ids)
+	{
+		String ap_id;
+		int len = port_ids.length;
+		for (int i = 0; i < len; i++)
+		{
+			try
+			{
+				try
+				{
+					#sql {
+						select id into :ap_id from AMFICOM.ACCESSPORTS
+							where PORT_ID = :(port_ids[i])
+					};
+					#sql {
+						delete from AMFICOM.ACCESSPORTCHARACTERISTICS
+							where ACCESS_PORT_ID = :ap_id
+					};
+					#sql {
+						delete from AMFICOM.MONITOREDELEMENTATTACHMENTS
+							where ACCESS_PORT_ID = :(port_ids[i])
+					};
+					#sql {
+						delete from AMFICOM.ACCESSPORTS
+							where PORT_ID = :(port_ids[i])
+					};
+					#sql { commit; };
+				}
+				catch(Exception e)
+				{// no access port on this port
+				}
+				#sql {
+					update AMFICOM.LINKS
+						set
+							END_PORT_ID = '',
+							END_EQUIPMENT_ID = ''
+						where END_PORT_ID = :(port_ids[i])
+				};
+				#sql {
+					update AMFICOM.LINKS
+						set
+							START_PORT_ID = '',
+							START_EQUIPMENT_ID = ''
+						where START_PORT_ID = :(port_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.PORTCHARACTERISTICS
+						where PORT_ID = :(port_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.PORTS
+						where ID = :(port_ids[i])
+				};
+				#sql { commit; };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error removing port: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int removeCablePorts(String[] cport_ids)
+	{
+		String ap_id;
+		int len = cport_ids.length;
+		for (int i = 0; i < len; i++)
+		{
+			try
+			{
+				try
+				{
+					#sql {
+						select id into :ap_id from AMFICOM.ACCESSPORTS
+							where PORT_ID = :(cport_ids[i])
+					};
+					#sql {
+						delete from AMFICOM.ACCESSPORTCHARACTERISTICS
+							where ACCESS_PORT_ID = :ap_id
+					};
+					#sql {
+						delete from AMFICOM.MONITOREDELEMENTATTACHMENTS
+							where ACCESS_PORT_ID = :(cport_ids[i])
+					};
+					#sql {
+						delete from AMFICOM.ACCESSPORTS
+							where PORT_ID = :(cport_ids[i])
+					};
+					#sql { commit; };
+				}
+				catch(Exception e)
+				{// no access port on this port
+				}
+				#sql {
+					update AMFICOM.CABLELINKS
+						set
+							END_PORT_ID = '',
+							END_EQUIPMENT_ID = ''
+						where END_PORT_ID = :(cport_ids[i])
+				};
+				#sql {
+					update AMFICOM.CABLELINKS
+						set
+							START_PORT_ID = '',
+							START_EQUIPMENT_ID = ''
+						where START_PORT_ID = :(cport_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.CABLEPORTCHARACTERISTICS
+						where CABLE_PORT_ID = :(cport_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.CABLEPORTS
+						where ID = :(cport_ids[i])
+				};
+				#sql { commit; };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error removing cable port: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int removeTestPorts(String[] testport_ids)
+	{
+		int len = testport_ids.length;
+		for (int i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql {
+					delete from AMFICOM.TESTPORTCHARACTERISTICS
+						where TEST_PORT_ID = :(testport_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.TESTPORTS
+						where ID = :(testport_ids[i])
+				};
+				#sql { commit; };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error removing testport: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int removeLinks(String[] link_ids)
+	{
+		int len = link_ids.length;
+		for (int i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql {
+					delete from AMFICOM.LINKCHARACTERISTICS
+						where LINK_ID = :(link_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.LINKS
+						where ID = :(link_ids[i])
+				};
+				#sql { commit; };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error removing link: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int removeCableLinks(String[] link_ids)
+	{
+		int len = link_ids.length;
+		for (int i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql {
+					delete from AMFICOM.CABLELINKCHARACTERISTICS
+						where CABLE_LINK_ID = :(link_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.CABLELINKTHREADS
+						where CABLE_ID = :(link_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.CABLELINKS
+						where ID = :(link_ids[i])
+				};
+				#sql { commit; };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error removing cable link: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int removeEquipments(String[] equipment_ids)
+	{
+		int i;
+		int len;
+
+		IdIterator idIt = null;
+		String[] ids;
+		Vector vec;
+
+		len = equipment_ids.length;
+		for (i = 0; i < len; i++)
+		{
+			try
+			{
+				vec = new Vector();
+				#sql idIt = {
+					select ID from AMFICOM.PORTS
+						where EQUIPMENT_ID = :(equipment_ids[i])
+				};
+				while(idIt.next())
+					vec.add(idIt.id());
+				idIt.close();
+				ids = new String[vec.size()];
+				removePorts(ids);
+
+				vec = new Vector();
+				#sql idIt = {
+					select ID from AMFICOM.CABLEPORTS
+						where EQUIPMENT_ID = :(equipment_ids[i])
+				};
+				while(idIt.next())
+					vec.add(idIt.id());
+				idIt.close();
+				ids = new String[vec.size()];
+				removeCablePorts(ids);
+
+				#sql {
+					delete from AMFICOM.EQUIPMENTCHARACTERISTICS
+						where EQUIPMENT_ID = :(equipment_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.EQUIPMENTS
+						where ID = :(equipment_ids[i])
+				};
+				#sql { commit; };
+			}
+			catch(SQLException ex)
+			{
+				if(idIt != null) try {
+				idIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error removing equipment: " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+			finally
+			{
+				try {
+					idIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	#sql public static iterator IdIterator ( String id );
+}

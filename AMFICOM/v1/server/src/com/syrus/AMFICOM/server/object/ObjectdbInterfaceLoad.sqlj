@@ -1,0 +1,2084 @@
+/*
+ * $Id: ObjectdbInterfaceLoad.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.server.object;
+
+import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.util.database.ByteArrayDatabase;
+import java.sql.*;
+import java.util.Vector;
+import oracle.sql.BLOB;
+import sqlj.runtime.SQLNullException;
+
+/**
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class ObjectdbInterfaceLoad
+{
+	protected ObjectdbInterfaceLoad()
+	{
+	}
+
+	public static ObjectPermissionAttributes_Transferable loadPermissionAttributes
+		(String id)
+	{
+		String It_id = "";
+		String It_rwx = "";
+		String It_owner_id = "";
+		String It_name = "";
+		String It_codename = "";
+
+		long It_created = 0;
+		String It_created_by = "";
+		long  It_modified = 0;
+		String It_modified_by = "";
+
+		String It_whyrejected = "";
+
+		String[] category_ids = new String[0];
+		String[] group_ids = new String[0];
+
+		ExecIterator exIt = null;
+
+		ObjectPermissionAttributes_Transferable opa = null;
+
+		Vector vector = new Vector();
+
+		CategoryIdIterator ciIt = null;
+		GroupIdIterator giIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql exIt = {
+				select
+						ID,
+						RWX,
+						OWNER_ID,
+						NAME,
+						CODENAME,
+
+						CREATED,
+						CREATED_BY,
+						MODIFIED,
+						MODIFIED_BY,
+
+						WHYREJECTED
+					from AMFICOM.OBJECTPERMISSIONS
+					where ID = :id
+				};
+			if (exIt.next())
+			{
+				try { It_id = exIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_rwx = exIt.rwx(); }
+				catch(SQLException e) { }
+				if(It_rwx == null) It_rwx = "";
+				try { It_owner_id = exIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_name = exIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_codename = exIt.codename(); }
+				catch(SQLException e) { }
+				if(It_codename == null) It_codename = "";
+				try { It_created = exIt.created().getTime(); }
+				catch(Exception e) { }
+//				if(It_created == null) It_created = 0;
+				try { It_created_by = exIt.created_by(); }
+				catch(SQLException e) { }
+				if(It_created_by == null) It_created_by = "";
+				try { It_modified = exIt.modified().getTime(); }
+				catch(Exception e) { }
+//				if(It_modified == null) It_modified = 0;
+				try { It_modified_by = exIt.modified_by(); }
+				catch(SQLException e) { }
+				if(It_modified_by == null) It_modified_by = "";
+
+				try { It_whyrejected = exIt.whyrejected(); }
+				catch(SQLException e) { }
+				if(It_whyrejected == null) It_whyrejected = "";
+
+				vector2 = new Vector();
+				try
+				{
+					#sql ciIt = { select CATEGORY_ID from AMFICOM.OBJECTPERMISSIONCATEGORIES
+							where OBJECT_PERMISSION_ID = :It_id };
+					while (ciIt.next())
+					{
+						try { vector2.addElement(ciIt.category_id()); }
+						catch (SQLNullException sqlne) {
+							;
+						}
+					}
+					ciIt.close();
+				}
+				catch(SQLException e)
+				{
+					ciIt.close();
+					System.out.println("could not get category for exec " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				category_ids = new String[vector2.size()];
+				vector2.copyInto(category_ids);
+//				System.out.println("found " + vector2.size() + " categories for exec " + It_id);
+
+				vector2 = new Vector();
+				try
+				{
+					#sql giIt = { select GROUP_ID from AMFICOM.OBJECTPERMISSIONGROUPS
+							where OBJECT_PERMISSION_ID = :It_id };
+					while (giIt.next())
+					{
+						try { vector2.addElement(giIt.group_id()); }
+						catch(SQLNullException e) { }
+					}
+					giIt.close();
+				}
+				catch(SQLException e)
+				{
+					giIt.close();
+					System.out.println("could not get group for exec " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				group_ids = new String[vector2.size()];
+				vector2.copyInto(group_ids);
+//				System.out.println("found " + vector2.size() + " groups for exec " + It_id);
+
+				opa = new ObjectPermissionAttributes_Transferable(
+							It_id,
+							It_rwx,
+
+							group_ids,
+							category_ids,
+
+							It_owner_id,
+							It_name,
+							It_codename,
+
+							It_created,
+							It_created_by,
+							It_modified,
+							It_modified_by,
+
+							It_whyrejected);
+
+			}// while(exIt)
+			exIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(exIt != null) try {
+			exIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading execs: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				exIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return opa;
+	}
+
+	public static String[] loadDomainLinks(String id)
+	{
+		String It_id = "";
+		InnerIdIterator idIt = null;
+		Vector vector = new Vector();
+		String[] ids = new String[0];
+		try
+		{
+			#sql idIt = {
+				select INNER_DOMAIN_ID from AMFICOM.DOMAINLINKS
+				where DOMAIN_ID = :id
+			};
+			while (idIt.next())
+			{
+				try { It_id = idIt.inner_domain_id(); }
+				catch(SQLException e) { }
+				if(It_id != null)
+					vector.add(It_id);
+			}
+			idIt.close();
+			ids = new String[vector.size()];
+			vector.copyInto(ids);
+		}
+		catch(SQLException e)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading domain links: " + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				idIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return ids;
+
+	}
+
+	public static int loadDomains(DomainSeq_TransferableHolder domainseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+		long It_created = 0;
+		String It_created_by = "";
+		long It_modified = 0;
+		String It_modified_by = "";
+		String It_owner_id = "";
+		String It_domain_id = "";
+		String It_object_permission_id = "";
+
+		String [] domain_ids = new String[0];
+
+		ObjectPermissionAttributes_Transferable It_opa;
+
+		Vector vector = new Vector();
+
+		Domain_Transferable d_t;
+		Domain_Transferable[] d_ts;
+		DomainIterator dIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql dIt = {
+				select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+						CREATED,
+						CREATED_BY,
+						MODIFIED,
+						MODIFIED_BY,
+						OWNER_ID,
+						DOMAIN_ID,
+						OBJECT_PERMISSION_ID
+					from AMFICOM.DOMAINS
+			};
+
+			while (dIt.next())
+			{
+				try { It_id = dIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = dIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_codename = dIt.codename(); }
+				catch(SQLException e) { }
+				if(It_codename == null) It_codename = "";
+				try { It_description = dIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_created = dIt.created().getTime(); }
+				catch(Exception e) { }
+				try { It_created_by = dIt.created_by(); }
+				catch(SQLException e) { }
+				if(It_created_by == null) It_created_by = "";
+				try { It_modified = dIt.modified().getTime(); }
+				catch(Exception e) { }
+				try { It_modified_by = dIt.modified_by(); }
+				catch(SQLException e) { }
+				if(It_modified_by == null) It_modified_by = "";
+				try { It_owner_id = dIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_domain_id = dIt.domain_id(); }
+				catch(SQLException e) { }
+				if(It_domain_id == null) It_domain_id = "";
+				try { It_object_permission_id = dIt.object_permission_id(); }
+				catch(SQLException e) { }
+				if(It_object_permission_id == null) It_object_permission_id = "";
+
+				It_opa = loadPermissionAttributes(It_object_permission_id);
+				if(It_opa == null)
+					It_opa = new ObjectPermissionAttributes_Transferable(
+							"",
+							"",
+							new String[0],
+							new String[0],
+							"",
+							"",
+							"",
+							0,
+							"",
+							0,
+							"",
+							"");
+
+				domain_ids = loadDomainLinks(It_id);
+
+				d_t = new Domain_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_owner_id,
+					It_description,
+					It_created,
+					It_created_by,
+					It_modified,
+					It_modified_by,
+					It_domain_id,
+					domain_ids,
+					It_opa);
+
+				vector.add(d_t);
+			}// while(dIt)
+			dIt.close();
+			d_ts = new Domain_Transferable[vector.size()];
+			vector.copyInto(d_ts);
+			domainseq.value = d_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(dIt != null) try {
+			dIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading domains: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				dIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int loadCategories(
+			OperatorCategorySeq_TransferableHolder categoryseq,
+			String []category_ids)
+	{
+		Vector vec = new Vector();
+		OperatorCategory_Transferable cat;
+		for(int i = 0; i < category_ids.length; i++)
+		{
+			cat = loadCategory(category_ids[i]);
+			if(cat != null)
+				vec.add(cat);
+		}
+		categoryseq.value = new OperatorCategory_Transferable[vec.size()];
+		vec.copyInto(categoryseq.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static OperatorCategory_Transferable loadCategory(String id)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+		Timestamp It_modified;
+
+		String [] user_ids = new String[0];
+
+		OperatorCategory_Transferable c_t;
+
+		Vector vector2;
+		UserIdIterator uiIt = null;
+
+		try
+		{
+			#sql {
+				select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+						MODIFIED
+				into
+						:It_id,
+						:It_name,
+						:It_codename,
+						:It_description,
+						:It_modified
+					from AMFICOM.CATEGORIES
+					where ID = :id
+			};
+
+			if(It_id == null) It_id = "";
+			if(It_name == null) It_name = "";
+			if(It_codename == null) It_codename = "";
+			if(It_description == null) It_description = "";
+			if(It_modified == null)
+					It_modified = new Timestamp(System.currentTimeMillis());
+
+			vector2 = new Vector();
+			try
+			{
+				#sql uiIt = { select USER_ID from AMFICOM.USERCATEGORIES
+						where CATEGORY_ID = :It_id };
+				while (uiIt.next())
+				{
+					try { vector2.addElement(uiIt.user_id()); }
+					catch(SQLNullException e) { }
+				}
+				uiIt.close();
+			}
+			catch(SQLException e)
+			{
+				uiIt.close();
+				System.out.println("could not get user for category " + It_id + ": " + e.getMessage());
+				e.printStackTrace();
+			}
+			finally
+			{
+				try {
+					uiIt.close();
+				}catch(Exception exe) {}
+			}
+			
+			user_ids = new String[vector2.size()];
+			vector2.copyInto(user_ids);
+
+			c_t = new OperatorCategory_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_description,
+					It_modified.getTime(),
+					user_ids);
+
+			return c_t;
+		}
+		catch(SQLException e)
+		{
+			System.out.println("error loading category " + id + ": " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static int loadCategories(
+			OperatorCategorySeq_TransferableHolder categoryseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+		long It_modified = 0L;
+
+		String [] user_ids = new String[0];
+
+		Vector vector = new Vector();
+
+		OperatorCategory_Transferable c_t;
+		OperatorCategory_Transferable[] c_ts;
+		CategoryIterator cIt = null;
+
+		Vector vector2;
+		UserIdIterator uiIt = null;
+
+		try
+		{
+			#sql cIt = {
+				select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+						MODIFIED
+					from AMFICOM.CATEGORIES
+			};
+
+			while (cIt.next())
+			{
+				try { It_id = cIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = cIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_codename = cIt.codename(); }
+				catch(SQLException e) { }
+				if(It_codename == null) It_codename = "";
+				try { It_description = cIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_modified = cIt.modified().getTime(); }
+				catch(Exception e) { It_modified = 0; }
+
+				vector2 = new Vector();
+				try
+				{
+					#sql uiIt = { select USER_ID from AMFICOM.USERCATEGORIES
+							where CATEGORY_ID = :It_id };
+					while (uiIt.next())
+					{
+						try { vector2.addElement(uiIt.user_id()); }
+						catch(SQLNullException e) { }
+					}
+					uiIt.close();
+				}
+				catch(SQLException e)
+				{
+					uiIt.close();
+					System.out.println("could not get user for category " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				finally
+				{
+					try {
+						uiIt.close();
+					}catch(Exception exe) {}
+				}
+				
+				user_ids = new String[vector2.size()];
+				vector2.copyInto(user_ids);
+//				System.out.println("found " + vector2.size() + " users for category " + It_id);
+
+				c_t = new OperatorCategory_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_description,
+					It_modified,
+					user_ids);
+
+				vector.add(c_t);
+			}// while(cIt)
+			cIt.close();
+			c_ts = new OperatorCategory_Transferable[vector.size()];
+			vector.copyInto(c_ts);
+			categoryseq.value = c_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(cIt != null) try {
+			cIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading categories: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				cIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int loadGroups(
+			OperatorGroupSeq_TransferableHolder groupseq,
+			String []group_ids)
+	{
+		Vector vec = new Vector();
+		OperatorGroup_Transferable gr;
+		for(int i = 0; i < group_ids.length; i++)
+		{
+			gr = loadGroup(group_ids[i]);
+			if(gr != null)
+				vec.add(gr);
+		}
+		groupseq.value = new OperatorGroup_Transferable[vec.size()];
+		vec.copyInto(groupseq.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static OperatorGroup_Transferable loadGroup(String id)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+		String It_owner_id = "";
+		Timestamp It_created;
+		String It_created_by = "";
+		Timestamp It_modified;
+		String It_modified_by = "";
+
+		String [] user_ids = new String[0];
+		String [] exec_ids = new String[0];
+
+		OperatorGroup_Transferable g_t;
+
+		Vector vector2;
+		UserIdIterator uiIt = null;
+		ExecIdIterator eiIt = null;
+
+		try
+		{
+			#sql {
+				select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+						OWNER_ID,
+						CREATED,
+						CREATED_BY,
+						MODIFIED,
+						MODIFIED_BY
+				into
+						:It_id,
+						:It_name,
+						:It_codename,
+						:It_description,
+						:It_owner_id,
+						:It_created,
+						:It_created_by,
+						:It_modified,
+						:It_modified_by
+					from AMFICOM.GROUPS
+					where ID = :id
+			};
+
+			if(It_id == null) It_id = "";
+			if(It_name == null) It_name = "";
+			if(It_codename == null) It_codename = "";
+			if(It_description == null) It_description = "";
+			if(It_owner_id == null) It_owner_id = "";
+			if(It_created == null)
+				It_created = new Timestamp(System.currentTimeMillis());
+			if(It_modified == null)
+				It_modified = new Timestamp(System.currentTimeMillis());
+
+			vector2 = new Vector();
+			try
+			{
+				#sql uiIt = { select USER_ID from AMFICOM.USERGROUPS
+						where GROUP_ID = :It_id };
+				while (uiIt.next())
+				{
+					try { vector2.addElement(uiIt.user_id()); }
+					catch(SQLNullException e) { }
+				}
+				uiIt.close();
+			}
+			catch(SQLException e)
+			{
+				uiIt.close();
+				System.out.println("could not get user for group " + It_id + ": " + e.getMessage());
+				e.printStackTrace();
+			}
+			finally
+			{
+				try {
+					uiIt.close();
+				}catch(Exception exe) {}
+			}
+			
+			user_ids = new String[vector2.size()];
+			vector2.copyInto(user_ids);
+
+			vector2 = new Vector();
+			try
+			{
+				#sql eiIt = { select EXEC_ID from AMFICOM.EXECGROUPS
+						where GROUP_ID = :It_id };
+				while (eiIt.next())
+				{
+					try { vector2.addElement(eiIt.exec_id()); }
+					catch(SQLNullException e) { }
+				}
+				eiIt.close();
+			}
+			catch(SQLException e)
+			{
+				eiIt.close();
+				System.out.println("could not get exec for group " + It_id + ": " + e.getMessage());
+				e.printStackTrace();
+			}
+			finally
+			{
+				try {
+					eiIt.close();
+				}catch(Exception exe) {}
+			}
+			
+			exec_ids = new String[vector2.size()];
+			vector2.copyInto(exec_ids);
+
+			g_t = new OperatorGroup_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_description,
+					It_owner_id,
+					It_created.getTime(),
+					It_created_by,
+					It_modified.getTime(),
+					It_modified_by,
+					user_ids,
+					exec_ids);
+
+			return g_t;
+		}
+		catch(SQLException e)
+		{
+			System.out.println("error loading group " + id + ": " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static int loadGroups(
+			OperatorGroupSeq_TransferableHolder groupseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+		String It_owner_id = "";
+		long It_created = 0;
+		String It_created_by = "";
+		long It_modified = 0;
+		String It_modified_by = "";
+
+		String [] user_ids = new String[0];
+		String [] exec_ids = new String[0];
+//		String [] role_ids = new String[0];
+//		String [] privilege_ids = new String[0];
+
+		Vector vector = new Vector();
+
+		OperatorGroup_Transferable g_t;
+		OperatorGroup_Transferable[] g_ts;
+		GroupIterator gIt = null;
+
+		Vector vector2;
+		UserIdIterator uiIt = null;
+		ExecIdIterator eiIt = null;
+
+		try
+		{
+			#sql gIt = {
+				select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+						OWNER_ID,
+						CREATED,
+						CREATED_BY,
+						MODIFIED,
+						MODIFIED_BY
+					from AMFICOM.GROUPS
+			};
+
+			while (gIt.next())
+			{
+				try { It_id = gIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = gIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_codename = gIt.codename(); }
+				catch(SQLException e) { }
+				if(It_codename == null) It_codename = "";
+				try { It_description = gIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_owner_id = gIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_created = gIt.created().getTime(); }
+				catch(Exception e) { }
+				try { It_created_by = gIt.created_by(); }
+				catch(SQLException e) { }
+				if(It_created_by == null) It_created_by = "";
+				try { It_modified = gIt.modified().getTime(); }
+				catch(Exception e) { }
+				try { It_modified_by = gIt.modified_by(); }
+				catch(SQLException e) { }
+				if(It_modified_by == null) It_modified_by = "";
+
+				vector2 = new Vector();
+				try
+				{
+					#sql uiIt = { select USER_ID from AMFICOM.USERGROUPS
+							where GROUP_ID = :It_id };
+					while (uiIt.next())
+					{
+						try { vector2.addElement(uiIt.user_id()); }
+						catch(SQLNullException e) { }
+					}
+					uiIt.close();
+				}
+				catch(SQLException e)
+				{
+					uiIt.close();
+					System.out.println("could not get user for group " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				finally
+				{
+					try {
+						uiIt.close();
+					}catch(Exception exe) {}
+				}
+				
+				user_ids = new String[vector2.size()];
+				vector2.copyInto(user_ids);
+//				System.out.println("found " + vector2.size() + " users for group " + It_id);
+
+				vector2 = new Vector();
+				try
+				{
+					#sql eiIt = { select EXEC_ID from AMFICOM.EXECGROUPS
+							where GROUP_ID = :It_id };
+					while (eiIt.next())
+					{
+						try { vector2.addElement(eiIt.exec_id()); }
+						catch(SQLNullException e) { }
+					}
+					eiIt.close();
+				}
+				catch(SQLException e)
+				{
+					eiIt.close();
+					System.out.println("could not get exec for group " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				finally
+				{
+					try {
+						eiIt.close();
+					}catch(Exception exe) {}
+				}
+				
+				exec_ids = new String[vector2.size()];
+				vector2.copyInto(exec_ids);
+
+				g_t = new OperatorGroup_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_description,
+					It_owner_id,
+					It_created,
+					It_created_by,
+					It_modified,
+					It_modified_by,
+					user_ids,
+					exec_ids);
+
+				vector.add(g_t);
+			}// while(gIt)
+			gIt.close();
+			g_ts = new OperatorGroup_Transferable[vector.size()];
+			vector.copyInto(g_ts);
+			groupseq.value = g_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(gIt != null) try {
+			gIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading groups: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				gIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+/*
+	public static int loadRoles(
+			OperatorRoleSeq_TransferableHolder roleseq,
+			Vector images)
+	{
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int loadPrivileges(
+			OperatorPrivilegeSeq_TransferableHolder privilegeseq,
+			Vector images)
+	{
+		return Constants.ERROR_NO_ERROR;
+	}
+*/
+	public static int loadProfiles(
+			OperatorProfileSeq_TransferableHolder profileseq,
+			String []profile_ids)
+	{
+		Vector vec = new Vector();
+		OperatorProfile_Transferable pr;
+		for(int i = 0; i < profile_ids.length; i++)
+		{
+			pr = loadProfile(profile_ids[i]);
+			if(pr != null)
+				vec.add(pr);
+		}
+		profileseq.value = new OperatorProfile_Transferable[vec.size()];
+		vec.copyInto(profileseq.value);
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static OperatorProfile_Transferable loadProfile(String id)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+
+		Timestamp It_created;
+		String It_created_by = "";
+		Timestamp It_modified;
+		String It_modified_by = "";
+
+		String It_user_id = "";
+		String It_owner_id = "";
+
+		String It_login = "";
+		BLOB It_password_blob = null;
+		byte[] It_password = new byte[0];
+		long It_password_expiry = 0L;
+
+		Timestamp It_last_login;
+		String It_status = "";
+		String It_state = "";
+
+		Timestamp It_disabled;
+		String It_disabled_comments = "";
+
+		String It_priority = "";
+		String It_logfile = "";
+
+		String It_first_name = "";
+		String It_second_name = "";
+		String It_last_name = "";
+		String It_phone_work = "";
+		String It_phone_home = "";
+		String It_phone_mobile = "";
+		String It_phone_emergency = "";
+
+		String It_pager_phone = "";
+		String It_pager_number = "";
+		String It_sms_number = "";
+
+		String It_address = "";
+		String It_language = "";
+		String It_organization = "";
+		String It_e_mail = "";
+
+		String[] category_ids = new String[0];
+		String[] group_ids = new String[0];
+
+		OperatorProfile_Transferable op_t;
+
+		CategoryIdIterator ciIt = null;
+		GroupIdIterator giIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql {
+				select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+
+						CREATED,
+						CREATED_BY,
+						MODIFIED,
+						MODIFIED_BY,
+
+						USER_ID,
+						OWNER_ID,
+
+						LOGIN,
+						PASSWORD,
+						PASSWORD_EXPIRY,
+						LAST_LOGIN,
+						STATUS,
+						STATE,
+
+						DISABLED,
+						DISABLED_COMMENTS,
+						PRIORITY,
+						LOGFILE,
+
+						FIRST_NAME,
+						SECOND_NAME,
+						LAST_NAME,
+						PHONE_WORK,
+						PHONE_HOME,
+						PHONE_MOBILE,
+						PHONE_EMERGENCY,
+						PAGER_PHONE,
+						PAGER_NUMBER,
+						SMS_NUMBER,
+						ADDRESS,
+						LANGUAGE,
+						ORGANIZATION,
+						E_MAIL
+				into
+						:It_id,
+						:It_name,
+						:It_codename,
+						:It_description,
+
+						:It_created,
+						:It_created_by,
+						:It_modified,
+						:It_modified_by,
+
+						:It_user_id,
+						:It_owner_id,
+
+						:It_login,
+						:It_password_blob,
+						:It_password_expiry,
+						:It_last_login,
+						:It_status,
+						:It_state,
+
+						:It_disabled,
+						:It_disabled_comments,
+						:It_priority,
+						:It_logfile,
+
+						:It_first_name,
+						:It_second_name,
+						:It_last_name,
+						:It_phone_work,
+						:It_phone_home,
+						:It_phone_mobile,
+						:It_phone_emergency,
+						:It_pager_phone,
+						:It_pager_number,
+						:It_sms_number,
+						:It_address,
+						:It_language,
+						:It_organization,
+						:It_e_mail
+					from AMFICOM.OPERATORPROFILES
+					where ID = :id
+				};
+
+			if(It_id == null) It_id = "";
+			if(It_name == null) It_name = "";
+			if(It_codename == null) It_codename = "";
+			if(It_description == null) It_description = "";
+			if(It_created == null)
+				It_created = new Timestamp(System.currentTimeMillis());
+			if(It_modified == null)
+				It_modified = new Timestamp(System.currentTimeMillis());
+
+			if(It_user_id == null) It_user_id = "";
+			if(It_owner_id == null) It_owner_id = "";
+			if(It_login == null) It_login = "";
+
+			if(It_password_blob == null)
+            	It_password = new byte[0];
+            else
+            	It_password = ByteArrayDatabase.toByteArray(It_password_blob);
+
+//			if(It_password_expiry == null)
+//				It_password_expiry = 0L;
+			if(It_last_login == null)
+				It_last_login = new Timestamp(System.currentTimeMillis());
+			if(It_status == null) It_status = "";
+			if(It_state == null) It_state = "";
+			if(It_disabled == null)
+				It_disabled = new Timestamp(System.currentTimeMillis());
+			if(It_disabled_comments == null) It_disabled_comments = "";
+			if(It_priority == null) It_priority = "";
+			if(It_logfile == null) It_logfile = "";
+			if(It_first_name == null) It_first_name = "";
+			if(It_second_name == null) It_second_name = "";
+			if(It_last_name == null) It_last_name = "";
+			if(It_phone_work == null) It_phone_work = "";
+			if(It_phone_home == null) It_phone_home = "";
+			if(It_phone_mobile == null) It_phone_mobile = "";
+			if(It_phone_emergency == null) It_phone_emergency = "";
+			if(It_pager_phone == null) It_pager_phone = "";
+			if(It_pager_number == null) It_pager_number = "";
+			if(It_sms_number == null) It_sms_number = "";
+			if(It_address == null) It_address = "";
+			if(It_language == null) It_language = "";
+			if(It_organization == null) It_organization = "";
+			if(It_e_mail == null) It_e_mail = "";
+
+			vector2 = new Vector();
+			try
+			{
+				#sql ciIt = { select CATEGORY_ID from AMFICOM.USERCATEGORIES
+						where USER_ID = :It_user_id };
+				while (ciIt.next())
+				{
+					try { vector2.addElement(ciIt.category_id()); }
+					catch(SQLNullException e) { }
+				}
+				ciIt.close();
+			}
+			catch(SQLException e)
+			{
+				ciIt.close();
+				System.out.println("could not get category for profile " + It_id + ": " + e.getMessage());
+				e.printStackTrace();
+			}
+			finally
+			{
+				try {
+					ciIt.close();
+				}catch(Exception exe) {}
+			}
+			
+			category_ids = new String[vector2.size()];
+			vector2.copyInto(category_ids);
+
+			vector2 = new Vector();
+			try
+			{
+				#sql giIt = { select GROUP_ID from AMFICOM.USERGROUPS
+						where USER_ID = :It_user_id };
+				while (giIt.next())
+				{
+					try { vector2.addElement(giIt.group_id()); }
+					catch(SQLNullException e) { }
+				}
+				giIt.close();
+			}
+			catch(SQLException e)
+			{
+				giIt.close();
+				System.out.println("could not get group for profile " + It_id + ": " + e.getMessage());
+				e.printStackTrace();
+			}
+			finally
+			{
+				try {
+					giIt.close();
+				}catch(Exception exe) {}
+			}
+			
+			group_ids = new String[vector2.size()];
+			vector2.copyInto(group_ids);
+
+			op_t = new OperatorProfile_Transferable(
+						It_id,
+						It_name,
+						It_codename,
+						It_description,
+
+						It_created.getTime(),
+						It_created_by,
+						It_modified.getTime(),
+						It_modified_by,
+
+						It_user_id,
+						It_owner_id,
+
+						It_login,
+						It_password,
+//						Rewriter.read(It_password),
+						It_password_expiry,
+
+						It_last_login.getTime(),
+						It_status,
+						It_state,
+//						It_disabled.getTime(),
+						It_password_expiry,
+						It_disabled_comments,
+
+						It_priority,
+						It_logfile,
+
+						category_ids,
+						group_ids,
+
+						It_first_name,
+						It_second_name,
+						It_last_name,
+						It_phone_work,
+						It_phone_home,
+						It_phone_mobile,
+						It_phone_emergency,
+
+						It_pager_phone,
+						It_pager_number,
+						It_sms_number,
+
+						It_address,
+						It_language,
+						It_organization,
+						It_e_mail);
+
+			return op_t;
+		}
+		catch(SQLException e)
+		{
+			System.out.println("error loading operator profile " + id + ": " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static int loadProfiles(
+			OperatorProfileSeq_TransferableHolder profileseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+
+		long It_created = 0;
+		String It_created_by = "";
+		long  It_modified = 0;
+		String It_modified_by = "";
+
+		String It_user_id = "";
+		String It_owner_id = "";
+
+		String It_login = "";
+		BLOB It_password_blob = null;
+		byte[] It_password = new byte[0];
+		long It_password_expiry = 0;
+
+		long It_last_login = 0;
+		String It_status = "";
+		String It_state = "";
+
+		long It_disabled = 0;
+		String It_disabled_comments = "";
+
+		String It_priority = "";
+		String It_logfile = "";
+
+		String It_first_name = "";
+		String It_second_name = "";
+		String It_last_name = "";
+		String It_phone_work = "";
+		String It_phone_home = "";
+		String It_phone_mobile = "";
+		String It_phone_emergency = "";
+
+		String It_pager_phone = "";
+		String It_pager_number = "";
+		String It_sms_number = "";
+
+		String It_address = "";
+		String It_language = "";
+		String It_organization = "";
+		String It_e_mail = "";
+
+		String[] category_ids = new String[0];
+//		String[] object_ids = new String[0];
+//		String[] role_ids = new String[0];
+		String[] group_ids = new String[0];
+//		String[] privilege_ids = new String[0];
+
+		OperatorProfile_Transferable[] op_ts;
+		OperatorProfile_Transferable op_t;
+		OperatorProfileIterator opIt = null;
+
+		Vector vector = new Vector();
+
+		CategoryIdIterator ciIt = null;
+		GroupIdIterator giIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql opIt = {
+				select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+
+						CREATED,
+						CREATED_BY,
+						MODIFIED,
+						MODIFIED_BY,
+
+						USER_ID,
+						OWNER_ID,
+
+						LOGIN,
+						PASSWORD,
+						PASSWORD_EXPIRY,
+						LAST_LOGIN,
+						STATUS,
+						STATE,
+
+						DISABLED,
+						DISABLED_COMMENTS,
+						PRIORITY,
+						LOGFILE,
+
+						FIRST_NAME,
+						SECOND_NAME,
+						LAST_NAME,
+						PHONE_WORK,
+						PHONE_HOME,
+						PHONE_MOBILE,
+						PHONE_EMERGENCY,
+						PAGER_PHONE,
+						PAGER_NUMBER,
+						SMS_NUMBER,
+						ADDRESS,
+						LANGUAGE,
+						ORGANIZATION,
+						E_MAIL
+					from AMFICOM.OPERATORPROFILES
+				};
+			while (opIt.next())
+			{
+				try { It_id = opIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = opIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_codename = opIt.codename(); }
+				catch(SQLException e) { }
+				if(It_codename == null) It_codename = "";
+				try { It_description = opIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_created = opIt.created().getTime(); }
+				catch(Exception e) { }
+//				if(It_created == null) It_created = 0;
+				try { It_created_by = opIt.created_by(); }
+				catch(SQLException e) { }
+				if(It_created_by == null) It_created_by = "";
+				try { It_modified = opIt.modified().getTime(); }
+				catch(Exception e) { }
+//				if(It_modified == null) It_modified = 0;
+				try { It_modified_by = opIt.modified_by(); }
+				catch(SQLException e) { }
+				if(It_modified_by == null) It_modified_by = "";
+				try { It_user_id = opIt.user_id(); }
+				catch(SQLException e) { }
+				if(It_user_id == null) It_user_id = "";
+				try { It_owner_id = opIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_login = opIt.login(); }
+				catch(SQLException e) { }
+				if(It_login == null) It_login = "";
+				try { It_password = ByteArrayDatabase.toByteArray(opIt.password()); }
+				catch(SQLException e) { It_password = new byte[0]; }
+				if(It_password == null) It_password = new byte[0];
+				try { It_password_expiry = opIt.password_expiry(); }
+				catch(Exception e) { }
+//				if(It_password_expiry == null) It_password_expiry = 0;
+				try { It_last_login = opIt.last_login().getTime(); }
+				catch(Exception e) { }
+//				if(It_last_login == null) It_last_login = 0;
+				try { It_status = opIt.status(); }
+				catch(SQLException e) { }
+				if(It_status == null) It_status = "";
+				try { It_state = opIt.state(); }
+				catch(SQLException e) { }
+				if(It_state == null) It_state = "";
+//				try { It_disabled = opIt.disabled().getTime(); }
+				try { It_disabled = opIt.password_expiry(); }
+				catch(Exception e) { }
+//				if(It_disabled == null) It_disabled = 0;
+				try { It_disabled_comments = opIt.disabled_comments(); }
+				catch(SQLException e) { }
+				if(It_disabled_comments == null) It_disabled_comments = "";
+				try { It_priority = opIt.priority(); }
+				catch(SQLException e) { }
+				if(It_priority == null) It_priority = "";
+				try { It_logfile = opIt.logfile(); }
+				catch(SQLException e) { }
+				if(It_logfile == null) It_logfile = "";
+				try { It_first_name = opIt.first_name(); }
+				catch(SQLException e) { }
+				if(It_first_name == null) It_first_name = "";
+				try { It_second_name = opIt.second_name(); }
+				catch(SQLException e) { }
+				if(It_second_name == null) It_second_name = "";
+				try { It_last_name = opIt.last_name(); }
+				catch(SQLException e) { }
+				if(It_last_name == null) It_last_name = "";
+				try { It_phone_work = opIt.phone_work(); }
+				catch(SQLException e) { }
+				if(It_phone_work == null) It_phone_work = "";
+				try { It_phone_home = opIt.phone_home(); }
+				catch(SQLException e) { }
+				if(It_phone_home == null) It_phone_home = "";
+				try { It_phone_mobile = opIt.phone_mobile(); }
+				catch(SQLException e) { }
+				if(It_phone_mobile == null) It_phone_mobile = "";
+				try { It_phone_emergency = opIt.phone_emergency(); }
+				catch(SQLException e) { }
+				if(It_phone_emergency == null) It_phone_emergency = "";
+				try { It_pager_phone = opIt.pager_phone(); }
+				catch(SQLException e) { }
+				if(It_pager_phone == null) It_pager_phone = "";
+				try { It_pager_number = opIt.pager_number(); }
+				catch(SQLException e) { }
+				if(It_pager_number == null) It_pager_number = "";
+				try { It_sms_number = opIt.sms_number(); }
+				catch(SQLException e) { }
+				if(It_sms_number == null) It_sms_number = "";
+				try { It_address = opIt.address(); }
+				catch(SQLException e) { }
+				if(It_address == null) It_address = "";
+				try { It_language = opIt.language(); }
+				catch(SQLException e) { }
+				if(It_language == null) It_language = "";
+				try { It_organization = opIt.organization(); }
+				catch(SQLException e) { }
+				if(It_organization == null) It_organization = "";
+				try { It_e_mail = opIt.e_mail(); }
+				catch(SQLException e) { }
+				if(It_e_mail == null) It_e_mail = "";
+
+				vector2 = new Vector();
+				try
+				{
+					#sql ciIt = { select CATEGORY_ID from AMFICOM.USERCATEGORIES
+							where USER_ID = :It_user_id };
+					while (ciIt.next())
+					{
+						try { vector2.addElement(ciIt.category_id()); }
+						catch(SQLNullException e) { }
+					}
+					ciIt.close();
+				}
+				catch(SQLException e)
+				{
+					ciIt.close();
+					System.out.println("could not get category for profile " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				finally
+				{
+					try {
+						ciIt.close();
+					}catch(Exception exe) {}
+				}
+				
+				category_ids = new String[vector2.size()];
+				vector2.copyInto(category_ids);
+//				System.out.println("found " + vector2.size() + " categories for profile " + It_id);
+
+				vector2 = new Vector();
+				try
+				{
+					#sql giIt = { select GROUP_ID from AMFICOM.USERGROUPS
+							where USER_ID = :It_user_id };
+					while (giIt.next())
+					{
+						try { vector2.addElement(giIt.group_id()); }
+						catch(SQLNullException e) { }
+					}
+					giIt.close();
+				}
+				catch(SQLException e)
+				{
+					giIt.close();
+					System.out.println("could not get group for profile " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				finally
+				{
+					try {
+						giIt.close();
+					}catch(Exception exe) {}
+				}
+				
+				group_ids = new String[vector2.size()];
+				vector2.copyInto(group_ids);
+//				System.out.println("found " + vector2.size() + " groups for profile " + It_id);
+
+				op_t = new OperatorProfile_Transferable(
+							It_id,
+							It_name,
+							It_codename,
+							It_description,
+
+							It_created,
+							It_created_by,
+							It_modified,
+							It_modified_by,
+
+							It_user_id,
+							It_owner_id,
+
+							It_login,
+							It_password,
+//							Rewriter.read(It_password),
+							It_password_expiry,
+
+							It_last_login,
+							It_status,
+							It_state,
+
+							It_password_expiry,
+							It_disabled_comments,
+
+							It_priority,
+							It_logfile,
+
+							category_ids,
+//							object_ids,
+//							role_ids,
+							group_ids,
+//							privilege_ids,
+
+							It_first_name,
+							It_second_name,
+							It_last_name,
+							It_phone_work,
+							It_phone_home,
+							It_phone_mobile,
+							It_phone_emergency,
+
+							It_pager_phone,
+							It_pager_number,
+							It_sms_number,
+
+							It_address,
+							It_language,
+							It_organization,
+							It_e_mail);
+
+				vector.addElement(op_t);
+			}// while(opIt)
+			opIt.close();
+			op_ts = new OperatorProfile_Transferable[vector.size()];
+			vector.copyInto(op_ts);
+			profileseq.value = op_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(opIt != null) try {
+			opIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading operator profile: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				opIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int loadExecs(
+			CommandPermissionAttributesSeq_TransferableHolder execseq)
+	{
+		String It_id = "";
+		String It_rwx = "";
+		String It_owner_id = "";
+		String It_name = "";
+		String It_codename = "";
+
+		long It_created = 0;
+		String It_created_by = "";
+		long  It_modified = 0;
+		String It_modified_by = "";
+
+		String It_whyrejected = "";
+
+		String[] category_ids = new String[0];
+		String[] group_ids = new String[0];
+
+		CommandPermissionAttributes_Transferable[] ex_ts;
+		CommandPermissionAttributes_Transferable ex_t;
+		ExecIterator exIt = null;
+
+		Vector vector = new Vector();
+
+		CategoryIdIterator ciIt = null;
+		GroupIdIterator giIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql exIt = {
+				select
+						ID,
+						RWX,
+						OWNER_ID,
+						NAME,
+						CODENAME,
+
+						CREATED,
+						CREATED_BY,
+						MODIFIED,
+						MODIFIED_BY,
+
+						WHYREJECTED
+					from AMFICOM.EXECS
+				};
+			while (exIt.next())
+			{
+				try { It_id = exIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_rwx = exIt.rwx(); }
+				catch(SQLException e) { }
+				if(It_rwx == null) It_rwx = "";
+				try { It_owner_id = exIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_name = exIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_codename = exIt.codename(); }
+				catch(SQLException e) { }
+				if(It_codename == null) It_codename = "";
+				try { It_created = exIt.created().getTime(); }
+				catch(Exception e) { }
+//				if(It_created == null) It_created = 0;
+				try { It_created_by = exIt.created_by(); }
+				catch(SQLException e) { }
+				if(It_created_by == null) It_created_by = "";
+				try { It_modified = exIt.modified().getTime(); }
+				catch(Exception e) { }
+//				if(It_modified == null) It_modified = 0;
+				try { It_modified_by = exIt.modified_by(); }
+				catch(SQLException e) { }
+				if(It_modified_by == null) It_modified_by = "";
+
+				try { It_whyrejected = exIt.whyrejected(); }
+				catch(SQLException e) { }
+				if(It_whyrejected == null) It_whyrejected = "";
+
+				vector2 = new Vector();
+				try
+				{
+					#sql ciIt = { select CATEGORY_ID from AMFICOM.EXECCATEGORIES
+							where EXEC_ID = :It_id };
+					while (ciIt.next())
+					{
+						try { vector2.addElement(ciIt.category_id()); }
+						catch(SQLNullException e) { }
+					}
+					ciIt.close();
+				}
+				catch(SQLException e)
+				{
+					ciIt.close();
+					System.out.println("could not get category for exec " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				finally
+				{
+					try {
+						ciIt.close();
+					}catch(Exception exe) {}
+				}
+				
+				category_ids = new String[vector2.size()];
+				vector2.copyInto(category_ids);
+//				System.out.println("found " + vector2.size() + " categories for exec " + It_id);
+
+				vector2 = new Vector();
+				try
+				{
+					#sql giIt = { select GROUP_ID from AMFICOM.EXECGROUPS
+							where EXEC_ID = :It_id };
+					while (giIt.next())
+					{
+						try { vector2.addElement(giIt.group_id()); }
+						catch(SQLNullException e) { }
+					}
+					giIt.close();
+				}
+				catch(SQLException e)
+				{
+					giIt.close();
+					System.out.println("could not get group for exec " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				finally
+				{
+					try {
+						giIt.close();
+					}catch(Exception exe) {}
+				}
+				
+				group_ids = new String[vector2.size()];
+				vector2.copyInto(group_ids);
+//				System.out.println("found " + vector2.size() + " groups for exec " + It_id);
+
+				ex_t = new CommandPermissionAttributes_Transferable(
+							It_id,
+							It_rwx,
+
+							group_ids,
+							category_ids,
+
+							It_owner_id,
+							It_name,
+							It_codename,
+
+							It_created,
+							It_created_by,
+							It_modified,
+							It_modified_by,
+
+							It_whyrejected);
+
+				vector.addElement(ex_t);
+			}// while(exIt)
+			exIt.close();
+			ex_ts = new CommandPermissionAttributes_Transferable[vector.size()];
+			vector.copyInto(ex_ts);
+			execseq.value = ex_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(exIt != null) try {
+			exIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading execs: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				exIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int loadUserDescriptors(
+			UserSeq_TransferableHolder userseq)
+	{
+		String It_id = "";
+		String It_login = "";
+		String It_type = "";
+
+		String object_id = "";
+		long last_login = 0;
+		long logged = 0;
+		int sessions = 0;
+		Timestamp lastlogin;
+
+		String[] category_ids = new String[0];
+		String[] group_ids = new String[0];
+
+		Vector vector = new Vector();
+
+		User_Transferable u_t;
+		User_Transferable[] u_ts;
+		UserIterator uIt = null;
+
+		CategoryIdIterator ciIt = null;
+		GroupIdIterator giIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql uIt = {
+				select
+						ID,
+						LOGIN,
+						TYPE,
+						OPERATOR_ID,
+						OPERATIONAL_ID,
+						SUBSCRIBER_ID,
+						ORGANIZATION_ID
+					from AMFICOM.USERS
+			};
+
+			while (uIt.next())
+			{
+				try { It_id = uIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_login = uIt.login(); }
+				catch(SQLException e) { }
+				if(It_login == null) It_login = "";
+				try { It_type = uIt.type(); }
+				catch(SQLException e) { }
+				if(It_type == null) It_type = "";
+				if(It_type.equals("operatorprofile"))
+				{
+					try { object_id = uIt.operator_id(); }
+					catch(SQLException e) { }
+					try {
+						#sql { select LAST_LOGIN into :lastlogin
+								from AMFIcOM.OPERATORPROFILES
+									where ID = :object_id };
+						last_login = lastlogin.getTime();
+					} catch(Exception e) { }
+					logged = last_login;
+					#sql { select COUNT(*) into :sessions
+							from AMFIcOM.LOGGEDUSERS
+								where USER_ID = :It_id };
+				}
+				else
+				if(It_type.equals("operationalprofile"))
+				{
+					try { object_id = uIt.operational_id(); }
+					catch(SQLException e) { }
+				}
+				else
+				if(It_type.equals("subscriberprofile"))
+				{
+					try { object_id = uIt.subscriber_id(); }
+					catch(SQLException e) { }
+				}
+				else
+				if(It_type.equals("organizationprofile"))
+				{
+					try { object_id = uIt.organization_id(); }
+					catch(SQLException e) { }
+				}
+				if(object_id == null) object_id = "";
+
+				vector2 = new Vector();
+				try
+				{
+					#sql ciIt = { select CATEGORY_ID from AMFICOM.USERCATEGORIES
+							where USER_ID = :It_id };
+					while (ciIt.next())
+					{
+						try { vector2.addElement(ciIt.category_id()); }
+						catch(SQLNullException e) { }
+					}
+					ciIt.close();
+				}
+				catch(SQLException e)
+				{
+					ciIt.close();
+					System.out.println("could not get category for user " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				finally
+				{
+					try {
+						ciIt.close();
+					}catch(Exception exe) {}
+				}
+				
+				category_ids = new String[vector2.size()];
+				vector2.copyInto(category_ids);
+//				System.out.println("found " + vector2.size() + " categories for profile " + It_id);
+
+				vector2 = new Vector();
+				try
+				{
+					#sql giIt = { select GROUP_ID from AMFICOM.USERGROUPS
+							where USER_ID = :It_id };
+					while (giIt.next())
+					{
+						try { vector2.addElement(giIt.group_id()); }
+						catch(SQLNullException e) { }
+					}
+					giIt.close();
+				}
+				catch(SQLException e)
+				{
+					giIt.close();
+					System.out.println("could not get group for user " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				finally
+				{
+					try {
+						giIt.close();
+					}catch(Exception exe) {}
+				}
+				
+				group_ids = new String[vector2.size()];
+				vector2.copyInto(group_ids);
+//				System.out.println("found " + vector2.size() + " groups for profile " + It_id);
+
+				u_t = new User_Transferable(
+					It_id,
+					object_id,
+					It_login,
+					It_type,
+					last_login,
+					logged,
+					sessions,
+					category_ids,
+					group_ids);
+
+				vector.add(u_t);
+			}// while(opIt)
+			uIt.close();
+			u_ts = new User_Transferable[vector.size()];
+			vector.copyInto(u_ts);
+			userseq.value = u_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(uIt != null) try {
+			uIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading users: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				uIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	#sql public static iterator ProfileIdIterator(
+		String profile_id );
+
+	#sql public static iterator CategoryIdIterator(
+		String category_id );
+
+	#sql public static iterator GroupIdIterator(
+		String group_id );
+
+	#sql public static iterator UserIdIterator(
+		String user_id );
+
+	#sql public static iterator ExecIdIterator(
+		String exec_id );
+
+	#sql public static iterator InnerIdIterator(
+		String inner_domain_id );
+
+	#sql public static iterator DomainIterator(
+		String id,
+		String name,
+		String codename,
+		String description,
+		Timestamp created,
+		String created_by,
+		Timestamp modified,
+		String modified_by,
+		String owner_id,
+		String domain_id,
+		String object_permission_id);
+
+	#sql public static iterator GroupIterator(
+		String id,
+		String name,
+		String codename,
+		String description,
+		String owner_id,
+		Timestamp created,
+		String created_by,
+		Timestamp modified,
+		String modified_by );
+
+	#sql public static iterator CategoryIterator(
+		String id,
+		String name,
+		String codename,
+		String description,
+		Timestamp modified );
+
+	#sql public static iterator UserIterator(
+		String id,
+		String login,
+		String type,
+		String operator_id,
+		String operational_id,
+		String subscriber_id,
+		String organization_id );
+
+	#sql public static iterator ExecIterator(
+		String id,
+		String rwx,
+		String owner_id,
+		String name,
+		String codename,
+
+		Timestamp created,
+		String created_by,
+		Timestamp modified,
+		String modified_by,
+
+		String whyrejected );
+
+	#sql public static iterator OperatorProfileIterator(
+		String id,
+		String name,
+		String codename,
+		String description,
+
+		Timestamp created,
+		String created_by,
+		Timestamp modified,
+		String modified_by,
+
+		String user_id,
+		String owner_id,
+
+		String login,
+		BLOB password,
+
+		long password_expiry,
+
+		Timestamp last_login,
+		String status,
+		String state,
+
+		Timestamp disabled,
+		String disabled_comments,
+
+		String priority,
+		String logfile,
+
+		String first_name,
+		String second_name,
+		String last_name,
+		String phone_work,
+		String phone_home,
+		String phone_mobile,
+		String phone_emergency,
+
+		String pager_phone,
+		String pager_number,
+		String sms_number,
+
+		String address,
+		String language,
+		String organization,
+		String e_mail);
+}

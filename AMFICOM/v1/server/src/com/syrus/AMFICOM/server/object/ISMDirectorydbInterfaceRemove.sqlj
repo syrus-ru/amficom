@@ -1,0 +1,123 @@
+/*
+ * $Id: ISMDirectorydbInterfaceRemove.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.server.object;
+
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.SQLException;
+
+/**
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class ISMDirectorydbInterfaceRemove
+{
+	protected ISMDirectorydbInterfaceRemove()
+	{
+	}
+
+	public static int removeAccessPortTypes(
+			String[] aporttype_ids)
+	{
+		int i;
+		int j;
+		int len;
+		int count = 0;
+
+		String id = "";
+		len = aporttype_ids.length;
+		for (i = 0; i < len; i++)
+		{
+			NetDirectorydbInterfaceRemove.removeCharacteristicLinks(
+					"ACCESSPORTTYPECHARACTERISTICS",
+					"ACCESS_PORT_TYPE_ID",
+					aporttype_ids[i]);
+			try
+			{
+				#sql { delete from AMFICOM.ACCESSPORTTYPETESTTYPES
+					where ACCESS_PORT_TYPE_ID = :(aporttype_ids[i])
+				};
+				#sql {
+					delete from AMFICOM.ACCESSPORTTYPES
+						where ID = :(aporttype_ids[i])
+				};
+				#sql { commit };
+			}
+			catch(Exception exx)
+			{
+				System.out.println("error removing access port type '" + aporttype_ids[i] + "': " + exx.getMessage());
+				return Constants.ERROR_SAVING;
+			}
+			}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int removeKISTypes(
+			String[] kistype_ids)
+	{
+		int i;
+		int j;
+		int len;
+		int count = 0;
+
+		String id = "";
+		len = kistype_ids.length;
+		for (i = 0; i < len; i++)
+		{
+			NetDirectorydbInterfaceRemove.removeCharacteristicLinks(
+					"EQUIPMENTTYPECHARACTERISTICLIN",
+					"EQUIPMENT_TYPE_ID",
+					kistype_ids[i]);
+			try
+			{
+				#sql {
+					delete from AMFICOM.EQUIPMENTTYPES
+						where ID = :(kistype_ids[i])
+				};
+				#sql { commit };
+			}
+			catch(SQLException ex)
+			{
+				System.out.println("error removing kis type '" + kistype_ids[i] + "': " + ex.getMessage());
+				ex.printStackTrace();
+				return Constants.ERROR_SAVING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	public static int removePathTypes(
+			String[] pathtype_ids)
+	{
+		int i;
+		int j;
+		int len;
+		int count = 0;
+
+		String id = "";
+		len = pathtype_ids.length;
+		for (i = 0; i < len; i++)
+		{
+			try
+			{
+				#sql {
+					delete from AMFICOM.PATHTYPES
+						where ID = :(pathtype_ids[i])
+				};
+				#sql { commit };
+			}
+			catch(Exception exx)
+			{
+				System.out.println("error removing path type '" + pathtype_ids[i] + "': " + exx.getMessage());
+				return Constants.ERROR_SAVING;
+			}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+}

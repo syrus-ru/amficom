@@ -1,9 +1,0 @@
-src/com/syrus/AMFICOM/filter/ElementsActiveZoneBase.java
-src/com/syrus/AMFICOM/filter/Filter.java
-src/com/syrus/AMFICOM/filter/FilterExpressionBase.java
-src/com/syrus/AMFICOM/filter/FilterExpressionInterface.java
-src/com/syrus/AMFICOM/filter/FilterTreeNodeHolder.java
-src/com/syrus/AMFICOM/filter/FinishedLinkBase.java
-src/com/syrus/AMFICOM/filter/LogicSchemeBase.java
-src/com/syrus/AMFICOM/filter/LogicSchemeElementBase.java
-src/com/syrus/AMFICOM/filter/ProSchemeElementBase.java
