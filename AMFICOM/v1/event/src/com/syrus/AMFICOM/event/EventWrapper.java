@@ -1,5 +1,5 @@
 /*
- * $Id: EventWrapper.java,v 1.4 2005/02/08 20:26:50 arseniy Exp $
+ * $Id: EventWrapper.java,v 1.5 2005/02/28 15:31:47 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,20 +9,16 @@ package com.syrus.AMFICOM.event;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.event.corba.EventStatus;
-import com.syrus.AMFICOM.event.corba.EventParameter_TransferablePackage.EventParameterSort;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/08 20:26:50 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/28 15:31:47 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -31,10 +27,6 @@ public class EventWrapper implements StorableObjectWrapper {
 	public static final String COLUMN_STATUS = "status";
 
 	public static final String LINK_FIELD_EVENT_PARAMETERS = "event_parameters";
-	public static final String LINK_COLUMN_EVENT_PARAMETER_SORT	= "sort";
-	public static final String LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER	= "value_number";
-	public static final String LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING	= "value_string";
-	public static final String LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW	= "value_raw";
 
 	public static final String LINK_COLUMN_EVENT_ID	= "event_id";
 
@@ -79,31 +71,8 @@ public class EventWrapper implements StorableObjectWrapper {
 				return new Integer(event.getStatus().value());
 			if (key.equals(COLUMN_DESCRIPTION))
 				return event.getDescription();
-			if (key.equals(LINK_FIELD_EVENT_PARAMETERS)) {
-				EventParameter[] eventParameters = event.getParameters();
-				Map values = new HashMap(eventParameters.length * 4);
-				int eventParameterSort;
-				for (int i = 0; i < eventParameters.length; i++) {
-					values.put(COLUMN_ID + i, eventParameters[i].getId());
-					values.put(COLUMN_TYPE_ID + i, eventParameters[i].getType());
-					eventParameterSort = eventParameters[i].getSort().value();
-					values.put(LINK_COLUMN_EVENT_PARAMETER_SORT + i, new Integer(eventParameterSort));
-					switch (eventParameterSort) {
-						case EventParameterSort._PARAMETER_SORT_NUMBER:
-							values.put(LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER + i, new Integer(eventParameters[i].getValueNumber()));
-							break;
-						case EventParameterSort._PARAMETER_SORT_STRING:
-							values.put(LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING + i, eventParameters[i].getValueString());
-							break;
-						case EventParameterSort._PARAMETER_SORT_RAW:
-							values.put(LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW + i, eventParameters[i].getValueRaw());
-							break;
-						default:
-							Log.errorMessage("EventWrapper.getValue | Unknown sort: " + eventParameterSort + " of parameter '" + eventParameters[i].getId() + "', event '" + event.getId() + "'");
-					}
-				}
-				return values;
-			}
+			if (key.equals(LINK_FIELD_EVENT_PARAMETERS))
+				return event.getParameters();
 			if (key.equals(LINK_FIELD_EVENT_SOURCES))
 				return event.getEventSourceIds();
 		}
@@ -123,41 +92,11 @@ public class EventWrapper implements StorableObjectWrapper {
 						event.setDescription((String) value);
 					else
 						if (key.equals(LINK_FIELD_EVENT_PARAMETERS)) {
-							Map eventParametersMap = (Map) value;
-							/* there are 4*N keys for N EventParameter */
-							EventParameter[] parameters = new EventParameter[eventParametersMap.size() / 4];
-							Identifier parameterId;
-							ParameterType parameterType;
-							int eventParameterSort;
-							for (int i = 0; i < parameters.length; i++) {
-								parameterId = (Identifier) eventParametersMap.get(COLUMN_ID + i);
-								parameterType = (ParameterType) eventParametersMap.get(COLUMN_TYPE_ID + i);
-								eventParameterSort = ((Integer) eventParametersMap.get(LINK_COLUMN_EVENT_PARAMETER_SORT + i)).intValue();
-								switch (eventParameterSort) {
-									case EventParameterSort._PARAMETER_SORT_NUMBER:
-										parameters[i] = new EventParameter(parameterId,
-												parameterType,
-												((Integer) eventParametersMap.get(LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER + i)).intValue());
-										break;
-									case EventParameterSort._PARAMETER_SORT_STRING:
-										parameters[i] = new EventParameter(parameterId,
-												parameterType,
-												(String) eventParametersMap.get(LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING + i));
-										break;
-									case EventParameterSort._PARAMETER_SORT_RAW:
-										parameters[i] = new EventParameter(parameterId,
-												parameterType,
-												(byte[]) eventParametersMap.get(LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW + i));
-										break;
-									default:
-										Log.errorMessage("EventWrapper.setValue | Unknown sort: " + eventParameterSort + " of parameter '" + parameterId + "', event '" + event.getId() + "'");
-								}
-							}
-							event.setEventParameters(parameters);
+							event.setEventParameters((Collection) value);
 						}
 						else
 							if (key.equals(LINK_FIELD_EVENT_SOURCES))
-								event.setEventSourceIds((List) value);
+								event.setEventSourceIds((Collection) value);
 		}
 	}
 

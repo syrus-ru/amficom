@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.8 2005/02/25 12:14:47 bass Exp $
+ * $Id: Event.java,v 1.9 2005/02/28 15:31:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,8 +36,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/25 12:14:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/02/28 15:31:47 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -49,14 +50,15 @@ public class Event extends StorableObject implements TypedObject {
 	private int status;
 	private String description;
 
-	private EventParameter[] parameters;
+	private Collection eventParameters;	//Collection <EventParameter>
 	private Collection eventSourceIds; //Collection <Identifier>
 
 	private StorableObjectDatabase eventDatabase;
 
 	public Event(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		this.eventSourceIds = new ArrayList();
+		this.eventParameters = new ArrayList();
+		this.eventSourceIds = new HashSet();
 
 		this.eventDatabase = EventDatabaseContext.eventDatabase;
 		try {
@@ -80,16 +82,11 @@ public class Event extends StorableObject implements TypedObject {
 		this.status = et.status.value();
 		this.description = new String(et.description);
 
-		try {
-			this.parameters = new EventParameter[et.parameters.length];
-			for (int i = 0; i < this.parameters.length; i++)
-				this.parameters[i] = new EventParameter(et.parameters[i]);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.eventParameters = new ArrayList(et.parameters.length);
+		for (int i = 0; i < et.parameters.length; i++)
+			this.eventParameters.add(new EventParameter(et.parameters[i]));
 
-		this.eventSourceIds = new ArrayList(et.event_source_ids.length);
+		this.eventSourceIds = new HashSet(et.event_source_ids.length);
 		for (int i = 0; i < et.event_source_ids.length; i++)
 			this.eventSourceIds.add(new Identifier(et.event_source_ids[i]));
 
@@ -101,8 +98,8 @@ public class Event extends StorableObject implements TypedObject {
 					   long version,
 					   EventType type,
 						 String description,
-						 EventParameter[] parameters,
-						 List eventSourceIds) {
+						 Collection eventParameters,
+						 Collection eventSourceIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -112,10 +109,12 @@ public class Event extends StorableObject implements TypedObject {
 		this.type = type;
 		this.status = EventStatus._EVENT_STATUS_GENERATED;
 		this.description = description;
-		this.parameters = parameters;
+
+		this.eventParameters = new ArrayList(eventParameters.size());
+		this.setEventParameters0(eventParameters);
 		
-		this.eventSourceIds = new ArrayList();
-		this.eventSourceIds.addAll(eventSourceIds);
+		this.eventSourceIds = new HashSet(eventSourceIds.size());
+		this.setEventSourceIds0(eventSourceIds);
 
 		this.eventDatabase = EventDatabaseContext.eventDatabase;
 	}
@@ -133,9 +132,9 @@ public class Event extends StorableObject implements TypedObject {
 	public static Event createInstance(Identifier creatorId,
 		EventType type,
 		String description,
-		EventParameter[] parameters,
-		List eventSourceIds) throws CreateObjectException {
-		if (creatorId == null || type == null || description == null || parameters == null || eventSourceIds == null)
+		Collection eventParameters,
+		Collection eventSourceIds) throws CreateObjectException {
+		if (creatorId == null || type == null || description == null || eventParameters == null || eventSourceIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -144,7 +143,7 @@ public class Event extends StorableObject implements TypedObject {
 											0L,
 											type,
 											description,
-											parameters,
+											eventParameters,
 											eventSourceIds);
 			event.changed = true;
 			return event;
@@ -155,12 +154,13 @@ public class Event extends StorableObject implements TypedObject {
 	}
 
 	public Object getTransferable() {
-		EventParameter_Transferable[] ept = new EventParameter_Transferable[this.parameters.length];
-		for (int i = 0; i < ept.length; i++)
-			ept[i] = (EventParameter_Transferable) this.parameters[i].getTransferable();
+		int i = 0;
+		EventParameter_Transferable[] ept = new EventParameter_Transferable[this.eventParameters.size()];
+		for (Iterator it = this.eventParameters.iterator(); it.hasNext(); i++)
+			ept[i] = (EventParameter_Transferable) ((EventParameter) it.next()).getTransferable();
 		
 		Identifier_Transferable[] esIdsT = new Identifier_Transferable[this.eventSourceIds.size()];
-		int i = 0;
+		i = 0;
 		for (Iterator it = this.eventSourceIds.iterator(); it.hasNext(); i++)
 			esIdsT[i] = (Identifier_Transferable) ((Identifier) it.next()).getTransferable();
 
@@ -184,8 +184,8 @@ public class Event extends StorableObject implements TypedObject {
 		return this.description;
 	}
 
-	public EventParameter[] getParameters() {
-		return this.parameters;
+	public Collection getParameters() {
+		return Collections.unmodifiableCollection(this.eventParameters);
 	}
 
 	public Collection getEventSourceIds() {
@@ -210,11 +210,13 @@ public class Event extends StorableObject implements TypedObject {
 		this.description = description;
 	}
 
-	protected synchronized void setEventParameters0(EventParameter[] parameters) {
-		this.parameters = parameters;
+	protected synchronized void setEventParameters0(Collection eventParameters) {
+		this.eventParameters.clear();
+		if (eventParameters != null)
+			this.eventParameters.addAll(eventParameters);
 	}
 
-	protected synchronized void setEventSourceIds0(List eventSourceIds) {
+	protected synchronized void setEventSourceIds0(Collection eventSourceIds) {
 		this.eventSourceIds.clear();
 		if (eventSourceIds != null)
 			this.eventSourceIds.addAll(eventSourceIds);
@@ -249,10 +251,10 @@ public class Event extends StorableObject implements TypedObject {
 
 	/**
 	 * Set new array of event parameters
-	 * @param parameters
+	 * @param eventParameters
 	 */
-	public void setEventParameters(EventParameter[] parameters) {
-		this.setEventParameters0(parameters);
+	public void setEventParameters(Collection eventParameters) {
+		this.setEventParameters0(eventParameters);
 		super.changed = true;
 	}
 
@@ -260,7 +262,7 @@ public class Event extends StorableObject implements TypedObject {
 	 * Set new list of event sources ids
 	 * @param eventSourceIds
 	 */
-	public void setEventSourceIds(List eventSourceIds) {
+	public void setEventSourceIds(Collection eventSourceIds) {
 		this.setEventSourceIds0(eventSourceIds);
 		super.changed = true;
 	}
@@ -269,9 +271,7 @@ public class Event extends StorableObject implements TypedObject {
 		List dependencies = new LinkedList();
 
 		dependencies.add(this.type);
-
-		for (int i = 0; i < this.parameters.length; i++)
-			dependencies.add(this.parameters[i].getType());
+		dependencies.addAll(this.eventParameters);
 
 		return dependencies;
 	}

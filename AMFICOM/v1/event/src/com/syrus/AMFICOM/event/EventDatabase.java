@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.15 2005/02/28 14:12:41 bob Exp $
+ * $Id: EventDatabase.java,v 1.16 2005/02/28 15:31:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,40 +13,33 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 
-import oracle.sql.BLOB;
-
-import com.syrus.AMFICOM.event.corba.EventParameter_TransferablePackage.EventParameterSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.Log;
-import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/28 14:12:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/02/28 15:31:47 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -143,108 +136,31 @@ public class EventDatabase extends StorableObjectDatabase {
     if ((events == null) || (events.isEmpty()))
 			return;
 
-    StringBuffer sql = new StringBuffer(SQL_SELECT
-  			+ StorableObjectWrapper.COLUMN_ID + COMMA			
-  			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-  			+ EventWrapper.LINK_COLUMN_EVENT_ID
-  			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_SORT + COMMA
-  			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER + COMMA
-  			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING + COMMA
-  			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW
-  			+ SQL_FROM + ObjectEntities.EVENTPARAMETER_ENTITY
-  			+ SQL_WHERE);
-    try {
-			sql.append(this.idsEnumerationString(events, EventWrapper.LINK_COLUMN_EVENT_ID, true));
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e);
-		}
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+    Map eventParameterIdsMap;
 		try {
-			statement = connection.createStatement();
-			Log.debugMessage("EventDatabase.retrieveEventParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-
-			Map eventParametersMap = new HashMap();
-			Identifier eventId;
-			Identifier parameterId;
-			ParameterType parameterType;
-			int sort;
-			EventParameter parameter;
-			List eventParameters;
-			while (resultSet.next()) {
-				parameter = null;
-				parameterId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
-				try {
-					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
-				}
-				catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
-				eventId = DatabaseIdentifier.getIdentifier(resultSet, EventWrapper.LINK_COLUMN_EVENT_ID);
-				sort = resultSet.getInt(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_SORT);
-				switch (sort) {
-					case EventParameterSort._PARAMETER_SORT_NUMBER:
-						parameter = new EventParameter(parameterId,
-								parameterType,
-								resultSet.getInt(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER));
-						break;
-					case EventParameterSort._PARAMETER_SORT_STRING:
-						parameter = new EventParameter(parameterId,
-								parameterType,
-								resultSet.getString(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING));
-						break;
-					case EventParameterSort._PARAMETER_SORT_RAW:
-						parameter = new EventParameter(parameterId,
-								parameterType,
-								ByteArrayDatabase.toByteArray(resultSet.getBlob(EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW)));
-						break;
-					default:
-						Log.errorMessage("EventDatabase.retrieveEventParameters | Unknown sort: " + sort + " of parameter '" + parameterId + "', event '" + eventId + "'");
-				}
-				if (parameter != null) {
-					eventParameters = (List) eventParametersMap.get(eventId);
-					if (eventParameters == null) {
-						eventParameters = new ArrayList();
-						eventParametersMap.put(eventId, eventParameters);
-					}
-					eventParameters.add(parameter);					
-				}
-			}
-
-			Event event;
-			for (Iterator it = events.iterator(); it.hasNext();) {
-				event = (Event) it.next();
-				eventId = event.getId();
-				eventParameters = (List) eventParametersMap.get(eventId);
-
-				if (eventParameters != null)
-					event.setEventParameters0((EventParameter[]) eventParameters.toArray(new EventParameter[eventParameters.size()]));
-			}
+			eventParameterIdsMap = this.retrieveLinkedEntityIds(events,
+					ObjectEntities.EVENTPARAMETER_ENTITY,
+					EventWrapper.LINK_COLUMN_EVENT_ID,
+					StorableObjectWrapper.COLUMN_ID);
 		}
-		catch (SQLException sqle) {
-			String mesg = "EventDatabase.retrieveEventParametersByOneQuery | Cannot retrieve parameters for event -- "
-					+ sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide);
 		}
-		finally {
+
+		Event event;
+		Identifier eventId;
+		Collection eventParameters;
+		for (Iterator it = events.iterator(); it.hasNext();) {
+			event = (Event) it.next();
+			eventId = event.getId();
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				eventParameters = EventStorableObjectPool.getStorableObjects((Collection) eventParameterIdsMap.get(eventId), true);
 			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+			catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
+
+			event.setEventParameters0(eventParameters);
 		}
 	}
 
@@ -258,10 +174,10 @@ public class EventDatabase extends StorableObjectDatabase {
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
 
 		Event event;
-		List eventSourceIds;
+		Collection eventSourceIds;
 		for (Iterator it = events.iterator(); it.hasNext();) {
 			event = (Event) it.next();
-			eventSourceIds = (List) eventSourceIdsMap.get(event.getId());
+			eventSourceIds = (Collection) eventSourceIdsMap.get(event.getId());
 
 			event.setEventSourceIds0(eventSourceIds);
 		}
@@ -279,7 +195,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		Event event = this.fromStorableObject(storableObject);
 		try {
 			this.insertEntity(event);
-			this.insertEventParameters(event);
+			EventDatabaseContext.eventParameterDatabase.insert(event.getParameters());
 			this.updateEventSources(Collections.singletonList(event));
 		}
 		catch (UpdateObjectException uoe) {
@@ -293,103 +209,19 @@ public class EventDatabase extends StorableObjectDatabase {
 
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
+
+		Collection eventParameters = new LinkedList();
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			Event event = (Event) it.next();
-			this.insertEventParameters(event);
+			eventParameters.addAll(event.getParameters());
 		}
+		EventDatabaseContext.eventParameterDatabase.insert(eventParameters);
+
 		try {
 			this.updateEventSources(storableObjects);
 		}
 		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
-		}
-	}
-
-	private void insertEventParameters(Event event) throws CreateObjectException {
-		String eventIdStr = event.getId().toString();
-		EventParameter[] eventParameters = event.getParameters();
-		String sql = SQL_INSERT_INTO 
-			+ ObjectEntities.EVENTPARAMETER_ENTITY
-			+ OPEN_BRACKET
-			+ StorableObjectWrapper.COLUMN_ID  + COMMA
-			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-			+ EventWrapper.LINK_COLUMN_EVENT_ID + COMMA
-			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_SORT + COMMA
-			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER + COMMA
-			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING + COMMA
-			+ EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION
-			+ CLOSE_BRACKET;
-		PreparedStatement preparedStatement = null;
-		int i = 0;
-		Identifier parameterId = null;
-		Identifier parameterTypeId = null;
-		int sort;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			preparedStatement = connection.prepareStatement(sql);
-			for (i = 0; i < eventParameters.length; i++) {
-				parameterId = eventParameters[i].getId();
-				parameterTypeId = eventParameters[i].getType().getId();
-				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, 3, event.getId());
-				sort = eventParameters[i].getSort().value();
-				preparedStatement.setInt(4, sort);
-				switch (sort) {
-					case EventParameterSort._PARAMETER_SORT_NUMBER:
-						preparedStatement.setInt(5, eventParameters[i].getValueNumber());
-						preparedStatement.setString(6, "");
-						preparedStatement.setBlob(7, null);
-						break;
-					case EventParameterSort._PARAMETER_SORT_STRING:
-						preparedStatement.setInt(5, 0);
-						preparedStatement.setString(6, eventParameters[i].getValueString());
-						preparedStatement.setBlob(7, null);
-						break;
-					case EventParameterSort._PARAMETER_SORT_RAW:
-						preparedStatement.setInt(5, 0);
-						preparedStatement.setString(6, "");
-						preparedStatement.setBlob(7, BLOB.empty_lob());//TODO: use APOSTOPHE + SQL_EMPTY_BLOB + APOSTOPHE (See ResultDatabase )
-						break;
-					default:
-						Log.errorMessage("EventDatabase.insertEventParameters | Unknown sort: " + sort + " of parameter '" + parameterId + "', event '" + eventIdStr + "'");
-				}
-				Log.debugMessage("EventDatabase.insertEventParameters | Inserting parameter '" + parameterId.toString() + "' of type '" + parameterTypeId.toString() + "' for event " + eventIdStr, Log.DEBUGLEVEL09);
-				preparedStatement.executeUpdate();
-				if (sort == EventParameterSort._PARAMETER_SORT_RAW) {
-					ByteArrayDatabase.saveAsBlob(eventParameters[i].getValueRaw(),
-												 connection,
-												 ObjectEntities.EVENTPARAMETER_ENTITY,
-												 EventWrapper.LINK_COLUMN_EVENT_PARAMETER_VALUE_RAW,
-												 StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
-				}
-			}
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			String mesg = "EventDatabase.insertEventParameters | Cannot insert parameter '" + parameterId.toString() + "' of type '" + parameterTypeId.toString() + "' for event '" + eventIdStr + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
 		}
 	}
 

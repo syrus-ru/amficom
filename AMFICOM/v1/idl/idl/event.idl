@@ -1,5 +1,5 @@
 /*
- * $Id: event.idl,v 1.10 2005/02/08 19:45:50 arseniy Exp $
+ * $Id: event.idl,v 1.11 2005/02/28 15:28:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -71,8 +71,9 @@ module corba {
 
 
 	struct EventParameter_Transferable {
-		general::corba::Identifier_Transferable id;
+		general::corba::StorableObject_Transferable header;
 		general::corba::Identifier_Transferable type_id;
+		general::corba::Identifier_Transferable event_id;
 		enum EventParameterSort {
 			PARAMETER_SORT_NUMBER,
 			PARAMETER_SORT_STRING,
