@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.6 2004/07/28 16:02:00 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.7 2004/08/12 13:35:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/07/28 16:02:00 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/12 13:35:08 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -56,7 +56,7 @@ public abstract class AnalysisEvaluationProcessor {
 		SetParameter[] arParameters = analysisManager.analyse();
 		Result analysisResult;
 		try {
-			Identifier analysisResultId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY, 10);
+			Identifier analysisResultId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE, 10);
 			analysisResult = analysis.createResult(analysisResultId,
 																						 MeasurementControlModule.iAm.getUserId(),
 																						 measurementResult.getMeasurement(),
@@ -71,7 +71,7 @@ public abstract class AnalysisEvaluationProcessor {
 		SetParameter[] erParameters = evaluationManager.evaluate();
 		Result evaluationResult;
 		try {
-			Identifier evaluationResultId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY, 10);
+			Identifier evaluationResultId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE, 10);
 			evaluationResult = evaluation.createResult(evaluationResultId,
 																								 MeasurementControlModule.iAm.getUserId(),
 																								 measurementResult.getMeasurement(),

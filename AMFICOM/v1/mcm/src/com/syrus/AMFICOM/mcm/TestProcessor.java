@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.13 2004/07/30 14:51:25 bob Exp $
+ * $Id: TestProcessor.java,v 1.14 2004/08/12 13:35:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,8 @@ import java.util.Map;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Result;
@@ -25,8 +27,8 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/07/30 14:51:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2004/08/12 13:35:08 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -46,8 +48,9 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.running = true;
 		
 		this.measurementResultQueue = Collections.synchronizedMap(new HashMap());
-		
-		Identifier kisId = this.test.getKIS().getId();
+
+		MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(this.test.getMonitoredElement().getMeasurementPortId(), true);
+		Identifier kisId = mp.getKISId();
 		this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);
 		if (this.transceiver == null) {
 			Log.errorMessage("Cannot find transceiver for kis '" + kisId.toString() + "'");

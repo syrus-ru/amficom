@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.11 2004/07/30 13:36:45 bob Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.12 2004/08/12 13:35:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/07/30 13:36:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2004/08/12 13:35:08 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -113,7 +113,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 			if (nextTimeStamp != null) {
 				if (nextTimeStamp.getTime() <= System.currentTimeMillis()) {
 					try {
-						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY, 10);
+						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
 						super.clearFalls();
 					}
 					catch (IllegalObjectEntityException ioee) {

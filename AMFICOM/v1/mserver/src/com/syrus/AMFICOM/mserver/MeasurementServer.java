@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.7 2004/08/11 14:49:34 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.8 2004/08/12 13:35:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/11 14:49:34 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/12 13:35:21 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -102,8 +102,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static void activateCORBAServer() {
 		try {
 			corbaServer = new CORBAServer();
-			//corbaServer.activateServant(new MServerImplementation(), iAm.getId().toString());
-			corbaServer.activateServant(new MServerImplementation(), "server_1");
+			corbaServer.activateServant(new MServerImplementation(), iAm.getId().toString());
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
