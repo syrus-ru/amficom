@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.62 2005/02/11 11:55:22 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.63 2005/02/11 16:31:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/02/11 11:55:22 $
+ * @version $Revision: 1.63 $, $Date: 2005/02/11 16:31:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -329,7 +330,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		this.insertParameterTypes(analysisType);
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for(Iterator it = storableObjects.iterator(); it.hasNext();) {
 			AnalysisType analysisType = this.fromStorableObject((StorableObject)it.next());
@@ -438,7 +439,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {		
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -512,7 +513,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
 			list = this.retrieveByIdsOneQuery(null, condition);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.60 2005/02/11 11:55:22 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.61 2005/02/11 16:31:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/02/11 11:55:22 $
+ * @version $Revision: 1.61 $, $Date: 2005/02/11 16:31:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -246,7 +247,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		this.insertEntity(measurement);
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}
 
@@ -266,7 +267,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		}
 	}	
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case Measurement.UPDATE_STATUS:
@@ -325,7 +326,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		}
 	}	
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 		return this.retrieveByIdsOneQuery(ids, condition);	

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.66 2005/02/11 11:55:22 bob Exp $
+ * $Id: TestDatabase.java,v 1.67 2005/02/11 16:31:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -50,7 +51,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/02/11 11:55:22 $
+ * @version $Revision: 1.67 $, $Date: 2005/02/11 16:31:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -556,12 +557,12 @@ public class TestDatabase extends StorableObjectDatabase {
 		
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 		
 		if (storableObjects.size() == 1){
-			Test test = (Test)storableObjects.get(0);
+			Test test = (Test)storableObjects.iterator().next();
 			insertEntity(test);
 			insertMeasurementSetupTestLinks(test);
 			return;
@@ -638,7 +639,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 //			case Test.UPDATE_STATUS:
@@ -790,7 +791,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
 			list = this.retrieveByIdsOneQuery(null, condition);

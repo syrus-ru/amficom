@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.66 2005/02/11 13:02:21 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.67 2005/02/11 16:31:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/02/11 13:02:21 $
+ * @version $Revision: 1.67 $, $Date: 2005/02/11 16:31:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -155,15 +155,15 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
+	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(List ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+	public static Collection getStorableObjectsByConditionButIds(Collection ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
@@ -213,8 +213,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
-		List storableObjects;
+	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
+		Collection storableObjects;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 				storableObjects = mObjectLoader.loadMeasurementTypes(ids);
@@ -259,122 +259,122 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return storableObjects;
 	}
 
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids)
+	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException, CommunicationException {
-		List loadedList = null;
+		Collection loadedCollection = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				loadedList = mObjectLoader.loadMeasurementTypesButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadMeasurementTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				loadedList = mObjectLoader.loadAnalysisTypesButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadAnalysisTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				loadedList = mObjectLoader.loadEvaluationTypesButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadEvaluationTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.SET_ENTITY_CODE:
-				loadedList = mObjectLoader.loadSetsButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadSetsButIds(condition, ids);
 				break;
 			case ObjectEntities.MODELING_ENTITY_CODE:
-				loadedList = mObjectLoader.loadModelingsButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadModelingsButIds(condition, ids);
 				break;						
 			case ObjectEntities.MS_ENTITY_CODE:
-				loadedList = mObjectLoader.loadMeasurementSetupsButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadMeasurementSetupsButIds(condition, ids);
 				break;
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				loadedList = mObjectLoader.loadAnalysesButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadAnalysesButIds(condition, ids);
 				break;
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				loadedList = mObjectLoader.loadEvaluationsButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadEvaluationsButIds(condition, ids);
 				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				loadedList = mObjectLoader.loadMeasurementsButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadMeasurementsButIds(condition, ids);
 				break;
 			case ObjectEntities.TEST_ENTITY_CODE:
-				loadedList = mObjectLoader.loadTestsButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadTestsButIds(condition, ids);
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				loadedList = mObjectLoader.loadResultsButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadResultsButIds(condition, ids);
 				break;
 			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-				loadedList = mObjectLoader.loadTemporalPatternsButIds(condition, ids);
+				loadedCollection = mObjectLoader.loadTemporalPatternsButIds(condition, ids);
 				break;
 			default:
 				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
-				loadedList = null;
+				loadedCollection = null;
 		}
-		return loadedList;
+		return loadedCollection;
 	}
 
-	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+	protected void saveStorableObjects(short code, Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);			
 
 			switch (code) {
 				case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveMeasurementType((MeasurementType)list.get(0), force);
+						mObjectLoader.saveMeasurementType((MeasurementType)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveMeasurementTypes(list, force);
 					break;
 				case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveAnalysisType((AnalysisType)list.get(0), force);
+						mObjectLoader.saveAnalysisType((AnalysisType)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveAnalysisTypes(list, force);
 					break;
 				case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveEvaluationType((EvaluationType)list.get(0), force);
+						mObjectLoader.saveEvaluationType((EvaluationType)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveEvaluationTypes(list, force);
 					break;
 				case ObjectEntities.SET_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveSet((Set)list.get(0), force);
+						mObjectLoader.saveSet((Set)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveSets(list, force);
 					break;
 				case ObjectEntities.MS_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveMeasurementSetup((MeasurementSetup)list.get(0), force);
+						mObjectLoader.saveMeasurementSetup((MeasurementSetup)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveMeasurementSetups(list, force);
 					break;
 				case ObjectEntities.ANALYSIS_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveAnalysis((Analysis)list.get(0), force);
+						mObjectLoader.saveAnalysis((Analysis)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveAnalyses(list, force);
 					break;
 				case ObjectEntities.EVALUATION_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveEvaluation((Evaluation)list.get(0), force);
+						mObjectLoader.saveEvaluation((Evaluation)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveEvaluations(list, force);
 					break;
 				case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveMeasurement((Measurement)list.get(0), force);
+						mObjectLoader.saveMeasurement((Measurement)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveMeasurements(list, force);
 					break;
 				case ObjectEntities.TEST_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveTest((Test)list.get(0), force);
+						mObjectLoader.saveTest((Test)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveTests(list, force);
 					break;
 				case ObjectEntities.RESULT_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveResult((Result)list.get(0), force);
+						mObjectLoader.saveResult((Result)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveResults(list, force);
 					break;
 				case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveTemporalPattern((TemporalPattern)list.get(0), force);
+						mObjectLoader.saveTemporalPattern((TemporalPattern)list.iterator().next(), force);
 					else 
 						mObjectLoader.saveTemporalPatterns(list, force);
 					break;
@@ -405,7 +405,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		instance.deleteImpl(objects);
 	}
 
@@ -423,7 +423,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected void deleteStorableObjects(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	protected void deleteStorableObjects(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		try {
 			mObjectLoader.delete(objects);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.4 2005/02/11 16:18:49 bob Exp $
+ * $Id: TypicalConditionImpl.java,v 1.5 2005/02/11 16:31:48 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -20,7 +19,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/11 16:18:49 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/11 16:31:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.41 2005/02/11 11:55:22 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.42 2005/02/11 16:31:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/02/11 11:55:22 $
+ * @version $Revision: 1.42 $, $Date: 2005/02/11 16:31:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -155,7 +156,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		this.insertEntity(analysis);
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}
 
@@ -172,7 +173,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -185,7 +186,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, conditions);
 		return this.retrieveByIdsOneQuery(ids, conditions);	

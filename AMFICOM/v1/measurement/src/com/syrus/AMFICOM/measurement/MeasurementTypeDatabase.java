@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.65 2005/02/11 11:55:22 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.66 2005/02/11 16:31:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/02/11 11:55:22 $
+ * @version $Revision: 1.66 $, $Date: 2005/02/11 16:31:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -451,7 +452,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			MeasurementType measurementType = this.fromStorableObject((StorableObject)it.next());
@@ -503,8 +504,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	private void updatePrepareStatementValues(PreparedStatement preparedStatement, MeasurementType measurementType) throws SQLException {
-		List inParTyps = measurementType.getInParameterTypes();
-		List outParTyps = measurementType.getOutParameterTypes();
+		Collection inParTyps = measurementType.getInParameterTypes();
+		Collection outParTyps = measurementType.getOutParameterTypes();
 		Identifier measurementTypeId = measurementType.getId();
 		Identifier parameterTypeId = null;
 		String parameterMode = null;
@@ -530,7 +531,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	private void updateMeasurementPortTypePrepareStatementValues(PreparedStatement preparedStatement,MeasurementType measurementType) throws SQLException{
-		List measurementPortTypes = measurementType.getMeasurementPortTypes();
+		Collection measurementPortTypes = measurementType.getMeasurementPortTypes();
 		Identifier measurementTypeId = measurementType.getId();
 		Identifier measurementPortTypeId = null;
 		
@@ -602,7 +603,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 	
-	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 		VersionCollisionException, UpdateObjectException {		
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -676,7 +677,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
 			list = this.retrieveByIdsOneQuery(null, condition);

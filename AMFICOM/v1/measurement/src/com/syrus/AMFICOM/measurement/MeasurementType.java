@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.50 2005/02/11 11:55:22 bob Exp $
+ * $Id: MeasurementType.java,v 1.51 2005/02/11 16:31:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/02/11 11:55:22 $
+ * @version $Revision: 1.51 $, $Date: 2005/02/11 16:31:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -46,9 +47,9 @@ public class MeasurementType extends ActionType {
 
 	public static final String CODENAME_REFLECTOMETRY = "reflectometry";
 
-	private List inParameterTypes;
-	private List outParameterTypes;
-	private List measurementPortTypes;
+	private Collection inParameterTypes;
+	private Collection outParameterTypes;
+	private Collection measurementPortTypes;
 
 	private StorableObjectDatabase	measurementTypeDatabase;
 
@@ -210,12 +211,12 @@ public class MeasurementType extends ActionType {
 												measurementPortTypeIds);
 	}
 
-  public List getInParameterTypes() {
-		return Collections.unmodifiableList(this.inParameterTypes);
+  public Collection getInParameterTypes() {
+		return Collections.unmodifiableCollection(this.inParameterTypes);
 	}
 
-	public List getOutParameterTypes() {
-		return Collections.unmodifiableList(this.outParameterTypes);
+	public Collection getOutParameterTypes() {
+		return Collections.unmodifiableCollection(this.outParameterTypes);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -296,8 +297,8 @@ public class MeasurementType extends ActionType {
 		super.changed = true;		
 	}
 
-	public List getMeasurementPortTypes() {
-		return Collections.unmodifiableList(this.measurementPortTypes);
+	public Collection getMeasurementPortTypes() {
+		return Collections.unmodifiableCollection(this.measurementPortTypes);
 	}
 
 	public List getDependencies() {

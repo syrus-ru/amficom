@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.2 2005/02/08 11:15:36 bob Exp $
+ * $Id: TestTestCase.java,v 1.3 2005/02/11 16:31:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -46,7 +47,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/08 11:15:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/11 16:31:48 $
  * @author $Author: bob $
  * @module tools
  */
@@ -200,7 +201,7 @@ public class TestTestCase extends AbstractMesurementTestCase {
 		CompoundCondition compoundCondition = new CompoundCondition(typicalCondition, CompoundConditionSort.AND,
 																	typicalCondition2);
 
-		List storableObjectsByCondition = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+		Collection storableObjectsByCondition = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 			compoundCondition, true);
 		for (Iterator it = storableObjectsByCondition.iterator(); it.hasNext();) {
 			Test test2 = (Test) it.next();
