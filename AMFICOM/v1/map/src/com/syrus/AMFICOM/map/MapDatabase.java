@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.1 2004/12/01 15:29:41 bob Exp $
+ * $Id: MapDatabase.java,v 1.2 2004/12/03 18:01:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,17 +32,41 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/01 15:29:41 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/03 18:01:01 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class MapDatabase extends StorableObjectDatabase {
 	 // name VARCHAR2(128),
-    public static final String COLUMN_NAME  = "name";
+    public static final String COLUMN_NAME  		= "name";
     // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
     // domain_id VARCHAR2(32),
     public static final String COLUMN_DOMAIN_ID     = "domain_id";
+    
+    // linked tables :: 
+    private static final String MAP_COLLECTOR 			= "MapCollector";
+    private static final String MAP_MARK 				= "MapMark";
+	private static final String MAP_NODE_LINK 			= "MapNodeLink";
+	private static final String MAP_PHYSICAL_LINK 		= "MapPhysicalLink";
+	private static final String MAP_SITE_NODE 			=  "MapSiteNode";
+	private static final String MAP_TOPOLOGICAL_NODE 	= "MapTopologicalNode";
+
+    // map_id VARCHAR2(32),   
+    private static final String LINK_COLUMN_MAP_ID					= "map_id";
+    // collector_id VARCHAR2(32),
+    private static final String LINK_COLUMN_COLLECTOR_ID			= "collector_id";
+    // mark_id VARCHAR2(32),
+    private static final String LINK_COLUMN_MARK_ID					= "mark_id";
+    // node_link_id VARCHAR2(32),
+    private static final String LINK_COLUMN_NODE_LINK_ID			= "node_link_id";
+    // physical_link_id VARCHAR2(32),
+    private static final String LINK_COLUMN_PHYSICAL_LINK_ID		= "physical_link_id";
+    // site_node_id VARCHAR2(32),
+    private static final String LINK_COLUMN_SITE_NODE_ID  			= "site_node_id";
+    // topological_node_id VARCHAR2(32),
+    private static final String LINK_COLUMN_TOPOLOGICAL_NODE_ID		= "topological_node_id";
+
 
 	private static String columns;
 	
