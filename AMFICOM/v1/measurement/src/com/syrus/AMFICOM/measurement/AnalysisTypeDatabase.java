@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.23 2004/08/29 11:47:05 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.24 2004/09/06 06:58:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,6 +15,8 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -30,12 +31,12 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/08/29 11:47:05 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/06 06:58:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
-public class AnalysisTypeDatabase extends StorableObjectDatabase {
+public class AnalysisTypeDatabase extends StorableObjectDatabase {	
 
 	public static final String	MODE_IN = "IN";
 	public static final String	MODE_CRITERION = "CRI";
@@ -48,20 +49,75 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
 	
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
+	
+	private String updateColumns;
+	private String updateMultiplySQLValues;
 
 	private AnalysisType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof AnalysisType)
 			return (AnalysisType) storableObject;
 		throw new IllegalDataException("AnalysisTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
+	
+	
+	protected String getEnityName() {
+		return "AnalysisType";
+	}
+	
+	
+	protected String getTableName() {
+		return ObjectEntities.ANALYSISTYPE_ENTITY;
+	}	
+	
+	protected String getUpdateColumns() {
+		if (this.updateColumns == null){
+			this.updateColumns = COLUMN_ID + COMMA 
+			+ COLUMN_CREATED + COMMA 
+			+ COLUMN_MODIFIED + COMMA 
+			+ COLUMN_CREATOR_ID + COMMA 
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_CODENAME + COMMA 
+			+ COLUMN_DESCRIPTION;
+		}
+		return this.updateColumns;
+	}	
+
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+			this.updateMultiplySQLValues = QUESTION + COMMA 
+			+ QUESTION + COMMA 
+			+ QUESTION + COMMA 
+			+ QUESTION + COMMA 
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA 
+			+ QUESTION;
+		}
+		return this.updateMultiplySQLValues;
+	}	
+	
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
+			UpdateObjectException {
+		AnalysisType analysisType = fromStorableObject(storableObject);
+		String analysisTypeIdStr = analysisType.getId().toSQLString();
+		String sql = analysisTypeIdStr + COMMA
+		+ DatabaseDate.toUpdateSubString(analysisType.getCreated()) + COMMA
+		+ DatabaseDate.toUpdateSubString(analysisType.getModified()) + COMMA
+		+ analysisType.getCreatorId().toSQLString() + COMMA 
+		+ analysisType.getModifierId().toSQLString() + COMMA
+		+ APOSTOPHE + analysisType.getCodename() + APOSTOPHE + COMMA 
+		+ APOSTOPHE + analysisType.getDescription() + APOSTOPHE;
+		return sql;
+	}
+	
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
-		this.retrieveAnalysisType(analysisType);
+		super.retrieveEntity(analysisType);
 		this.retrieveParameterTypes(analysisType);
 	}
 	
-	private String retrieveAnalysisTypeQuery(String condition){
+	protected String retrieveQuery(final String condition){
 		return SQL_SELECT
 		+ COLUMN_ID + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
@@ -75,9 +131,9 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 	}
 	
-	private AnalysisType updateAnalysisTypeFromResultSet(AnalysisType analysisType, ResultSet resultSet) throws SQLException{
-		AnalysisType analysisType1 = analysisType;
-		if (analysisType == null){
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException{
+		AnalysisType analysisType1 = (AnalysisType) storableObject;
+		if (storableObject == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
@@ -101,39 +157,6 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 												 resultSet.getString(COLUMN_CODENAME),
 												 resultSet.getString(COLUMN_DESCRIPTION));
 		return analysisType1;
-	}
-
-	private void retrieveAnalysisType(AnalysisType analysisType) throws ObjectNotFoundException, RetrieveObjectException {
-		String analysisTypeIdStr = analysisType.getId().toSQLString();
-		String sql = retrieveAnalysisTypeQuery(COLUMN_ID + EQUALS + analysisTypeIdStr);
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("AnalysisTypeDatabase.retrieveAnalysisType | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
-				updateAnalysisTypeFromResultSet(analysisType, resultSet);
-			else
-				throw new ObjectNotFoundException("No such analysis type: " + analysisTypeIdStr);
-		}
-		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveAnalysisType | Cannot retrieve analysis type '" + analysisTypeIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
 	}
 
 	private void retrieveParameterTypes(AnalysisType analysisType) throws RetrieveObjectException {	
@@ -218,7 +241,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		try {
-			this.insertAnalysisType(analysisType);
+			this.insertEntity(analysisType);
 			this.insertParameterTypes(analysisType);
 		}
 		catch (CreateObjectException e) {
@@ -239,46 +262,15 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			Log.errorException(sqle);
 		}
 	}
+	
+	
+	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+		insertEntities(storableObjects);
+		for(Iterator it=storableObjects.iterator();it.hasNext();){
+			AnalysisType analysisType = fromStorableObject((StorableObject)it.next());
+			insertParameterTypes(analysisType);
+		}
 
-	private void insertAnalysisType(AnalysisType analysisType) throws CreateObjectException {
-		String analysisTypeIdStr = analysisType.getId().toSQLString();
-		String sql = SQL_INSERT_INTO 
-			+ ObjectEntities.ANALYSISTYPE_ENTITY + OPEN_BRACKET 
-			+ COLUMN_ID + COMMA 
-			+ COLUMN_CREATED + COMMA 
-			+ COLUMN_MODIFIED + COMMA 
-			+ COLUMN_CREATOR_ID + COMMA 
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA 
-			+ COLUMN_DESCRIPTION
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET			
-			+ analysisTypeIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(analysisType.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(analysisType.getModified()) + COMMA
-			+ analysisType.getCreatorId().toSQLString() + COMMA 
-			+ analysisType.getModifierId().toSQLString() + COMMA
-			+ APOSTOPHE + analysisType.getCodename() + APOSTOPHE + COMMA 
-			+ APOSTOPHE + analysisType.getDescription() + APOSTOPHE
-			+ CLOSE_BRACKET;
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("AnalysisTypeDatabase.insertAnalysisType | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-		}
-		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.insertAnalysisType | Cannot insert analysis type '" + analysisTypeIdStr + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null) statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
 	}
 
 	private void insertParameterTypes(AnalysisType analysisType) throws CreateObjectException {
@@ -387,8 +379,16 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:
+				updateEntity(analysisType);
 				return;
 		}
+	}
+	
+	
+	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+			UpdateObjectException {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
 	}
 
 	public void delete(AnalysisType analysisType) {
@@ -420,164 +420,59 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY
-				+ SQL_WHERE + COLUMN_CODENAME + EQUALS + APOSTOPHE + codename + APOSTOPHE;
-		Statement statement = null;
-		ResultSet resultSet = null;
+		
+		List list = null;
+		
 		try {
-			statement = connection.createStatement();
-			Log.debugMessage("AnalysisTypeDatabase.retrieveForCodename | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
-				return new AnalysisType(new Identifier(resultSet.getString(COLUMN_ID)));
-			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
+			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + codename + APOSTOPHE);
+		}  catch (IllegalDataException ide) {				
+			throw new RetrieveObjectException(ide);
 		}
-		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveForCodename | Cannot retrieve analysis type with codename: '" + codename + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
+		
+		if ((list == null) || (list.isEmpty()))
+				throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
+		
+		return (AnalysisType) list.get(0);
+		
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {
-		return retriveByIdsOneQuery(null);
+		try{
+			return retrieveByIds(null, null);
+		}catch(IllegalDataException ide){
+			throw new RetrieveObjectException(ide);
+		}
 	}
 	
-	public List retrieveByIds(List ids) throws RetrieveObjectException {
+	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
+		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null);
-		return retriveByIdsOneQuery(ids);	
-		//return retriveByIdsPreparedStatement(ids);
-	}
-	
-	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			String condition = null;
-			if (ids!=null){
-				StringBuffer buffer = new StringBuffer(COLUMN_ID);
-				int idsLength = ids.size();
-				if (idsLength == 1){
-					buffer.append(EQUALS);
-					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-				} else{
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					
-					int i = 1;
-					for(Iterator it=ids.iterator();it.hasNext();i++){
-						Identifier id = (Identifier)it.next();
-						buffer.append(id.toSQLString());
-						if (i < idsLength)
-							buffer.append(COMMA);
-					}
-					
-					buffer.append(CLOSE_BRACKET);
-					condition = buffer.toString();
-				}
-			}
-			sql = retrieveAnalysisTypeQuery(condition);
+			list = retriveByIdsOneQuery(null, conditions);
+		else list = retriveByIdsOneQuery(ids, conditions);
+		
+		for(Iterator it=list.iterator();it.hasNext();){
+			AnalysisType analysisType = (AnalysisType)it.next();
+			retrieveParameterTypes(analysisType);
 		}
 		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("AnalysisTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				result.add(updateAnalysisTypeFromResultSet(null, resultSet));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return result;
-	}
+		return list;		
+	}	
 	
-	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				return retriveByIdsOneQuery(ids);
-			}
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			buffer.append(EQUALS);							
-			buffer.append(QUESTION);
-			
-			sql =retrieveAnalysisTypeQuery(buffer.toString());
-		}
-			
-		PreparedStatement stmt = null;
-		ResultSet resultSet = null;
-		try {
-			stmt = connection.prepareStatement(sql.toString());
-			for(Iterator it = ids.iterator();it.hasNext();){
-				Identifier id = (Identifier)it.next(); 
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				String idStr = id.getIdentifierString();
-				stmt.setString(1, idStr);
-				resultSet = stmt.executeQuery();
-				if (resultSet.next()){
-					result.add(updateAnalysisTypeFromResultSet(null, resultSet));
-				} else{
-					Log.errorMessage("AnalysisTypeDatabase.retriveByIdsPreparedStatement | No such analysis type: " + idStr);									
-				}
-				
-			}
-		}catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve analysis type " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (stmt != null)
-					stmt.close();
-				stmt = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}			
-		
-		return result;
-	}
 	
+	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+			throws IllegalDataException, UpdateObjectException {
+		AnalysisType analysisType = fromStorableObject(storableObject);
+		try {
+			preparedStatement.setString(1, analysisType.getId().getCode());
+			preparedStatement.setTimestamp(2, new Timestamp(analysisType.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(analysisType.getModified().getTime()));
+			preparedStatement.setString(4, analysisType.getCreatorId().getCode());
+			preparedStatement.setString(5, analysisType.getModifierId().getCode());
+			preparedStatement.setString(6, analysisType.getCodename());
+			preparedStatement.setString(7, analysisType.getDescription());
+			preparedStatement.setString(8, analysisType.getId().getCode());
+		} catch (SQLException sqle) {
+			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+		}
+	}
 }
