@@ -68,7 +68,8 @@ public class LangModel {
 		return vec;
 	}
 
-	public static String getString(String keyName) {
+	public static String getString(String keyName)
+	{
 		//System.out.println("keyName:" + keyName);
 		keyName = keyName.replaceAll(" ", "_");
 		String string = null;

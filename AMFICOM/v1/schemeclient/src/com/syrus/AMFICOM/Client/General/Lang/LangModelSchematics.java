@@ -4,10 +4,13 @@ import java.text.DateFormatSymbols;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
+import java.util.MissingResourceException;
 
-public class LangModelSchematics extends LangModel
+public class LangModelSchematics
 {
 	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.schematics";
+	private static final ResourceBundle	RESOURCE_BUNDLE		= ResourceBundle
+																	.getBundle(BUNDLE_NAME);
 
 	static public Locale locale;
 	static public String language;
@@ -21,8 +24,36 @@ public class LangModelSchematics extends LangModel
 		symbols = new DateFormatSymbols(locale);
 	}
 
-	protected static String getBundleName()
+	public static String getString(String keyName)
 	{
-		return BUNDLE_NAME;
+		//System.out.println("keyName:" + keyName);
+		keyName = keyName.replaceAll(" ", "_");
+		String string = null;
+		try
+		{
+			string = RESOURCE_BUNDLE.getString(keyName);
+		}
+		catch (MissingResourceException e)
+		{
+			try
+			{
+				string = RESOURCE_BUNDLE.getString(keyName + "Text");
+				try
+				{
+					throw new Exception("key '"
+											  + keyName
+											  + "' "
+											  + "not found");
+				}
+				catch (Exception exc)
+				{
+					exc.printStackTrace();
+				}
+			}
+			catch (Exception exc)
+			{
+			}
+		}
+		return string;
 	}
 }
