@@ -1,8 +1,8 @@
 include Makefile.inc
 
-.PHONY:	clean common analyse fit An2 JNI BreakL head
+.PHONY:	clean common analyse fit an2 JNI BreakL head
 
-$(OUT):	common analyse fit An2 JNI BreakL
+$(OUT):	common analyse fit an2 JNI BreakL
 	$(LD) $(LDFLAGS) \
 	$(COMMON_DIR)/*.$(OBJ_EXT) \
 	$(ANALYSE_DIR)/*.$(OBJ_EXT) \
@@ -22,7 +22,7 @@ fit:
 	make -C ./fit
 
 an2:
-	make -C ./An2
+	make -C ./an2
 
 JNI:
 	make -C ./JNI
@@ -34,7 +34,7 @@ clean:
 	make -C common clean
 	make -C analyse clean
 	make -C fit clean
-	make -C An2 clean
+	make -C an2 clean
 	make -C JNI clean
 	make -C BreakL clean
 	rm -f dadara.dll dadara.exp dadara.lib 
