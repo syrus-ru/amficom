@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.21 2004/12/15 14:09:13 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.22 2005/03/25 22:21:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/12/15 14:09:13 $
+ * @version $Revision: 1.22 $, $Date: 2005/03/25 22:21:50 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -30,20 +30,23 @@ public class OnetimeTestProcessor extends TestProcessor {
 
 	public OnetimeTestProcessor(Test test) {
 		super(test);
+		super.lastMeasurementAcquisition = (super.numberOfScheduledMeasurements > 0);
+
 		this.startTime = test.getStartTime();
-		super.lastMeasurementAcquisition = (this.startTime.getTime() < System.currentTimeMillis());
 		Log.debugMessage("Set lastMeasurementAcquisition: " + this.lastMeasurementAcquisition + "; startTime: " + this.startTime + ", current: " + (new Date(System.currentTimeMillis())), Log.DEBUGLEVEL08);
 	}
 
 	public void run() {
-		Measurement measurement = null;
+		Measurement measurement;
+		long currentMeasurementStartTime = this.startTime.getTime();
 		while (super.running) {
-			long time = this.startTime.getTime();
-			if (! super.lastMeasurementAcquisition) {				
-				if ( time <= System.currentTimeMillis()) {
+			if (!super.lastMeasurementAcquisition) {
+				if (this.startTime.getTime() <= System.currentTimeMillis()) {
 
+					measurement = null;
 					try {
 						measurement = super.test.createMeasurement(MeasurementControlModule.iAm.getUserId(), this.startTime);
+//						currentMeasurementStartTime = this.startTime.getTime();
 						super.clearFalls();
 					}
 					catch (CreateObjectException coe) {
@@ -61,19 +64,21 @@ public class OnetimeTestProcessor extends TestProcessor {
 						super.lastMeasurementAcquisition = true;
 					}
 
-				}	//if (this.startTime.getTime() <= System.currentTimeMillis())
-			}	//if (! super.lastMeasurementAcquisition)
+				}
+			}
 
 			this.processMeasurementResult();
 			Log.debugMessage("numberOfReceivedMResults: " + super.numberOfReceivedMResults 
-							   + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
-							   + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
+				   + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
+				   + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
 			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && this.lastMeasurementAcquisition)
 				this.complete();
-			else if (super.lastMeasurementAcquisition && (time + super.forgetFrame < System.currentTimeMillis())){
-				Log.debugMessage("Past " + (super.forgetFrame/1000) + " sec since last measurement,"
-								 + " forget acquire results for '" + super.test.getId().getIdentifierString() + "'", Log.DEBUGLEVEL03);
-				this.abort();
+			else {
+				if (System.currentTimeMillis() - currentMeasurementStartTime > super.forgetFrame) {
+					Log.debugMessage("Passed " + super.forgetFrame / 1000 + " sec from last measurement creation. Aborting test '"
+							+ super.test.getId() + "'", Log.DEBUGLEVEL03);
+					this.abort();
+				}
 			}
 
 			try {
@@ -82,6 +87,7 @@ public class OnetimeTestProcessor extends TestProcessor {
 			catch (InterruptedException ie) {
 				Log.errorException(ie);
 			}
+
 		}	//while
 	}
 
