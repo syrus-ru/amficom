@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.11 2004/09/15 11:58:19 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.12 2004/09/16 12:54:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,17 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Hashtable;
+
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -26,7 +31,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/09/15 11:58:19 $
+ * @version $Revision: 1.12 $, $Date: 2004/09/16 12:54:38 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -172,6 +177,147 @@ public class MeasurementStorableObjectPool {
 			}
 		}
 		
+		return list;
+	}
+
+	public static List getStorableObjectsByDomain(short entityCode, Domain domain) throws DatabaseException, CommunicationException {
+		List list = null;
+		/**
+		 * TODO method isn't complete
+		 */
+		LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(entityCode));
+		if (objectPool != null){
+			list = new LinkedList();
+			for (Iterator it = objectPool.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();				
+				if (domain != null){
+					{
+						/**
+						 * TODO check for entites
+						 */
+						switch(entityCode){
+							case ObjectEntities.SET_ENTITY_CODE:
+								Set set = (Set)storableObject;
+								{
+									List meList = set.getMonitoredElementIds();
+									if (meList != null){
+										for(Iterator iter = meList.iterator();iter.hasNext();){
+											Identifier id = (Identifier)iter.next();
+											MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(id, true);
+											if (me.getDomainId().equals(domain)){
+												// here we can simple add set to list, 
+												// but must put element to start of LRU 
+												Object obj = objectPool.get(set.getId());
+												list.add(obj);
+												break;
+											}
+										}
+									} else 
+										list.add(set);
+								}						
+								break;
+							case ObjectEntities.MS_ENTITY_CODE:
+								MeasurementSetup measurementSetup = (MeasurementSetup)storableObject;
+								{
+									List meList = measurementSetup.getMonitoredElementIds();
+									if (meList != null){
+										for(Iterator iter = meList.iterator();iter.hasNext();){
+											Identifier id = (Identifier)iter.next();
+											MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(id, true);
+											if (me.getDomainId().equals(domain)){
+												// here we can simple add measurementSetup to list, 
+												// but must put element to start of LRU 
+												Object obj = objectPool.get(measurementSetup.getId());
+												list.add(obj);
+												break;
+											}
+										}
+									} else 
+										list.add(measurementSetup);
+								}
+								break;
+							case ObjectEntities.ANALYSIS_ENTITY_CODE:
+								Analysis analysis = (Analysis)storableObject;
+								{
+									MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(analysis.getMonitoredElementId(), true);
+									if (me.getDomainId().equals(domain)){
+										// here we can simple add analysis to list, 
+										// but must put element to start of LRU 
+										Object obj = objectPool.get(analysis.getId());
+										list.add(obj);
+									}
+								}							
+								break;
+							case ObjectEntities.EVALUATION_ENTITY_CODE:
+								Evaluation evaluation = (Evaluation)storableObject;
+								{
+									MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(evaluation.getMonitoredElementId(), true);
+									if (me.getDomainId().equals(domain)){
+										// here we can simple add evaluation to list, 
+										// but must put element to start of LRU 
+										Object obj = objectPool.get(evaluation.getId());
+										list.add(obj);
+									}
+								}
+								break;
+							case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+								Measurement measurement = (Measurement)storableObject;
+								{
+									MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(measurement.getMonitoredElementId(), true);
+									if (me.getDomainId().equals(domain)){
+										// here we can simple add measurement to list, 
+										// but must put element to start of LRU 
+										Object obj = objectPool.get(measurement.getId());
+										list.add(obj);
+									}
+								}
+								break;
+							case ObjectEntities.TEST_ENTITY_CODE:
+								Test test = (Test)storableObject;
+								{
+									MonitoredElement me = test.getMonitoredElement();
+									if (me.getDomainId().equals(domain)){
+										// here we can simple add test to list, 
+										// but must put element to start of LRU 
+										Object obj = objectPool.get(test.getId());
+										list.add(obj);
+									}
+								}
+								break;
+							case ObjectEntities.RESULT_ENTITY_CODE:
+								Result result = (Result) storableObject;								
+								Measurement measurement2 = result.getMeasurement();
+								{
+									MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(measurement2.getMonitoredElementId(), true);
+									if (me.getDomainId().equals(domain)){
+										// here we can simple add result to list, 
+										// but must put element to start of LRU 
+										Object obj = objectPool.get(result.getId());
+										list.add(obj);
+									}
+								}							
+								break;
+							default: 
+								list.add(storableObject);
+								break;
+								
+						}
+					} 
+				}
+				else {
+					list.add(storableObject);
+				}
+				
+			}
+		}
+		return list;
+	}
+	
+	public static List getTestsByTimeRange(Domain domain, Date start, Date end){
+		List list = null;
+		/**
+		 * TODO method isn't complete
+		 */
 		return list;
 	}
 
