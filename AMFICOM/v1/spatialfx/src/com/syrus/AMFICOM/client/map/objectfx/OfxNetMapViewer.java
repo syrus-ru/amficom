@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.4 2005/02/24 08:36:50 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.5 2005/02/24 13:46:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,8 +12,9 @@
 package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
 import com.ofx.component.swing.JMapViewer;
-import com.ofx.mapViewer.SxMapLayerException;
+import com.ofx.mapViewer.SxMapLayerInterface;
 import com.ofx.mapViewer.SxMapViewer;
+import com.ofx.mapViewer.SxMarkerLayer;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
@@ -45,7 +46,7 @@ import javax.swing.ToolTipManager;
 
 /**
  * 
- * @version $Revision: 1.4 $, $Date: 2005/02/24 08:36:50 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/24 13:46:09 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -108,6 +109,9 @@ public class OfxNetMapViewer extends NetMapViewer
 		{
 			this.logicalNetLayer = new OfxLogicalNetLayer(this);
 
+			this.logicalNetLayer.setCenter(MapPropertiesManager.getCenter());
+			this.logicalNetLayer.setScale(MapPropertiesManager.getZoom());
+
 			this.dtl = new MapDropTargetListener(this.logicalNetLayer);
 			this.dropTarget = new DropTarget( jMapViewer.getMapCanvas(), this.dtl);
 			this.dropTarget.setActive(true);
@@ -117,8 +121,8 @@ public class OfxNetMapViewer extends NetMapViewer
 			jMapViewer.addMouseMotionListener(this.mttp.toolTippedPanelListener);
 
 			this.mka = new MapKeyAdapter(this.logicalNetLayer);
-			getVisualComponent().addKeyListener(this.mka);
-			getVisualComponent().grabFocus();
+			this.visualComponent.addKeyListener(this.mka);
+			this.visualComponent.grabFocus();
 
 			this.ttm = ToolTipManager.sharedInstance();
 			this.ttm.registerComponent(this.mttp);
@@ -126,6 +130,23 @@ public class OfxNetMapViewer extends NetMapViewer
 			SxMapViewer anSxMapViewer = jMapViewer.getSxMapViewer();
 	
 			anSxMapViewer.addLayer( "Network layer", this.logicalNetLayer.spatialLayer);
+
+			try 
+			{
+				SxMarkerLayer markerLayer = (SxMarkerLayer) 
+						anSxMapViewer.getLayer(SxMapLayerInterface.MARKER);
+				markerLayer.listenForMapEvents( false );
+				markerLayer.setEnabled(false);
+			} 
+			catch (Exception ex) 
+			{
+					ex.printStackTrace();
+			} 
+			
+			anSxMapViewer.removeNamedLayer("OFX LOGO");
+			anSxMapViewer.removeNamedLayer("OFX COPYRIGHT");
+
+			this.logicalNetLayer.repaint(true);
 		}
 		catch(Exception e)
 		{

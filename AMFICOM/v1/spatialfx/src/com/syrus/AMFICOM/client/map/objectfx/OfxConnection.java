@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.5 2005/02/22 17:54:16 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.6 2005/02/24 13:46:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,23 +9,18 @@
 package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
 import com.ofx.base.SxEnvironment;
-import com.ofx.base.SxProperties;
-
 import com.ofx.component.swing.JMapViewer;
-import com.ofx.mapViewer.SxMapLayerInterface;
-import com.ofx.mapViewer.SxMapViewer;
-import com.ofx.mapViewer.SxMarkerLayer;
+
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Реализация соединения с хранилищем данных в формате SpatialFX.
- * @version $Revision: 1.5 $, $Date: 2005/02/22 17:54:16 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/24 13:46:09 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -178,31 +173,13 @@ public class OfxConnection extends MapConnection
 		{
 			this.jMapViewer = new JMapViewer();
 
-			SxMapViewer anSxMapViewer = this.jMapViewer.getSxMapViewer();
-
 			if(!dbset)
 				this.jMapViewer.setDBName(sessionName);
-			this.jMapViewer.setMapName( dataBaseView);
-
-			try 
-			{
-				SxMarkerLayer markerLayer = (SxMarkerLayer) 
-						anSxMapViewer.getLayer(SxMapLayerInterface.MARKER);
-				markerLayer.listenForMapEvents( false );
-				markerLayer.setEnabled(false);
-			} 
-			catch (Exception ex) 
-			{
-					ex.printStackTrace();
-			} 
-			
-			anSxMapViewer.removeNamedLayer("OFX LOGO");
-			anSxMapViewer.removeNamedLayer("OFX COPYRIGHT");
-			anSxMapViewer.postPaintEvent();
+			this.jMapViewer.setMapName(dataBaseView);
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			throw new MapConnectionException(e);
 		}
 
 		return true;
