@@ -8,8 +8,12 @@ package com.syrus.AMFICOM.client.resource;
 
 import java.awt.Color;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
@@ -31,15 +35,17 @@ public final class TestResourceController implements ObjectResourceController {
 
 	private static TestResourceController	instance;
 
-	private String[]			keys;
+	private List			keys;
 
 	private Map				statusMap;
 	private Map				values;
 
 	private TestResourceController() {
 		// empty private constructor
-		this.keys = new String[] { KEY_ID, KEY_NAME, KEY_STATUS_COLOR, KEY_STATUS, KEY_TIME, KEY_CHANGED,
-				KEY_VALUES};
+		String[] keysArray = new String[] { KEY_ID, KEY_NAME, KEY_STATUS_COLOR, KEY_STATUS, KEY_TIME, KEY_CHANGED,
+				KEY_VALUES};	
+	
+		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
 		this.statusMap = new HashMap();
 		this.statusMap.put(new MLabel("Aborted", TestStatus._TEST_STATUS_ABORTED),
@@ -64,7 +70,7 @@ public final class TestResourceController implements ObjectResourceController {
 		return instance;
 	}
 
-	public String[] getKeys() {
+	public List getKeys() {
 		return this.keys;
 	}
 
@@ -172,7 +178,7 @@ public final class TestResourceController implements ObjectResourceController {
 	}
 
 	public String getKey(final int index) {
-		return ((index >= 0) && (index < this.keys.length)) ? this.keys[index] : null;
+		return (String)this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {

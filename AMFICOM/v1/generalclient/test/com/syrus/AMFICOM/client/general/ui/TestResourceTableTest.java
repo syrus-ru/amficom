@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.client.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client.resource.TestResource;
 import com.syrus.AMFICOM.client.resource.TestResourceController;
 
@@ -42,21 +43,12 @@ public class TestResourceTableTest {
 		List list = new LinkedList();
 		list.add(tr1);
 		list.add(tr2);
-		
-		MLabel label1 = new MLabel("Abort",TestStatus._TEST_STATUS_ABORTED);
-		MLabel label2 = new MLabel("Complete",TestStatus._TEST_STATUS_COMPLETED);
-		JComboBox cb = new JComboBox();		
-		//cb.addItem(label1);
-		//cb.addItem(label2);
-		cb.addItem("Abort");
-		cb.addItem("Complete");
 
 		ObjectResourceTable table = new ObjectResourceTable(controller, list);
 		table.setDefaultTableCellRenderer();
 		table.setRenderer(TestResourceCellRenderer.getInstance(), TestResourceController.KEY_NAME);
 
-		JPanel panel = new JPanel(new GridLayout(0, 1));
-		panel.add(cb);
+		JPanel panel = new JPanel(new GridLayout(0, 1));	
 		panel.add(table.getTableHeader());
 		panel.add(new JScrollPane(table));
 		frame.getContentPane().add(panel);

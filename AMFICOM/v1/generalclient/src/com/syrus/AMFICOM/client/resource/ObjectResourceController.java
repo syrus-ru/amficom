@@ -2,6 +2,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
@@ -17,7 +18,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
  * using a static method <code>getInstance()</code>. 
  *
  * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/25 09:09:08 $
  * @see <a href = "http://bass.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module generalclient_v1
  */
@@ -57,12 +58,13 @@ public interface ObjectResourceController {
 	
 	/**
 	 * Entity keys of controller must be unique and cannot be changed.
-	 * This implementation uses array in order to avoid creating
-	 * unnecessary entities.
+	 * This implementation uses unmodified List.
+	 * 
+	 * 
 	 *
 	 * @return array of keys
 	 */
-	String[] getKeys();
+	List getKeys();
 
 	/**
 	 * Name of the entity represented by <code>key</code>.

@@ -12,7 +12,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/25 06:07:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/25 09:09:08 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -59,7 +59,7 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 	 */
 	public ObjectResourceTableModel(ObjectResourceController controller, List objectResourceList) {
 		this.controller = controller;
-		this.ascendings = new boolean[this.controller.getKeys().length];
+		this.ascendings = new boolean[this.controller.getKeys().size()];
 		setContents(objectResourceList);
 	}
 
@@ -83,7 +83,7 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 	 * override {@link javax.swing.table.TableModel#getColumnCount()} method
 	 */
 	public int getColumnCount() {
-		return this.controller.getKeys().length;
+		return this.controller.getKeys().size();
 	}
 
 	public String getColumnName(int columnIndex) {
