@@ -84,8 +84,8 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -159,7 +159,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -203,7 +205,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 	}
 }

@@ -113,8 +113,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -164,8 +164,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -242,8 +242,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -303,8 +303,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 }

@@ -1,65 +1,22 @@
 MODULE_NAME = measurement_v1
-MODULE_VERSION = $(shell date +%Y%m%d)S
+LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-SRCDIR=./src
-CLASSDIR=./classes
 IDLDIR=../idl_v1/idl
 LIBDIR=../lib
-DBHOSTNAME=mongol
-CONNECTSTRING=mongol
 
-LIBNAME=measurement.jar
-ARCHFILE=measurement.tar.gz
+HOST=mongol
+SERVICE_NAME=mongol
 
-include ../tools/Makefile.inc
-$(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
-
-
-ORACLECLASSPATH = $(ORACLE_HOME)/jdbc/lib/classes12.jar:$(ORACLE_HOME)/sqlj/lib/translator.jar:$(ORACLE_HOME)/sqlj/lib/runtime12ee.jar
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar
-
-
-IDL2JAVA = idl2java
-IDL2JAVA_FLAGS = \
-	-C \
-	-H \
-	-no_bind \
-	-no_examples \
-	-no_tie \
-	-narrow_compliance \
-	-portable \
-	-strict \
-	-root_dir $(SRCDIR) \
-	-I$(IDLDIR)
-
-#JAVAC = javac
-JAVAC = jikes
-JIKES_FLAGS = \
-	-target 1.4.2 \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	-extdirs $(JAVA_HOME)/jre/lib/ext \
-	+E \
-	+Pmodifier-order \
-	+Predundant-modifiers \
-	+Pswitchcheck \
-	+Pnaming-convention \
-	+T=2
-JAVAC_FLAGS = \
-	-d $(CLASSDIR) \
-	-source 1.4 \
-	-g \
-	-O \
-	-deprecation
-JAVAC_FLAGS := $(JAVAC_FLAGS) $(JIKES_FLAGS)
-JAVAC_WARNOFF_FLAG=-nowarn
+JAVACFLAGS = -source 1.3
+SUNJAVACFLAGS = -target 1.2
+JIKESFLAGS = -target 1.2
 
 JPUB = $(ORACLE_HOME)/bin/jpub
 JPUB_FLAGS = \
-	-J-classpath $(ORACLECLASSPATH) \
+	-J-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
 	-user=amficom/amficom \
-	-url=jdbc:oracle:thin:@$(DBHOSTNAME):1521:$(CONNECTSTRING) \
+	-url=jdbc:oracle:thin:@$(HOST):1521:$(SERVICE_NAME) \
 	-omit_schema_names \
 	-package=com.syrus.AMFICOM.measurement.ora \
 	-dir=$(SRCDIR) \
@@ -72,14 +29,13 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
-
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
 .mach:	.corba .ora $(CLASSDIR)
-	$(JAVAC) $(JAVAC_FLAGS) \
-		-classpath $(APPCLASSPATH):$(ORACLECLASSPATH):$(CLASSDIR) \
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(AMFICOMCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterType.java \
@@ -114,19 +70,19 @@ $(LIBNAME): .mach
 .ora:	$(CLASSDIR)
 	$(JPUB) $(JPUB_FLAGS) \
 		-sql=CRONSTRINGARRAY:CronStringArray
-	$(JAVAC) $(JAVAC_FLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(ORACLECLASSPATH) \
+	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ora/*.java
 	touch $@
 	
 
 .corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVA_FLAGS) \
+	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
 		$(IDLDIR)/event.idl \
 		$(IDLDIR)/measurement.idl
-	$(JAVAC) $(JAVAC_FLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
+	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(AMFICOMCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java

@@ -96,8 +96,8 @@ public class SetDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -145,8 +145,8 @@ public class SetDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 		set.setParameters((SetParameter[])arraylist.toArray(new SetParameter[arraylist.size()]));
 	}
@@ -186,8 +186,8 @@ public class SetDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 		set.setMonitoredElementIds(arraylist);
 	}
@@ -253,8 +253,8 @@ public class SetDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -313,8 +313,8 @@ public class SetDatabase extends StorableObjectDatabase {
 				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -367,8 +367,8 @@ public class SetDatabase extends StorableObjectDatabase {
 				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -420,8 +420,8 @@ public class SetDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -454,8 +454,8 @@ public class SetDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -486,8 +486,8 @@ public class SetDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -522,9 +522,9 @@ public class SetDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch(SQLException Ex) {
-				// nothing yet.
-				}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 	}
 }

@@ -141,8 +141,8 @@ public class TestDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet ???
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -182,8 +182,8 @@ public class TestDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet ???
-				}
+				Log.errorException(sqle1);
+			}
 		}
 		test.setMeasurementSetupIds(arraylist);
 	}
@@ -247,8 +247,8 @@ public class TestDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet ???
-				}
+				Log.errorException(sqle1);
+			}
 		}
 		return arraylist;
 	}
@@ -380,8 +380,8 @@ public class TestDatabase extends StorableObjectDatabase {
 				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet ???
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -427,8 +427,8 @@ public class TestDatabase extends StorableObjectDatabase {
 				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet ???
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -476,8 +476,8 @@ public class TestDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet ???
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -509,8 +509,8 @@ public class TestDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet ???
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 }

@@ -93,7 +93,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//			nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -168,7 +168,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}

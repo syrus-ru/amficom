@@ -89,8 +89,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -145,8 +145,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 		inParTyps.trimToSize();
 		outParTyps.trimToSize();
@@ -224,7 +224,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -300,8 +300,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -335,9 +335,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 					statement.close();
 				statement = null;
 			}
-			catch(SQLException Ex) {
-//				 nothing yet.
-				}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -375,8 +375,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 }

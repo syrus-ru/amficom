@@ -95,6 +95,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -154,7 +155,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 		inParTyps.trimToSize();
@@ -236,6 +237,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -337,7 +339,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -372,7 +374,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException Ex) {
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -406,6 +409,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}

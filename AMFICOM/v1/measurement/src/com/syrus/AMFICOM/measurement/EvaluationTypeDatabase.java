@@ -92,7 +92,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -158,7 +158,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 		inParTyps.trimToSize();
@@ -242,7 +242,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -343,7 +343,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -379,8 +379,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException ex) {
-				// nothing yet.
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -419,6 +419,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}

@@ -130,8 +130,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -178,8 +178,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 		result.setParameters((SetParameter[])arraylist.toArray(new SetParameter[arraylist.size()]));
 	}
@@ -290,8 +290,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
-				}
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -353,7 +353,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 					preparedStatement.close();
 				preparedStatement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -393,9 +395,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch(SQLException Ex) {
-				// nothing yet.
-				}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 	}
 }

@@ -140,6 +140,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -178,6 +179,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -279,7 +281,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -344,7 +346,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -456,7 +458,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -506,7 +508,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 		measurementSetup.setMonitoredElementIds(arraylist);
@@ -545,7 +547,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				statement = null;
 			}
 			catch (SQLException sqle1) {
-				// nothing yet.
+				Log.errorException(sqle1);
 			}
 		}
 	}

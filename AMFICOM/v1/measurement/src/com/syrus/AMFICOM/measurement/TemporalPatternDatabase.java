@@ -76,7 +76,9 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
@@ -155,7 +157,9 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 					preparedStatement.close();
 				preparedStatement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 	}
 
