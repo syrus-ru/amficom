@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.9 2005/03/09 14:49:53 bass Exp $
+ * $Id: MapElement.java,v 1.10 2005/04/06 16:02:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.Namable;
 
 /**
  *  Интерфейс для всех элементов карты. Нужен для определения координат
@@ -20,29 +21,17 @@ import com.syrus.AMFICOM.general.Identifier;
  * 
  * 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/09 14:49:53 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/04/06 16:02:08 $
  * @module map_v1
  */
-public interface MapElement extends Characterizable
+public interface MapElement extends Characterizable, Namable
 {
 	/**
 	 * Поучить идентификатор элемента.
 	 * @return Идентификатор элемента карты.
 	 */
 	Identifier getId();
-
-	/**
-	 * Полуяить название элемента.
-	 * @return Название элемента карты.
-	 */
-	String getName();
-
-	/**
-	 * Установить название элемента.
-	 * @param name Новое название.
-	 */
-	void setName(final String name);
 
 	/**
 	 * Поулчить ссылку на топологическую схему, на которую нанесен данный элемент.
