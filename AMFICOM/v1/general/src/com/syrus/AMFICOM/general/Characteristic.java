@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.10 2005/01/31 14:07:13 bob Exp $
+ * $Id: Characteristic.java,v 1.11 2005/02/03 19:51:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/01/31 14:07:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/03 19:51:43 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -336,7 +336,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 			case ObjectEntities.LINKTYPE_ENTITY_CODE:
 				csort = CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE;
 				break;
-			case ObjectEntities.CABLE_LINKTYPE_ENTITY_CODE:
+			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
 				csort = CharacteristicSort.CHARACTERISTIC_SORT_CABLELINKTYPE;
 				break;
 			default:
