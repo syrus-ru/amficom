@@ -14,9 +14,15 @@ module corba {
 
 	struct ParameterType_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
 		wstring codename;
-		wstring name;
 		wstring description;
+
+		wstring name;
 	};
 
 	struct MeasurementType_Transferable {
@@ -25,8 +31,10 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
 		wstring codename;
 		wstring description;
+
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_types;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_types;
 	};
@@ -37,10 +45,13 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
 		wstring codename;
 		wstring description;
+
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_types;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable criteria_parameter_types;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable etalon_parameter_types;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_types;
 	};
 
@@ -50,8 +61,10 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
 		wstring codename;
 		wstring description;
+
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_types;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable threshold_parameter_types;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable etalon_parameter_types;
@@ -81,6 +94,7 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
 		SetSort sort;
 		wstring description;
 		ParameterSeq_Transferable parameters;
@@ -95,6 +109,7 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable parameter_set_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable criteria_set_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable threshold_set_id;
@@ -120,8 +135,10 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
+
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable setup_id;
 		long long start_time;
 		long long duration;
@@ -141,6 +158,7 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
 		wstring description;
 		sequence <wstring> cron_strings;
 	};
@@ -189,6 +207,7 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
     TestTemporalType temporal_type;
 		TestTimeStamps_Transferable time_stamps;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable measurement_type_id;
@@ -211,8 +230,10 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
     com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
+
     com::syrus::AMFICOM::general::corba::Identifier_Transferable criteria_set_id;
   };
 
@@ -224,10 +245,11 @@ module corba {
 	  long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
     com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
+
     com::syrus::AMFICOM::general::corba::Identifier_Transferable threshold_set_id;
-    com::syrus::AMFICOM::general::corba::Identifier_Transferable etalon_id;
   };
 
 ////////////////////// Result ///////////////////////
