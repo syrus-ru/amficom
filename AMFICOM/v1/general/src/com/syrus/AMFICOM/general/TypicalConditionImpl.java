@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.4 2005/02/11 16:18:42 bob Exp $
+ * $Id: TypicalConditionImpl.java,v 1.5 2005/03/01 16:33:43 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/11 16:18:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/03/01 16:33:43 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 class TypicalConditionImpl extends TypicalCondition {
@@ -93,7 +93,13 @@ class TypicalConditionImpl extends TypicalCondition {
 	}
 
 	public boolean isNeedMore(Collection collection) throws ApplicationException {
-		return true;
+		boolean more = true;
+
+		if (this.type == TypicalSort._TYPE_STRING && this.operation == OperationSort._OPERATION_EQUALS)
+			if (collection != null && !collection.isEmpty())
+				more = false;
+
+		return more;
 	}
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
