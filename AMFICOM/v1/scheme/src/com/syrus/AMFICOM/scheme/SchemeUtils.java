@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.6 2004/12/23 13:49:46 stas Exp $
+ * $Id: SchemeUtils.java,v 1.7 2005/02/28 14:24:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,28 +8,28 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import java.util.*;
-
 import com.syrus.AMFICOM.general.corba.Identifier;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
+import java.util.*;
 
 /**
  * Functionality will be partially moved to {@link PathElement}.
  *
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2004/12/23 13:49:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/02/28 14:24:19 $
+ * @todo Move to corba subpackage.
  * @module scheme_v1
  */
-public class SchemeUtils
-{
+public class SchemeUtils {
 	private static final char separator = ':';
 
 	private SchemeUtils() {
+		assert false;
 	}
 
 	/**
-	 * returns cableports for sertain schemeelement
+	 * returns cableports for certain schemeelement
 	 * @param se SchemeElement
 	 * @return List of SchemeCablePort
 	 */
@@ -48,7 +48,7 @@ public class SchemeUtils
 	}
 
 	/**
-	 * returns cableports for sertain protoelement
+	 * returns cableports for certain protoelement
 	 * @param proto SchemeProtoElement
 	 * @return List of SchemeCablePort
 	 */
@@ -67,7 +67,7 @@ public class SchemeUtils
 	}
 
 	/**
-	 * returns ports for sertain schemeelement
+	 * returns ports for certain schemeelement
 	 * @param se SchemeElement
 	 * @return List of SchemePort
 	 */
@@ -86,7 +86,7 @@ public class SchemeUtils
 	}
 
 	/**
-	 * returns ports for sertain protoelement
+	 * returns ports for certain protoelement
 	 * @param proto SchemeProtoElement
 	 * @return List of SchemePort
 	 */

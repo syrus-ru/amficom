@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoGroupImpl.java,v 1.9 2004/12/21 15:35:01 bass Exp $
+ * $Id: SchemeProtoGroupImpl.java,v 1.10 2005/02/28 14:24:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/12/21 15:35:01 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/28 14:24:19 $
  * @module scheme_v1
  */
 final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
@@ -27,9 +27,23 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 	}
 
 	/**
-	 * @see StorableObject#changed()
+	 * @param id
 	 */
-	public boolean changed() {
+	SchemeProtoGroupImpl(final Identifier id) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param id
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param parentSchemeProtoGroup
+	 */
+	SchemeProtoGroupImpl(final Identifier id, final long created, final long modified, final Identifier creatorId, final Identifier modifierId, final long version, final String name, final SchemeProtoGroup parentSchemeProtoGroup) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -56,7 +70,7 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 	/**
 	 * @see StorableObject#dependencies()
 	 */
-	public StorableObject[] dependencies() {
+	public Identifier[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -77,6 +91,15 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 
 	public Identifier id() {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Getter for <code>changed</code> property.
+	 *
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
+		return this.delegate.isChanged();
 	}
 
 	public long modified() {
@@ -110,6 +133,13 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see ISchemeProtoGroup#parentSchemeProtoGroup()
+	 */
+	public SchemeProtoGroup parentSchemeProtoGroup() {
+		throw new UnsupportedOperationException();
+	}
+
 	public SchemeProtoElement[] schemeProtoElements() {
 		throw new UnsupportedOperationException();
 	}
@@ -132,6 +162,33 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 	 */
 	public void schemeProtoGroups(SchemeProtoGroup[] newSchemeProtoGroups) {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param description
+	 * @param symbol
+	 * @param parentSchemeProtoGroup
+	 * @see SchemeProtoGroup#setAttributes(long, long, Identifier, Identifier, long, String, String, ImageResource_Transferable, SchemeProtoGroup)
+	 */
+	public void setAttributes(final long created, final long modified, final Identifier creatorId, final Identifier modifierId, final long version, final String name, final String description, final ImageResource_Transferable symbol, final SchemeProtoGroup parentSchemeProtoGroup) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Setter for <code>changed</code> property.
+	 *
+	 * @param storableObjectFactory
+	 * @param changed
+	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
+	 */
+	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
+		this.delegate.setChanged(storableObjectFactory, changed);
 	}
 
 	/**

@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 
@@ -414,7 +415,7 @@ class GroupSEAction extends AbstractAction
 					graph.setSchemeElement(null);
 			}
 			else
-				scheme_el = SchemeFactory.createSchemeElement();
+				scheme_el = SchemeStorableObjectFactory.createSchemeElement();
 
 			group.setSchemeElementId(scheme_el.id());
 			group.setProtoElementId(scheme_el.schemeProtoElement().id());
@@ -448,9 +449,9 @@ class GroupSEAction extends AbstractAction
 					{
 						SchemeElement sel = null;
 						if (((DeviceGroup)cells[i]).getProtoElement() != null)
-							sel = SchemeFactory.createSchemeElement(((DeviceGroup)cells[i]).getProtoElement());
+							sel = SchemeStorableObjectFactory.createSchemeElement(((DeviceGroup)cells[i]).getProtoElement());
 						else
-							sel = SchemeFactory.createSchemeElement();
+							sel = SchemeStorableObjectFactory.createSchemeElement();
 						java.util.List schemeElements = Arrays.asList(scheme_el.schemeElements());
 						if (!schemeElements.contains(sel))
 							schemeElements.add(sel);
@@ -579,7 +580,7 @@ class GroupAction extends AbstractAction
 			catch (CreateObjectException ex) {
 				ex.printStackTrace();
 			}
-			SchemeProtoElement proto = SchemeFactory.createSchemeProtoElement();
+			SchemeProtoElement proto = SchemeStorableObjectFactory.createSchemeProtoElement();
 			proto.equipmentTypeImpl(eqt);
 			try {
 				ConfigurationStorableObjectPool.putStorableObject(eqt);
@@ -856,7 +857,7 @@ class CreateTopLevelElementAction extends AbstractAction
 		else
 		{
 			Identifier user_id = new Identifier(((RISDSessionInfo)graph.aContext.getSessionInterface()).getAccessIdentifier().user_id);
-			proto = SchemeFactory.createSchemeProtoElement();
+			proto = SchemeStorableObjectFactory.createSchemeProtoElement();
 			EquipmentType eqt = null;
 			try {
 				eqt = EquipmentType.createInstance(
@@ -879,7 +880,7 @@ class CreateTopLevelElementAction extends AbstractAction
 			for (int i = 0; i < _links.length; i++)
 				links.add(_links[i].getSchemeLink());
 
-			SchemeDevice new_dev = SchemeFactory.createSchemeDevice();
+			SchemeDevice new_dev = SchemeStorableObjectFactory.createSchemeDevice();
 			List cablePorts = new ArrayList();
 			List ports = new ArrayList();
 			for (Iterator it = blockports_in.iterator(); it.hasNext();)

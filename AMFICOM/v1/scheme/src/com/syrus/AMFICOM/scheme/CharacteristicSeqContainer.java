@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicSeqContainer.java,v 1.2 2005/01/20 09:58:02 bass Exp $
+ * $Id: CharacteristicSeqContainer.java,v 1.3 2005/02/28 14:24:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,8 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/01/20 09:58:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/28 14:24:19 $
+ * @todo Move to corba subpackage.
  * @module scheme_v1
  */
 public final class CharacteristicSeqContainer {

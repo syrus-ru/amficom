@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementImpl.java,v 1.8 2004/12/21 15:35:01 bass Exp $
+ * $Id: PathElementImpl.java,v 1.9 2005/02/28 14:24:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -15,7 +15,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2004/12/21 15:35:01 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/28 14:24:18 $
  * @module scheme_v1
  */
 final class PathElementImpl extends PathElement implements Cloneable {
@@ -49,13 +49,6 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	}
 
 	/**
-	 * @see StorableObject#changed()
-	 */
-	public boolean changed() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see PathElement#cloneInstance()
 	 */
 	public PathElement cloneInstance() {
@@ -84,7 +77,7 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	/**
 	 * @see StorableObject#dependencies()
 	 */
-	public StorableObject[] dependencies() {
+	public Identifier[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -127,6 +120,13 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	 * @see Identifiable#id()
 	 */
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -199,6 +199,15 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	 * @see PathElement#sequentialNumber(int)
 	 */
 	public void sequentialNumber(int sequentialNumber) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param storableObjectFactory
+	 * @param changed
+	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
+	 */
+	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -97,7 +97,7 @@ public class GraphActions
 
 		Object obj = (userObject instanceof String) ? userObject : "";
 		DeviceCell cell = new DeviceCell(obj);
-		SchemeDevice device = SchemeFactory.createSchemeDevice();
+		SchemeDevice device = SchemeStorableObjectFactory.createSchemeDevice();
 		cell.setSchemeDeviceId(device.id());
 		try {
 			SchemeStorableObjectPool.putStorableObject(device);
@@ -180,7 +180,7 @@ public class GraphActions
 
 			cell = new DefaultLink(name);
 			GraphConstants.setRouting(map, cell.getRouting());
-			link = SchemeFactory.createSchemeLink();
+			link = SchemeStorableObjectFactory.createSchemeLink();
 			link.name(name);
 			cell.setSchemeLinkId(link.id());
 			try {
@@ -264,7 +264,7 @@ public class GraphActions
 
 			cell = new DefaultCableLink(name);
 			GraphConstants.setRouting(map, cell.getRouting());
-			link = SchemeFactory.createSchemeCableLink();
+			link = SchemeStorableObjectFactory.createSchemeCableLink();
 			cell.setSchemeCableLinkId(link.id());
 			link.name(name);
 
@@ -416,7 +416,7 @@ public class GraphActions
 
 		// Create Vertex
 		PortCell cell = new PortCell(userObject);
-		SchemePort sp = SchemeFactory.createSchemePort();
+		SchemePort sp = SchemeStorableObjectFactory.createSchemePort();
 		sp.directionType(direction);
 		sp.schemeDevice(dev.getSchemeDevice());
 		cell.setSchemePortId(sp.id());
@@ -451,7 +451,7 @@ public class GraphActions
 
 		// Create Vertex
 		CablePortCell cell = new CablePortCell(userObject);
-		SchemeCablePort scp = SchemeFactory.createSchemeCablePort();
+		SchemeCablePort scp = SchemeStorableObjectFactory.createSchemeCablePort();
 		scp.schemeDevice(dev.getSchemeDevice());
 		scp.directionType(direction);
 		cell.setSchemeCablePortId(scp.id());

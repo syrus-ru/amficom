@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThreadImpl.java,v 1.12 2005/01/20 09:58:02 bass Exp $
+ * $Id: SchemeCableThreadImpl.java,v 1.13 2005/02/28 14:24:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/01/20 09:58:02 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/28 14:24:19 $
  * @module scheme_v1
  */
 final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable {
@@ -60,13 +60,6 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#cableThreadTypeImpl(com.syrus.AMFICOM.configuration.CableThreadType)
 	 */
 	public void cableThreadTypeImpl(CableThreadType newCableThreadTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#changed()
-	 */
-	public boolean changed() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -116,7 +109,7 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	/**
 	 * @see StorableObject#dependencies()
 	 */
-	public StorableObject[] dependencies() {
+	public Identifier[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -158,6 +151,13 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
+		throw new UnsupportedOperationException();
+	}
+
 	public long modified() {
 		throw new UnsupportedOperationException();
 	}
@@ -194,6 +194,15 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableThread#schemeCablelink(com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
 	 */
 	public void schemeCablelink(SchemeCableLink newSchemeCablelink) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param storableObjectFactory
+	 * @param changed
+	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
+	 */
+	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -198,8 +198,8 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			{
 				try {
 					SchemeStorableObjectPool.delete(group.id());
-					if (group.parent() != null)
-						Arrays.asList(group.parent().schemeProtoGroups()).remove(group);
+					if (group.parentSchemeProtoGroup() != null)
+						Arrays.asList(group.parentSchemeProtoGroup().schemeProtoGroups()).remove(group);
 				dispatcher.notify(new TreeListSelectionEvent("", TreeListSelectionEvent.REFRESH_EVENT));
 				} catch (ApplicationException e) {
 					// TODO Auto-generated catch block

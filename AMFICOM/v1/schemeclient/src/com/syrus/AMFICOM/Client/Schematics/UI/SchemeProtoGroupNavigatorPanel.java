@@ -9,10 +9,11 @@ import javax.swing.border.EtchedBorder;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeFactory;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
 import oracle.jdeveloper.layout.*;
 import com.syrus.AMFICOM.general.*;
@@ -146,12 +147,15 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 		if (ret == null || ret.equals(""))
 			return;
 
-		SchemeProtoGroup new_group = SchemeFactory.createSchemeProtoGroup();
+		SchemeProtoGroup new_group = SchemeStorableObjectFactory.createSchemeProtoGroup();
 		new_group.name(ret);
 		if (selectedObject instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup parent_group = (SchemeProtoGroup)selectedObject;
-			new_group.parent(parent_group);
+			/**
+			 * @todo Set parent at creation time.
+			 */
+//			new_group.parent(parent_group);
 			Arrays.asList(parent_group.schemeProtoGroups()).add(new_group);
 		}
 
@@ -181,8 +185,8 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 				catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
-				if (group.parent() != null)
-					Arrays.asList(group.parent().schemeProtoGroups()).remove(group);
+				if (group.parentSchemeProtoGroup() != null)
+					Arrays.asList(group.parentSchemeProtoGroup().schemeProtoGroups()).remove(group);
 			}
 			else
 				return;

@@ -9,12 +9,12 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeFactory;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
 
@@ -400,7 +400,7 @@ public class CableLinkPropsPanel extends JPanel
 				for (int j = 0; j < old_num; j++)
 					links[i].schemeCableThreads()[j].cableThreadTypeImpl((CableThreadType)it.next());
 				for (int j = old_num; j < num; j++) {
-					SchemeCableThread newct = SchemeFactory.createSchemeCableThread();
+					SchemeCableThread newct = SchemeStorableObjectFactory.createSchemeCableThread();
 					CableThreadType type = (CableThreadType)it.next();
 					newct.cableThreadTypeImpl(type);
 					newct.name(String.valueOf(j));

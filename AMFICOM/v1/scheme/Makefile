@@ -1,3 +1,9 @@
+#
+# $Id: Makefile,v 1.12 2005/02/28 14:24:19 bass Exp $
+#
+# vim:set ft=make:
+#
+
 MODULE_NAME := scheme_v1
 
 LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
@@ -94,7 +100,7 @@ clean: cleanmach
 
 .PHONY:	cleanmach
 cleanmach: cleancorba
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/scheme/*.class)
+	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/scheme/*.class))
 	$(RM) .mach
 
 .PHONY: cleancorba

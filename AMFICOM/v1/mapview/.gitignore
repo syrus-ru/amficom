@@ -1,8 +1,11 @@
 .classpath
 .project
+.settings
 .corba
 docs
 .mach
+.classpath
+.project
 *.jar
 *.jpr*
 *.jpx*

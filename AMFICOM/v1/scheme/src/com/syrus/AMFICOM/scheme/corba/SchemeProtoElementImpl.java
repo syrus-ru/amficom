@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoElementImpl.java,v 1.11 2005/01/20 09:58:02 bass Exp $
+ * $Id: SchemeProtoElementImpl.java,v 1.12 2005/02/28 14:24:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/01/20 09:58:02 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/28 14:24:18 $
  * @module scheme_v1
  */
 final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneable {
@@ -35,13 +35,6 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#changed()
-	 */
-	public boolean changed() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -92,7 +85,7 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 	/**
 	 * @see StorableObject#dependencies()
 	 */
-	public StorableObject[] dependencies() {
+	public Identifier[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -151,6 +144,13 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 	}
 
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -252,6 +252,15 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCellImpl(SchemeImageResource)
 	 */
 	public void schemeCellImpl(SchemeImageResource schemeCellImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param storableObjectFactory
+	 * @param changed
+	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
+	 */
+	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
 		throw new UnsupportedOperationException();
 	}
 

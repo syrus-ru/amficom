@@ -5,7 +5,6 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeFactory;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeTabbedPane;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
@@ -16,6 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 public class PathNewCommand extends VoidCommand
@@ -39,7 +39,7 @@ public class PathNewCommand extends VoidCommand
 		SchemeGraph graph = pane.getPanel().getGraph();
 		if (graph.getScheme() == null)
 			return;
-		SchemePath path = SchemeFactory.createPath();
+		SchemePath path = SchemeStorableObjectFactory.createPath();
 		path.scheme(graph.getScheme());
 		graph.setCurrentPath(path);
 

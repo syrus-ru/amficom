@@ -98,7 +98,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 				for (Iterator it = groups.iterator(); it.hasNext(); )
 				{
 					SchemeProtoGroup group = (SchemeProtoGroup)it.next();
-					if (group.parent() == null)
+					if (group.parentSchemeProtoGroup() == null)
 					{
 						ImageIcon icon;
 						if (group.symbol() == null)

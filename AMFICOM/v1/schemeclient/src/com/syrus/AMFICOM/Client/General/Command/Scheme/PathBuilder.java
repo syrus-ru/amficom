@@ -5,7 +5,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeFactory;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
@@ -232,7 +232,7 @@ public class PathBuilder
 
 			PathElement pe = (PathElement)lit.previous();
 
-			newPE = SchemeFactory.createPathElement();
+			newPE = SchemeStorableObjectFactory.createPathElement();
 			newPE.type(Type.SCHEME_ELEMENT);
 			newPE.abstractSchemeElement(se);
 			newPE.scheme(se.scheme());
@@ -342,7 +342,7 @@ public class PathBuilder
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "У начального устройства должен быть тестовый порт\nс которого должен начинаться маршрут тестирования", "Ошибка", JOptionPane.OK_OPTION);
 				return null;
 			}
-			newPE = SchemeFactory.createPathElement();
+			newPE = SchemeStorableObjectFactory.createPathElement();
 			newPE.type(Type.SCHEME_ELEMENT);
 			newPE.abstractSchemeElement(se);
 			newPE.scheme(se.scheme());
@@ -400,7 +400,7 @@ public class PathBuilder
 		if (it.hasPrevious())
 			number = ((PathElement)it.previous()).sequentialNumber() + 1;
 
-		PathElement newPE = SchemeFactory.createPathElement();
+		PathElement newPE = SchemeStorableObjectFactory.createPathElement();
 		newPE.type(Type.SCHEME_LINK);
 		newPE.abstractSchemeElement(link);
 		newPE.scheme(link.scheme());
@@ -486,7 +486,7 @@ public class PathBuilder
 		if (it.hasPrevious())
 			number = ((PathElement)it.previous()).sequentialNumber() + 1;
 
-		PathElement newPE = SchemeFactory.createPathElement();
+		PathElement newPE = SchemeStorableObjectFactory.createPathElement();
 		newPE.type(Type.SCHEME_CABLE_LINK);
 		newPE.abstractSchemeElement(link);
 		newPE.schemeCableThread(thread);

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeOptimizeInfoImpl.java,v 1.7 2004/12/21 15:35:01 bass Exp $
+ * $Id: SchemeOptimizeInfoImpl.java,v 1.8 2005/02/28 14:24:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/12/21 15:35:01 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/28 14:24:19 $
  * @module scheme_v1
  */
 final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneable {
@@ -23,13 +23,6 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	private static final long serialVersionUID = 4121130333883609142L;
 
 	SchemeOptimizeInfoImpl() {
-	}
-
-	/**
-	 * @see StorableObject#changed()
-	 */
-	public boolean changed() {
-		throw new UnsupportedOperationException();
 	}
 	
 	public SchemeOptimizeInfo cloneInstance() {
@@ -55,7 +48,7 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	/**
 	 * @see StorableObject#dependencies()
 	 */
-	public StorableObject[] dependencies() {
+	public Identifier[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -75,6 +68,13 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	}
 
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -274,6 +274,15 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#schemeMonitoringSolution(com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution)
 	 */
 	public void schemeMonitoringSolution(SchemeMonitoringSolution newSchemeMonitoringSolution) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param storableObjectFactory
+	 * @param changed
+	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
+	 */
+	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
 		throw new UnsupportedOperationException();
 	}
 

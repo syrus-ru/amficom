@@ -26,3 +26,4 @@ SchemePath.java
 SchemePort.java
 SchemeProtoElement.java
 SchemeProtoGroup.java
+ISchemeProtoGroup.java

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeDeviceImpl.java,v 1.9 2005/01/20 09:58:02 bass Exp $
+ * $Id: SchemeDeviceImpl.java,v 1.10 2005/02/28 14:24:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/01/20 09:58:02 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/28 14:24:18 $
  * @module scheme_v1
  */
 final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
@@ -31,13 +31,6 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#changed()
-	 */
-	public boolean changed() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -87,7 +80,7 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 	/**
 	 * @see StorableObject#dependencies()
 	 */
-	public StorableObject[] dependencies() {
+	public Identifier[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -107,6 +100,13 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 	}
 
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -158,6 +158,15 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 	 * @see com.syrus.AMFICOM.scheme.corba.SchemeDevice#schemePorts(com.syrus.AMFICOM.scheme.corba.SchemePort[])
 	 */
 	public void schemePorts(SchemePort[] newSchemePorts) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param storableObjectFactory
+	 * @param changed
+	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
+	 */
+	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.5 2005/02/02 15:17:30 krupenn Exp $
+ * $Id: Marker.java,v 1.6 2005/02/28 14:26:24 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.PathDecompositor;
+import com.syrus.AMFICOM.scheme.PathDecomposer;
 
 import java.util.Date;
 import java.util.List;
@@ -50,9 +50,9 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/02/02 15:17:30 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/28 14:26:24 $
  * @module mapview_v1
- * @author $Author: krupenn $
+ * @author $Author: bass $
  */
 
 public class Marker extends AbstractNode
@@ -86,7 +86,7 @@ public class Marker extends AbstractNode
 	 * ƒекомпозитор пути, позвол€ющий маркеру передвигатьс€ вдоль 
 	 * измерительного пути.
 	 */
-	protected PathDecompositor spd = null;
+	protected PathDecomposer spd = null;
 	/**
 	 * “екущий кабель, на котором находитс€ маркер.
 	 */
@@ -234,7 +234,7 @@ public class Marker extends AbstractNode
 		this.measurementPath = path;
 		this.startNode = this.measurementPath.getStartNode();
 		
-		this.spd = new PathDecompositor(this.measurementPath.getSchemePath());
+		this.spd = new PathDecomposer(this.measurementPath.getSchemePath());
 	}
 
 	/**
@@ -387,12 +387,12 @@ public class Marker extends AbstractNode
 		return this.descriptor;
 	}
 
-	public PathDecompositor getPathDecompositor()
+	public PathDecomposer getPathDecompositor()
 	{
 		return this.spd;
 	}
 	
-	public void setPathDecompositor(PathDecompositor spd)
+	public void setPathDecompositor(PathDecomposer spd)
 	{
 		this.spd = spd;
 	}
