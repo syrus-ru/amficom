@@ -1,16 +1,10 @@
 #
-# $Id: Makefile,v 1.7 2004/06/24 13:39:05 bass Exp $
+# $Id: Makefile,v 1.8 2004/07/06 08:10:12 bass Exp $
 #
 # vim:set ft=make:
 #
 
 MODULE_NAME = idl_v1
-MODULE_VERSION = $(shell date +%Y%m%d)
-
-USER = AMFICOM
-PASSWORD = amficom
-HOST = RESEARCH
-SERVICE_NAME = SHAITAN
 
 LIBNAME = corba.jar
 LIBNAME_OBJECT = ServerObjectInterface.jar
@@ -23,67 +17,12 @@ LIBNAME_NETWORK = ServerInterface_Network.jar
 LIBNAME_REPORT = ServerInterface_Report.jar
 LIBNAME_SCHEME = ServerInterface_Scheme.jar
 LIBNAME_SURVEY = ServerInterface_Survey.jar
-SRC_SUFFIXES = \
-	.java \
-	.generated.java
 
-CLASS_SUFFIXES = \
-	.class \
-	$$%.class \
-	_SJProfile0.class \
-	_SJProfileKeys.class
-
-IDLDIR = idl
-SRCDIR = src
-CLASSDIR = classes
-ifeq ($(shell hostname -s),bass)
-LIBDIR = lib
-else
-LIBDIR = ../lib
-endif
-ENCODING = windows-1251
-JAVACFLAGS = -source 1.3 -sourcepath $(SRCDIR) -deprecation -g -O
+JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = \
-	-target 1.2 \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	+E \
-	+P \
-	+Pmodifier-order \
-	+Predundant-modifiers \
-	+Pno-switchcheck \
-	+Pnaming-convention \
-	-nowarn \
-	+T=8
-# -portable and -strict are temporarily removed: AMFICOMServer overrides
-# _execute() and _methods() from _AMFICOMImplBase.
-IDL2JAVAFLAGS = \
-	-C \
-	-H \
-	-no_bind \
-	-no_examples \
-	-narrow_compliance \
-	-root_dir $(SRCDIR) \
-	-no_toString
-SQLJFLAGS = \
-	-cache=true \
-	-checkfilename=true \
-	-checksource=true \
-	-codegen=iso \
-	-compile=true \
-	-compiler-encoding-flag=true \
-	-explain=true \
-	-linemap=true \
-	-parse=both \
-	-password "$(PASSWORD)" \
-	-profile=true \
-	-ser2class=true \
-	-status=false \
-	-url "jdbc:oracle:oci:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$(HOST))(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=$(SERVICE_NAME))))" \
-	-user "$(USER)" \
-	-warn=all
+JIKESFLAGS = -target 1.2
 
-include Makefile.inc
+include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
@@ -97,9 +36,8 @@ all: .all
 .all: .idl .sqlj
 	$(JAVAC) \
 		$(JAVACFLAGS) \
+		$(JAVAC_WARNOFF_FLAG) \
 		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
-		-d $(CLASSDIR) \
-		-encoding $(ENCODING) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
 
@@ -110,12 +48,12 @@ idl: .idl
 	$(IDL2JAVA) \
 		$(IDL2JAVAFLAGS) \
 		$(IDLDIR)/AMFICOM.idl \
+		$(IDLDIR)/ISM.idl \
 		$(IDLDIR)/admin.idl \
 		$(IDLDIR)/alarm.idl \
 		$(IDLDIR)/client.idl \
 		$(IDLDIR)/constants.idl \
 		$(IDLDIR)/general.idl \
-		$(IDLDIR)/ISM.idl \
 		$(IDLDIR)/map.idl \
 		$(IDLDIR)/network.idl \
 		$(IDLDIR)/report.idl \
