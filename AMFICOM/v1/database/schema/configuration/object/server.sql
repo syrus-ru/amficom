@@ -11,6 +11,7 @@ CREATE TABLE Server (
 --
  name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
+ hostname VARCHAR2(64) NOT NULL,
  user_id VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT server_pk PRIMARY KEY (id),
