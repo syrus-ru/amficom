@@ -43,9 +43,6 @@ public class ByteArrayDatabase {
       os.write(this.bar);
 			os.close();
 		}
-		catch (SQLException e) {
-			throw e;
-		}
 		catch (IOException e){
 			throw new SQLException(e.getMessage());
 		}
