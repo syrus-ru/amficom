@@ -10,12 +10,12 @@ CREATE TABLE imageresource (
  image BLOB,
  sort NUMBER(1) NOT NULL,
 --
- CONSTRAINT img_pk PRIMARY KEY (id),
- CONSTRAINT img_crt_id_fk FOREIGN KEY (creator_id)
+ CONSTRAINT imgres_pk PRIMARY KEY (id),
+ CONSTRAINT imgres_creator_fk FOREIGN KEY (creator_id)
   REFERENCES "User" (id) ON DELETE CASCADE,
- CONSTRAINT img_mod_id_fk FOREIGN KEY (modifier_id)
+ CONSTRAINT imgres_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES "User" (id) ON DELETE CASCADE,
- CONSTRAINT img_cn_uk UNIQUE (CODENAME)
+ CONSTRAINT imgres_uniq UNIQUE (CODENAME)
 );
  
 
