@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.48 2004/11/16 11:00:56 arseniy Exp $
+ * $Id: configuration.idl,v 1.49 2004/11/16 12:32:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -155,8 +155,10 @@ module corba {
 	};
 	
 	typedef sequence <User_Transferable> UserSeq_Transferable;
+#ifndef REDUNDANT_DEPS
 	typedef User_Transferable User;
 	typedef sequence<User> UserSeq;
+#endif // REDUNDANT_DEPS
 	
 	/////////////////////////////////// Domain ////////////////////////////////
 	struct Domain_Transferable {
