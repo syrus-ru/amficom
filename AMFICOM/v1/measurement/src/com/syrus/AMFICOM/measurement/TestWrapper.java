@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.6 2005/03/30 08:05:59 bob Exp $
+ * $Id: TestWrapper.java,v 1.7 2005/03/31 09:52:54 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,34 +22,43 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/30 08:05:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/03/31 09:52:54 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class TestWrapper implements StorableObjectWrapper {
 
-	public static final String	COLUMN_ANALYSIS_TYPE_ID			= "analysis_type_id";
-	public static final String	COLUMN_END_TIME					= "end_time";
-	public static final String	COLUMN_EVALUATION_TYPE_ID		= "evaluation_type_id";
-	public static final String	COLUMN_MEASUREMENT_TYPE_ID		= "measurement_type_id";
-	public static final String	COLUMN_MONITORED_ELEMENT_ID		= "monitored_element_id";
-	public static final String	COLUMN_RETURN_TYPE				= "return_type";
-	public static final String	COLUMN_START_TIME				= "start_time";
-	public static final String	COLUMN_STATUS					= "status";
-	public static final String	COLUMN_TEMPORAL_PATTERN_ID		= "temporal_pattern_id";
-	public static final String	COLUMN_TEMPORAL_TYPE			= "temporal_type";
-	public static final String	LINK_COLUMN_MEASUREMENT_SETUP_ID	= "measurement_setup_id";
+	public static final String COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
+	public static final String COLUMN_END_TIME = "end_time";
+	public static final String COLUMN_EVALUATION_TYPE_ID = "evaluation_type_id";
+	public static final String COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
+	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
+	public static final String COLUMN_RETURN_TYPE = "return_type";
+	public static final String COLUMN_START_TIME = "start_time";
+	public static final String COLUMN_STATUS = "status";
+	public static final String COLUMN_TEMPORAL_PATTERN_ID = "temporal_pattern_id";
+	public static final String COLUMN_TEMPORAL_TYPE = "temporal_type";
+	public static final String LINK_COLUMN_TEST_ID = "test_id";
+	public static final String LINK_COLUMN_MEASUREMENT_SETUP_ID = "measurement_setup_id";
 
-	private static TestWrapper	instance;
+	private static TestWrapper instance;
 
-	private List				keys;
+	private List keys;
 
 	private TestWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_TEMPORAL_TYPE, COLUMN_START_TIME, COLUMN_END_TIME,
-				COLUMN_TEMPORAL_PATTERN_ID, COLUMN_MEASUREMENT_TYPE_ID, COLUMN_ANALYSIS_TYPE_ID,
-				COLUMN_EVALUATION_TYPE_ID, COLUMN_STATUS, COLUMN_MONITORED_ELEMENT_ID, COLUMN_RETURN_TYPE,
-				COLUMN_DESCRIPTION, LINK_COLUMN_MEASUREMENT_SETUP_ID};
+		String[] keysArray = new String[] {COLUMN_TEMPORAL_TYPE,
+				COLUMN_START_TIME,
+				COLUMN_END_TIME,
+				COLUMN_TEMPORAL_PATTERN_ID,
+				COLUMN_MEASUREMENT_TYPE_ID,
+				COLUMN_ANALYSIS_TYPE_ID,
+				COLUMN_EVALUATION_TYPE_ID,
+				COLUMN_STATUS,
+				COLUMN_MONITORED_ELEMENT_ID,
+				COLUMN_RETURN_TYPE,
+				COLUMN_DESCRIPTION,
+				LINK_COLUMN_MEASUREMENT_SETUP_ID};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -77,8 +86,8 @@ public class TestWrapper implements StorableObjectWrapper {
 			if (key.equals(COLUMN_START_TIME))
 				return test.getStartTime();
 			if (key.equals(COLUMN_END_TIME)) {
-				 Date endTime = test.getEndTime();
-				 return endTime == null ? test.getStartTime() : endTime;
+				Date endTime = test.getEndTime();
+				return endTime == null ? test.getStartTime() : endTime;
 			}
 			if (key.equals(COLUMN_TEMPORAL_PATTERN_ID))
 				return test.getTemporalPatternId();
