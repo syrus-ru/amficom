@@ -1,125 +1,72 @@
+//////////////////////////////////////////////////////////////////////////////
+// *                                                                      * //
+// * Syrus Systems                                                        * //
+// * Департамент Системных Исследований и Разработок                      * //
+// *                                                                      * //
+// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
+// *         Интеллектуального Контроля и Объектного Мониторинга          * //
+// *                                                                      * //
+// *         реализация Интегрированной Системы Мониторинга               * //
+// *                                                                      * //
+// * Название: модуль организации многоязыковой поддержки для модуля      * //
+// *         Конфигурирование клиентской части ПО АМФИКОМ                 * //
+// *                                                                      * //
+// * Тип: Java 1.2.2                                                      * //
+// *                                                                      * //
+// * Автор: Крупенников А.В.                                              * //
+// *                                                                      * //
+// * Версия: 1.0                                                          * //
+// * От: 1 jul 2002                                                       * //
+// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
+// *        Client\General\Lang\LangModelAdmin.java                       * //
+// *                                                                      * //
+// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
+// *                                                                      * //
+// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
+// *                                                                      * //
+// * Статус: разработка                                                   * //
+// *                                                                      * //
+// * Изменения:                                                           * //
+// *  Кем         Верс   Когда      Комментарии                           * //
+// * -----------  ----- ---------- -------------------------------------- * //
+// *                                                                      * //
+// * Описание:                                                            * //
+// *                                                                      * //
+//////////////////////////////////////////////////////////////////////////////
+
 package com.syrus.AMFICOM.Client.General.Lang;
 
-import java.text.*;
 import java.util.*;
 
-public class LangModelAdmin extends LangModel
-{
-  static public Locale locale;
-  static public String language;
-  static public String country;
-  static public ResourceBundle lang;
-  static public DateFormatSymbols symbols;
-  static public String resourceBundle;
+public class LangModelAdmin {
 
-  public LangModelAdmin()
-  {
-    symbols = new DateFormatSymbols(locale);
-  }
+	private static final String BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.admin";
 
-  static public void initialize()
-  {
-    initialize("com.syrus.AMFICOM.Client.General.Lang.LangModelAdmin");
-  }
+	private static final ResourceBundle	RESOURCE_BUNDLE		= ResourceBundle
+																	.getBundle(BUNDLE_NAME);
 
-  static public void initialize(String rb)
-  {
-    System.out.println("initialize lang - " + rb);
-    resourceBundle = new String(rb);
-    setLangModel("ru", "");
-  }
 
-  static public Vector getLangModels()
-  {
+	public LangModelAdmin() {
+		//symbols = new DateFormatSymbols(locale);
+	}
 
-    Vector vec = new Vector();
-    return vec;
-  }
+	public static String getString(String keyName) {
+		//System.out.println("keyName:" + keyName);
+		keyName = keyName.replaceAll(" ", "_");
+		String string = null;
+		try {
+			string = RESOURCE_BUNDLE.getString(keyName);
+		} catch (MissingResourceException e) {
 
-  static public boolean setLangModel(String l, String c)
-  {
-    language = l;
-    country = c;
-    try
-    {
-      locale = new Locale(language, country);
-      lang = ResourceBundle.getBundle(
-          resourceBundle,
-          locale);
-      System.out.println("initialize locale - " + locale.toString());
-      symbols = new DateFormatSymbols(locale);
-    }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      e.printStackTrace();
-      return false;
-    }
-    return true;
-  }
-
-  static public String Text(String componentName)
-  {
-    return getComponentText(lang, componentName);
-  }
-
-  static public String ToolTip(String componentName)
-  {
-    return getComponentToolTip(lang, componentName);
-  }
-
-  static public String getComponentText(
-      ResourceBundle lang,
-      String componentName)
-  {
-    return String(componentName + "Text");
-  }
-
-  static public String getComponentToolTip(
-      ResourceBundle lang,
-      String componentName)
-  {
-    return String(componentName + "ToolTip");
-  }
-
-  static public String String(String keyName)
-  {
-    return String(lang, keyName);
-  }
-
-  static public String String(ResourceBundle lang, String keyName)
-  {
-    try
-    {
-      return lang.getString(keyName);
-    }
-    catch(java.util.MissingResourceException mre)
-    {
-      try
-      {
-        Locale loc2 = lang.getLocale();
-        Locale loc;
-        if(loc2.getCountry() != null && !(loc2.getCountry().equals("")))
-          loc = new Locale(loc2.getLanguage(), "");
-        else
-          if(loc2.getLanguage() != null && !(loc2.getLanguage().equals("")))
-            loc = new Locale("", "");
-        else
-          throw mre;
-        ResourceBundle lang2 =
-            ResourceBundle.getBundle(resourceBundle, loc);
-        return String(lang2, keyName);
-      }
-      catch(Exception e)
-      {
-		System.out.println("LangModelAdmin found: " + e + " for key Name " + keyName);
-        return "ERROR key!" + keyName;
-      }
-    }
-    catch(Exception e)
-    {
-	  System.out.println("LangModelAdmin found: " + e + " for key Name " + keyName);
-      return "ERROR key!" + keyName;
-    }
-  }
+			try {
+				throw new Exception("key '"
+									+ keyName
+									+ "' "
+									+  "not found");
+			} catch (Exception exc) {
+				exc.printStackTrace();
+			}
+		}
+		return string;
+	}
 }

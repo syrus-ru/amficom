@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrateRun.java,v 1.2 2004/06/29 11:34:56 bass Exp $
+ * $Id: AdministrateRun.java,v 1.3 2004/07/13 12:19:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import javax.swing.UIManager;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/29 11:34:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/07/13 12:19:10 $
+ * @author $Author: peskovsky $
  * @module admin_v1
  */
 public class AdministrateRun
@@ -34,7 +34,6 @@ public class AdministrateRun
 		{
 			e.printStackTrace();
 		}
-		LangModelAdmin.initialize();
 		new Administrate(new DefaultAdminApplicationModelFactory());
 	}
 }
