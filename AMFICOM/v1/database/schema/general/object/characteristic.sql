@@ -10,8 +10,8 @@ CREATE TABLE Characteristic (
  name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
  value VARCHAR2(256),
- is_editable NUMBER(1) NOT NULL,
- is_visible NUMBER(1) NOT NULL,
+ editable NUMBER(1) NOT NULL,
+ visible NUMBER(1) NOT NULL,
 --
  sort NUMBER(2) NOT NULL,
  characterized_id VARCHAR2(32),
