@@ -207,6 +207,10 @@ module corba {
 
 		wstring name;
 		wstring description;
+
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable start_port_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable finish_port_id;
+		
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 
 	};
