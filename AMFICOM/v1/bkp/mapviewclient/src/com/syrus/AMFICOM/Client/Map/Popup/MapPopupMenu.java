@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.4 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.5 2004/09/29 15:18:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Popup;
 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
@@ -20,6 +22,9 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCollectorCommandAtomic;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
+import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
@@ -30,10 +35,6 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -41,6 +42,7 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
@@ -49,7 +51,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/29 15:18:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -107,6 +109,9 @@ public abstract class MapPopupMenu extends JPopupMenu
 
 		if ( dialog.ifAccept())
 		{
+			Dispatcher disp = logicalNetLayer.getContext().getDispatcher();
+			if(disp != null)
+				disp.notify(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
 	}
 
