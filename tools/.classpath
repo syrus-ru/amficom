@@ -14,7 +14,7 @@
 	<classpathentry kind="src" path="/measurement_v1"/>
 	<classpathentry kind="src" path="/mserver_v1"/>
 	<classpathentry kind="var" path="PMD_HOME/lib/pmd-1.9.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/servermisc.jar"/>
 	<classpathentry kind="src" path="/util"/>
+	<classpathentry kind="src" path="/mcm_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
