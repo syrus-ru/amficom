@@ -1,2 +1,0 @@
-@@servertype.sql
-@@mcmtype.sql
