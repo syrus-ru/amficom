@@ -27,7 +27,7 @@ import com.mapinfo.xmlprot.mxtj.ImageRequestComposer;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/02/02 13:51:03 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/14 14:29:31 $
  * @module mapper-servlet
  */
 public class MapperControllableServlet
@@ -58,7 +58,7 @@ public class MapperControllableServlet
 
 	// Define constants to control various rendering options
 	public static final int NUM_OF_COLORS = 256;
-	public static final Color BACKGROUND_COLOR = Color.blue;
+	public static final Color BACKGROUND_COLOR = Color.WHITE;
 
 	public static final String ERROR_INVALID_PARAMETERS = "invalid_params"; //$NON-NLS-1$
 	public static final String ERROR_NO_PARAMETERS = "no_params"; //$NON-NLS-1$
