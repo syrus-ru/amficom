@@ -90,6 +90,7 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/LinkedIdsCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/DomainCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/StringFieldCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultSortCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupCondition.java 
 	touch $@
 
