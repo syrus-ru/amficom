@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.10 2004/12/23 12:37:03 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.11 2004/12/24 11:46:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
+import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -48,7 +49,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.10 $, $Date: 2004/12/23 12:37:03 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/24 11:46:59 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -406,20 +407,24 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				identifierTransferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
 			}
 
-			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) condition;
-			LinkedIdsCondition_Transferable linkedIdsConditionTransferable = (LinkedIdsCondition_Transferable)linkedIdsCondition.getTransferable();
-			List tests;
-			if (linkedIdsCondition.getLinkedIds() != null)
-				tests = MeasurementStorableObjectPool.getStorableObjects(linkedIdsCondition.getLinkedIds(), true);
-			else tests = Collections.singletonList(MeasurementStorableObjectPool.getStorableObject(linkedIdsCondition.getIdentifier(), true));
-			for (Iterator it = tests.iterator(); it.hasNext();) {
-				Test test = (Test) it.next();				
-				MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
-				KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
-				com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(kis.getMCMId());
-				measurementTransferables = mcmRef.transmitMeasurementsButIds(  linkedIdsConditionTransferable , identifierTransferables);
-				list.add(measurementTransferables);
-
+			if (condition instanceof LinkedIdsCondition){
+				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) condition;
+				LinkedIdsCondition_Transferable linkedIdsConditionTransferable = (LinkedIdsCondition_Transferable)linkedIdsCondition.getTransferable();
+				List tests;
+				if (linkedIdsCondition.getLinkedIds() != null)
+					tests = MeasurementStorableObjectPool.getStorableObjects(linkedIdsCondition.getLinkedIds(), true);
+				else tests = Collections.singletonList(MeasurementStorableObjectPool.getStorableObject(linkedIdsCondition.getIdentifier(), true));
+				for (Iterator it = tests.iterator(); it.hasNext();) {
+					Test test = (Test) it.next();				
+					MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
+					KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+					com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(kis.getMCMId());
+					measurementTransferables = mcmRef.transmitMeasurementsButIds(  linkedIdsConditionTransferable , identifierTransferables);
+					list.add(measurementTransferables);
+	
+				}
+			} else {
+				Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | unsupported condition class: " + condition.getClass().getName());			
 			}
 			return list;
 		}
