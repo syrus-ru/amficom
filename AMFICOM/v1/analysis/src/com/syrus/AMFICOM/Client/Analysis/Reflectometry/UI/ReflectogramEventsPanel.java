@@ -258,7 +258,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			paint_events(g); // метод суперкласса....
 			return;
 		}
-		SimpleReflectogramEvent []ep = mtm.getComplexEvents();
+		SimpleReflectogramEvent []ep = mtm.getSimpleEvents();
 		for(int j=0; j<ep.length; j++)
 		{
 			if ((ep[j].getBegin() < end) && (ep[j].getEnd() > start))

@@ -238,13 +238,13 @@ implements OperationListener
 
 		ModelTrace etalonMTrace = etalonMTM.getModelTrace();
 		ModelTrace dataMTrace = dataMTM.getModelTrace();
-		ComplexReflectogramEvent []etalonCRE = etalonMTM.getComplexEvents();
-		ComplexReflectogramEvent []dataCRE = dataMTM.getComplexEvents();
+		SimpleReflectogramEvent []etalonSRE = etalonMTM.getSimpleEvents();
+		SimpleReflectogramEvent []dataSRE = dataMTM.getSimpleEvents();
 	
 		double maxDeviation = ReflectogramComparer.getMaxDeviation(etalonMTrace, dataMTrace);
 		double meanDeviation = ReflectogramComparer.getMeanDeviation(etalonMTrace, dataMTrace);
-		double etalonLength = ReflectogramMath.getLastConnectorBegin(etalonCRE) * deltaX;
-		double dataLength = ReflectogramMath.getLastConnectorBegin(dataCRE) * deltaX;
+		double etalonLength = ReflectogramMath.getLastConnectorBegin(etalonSRE) * deltaX;
+		double dataLength = ReflectogramMath.getLastConnectorBegin(dataSRE) * deltaX;
 		double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM, dataMTM);
 
 		wctModel.setValueAt(String.valueOf(MathRef.round_3(dataLength))+ " " + LangModelAnalyse.getString("km"), 0, 1);

@@ -94,7 +94,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		int index = coord2index(currpos.x);
 
 		// если это текущее событие - пытаемся "ухватить" (drag) порог
-		SimpleReflectogramEvent c_sre = et_mtm.getComplexEvent(c_event);
+		SimpleReflectogramEvent c_sre = et_mtm.getSimpleEvent(c_event);
 		if (index >= c_sre.getBegin() && index <= c_sre.getEnd())
 		{
 			int new_threshold = -1;
@@ -237,7 +237,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		int[] keys = { Threshold.UP1, Threshold.DOWN1, Threshold.UP2, Threshold.DOWN2 };
 		Color[] p_colors = {warningThresholdColor, warningThresholdColor, alarmThresholdColor, alarmThresholdColor };
-		SimpleReflectogramEvent sre = et_mtm.getComplexEvent(nEvent);
+		SimpleReflectogramEvent sre = et_mtm.getSimpleEvent(nEvent);
 		for (int k = 0; k < 4; k++)
 		{
 			int key = keys[k];
