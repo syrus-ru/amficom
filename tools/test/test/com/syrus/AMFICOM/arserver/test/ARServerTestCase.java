@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerTestCase.java,v 1.1 2005/03/04 11:24:24 bass Exp $
+ * $Id: ARServerTestCase.java,v 1.2 2005/03/04 19:47:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/04 11:24:24 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/04 19:47:50 $
  * @author $Author: bass $
  * @module arserver_v1
  */
@@ -327,7 +327,7 @@ public class ARServerTestCase extends TestCase {
 				&& !(testbir1Trans == null));
     }
     
-    public void testMultiplyInsertUpdateDelete() throws AMFICOMRemoteException, CreateObjectException {
+    public void testMultipleInsertUpdateDelete() throws AMFICOMRemoteException, CreateObjectException {
         
         // some preporations. Important: it is necassarly to change "j" variable every time you start this test
     	// , otherwise an exception will arise
