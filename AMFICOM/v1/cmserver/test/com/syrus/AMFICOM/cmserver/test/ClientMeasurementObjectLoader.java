@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.8 2004/09/28 14:06:27 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.9 2004/09/29 06:27:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,28 +13,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.MCM;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.Port;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.Server;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -61,11 +48,10 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/28 14:06:27 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2004/09/29 06:27:26 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -524,59 +510,59 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
     
-    public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException, CommunicationException{
+    public void saveMeasurementType(MeasurementType measurementType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub        
     }
 
-     public void saveAnalysisType(AnalysisType analysisType, boolean force) throws DatabaseException, CommunicationException{
+     public void saveAnalysisType(AnalysisType analysisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
     }
 
-     public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws DatabaseException, CommunicationException{
+     public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveSet(Set set, boolean force) throws DatabaseException, CommunicationException{
+     public void saveSet(Set set, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveModeling(Modeling modeling, boolean force) throws DatabaseException, CommunicationException{
+     public void saveModeling(Modeling modeling, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurement(Measurement measurement, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMeasurement(Measurement measurement, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveAnalysis(Analysis analysis, boolean force) throws DatabaseException, CommunicationException{
+     public void saveAnalysis(Analysis analysis, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEvaluation(Evaluation evaluation, boolean force) throws DatabaseException, CommunicationException{
+     public void saveEvaluation(Evaluation evaluation, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveTest(Test test, boolean force) throws DatabaseException, CommunicationException{
+     public void saveTest(Test test, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveResult(Result result, boolean force) throws DatabaseException, CommunicationException{
+     public void saveResult(Result result, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws DatabaseException, CommunicationException{
+     public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveParameterTypes(List parameterTypes, boolean force) throws DatabaseException, CommunicationException{
+     public void saveParameterTypes(List parameterTypes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
      
-     public void saveMeasurementTypes(List measurementTypes, boolean force) throws DatabaseException, CommunicationException {
+     public void saveMeasurementTypes(List measurementTypes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
          MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[measurementTypes.size()];
          int i=0;
          for (Iterator it = measurementTypes.iterator(); it.hasNext();i++) {
@@ -586,15 +572,19 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
              this.server.receiveMeasurementTypes(transferables, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
              String msg = "ClientMeasurementObjectLoader.saveMeasurementType | receiveMeasurementTypes";
-             throw new CommunicationException(msg, e);       
+          	
+          	if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+          	 	throw new VersionCollisionException(msg, e);
+          	else
+          	 	throw new CommunicationException(msg, e);       
          }
      }    
 
-     public void saveAnalysisTypes(List analysisTypes, boolean force) throws DatabaseException, CommunicationException{
+     public void saveAnalysisTypes(List analysisTypes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEvaluationTypes(List evaluationTypes, boolean force) throws DatabaseException, CommunicationException{
+     public void saveEvaluationTypes(List evaluationTypes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
          EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[evaluationTypes.size()];
          int i=0;
          for (Iterator it = evaluationTypes.iterator(); it.hasNext();i++) {
@@ -603,49 +593,54 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
          try {
              this.server.receiveEvaluationTypes(transferables, accessIdentifierTransferable);         
          } catch (AMFICOMRemoteException e) {
-             String msg = "ClientMeasurementObjectLoader.saveEvaluationType | receiveEvaluationTypes";
-             throw new CommunicationException(msg, e);       
+         	
+         	String msg = "ClientMeasurementObjectLoader.saveEvaluationType | receiveEvaluationTypes";
+         	
+         	if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+         	 	throw new VersionCollisionException(msg, e);
+         	else
+         	 	throw new CommunicationException(msg, e);       
          }
      }
 
-     public void saveSets(List sets, boolean force) throws DatabaseException, CommunicationException{
+     public void saveSets(List sets, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveModelings(List modelings, boolean force) throws DatabaseException, CommunicationException{
+     public void saveModelings(List modelings, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurementSetups(List measurementSetups, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMeasurementSetups(List measurementSetups, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurements(List measurements, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMeasurements(List measurements, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveAnalyses(List analyses, boolean force) throws DatabaseException, CommunicationException{
+     public void saveAnalyses(List analyses, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEvaluations(List evaluations, boolean force) throws DatabaseException, CommunicationException{
+     public void saveEvaluations(List evaluations, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveTests(List tests, boolean force) throws DatabaseException, CommunicationException{
+     public void saveTests(List tests, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveResults(List results, boolean force) throws DatabaseException, CommunicationException{
+     public void saveResults(List results, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveTemporalPatterns(List temporalPatterns, boolean force) throws DatabaseException, CommunicationException{
+     public void saveTemporalPatterns(List temporalPatterns, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
      
     public void saveParameterType(ParameterType parameterType, boolean force)
-            throws DatabaseException, CommunicationException {
+            throws VersionCollisionException, DatabaseException, CommunicationException {
         // TODO Auto-generated method stub
 
     }
