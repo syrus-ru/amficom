@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.31 2004/09/08 14:14:37 max Exp $
+ * $Id: EquipmentDatabase.java,v 1.32 2004/09/09 09:29:07 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/09/08 14:14:37 $
+ * @version $Revision: 1.32 $, $Date: 2004/09/09 09:29:07 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -75,7 +75,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns()
+			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
@@ -87,7 +87,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateColumns == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() 
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -100,7 +100,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		Equipment equipment = fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject)
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ equipment.getDomainId().toSQLString() + COMMA
 			+ equipment.getType().getId().toSQLString() + COMMA
 			+ APOSTOPHE + equipment.getName() + APOSTOPHE + COMMA
@@ -110,7 +110,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition)
+		return super.retrieveQuery(condition) + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_TYPE_ID + COMMA
 			+ COLUMN_NAME + COMMA
@@ -121,23 +121,23 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 
 	}
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject,
+	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement) throws IllegalDataException,
 			UpdateObjectException {
 		Equipment equipment = fromStorableObject(storableObject);
-		String eqIdStr = equipment.getId().getCode();
+		int i;
 		try {
-			super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( 6 , equipment.getDomainId().getCode());
-			preparedStatement.setString( 7, equipment.getType().getId().getCode());
-			preparedStatement.setString( 8, equipment.getName());
-			preparedStatement.setString( 9, equipment.getDescription());
-			preparedStatement.setString( 10, equipment.getImageId().toString());
-			preparedStatement.setString( 11, eqIdStr);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			preparedStatement.setString( ++i , equipment.getDomainId().getCode());
+			preparedStatement.setString( ++i, equipment.getType().getId().getCode());
+			preparedStatement.setString( ++i, equipment.getName());
+			preparedStatement.setString( ++i, equipment.getDescription());
+			preparedStatement.setString( ++i, equipment.getImageId().toString());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("EquipmentDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 	
 	protected StorableObject updateEntityFromResultSet(
@@ -190,7 +190,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		Equipment equipment = this.fromStorableObject(storableObject);
-		this.retrieveEntity(equipment);
+		super.retrieveEntity(equipment);
 		this.retrieveEquipmentPortIds(equipment);
 		this.retrieveEquipmentMEIds(equipment);
 		equipment.setCharacteristics(characteristicDatabase.retrieveCharacteristics(equipment.getId(), CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT));
@@ -319,7 +319,6 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	
 	public void insert(List storableObjects) throws IllegalDataException,
 			CreateObjectException {
-		//TODO maybe wrong sequence of incerted items 
 		super.insertEntities(storableObjects);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
@@ -448,7 +447,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	}
 	
 	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {		
-		return retrieveByIds(null,null);
+		return this.retrieveByIds(null,null);
 	}
 	
 	

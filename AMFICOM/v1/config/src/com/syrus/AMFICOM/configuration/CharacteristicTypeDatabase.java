@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.15 2004/09/08 14:14:37 max Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.16 2004/09/09 09:29:07 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/09/08 14:14:37 $
+ * @version $Revision: 1.16 $, $Date: 2004/09/09 09:29:07 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -57,7 +57,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns  = super.getUpdateColumns()
+			this.updateColumns  = super.getUpdateColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_DATA_TYPE + COMMA
@@ -69,7 +69,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues  = getUpdateMultiplySQLValues() 
+			this.updateMultiplySQLValues  = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -82,7 +82,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		CharacteristicType characteristicType = fromStorableObject(storableObject); 
-		String sql = getUpdateSingleSQLValues(storableObject) 
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
 			+ APOSTOPHE + characteristicType.getCodename() + APOSTOPHE + COMMA
 			+ APOSTOPHE + characteristicType.getDescription() + APOSTOPHE + COMMA
 			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
@@ -91,22 +91,22 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		return sql;
 	}
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject,
+	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement) throws IllegalDataException,
 			UpdateObjectException {
 		CharacteristicType characteristicType = fromStorableObject(storableObject); 
-		String ctIdStr = characteristicType.getId().getCode();
+		int i;
 		try {
-			super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( 6, characteristicType.getCodename());
-			preparedStatement.setString( 7, characteristicType.getDescription());
-			preparedStatement.setInt( 8, characteristicType.getDataType().value());
-			preparedStatement.setInt( 9, characteristicType.isEditable()?'1':'0');
-			preparedStatement.setInt( 10, characteristicType.isVisible()?'1':'0');
-			preparedStatement.setString( 11, ctIdStr);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			preparedStatement.setString( ++i, characteristicType.getCodename());
+			preparedStatement.setString( ++i, characteristicType.getDescription());
+			preparedStatement.setInt( ++i, characteristicType.getDataType().value());
+			preparedStatement.setInt( ++i, characteristicType.isEditable()?'1':'0');
+			preparedStatement.setInt( ++i, characteristicType.isVisible()?'1':'0');
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("CharacteristicTypeDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 	
 	
@@ -118,11 +118,11 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
-		this.retrieveEntity(characteristicType);
+		super.retrieveEntity(characteristicType);
 	}
 
 	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition)
+		return super.retrieveQuery(condition) + COMMA
 		+ COLUMN_CODENAME + COMMA
 		+ COLUMN_DESCRIPTION + COMMA
 		+ COLUMN_DATA_TYPE + COMMA
@@ -235,13 +235,13 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {		
-		return retriveByIdsOneQuery(null, null);
+		return this.retriveByIdsOneQuery(null, null);
 	}
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null, condition);
-		return retriveByIdsOneQuery(ids, condition);	
+			return super.retriveByIdsOneQuery(null, condition);
+		return super.retriveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids, condition);
 	}	
 

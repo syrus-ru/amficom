@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.25 2004/09/08 16:34:37 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.26 2004/09/09 09:29:07 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/09/08 16:34:37 $
+ * @version $Revision: 1.26 $, $Date: 2004/09/09 09:29:07 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -74,7 +74,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     
     protected String getUpdateColumns() {
     	if (this.updateColumns == null){
-    		this.updateColumns = super.getUpdateColumns() 
+    		this.updateColumns = super.getUpdateColumns() + COMMA
     			+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
@@ -92,7 +92,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     
     protected String getUpdateMultiplySQLValues() {
     	if (this.updateMultiplySQLValues == null){
-    		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() 
+    		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -112,7 +112,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		Characteristic characteristic = fromStorableObject(storableObject);
 		String cIdStr = characteristic.getId().toSQLString();
 		int sort = characteristic.getSort().value();
-		String sql = super.getUpdateSingleSQLValues(storableObject)
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ characteristic.getType().getId().toSQLString() + COMMA
 			+ APOSTOPHE + characteristic.getName() + APOSTOPHE + COMMA
 			+ APOSTOPHE + characteristic.getDescription() + APOSTOPHE  + COMMA
@@ -174,76 +174,76 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return sql;
 	}
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject,
+	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement) throws IllegalDataException, UpdateObjectException{
 		Characteristic characteristic = fromStorableObject(storableObject);
 		String cIdStr = characteristic.getId().getCode();
 		int sort = characteristic.getSort().value();
+		int i;
 		try {
-			super.setEntityForPreparedStatement(storableObject , preparedStatement);
-			preparedStatement.setString( 6, characteristic.getType().getId().getCode());
-			preparedStatement.setString( 7, characteristic.getName());
-			preparedStatement.setString( 8, characteristic.getDescription());
-			preparedStatement.setString( 9, characteristic.getValue());
-			preparedStatement.setInt( 10, sort);
+			i = super.setEntityForPreparedStatement(storableObject , preparedStatement);
+			preparedStatement.setString( ++i, characteristic.getType().getId().getCode());
+			preparedStatement.setString( ++i, characteristic.getName());
+			preparedStatement.setString( ++i, characteristic.getDescription());
+			preparedStatement.setString( ++i, characteristic.getValue());
+			preparedStatement.setInt( ++i, sort);
 			String characterizedIdStr = characteristic.getCharacterizedId().toSQLString();
 			switch (sort) {
 				case CharacteristicSort._CHARACTERISTIC_SORT_DOMAIN:
-					preparedStatement.setString( 11, characterizedIdStr);
-					preparedStatement.setString( 12, "");
-					preparedStatement.setString( 13, "");
-					preparedStatement.setString( 14, "");
-					preparedStatement.setString( 15, "");
-					preparedStatement.setString( 16, "");
+					preparedStatement.setString( ++i, characterizedIdStr);
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
-					preparedStatement.setString( 11, "");
-					preparedStatement.setString( 12, characterizedIdStr);
-					preparedStatement.setString( 13, "");
-					preparedStatement.setString( 14, "");
-					preparedStatement.setString( 15, "");
-					preparedStatement.setString( 16, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, characterizedIdStr);
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_MCM:
-					preparedStatement.setString( 11, "");
-					preparedStatement.setString( 12, "");
-					preparedStatement.setString( 13, characterizedIdStr);
-					preparedStatement.setString( 14, "");
-					preparedStatement.setString( 15, "");
-					preparedStatement.setString( 16, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, characterizedIdStr);
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
-					preparedStatement.setString( 11, "");
-					preparedStatement.setString( 12, "");
-					preparedStatement.setString( 13, "");
-					preparedStatement.setString( 14, characterizedIdStr);
-					preparedStatement.setString( 15, "");
-					preparedStatement.setString( 16, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, characterizedIdStr);
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_TRANSMISSIONPATH:
-					preparedStatement.setString( 11, "");
-					preparedStatement.setString( 12, "");
-					preparedStatement.setString( 13, "");
-					preparedStatement.setString( 14, "");
-					preparedStatement.setString( 15, characterizedIdStr);
-					preparedStatement.setString( 16, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, characterizedIdStr);
+					preparedStatement.setString( ++i, "");
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
-					preparedStatement.setString( 11, "");
-					preparedStatement.setString( 12, "");
-					preparedStatement.setString( 13, "");
-					preparedStatement.setString( 14, "");
-					preparedStatement.setString( 15, "");
-					preparedStatement.setString( 16, characterizedIdStr);
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, "");
+					preparedStatement.setString( ++i, characterizedIdStr);
 					break;
 				default:
 					throw new UpdateObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
 			}
-		preparedStatement.setString( 17, cIdStr );
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("CharacteristicDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
-		
+		return i;
 	}	
 	
 	private Characteristic fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -260,7 +260,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	
 
 	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition)
+		return super.retrieveQuery(condition) + COMMA
 		+ COLUMN_TYPE_ID + COMMA
 		+ COLUMN_NAME + COMMA
 		+ COLUMN_DESCRIPTION + COMMA			
@@ -380,7 +380,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 
 	public void insert(List storableObjects) throws IllegalDataException,
 			CreateObjectException {
-		insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 	}
 	
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {

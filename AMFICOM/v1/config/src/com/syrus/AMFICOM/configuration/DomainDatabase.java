@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.10 2004/09/09 05:43:50 bob Exp $
+ * $Id: DomainDatabase.java,v 1.11 2004/09/09 09:29:07 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/09/09 05:43:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/09/09 09:29:07 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -139,24 +139,23 @@ public class DomainDatabase extends StorableObjectDatabase {
 		return domain;
 	}
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject,
+	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement) throws IllegalDataException,
 			UpdateObjectException {
 		Domain domain = fromStorableObject(storableObject);
-		String domainIdStr = domain.getId().getCode();
-
-		Identifier domainId = domain.getDomainId();
+			Identifier domainId = domain.getDomainId();
 		String domainIdSubstr = (domainId != null) ? domainId.getCode() : "";
+		int i;
 		try {
-			super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( 6, domainIdSubstr);
-			preparedStatement.setString( 7, domain.getName());
-			preparedStatement.setString( 8, domain.getDescription());
-			preparedStatement.setString( 9, domainIdStr);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			preparedStatement.setString( ++i, domainIdSubstr);
+			preparedStatement.setString( ++i, domain.getName());
+			preparedStatement.setString( ++i, domain.getDescription());
 		}catch (SQLException sqle) {
 			throw new UpdateObjectException("DomainDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 		
 	
