@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -49,10 +48,33 @@ import com.syrus.io.BellcoreStructure;
 public class AnalysisSelectionFrame extends ATableFrame
 																		implements OperationListener
 {
+	
+	private static final Double[] ff =
+	 {
+		 new Double(0.0), new Double(0.05), new Double(0.1), new Double(0.15),
+		 new Double(0.2), new Double(0.25), new Double(0.3), new Double(0.35),
+		 new Double(0.4), new Double(0.45), new Double(0.5)
+	 };
+
+	 private static final String[] strategy =
+	 {
+		 LangModelAnalyse.getString("strategy-1"),
+		 LangModelAnalyse.getString("strategy0"),
+		 LangModelAnalyse.getString("strategy1"),
+		 LangModelAnalyse.getString("strategy2"),
+		 LangModelAnalyse.getString("strategy3"),
+		 LangModelAnalyse.getString("strategy4")
+	 };
+
+	 private static final Integer[] tactics =
+	 {
+		 new Integer(0), new Integer(1), new Integer(2), new Integer(3),
+		 new Integer(4), new Integer(5), new Integer(6), new Integer(7), new Integer(8)
+	 };
+	 
 	private Dispatcher dispatcher;
 	private ParamTableModel tModelMinuit;
 	private ATable jTable;
-	private ColorManager cManager;
 	private static final String OT_analysisparameters = "analysisparameters";
 	private static final String OID_minuitanalysis = "minuitanalysis";
 	private static final String OID_minuitinitials = "minuitinitials";
@@ -63,9 +85,6 @@ public class AnalysisSelectionFrame extends ATableFrame
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
 	JToolBar jToolBar1 = new JToolBar();
-	JButton analysisStartButton = new JButton();
-	JButton analysisInitialButton = new JButton();
-	JButton analysisDefaultsButton = new JButton();
 	ApplicationContext aContext;
 	
 	private Object selectedEventId;
@@ -261,6 +280,10 @@ public class AnalysisSelectionFrame extends ATableFrame
 		jTable.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(tModelMinuit));
 		jTable.setDefaultEditor(Object.class, new ModelParamsTableEditor(tModelMinuit));
 
+		JButton analysisStartButton = new JButton();
+		JButton analysisInitialButton = new JButton();
+		JButton analysisDefaultsButton = new JButton();
+
 		analysisStartButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		analysisStartButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		analysisStartButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
@@ -305,7 +328,6 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 //		jToolBar1.setBorderPainted(true);
 		jToolBar1.setFloatable(false);
-		jToolBar1.setLayout(new BoxLayout(this.jToolBar1, BoxLayout.X_AXIS));
 		jToolBar1.add(analysisStartButton);
 		jToolBar1.add(Box.createRigidArea(UIManager.getDimension(ResourceKeys.SIZE_BUTTON)));
 		jToolBar1.add(analysisInitialButton);
@@ -325,7 +347,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		mainPanel.add(jToolBar1,  BorderLayout.NORTH);
 
-		updColorModel();
+		this.updColorModel();
 	}
 
 	public Object getDoubleValueAt(Object obj, int row)
@@ -375,34 +397,10 @@ public class AnalysisSelectionFrame extends ATableFrame
 		double[] defaults = (double[])Pool.get(OT_analysisparameters, OID_minuitdefaults);
 		setDefaults(defaults);
 	}
-}
 
 
-class ParamTableModel extends AbstractTableModel
- {
-
-	 public static final Double[] ff =
-	 {
-		 new Double(0.0), new Double(0.05), new Double(0.1), new Double(0.15),
-		 new Double(0.2), new Double(0.25), new Double(0.3), new Double(0.35),
-		 new Double(0.4), new Double(0.45), new Double(0.5)
-	 };
-
-	 public static final String[] strategy =
-	 {
-		 LangModelAnalyse.getString("strategy-1"),
-		 LangModelAnalyse.getString("strategy0"),
-		 LangModelAnalyse.getString("strategy1"),
-		 LangModelAnalyse.getString("strategy2"),
-		 LangModelAnalyse.getString("strategy3"),
-		 LangModelAnalyse.getString("strategy4")
-	 };
-
-	 public static final Integer[] tactics =
-	 {
-		 new Integer(0), new Integer(1), new Integer(2), new Integer(3),
-		 new Integer(4), new Integer(5), new Integer(6), new Integer(7), new Integer(8)
-	 };
+	private class ParamTableModel extends AbstractTableModel
+ {	
 
 	 AComboBox ffComboBox = new AComboBox(AComboBox.SMALL_FONT);
 	 AComboBox strComboBox = new AComboBox(AComboBox.SMALL_FONT);
@@ -512,7 +510,7 @@ class ParamTableModel extends AbstractTableModel
 	 }
  }
 
- class ModelParamsTableEditor extends DefaultCellEditor
+ private class ModelParamsTableEditor extends DefaultCellEditor
  {
 	 Object editor;
 	 ParamTableModel model;
@@ -573,7 +571,7 @@ class ParamTableModel extends AbstractTableModel
 	 }
 }
 
-class ModelParamsTableRenderer extends ADefaultTableCellRenderer
+private class ModelParamsTableRenderer extends ADefaultTableCellRenderer
 {
 	ParamTableModel model;
 	public ModelParamsTableRenderer(ParamTableModel model)
@@ -596,4 +594,6 @@ class ModelParamsTableRenderer extends ADefaultTableCellRenderer
 
 		return  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 	}
+}
+
 }
