@@ -155,6 +155,11 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 			}
 		}
 	}
+
+	boolean hasShowThresholdButtonSelected()
+	{
+		return ((ThresholdsToolBar )toolbar).showThresholdButton.isSelected();
+	}
 }
 
 class ThresholdsToolBar extends TraceEventsToolBar
@@ -171,7 +176,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 	JButton dAButton = new JButton();
 	JButton eXButton = new JButton();
 	JButton dXButton = new JButton();
-	JToggleButton showThresholdButton = new JToggleButton();
+	protected JToggleButton showThresholdButton = new JToggleButton();
 
 	protected static String[] buttons = new String[]
 	{
@@ -342,7 +347,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 
 	void showThresholdButton_actionPerformed(ActionEvent e)
 	{
-		for(int i=0; i<panel.jLayeredPane.getComponentCount(); i++)
+		/*for(int i=0; i<panel.jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel sgp = (SimpleGraphPanel)(panel.jLayeredPane.getComponent(i));
 
@@ -350,7 +355,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 			{
 				((ThresholdsPanel)sgp).paint_all_thresholds = showThresholdButton.isSelected();
 			}
-		}
+		}*/
 		panel.jLayeredPane.repaint();
 	}
 }

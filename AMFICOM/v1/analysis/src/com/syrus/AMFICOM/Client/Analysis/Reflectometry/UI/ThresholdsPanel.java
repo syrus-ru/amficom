@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class ThresholdsPanel extends ReflectogramEventsPanel
 {
-	public boolean paint_all_thresholds = false;
+	//public boolean paint_all_thresholds = false;
 	public boolean paint_thresholds = true;
 
 	protected boolean edit_thresholds = true;
@@ -20,7 +20,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	protected int c_event = 0;
 	protected ModelTraceManager.ThresholdHandle c_TH = null;
 	protected boolean isRbutton = false;
-	
+
 	// XXX: read colors from file?
 	protected static Color warningThresholdColor = new Color(255, 220, 0);
 	protected static Color alarmThresholdColor = new Color(255, 150, 60);
@@ -28,7 +28,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
 		super (panel, dispatcher, y, deltaX);
-		
+
 		try
 		{
 			jbInit();
@@ -215,7 +215,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		if (paint_thresholds)
 		{
-			if(paint_all_thresholds)
+			if(isToPaintAllThresholds())
 				paint_all_thresholds(g);
 			else
 				paint_threshold(g);
@@ -334,4 +334,10 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		return (maxData - maxEtalon);
 	}
 	*/
+
+	private boolean isToPaintAllThresholds()
+	{
+		return parent instanceof ThresholdsLayeredPanel
+			&& ((ThresholdsLayeredPanel )parent).hasShowThresholdButtonSelected();
+	}
 }
