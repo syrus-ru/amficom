@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeMonitoringSolutionImpl.java,v 1.3 2004/11/30 07:54:42 bass Exp $
+ * $Id: SchemeMonitoringSolutionImpl.java,v 1.4 2004/12/15 13:47:41 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/11/30 07:54:42 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/15 13:47:41 $
  * @module schemecommon_v1
  */
 final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implements Cloneable {
@@ -45,7 +45,6 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 	}
 
 	/**
-	 * @return
 	 * @see java.util.JavaUtilIStorableObject#getCreated()
 	 */
 	public Date getCreated() {
@@ -53,15 +52,6 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 	}
 
 	/**
-	 * @return
-	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getCreatorId()
-	 */
-	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @return
 	 * @see java.util.JavaUtilIStorableObject#getDependencies()
 	 */
 	public List getDependencies() {
@@ -69,7 +59,6 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
@@ -77,26 +66,9 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 	}
 
 	/**
-	 * @return
-	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getId()
-	 */
-	public com.syrus.AMFICOM.general.Identifier getId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @return
 	 * @see java.util.JavaUtilIStorableObject#getModified()
 	 */
 	public Date getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @return
-	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getModifierId()
-	 */
-	public com.syrus.AMFICOM.general.Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -105,7 +77,6 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
 	 */
 	public boolean isChanged() {

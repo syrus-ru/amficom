@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableLinkImpl.java,v 1.4 2004/11/30 07:54:42 bass Exp $
+ * $Id: SchemeCableLinkImpl.java,v 1.5 2004/12/15 13:47:41 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,10 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/11/30 07:54:42 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/15 13:47:41 $
  * @module schemecommon_v1
  */
-public final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
+final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
 
 	SchemeCableLinkImpl() {
@@ -76,28 +76,28 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 	/**
 	 * @see #cableLinkTypeImpl()
 	 */
-	public LinkType_Transferable cableLinkType() {
+	public CableLinkType_Transferable cableLinkType() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see #cableLinkTypeImpl(LinkType)
+	 * @see #cableLinkTypeImpl(CableLinkType)
 	 */
-	public void cableLinkType(final LinkType_Transferable cableLinkType) {
+	public void cableLinkType(final CableLinkType_Transferable cableLinkType) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @see #cableLinkType() 
 	 */
-	public LinkType cableLinkTypeImpl() {
+	public CableLinkType cableLinkTypeImpl() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see #cableLinkType(LinkType_Transferable)
+	 * @see #cableLinkType(CableLinkType_Transferable)
 	 */
-	public void cableLinkTypeImpl(final LinkType cableLinkType) {
+	public void cableLinkTypeImpl(final CableLinkType cableLinkType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -116,7 +116,6 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 	}
 
 	/**
-	 * @return
 	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl()
 	 */
 	public List characteristicsImpl() {
@@ -153,7 +152,6 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 	}
 
 	/**
-	 * @return
 	 * @see java.util.JavaUtilIStorableObject#getCreated()
 	 */
 	public Date getCreated() {
@@ -161,15 +159,6 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 	}
 
 	/**
-	 * @return
-	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getCreatorId()
-	 */
-	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @return
 	 * @see java.util.JavaUtilIStorableObject#getDependencies()
 	 */
 	public List getDependencies() {
@@ -177,7 +166,6 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
@@ -185,26 +173,9 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 	}
 
 	/**
-	 * @return
-	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getId()
-	 */
-	public com.syrus.AMFICOM.general.Identifier getId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @return
 	 * @see java.util.JavaUtilIStorableObject#getModified()
 	 */
 	public Date getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @return
-	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getModifierId()
-	 */
-	public com.syrus.AMFICOM.general.Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -213,7 +184,6 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
 	 */
 	public boolean isChanged() {

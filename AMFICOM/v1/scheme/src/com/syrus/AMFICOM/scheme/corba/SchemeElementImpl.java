@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.5 2004/12/06 08:31:44 bass Exp $
+ * $Id: SchemeElementImpl.java,v 1.6 2004/12/15 13:47:41 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -20,10 +20,10 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/12/06 08:31:44 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/15 13:47:41 $
  * @module schemecommon_v1
  */
-public final class SchemeElementImpl extends SchemeElement implements Cloneable {
+final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
 
 	SchemeElementImpl() {
@@ -62,7 +62,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
 	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl()
 	 */
 	public List characteristicsImpl() {
@@ -107,7 +106,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#equipmentImpl()
 	 */
 	public Equipment equipmentImpl() {
@@ -131,7 +129,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#equipmentTypeImpl()
 	 */
 	public EquipmentType equipmentTypeImpl() {
@@ -147,7 +144,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
 	 * @see java.util.JavaUtilIStorableObject#getCreated()
 	 */
 	public Date getCreated() {
@@ -155,15 +151,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
-	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getCreatorId()
-	 */
-	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @return
 	 * @see java.util.JavaUtilIStorableObject#getDependencies()
 	 */
 	public List getDependencies() {
@@ -171,7 +158,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
@@ -179,26 +165,9 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
-	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getId()
-	 */
-	public com.syrus.AMFICOM.general.Identifier getId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @return
 	 * @see java.util.JavaUtilIStorableObject#getModified()
 	 */
 	public Date getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @return
-	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getModifierId()
-	 */
-	public com.syrus.AMFICOM.general.Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -215,7 +184,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
 	 */
 	public boolean isChanged() {
@@ -243,7 +211,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#rtuImpl()
 	 */
 	public KIS rtuImpl() {
@@ -279,7 +246,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCellImpl()
 	 */
 	public SchemeImageResource schemeCellImpl() {
@@ -347,7 +313,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbolImpl()
 	 */
 	public BitmapImageResource symbolImpl() {
@@ -375,7 +340,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCellImpl()
 	 */
 	public SchemeImageResource ugoCellImpl() {

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElementImpl.java,v 1.4 2004/11/30 07:54:42 bass Exp $
+ * $Id: AbstractSchemeElementImpl.java,v 1.5 2004/12/15 13:47:40 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.*;
  * {@link AbstractSchemeElement} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/11/30 07:54:42 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/15 13:47:40 $
  * @module schemecommon_v1
  */
 final class AbstractSchemeElementImpl extends AbstractSchemeElement {
@@ -81,10 +81,6 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 	}
 
 	public Date getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	public com.syrus.AMFICOM.general.Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
