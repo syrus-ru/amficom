@@ -2,11 +2,6 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 public class WorkWithReflectoEventsArray
 {
-	public static final int LINEAR = 0;
-	public static final int CONNECTOR = 4;
-	public static final int WELD = 3;
-	public static final int UNKNOWN = 1;
-
 	public WorkWithReflectoEventsArray()
 	{
 	}
@@ -18,7 +13,7 @@ public class WorkWithReflectoEventsArray
 
 		for(int i=0; i<re.length; i++)
 		{
-			if(re[i].beginLinear<= coord && re[i].endLinear>=coord)
+			if(re[i].begin <= coord && re[i].end>=coord)
 			{
 				return re[i];
 			}
@@ -29,51 +24,23 @@ public class WorkWithReflectoEventsArray
 
 	public static int getEventTypeByNumber(int nEvent, ReflectogramEvent []re)
 	{
-		if(re == null)
-			return UNKNOWN;
-		if(nEvent <0 || nEvent>=re.length)
-			return UNKNOWN;
-		if(re[nEvent].linearEvent == 1)
-			return LINEAR;
-		else if(re[nEvent].weldEvent == 1)
-			return WELD;
-		else if(re[nEvent].connectorEvent == 1)
-			return CONNECTOR;
-		return UNKNOWN;
+		return re[nEvent].getType();
 	}
 
 	public static int getEventType(ReflectogramEvent re)
 	{
-		if(re == null)
-			return UNKNOWN;
-		if(re.linearEvent == 1)
-			return LINEAR;
-		else if(re.weldEvent == 1)
-			return WELD;
-		else if(re.connectorEvent == 1)
-			return CONNECTOR;
-		return UNKNOWN;
+		return re.getType();
 	}
 
 
 	public static int getEventType(int coord, ReflectogramEvent []re)
 	{
-		if(re == null)
-			return UNKNOWN;
 		for(int i=0; i<re.length; i++)
 		{
-			if(re[i].beginLinear<= coord && re[i].endLinear>=coord)
-			{
-				if(re[i].linearEvent == 1)
-					return LINEAR;
-				else if(re[i].weldEvent == 1)
-					return WELD;
-				else if(re[i].connectorEvent == 1)
-					return CONNECTOR;
-				return UNKNOWN;
-			}
+			if(re[i].begin<= coord && re[i].end>=coord)
+				return re[i].getType();
 		}
-		return UNKNOWN;
+		return 0;
 	}
 
 
@@ -81,11 +48,9 @@ public class WorkWithReflectoEventsArray
 
 	public static  int getEventNumber(int coord, ReflectogramEvent []re)
 	{
-		if(re == null)
-			return UNKNOWN;
 		for(int i=0; i<re.length; i++)
 		{
-			if(re[i].beginLinear<= coord && re[i].endLinear>=coord)
+			if(re[i].begin<= coord && re[i].end>=coord)
 				return i;
 		}
 		return -1;
@@ -95,18 +60,17 @@ public class WorkWithReflectoEventsArray
 	public static int getEventCoord(ReflectogramEvent re)
 	{
 		int coord;
-		if(re.connectorEvent == 1)
+		if(re.type == ReflectogramEvent.CONNECTOR)
 		{
 			coord = (int)(re.center_connector);
 		}
-		else if(re.weldEvent == 1)
+		else if(re.type == ReflectogramEvent.WELD)
 		{
 			coord = (int)(re.center_weld);
 		}
 		else
 		{
-			coord = (re.beginLinear+
-							 re.endLinear)/2;
+			coord = (re.begin+re.end)/2;
 		}
 		return coord;
 	}
@@ -136,7 +100,7 @@ public class WorkWithReflectoEventsArray
 	{
 		for(int i=0; i<re.length; i++)
 		{
-			if(re[i].beginLinear<=coord && re[i].endLinear>=coord)
+			if(re[i].begin<=coord && re[i].end>=coord)
 			{
 				return re[i].refAmplitude(coord);
 			}
@@ -155,17 +119,17 @@ public class WorkWithReflectoEventsArray
 	public static double []getArrayFromReflectogramEvents(ReflectogramEvent []re, int arrayLength)
 	{
 		correctEventsCoords(re);
-		double []ret = new double[Math.max(re[re.length-1].endConnector, arrayLength)];
+		double []ret = new double[Math.max(re[re.length-1].end, arrayLength)];
 
 		for(int i=0; i<re.length; i++)
 		{
-			for(int j=re[i].beginLinear; j<=re[i].endConnector && j<ret.length; j++)
+			for(int j=re[i].begin; j<=re[i].end && j<ret.length; j++)
 			{
 				ret[j] = re[i].refAmplitude(j);
 			}
 		}
 
-		for(int i=re[re.length-1].endConnector; i<ret.length; i++)
+		for(int i=re[re.length-1].end; i<ret.length; i++)
 		{
 			ret[i] = 0.;
 		}
@@ -197,9 +161,9 @@ public class WorkWithReflectoEventsArray
 	{
 		for(int i=re.length-1; i>=0; i--)
 		{
-			if(re[i].connectorEvent == 1)
+			if(re[i].type == ReflectogramEvent.CONNECTOR)
 			{
-				return re[i].beginConnector;
+				return re[i].begin;
 			}
 		}
 		return 0;
@@ -214,7 +178,7 @@ public class WorkWithReflectoEventsArray
 		double maxData = -1000.;
 		double maxEtalon = -1000.;
 
-		for(int i=etalon[0].beginConnector; i<etalon[0].endConnector; i++)
+		for(int i=etalon[0].begin; i<etalon[0].end; i++)
 		{
 			if(maxEtalon<etalon[0].refAmplitude(i))
 				maxEtalon=etalon[0].refAmplitude(i);
@@ -253,7 +217,7 @@ public class WorkWithReflectoEventsArray
 
 		for(int i=0; i<re.length; i++)
 		{
-			for(int j=re[i].beginConnector; j<re[i].endConnector; j++)
+			for(int j=re[i].begin; j<re[i].end; j++)
 			{
 				if(ret<re[i].refAmplitude(j))
 					ret = re[i].refAmplitude(j);
@@ -270,25 +234,20 @@ public class WorkWithReflectoEventsArray
 
 		for(int i=0; i<re.length; i++)
 		{
-			re[i].beginWeld = re[i].beginLinear = re[i].beginConnector;
-			re[i].endWeld = re[i].endLinear = re[i].endConnector;
-			if(re[i].connectorEvent == 1)
+			if(re[i].type == ReflectogramEvent.CONNECTOR)
 			{
-				if(re[i].beginConnector<0)
+				if(re[i].begin<0)
 				{
-					re[i].beginConnector =
-					re[i].beginLinear = re[i].beginWeld = 0;
+					re[i].begin = 0;
 				}
 
 				if(i>0)
 				{
-					re[i-1].endConnector = re[i-1].endLinear = re[i-1].endWeld =
-							re[i].beginConnector;
+					re[i-1].end =	re[i].begin;
 				}
 				if(i<re.length-1)
 				{
-					re[i+1].beginConnector = re[i+1].beginLinear = re[i+1].beginWeld =
-							re[i].endConnector;
+					re[i+1].begin =	re[i].end;
 				}
 			}
 		}

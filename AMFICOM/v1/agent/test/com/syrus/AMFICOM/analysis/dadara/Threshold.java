@@ -148,11 +148,11 @@ public class Threshold {
 	{
 		double ret=0.;
 
-		if(ep.connectorEvent == 1)
+		if(ep.type == ReflectogramEvent.CONNECTOR)
 		{
 			ret = ep.connectorThresholdF(x, dL[key], dA[key], dX[key], dC[key]);
 		}
-		else if(ep.linearEvent == 1)
+		else if(ep.type == ReflectogramEvent.LINEAR)
 		{
 			ret = ep.linearThresholdF(x, dA[key]);
 		}

@@ -2,7 +2,7 @@
 // Author: Levchenko Alexander S.
 // mailto: levchenko@syrus.ru
 // date: 4.11.2003
-
+/*
 package com.syrus.AMFICOM.analysis.dadara;
 
 import java.util.ArrayList;
@@ -35,7 +35,8 @@ public class ReflectogramComparer
 		doIt();
 	}
 
-	public ReflectogramComparer(ReflectogramEvent []reData, ReflectogramEvent []etalon, Threshold []thresholds, boolean performShifting) {
+	public ReflectogramComparer(ReflectogramEvent []reData, ReflectogramEvent []etalon, Threshold []thresholds, boolean performShifting)
+	{
 		this(reData, etalon, performShifting);
 		WorkWithReflectoEventsArray.setThresholds(this.etalon, thresholds);
 
@@ -55,18 +56,11 @@ public class ReflectogramComparer
 	public ReflectogramComparer(ReflectogramEvent []reData, ReflectogramEvent []etalon, boolean performShifting)
 	{
 		this.reData = reData;
-try {
 		this.data = WorkWithReflectoEventsArray.getArrayFromReflectogramEvents(reData, etalon[etalon.length-1].endLinear);
 		this.etalon = etalon;
 		this.performShifting = performShifting;
 
 		doIt();
-}
-catch (OutOfMemoryError ome) {
-	System.out.println("@@@@@@@@@@@ Out of memory: " + ome.getMessage());
-	ome.printStackTrace();
-}
-
 	}
 
 
@@ -125,7 +119,7 @@ catch (OutOfMemoryError ome) {
 		for(int i=0; i<hardAlarms.length; i++) // iniciating of the hard alarms properties;
 		{
 			ReflectogramAlarm ra = hardAlarms[i];
-			ra.eventType = WorkWithReflectoEventsArray.getEventType(ra.alarmPointCoord, etalon);
+			ra.setEventType(WorkWithReflectoEventsArray.getEventType(ra.alarmPointCoord, etalon));
 			ra.refAmplChangeValue = ReflectogramMath.getMaximalDifference(etalonArray, data, ra.alarmPointCoord, ra.alarmEndPointCoord);
 
 //      if(reData == null)
@@ -186,7 +180,7 @@ catch (OutOfMemoryError ome) {
 		for(int i=0; i<softAlarms.length; i++) // iniciating of the soft alarms properties;
 		{
 			ReflectogramAlarm ra = softAlarms[i];
-			ra.eventType = WorkWithReflectoEventsArray.getEventType(ra.alarmPointCoord, etalon);
+			ra.setEventType(WorkWithReflectoEventsArray.getEventType(ra.alarmPointCoord, etalon));
 			ra.refAmplChangeValue = ReflectogramMath.getMaximalDifference(etalonArray, data, ra.alarmPointCoord, ra.alarmEndPointCoord);
 
 //      if(reData == null)
@@ -749,8 +743,8 @@ catch (OutOfMemoryError ome) {
 
 
 }
+*/
 
-/*
 
 
 
@@ -879,7 +873,7 @@ public class ReflectogramComparer
 				ra.rightReflectoEventCoord = etalon[etalon.length-1].begin;
 
 				int number = WorkWithReflectoEventsArray.getEventNumber(ra.alarmPointCoord, etalon);
-				for(int j=number+1; i<etalon.length; i++)
+				for(int j=number+1; j<etalon.length; j++)
 				{
 					if(etalon[j].type == ReflectogramEvent.CONNECTOR)
 					{
@@ -900,7 +894,7 @@ public class ReflectogramComparer
 //        ra.rightReflectoEventCoord = reData[reData.length-1].begin;
 //
 //        int number = WorkWithReflectoEventsArray.getEventNumber(ra.alarmPointCoord, reData);
-//        for(int j=number+1; i<reData.length; i++)
+//        for(int j=number+1; j<reData.length; j++)
 //        {
 //          if(reData[j].connectorEvent == 1)
 //          {
@@ -940,7 +934,7 @@ public class ReflectogramComparer
 				ra.rightReflectoEventCoord = etalon[etalon.length-1].begin;
 
 				int number = WorkWithReflectoEventsArray.getEventNumber(ra.alarmPointCoord, etalon);
-				for(int j=number+1; i<etalon.length; i++)
+				for(int j=number+1; j<etalon.length; j++)
 				{
 					if(etalon[j].type == ReflectogramEvent.CONNECTOR)
 					{
@@ -961,7 +955,7 @@ public class ReflectogramComparer
 //        ra.rightReflectoEventCoord = reData[reData.length-1].begin;
 //
 //        int number = WorkWithReflectoEventsArray.getEventNumber(ra.alarmPointCoord, reData);
-//        for(int j=number+1; i<reData.length; i++)
+//        for(int j=number+1; j<reData.length; j++)
 //        {
 //          if(reData[j].connectorEvent == 1)
 //          {
@@ -1502,7 +1496,7 @@ public class ReflectogramComparer
 
 
 
-*/
+
 
 
 
