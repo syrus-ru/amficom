@@ -19,38 +19,38 @@ $(OUT):	head common analyse fit an2 JNI thresh BreakL wavelet
 	$(LDLIBS)
 
 common:
-	make -C ./common
+	$(MAKE) -C ./common
 
 analyse:
-	make -C ./analyse
+	$(MAKE) -C ./analyse
 
 fit:
-	make -C ./fit
+	$(MAKE) -C ./fit
 
 an2:
-	make -C ./an2
+	$(MAKE) -C ./an2
 
 JNI:
-	make -C ./JNI
+	$(MAKE) -C ./JNI
 
 BreakL:
-	make -C ./BreakL
+	$(MAKE) -C ./BreakL
 
 thresh:
-	make -C ./thresh
+	$(MAKE) -C ./thresh
 
 wavelet:
-	make -C ./wavelet
+	$(MAKE) -C ./wavelet
 
 clean:
-	make -C common clean
-	make -C analyse clean
-	make -C fit clean
-	make -C an2 clean
-	make -C JNI clean
-	make -C BreakL clean
-	make -C thresh clean
-	make -C wavelet clean
+	$(MAKE) -C common clean
+	$(MAKE) -C analyse clean
+	$(MAKE) -C fit clean
+	$(MAKE) -C an2 clean
+	$(MAKE) -C JNI clean
+	$(MAKE) -C BreakL clean
+	$(MAKE) -C thresh clean
+	$(MAKE) -C wavelet clean
 	rm -f $(OUT) dadara.exp dadara.lib 
 
 head:
