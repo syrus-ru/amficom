@@ -1,0 +1,9 @@
+#!/bin/bash
+
+CLASSES=./classes
+LIB=../lib
+QPLIB=/mnt/e/Java/Nettest/2.0/lib/rtu
+QPCLASSPATH=$QPLIB/QuestFiberServer.jar:$QPLIB/QuestFiberServerClientInterface.jar:$QPLIB/QuestFiberServerRMI.jar
+CI=/home/arseniy/c/r6
+
+exec java -classpath $CLASSES:$QPCLASSPATH -Djava.library.path=$CI com.syrus.AMFICOM.kis.r6.setup.Setup
