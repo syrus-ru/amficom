@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.General.UI.ProgressBar;
@@ -461,8 +462,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 
 	public void setSessionOpened()
 	{
-//		aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_startProgressBar));
-		statusBar.enableProgressBar(true);
+		aContext.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR,true));
+//		statusBar.enableProgressBar(true);
 
 		ReportBuilder.invokeAsynchronously(new Runnable() {
 			public void run() {
@@ -496,7 +497,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 
 				aModel.fireModelChanged("");
 //				aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_stopProgressBar));
-				statusBar.enableProgressBar(false);
+        aContext.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR,false));
+//				statusBar.enableProgressBar(false);
 			}
 		},
 		"Идёт загрузка. Пожалуйста, подождите.");

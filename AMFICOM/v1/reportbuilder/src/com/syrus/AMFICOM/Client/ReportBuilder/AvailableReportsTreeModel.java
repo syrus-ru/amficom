@@ -324,6 +324,14 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				vec.add(ortn);
 				registerSearchableNode("", ortn);
 
+				MapReportModel mapModel = new MapReportModel();
+				ortn = new ObjectResourceTreeNode(
+					mapModel,
+					mapModel.getObjectsName(),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 new OptimizationReportModel(),
