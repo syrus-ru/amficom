@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.27 2004/11/15 10:19:40 bob Exp $
+ * $Id: MCMDatabase.java,v 1.28 2004/11/15 14:05:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/15 10:19:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2004/11/15 14:05:14 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -127,10 +127,10 @@ public class MCMDatabase extends StorableObjectDatabase {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		MCM mcm = this.fromStorableObject(storableObject);
 		this.retrieveEntity(mcm);
-		this.retrieveKISIds(mcm);
+		this.retrieveKISs(mcm);
 		mcm.setCharacteristics(characteristicDatabase.retrieveCharacteristics(mcm.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
 	}
-	
+
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
@@ -174,7 +174,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		return mcm;
 	}
 		
-	private void retrieveKISIds(MCM mcm) throws RetrieveObjectException {
+	private void retrieveKISs(MCM mcm) throws RetrieveObjectException {
 		List kiss = new ArrayList();
 		String mcmIdStr = mcm.getId().toSQLString();
 		String sql = SQL_SELECT 
@@ -184,20 +184,22 @@ public class MCMDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
-        try {
+    try {
 			statement = connection.createStatement();
 			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
-					kiss.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
+				kiss.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
 		}
 		catch (SQLException sqle) {
 			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
-		} catch (DatabaseException e) {
+		}
+		catch (DatabaseException e) {
 			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
 			throw new RetrieveObjectException(mesg, e);
-		} catch (CommunicationException e) {
+		}
+		catch (CommunicationException e) {
 			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
 			throw new RetrieveObjectException(mesg, e);
 		}
@@ -212,9 +214,10 @@ public class MCMDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-                DatabaseConnection.closeConnection(connection);
-            }
+			}
+			finally {
+				DatabaseConnection.closeConnection(connection);
+			}
 		}
 		mcm.setKISs(kiss);
 	}
