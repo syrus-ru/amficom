@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.11 2005/02/24 15:14:37 bob Exp $
+ * $Id: TypicalCondition.java,v 1.12 2005/02/25 06:48:23 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -111,7 +111,7 @@ import com.syrus.util.Log;
  * </li>
  * 
  * <li>It must override {@link #isConditionTrue(Object)},
- * {@link #isNeedMore(List)}.</li>
+ * {@link #isNeedMore(java.util.List)}.</li>
  * 
  * <li>Overrided method {@link #isConditionTrue(Object)}get correspond value
  * of object using controller (wrapper) and key, and return result calculated at
@@ -119,8 +119,8 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.11 $, $Date: 2005/02/24 15:14:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/02/25 06:48:23 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -210,12 +210,12 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * @param secondInt
 	 *            right edge of range
 	 * @param operation
-	 *            one of {@link OperationSort.OPERATION_EQUALS},
-	 *            {@link OperationSort.OPERATION_GREAT},
-	 *            {@link OperationSort.OPERATION_LESS},
-	 *            {@link OperationSort.OPERATION_GREAT_EQUALS},
-	 *            {@link OperationSort.OPERATION_IN_RANGE}or
-	 *            {@link OperationSort.OPERATION_LESS_EQUALS}
+	 *            one of {@link OperationSort#OPERATION_EQUALS},
+	 *            {@link OperationSort#OPERATION_GREAT},
+	 *            {@link OperationSort#OPERATION_LESS},
+	 *            {@link OperationSort#OPERATION_GREAT_EQUALS},
+	 *            {@link OperationSort#OPERATION_IN_RANGE}or
+	 *            {@link OperationSort#OPERATION_LESS_EQUALS}
 	 * @param entityCode
 	 *            code of searching entity
 	 * @param key
@@ -308,12 +308,12 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * @param secondLong
 	 *            right edge of range
 	 * @param operation
-	 *            one of {@link OperationSort.OPERATION_EQUALS},
-	 *            {@link OperationSort.OPERATION_GREAT},
-	 *            {@link OperationSort.OPERATION_LESS},
-	 *            {@link OperationSort.OPERATION_GREAT_EQUALS},
-	 *            {@link OperationSort.OPERATION_IN_RANGE}or
-	 *            {@link OperationSort.OPERATION_LESS_EQUALS}
+	 *            one of {@link OperationSort#OPERATION_EQUALS},
+	 *            {@link OperationSort#OPERATION_GREAT},
+	 *            {@link OperationSort#OPERATION_LESS},
+	 *            {@link OperationSort#OPERATION_GREAT_EQUALS},
+	 *            {@link OperationSort#OPERATION_IN_RANGE}or
+	 *            {@link OperationSort#OPERATION_LESS_EQUALS}
 	 * @param entityCode
 	 *            code of searching entity
 	 * @param key
@@ -406,12 +406,12 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * @param secondDouble
 	 *            right edge of range
 	 * @param operation
-	 *            one of {@link OperationSort.OPERATION_EQUALS},
-	 *            {@link OperationSort.OPERATION_GREAT},
-	 *            {@link OperationSort.OPERATION_LESS},
-	 *            {@link OperationSort.OPERATION_GREAT_EQUALS},
-	 *            {@link OperationSort.OPERATION_IN_RANGE}or
-	 *            {@link OperationSort.OPERATION_LESS_EQUALS}
+	 *            one of {@link OperationSort#OPERATION_EQUALS},
+	 *            {@link OperationSort#OPERATION_GREAT},
+	 *            {@link OperationSort#OPERATION_LESS},
+	 *            {@link OperationSort#OPERATION_GREAT_EQUALS},
+	 *            {@link OperationSort#OPERATION_IN_RANGE}or
+	 *            {@link OperationSort#OPERATION_LESS_EQUALS}
 	 * @param entityCode
 	 *            code of searching entity
 	 * @param key
@@ -498,9 +498,9 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * @param value
 	 *            value such as substring, regexp
 	 * @param operation
-	 *            one of {@link OperationSort.OPERATION_EQUALS},
-	 *            {@link OperationSort.OPERATION_REGEXP}or
-	 *            {@link OperationSort.OPERATION_CI_REGEXP}
+	 *            one of {@link OperationSort#OPERATION_EQUALS},
+	 *            {@link OperationSort#OPERATION_REGEXP}or
+	 *            {@link OperationSort#OPERATION_CI_REGEXP}
 	 * @param entityCode
 	 *            code of searching entity
 	 * @param key
@@ -590,12 +590,12 @@ public class TypicalCondition implements StorableObjectCondition {
 	 *            end date range or the same object as firstDate if not need (is
 	 *            not NULL)
 	 * @param operation
-	 *            one of {@link OperationSort.OPERATION_EQUALS},
-	 *            {@link OperationSort.OPERATION_GREAT},
-	 *            {@link OperationSort.OPERATION_LESS},
-	 *            {@link OperationSort.OPERATION_GREAT_EQUALS},
-	 *            {@link OperationSort.OPERATION_IN_RANGE}or
-	 *            {@link OperationSort.OPERATION_LESS_EQUALS}
+	 *            one of {@link OperationSort#OPERATION_EQUALS},
+	 *            {@link OperationSort#OPERATION_GREAT},
+	 *            {@link OperationSort#OPERATION_LESS},
+	 *            {@link OperationSort#OPERATION_GREAT_EQUALS},
+	 *            {@link OperationSort#OPERATION_IN_RANGE}or
+	 *            {@link OperationSort#OPERATION_LESS_EQUALS}
 	 * @param entityCode
 	 *            code of searching entity
 	 * @param key
@@ -881,7 +881,6 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * only for descendant, do not call it directly
 	 * 
 	 * @param object
-	 * @return
 	 */
 	protected boolean parseCondition(Object object) {
 		boolean result = false;
