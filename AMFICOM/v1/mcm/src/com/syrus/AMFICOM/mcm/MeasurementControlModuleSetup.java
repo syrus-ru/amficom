@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModuleSetup.java,v 1.1 2005/03/23 18:08:06 arseniy Exp $
+ * $Id: MeasurementControlModuleSetup.java,v 1.2 2005/03/23 19:09:52 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,9 @@
  */
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
@@ -18,7 +20,13 @@ import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
+import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -34,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/23 18:08:06 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/23 19:09:52 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -101,6 +109,7 @@ public class MeasurementControlModuleSetup {
 		
 		id = new Identifier(ApplicationProperties.getString(KEY_ID, ID));
 		try {
+			//MCM, Users, Server, Domain
 			MCM mcm = new MCM(mServerRef.transmitMCM((Identifier_Transferable) id.getTransferable()));
 
 			id = mcm.getCreatorId();
@@ -127,6 +136,7 @@ public class MeasurementControlModuleSetup {
 			AdministrationDatabaseContext.getMCMDatabase().insert(mcm);
 
 
+			//KISs and Equipments
 			LinkedIdsCondition lic = new LinkedIdsCondition(mcm.getId(), ObjectEntities.KIS_ENTITY_CODE);
 			KIS_Transferable[] kissT = mServerRef.transmitKISsButIdsByCondition(new Identifier_Transferable[0],
 					StorableObjectConditionBuilder.getConditionTransferable(lic));
@@ -144,6 +154,49 @@ public class MeasurementControlModuleSetup {
 			}
 			ConfigurationDatabaseContext.getEquipmentDatabase().insert(equipments);
 			ConfigurationDatabaseContext.getKISDatabase().insert(kiss);
+
+			//Ports
+			Set ids = new HashSet(equipments.size());
+			for (Iterator it = equipments.iterator(); it.hasNext();) {
+				equipment = (Equipment) it.next();
+				ids.add(equipment.getId());
+			}
+			lic = new LinkedIdsCondition(ids, ObjectEntities.PORT_ENTITY_CODE);
+			Port_Transferable[] portsT = mServerRef.transmitPortsButIdsByCondition(new Identifier_Transferable[0],
+					StorableObjectConditionBuilder.getConditionTransferable(lic));
+			Collection ports = new HashSet(portsT.length);
+			for (int i = 0; i < portsT.length; i++)
+				ports.add(new Port(portsT[i]));
+			ConfigurationDatabaseContext.getPortDatabase().insert(ports);
+
+			//Measurement Ports
+			ids = new HashSet(kiss.size());
+			for (Iterator it = kiss.iterator(); it.hasNext();) {
+				kis = (KIS) it.next();
+				ids.add(kis.getId());
+			}
+			lic = new LinkedIdsCondition(ids, ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
+			MeasurementPort_Transferable[] measurementPortsT = mServerRef.transmitMeasurementPortsButIdsByCondition(new Identifier_Transferable[0],
+					StorableObjectConditionBuilder.getConditionTransferable(lic));
+			Collection measurementPorts = new HashSet(measurementPortsT.length);
+			for (int i = 0; i < measurementPortsT.length; i++)
+				measurementPorts.add(new MeasurementPort(measurementPortsT[i]));
+			ConfigurationDatabaseContext.getMeasurementPortDatabase().insert(measurementPorts);
+
+			//Transmission Paths
+			ids = new HashSet(ports.size());
+			Port port;
+			for (Iterator it = ports.iterator(); it.hasNext();) {
+				port = (Port) it.next();
+				ids.add(port.getId());
+			}
+			lic = new LinkedIdsCondition(ids, ObjectEntities.TRANSPATH_ENTITY_CODE);
+			TransmissionPath_Transferable[] transmissionPathsT = mServerRef.transmitTransmissionPathsButIdsByCondition(new Identifier_Transferable[0],
+					StorableObjectConditionBuilder.getConditionTransferable(lic));
+			Collection transmissionPaths = new HashSet(transmissionPathsT.length);
+			for (int i = 0; i < transmissionPathsT.length; i++)
+				transmissionPaths.add(new TransmissionPath(transmissionPathsT[i]));
+			ConfigurationDatabaseContext.getTransmissionPathDatabase().insert(transmissionPaths);
 
 		}
 		catch (Exception e) {
@@ -182,7 +235,7 @@ public class MeasurementControlModuleSetup {
 		/*	Obtain reference to setup server	*/
 		try {
 			mServerRef = MServerHelper.narrow(corbaServer.resolveReference(setupServerId));
-			MeasurementControlModule.
+			MeasurementControlModule.mServerRef = mServerRef;
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
