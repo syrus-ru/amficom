@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.17 2004/12/22 12:22:44 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.18 2004/12/22 12:37:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/12/22 12:22:44 $
+ * @version $Revision: 1.18 $, $Date: 2004/12/22 12:37:57 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -328,7 +328,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	protected void shutdown() {
 		this.running = false;
 		deactivateCORBAServer();
-		DatabaseConnection.closeConnection();
+//		DatabaseConnection.closeConnection();
 	}
 
 	private static class MCMTestQueueMap {
