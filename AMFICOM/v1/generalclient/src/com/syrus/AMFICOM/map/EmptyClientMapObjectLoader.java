@@ -1,5 +1,5 @@
 /*
-* $Id: EmptyClientMapObjectLoader.java,v 1.3 2005/02/21 11:11:15 bob Exp $
+* $Id: EmptyClientMapObjectLoader.java,v 1.4 2005/03/01 16:12:42 krupenn Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,8 +9,6 @@
 package com.syrus.AMFICOM.map;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -19,20 +17,33 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/21 11:11:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/03/01 16:12:42 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public class EmptyClientMapObjectLoader implements MapObjectLoader {
 
+	private java.util.Map localHash = new HashMap();
+
 	public void delete(Identifier id) throws IllegalDataException {
-		// nothing
+		this.localHash.remove(id);
 	}
 
 	public void delete(Collection ids) throws IllegalDataException {
-		//		 nothing
+		for(Iterator it = ids.iterator(); it.hasNext();)
+		{
+			this.localHash.remove(it.next());
+		}
 	}
 
 	public Collector loadCollector(Identifier id) throws DatabaseException, CommunicationException {
@@ -44,11 +55,11 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 	}
 
 	public Map loadMap(Identifier id) throws DatabaseException, CommunicationException {
-		return null;
+		return (Map )this.localHash.get(id);
 	}
 
 	public Collection loadMaps(Collection ids) throws DatabaseException, CommunicationException {
-		return Collections.EMPTY_LIST;
+		return Arrays.asList(this.localHash.values().toArray());
 	}
 
 	public Mark loadMark(Identifier id) throws DatabaseException, CommunicationException {
@@ -114,7 +125,14 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 
 	public Collection loadMapsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
-		return Collections.EMPTY_LIST;
+		Collection objects = new LinkedList();
+		for(Iterator it = this.localHash.keySet().iterator(); it.hasNext();)
+		{
+			Identifier id = (Identifier)it.next();
+			if(!ids.contains(id))
+				objects.add(this.localHash.get(id));
+		}
+		return objects;
 	}
 
 	public Collection loadMarksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
@@ -153,7 +171,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 	}
 
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
-		return Collections.EMPTY_SET;
+		return storableObjects;
 	}
 
 	public void saveCollector(Collector collector, boolean force) throws VersionCollisionException, DatabaseException,
@@ -163,8 +181,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 
 	public void saveMap(Map map, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		// empty
-
+		this.localHash.put(map.getId(), map);
 	}
 
 	public void saveMark(Mark mark, boolean force) throws VersionCollisionException, DatabaseException,
@@ -217,7 +234,11 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 
 	public void saveMaps(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		// empty
+		for(Iterator it = list.iterator(); it.hasNext();)
+		{
+			Map map = (Map )it.next();
+			this.localHash.put(map.getId(), map);
+		}
 
 	}
 
