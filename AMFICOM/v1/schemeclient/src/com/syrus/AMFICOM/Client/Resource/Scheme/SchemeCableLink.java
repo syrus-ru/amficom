@@ -21,7 +21,7 @@ public class SchemeCableLink extends StubResource
 	public SchemeCableLink_Transferable transferable;
 
 	public String id = "";
-	private String name = "";
+	public String name = "";
 	public String source_port_id = "";
 	public String target_port_id = "";
 	public String cable_link_id = "";

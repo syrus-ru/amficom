@@ -110,6 +110,7 @@ public class SchemeLink extends StubResource implements Serializable
 			physical_length = 0;
 		}
 
+		attributes = new HashMap(transferable.attributes.length);
 		for(int i = 0; i < transferable.attributes.length; i++)
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}

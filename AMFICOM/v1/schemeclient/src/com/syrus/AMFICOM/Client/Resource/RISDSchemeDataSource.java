@@ -97,7 +97,7 @@ public class RISDSchemeDataSource
 		}
 	}
 
-	public void LoadSchemeProto(List ids)
+	public void LoadSchemeProto(Vector ids)
 	{
 		if(si == null)
 			return;
@@ -325,7 +325,7 @@ public class RISDSchemeDataSource
 		}
 	}
 
-	public void LoadSchemes(List ids)
+	public void LoadSchemes(Vector ids)
 	{
 		if(si == null)
 			return;

@@ -76,6 +76,7 @@ public class SchemePort extends StubResource implements Serializable
 		is_access_port = transferable.is_access_port;
 		direction_type = transferable.direction_type;
 
+		attributes = new HashMap(transferable.attributes.length);
 		for(int i = 0; i < transferable.attributes.length; i++)
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}
