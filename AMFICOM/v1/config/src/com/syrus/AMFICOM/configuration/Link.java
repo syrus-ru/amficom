@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.35 2005/02/11 07:49:43 bob Exp $
+ * $Id: Link.java,v 1.36 2005/02/14 09:15:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/02/11 07:49:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.36 $, $Date: 2005/02/14 09:15:46 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
@@ -176,16 +176,6 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 			return link;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Link.createInstance | cannot generate identifier ", e);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.linkDatabase != null)
-				this.linkDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 

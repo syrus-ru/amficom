@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.44 2005/02/11 07:49:43 bob Exp $
+ * $Id: EquipmentType.java,v 1.45 2005/02/14 09:15:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/02/11 07:49:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2005/02/14 09:15:46 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -137,16 +137,6 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 		}
 		catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("EquipmentType.createInstance | cannot generate identifier ", ioee);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.equipmentTypeDatabase != null)
-				this.equipmentTypeDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 

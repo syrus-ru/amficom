@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.65 2005/02/11 07:49:43 bob Exp $
+ * $Id: Equipment.java,v 1.66 2005/02/14 09:15:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/02/11 07:49:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.66 $, $Date: 2005/02/14 09:15:46 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -222,16 +222,6 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Equipment.createInstance | cannot generate identifier ", e);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.equipmentDatabase != null)
-				this.equipmentDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.47 2005/02/11 07:49:44 bob Exp $
+ * $Id: TransmissionPath.java,v 1.48 2005/02/14 09:15:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.47 $, $Date: 2005/02/11 07:49:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.48 $, $Date: 2005/02/14 09:15:46 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -155,16 +155,6 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("TransmissionPath.createInstance | cannot generate identifier ", e);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.transmissionPathDatabase != null)
-				this.transmissionPathDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 

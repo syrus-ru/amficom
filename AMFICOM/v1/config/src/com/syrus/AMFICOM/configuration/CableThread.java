@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.12 2005/02/11 07:49:43 bob Exp $
+ * $Id: CableThread.java,v 1.13 2005/02/14 09:15:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/11 07:49:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/02/14 09:15:45 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
@@ -112,16 +112,6 @@ public class CableThread extends DomainMember implements TypedObject {
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("CableThread.createInstance | cannot generate identifier ", e);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.cableThreadDatabase != null)
-				this.cableThreadDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 

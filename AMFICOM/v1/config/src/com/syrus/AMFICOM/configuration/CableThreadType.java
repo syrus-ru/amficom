@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.20 2005/02/11 07:49:43 bob Exp $
+ * $Id: CableThreadType.java,v 1.21 2005/02/14 09:15:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/02/11 07:49:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/02/14 09:15:45 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -125,30 +125,6 @@ public class CableThreadType extends StorableObjectType {
 		}
 
 	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.cableThreadTypeDatabase != null)
-				this.cableThreadTypeDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
-	}
-
-//	public static CableThreadType getInstance(CableThreadType_Transferable ctt) throws CreateObjectException {
-//		CableThreadType cableThreadType = new CableThreadType(ctt);
-//
-//		cableThreadType.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
-//		try {
-//			if (cableThreadType.cableThreadTypeDatabase != null)
-//				cableThreadType.cableThreadTypeDatabase.insert(cableThreadType);
-//		} catch (IllegalDataException ide) {
-//			throw new CreateObjectException(ide.getMessage(), ide);
-//		}
-//
-//		return cableThreadType;
-//	}
 
 	public Object getTransferable() {
 		return new CableThreadType_Transferable(super.getHeaderTransferable(),

@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.38 2005/02/11 07:49:44 bob Exp $
+ * $Id: PortType.java,v 1.39 2005/02/14 09:15:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/02/11 07:49:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.39 $, $Date: 2005/02/14 09:15:46 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -130,16 +130,6 @@ public class PortType extends StorableObjectType implements Characterized {
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("PortType.createInstance | cannot generate identifier ", e);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.portTypeDatabase != null)
-				this.portTypeDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 
