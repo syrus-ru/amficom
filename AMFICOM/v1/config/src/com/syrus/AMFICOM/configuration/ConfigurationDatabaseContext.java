@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.37 2005/02/03 14:38:45 arseniy Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.38 2005/02/03 14:43:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/02/03 14:38:45 $
+ * @version $Revision: 1.38 $, $Date: 2005/02/03 14:43:43 $
  * @author $Author: arseniy $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
@@ -55,21 +55,52 @@ public final class ConfigurationDatabaseContext {
 			final StorableObjectDatabase monitoredElementDatabase1,
 			final StorableObjectDatabase linkDatabase1,
 			final StorableObjectDatabase cableThreadDatabase1) {
-		equipmentTypeDatabase = equipmentTypeDatabase1;
-		portTypeDatabase = portTypeDatabase1;
-		measurementPortTypeDatabase = measurementPortTypeDatabase1;
-		linkTypeDatabase = linkTypeDatabase1;
-		cableLinkTypeDatabase = cableLinkTypeDatabase1;
-		cableThreadTypeDatabase = cableThreadTypeDatabase1;
-		equipmentDatabase = equipmentDatabase1;
-		portDatabase = portDatabase1;
-		measurementPortDatabase = measurementPortDatabase1;
-		transmissionPathDatabase = transmissionPathDatabase1;
-		transmissionPathTypeDatabase = transmissionPathTypeDatabase1;
-		kisDatabase = kisDatabase1;
-		monitoredElementDatabase = monitoredElementDatabase1;
-		linkDatabase = linkDatabase1;
-		cableThreadDatabase = cableThreadDatabase1;
+
+		if (equipmentTypeDatabase1 != null)
+			equipmentTypeDatabase = equipmentTypeDatabase1;
+
+		if (portTypeDatabase1 != null)
+			portTypeDatabase = portTypeDatabase1;
+
+		if (measurementPortTypeDatabase1 != null)
+			measurementPortTypeDatabase = measurementPortTypeDatabase1;
+
+		if (linkTypeDatabase1 != null)
+			linkTypeDatabase = linkTypeDatabase1;
+
+		if (cableLinkTypeDatabase1 != null)
+			cableLinkTypeDatabase = cableLinkTypeDatabase1;
+
+		if (cableThreadTypeDatabase1 != null)
+			cableThreadTypeDatabase = cableThreadTypeDatabase1;
+
+		if (equipmentDatabase1 != null)
+			equipmentDatabase = equipmentDatabase1;
+
+		if (portDatabase1 != null)
+			portDatabase = portDatabase1;
+
+		if (measurementPortDatabase1 != null)
+			measurementPortDatabase = measurementPortDatabase1;
+
+		if (transmissionPathDatabase1 != null)
+			transmissionPathDatabase = transmissionPathDatabase1;
+
+		if (transmissionPathTypeDatabase1 != null)
+			transmissionPathTypeDatabase = transmissionPathTypeDatabase1;
+
+		if (kisDatabase1 != null)
+			kisDatabase = kisDatabase1;
+
+		if (monitoredElementDatabase1 != null)
+			monitoredElementDatabase = monitoredElementDatabase1;
+
+		if (linkDatabase1 != null)
+			linkDatabase = linkDatabase1;
+
+		if (cableThreadDatabase1 != null)
+			cableThreadDatabase = cableThreadDatabase1;
+
 	}
 
 	public static StorableObjectDatabase getEquipmentDatabase() {
