@@ -39,9 +39,9 @@ public class CableLayout implements OperationListener
 
 		CableLinkType type = (CableLinkType)Pool.get(CableLinkType.typ, link.cableLinkTypeId);
 		int nModules = 8;
-		if (type.codename.equals("okst8") ||
-				type.codename.equals("okst16"))
-			nModules = 6;
+//		if (type.codename.equals("okst8") ||
+//				type.codename.equals("okst16"))
+//			nModules = 6;
 
 		int tmp = (int)(2 * FIBER_RADIUS * Math.sqrt(Math.round((double)link.cableThreads.size() / (double)nModules + 0.49)));
 		if (tmp > radius)
