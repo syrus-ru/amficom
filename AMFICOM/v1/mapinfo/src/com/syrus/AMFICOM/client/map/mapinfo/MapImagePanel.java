@@ -1,8 +1,13 @@
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import java.awt.Graphics;
 import java.awt.Image;
+
+import java.awt.SystemColor;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
+import java.io.IOException;
 import javax.swing.JPanel;
 
 public class MapImagePanel extends JPanel
@@ -10,14 +15,28 @@ public class MapImagePanel extends JPanel
   private Image mapImage;
   private MapInfoLogicalNetLayer layerToPaint = null;
   
-  private DoublePoint center = new DoublePoint (0,0);
-  private double zoom = 100000;
-  
-	public static final double ZOOM_FACTOR = 2D;  
-  
-  public MapImagePanel(MapInfoLogicalNetLayer layerToPaint)
+  public MapImagePanel()
   {
-    this.layerToPaint = layerToPaint;
+    this.setDoubleBuffered(true);
+    
+    this.addComponentListener(new ComponentAdapter()
+    {
+      public void componentResized(ComponentEvent e)
+      {
+        if (layerToPaint != null)
+          layerToPaint.setMapImageSize(
+            e.getComponent().getWidth(),
+            e.getComponent().getHeight());
+      }
+      
+      public void componentShown(ComponentEvent e)
+      {
+        if (layerToPaint != null)
+          layerToPaint.setMapImageSize(
+            e.getComponent().getWidth(),
+            e.getComponent().getHeight());
+      }
+    });
   }
   
   public void setImage(Image newImage)
@@ -26,75 +45,11 @@ public class MapImagePanel extends JPanel
     this.repaint();
   }
 
-/*  public boolean imageUpdate(Image img, int infoflag, int x, int y, 
-                             int width, int height) 
+  public void setLogicalLayer(MapInfoLogicalNetLayer layerToPaint)
   {
-    boolean result = true;
-
-    if ((infoflag & (ERROR | ABORT)) != 0) 
-    {
-      result = false;
-    }
-    else 
-    {
-      if ((infoflag & ALLBITS) != 0) 
-      {
-        result = false;
-      }
-      repaint();
-    }
-    return result;
+    this.layerToPaint = layerToPaint;
+    this.repaint();
   }
-
-  public void update(Graphics g)
-  {
-      paint(g);
-  }*/
-
-  public void setCenter(DoublePoint c)
-  {
-    center = c;
-  }
-
-  public DoublePoint getCenter()
-  {
-    return center;
-  }
-
-  public void setZoom(double z)
-  {
-    zoom = z;
-  }
-
-  public double getZoom()
-  {
-    return zoom;
-  }
-
-	/**
-	 * Установить масштаб вида карты с заданным коэффициентом
-	 */
-	public void scaleTo(double scaleСoef)
-	{
-    setZoom(getZoom() * scaleСoef);
-	}
-
-	/**
-	 * Приблизить вид карты со стандартным коэффициентом
-	 */
-	public void zoomIn()
-	{
-		scaleTo(1.0D / ZOOM_FACTOR);
-	}
-
-	/**
-	 * Отдалить вид карты со стандартным коэффициентом
-	 */
-	public void zoomOut()
-	{
-		scaleTo(ZOOM_FACTOR);
-	}
-
 
   public void paintComponent(Graphics g)
   {
@@ -106,15 +61,26 @@ public class MapImagePanel extends JPanel
       layerToPaint.paint(g);
   }
   
-  public String getMapMainParamString()
+  public void repaint(Graphics g, int shiftX, int shiftY)
   {
-    String result = "";
-    result += "&" + ServletCommandNames.WIDTH + "=" + this.getWidth();
-    result += "&" + ServletCommandNames.HEIGHT + "=" + this.getHeight();
-    result += "&" + ServletCommandNames.CENTER_X + "=" + this.getCenter().x;
-    result += "&" + ServletCommandNames.CENTER_Y + "=" + this.getCenter().y;
-    result += "&" + ServletCommandNames.ZOOM_FACTOR + "=" + this.getZoom();
+//    super.paintComponent(g);
+    g.setColor(SystemColor.GRAY);
     
-    return result;
+    if (shiftX > 0)
+      g.fillRect(0,0,shiftX,this.getHeight());
+    else if (shiftX < 0)
+      g.fillRect(this.getWidth() + shiftX,0,-shiftX,this.getHeight());
+      
+    if (shiftY > 0)
+      g.fillRect(0,0,this.getWidth(),shiftY);
+    else if (shiftY < 0)
+      g.fillRect(0,this.getHeight() + shiftY,this.getWidth(),-shiftY);
+
+
+		if (mapImage != null && g != null)
+      g.drawImage(this.mapImage, shiftX, shiftY, this);
+
+/*    if (this.layerToPaint != null)
+      layerToPaint.paint(g);*/
   }
 }

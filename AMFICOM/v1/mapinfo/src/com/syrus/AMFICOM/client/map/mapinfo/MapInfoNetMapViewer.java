@@ -1,11 +1,19 @@
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
 import com.mapinfo.beans.vmapj.VisualMapJ;
+import com.mapinfo.mapj.AbstractLayer;
+import com.mapinfo.mapj.FeatureLayer;
+import com.mapinfo.mapj.Layer;
+import com.mapinfo.mapj.LayerType;
+import com.mapinfo.mapj.MapJ;
+//import com.mapinfo.util.DoublePoint;
+import com.mapinfo.unit.LinearUnit;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
+import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 
 import com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapKeyAdapter;
@@ -13,12 +21,16 @@ import com.syrus.AMFICOM.Client.Map.UI.MapMouseListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapMouseMotionListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapScrollPane;
 import com.syrus.AMFICOM.Client.Map.UI.MapToolTippedPanel;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import java.awt.Component;
 
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,10 +54,12 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	protected static MapInfoNetMapViewer mapViewer = null;
 	protected static boolean dbset = false;
 
-	protected MapImagePanel mapImagePanel = null;
-  protected String mapperServletURL = null;
 	protected MapScrollPane scrollPane = null;
-
+	protected MapImagePanel mapImagePanel = null;
+  protected MapJ localMapJ = null;  
+  protected String mapperServletURL = "http://amficom:8081/samples47/servlet/cmapper";
+  protected String mapDefinitionFile = "\\\\amficom\\Mif\\mif.mdf";
+  
 	public void init()
 	{
 		Environment.log(
@@ -66,9 +80,11 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		}
 		try
 		{
+      this.localMapJ = this.initMapJ(this.mapDefinitionFile);
 			lnl = new MapInfoLogicalNetLayer(this);
 
 //			lnl.getMapState().setActionMode(MapState.DRAW_ACTION_MODE);
+      mapImagePanel.setLogicalLayer(lnl);
 
 			dtl = new MapDropTargetListener(lnl);
 			dropTarget = mapImagePanel.getDropTarget();
@@ -145,11 +161,39 @@ public class MapInfoNetMapViewer extends NetMapViewer
 //			e.printStackTrace();
 //		}
 //	}
-	public void setMap(String servletURL,String nullString)
+	public void setMap(String servletURL,String mapDefinitionFile)
 	{
-    //this.mapperServletURL = mapperServletURL;
-    this.mapperServletURL = "http://amficom:8081/samples47/servlet/cmapper";
-	}
+//    this.mapperServletURL = "http://amficom:8081/samples47/servlet/cmapper";
+//    this.mapDefinitionFile = "\\\\amficom\\Mif\\mif.mdf";
+    this.localMapJ = this.initMapJ(this.mapDefinitionFile);
+    this.lnl.setCenter(new DoublePoint(0,0));
+    this.lnl.setScale(100000);
+  }
+
+/**
+ * Инициализируем объект MapJ для локальных преобразований координат
+ */
+  private MapJ initMapJ(String mapDefinitionFile)
+  {
+		MapJ myMap = new MapJ(); // this MapJ object
+
+		// Query for image locations and load the geoset
+		try
+		{
+      System.out.println("MapImagePanel - Loading geoset...");
+      myMap.loadMapDefinition(mapDefinitionFile);
+      System.out.println("MapImagePanel - Geoset " + mapDefinitionFile + " has been loaded.");        
+		}
+		catch (IOException e)
+		{
+			System.out.println("MapImagePanel - Can't load geoset: " + mapDefinitionFile);
+		}
+
+		System.out.println("Units " + myMap.getDistanceUnits().toString());
+		myMap.setDistanceUnits(LinearUnit.meter);
+   
+    return myMap;
+  }
 
 	
 	/**
@@ -201,7 +245,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	public JComponent getVisualComponent()
 	{
 		if(mapImagePanel == null)
-			mapImagePanel = new MapImagePanel(this.lnl);
+			mapImagePanel = new MapImagePanel();
 		if(scrollPane == null)
 			scrollPane = new MapScrollPane(this);
 		return scrollPane;
@@ -224,7 +268,10 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	
 	public List getAvailableViews()
 	{
-		throw new UnsupportedOperationException();
+    List listToReturn = new ArrayList();
+    listToReturn.add(this.mapDefinitionFile);
+    
+    return listToReturn;
 	}
 	
 	public void setView(String dataBaseView)
@@ -237,7 +284,15 @@ public class MapInfoNetMapViewer extends NetMapViewer
 
 	public List getLayers()
 	{
-		List returnList = new LinkedList();
+		List returnList = new ArrayList();
+
+    Iterator layersIt =  this.localMapJ.getLayers().iterator(LayerType.FEATURE);
+    for (;layersIt.hasNext();)
+    {
+      FeatureLayer currLayer = (FeatureLayer)layersIt.next();
+      SpatialLayer spL = new MapInfoSpatialLayer(currLayer,this.lnl);
+      returnList.add(spL);
+    }
 
 		return returnList;
 	}
