@@ -42,7 +42,7 @@ implements bsHashChangeListener
 
 	public void addTrace (String id)
 	{
-		if (id.equals(RefUpdateEvent.PRIMARY_TRACE) || id.equals("modeledtrace"))
+		if (id.equals(Heap.PRIMARY_TRACE_KEY) || id.equals(Heap.MODELED_TRACE_KEY))
 		{
 			HistogrammPanel p;
 

@@ -55,7 +55,7 @@ public class PathElementsFrame extends AnalysisFrame
 		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
-		if (id.equals(RefUpdateEvent.PRIMARY_TRACE) || id.equals("modeledtrace"))
+		if (id.equals(Heap.PRIMARY_TRACE_KEY) || id.equals(Heap.MODELED_TRACE_KEY))
 		{
 			SchemePath path = null;
 

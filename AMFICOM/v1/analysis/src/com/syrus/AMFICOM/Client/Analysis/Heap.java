@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.9 2005/04/01 11:37:30 saa Exp $
+ * $Id: Heap.java,v 1.10 2005/04/01 12:40:26 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/04/01 11:37:30 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 12:40:26 $
  * @module
  */
 public class Heap
@@ -40,6 +40,7 @@ public class Heap
 	public static final String PRIMARY_TRACE_KEY = "primarytrace";
 	public static final String ETALON_TRACE_KEY =  "etalon";
 	public static final String REFERENCE_TRACE_KEY = "referencetrace"; // XXX - is really required
+	public static final String MODELED_TRACE_KEY = "modeledtrace"; // trace got from modelling module
 
 	private static double[] minuitDefaultParams;	// OT_analysisparameters, OID_minuitdefaults
 	private static double[] minuitAnalysisParams;	// OT_analysisparameters, OID_minuitanalysis
