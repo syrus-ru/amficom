@@ -4,6 +4,7 @@ public abstract class ObjectEntities {
 	/*	Object Types	*/
 	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteriscticType";
+	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
 	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink";
 	public static final String ANALYSISTYPE_ENTITY = "AnalysisType";
@@ -44,10 +45,11 @@ public abstract class ObjectEntities {
 
 	/*	Object Types 1 -- 128	*/
 	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0001;
-	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0002;
-	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0003;
-	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0004;
-	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0005;
+	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x0002;
+	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0003;
+	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0004;
+	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0005;
+	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0006;
 
 	/*	Administration 129 -- 256	*/
 	public static final short PERMATTR_ENTITY_CODE = 0x0081;
