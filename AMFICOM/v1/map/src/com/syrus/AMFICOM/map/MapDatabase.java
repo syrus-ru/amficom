@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.20 2005/03/10 09:03:20 bob Exp $
+ * $Id: MapDatabase.java,v 1.21 2005/03/10 15:39:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/10 09:03:20 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/10 15:39:16 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -551,11 +551,8 @@ public class MapDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
-		Collection maps;
-		if ((ids == null) || (ids.isEmpty()))
-			maps = super.retrieveByIds(null, conditions);
-		else maps = super.retrieveByIds(ids, conditions);	
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection maps = super.retrieveByCondition(conditionQuery);
 		
 		java.util.Map mapIds = new HashMap();
 		for (Iterator it = maps.iterator(); it.hasNext();) {

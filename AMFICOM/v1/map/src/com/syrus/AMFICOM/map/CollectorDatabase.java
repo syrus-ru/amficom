@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.21 2005/03/10 09:03:20 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.22 2005/03/10 15:39:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/03/10 09:03:20 $
+ * @version $Revision: 1.22 $, $Date: 2005/03/10 15:39:16 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -289,18 +289,12 @@ public class CollectorDatabase extends CharacterizableDatabase {
 		Collector collector = this.fromStorableObject(storableObject);		
 		this.delete(Collections.singletonList(collector.getId()));		
 	}
-
-	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
-		Collection collectors;
-		if ((ids == null) || (ids.isEmpty()))
-			collectors = super.retrieveByIds(null, conditions);
-		else 
-			collectors = super.retrieveByIds(ids, conditions);
-		this.retrievePhysicalLinks(collectors);		
-
-		return collectors;
-	}	
 	
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection collection = super.retrieveByCondition(conditionQuery);
+		this.retrievePhysicalLinks(collection);
+		return collection;
+	}
 }
 
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.17 2005/03/10 09:03:20 bob Exp $
+ * $Id: MarkDatabase.java,v 1.18 2005/03/10 15:39:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/10 09:03:20 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/10 15:39:16 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -199,14 +199,5 @@ public class MarkDatabase extends CharacterizableDatabase {
 				return;
 		}
 
-	}
-	
-
-	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
-		if ((ids == null) || (ids.isEmpty()))
-			return super.retrieveByIds(null, conditions);
-		return super.retrieveByIds(ids, conditions);	
-		//return retriveByIdsPreparedStatement(ids, conditions);
 	}	
-	
 }

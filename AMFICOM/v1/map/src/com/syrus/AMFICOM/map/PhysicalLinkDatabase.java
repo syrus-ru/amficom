@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.18 2005/03/10 09:03:20 bob Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.19 2005/03/10 15:39:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,11 +13,9 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -31,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/10 09:03:20 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/10 15:39:16 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -217,13 +215,4 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 		}
 
 	}
-	
-
-	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
-		if ((ids == null) || (ids.isEmpty()))
-			return super.retrieveByIds(null, conditions);
-		return super.retrieveByIds(ids, conditions);	
-		//return retriveByIdsPreparedStatement(ids, conditions);
-	}	
-	
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.19 2005/03/10 09:03:20 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.20 2005/03/10 15:39:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/10 09:03:20 $
+ * @version $Revision: 1.20 $, $Date: 2005/03/10 15:39:16 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -196,16 +196,5 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 		}
 
 	}
-	
-
-	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
-		Collection siteNodes;
-		if ((ids == null) || (ids.isEmpty()))
-			siteNodes = super.retrieveByIds(null, conditions);
-		else
-			siteNodes = super.retrieveByIds(ids, conditions);
-        return siteNodes;
-		//return retriveByIdsPreparedStatement(ids, conditions);
-	}	
 
 }
