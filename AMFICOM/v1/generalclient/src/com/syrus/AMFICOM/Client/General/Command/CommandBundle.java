@@ -1,5 +1,5 @@
 /**
- * $Id: CommandBundle.java,v 1.7 2004/08/20 13:25:58 krupenn Exp $
+ * $Id: CommandBundle.java,v 1.8 2004/10/07 11:52:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/08/20 13:25:58 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/07 11:52:09 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -113,24 +113,24 @@ public class CommandBundle extends VoidCommand implements Command
 	/** 
 	 * подтверждение выполнения - подтвердить для всех команд 
 	 */
-	public void commit_execute()
+	public void commitExecute()
 	{
 		for(ListIterator it = commands.listIterator();it.hasNext();)
 		{
 			Command command = (Command )it.next();
-			command.commit_execute();
+			command.commitExecute();
 		}
 	}
 
 	/** 
 	 * подтверждение обратного выполнения - подтвердить для всех команд 
 	 */
-	public void commit_undo()
+	public void commitUndo()
 	{
 		for(ListIterator it = commands.listIterator(commands.size());it.hasPrevious();)
 		{
 			Command command = (Command )it.previous();
-			command.commit_undo();
+			command.commitUndo();
 		}
 	}
 

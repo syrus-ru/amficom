@@ -50,10 +50,10 @@ public interface Command extends Cloneable
 
 	public void redo();				// повторное выполнение команды
 
-	public void commit_execute();	// подтверждение окончательного выполнения
+	public void commitExecute();	// подтверждение окончательного выполнения
 									// команды и освобождение ресурсов
 
-	public void commit_undo();		// подтверждение окончательного обратного
+	public void commitUndo();		// подтверждение окончательного обратного
 									// выполнения команды и освобождение
 									// ресурсов
 
@@ -69,4 +69,7 @@ public interface Command extends Cloneable
 
 	public Command getNext();
 	public void setNext(Command next);
+
+	public Command getPrevious();
+	public void setPrevious(Command previous);
 }

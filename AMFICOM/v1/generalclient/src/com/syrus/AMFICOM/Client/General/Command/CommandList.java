@@ -1,5 +1,5 @@
 /*
- * $Id: CommandList.java,v 1.6 2004/09/27 11:35:43 bass Exp $
+ * $Id: CommandList.java,v 1.7 2004/10/07 11:52:09 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,20 +11,23 @@ package com.syrus.AMFICOM.Client.General.Command;
 import java.util.LinkedList;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/09/27 11:35:43 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2004/10/07 11:52:09 $
  * @module generalclient_v1
  */
 public class CommandList extends VoidCommand
 {
 	/** список команд */
-	protected Command top = null;
+	private Command top = null;
+	private Command bottom = null;
+	
+	private int count = 0;
 	
 	/**
 	 * последней выполненной команды в списке + 1
 	 * (или индекс первой готовой к выполнению команды)
 	 */
-	protected Command current = null;
+	private Command current = null;
 
 	/** максимальное количество команд в списке */
 	private int maxlength = 50;
@@ -45,7 +48,7 @@ public class CommandList extends VoidCommand
 	{
 		for(int i = 0; i < c; i++)
 		{
-			Command com = getPrevious(current);
+			Command com = current.getPrevious();
 			if( com != null)
 			{
 				current = com;
@@ -61,7 +64,7 @@ public class CommandList extends VoidCommand
 	/**
 	 * выполнить обратоно C команд
 	 */
-	public void proceed_undo(int c)
+	public void proceedUndo(int c)
 	{
 		for(int i = 0; i < c; i++)
 		{
@@ -72,11 +75,11 @@ public class CommandList extends VoidCommand
 		}
 	}
 
-	public void proceed_redo(int c)	// повторно выполнить c команд
+	public void proceedRedo(int c)	// повторно выполнить c команд
 	{
 		for(int i = 0; i < c; i++)
 		{
-			Command com = getPrevious(current);
+			Command com = current.getPrevious();
 			if( com != null)
 			{
 				current = com;
@@ -89,23 +92,6 @@ public class CommandList extends VoidCommand
 		}
 	}
 	
-	public Command getPrevious(Command c)
-	{
-		Command com;
-		
-		if(c == null)
-			return getBottom(); //bottom of list
-
-		if(c == top)
-			return null;// has no previous
-
-		for(com = top; com != null; com = com.getNext())
-			if(com.getNext() == c)
-				return com;
-
-		return null;// not on list
-	}
-
 	/**
 	 * добавить команду в конец списка
 	 */
@@ -116,7 +102,14 @@ public class CommandList extends VoidCommand
 
 		// not executed commands are lost
 		command.setNext(current);
+		if(current != null)	
+			current.setPrevious(command);
+		command.setPrevious(null);
 		top = command;
+		if(bottom == null)
+			bottom = top;
+
+		count++;
 
 		if(getCount() > maxlength)
 			removeBottom(1);
@@ -128,7 +121,9 @@ public class CommandList extends VoidCommand
 	public void flush()
 	{
 		top = null;
+		bottom = null;
 		current = null;
+		count = 0;
 	}
 
 	/**
@@ -140,12 +135,17 @@ public class CommandList extends VoidCommand
 		{
 			if(top != null)
 			{
-				top.commit_undo();
+				top.commitUndo();
+				if(current == top)
+					current = top.getNext();
 				top = top.getNext();
+				count--;
 			}
 			else
-				return;
+				break;
 		}
+		if(top != null)
+			top.setPrevious(null);
 	}
 
 	/**
@@ -153,30 +153,36 @@ public class CommandList extends VoidCommand
 	 */
 	public void removeBottom(int c)
 	{
-		Command com;
-		LinkedList commands = new LinkedList();
-		
-		for(com = top; com != null; com = com.getNext())
-			commands.add(com);
-
-		if(c >= commands.size())
+		for (int i = 0; i < c; i++) 
 		{
-			flush();
-			return;
+			if(bottom != null)
+			{
+				bottom.commitExecute();
+				if(current == bottom)
+					current = null;
+				bottom = bottom.getPrevious();
+				count--;
+			}
+			else
+				break;
 		}
-		if(c < 0)
-			return;
-			
-		com = (Command )commands.get(commands.size() - c - 1);
 
-		for(Command c2 = com; c2 != null; c2 = c2.getNext())
-		{
-			c2.commit_execute();
-		}
-		
-		com.setNext(null);// Отметить как конец списка
+		if(bottom != null)
+			bottom.setNext(null);
 	}
 	
+	public void executeAll()
+	{
+		while(current != top)
+		{
+			// выполнить команду и переместить указатель
+			// списка выполненных команд
+			current = current.getPrevious();
+			if(current != null)
+				current.execute();
+		}
+	}
+
 	/**
 	 * выполнить одну следующую команду
 	 */
@@ -187,7 +193,7 @@ public class CommandList extends VoidCommand
 
 		// выполнить команду и переместить указатель
 		// списка выполненных команд
-		current = getPrevious(current);
+		current = current.getPrevious();
 		if(current != null)
 			current.execute();
 	}
@@ -202,7 +208,7 @@ public class CommandList extends VoidCommand
 
 		// выполнить команду и переместить указатель
 		// списка выполненных команд
-		current = getPrevious(current);
+		current = current.getPrevious();
 		current.redo();
 	}
 
@@ -225,12 +231,12 @@ public class CommandList extends VoidCommand
 	 */
 	 public Command getBottom()
 	 {
-		if (top == null)
-			return null;
-		Command com = top;
-		while (com.getNext() != null)
-			com = com.getNext();
-		return com;
+		return bottom;
+	 }
+
+	 public Command getTop()
+	 {
+		return top;
 	 }
 
 	/**
@@ -238,13 +244,6 @@ public class CommandList extends VoidCommand
 	 */
 	public int getCount()
 	{
-		Command c;
-		int count = 0;
-		for(c = top; c != null; )
-		{
-			count++;
-			c = c.getNext();
-		}
 		return count;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.9 2004/08/26 10:21:39 krupenn Exp $
+ * $Id: VoidCommand.java,v 1.10 2004/10/07 11:52:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/08/26 10:21:39 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/07 11:52:09 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -31,6 +31,7 @@ public class VoidCommand implements Command, Cloneable
 	private Object source;
 
 	Command next = null;
+	Command previous = null;
 	
 	public Command getNext()
 	{
@@ -99,13 +100,13 @@ public class VoidCommand implements Command, Cloneable
 	}
 
 	// пустая команда не выполняет никаких действий
-	public void commit_execute()
+	public void commitExecute()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "Void command execution commit() - ignored");
 	}
 
 	// пустая команда не выполняет никаких действий
-	public void commit_undo()
+	public void commitUndo()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "Void command undo commit() - ignored");
 	}
@@ -134,6 +135,16 @@ public class VoidCommand implements Command, Cloneable
 		{
 			Environment.log(Environment.LOG_LEVEL_FINE, "current execution point with call stack:", null, null, e);
 		}
+	}
+
+	public Command getPrevious()
+	{
+		return previous;
+	}
+
+	public void setPrevious(Command previous)
+	{
+		this.previous = previous;
 	}
 
 }
