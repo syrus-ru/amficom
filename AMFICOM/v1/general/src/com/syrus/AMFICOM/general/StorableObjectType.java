@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.7 2004/11/15 12:43:41 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.8 2004/11/15 15:14:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/11/15 12:43:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2004/11/15 15:14:46 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -29,24 +29,24 @@ public abstract class StorableObjectType extends StorableObject {
 	}
 
 	public StorableObjectType(Identifier id,
-														Date created,
-														Date modified,
-														Identifier creator_id,
-														Identifier modifier_id,
-														String codename,
-														String description) {
+							  Date created,
+							  Date modified,
+							  Identifier creator_id,
+							  Identifier modifier_id,
+							  String codename,
+							  String description) {
 		super(id,
-					created,
-					modified,
-					creator_id,
-					modifier_id);
+			  created,
+			  modified,
+			  creator_id,
+			  modifier_id);
 		this.codename = codename;
 		this.description = description;
 	}
 	
 	public StorableObjectType(StorableObject_Transferable transferable,
-								String codename,
-								String description) {
+							  String codename,
+							  String description) {
 			super(transferable);
 			this.codename = codename;
 			this.description = description;
@@ -59,17 +59,22 @@ public abstract class StorableObjectType extends StorableObject {
 	public String getDescription() {
 		return this.description;
 	}
+	
+	public void setDescription(String description){
+		this.description = description;
+		super.currentVersion = super.getNextVersion();
+	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						String codename,
-																						String description) {
+											  Date modified,
+											  Identifier creator_id,
+											  Identifier modifier_id,
+											  String codename,
+											  String description) {
 		super.setAttributes(created,
-												modified,
-												creator_id,
-												modifier_id);
+							modified,
+							creator_id,
+							modifier_id);
 		this.codename = codename;
 		this.description = description;
 	}
