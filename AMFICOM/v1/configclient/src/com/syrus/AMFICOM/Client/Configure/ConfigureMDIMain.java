@@ -2,9 +2,9 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Configure;
 
-import com.syrus.AMFICOM.Client.Configure.Map.MapMainFrame;
-import com.syrus.AMFICOM.Client.Configure.Map.MapPropertyFrame;
-import com.syrus.AMFICOM.Client.Configure.Map.MapElementsFrame;
+import com.syrus.AMFICOM.Client.Map.MapMainFrame;
+import com.syrus.AMFICOM.Client.Map.MapPropertyFrame;
+import com.syrus.AMFICOM.Client.Map.MapElementsFrame;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.ConnectionInterface;
@@ -259,8 +259,8 @@ public class ConfigureMDIMain extends JFrame implements OperationListener
 		aModel.setCommand("menuSchemeNetOpenScheme", new SchemeViewOpenCommand(desktopPane, aContext));
 
 		aModel.setCommand("menuSchemeJCatalogue", new MapJCatalogueCommand(/*Environment.the_dispatcher*/internal_dispatcher, desktopPane, aContext, new MapConfigureApplicationModelFactory()));
-		aModel.setCommand("menuSchemeJLayout", new NewJMapViewCommand(/*Environment.the_dispatcher*/internal_dispatcher, desktopPane, aContext, new MapConfigureApplicationModelFactory()));
-		aModel.setCommand("menuSchemeJOpen", new MapJViewOpenCommand(/*Environment.the_dispatcher*/internal_dispatcher, desktopPane, aContext, new MapConfigureApplicationModelFactory()));
+//		aModel.setCommand("menuSchemeJLayout", new NewJMapViewCommand(/*Environment.the_dispatcher*/internal_dispatcher, desktopPane, aContext, new MapConfigureApplicationModelFactory()));
+//		aModel.setCommand("menuSchemeJOpen", new MapJViewOpenCommand(/*Environment.the_dispatcher*/internal_dispatcher, desktopPane, aContext, new MapConfigureApplicationModelFactory()));
 
 //		aModel.setCommand("menuObjectNavigator", new OpenObjectFrameCommand(
 		aModel.setCommand("menuObjectDomain", new OpenDomainsCommand(desktopPane, aContext, "domain"));

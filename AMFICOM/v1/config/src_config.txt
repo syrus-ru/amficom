@@ -66,9 +66,7 @@ src/com/syrus/AMFICOM/Client/General/Command/Config/ImportCatalogCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Config/MapCatalogueCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Config/MapConfigViewOpenCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Config/MapJCatalogueCommand.java
-src/com/syrus/AMFICOM/Client/General/Command/Config/MapJViewOpenCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Config/MapViewOpenCommand.java
-src/com/syrus/AMFICOM/Client/General/Command/Config/NewJMapViewCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Config/NewMapViewCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Config/OpenCatalogCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Config/OpenComponentEditorCommand.java

@@ -76,11 +76,11 @@ public class OpenMapEditorCommand extends VoidCommand
 		LangModelConfig.initialize();
 		LangModelMap.initialize();
 		LangModelSchematics.initialize();
-		new com.syrus.AMFICOM.Client.Configure.Map.Editor.MapEditor(new DefaultMapEditorApplicationModelFactory());
+		new com.syrus.AMFICOM.Client.Map.Editor.MapEditor(new DefaultMapEditorApplicationModelFactory());
 /*
 		try
 		{
-			String st = "com.syrus.AMFICOM.Client.Configure.Map.Editor.MapEditor";
+			String st = "com.syrus.AMFICOM.Client.Map.Editor.MapEditor";
 			System.out.println("Opening " + st);
 			Class cl = Class.forName(st);
 			String args[] = new String[0];

@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Config;
 
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapChooserDialog;
+import com.syrus.AMFICOM.Client.Map.UI.MapChooserDialog;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
