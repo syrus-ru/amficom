@@ -14,24 +14,23 @@ public class LangModelSurvey {
 		// private constuctor consider to skeleton
 	}
 
-	public static String getString(String keyName) {
-		//System.out.println("keyName:" + keyName);
-		keyName = keyName.replaceAll(" ", "_");
+	public static String getString(final String keyName) {
+		String _keyName = keyName.replaceAll(" ", "_");
 		String string;
 		try {
-			string = RESOURCE_BUNDLE.getString(keyName);
+			string = RESOURCE_BUNDLE.getString(_keyName);
 		} catch (MissingResourceException e) {
 			String key = null;
-			string = "!" + keyName + "!";
+			string = "!" + _keyName + "!";
 			try {
-				key = OLDRESOURCE_BUNDLE.getString(keyName);
+				key = OLDRESOURCE_BUNDLE.getString(_keyName);
 				key = key.replaceAll("\\s+", "");
 			} catch (MissingResourceException ex) {
 				// nothing
 			}
 			if (key == null) {
 				try {
-					key = OLDRESOURCE_BUNDLE.getString(keyName + "Text");
+					key = OLDRESOURCE_BUNDLE.getString(_keyName + "Text");
 					key = key.replaceAll("\\s+", "");
 				} catch (MissingResourceException ex) {
 					// nothing
@@ -39,7 +38,7 @@ public class LangModelSurvey {
 			}
 			if (key == null) {
 				try {
-					key = OLDRESOURCE_BUNDLE.getString(keyName + "ToolTip");
+					key = OLDRESOURCE_BUNDLE.getString(_keyName + "ToolTip");
 					key = key.replaceAll("\\s+", "");
 				} catch (MissingResourceException ex) {
 					// nothing
@@ -47,7 +46,7 @@ public class LangModelSurvey {
 			}
 
 			try {
-				String s = "key '" + keyName + "' "
+				String s = "key '" + _keyName + "' "
 						+ (key == null ? "not found" : " is deprecated , use '" + key + "' key.");
 				throw new Exception(s);
 			} catch (Exception exc) {
