@@ -245,7 +245,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		if (et_mtm == null)
 			return;
 
-		int[] keys = { Threshold.UP1, Threshold.DOWN1, Threshold.UP2, Threshold.DOWN2 };
+		int[] keys = { Thresh.SOFT_UP, Thresh.SOFT_DOWN, Thresh.HARD_UP, Thresh.HARD_DOWN };
 		Color[] p_colors = {warningThresholdColor, warningThresholdColor, alarmThresholdColor, alarmThresholdColor };
 		SimpleReflectogramEvent sre = nEvent >= 0
 				? et_mtm.getSimpleEvent(nEvent)

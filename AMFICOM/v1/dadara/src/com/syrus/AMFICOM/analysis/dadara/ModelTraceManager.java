@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.23 2005/03/21 17:09:31 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.24 2005/03/21 18:09:23 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.23 $, $Date: 2005/03/21 17:09:31 $
+ * @version $Revision: 1.24 $, $Date: 2005/03/21 18:09:23 $
  * @module
  */
 public class ModelTraceManager
@@ -650,7 +650,7 @@ public class ModelTraceManager
 		double bestDR = 2; // наибольшее расстояние=1; 2 => еще не найдено  
 		int bestKey = 0;
 		int bestX = 0;
-		int[] keys = new int[] { Threshold.UP1, Threshold.DOWN1, Threshold.UP2, Threshold.DOWN2 }; 
+		int[] keys = new int[] { Thresh.SOFT_UP, Thresh.SOFT_DOWN, Thresh.HARD_UP, Thresh.HARD_DOWN }; 
 		for (int k = 0; k < 4; k++)
 		{
 			int xL = (int )x0 - xRange;
