@@ -23,8 +23,6 @@ test
 *.tar
 *.trc
 .all
-.classpath
 .idl
-.project
 .settings
 .sqlj
