@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.9 2005/04/04 13:33:00 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.10 2005/04/04 15:04:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
@@ -23,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/04 13:33:00 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/04 15:04:34 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -38,11 +40,27 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 	private AccessIdentifier_Transferable getAccessIdentifierTransferable() {
 		return  (AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable();
 	}
-
-	public ParameterType loadParameterType(Identifier id) throws RetrieveObjectException, CommunicationException {
+	
+	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws CreateObjectException {
+		StorableObject so = null;
 		try {
-			return new ParameterType(this.server.transmitParameterType((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			so = GeneralStorableObjectPool.getStorableObject(id, false);
+		} catch (ApplicationException e) {
+			// nothing do
+		}
+		if (so != null)
+			so.fromTransferable(transferable);
+		return so;
+	}
+
+	public ParameterType loadParameterType(Identifier id) throws CommunicationException, CreateObjectException {
+		try {
+			ParameterType_Transferable ptt = this.server.transmitParameterType((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			ParameterType parameterType = (ParameterType) this.fromTransferable(id, ptt);
+			if (parameterType == null)
+				parameterType = new ParameterType(ptt);
+			return parameterType;			
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientGeneralObjectLoader.transmitParameterType | server.transmitParameterType("
 					+ id.toString() + ")";
@@ -51,10 +69,14 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 	}
 
 	public CharacteristicType loadCharacteristicType(Identifier id) throws RetrieveObjectException,
-			CommunicationException {
+			CommunicationException, CreateObjectException {
 		try {
-			return new CharacteristicType(this.server.transmitCharacteristicType((Identifier_Transferable) id
-					.getTransferable(), getAccessIdentifierTransferable()));
+			CharacteristicType_Transferable ctt = this.server.transmitCharacteristicType((Identifier_Transferable) id
+				.getTransferable(), getAccessIdentifierTransferable());
+			CharacteristicType characteristicType = (CharacteristicType) this.fromTransferable(id, ctt);
+			if (characteristicType == null)
+				characteristicType = new CharacteristicType(ctt);
+			return characteristicType;	
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientGeneralObjectLoader.loadCharacteristicType | server.transmitCharacteristicType("
 					+ id.toString() + ")";
@@ -64,8 +86,12 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 
 	public Characteristic loadCharacteristic(Identifier id) throws RetrieveObjectException, CommunicationException {
 		try {
-			return new Characteristic(this.server.transmitCharacteristic(
-				(Identifier_Transferable) id.getTransferable(), getAccessIdentifierTransferable()));
+			Characteristic_Transferable ct = this.server.transmitCharacteristic(
+				(Identifier_Transferable) id.getTransferable(), getAccessIdentifierTransferable());
+			Characteristic characteristic = (Characteristic) this.fromTransferable(id, ct);
+			if (characteristic == null)
+				characteristic = new Characteristic(ct);
+			return characteristic;	
 		} catch (CreateObjectException e) {
 			String msg = "ClientGeneralObjectLoader.loadCharacteristic | new Characteristic(" + id.toString() + ")";
 			throw new RetrieveObjectException(msg, e);
@@ -88,7 +114,10 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 				getAccessIdentifierTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new ParameterType(transferables[j]));
+				ParameterType parameterType = (ParameterType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (parameterType == null)
+					parameterType = new ParameterType(transferables[j]);
+				set.add(parameterType);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -108,7 +137,10 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 				getAccessIdentifierTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new Characteristic(transferables[j]));
+				Characteristic characteristic = (Characteristic) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (characteristic == null)
+					characteristic = new Characteristic(transferables[j]);
+				set.add(characteristic);
 			}
 			return set;
 		} catch (CreateObjectException e) {
@@ -130,7 +162,10 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 				identifierTransferables, getAccessIdentifierTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new CharacteristicType(transferables[j]));
+				CharacteristicType characteristicType = (CharacteristicType) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (characteristicType == null)
+					characteristicType = new CharacteristicType(transferables[j]);
+				set.add(characteristicType);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
@@ -152,6 +187,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 				identifierTransferables, getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
+				/* there is no reason check entity for exist entity with same id*/
 				set.add(new ParameterType(transferables[j]));
 			}
 			return set;
@@ -171,11 +207,12 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			}
 			CharacteristicType_Transferable[] transferables = this.server.transmitCharacteristicTypesButIds(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Set list = new HashSet(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new CharacteristicType(transferables[j]));
+				/* there is no reason check entity for exist entity with same id*/
+				set.add(new CharacteristicType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
@@ -192,11 +229,12 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			}
 			Characteristic_Transferable[] transferables = this.server.transmitCharacteristicsButIdsCondition(
 				identifierTransferables, getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Set list = new HashSet(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Characteristic(transferables[j]));
+				/* there is no reason check entity for exist entity with same id*/
+				set.add(new Characteristic(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -286,15 +324,15 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public void saveCharacteristicTypes(Set list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCharacteristicTypes(Set set, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[list.size()];
+		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[set.size()];
 		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+		for (Iterator it = set.iterator(); it.hasNext(); i++) {
 			transferables[i] = (CharacteristicType_Transferable) ((CharacteristicType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveCharacteristicTypes(transferables, force,
+			this.updateStorableObjectHeader(set, this.server.receiveCharacteristicTypes(transferables, force,
 				getAccessIdentifierTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientGeneralObjectLoader.saveCharacteristicTypes ";
@@ -306,15 +344,15 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public void saveCharacteristics(Set list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCharacteristics(Set set, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		Characteristic_Transferable[] transferables = new Characteristic_Transferable[list.size()];
+		Characteristic_Transferable[] transferables = new Characteristic_Transferable[set.size()];
 		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+		for (Iterator it = set.iterator(); it.hasNext(); i++) {
 			transferables[i] = (Characteristic_Transferable) ((Characteristic) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveCharacteristics(transferables, force,
+			this.updateStorableObjectHeader(set, this.server.receiveCharacteristics(transferables, force,
 				getAccessIdentifierTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientGeneralObjectLoader.saveCharacteristics ";
@@ -326,7 +364,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException {
+	public java.util.Set refresh(Set storableObjects) throws CommunicationException {
 		try {
 			java.util.Set refreshedIds = new HashSet();
 			Identifier_Transferable[] identifier_Transferables;
