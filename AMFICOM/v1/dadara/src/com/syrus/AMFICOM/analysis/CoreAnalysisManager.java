@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.23 2005/03/21 17:09:31 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.24 2005/03/24 08:41:03 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.23 $, $Date: 2005/03/21 17:09:31 $
+ * @version $Revision: 1.24 $, $Date: 2005/03/24 08:41:03 $
  * @module
  */
 
@@ -112,7 +112,7 @@ public class CoreAnalysisManager
 			double[] yCover,
 			ThreshDX[] thDX,
 			ThreshDY[] thDY,
-			int softYeyToUpdate,
+			int softKeyToUpdate,
 			int hardKeyToUpdate);
 
 	/**
@@ -255,7 +255,9 @@ public class CoreAnalysisManager
 		SimpleReflectogramEventImpl[] se = createSimpleEvents(
 				y, deltaX,
 				pars[0], pars[1], pars[2], pars[3],
-				reflSize, nReflSize, traceLength, noiseArray);
+				reflSize, nReflSize,
+				0, null); // FIXME: ошибка в native: IA - импорт шума
+				//traceLength, noiseArray);
 
 		// теперь уточняем длину рефлектограммы по концу последнего события
 		// (длина может уменьшиться)
@@ -278,6 +280,7 @@ public class CoreAnalysisManager
 		// FIXME: testing...
 		mtm.updateUpperThreshToContain(y);
 		mtm.updateLowerThreshToContain(y);
+		// @todo: добавить запас к порогам - и по DX, и по DY
 
 		long t5 = System.currentTimeMillis();
 		System.out.println("makeAnalysis: getDataAndLength: " + (t1-t0) + "; noiseArray:" + (t2-t1) + "; IA: " + (t3-t2) + "; fit: " + (t4-t3) + "; postProcess: " + (t5-t4));
