@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.3 2004/09/15 10:31:06 max Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.4 2004/09/15 10:41:49 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/15 10:31:06 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/15 10:41:49 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -82,8 +82,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalyses(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadAnalyses(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
@@ -95,8 +95,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalysisTypes(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadAnalysisTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalysisTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadAnalysisTypes | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
@@ -108,8 +108,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluations(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadEvaluations(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
@@ -121,8 +121,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationTypes(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadEvaluationTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadEvaluationTypes | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
@@ -134,8 +134,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurements(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurements(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurements | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurements | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
@@ -147,8 +147,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetups(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementSetups(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
@@ -160,8 +160,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementTypes(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
         }
         return list;
     }
@@ -173,8 +173,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadParameterTypes(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadParameterTypes(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
@@ -186,8 +186,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadResults(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadResults(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadResults | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadResults | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
@@ -199,8 +199,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadSets(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadSets(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
@@ -212,8 +212,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadTemporalPatterns(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTemporalPatterns(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
@@ -225,8 +225,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseMeasumentObjectLoader.loadTests(List ids) | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTests(List ids) | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadTests | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTests | Illegal Storable Object: " + e.getMessage());
         }
         return list;
 	}
