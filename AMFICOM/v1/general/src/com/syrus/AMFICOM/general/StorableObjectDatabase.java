@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.32 2004/09/21 14:28:41 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.33 2004/10/17 14:19:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/09/21 14:28:41 $
+ * @version $Revision: 1.33 $, $Date: 2004/10/17 14:19:40 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -638,6 +638,9 @@ public abstract class StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				StorableObject storableObject = updateEntityFromResultSet(null, resultSet);
+				Log.debugMessage(this.getEnityName() + "Database.retriveByIdsOneQuery | retrieve  " 
+								 + ObjectEntities.codeToString(storableObject.getId().getMajor()) + ", id:" + storableObject.getId(),
+									Log.DEBUGLEVEL09);
 				result.add(storableObject);
 			}
 		} catch (SQLException sqle) {
