@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.19 2004/10/15 11:10:10 max Exp $
+ * $Id: CMServerTestCase.java,v 1.20 2004/10/19 09:35:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,7 +62,7 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/10/15 11:10:10 $
+ * @version $Revision: 1.20 $, $Date: 2004/10/19 09:35:57 $
  * @author $Author: max $
  * @module module
  */
@@ -162,7 +162,7 @@ public class CMServerTestCase extends TestCase {
         // empty;
 	}
 
-	public void testRecieveAnalyses() throws AMFICOMRemoteException, CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
+	public void _testRecieveAnalyses() throws AMFICOMRemoteException, CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
         
         //      Checking recieveAnalysiss and transmitAnalysiss methods
         
@@ -344,7 +344,7 @@ public class CMServerTestCase extends TestCase {
 				+ " identifier_Transferables  for " + (time5 - time4) + " ms");
 	}
 
-	public void _testTransmitAnalysisTypeX() throws AMFICOMRemoteException {
+	public void testTransmitAnalysisTypeX() throws AMFICOMRemoteException {
 		//      Checking method transmitAnalysisTypes(null , acc)
 		System.out.println("Checking method transmitAnalysisTypeX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.21 2004/10/18 13:59:50 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.22 2004/10/19 09:35:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,14 +56,14 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
+import com.syrus.AMFICOM.measurement.corba.TemporalCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TestCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/10/18 13:59:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2004/10/19 09:35:57 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 
@@ -992,7 +992,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
             if (storableObjectCondition instanceof TemporalCondition) {
                 transferables = this.server.transmitTestsButIdsCondition(identifier_Transferables,
                         accessIdentifierTransferable,
-                        (TestCondition_Transferable) storableObjectCondition.getTransferable());                
+                        (TemporalCondition_Transferable) storableObjectCondition.getTransferable());                
             } else {
                 transferables = this.server.transmitTestsButIds(identifier_Transferables,
                         accessIdentifierTransferable);

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.48 2004/10/19 06:50:37 max Exp $
+ * $Id: CMServerImpl.java,v 1.49 2004/10/19 09:35:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -133,13 +133,13 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TestCondition_Transferable;
+import com.syrus.AMFICOM.measurement.corba.TemporalCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/10/19 06:50:37 $
+ * @version $Revision: 1.49 $, $Date: 2004/10/19 09:35:57 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -6812,7 +6812,7 @@ public class CMServerImpl implements CMServerOperations {
     public Test_Transferable[] transmitTestsButIdsCondition(
             Identifier_Transferable[] identifier_Transferables,
             AccessIdentifier_Transferable accessIdentifier,
-            TestCondition_Transferable testCondition_Transferable)
+            TemporalCondition_Transferable temporalCondition_Transferable)
             throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.transmitTestsButIdsCondition | requiere "
                 + (identifier_Transferables.length == 0 ? "all" : Integer
@@ -6825,10 +6825,10 @@ public class CMServerImpl implements CMServerOperations {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds( idsList, new TemporalCondition(testCondition_Transferable), true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds( idsList, new TemporalCondition(temporalCondition_Transferable), true);
 
             } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new TemporalCondition(testCondition_Transferable), true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new TemporalCondition(temporalCondition_Transferable), true);
 
             Test_Transferable[] transferables = new Test_Transferable[list.size()];
             int i = 0;
