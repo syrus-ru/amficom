@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.55 2004/11/25 10:39:20 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.56 2004/11/25 10:42:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2004/11/25 10:39:20 $
+ * @version $Revision: 1.56 $, $Date: 2004/11/25 10:42:18 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -143,54 +143,9 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
 		
-<<<<<<< MeasurementStorableObjectPool.java
 		instance.polulatePools();
-=======
-		polulatePools();
 	}
-
-	public static void serializePool() {
-		java.util.Set entityCodeSet = objectPoolMap.keySet();
-		for (Iterator it = entityCodeSet.iterator(); it.hasNext();) {
-			Short entityCode = (Short) it.next();
-			LRUMapSaver.save((LRUMap) objectPoolMap.get(entityCode), ObjectEntities.codeToString(entityCode.shortValue()));	
-		}
-	}
-    
-    
-
-	private static void addObjectPool(short objectEntityCode, int poolSize) {
-		try {
-			//LRUMap objectPool = new LRUMap(poolSize);
-			LRUMap objectPool = null;
-			Constructor constructor = cacheMapClass.getConstructor(new Class[] { int.class});
-			Object obj = constructor.newInstance(new Object[] { new Integer(poolSize)});
-			if (obj instanceof LRUMap) {
-				objectPool = (LRUMap) obj;
-				objectPoolMap.put(new Short(objectEntityCode), objectPool);
-			}
-			else {
-				throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() + " must extends LRUMap");
-			}
-		} catch (IllegalArgumentException e) {
-			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
-					+ " IllegalArgumentException " + e.getMessage());
-		} catch (NoSuchMethodException e) {
-			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
-					+ " NoSuchMethodException " + e.getMessage());
-		} catch (InstantiationException e) {
-			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
-					+ " InstantiationException " + e.getMessage());
-		} catch (IllegalAccessException e) {
-			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
-					+ " IllegalAccessException " + e.getMessage());
-		} catch (InvocationTargetException e) {
-			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
-					+ " InvocationTargetException " + e.getMessage());
-		}
->>>>>>> 1.54
-	}
-	
+		
     public static void refresh() throws DatabaseException, CommunicationException {        
     	instance.refreshImpl();
     }
@@ -494,35 +449,10 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	}
 	
 	public static void delete(Identifier id) throws DatabaseException, CommunicationException {
-        Short entityCode = new Short(id.getMajor());
-		LRUMap lruMap = (LRUMap) objectPoolMap.get(entityCode);
-        lruMap.remove(id);
-        try {
-        	mObjectLoader.delete(id);
-        } catch (DatabaseException e) {
-            Log.errorMessage("MeasurementStorableObjectPool.delete | DatabaseException: " + e.getMessage());
-            throw new DatabaseException("MeasurementStorableObjectPool.refresh", e);
-        } catch (CommunicationException e) {
-            Log.errorMessage("MeasurementStorableObjectPool.delete | CommunicationException: " + e.getMessage());
-            throw new CommunicationException("MeasurementStorableObjectPool.refresh", e);
-        }
+        instance.deleteImpl(id);
 	}
     
     public static void delete(List ids) throws DatabaseException, CommunicationException {
-    	for (Iterator it = ids.iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
-            Short entityCode = new Short(id.getMajor());
-            LRUMap lruMap = (LRUMap) objectPoolMap.get(entityCode);
-            lruMap.remove(id);
-		}
-        try {
-            mObjectLoader.delete(ids);
-        } catch (DatabaseException e) {
-            Log.errorMessage("MeasurementStorableObjectPool.delete | DatabaseException: " + e.getMessage());
-            throw new DatabaseException("MeasurementStorableObjectPool.refresh", e);
-        } catch (CommunicationException e) {
-            Log.errorMessage("MeasurementStorableObjectPool.delete | CommunicationException: " + e.getMessage());
-            throw new CommunicationException("MeasurementStorableObjectPool.refresh", e);
-        }
+    	instance.deleteImpl(ids);
     }
 }
