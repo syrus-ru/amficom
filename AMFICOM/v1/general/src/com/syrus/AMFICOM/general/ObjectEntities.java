@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.32 2004/12/01 10:35:46 bass Exp $
+ * $Id: ObjectEntities.java,v 1.33 2004/12/06 17:51:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/01 10:35:46 $
+ * @version $Revision: 1.33 $, $Date: 2004/12/06 17:51:31 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -109,28 +109,25 @@ public final class ObjectEntities {
 
 	public static final short UNKNOWN_ENTITY_CODE = 0x0000;
 
-	/*	Object Types 1 -- 128           */
-	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0001;
-	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x0002;
-	public static final short PORTTYPE_ENTITY_CODE = 0x0003;
-	public static final short MEASUREMENTPORTTYPE_ENTITY_CODE = 0x0004;
+	/*
+	 * Здесь могла бы быть ваша реклама: 001-128 (0x0001-0x0080)
+	 */
 
-	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0005;
-	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0006;
-	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0007;
-	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0008;
-	public static final short LINKTYPE_ENTITY_CODE = 0x0009;
-	//public static final short KISTYPE_ENTITY_CODE = 0x000A;
-	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x000B;
-	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x000C;
+	/*
+	 * Administration:       129-192 (0x0081-0x00C0)
+	 * Administration Types: 193-256 (0x00C1-0x0100)
+	 */
+	public static final short ADMINISTRATION_MIN_ENTITY_CODE = 0x0081;
 
-	public static final short SITE_NODE_TYPE_ENTITY_CODE = 0x000D;
-	public static final short PHYSICAL_LINK_TYPE_ENTITY_CODE = 0x000E;
+	public static final short ADMINISTRATION_MAX_ENTITY_CODE = 0x0100;
 
-	/*	Administration 129 -- 256	*/
+	/*
+	 * Configuration:       257-320 (0x0101-0x0140)
+	 * Configuration Types: 321-384 (0x0141-0x0180)
+	 */
+	public static final short CONFIGURATION_MIN_ENTITY_CODE = 0x0101;
 
-	/*	Configuration 257 -- 384        */
-	public static final short CHARACTERISTIC_ENTITY_CODE = 0x0101;
+	public static final short CHARACTERISTIC_ENTITY_CODE = CONFIGURATION_MIN_ENTITY_CODE;
 	public static final short PERMATTR_ENTITY_CODE = 0x0102;
 	public static final short USER_ENTITY_CODE = 0x0103;
 	public static final short DOMAIN_ENTITY_CODE = 0x0104;
@@ -144,8 +141,20 @@ public final class ObjectEntities {
 	public static final short ME_ENTITY_CODE = 0x010C;
 	public static final short LINK_ENTITY_CODE = 0x010D;
 
-	/*	Measurement 385 -- 512          */
-	public static final short SET_ENTITY_CODE = 0x0181;
+	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0141;
+	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x0142;
+	public static final short PORTTYPE_ENTITY_CODE = 0x0143;
+	public static final short MEASUREMENTPORTTYPE_ENTITY_CODE = 0x0144;
+
+	public static final short CONFIGURATION_MAX_ENTITY_CODE = 0x0180;
+
+	/*
+	 * Measurement:       385-448 (0x0181-0x01C0)
+	 * Measurement Types: 449-512 (0x01C1-0x0200)
+	 */
+	public static final short MEASUREMENT_MIN_ENTITY_CODE = 0x0181;
+
+	public static final short SET_ENTITY_CODE = MEASUREMENT_MIN_ENTITY_CODE;
 	public static final short SETPARAMETER_ENTITY_CODE = 0x0182;
 	public static final short MS_ENTITY_CODE = 0x0183;
 	public static final short MEASUREMENT_ENTITY_CODE = 0x0184;
@@ -157,7 +166,21 @@ public final class ObjectEntities {
 	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x018A;
 	public static final short MODELING_ENTITY_CODE = 0x018B;
 
-	/*	Scheme 513 -- 640               */
+	public static final short PARAMETERTYPE_ENTITY_CODE = 0x01C1;
+	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x01C2;
+	public static final short ANALYSISTYPE_ENTITY_CODE = 0x01C3;
+	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x01C4;
+	public static final short LINKTYPE_ENTITY_CODE = 0x01C5;
+//	public static final short KISTYPE_ENTITY_CODE = 0x01C6;
+	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x01C7;
+	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x01C8;
+
+	public static final short MEASUREMENT_MAX_ENTITY_CODE = 0x0200;
+
+	/*
+	 * Scheme:       513-576 (0x0201-0x0240)
+	 * Scheme Types: 577-640 (0x0241-0x0280)
+	 */
 	public static final short SCHEME_MIN_ENTITY_CODE = 0x0201;
 
 	public static final short CABLE_CHANNELING_ITEM_ENTITY_CODE = SCHEME_MIN_ENTITY_CODE;
@@ -178,7 +201,10 @@ public final class ObjectEntities {
 
 	public static final short SCHEME_MAX_ENTITY_CODE = 0x0280;
 
-	/*      Map 641 -- 768                    */
+	/*
+	 * Map:       641-704 (0x0281-0x02C0)
+	 * Map Types: 705-768 (0x02C1-0x0300)
+	 */
 	public static final short MAP_MIN_ENTITY_CODE = 0x0281;
 
 	public static final short SITE_NODE_ENTITY_CODE = 0x0281;
@@ -189,16 +215,24 @@ public final class ObjectEntities {
 	public static final short COLLECTOR_ENTITY_CODE = 0x0286;
 	public static final short MAP_ENTITY_CODE = 0x0287;
 
+	public static final short SITE_NODE_TYPE_ENTITY_CODE = 0x02C1;
+	public static final short PHYSICAL_LINK_TYPE_ENTITY_CODE = 0x02C2;
+
 	public static final short MAP_MAX_ENTITY_CODE = 0x0300;
 
-	/*      Resource 769 -- 896               */
+	/*
+	 * Resource:       769-832 (0x0301-0x0340)
+	 * Resource Types: 833-896 (0x0341-0x0380)
+	 */
 	public static final short RESOURCE_MIN_ENTITY_CODE = 0x0301;
 
 	public static final short IMAGE_RESOURCE_ENTITY_CODE = RESOURCE_MIN_ENTITY_CODE;
 
 	public static final short RESOURCE_MAX_ENTITY_CODE = 0x0380;
 
-	/*      Updike 32767                      */
+	/*
+	 * Updike: 32767 (0x7FFF)
+	 */
 	public static final short UPDIKE_ENTITY_CODE = Short.MAX_VALUE;
 
 	private ObjectEntities() {
