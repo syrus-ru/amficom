@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.9 2004/09/08 14:14:37 max Exp $
+ * $Id: DomainDatabase.java,v 1.10 2004/09/09 05:43:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/09/08 14:14:37 $
- * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2004/09/09 05:43:50 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -58,7 +58,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns()
+			this.updateColumns = super.getUpdateColumns() + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION;
@@ -68,7 +68,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues()
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
@@ -81,7 +81,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 		Domain domain = fromStorableObject(storableObject);
 		Identifier domainId = domain.getDomainId();
 		String domainIdSubstr = (domainId != null) ? domainId.toSQLString() : Identifier.getNullSQLString();
-		String sql = super.getUpdateSingleSQLValues(storableObject)
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ domainIdSubstr + COMMA
 			+ APOSTOPHE + domain.getName() + APOSTOPHE + COMMA
 			+ APOSTOPHE + domain.getDescription() + APOSTOPHE;
@@ -96,7 +96,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	}
 
 	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition)
+		return super.retrieveQuery(condition) + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION
