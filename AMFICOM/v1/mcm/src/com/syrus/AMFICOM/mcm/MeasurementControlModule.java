@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.66 2005/03/23 18:09:16 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.67 2005/03/25 22:23:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/03/23 18:09:16 $
+ * @version $Revision: 1.67 $, $Date: 2005/03/25 22:23:01 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -177,10 +177,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Create reference to MServer*/
 		activateMServerReference();
 
-		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
-		prepareTestList();
-		prepareResultList();
-
 		/*	Initialize pool of Identifiers*/
 		IdentifierPool.init(mServerRef);
 
@@ -192,6 +188,10 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 		/*	Create and start transceiver for every KIS*/
 		activateKISTransceivers();
+
+		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
+		prepareTestList();
+		prepareResultList();
 
 		/*	Start main loop	*/
 		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
