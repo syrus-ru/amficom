@@ -1,3 +1,11 @@
+/*
+ * $Id: MeasurementServerSetup.java,v 1.5 2004/08/17 18:23:15 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.setup;
 
 import java.util.List;
@@ -34,9 +42,16 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
+/**
+ * @version $Revision: 1.5 $, $Date: 2004/08/17 18:23:15 $
+ * @author $Author: arseniy $
+ * @module mserver_v1
+ */
+
 public class MeasurementServerSetup {
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
+	public static final String DB_LOGIN_NAME = "amficom";
 
 	public static final String CODENAME_REF_WVLEN = "ref_wvlen";
 	public static final String CODENAME_REF_TRCLEN = "ref_trclen";
@@ -71,32 +86,38 @@ public class MeasurementServerSetup {
 		establishDatabaseConnection();
 		DatabaseContextSetup.initDatabaseContext();
 		DatabaseContextSetup.initObjectPools();
+		
+		Identifier sysAdminId = createSystemAdministrator();
 
-		Identifier creatorId = new Identifier("Users_9");
-//		createUser(creatorId,
-//							 "mserver",
-//							 UserSort.USER_SORT_SERVER,
-//							 "User Serverovich",
-//							 "User for measurement server");
-//		createUser(creatorId,
-//							 "mcm",
-//							 UserSort.USER_SORT_MCM,
-//							 "User Mcmovich",
-//							 "User for measurement control module");
+//		Identifier creatorId = new Identifier("Users_1");//Users_9
 
-//		createDomain(creatorId);
+		Identifier serverUserId = createUser(sysAdminId,
+																				 "mserver",
+																				 UserSort.USER_SORT_SERVER,
+																				 "User Serverovich",
+																				 "User for measurement server");
+
+		Identifier mcmUserId = createUser(sysAdminId,
+																			"mcm",
+																			UserSort.USER_SORT_MCM,
+																			"User Mcmovich",
+																			"User for measurement control module");
+
+		Identifier domainId = createDomain(sysAdminId);
 //		checkDomain();
 
-		Identifier serverUserId = new Identifier("Users_10");
-		Identifier mcmUserId = new Identifier("Users_11");
-		Identifier domainId = new Identifier("Domain_26");
-//		createServer(creatorId,
-//								 domainId,
-//								 serverUserId);
+//		Identifier serverUserId = new Identifier("Users_4");//Users_10
+//		Identifier mcmUserId = new Identifier("Users_3");//Users_11
+//		Identifier domainId = new Identifier("Domain_2");//Domain_26
+
+		Identifier serverId = createServer(sysAdminId,
+																			 domainId,
+																			 serverUserId);
 //		checkServer();
 
-		Identifier serverId = new Identifier("Server_3");
-		createMCM(creatorId, domainId, mcmUserId, serverId);
+//		Identifier serverId = new Identifier("Server_3");
+
+		Identifier mcmId = createMCM(sysAdminId, domainId, mcmUserId, serverId);
 
 //		createParameterTypes(creatorId);
 //		checkParameterTypes();
@@ -104,11 +125,30 @@ public class MeasurementServerSetup {
 		DatabaseConnection.closeConnection();
 	}
 
-	private static void createUser(Identifier creatorId,
-																 String login,
-																 UserSort sort,
-																 String name,
-																 String description) {
+	private static Identifier createSystemAdministrator() {
+		try {
+			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.USER_ENTITY_CODE);
+			User user = User.createInstance(id,
+																			id,
+																			"sys",
+																			UserSort.USER_SORT_SYSADMIN,
+																			"sys",
+																			"System Administrator");
+																			
+			User user1 = new User((User_Transferable)user.getTransferable());
+			return id;
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+
+	private static Identifier createUser(Identifier creatorId,
+																			 String login,
+																			 UserSort sort,
+																			 String name,
+																			 String description) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.USER_ENTITY_CODE);
 			User user = User.createInstance(id,
@@ -119,9 +159,11 @@ public class MeasurementServerSetup {
 																			description);
 																			
 			User user1 = new User((User_Transferable)user.getTransferable());
+			return id;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
+			return null;
 		}
 	}
 
@@ -136,7 +178,7 @@ public class MeasurementServerSetup {
 		}
 	}
 
-	private static void createDomain(Identifier creatorId) {
+	private static Identifier createDomain(Identifier creatorId) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE);
 			Domain domain = Domain.createInstance(id,
@@ -145,9 +187,11 @@ public class MeasurementServerSetup {
 																						"domain 1",
 																						"System domain");
 			Domain domain1 = new Domain((Domain_Transferable)domain.getTransferable());
+			return id;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
+			return null;
 		}
 	}
 
@@ -162,9 +206,9 @@ public class MeasurementServerSetup {
 		}
 	}
 
-	private static void createServer(Identifier creatorId,
-																	 Identifier domainId,
-																	 Identifier serverUserId) {
+	private static Identifier createServer(Identifier creatorId,
+																				 Identifier domainId,
+																				 Identifier serverUserId) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.SERVER_ENTITY_CODE);
 			Server server = Server.createInstance(id,
@@ -174,9 +218,11 @@ public class MeasurementServerSetup {
 																						"Measurement server",
 																						serverUserId);
 			new Server((Server_Transferable)server.getTransferable());
+			return id;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
+			return null;
 		}
 	}
 
@@ -191,10 +237,10 @@ public class MeasurementServerSetup {
 		}
 	}
 
-	private static void createMCM(Identifier creatorId,
-																Identifier domainId,
-																Identifier mcmUserId,
-																Identifier serverId) {
+	private static Identifier createMCM(Identifier creatorId,
+																			Identifier domainId,
+																			Identifier mcmUserId,
+																			Identifier serverId) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MCM_ENTITY_CODE);
 			MCM mcm = MCM.createInstance(id,
@@ -205,9 +251,11 @@ public class MeasurementServerSetup {
 																	 mcmUserId,
 																	 serverId);
 			new MCM((MCM_Transferable)mcm.getTransferable());
+			return id;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
+			return null;
 		}
 	}
 
@@ -400,8 +448,9 @@ public class MeasurementServerSetup {
 		String dbHostName = ApplicationProperties.getString("DBHostName", Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString("DBSID", DB_SID);
 		long dbConnTimeout = ApplicationProperties.getInt("DBConnectionTimeout", DB_CONNECTION_TIMEOUT)*1000;
+		String dbLoginName = ApplicationProperties.getString("DBLoginName", DB_LOGIN_NAME);
 		try {
-			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout);
+			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		}
 		catch (Exception e) {
 			Log.errorException(e);

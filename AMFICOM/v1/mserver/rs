@@ -3,8 +3,6 @@
 
 JAVA=$JAVA_HOME/bin/java
 LIB=../lib
-TRANSCEIVER=./transceiver
-DADARA=./dadara
 ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/classes12.jar
 APPCLASSPATH=$LIB/mserver.jar:$LIB/mcm_interface.jar:$LIB/measurement.jar:$LIB/configuration.jar:$LIB/general.jar:$LIB/servermisc.jar:$LIB/util.jar
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.11 2004/08/16 10:46:45 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.12 2004/08/17 18:23:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.configuration.Server;
 //import com.syrus.AMFICOM.configuration.MCM;
@@ -34,7 +35,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/16 10:46:45 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/17 18:23:15 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -43,6 +44,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	public static final String ID = "server_1";
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
+	public static final String DB_LOGIN_NAME = "amficom";
 	public static final int TICK_TIME = 5;
 
 	/*	Error codes for method processFall()	(abort tests, ...)*/
@@ -114,8 +116,9 @@ public class MeasurementServer extends SleepButWorkThread {
 		String dbHostName = ApplicationProperties.getString("DBHostName", Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString("DBSID", DB_SID);
 		long dbConnTimeout = ApplicationProperties.getInt("DBConnectionTimeout", DB_CONNECTION_TIMEOUT)*1000;
+		String dbLoginName = ApplicationProperties.getString("DBLoginName", DB_LOGIN_NAME);
 		try {
-			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout);
+			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -176,10 +179,10 @@ public class MeasurementServer extends SleepButWorkThread {
 		while (this.running) {
 			/*	Now Measurement Server can get new tests only from database
 			 * (not through direct CORBA operation).
-			 * Maybe in future remove it*/
+			 * Maybe in future remove this*/
 			fillMCMTestQueueMap();
 
-			synchronized (mcmTestQueueMap) {
+//			synchronized (mcmTestQueueMap) {
 				for (Iterator it = mcmTestQueueMap.getMCMIdsIterator(); it.hasNext();) {
 					mcmId = (Identifier)it.next();
 					testQueue = mcmTestQueueMap.getQueue(mcmId);
@@ -188,13 +191,19 @@ public class MeasurementServer extends SleepButWorkThread {
 						testsT = createTransferables(testQueue);
 						if (testsT != null) {
 							try {
+								Log.debugMessage(testsT.length + " tests to send to MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
 								mcmRef.receiveTests(testsT);
 								updateTestsStatus(testQueue, TestStatus.TEST_STATUS_SCHEDULED);
+								testQueue.clear();
 								super.clearFalls();
 							}
-							catch (org.omg.CORBA.SystemException se) {
+							catch (org.omg.CORBA.COMM_FAILURE se) {
 								Log.errorException(se);
+								super.fallCode = FALL_CODE_RECEIVE_TESTS;
+								this.mcmIdToAbortTests = mcmId;
+								this.testsToAbort = testQueue;
 								activateMCMReferenceWithId(mcmId);
+								super.sleepCauseOfFall();
 							}
 							catch (AMFICOMRemoteException are) {
 								Log.errorMessage("Cannot transmit tests: " + are.message + "; sleeping cause of fall");
@@ -208,7 +217,7 @@ public class MeasurementServer extends SleepButWorkThread {
 					else
 						activateMCMReferenceWithId(mcmId);
 				}
-			}	//synchronized
+//			}	//synchronized
 
 			System.out.println(System.currentTimeMillis());
 			try {
@@ -223,7 +232,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static void fillMCMTestQueueMap() {
 		Identifier mcmId;
 		List tests = null;
-		synchronized (mcmTestQueueMap) {
+//		synchronized (mcmTestQueueMap) {
 			for (Iterator it = mcmTestQueueMap.getMCMIdsIterator(); it.hasNext();) {
 				mcmId = (Identifier)it.next();
 				try {
@@ -233,10 +242,11 @@ public class MeasurementServer extends SleepButWorkThread {
 					Log.errorException(roe);
 				}
 				if (tests != null && !tests.isEmpty()) {
+					Log.debugMessage("Adding " + tests.size() + " tests for MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
 					mcmTestQueueMap.addTests(mcmId, tests);
 				}
 			}
-		}
+//		}
 	}
 
 	private static Test_Transferable[] createTransferables(List testQueue) {
@@ -244,19 +254,19 @@ public class MeasurementServer extends SleepButWorkThread {
 		if (! testQueue.isEmpty()) {
 			testsT = new Test_Transferable[testQueue.size()];
 			int i = 0;
-			synchronized (testQueue) {
+//			synchronized (testQueue) {
 				for (Iterator it = testQueue.iterator(); it.hasNext();)
 					testsT[i++] = (Test_Transferable)((Test)it.next()).getTransferable();
-			}
+//			}
 		}
 		return testsT;
 	}
 
 	private static void updateTestsStatus(List tests, TestStatus status) {
-		synchronized (tests) {
+//		synchronized (tests) {
 			for (Iterator it = tests.iterator(); it.hasNext();)
 				((Test)it.next()).setStatus(status);
-		}
+//		}
 	}
 
 	protected void processFall() {
@@ -274,14 +284,20 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	private void abortTests() {
 		if (this.testsToAbort != null && ! this.testsToAbort.isEmpty()) {
-			mcmTestQueueMap.remove(this.mcmIdToAbortTests, this.testsToAbort);
 			Test test;
-			synchronized (this.testsToAbort) {
+//			synchronized (this.testsToAbort) {
 				for (Iterator it = this.testsToAbort.iterator(); it.hasNext();) {
 					test = (Test)it.next();
-					test.setStatus(TestStatus.TEST_STATUS_ABORTED);
+					try {
+						test.updateStatus(TestStatus.TEST_STATUS_ABORTED, iAm.getUserId());
+					}
+					catch (UpdateObjectException uoe) {
+						Log.errorException(uoe);
+					}
+					Log.debugMessage("Test '" + test.getId() + "' set ABORTED", Log.DEBUGLEVEL08);
 				}
-			}
+//			}
+			mcmTestQueueMap.remove(this.mcmIdToAbortTests, this.testsToAbort);
 			this.mcmIdToAbortTests = null;
 			this.testsToAbort = null;
 		}
@@ -299,10 +315,10 @@ public class MeasurementServer extends SleepButWorkThread {
 
 		MCMTestQueueMap(List mcmIds) {
 			this.queueMap = Collections.synchronizedMap(new HashMap(mcmIds.size()));
-			synchronized (mcmIds) {
+//			synchronized (mcmIds) {
 				for (Iterator iterator = mcmIds.iterator(); iterator.hasNext();)
 					this.queueMap.put((Identifier)iterator.next(), Collections.synchronizedList(new LinkedList()));
-			}
+//			}
 		}
 
 		Iterator getMCMIdsIterator() {
@@ -312,6 +328,10 @@ public class MeasurementServer extends SleepButWorkThread {
 		List getQueue(Identifier mcmId) {
 			return (List)this.queueMap.get(mcmId);
 		}
+//
+//		List removeQueue(Identifier mcmId) {
+//			return (List)this.queueMap.put(mcmId, Collections.synchronizedList(new LinkedList()));
+//		}
 
 		void createQueue(Identifier mcmId) {
 			List queue = new ArrayList();
@@ -320,8 +340,20 @@ public class MeasurementServer extends SleepButWorkThread {
 
 		void addTests(Identifier mcmId, List tests) {
 			List queue = (List)this.queueMap.get(mcmId);
-			if (queue != null)
-				queue.addAll(tests);
+			if (queue != null) {
+				Test test;
+//				synchronized (tests) {
+					for (Iterator it = tests.iterator(); it.hasNext();) {
+						test = (Test)it.next();
+						if (! queue.contains(test)) {
+							queue.add(test);
+							Log.debugMessage("Added test '" + test.getId() + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
+						}
+						else
+							Log.debugMessage("Test '" + test.getId() + "'  already in map for MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
+					}
+//				}
+			}
 			else
 				Log.errorMessage("Test queue for mcm id '" + mcmId + "' not found");
 		}
