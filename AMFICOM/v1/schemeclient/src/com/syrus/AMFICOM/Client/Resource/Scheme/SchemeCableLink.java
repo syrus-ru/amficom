@@ -18,7 +18,7 @@ public class SchemeCableLink extends StubResource
 {
 	public static final String typ = "schemecablelink";
 	public static final char delimeter = ':';
-	private static final long serialVersionUID = 03L;
+	private static final long serialVersionUID = 04L;
 	public SchemeCableLink_Transferable transferable;
 
 	public String id = "";
@@ -33,11 +33,13 @@ public class SchemeCableLink extends StubResource
 	public double opticalLength = 0;
 	public double physicalLength = 0;
 
-	public Collection cableThreads;
-	public Collection channelingItems;
+	public List cableThreads;
+	public List channelingItems;
 	public Map attributes;
 
 	public boolean alarmed = false;
+
+	private static CableThreadSorter sorter;
 
 	public SchemeCableLink(SchemeCableLink_Transferable transferable)
 	{
@@ -75,7 +77,7 @@ public class SchemeCableLink extends StubResource
 		}
 	}
 
-	static String parseName(String name)
+	public static String parseName(String name)
 	{
 		int pos = name.lastIndexOf(delimeter);
 		if (pos == -1)
@@ -207,6 +209,10 @@ public class SchemeCableLink extends StubResource
 	{
 		if (cableLinkId.length() != 0)
 			cableLink = (CableLink)Pool.get(CableLink.typ, cableLinkId);
+
+		ObjectResourceSorter sorter = getSorter();
+		sorter.setDataSet(cableThreads);
+		cableThreads = sorter.sort("num", CableThreadSorter.SORT_ASCENDING);
 	}
 
 	public Object clone(DataSourceInterface dataSource)
@@ -282,6 +288,7 @@ public class SchemeCableLink extends StubResource
 		out.writeObject(cableLinkTypeId);
 		out.writeObject(schemeId);
 		out.writeObject(cableThreads);
+		out.writeObject(channelingItems);
 		out.writeDouble(opticalLength);
 		out.writeDouble(physicalLength);
 		out.writeObject(attributes);
@@ -301,7 +308,8 @@ public class SchemeCableLink extends StubResource
 
 		cableLinkTypeId = (String )in.readObject();
 		schemeId = (String )in.readObject();
-		cableThreads = (Collection )in.readObject();
+		cableThreads = (List )in.readObject();
+		channelingItems = (List )in.readObject();
 		opticalLength = in.readDouble();
 		physicalLength = in.readDouble();
 		attributes = (Map )in.readObject();
@@ -337,6 +345,13 @@ public class SchemeCableLink extends StubResource
 	public void setSchemeId(String schemeId)
 	{
 		this.schemeId = schemeId;
+	}
+
+	static public ObjectResourceSorter getSorter()
+	{
+		if (sorter == null)
+			sorter = new CableThreadSorter();
+		return sorter;
 	}
 
 //////////////////////////////////////////////////
@@ -415,5 +430,44 @@ class SchemeCableLinkModel extends ObjectResourceModel
 		{
 			System.out.println("error gettin field value - Analysis");
 		}
+	}
+}
+
+class CableThreadSorter extends ObjectResourceSorter
+{
+	String[][] sorted_columns = new String[][]{
+		{"num", "long"},
+		{"name", "string"}
+		};
+
+	public String[][] getSortedColumns()
+	{
+		return sorted_columns;
+	}
+
+	public String getString(ObjectResource or, String column)
+	{
+		if (or instanceof SchemeCableThread)
+		{
+			SchemeCableThread thread = (SchemeCableThread)or;
+			if (column.equals("name"))
+				return thread.getName();
+		}
+		return "";
+	}
+
+	public long getLong(ObjectResource or, String column)
+	{
+		int num = 0;
+		if (or instanceof SchemeCableThread)
+		{
+			SchemeCableThread thread = (SchemeCableThread)or;
+			try {
+				num = ResourceUtil.parseNumber(SchemeCableLink.parseName(thread.getName()));
+			}
+			catch (Exception ex) {
+			}
+		}
+		return num;
 	}
 }

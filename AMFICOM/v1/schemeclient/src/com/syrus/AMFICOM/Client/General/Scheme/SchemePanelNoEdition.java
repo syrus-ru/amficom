@@ -29,7 +29,7 @@ public class SchemePanelNoEdition extends SchemePanel
 	public void init_module()
 	{
 		super.init_module();
-		dispatcher.register(this, MapNavigateEvent.type);
+		dispatcher.register(this, MapNavigateEvent.MAP_NAVIGATE);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -45,18 +45,18 @@ public class SchemePanelNoEdition extends SchemePanel
 				return;
 
 		}
-		if (ae.getActionCommand().equals(MapNavigateEvent.type))
+		if (ae.getActionCommand().equals(MapNavigateEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent)ae;
 			if (mne.DATA_ALARMMARKER_CREATED)
 			{
 				//				System.out.println("DATA_ALARMMARKER_CREATED: " + mne.linkID);
-				startPathAnimator(mne.linkID);
+				startPathAnimator(mne.getLinkId());
 			}
 			if (mne.DATA_ALARMMARKER_DELETED)
 			{
 //				System.out.println("DATA_ALARMMARKER_DELETED: " + mne.linkID);
-				stopPathAnimator(mne.linkID);
+				stopPathAnimator(mne.getLinkId());
 			}
 		}
 		super.operationPerformed(ae);

@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.io.Serializable;
+import java.io.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.CableChannelingItem_Transferable;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
@@ -66,5 +66,28 @@ public class CableChannelingItem extends StubResource implements Serializable
 		transferable.physicalLinkId = physicalLinkId;
 		transferable.endSpare = endSpare;
 		transferable.endSiteId = endSiteId;
+	}
+
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException
+	{
+		out.writeObject(id);
+		out.writeInt(n);
+		out.writeObject(startSiteId);
+		out.writeDouble(startSpare);
+		out.writeObject(physicalLinkId);
+		out.writeDouble(endSpare);
+		out.writeObject(endSiteId);
+	}
+
+	private void readObject(java.io.ObjectInputStream in) throws IOException,
+			ClassNotFoundException
+	{
+		id = (String) in.readObject();
+		n = in.readInt();
+		startSiteId = (String) in.readObject();
+		startSpare = in.readDouble();
+		physicalLinkId = (String) in.readObject();
+		endSpare = in.readDouble();
+		endSiteId = (String) in.readObject();
 	}
 }
