@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.4 2005/01/30 15:13:50 krupenn Exp $
+* $Id: MapView.java,v 1.5 2005/01/31 12:31:32 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,8 +36,13 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/30 15:13:50 $
+ * Класс используется для хранения объектов, отображаемых на 
+ * топологической схеме. Объекты включают в себя:
+ * <br>&#9;- объект топологической схемы Map, то есть прокладку канализационную
+ * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
+ * топологической схеме
  * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/01/31 12:31:32 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
