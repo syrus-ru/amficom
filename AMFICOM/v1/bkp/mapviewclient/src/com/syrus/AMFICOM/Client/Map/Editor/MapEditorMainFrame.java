@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.18 2005/01/24 16:51:32 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.19 2005/01/26 16:26:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapPropertiesCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapSetupCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapWindowCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.CreateMapReportCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapEditorAddSchemeToViewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapEditorRemoveSchemeFromViewCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewRemoveSchemeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapExportCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapImportCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
@@ -100,7 +100,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2005/01/24 16:51:32 $
+ * @version $Revision: 1.19 $, $Date: 2005/01/26 16:26:14 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -241,6 +241,8 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setEnabled("menuMapViewClose", false);
 		aModel.setEnabled("menuMapViewSave", false);
 		aModel.setEnabled("menuMapViewSaveAs", false);
+		aModel.setEnabled("menuMapViewAddScheme", false);
+		aModel.setEnabled("menuMapViewRemoveScheme", false);
 
 		aModel.setEnabled("menuHelp", false);
 		aModel.setEnabled("menuHelpContents", false);
@@ -366,12 +368,12 @@ public class MapEditorMainFrame extends JFrame
 					desktopPane, 
 					aContext));
 
-		aModel.setCommand("menuSchemeAddToView", 
-				new MapEditorAddSchemeToViewCommand(
+		aModel.setCommand("menuMapViewAddScheme", 
+				new MapViewAddSchemeCommand(
 					desktopPane, 
 					aContext));
-		aModel.setCommand("menuSchemeRemoveFromView", 
-				new MapEditorRemoveSchemeFromViewCommand(
+		aModel.setCommand("menuMapViewRemoveScheme", 
+				new MapViewRemoveSchemeCommand(
 					desktopPane, 
 					aContext));
 
@@ -513,22 +515,22 @@ public class MapEditorMainFrame extends JFrame
 		{
 			mapFrame = (MapFrame)ae.getSource();
 
-			ApplicationModel aModel = aContext.getApplicationModel();
-			if(aModel != null)
-			{
-				aModel.getCommand("menuMapOpen").setParameter("mapFrame", mapFrame);
-				aModel.getCommand("menuMapNew").setParameter("mapFrame", mapFrame);
-				aModel.getCommand("menuMapSave").setParameter("mapFrame", mapFrame);
-				aModel.getCommand("menuMapSaveAs").setParameter("mapFrame", mapFrame);
-
-				aModel.getCommand("menuMapViewOpen").setParameter("mapFrame", mapFrame);
-				aModel.getCommand("menuMapViewNew").setParameter("mapFrame", mapFrame);
-				aModel.getCommand("menuMapViewSave").setParameter("mapFrame", mapFrame);
-				aModel.getCommand("menuMapViewSaveAs").setParameter("mapFrame", mapFrame);
-
-				aModel.getCommand("menuSchemeAddToView").setParameter("mapFrame", mapFrame);
-				aModel.getCommand("menuSchemeRemoveFromView").setParameter("mapFrame", mapFrame);
-			}
+//			ApplicationModel aModel = aContext.getApplicationModel();
+//			if(aModel != null)
+//			{
+//				aModel.getCommand("menuMapOpen").setParameter("mapFrame", mapFrame);
+//				aModel.getCommand("menuMapNew").setParameter("mapFrame", mapFrame);
+//				aModel.getCommand("menuMapSave").setParameter("mapFrame", mapFrame);
+//				aModel.getCommand("menuMapSaveAs").setParameter("mapFrame", mapFrame);
+//
+//				aModel.getCommand("menuMapViewOpen").setParameter("mapFrame", mapFrame);
+//				aModel.getCommand("menuMapViewNew").setParameter("mapFrame", mapFrame);
+//				aModel.getCommand("menuMapViewSave").setParameter("mapFrame", mapFrame);
+//				aModel.getCommand("menuMapViewSaveAs").setParameter("mapFrame", mapFrame);
+//
+//				aModel.getCommand("menuSchemeAddToView").setParameter("mapFrame", mapFrame);
+//				aModel.getCommand("menuSchemeRemoveFromView").setParameter("mapFrame", mapFrame);
+//			}
 		 }
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
@@ -542,6 +544,8 @@ public class MapEditorMainFrame extends JFrame
 			aModel.setEnabled("menuMapViewSave", true);
 			aModel.setEnabled("menuMapViewSaveAs", true);
 			aModel.setEnabled("menuMapViewClose", true);
+			aModel.setEnabled("menuMapViewAddScheme", true);
+			aModel.setEnabled("menuMapViewRemoveScheme", true);
 
 			aModel.fireModelChanged();
 			setTitle(LangModelMap.getString("MapView") + ": " + ((MapView )ae.getSource()).getName());
@@ -574,6 +578,8 @@ public class MapEditorMainFrame extends JFrame
 			aModel.setEnabled("menuMapViewSave", false);
 			aModel.setEnabled("menuMapViewSaveAs", false);
 			aModel.setEnabled("menuMapViewClose", false);
+			aModel.setEnabled("menuMapViewAddScheme", false);
+			aModel.setEnabled("menuMapViewRemoveScheme", false);
 
 			aModel.fireModelChanged();
 			setTitle(LangModelMap.getString("MapView"));
@@ -672,7 +678,6 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setEnabled("menuSessionDomain", false);
 
 		aModel.setEnabled("menuMap", false);
-		aModel.setEnabled("menuScheme", false);
 		aModel.setEnabled("menuMapView", false);
 		aModel.setEnabled("menuView", false);
 		aModel.setEnabled("menuReport", false);
@@ -694,7 +699,6 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setEnabled("menuSessionDomain", false);
 
 		aModel.setEnabled("menuMap", false);
-		aModel.setEnabled("menuScheme", false);
 		aModel.setEnabled("menuMapView", false);
 		aModel.setEnabled("menuView", false);
 		aModel.setEnabled("menuReport", false);
@@ -751,7 +755,6 @@ public class MapEditorMainFrame extends JFrame
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuMap", true);
-		aModel.setEnabled("menuScheme", true);
 		aModel.setEnabled("menuMapView", true);
 		aModel.setEnabled("menuView", true);
 		aModel.setEnabled("menuReport", true);
@@ -803,6 +806,8 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setEnabled("menuMapViewSave", false);
 		aModel.setEnabled("menuMapViewSaveAs", false);
 		aModel.setEnabled("menuMapViewClose", false);
+		aModel.setEnabled("menuMapViewAddScheme", false);
+		aModel.setEnabled("menuMapViewRemoveScheme", false);
 		
 		aModel.setEnabled("menuMapNew", false);
 		aModel.setEnabled("menuMapOpen", false);
@@ -853,10 +858,6 @@ public class MapEditorMainFrame extends JFrame
 			Command closeCommand = aContext.getApplicationModel().getCommand("menuExit");
 			this.setContext(null);
 			closeCommand.execute();
-
-//			internal_dispatcher.notify(new OperationEvent(this, 0, "mapcloseevent"));
-//			internal_dispatcher.unregister(this, "contextchange");
-//			Environment.getDispatcher().unregister(this, "contextchange");
 
 			return;
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.8 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.9 2005/01/26 16:26:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import javax.swing.JMenuItem;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/26 16:26:14 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -58,9 +58,6 @@ public class MapEditorMenuBar extends JMenuBar
 	JMenuItem menuMapExport = new JMenuItem();
 	JMenuItem menuMapImport = new JMenuItem();
 
-	JMenu menuScheme = new JMenu();
-	JMenuItem menuSchemeAddToView = new JMenuItem();
-	JMenuItem menuSchemeRemoveFromView = new JMenuItem();
 
 	JMenu menuMapView = new JMenu();
 	JMenuItem menuMapViewNew = new JMenuItem();
@@ -68,6 +65,8 @@ public class MapEditorMenuBar extends JMenuBar
 	JMenuItem menuMapViewClose = new JMenuItem();
 	JMenuItem menuMapViewSave = new JMenuItem();
 	JMenuItem menuMapViewSaveAs = new JMenuItem();
+	JMenuItem menuMapViewAddScheme = new JMenuItem();
+	JMenuItem menuMapViewRemoveScheme = new JMenuItem();
 
 	JMenu menuView = new JMenu();
 	JMenuItem menuViewProto = new JMenuItem();
@@ -198,15 +197,6 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMapImport.setName("menuMapImport");
 		menuMapImport.addActionListener(actionAdapter);
 
-		menuScheme.setText(LangModelMap.getString("menuScheme"));
-		menuScheme.setName("menuScheme");
-		menuSchemeAddToView.setText(LangModelMap.getString("menuSchemeAddToView"));
-		menuSchemeAddToView.setName("menuSchemeAddToView");
-		menuSchemeAddToView.addActionListener(actionAdapter);
-		menuSchemeRemoveFromView.setText(LangModelMap.getString("menuSchemeRemoveFromView"));
-		menuSchemeRemoveFromView.setName("menuSchemeRemoveFromView");
-		menuSchemeRemoveFromView.addActionListener(actionAdapter);
-
 		menuMapView.setText(LangModelMap.getString("menuMapView"));
 		menuMapView.setName("menuMapView");
 		menuMapViewNew.setText(LangModelMap.getString("menuMapViewNew"));
@@ -224,6 +214,12 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMapViewSaveAs.setText(LangModelMap.getString("menuMapViewSaveAs"));
 		menuMapViewSaveAs.setName("menuMapViewSaveAs");
 		menuMapViewSaveAs.addActionListener(actionAdapter);
+		menuMapViewAddScheme.setText(LangModelMap.getString("menuMapViewAddScheme"));
+		menuMapViewAddScheme.setName("menuMapViewAddScheme");
+		menuMapViewAddScheme.addActionListener(actionAdapter);
+		menuMapViewRemoveScheme.setText(LangModelMap.getString("menuMapViewRemoveScheme"));
+		menuMapViewRemoveScheme.setName("menuMapViewRemoveScheme");
+		menuMapViewRemoveScheme.addActionListener(actionAdapter);
 
 		menuReport.setText(LangModelReport.getString("label_report"));
 		menuReport.setName("menuReport");
@@ -292,8 +288,6 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMap.add(menuMapExport);
 		menuMap.add(menuMapImport);
 
-		menuScheme.add(menuSchemeAddToView);
-		menuScheme.add(menuSchemeRemoveFromView);
 
 		menuMapView.add(menuMapViewNew);
 		menuMapView.add(menuMapViewOpen);
@@ -301,6 +295,9 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMapView.add(menuMapViewSave);
 		menuMapView.add(menuMapViewSaveAs);
 		menuMapView.add(menuMapViewClose);
+		menuMapView.addSeparator();
+		menuMapView.add(menuMapViewAddScheme);
+		menuMapView.add(menuMapViewRemoveScheme);
 
 //		menuHelp.add(menuHelpContents);
 //		menuHelp.add(menuHelpFind);
@@ -318,7 +315,6 @@ public class MapEditorMenuBar extends JMenuBar
 		this.add(menuSession);
 		this.add(menuMap);
 		this.add(menuMapView);
-		this.add(menuScheme);
 		this.add(menuView);
 		this.add(menuReport);    
 		this.add(menuHelp);
@@ -408,15 +404,6 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMapImport.setVisible(aModel.isVisible("menuMapImport"));
 		menuMapImport.setEnabled(aModel.isEnabled("menuMapImport"));
 
-		menuScheme.setVisible(aModel.isVisible("menuScheme"));
-		menuScheme.setEnabled(aModel.isEnabled("menuScheme"));
-
-		menuSchemeAddToView.setVisible(aModel.isVisible("menuSchemeAddToView"));
-		menuSchemeAddToView.setEnabled(aModel.isEnabled("menuSchemeAddToView"));
-
-		menuSchemeRemoveFromView.setVisible(aModel.isVisible("menuSchemeRemoveFromView"));
-		menuSchemeRemoveFromView.setEnabled(aModel.isEnabled("menuSchemeRemoveFromView"));
-
 		menuMapView.setVisible(aModel.isVisible("menuMapView"));
 		menuMapView.setEnabled(aModel.isEnabled("menuMapView"));
 
@@ -434,6 +421,12 @@ public class MapEditorMenuBar extends JMenuBar
 
 		menuMapViewSaveAs.setVisible(aModel.isVisible("menuMapViewSaveAs"));
 		menuMapViewSaveAs.setEnabled(aModel.isEnabled("menuMapViewSaveAs"));
+
+		menuMapViewAddScheme.setVisible(aModel.isVisible("menuMapViewAddScheme"));
+		menuMapViewAddScheme.setEnabled(aModel.isEnabled("menuMapViewAddScheme"));
+
+		menuMapViewRemoveScheme.setVisible(aModel.isVisible("menuMapViewRemoveScheme"));
+		menuMapViewRemoveScheme.setEnabled(aModel.isEnabled("menuMapViewRemoveScheme"));
 
 		menuHelp.setVisible(aModel.isVisible("menuHelp"));
 		menuHelp.setEnabled(aModel.isEnabled("menuHelp"));
