@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.9 2005/02/08 11:53:13 max Exp $
+ * $Id: LinkedIdsCondition.java,v 1.10 2005/02/08 14:25:03 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(List)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  * 
- * @author $Author: max $
- * @version $Revision: 1.9 $, $Date: 2005/02/08 11:53:13 $
+ * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/02/08 14:25:03 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -341,29 +341,31 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.delegate.linkedIds = Collections.singletonList(linkedId);
 	}
 	
-	public Map sort(List linkedIds) {
+	public Map sort(List linkIds) {
 		Map codeIdsMap = new Hashtable();
-		for (Iterator it = linkedIds.iterator(); it.hasNext();) {
+		for (Iterator it = linkIds.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			short code = id.getMajor();
 			List ids = (List) codeIdsMap.get(new Short(code));
 			if(ids == null) {
 				ids = new LinkedList();
-				ids.add(id);
 				codeIdsMap.put(new Short(code), ids);
-			} else {
-				ids.add(id);
 			}
+			ids.add(id);
 		}
 		return codeIdsMap;		
 	}
 	
-	public boolean conditionTest(List params) {
+	public boolean conditionTest(List params) {		
+		return this.conditionTest(params, this.linkedIds);
+	}
+	
+	public boolean conditionTest(List params, List linkIds) {
 		if (params != null) {
 			for (Iterator it = params.iterator(); it.hasNext();) {
 				Identified identified = (Identified) it.next();
 				Identifier id2 = identified.getId();
-				for (Iterator iter = this.linkedIds.iterator(); iter.hasNext();) {
+				for (Iterator iter = linkIds.iterator(); iter.hasNext();) {
 					Identifier id = (Identifier) iter.next();
 					if (id2.equals(id)) {
 						return true;
