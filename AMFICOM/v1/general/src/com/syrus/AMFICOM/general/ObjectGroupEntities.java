@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.1 2004/11/23 10:42:07 max Exp $
+ * $Id: ObjectGroupEntities.java,v 1.2 2004/11/23 12:26:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/23 10:42:07 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2004/11/23 12:26:47 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 public class ObjectGroupEntities {
@@ -22,6 +22,9 @@ public class ObjectGroupEntities {
     public static final short UNKNOWN_GROUP_CODE = 0x0000;
     public static final short MEASUREMENT_GROUP_CODE = 0x0001;
     public static final short CONFIGURATION_GROUP_CODE = 0x0002;
+
+		private ObjectGroupEntities() {
+		}
 
     public static short stringToCode(String groupString) {
         if(groupString.equals(MEASUREMENT_GROUP))
