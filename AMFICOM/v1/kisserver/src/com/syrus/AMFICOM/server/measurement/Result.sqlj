@@ -1,9 +1,7 @@
 package com.syrus.AMFICOM.server.measurement;
 
-import java.util.List;
 import java.util.LinkedList;
-import java.sql.Timestamp;
-import java.sql.SQLException;
+import java.sql.*;
 import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
 import com.syrus.AMFICOM.CORBA.Survey.ClientResult_Transferable;
 import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
@@ -11,12 +9,15 @@ import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.CORBA.General.TestTemporalType;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.util.Log;
+import sqlj.runtime.ref.DefaultContext;
 
 public class Result {
-  public static final String RESULT_TYPE_TEST = "test";
-  public static final String RESULT_TYPE_ANALYSIS = "analysis";
-  public static final String RESULT_TYPE_EVALUATION = "evaluation";
-  public static final String RESULT_TYPE_MODELING = "modeling";
+	private static final Connection CONN = DefaultContext.getDefaultContext().getConnection(); 
+
+	public static final String RESULT_TYPE_TEST = "test";
+	public static final String RESULT_TYPE_ANALYSIS = "analysis";
+	public static final String RESULT_TYPE_EVALUATION = "evaluation";
+	public static final String RESULT_TYPE_MODELING = "modeling";
 
   private String id;
   private String action_id;
@@ -27,7 +28,7 @@ public class Result {
 	private String user_id;
 
   public Result(Result_Transferable rest) throws Exception {
-    this.id = ResourcedbInterface.getUId("result");
+    this.id = ResourcedbInterface.getUid(CONN, "result");
     this.action_id = rest.action_id;
     this.result_type = rest.result_type;
     this.elementary_start_time = new Timestamp(rest.elementary_start_time);

@@ -1,23 +1,23 @@
 package com.syrus.AMFICOM.server.measurement;
 
 import java.util.LinkedList;
-import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.*;
 import oracle.jdbc.driver.OracleResultSet;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
 import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
-//import com.syrus.util.Log;
+import sqlj.runtime.ref.DefaultContext;
 
 public class Parameter {
-  private String id;
-  private String result_id;
-  private String type_id;
-  private byte[] value;
-  private String holder_sort;
+	private static final Connection CONN = DefaultContext.getDefaultContext().getConnection(); 
+
+	private String id;
+	private String result_id;
+	private String type_id;
+	private byte[] value;
+	private String holder_sort;
 
   public Parameter(String id, String holder_sort) throws SQLException {
     this.id = id;
@@ -57,7 +57,7 @@ public class Parameter {
                    String result_id,
                    String holder_sort) throws Exception {
     this(holder_sort,
-         ResourcedbInterface.getUId("parameter"),
+         ResourcedbInterface.getUid(CONN, "parameter"),
          result_id,
          parameter_t.type_id,
          parameter_t.value);

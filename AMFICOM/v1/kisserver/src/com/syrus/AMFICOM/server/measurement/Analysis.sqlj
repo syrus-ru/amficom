@@ -1,17 +1,19 @@
 package com.syrus.AMFICOM.server.measurement;
 
 import java.util.LinkedList;
-import java.sql.Timestamp;
-import java.sql.SQLException;
+import java.sql.*;
 import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.CORBA.KIS.Analysis_Transferable;
 import com.syrus.AMFICOM.CORBA.Survey.ClientAnalysis_Transferable;
 import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
+import sqlj.runtime.ref.DefaultContext;
 
 public class Analysis extends Action {
-  private CriteriaSet criteriaSet;
-  private Argument[] arguments;
+	private static final Connection CONN = DefaultContext.getDefaultContext().getConnection(); 
+
+	private CriteriaSet criteriaSet;
+	private Argument[] arguments;
 
   public Analysis(String id) throws SQLException {
     super.id = id;
@@ -240,17 +242,18 @@ public class Analysis extends Action {
 		if (cri_set_id == null || cri_set_id.equals(""))
 			throw new SQLException("Criteria Set not found");
 		ClientParameter_Transferable[] arguments_t = new ClientParameter_Transferable[0];
-		ClientAnalysis_Transferable cat = new ClientAnalysis_Transferable(ResourcedbInterface.getUId("analysis"),
-												                                              "dadara",
-																																			cri_set_id,
-																																			me_id,
-																																			"A dadara analysis",
-																																			System.currentTimeMillis(),
-																																			null,
-																																			0,
-																																			"The First dadara analysis imeni Levchenko",
-																																			new String[0],
-																																			arguments_t);
+		ClientAnalysis_Transferable cat = new ClientAnalysis_Transferable(
+			ResourcedbInterface.getUid(CONN, "analysis"),
+			"dadara",
+			cri_set_id,
+			me_id,
+			"A dadara analysis",
+			System.currentTimeMillis(),
+			null,
+			0,
+			"The First dadara analysis imeni Levchenko",
+			new String[0],
+			arguments_t);
 		return (new Analysis(cat)).getId();
 	}
 }

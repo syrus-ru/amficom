@@ -1,19 +1,19 @@
 package com.syrus.AMFICOM.server.event;
 
 import sqlj.runtime.ref.DefaultContext;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.Hashtable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.AMFICOM.CORBA.Alarm.EventSource_Transferable;
 
 public class EventSource {
-  private String id;
-  private String description;
-  private EventSourceType eventSourceType;
-  private String object_source_id;
-  private String object_source_name;
+	private static final Connection CONN = DefaultContext.getDefaultContext().getConnection(); 
+
+	private String id;
+	private String description;
+	private EventSourceType eventSourceType;
+	private String object_source_id;
+	private String object_source_name;
 	private String domain_id;
 	private Hashtable rules;
 
@@ -56,7 +56,7 @@ public class EventSource {
     this.eventSourceType = new EventSourceType(type_id);
     this.object_source_id = object_source_id;
     this.description = description;
-    this.id = ResourcedbInterface.getUId("eventsource");
+    this.id = ResourcedbInterface.getUid(CONN, "eventsource");
     #sql { INSERT INTO amficom.eventsources (id,
                                              description,
 																						 type_id,
