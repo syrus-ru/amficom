@@ -15,12 +15,12 @@ CREATE TABLE SiteNode (
  street VARCHAR2(128),
  building VARCHAR2(128),
 --
- CONSTRAINT sitnode_pk PRIMARY KEY (id),
- CONSTRAINT sitnode_creator_fk FOREIGN KEY (creator_id)
+ CONSTRAINT sitenode_pk PRIMARY KEY (id),
+ CONSTRAINT sitenode_creator_fk FOREIGN KEY (creator_id)
   REFERENCES "User" (id) ON DELETE CASCADE,
- CONSTRAINT sitnode_modifier_fk FOREIGN KEY (modifier_id)
+ CONSTRAINT sitenode_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES "User" (id) ON DELETE CASCADE,
- CONSTRAINT sitnode_type_modifier_fk FOREIGN KEY (site_node_type_id)
+ CONSTRAINT sitenode_type_fk FOREIGN KEY (site_node_type_id)
   REFERENCES SiteNodeType (id) ON DELETE CASCADE
 );
 
