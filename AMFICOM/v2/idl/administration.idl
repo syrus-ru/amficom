@@ -127,7 +127,7 @@ module corba {
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		wstring login;
-		wstring type;
+		wstring user_type;
 		long long last_login;
 		long long logged;
 		long sessions;

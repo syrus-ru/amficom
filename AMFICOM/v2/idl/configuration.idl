@@ -17,8 +17,44 @@ module corba {
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id;
+//		com::syrus::AMFICOM::general::corba::Identifier_Transferable path_id;
+//		com::syrus::AMFICOM::general::corba::Identifier_Transferable access_port_id;
 		wstring local_address;
 	};
+
+	struct Equipment_Transferable	{
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
+		wstring name;
+		wstring description;
+		wstring longitude;
+		wstring latitude;
+		wstring hw_serial;
+		wstring sw_serial;
+		wstring hw_version;
+		wstring sw_version;
+		wstring inventory_nr;
+		wstring manufacturer;
+		wstring manufacturer_code;
+		wstring supplier;
+		wstring supplier_code;
+		wstring eq_class;
+		wstring image_id;
+
+		wstring agent_id;
+		wstring domain_id;
+		boolean is_kis;
+
+		General::wstringSeq port_ids;
+		General::wstringSeq cport_ids;
+		General::wstringSeq s_port_ids;
+
 
 	struct KIS_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
