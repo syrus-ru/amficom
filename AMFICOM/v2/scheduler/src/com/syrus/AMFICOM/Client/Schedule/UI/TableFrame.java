@@ -17,9 +17,7 @@ import com.syrus.AMFICOM.CORBA.Survey.ElementaryTestAlarm;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableCellRenderer;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableRow;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
@@ -32,204 +30,66 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
  * @author Vladimir Dolzhenko
  */
 public class TableFrame extends JInternalFrame implements OperationListener {
-	
-	private class TestTableCellRenderer extends JLabel implements TableCellRenderer {
 
-		//protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
+	private class TestTableCellRenderer extends ObjectResourceTableCellRenderer {
 
-		//		 We need a place to store the color the JLabel should be returned
-		// to after its foreground and background colors have been set
-		// to the selection background color.
-		// These ivars will be made protected when their names are finalized.
-		private Color	unselectedForeground;
+		protected void customRendering(	JTable table,
+										ObjectResource objectResource,
+										boolean isSelected,
+										boolean hasFocus,
+										int rowIndex,
+										int vColIndex) {
+			if (objectResource instanceof Test) {
+				Test test = (Test) objectResource;
+				Color color = table.getBackground();
+				TestTableModel model = (TestTableModel) table.getModel();
 
-		//private Color unselectedBackground;
-
-		/**
-		 * Creates a default table cell renderer.
-		 */
-		public TestTableCellRenderer() {
-			super();
-			setOpaque(true);
-			//setBorder(noFocusBorder);
-		}
-
-		// This method is called each time a cell in a column
-		// using this renderer needs to be rendered.
-		public Component getTableCellRendererComponent(	JTable table,
-														Object value,
-														boolean isSelected,
-														boolean hasFocus,
-														int rowIndex,
-														int vColIndex) {
-			// 'value' is value contained in the cell located at
-			// (rowIndex, vColIndex)
-			//
-			TestTableModel model = (TestTableModel) table.getModel();
-			TestTableRow line = (TestTableRow) model.getRow(rowIndex);
-
-			Color color = table.getBackground();
-			Test test = (Test)line.getObjectResource();
-			ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
-			if (testAlarms.length != 0) {
-				for (int i = 0; i < testAlarms.length; i++) {
-					Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);
-					if (alarm != null) {
-						System.out.println("alarm.type_id:" + alarm.type_id);
-						if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
-							color = Color.RED;
-						} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING))
-							color = Color.YELLOW;
+				ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
+				if (testAlarms.length != 0) {
+					for (int i = 0; i < testAlarms.length; i++) {
+						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);
+						if (alarm != null) {
+							System.out.println("alarm.type_id:" + alarm.type_id);
+							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
+								color = Color.RED;
+							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING))
+								color = Color.YELLOW;
+						}
 					}
 				}
-			}
-			int statusIndex = -1;
-			{
-				int columnCount = model.getColumnCount();
-				String statusString = LangModelSchedule.getString("Status");
-				for (int i = 0; i < columnCount; i++)
-					if (model.getColumnName(i).equals(statusString)) {
-						statusIndex = i;
-						break;
-					}
-			}
-
-			if (vColIndex == table.convertColumnIndexToView(statusIndex)) {
-				if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
-					color = TestLine.COLOR_COMPLETED;
-				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
-					color = TestLine.COLOR_SCHEDULED;
-				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
-					color = TestLine.COLOR_PROCCESSING;
-				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
-					color = TestLine.COLOR_ABORDED;
-				} else {
-					color = TestLine.COLOR_UNRECOGNIZED;
+				int statusIndex = -1;
+				{
+					int columnCount = model.getColumnCount();
+					String statusString = LangModelSchedule.getString("Status");
+					for (int i = 0; i < columnCount; i++)
+						if (model.getColumnName(i).equals(statusString)) {
+							statusIndex = i;
+							break;
+						}
 				}
-			}
 
-			if (isSelected) {
-				super.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table.getForeground());
-				Font font = table.getFont();
-				font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font.getSize());
-				setFont(font);
-				Color c = table.getSelectionBackground();
-				double k = 0.3;
-				super.setBackground(new Color((int) (c.getRed() * (1.0 - k) + k * color.getRed()) % 256, (int) (c
-						.getGreen()
-						* (1.0 - k) + k * color.getGreen()) % 256,
-												(int) (c.getBlue() * (1.0 - k) + k * color.getBlue()) % 256));
-			} else {
-				super.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table.getForeground());
-				setFont(table.getFont());
+				if (vColIndex == table.convertColumnIndexToView(statusIndex)) {
+					//System.out.println("statusIndex:"+statusIndex);
+					if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
+						color = TestLine.COLOR_COMPLETED;
+					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
+						color = TestLine.COLOR_SCHEDULED;
+					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
+						color = TestLine.COLOR_PROCCESSING;
+					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
+						color = TestLine.COLOR_ABORDED;
+					} else {
+						color = TestLine.COLOR_UNRECOGNIZED;
+					}
+
+				}
+
 				super.setBackground(color);
+
 			}
-
-			if (hasFocus) {
-				setBorder(UIManager.getBorder("Table.focusCellHighlightBorder")); //$NON-NLS-1$
-				if (table.isCellEditable(rowIndex, vColIndex)) {
-					super.setForeground(UIManager.getColor("Table.focusCellForeground")); //$NON-NLS-1$
-					super.setBackground(UIManager.getColor("Table.focusCellBackground")); //$NON-NLS-1$
-				}
-			} else {
-				//setBorder(noFocusBorder);
-			}
-
-			setValue(value);
-
-			return this;
-		}
-
-		/**
-		 * Overrides <code>JComponent.setBackground</code> to assign the
-		 * unselected-background color to the specified color.
-		 * 
-		 * @param c
-		 *            set the background color to this value
-		 */
-		public void setBackground(Color c) {
-			super.setBackground(c);
-			//unselectedBackground = c;
-		}
-
-		/**
-		 * Overrides <code>JComponent.setForeground</code> to assign the
-		 * unselected-foreground color to the specified color.
-		 * 
-		 * @param c
-		 *            set the foreground color to this value
-		 */
-		public void setForeground(Color c) {
-			super.setForeground(c);
-			this.unselectedForeground = c;
-		}
-
-		protected void setValue(Object value) {
-			setText((value == null) ? "" : value.toString()); //$NON-NLS-1$
 		}
 
 	}
-
-
-//	private class TestTableCellRenderer extends ObjectResourceTableCellRenderer {
-//
-//		protected void doCustomRendering(	JTable table,
-//											ObjectResource objectResource,
-//											boolean isSelected,
-//											boolean hasFocus,
-//											int rowIndex,
-//											int vColIndex) {
-//			if (objectResource instanceof Test) {
-//				Test test = (Test) objectResource;
-//				Color color = table.getBackground();
-//				TestTableModel model = (TestTableModel) table.getModel();
-//
-//				ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
-//				if (testAlarms.length != 0) {
-//					for (int i = 0; i < testAlarms.length; i++) {
-//						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);
-//						if (alarm != null) {
-//							System.out.println("alarm.type_id:" + alarm.type_id);
-//							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
-//								color = Color.RED;
-//							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING))
-//								color = Color.YELLOW;
-//						}
-//					}
-//					super.setBackground(color);
-//				}
-//				int statusIndex = -1;
-//				{
-//					int columnCount = model.getColumnCount();
-//					String statusString = LangModelSchedule.getString("Status");
-//					for (int i = 0; i < columnCount; i++)
-//						if (model.getColumnName(i).equals(statusString)) {
-//							statusIndex = i;
-//							break;
-//						}
-//				}
-//
-//				if (vColIndex == table.convertColumnIndexToView(statusIndex)) {
-//					//System.out.println("statusIndex:"+statusIndex);
-//					if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
-//						color = TestLine.COLOR_COMPLETED;
-//					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
-//						color = TestLine.COLOR_SCHEDULED;
-//					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
-//						color = TestLine.COLOR_PROCCESSING;
-//					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
-//						color = TestLine.COLOR_ABORDED;
-//					} else {
-//						color = TestLine.COLOR_UNRECOGNIZED;
-//					}
-//					
-//					super.setBackground(color);
-//				}
-//				
-//			}
-//		}
-//
-//	}
 
 	private class TestTableModel extends ObjectResourceTableModel {
 
@@ -431,7 +291,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	}
 
 	Dispatcher			dispatcher;
-	JTable				listTable;
+	ObjectResourceTable				listTable;
 	ApplicationContext	aContext;
 	private JPanel		panel;
 	private Test		test;
@@ -529,9 +389,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			this.panel = new JPanel(new BorderLayout());
 
 			TestTableModel tableModel = new TestTableModel();
-			this.listTable = new JTable(tableModel);
-			this.listTable.setColumnSelectionAllowed(false);
-			this.listTable.setRowSelectionAllowed(true);
+			this.listTable = new ObjectResourceTable(tableModel);
 			this.listTable.addMouseListener(new MouseAdapter() {
 
 				public void mouseClicked(MouseEvent evt) {
@@ -557,27 +415,35 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 							deleteTestMenuItem.addActionListener(new ActionListener() {
 
 								public void actionPerformed(ActionEvent e) {
-									if (TableFrame.this.rowToRemove == null)
-										TableFrame.this.rowToRemove = new ArrayList();
-									else
-										TableFrame.this.rowToRemove.clear();
-									for (int i = 0; i < rowIndices.length; i++) {
-										TestTableRow line = (TestTableRow) model.getRow(rowIndices[i]);
-										Test test = (Test) line.getObjectResource();
-										TableFrame.this.rowToRemove.add(test);
+
+									int temp = JOptionPane
+											.showConfirmDialog(Environment.getActiveWindow(), LangModelSchedule
+													.getString("AreYouShureDeleteTests"), LangModelSchedule
+													.getString("ConfirmDeleting"), JOptionPane.YES_NO_OPTION);
+									if (temp == JOptionPane.YES_OPTION) {
+										if (TableFrame.this.rowToRemove == null)
+											TableFrame.this.rowToRemove = new ArrayList();
+										else
+											TableFrame.this.rowToRemove.clear();
+										for (int i = 0; i < rowIndices.length; i++) {
+											TestTableRow line = (TestTableRow) model.getRow(rowIndices[i]);
+											Test test = (Test) line.getObjectResource();
+											TableFrame.this.rowToRemove.add(test);
+										}
+										for (Iterator it = TableFrame.this.rowToRemove.iterator(); it.hasNext();) {
+											Test test = (Test) it.next();
+											int index = model.getObjectResourceIndex(test);
+											test.setDeleted(System.currentTimeMillis());
+											TableFrame.this.dispatcher
+													.notify(new OperationEvent(test, 0,
+																				SchedulerModel.COMMAND_REMOVE_TEST));
+											//System.out.println("remove
+											// index:"+index+"\ttest:"+test.getId());
+											model.remove(index);
+										}
+										table.revalidate();
+										table.repaint();
 									}
-									for (Iterator it = TableFrame.this.rowToRemove.iterator(); it.hasNext();) {
-										Test test = (Test) it.next();
-										int index = model.getObjectResourceIndex(test);
-										test.setDeleted(System.currentTimeMillis());
-										TableFrame.this.dispatcher
-												.notify(new OperationEvent(test, 0, SchedulerModel.COMMAND_REMOVE_TEST));
-										//System.out.println("remove
-										// index:"+index+"\ttest:"+test.getId());
-										model.remove(index);
-									}
-									table.revalidate();
-									table.repaint();
 								}
 							});
 							/**
@@ -600,58 +466,58 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				}
 			}
 			JTableHeader header = this.listTable.getTableHeader();
-			header.addMouseListener(new MouseAdapter() {
-
-				public void mouseClicked(MouseEvent evt) {
-					JTableHeader header = (JTableHeader) evt.getSource();
-					JTable table = header.getTable();
-					TableColumnModel colModel = table.getColumnModel();
-
-					// The index of the column whose header was clicked
-					int columnIndex = colModel.getColumnIndexAtX(evt.getX());
-					int mColIndex = table.convertColumnIndexToModel(columnIndex);
-					TestTableModel model = (TestTableModel) table.getModel();
-					String s;
-					if (model.getSortOrder(mColIndex))
-						s = " v "; //$NON-NLS-1$
-					else
-						s = " ^ "; //$NON-NLS-1$
-					table.getColumnModel().getColumn(columnIndex)
-							.setHeaderValue(s + model.getColumnName(mColIndex) + s);
-
-					for (int i = 0; i < model.getColumnCount(); i++) {
-						if (i != mColIndex)
-							table.getColumnModel().getColumn(table.convertColumnIndexToView(i))
-									.setHeaderValue(model.getColumnName(i));
-					}
-
-					// Force the header to resize and repaint itself
-					header.resizeAndRepaint();
-					model.sortRows(mColIndex);
-
-					// Return if not clicked on any column header
-					if (columnIndex == -1) { return; }
-
-					// Determine if mouse was clicked between column heads
-					Rectangle headerRect = table.getTableHeader().getHeaderRect(columnIndex);
-					if (columnIndex == 0) {
-						headerRect.width -= 3; // Hard-coded constant
-					} else {
-						headerRect.grow(-3, 0); // Hard-coded constant
-					}
-					if (!headerRect.contains(evt.getX(), evt.getY())) {
-						// Mouse was clicked between column heads
-						// vColIndex is the column head closest to the click
-
-						// vLeftColIndex is the column head to the left of the
-						// click
-						int vLeftColIndex = columnIndex;
-						if (evt.getX() < headerRect.x) {
-							vLeftColIndex--;
-						}
-					}
-				}
-			});
+//			header.addMouseListener(new MouseAdapter() {
+//
+//				public void mouseClicked(MouseEvent evt) {
+//					JTableHeader header = (JTableHeader) evt.getSource();
+//					JTable table = header.getTable();
+//					TableColumnModel colModel = table.getColumnModel();
+//
+//					// The index of the column whose header was clicked
+//					int columnIndex = colModel.getColumnIndexAtX(evt.getX());
+//					int mColIndex = table.convertColumnIndexToModel(columnIndex);
+//					TestTableModel model = (TestTableModel) table.getModel();
+//					String s;
+//					if (model.getSortOrder(mColIndex))
+//						s = " v "; //$NON-NLS-1$
+//					else
+//						s = " ^ "; //$NON-NLS-1$
+//					table.getColumnModel().getColumn(columnIndex)
+//							.setHeaderValue(s + model.getColumnName(mColIndex) + s);
+//
+//					for (int i = 0; i < model.getColumnCount(); i++) {
+//						if (i != mColIndex)
+//							table.getColumnModel().getColumn(table.convertColumnIndexToView(i))
+//									.setHeaderValue(model.getColumnName(i));
+//					}
+//
+//					// Force the header to resize and repaint itself
+//					header.resizeAndRepaint();
+//					model.sortRows(mColIndex);
+//
+//					// Return if not clicked on any column header
+//					if (columnIndex == -1) { return; }
+//
+//					// Determine if mouse was clicked between column heads
+//					Rectangle headerRect = table.getTableHeader().getHeaderRect(columnIndex);
+//					if (columnIndex == 0) {
+//						headerRect.width -= 3; // Hard-coded constant
+//					} else {
+//						headerRect.grow(-3, 0); // Hard-coded constant
+//					}
+//					if (!headerRect.contains(evt.getX(), evt.getY())) {
+//						// Mouse was clicked between column heads
+//						// vColIndex is the column head closest to the click
+//
+//						// vLeftColIndex is the column head to the left of the
+//						// click
+//						int vLeftColIndex = columnIndex;
+//						if (evt.getX() < headerRect.x) {
+//							vLeftColIndex--;
+//						}
+//					}
+//				}
+//			});
 
 			this.panel.add(header, BorderLayout.NORTH);
 			this.panel.add(new JScrollPane(this.listTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
