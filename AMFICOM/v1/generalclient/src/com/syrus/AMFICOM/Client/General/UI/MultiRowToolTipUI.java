@@ -35,7 +35,8 @@ public class MultiRowToolTipUI extends BasicToolTipUI
     public void paint(Graphics g, JComponent c) 
 	{
         Font font = c.getFont();
-        FontMetrics metrics = g.getFontMetrics(font);
+		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(font);
+//        FontMetrics metrics = g.getFontMetrics(font);
         Dimension size = c.getSize();
         g.setColor(c.getBackground());
         g.fillRect(0, 0, size.width, size.height);
@@ -70,7 +71,8 @@ public class MultiRowToolTipUI extends BasicToolTipUI
     public Dimension getPreferredSize(JComponent c) 
 	{
         Font font = c.getFont();
-        FontMetrics fm = c.getGraphics().getFontMetrics(font);
+		FontMetrics fm = Toolkit.getDefaultToolkit().getFontMetrics(font);
+//        FontMetrics fm = c.getGraphics().getFontMetrics(font);
 		Insets insets = c.getInsets();
 		Dimension prefSize = new Dimension(
 				insets.left + insets.right,

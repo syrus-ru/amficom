@@ -35,6 +35,8 @@
 
 package com.syrus.AMFICOM.Client.General.Command;
 
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+
 public class VoidCommand implements Command
 {
 	// поле источника команды
@@ -63,6 +65,14 @@ public class VoidCommand implements Command
 	public void execute()
 	{
 		System.out.println("Void command executed for " + source.toString() + " - ignored");
+		try
+		{
+			throw new Exception("dummy");
+		}
+		catch(Exception e)
+		{
+			Environment.log(Environment.LOG_LEVEL_FINE, "current execution point with call stack:", null, null, e);
+		}
 	}
 	
 	public int getResult()
@@ -106,6 +116,14 @@ public class VoidCommand implements Command
 	{
 		System.out.println("Set for Void command paramenter " + field +
 				" to value " + value.toString() + " - ignored");
+		try
+		{
+			throw new Exception("dummy");
+		}
+		catch(Exception e)
+		{
+			Environment.log(Environment.LOG_LEVEL_FINE, "current execution point with call stack:", null, null, e);
+		}
 	}
 
 }

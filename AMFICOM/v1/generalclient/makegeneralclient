@@ -52,11 +52,11 @@ impl:
 		@$(TARGET_CLASS_LIST)
 
 loc:
-	copy /y \
+	cp -f \
 		src\com\syrus\AMFICOM\Client\General\Lang\*.properties \
 		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang\
 
-	copy /y \
+	cp -f \
 		src\com\syrus\AMFICOM\Client\Resource\Alarm\util\*.properties \
 		$(CLASSES)\com\syrus\AMFICOM\Client\Resource\Alarm\util\
 
