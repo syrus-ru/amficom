@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.14 2004/10/26 14:32:47 bob Exp $
+ * $Id: MeasurementServerSetup.java,v 1.15 2004/10/27 08:25:51 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/10/26 14:32:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/10/27 08:25:51 $
+ * @author $Author: max $
  * @module mserver_v1
  */
 
@@ -184,6 +184,7 @@ public class MeasurementServerSetup {
 			PortType portType = PortType.createInstance(id,
 																									creatorId,
 																									"PortTypeReflectometry",
+                                                                                                    "",
 																									"");
 			PortType portType1 = PortType.getInstance((PortType_Transferable)portType.getTransferable());
 			return portType;
@@ -200,6 +201,7 @@ public class MeasurementServerSetup {
 			MeasurementPortType mportType = MeasurementPortType.createInstance(id,
 																																				 creatorId,
 																																				 "MeasurementPortTypeReflectometry",
+                                                                                                                                                 "",
 																																				 "");
 			MeasurementPortType mportType1 = MeasurementPortType.getInstance((MeasurementPortType_Transferable)mportType.getTransferable());
 			return mportType;

@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.41 2004/10/26 14:31:35 bob Exp $
+ * $Id: configuration.idl,v 1.42 2004/10/27 08:24:32 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -87,6 +87,21 @@ module corba {
 	};
 	
 	typedef sequence <KISType_Transferable> KISTypeSeq_Transferable;
+	
+/////////////////////// TransmissionPathType /////////////////////
+	struct TransmissionPathType_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
+		wstring codename;
+		wstring description;
+		wstring name;
+	};
+	
+	typedef sequence <TransmissionPathType_Transferable> TransmissionPathTypeSeq_Transferable;
 	
 /////////////////////// PortType /////////////////////
 	struct PortType_Transferable {
@@ -295,7 +310,8 @@ module corba {
 
 		wstring name;
 		wstring description;
-
+		
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable start_port_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable finish_port_id;
 		

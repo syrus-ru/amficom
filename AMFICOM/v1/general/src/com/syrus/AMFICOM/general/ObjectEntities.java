@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.23 2004/10/22 11:04:26 bob Exp $
+ * $Id: ObjectEntities.java,v 1.24 2004/10/27 08:22:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/10/22 11:04:26 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2004/10/27 08:22:04 $
+ * @author $Author: max $
  * @module general_v1
  */
 
@@ -31,6 +31,7 @@ public abstract class ObjectEntities {
 	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType";
 	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
     public static final String KISTYPE_ENTITY = "KISType";
+    public static final String TRANSPATHTYPE_ENTITY = "TransmissionPathType";
 
 	/*	Administration	*/
 
@@ -82,6 +83,7 @@ public abstract class ObjectEntities {
 	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0008;	
 	public static final short LINKTYPE_ENTITY_CODE = 0x0009;
     public static final short KISTYPE_ENTITY_CODE = 0x000A;
+    public static final short TRANSPATHTYPE_ENTITY_CODE = 0x000B;
 
 	/*	Administration 129 -- 256	*/
 
@@ -134,8 +136,10 @@ public abstract class ObjectEntities {
 		else if (entity.equals(EQUIPMENT_ENTITY)) return EQUIPMENT_ENTITY_CODE;
 		else if (entity.equals(PORT_ENTITY)) return PORT_ENTITY_CODE;
 		else if (entity.equals(TRANSPATH_ENTITY)) return TRANSPATH_ENTITY_CODE;
+        else if (entity.equals(TRANSPATHTYPE_ENTITY)) return TRANSPATHTYPE_ENTITY_CODE;
 		else if (entity.equals(KIS_ENTITY)) return KIS_ENTITY_CODE;
-		else if (entity.equals(MEASUREMENTPORT_ENTITY)) return MEASUREMENTPORT_ENTITY_CODE;
+		else if (entity.equals(KISTYPE_ENTITY)) return KISTYPE_ENTITY_CODE;
+        else if (entity.equals(MEASUREMENTPORT_ENTITY)) return MEASUREMENTPORT_ENTITY_CODE;
 		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
 		else if (entity.equals(LINK_ENTITY)) return LINK_ENTITY_CODE;
 
@@ -194,8 +198,12 @@ public abstract class ObjectEntities {
 				return PORT_ENTITY;
 			case TRANSPATH_ENTITY_CODE:
 				return TRANSPATH_ENTITY;
+            case TRANSPATHTYPE_ENTITY_CODE:
+                return TRANSPATHTYPE_ENTITY;
 			case KIS_ENTITY_CODE:
 				return KIS_ENTITY;
+            case KISTYPE_ENTITY_CODE:
+                return KISTYPE_ENTITY;
 			case MEASUREMENTPORT_ENTITY_CODE:
 				return MEASUREMENTPORT_ENTITY;
 			case ME_ENTITY_CODE:
