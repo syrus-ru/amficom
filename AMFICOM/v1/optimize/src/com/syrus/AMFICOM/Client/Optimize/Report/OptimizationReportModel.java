@@ -304,8 +304,7 @@ public class OptimizationReportModel extends APOReportModel
 					rt.findROforReport(rp));
 		}
 
-		else if (rp.field.equals(OptimizationReportModel.optimizationParams)
-           ||rp.field.equals(OptimizationReportModel.solution))
+		else if (rp.field.equals(OptimizationReportModel.optimizationParams))
 		{
       TableModelDividerReport tmd = new TableModelDividerReport(rp,divisionsNumber);
 			returnValue = new ReportResultsTablePanel(
@@ -314,7 +313,8 @@ public class OptimizationReportModel extends APOReportModel
 					rt.findROforReport(rp));
 		}
 
-		else if (rp.field.equals(OptimizationReportModel.nodesOptimizeProperties))
+		else if (rp.field.equals(OptimizationReportModel.nodesOptimizeProperties)
+             ||rp.field.equals(OptimizationReportModel.solution))
 		{
       ObjectResourceDivList ordl = new ObjectResourceDivList(rp,divisionsNumber);
 			returnValue = new ReportResultsTablePanel(
