@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.27 2004/11/19 11:40:23 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.28 2004/11/19 15:31:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,11 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -25,7 +29,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/19 11:40:23 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/19 15:31:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -487,9 +491,50 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 	
 	public void delete(List ids) throws CommunicationException, DatabaseException {
-		delete(null, ids);
+		if (ids == null || ids.isEmpty())
+			return;
+		/**
+		 * TODO: use Trove collection instead java.util.Map 
+		 */
+		Map map = new HashMap();
+		
+		/**
+		 * separate objects by kind of entity 
+		 */
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			Object object = it.next();
+			Identifier identifier = null;
+			if (object instanceof Identifier)
+				identifier = (Identifier)object;
+			else if (object instanceof Identified)
+				identifier = ((Identified)object).getId();
+			else throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | Object " + 
+												object.getClass().getName() 
+												+ " isn't Identifier or Identified");
+			Short entityCode = new Short(identifier.getMajor());
+			List list = (List)map.get(entityCode);
+				if (list == null){
+					list = new LinkedList();
+					map.put(entityCode, list);
+				}
+			list.add(object);
+			
+		}
+		
+		for (Iterator iter = ids.iterator(); iter.hasNext();) {
+			Short entityCode = (Short) iter.next();
+			List list = (List)map.get(entityCode);
+			delete(null, list);
+		}
+		
 	}
 
+	/**
+	 * delete storable objects of one kind of entity
+	 * @param id
+	 * @param ids
+	 * @throws DatabaseException
+	 */
 	private void delete(Identifier id, List ids) throws DatabaseException {
 			short entityCode = (id != null) ? id.getMajor() : 0;
 			if (id == null){
@@ -535,9 +580,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	                	database = MeasurementDatabaseContext.getMeasurementDatabase();
 	                    break;
 	                case ObjectEntities.TEST_ENTITY_CODE:
-	                	// database = MeasurementDatabaseContext.getTestDatabase();
-	                	// Test(s) cannot be deleted !
-	                	throw new DatabaseException("Tests cannot be deleted due to its model");
+	                	database = MeasurementDatabaseContext.getTestDatabase();
 	                case ObjectEntities.RESULT_ENTITY_CODE:
 	                	database = MeasurementDatabaseContext.getResultDatabase();
 	                    break;
