@@ -38,6 +38,7 @@ mach:	corba
 		$(SRC)/com/syrus/AMFICOM/general/ObjectEntities.java \
 		$(SRC)/com/syrus/AMFICOM/general/StorableObject.java \
 		$(SRC)/com/syrus/AMFICOM/general/StorableObject_Database.java \
+		$(SRC)/com/syrus/AMFICOM/general/StorableObjectType.java \
 		$(SRC)/com/syrus/AMFICOM/general/CreateObjectException.java \
 		$(SRC)/com/syrus/AMFICOM/general/RetrieveObjectException.java \
 		$(SRC)/com/syrus/AMFICOM/general/UpdateObjectException.java \

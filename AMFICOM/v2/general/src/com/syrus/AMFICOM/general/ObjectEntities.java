@@ -18,6 +18,7 @@ public class ObjectEntities {
 	public static final String USER_ENTITY = "User";
 
 	/*	Configuration	*/
+	public static final String CHARACTERISTIC_ENTITY = "Characteristic";
 	public static final String ME_ENTITY = "MonitoredElement";
 	public static final String KIS_ENTITY = "kis";
 
@@ -53,22 +54,23 @@ public class ObjectEntities {
 	public static final short USER_ENTITY_CODE = 0x0085;
 
 	/*	Configuration	257 -- 384*/
-	public static final short ME_ENTITY_CODE = 0x0100;
-	public static final short KIS_ENTITY_CODE = 0x0101;
+	public static final short CHARACTERISTIC_CODE = 0x0101;
+	public static final short ME_ENTITY_CODE = 0x0108;
+	public static final short KIS_ENTITY_CODE = 0x0109;
 
 	/*	Measurement 385 -- 512	*/
-	public static final short SET_ENTITY_CODE = 0x0180;
-	public static final short SETPARAMETER_ENTITY_CODE = 0x0181;
-	public static final short SETMELINK_ENTITY_CODE = 0x0182;
-	public static final short MS_ENTITY_CODE = 0x0183;
-	public static final short MSMELINK_ENTITY_CODE = 0x0184;
-	public static final short MEASUREMENT_ENTITY_CODE = 0x0185;
-	public static final short ANALYSIS_ENTITY_CODE = 0x0186;
-	public static final short EVALUATION_ENTITY_CODE = 0x0187;
-	public static final short TEST_ENTITY_CODE = 0x0188;
-	public static final short MSTESTLINK_ENTITY_CODE = 0x0189;
-	public static final short RESULT_ENTITY_CODE = 0x018A;
-	public static final short RESULTPARAMETER_ENTITY_CODE = 0x018B;
-	public static final short PTTEMPORALTEMPLATE_ENTITY_CODE = 0x018C;
+	public static final short SET_ENTITY_CODE = 0x0181;
+	public static final short SETPARAMETER_ENTITY_CODE = 0x0182;
+	public static final short SETMELINK_ENTITY_CODE = 0x0183;
+	public static final short MS_ENTITY_CODE = 0x0184;
+	public static final short MSMELINK_ENTITY_CODE = 0x0185;
+	public static final short MEASUREMENT_ENTITY_CODE = 0x0186;
+	public static final short ANALYSIS_ENTITY_CODE = 0x0187;
+	public static final short EVALUATION_ENTITY_CODE = 0x0188;
+	public static final short TEST_ENTITY_CODE = 0x0189;
+	public static final short MSTESTLINK_ENTITY_CODE = 0x018A;
+	public static final short RESULT_ENTITY_CODE = 0x018B;
+	public static final short RESULTPARAMETER_ENTITY_CODE = 0x018C;
+	public static final short PTTEMPORALTEMPLATE_ENTITY_CODE = 0x018D;
 
 }
