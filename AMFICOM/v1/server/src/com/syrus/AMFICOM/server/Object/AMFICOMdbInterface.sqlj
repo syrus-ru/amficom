@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbInterface.sqlj,v 1.3 2004/06/29 07:12:57 bass Exp $
+ * $Id: AMFICOMdbInterface.sqlj,v 1.4 2004/07/26 10:23:30 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import org.omg.CORBA.StringHolder;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/06/29 07:12:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/07/26 10:23:30 $
+ * @author $Author: krupenn $
  * @module server_v1
  */
 public class AMFICOMdbInterface
@@ -2292,6 +2292,7 @@ public class AMFICOMdbInterface
 		vec1.copyInto(desc1);
 
 		Vector vec = filterTimeDiapazon(start_time, end_time, desc1);
+		vec = filterDomain(vec, accessIdentity.domain_id);
 
 		desc.value = new ResourceDescriptor_Transferable[vec.size()];
 		vec.copyInto(desc.value);
@@ -2352,6 +2353,37 @@ public class AMFICOMdbInterface
 			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тест: " + ex.getMessage());
 		}
 */
+	}
+
+	public Vector filterDomain(Vector invec, String domain_id)
+	{
+		Vector vec = new Vector();
+		String dom;
+		String kis_id;
+		Test test;
+
+		for(int i = 0; i < invec.size(); i++)
+		{
+			test = (Test )invec.get(i);
+			kis_id = test.getKISId();
+				
+			try
+			{
+				#sql {
+					select domain_id into :dom from equipments
+					where id = :kis_id
+				};
+				if(domain_id.equals(dom))
+				{
+					vec.add(test);
+				}
+			}
+			catch(Exception e)
+			{
+				
+			}
+		}
+		return vec;
 	}
 
 	public Vector filterTimeDiapazon(
