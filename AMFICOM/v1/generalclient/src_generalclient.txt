@@ -227,6 +227,7 @@ src/com/syrus/AMFICOM/Client/General/Report/ReportResultsTablePanel.java
 src/com/syrus/AMFICOM/Client/General/Report/ReportTemplate.java
 src/com/syrus/AMFICOM/Client/General/Report/ReportTemplateImplementationPanel.java
 src/com/syrus/AMFICOM/Client/General/Report/SelectTypeTemplateWindow.java
+src/com/syrus/AMFICOM/Client/General/Report/SelectReportsPanel.java
 src/com/syrus/AMFICOM/Client/General/Report/Statistics.java
 src/com/syrus/AMFICOM/Client/General/Report/TitledPanel.java
 

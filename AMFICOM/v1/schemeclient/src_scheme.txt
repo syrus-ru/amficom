@@ -101,6 +101,7 @@ src\com\syrus\AMFICOM\Client\General\Scheme\SchemePanelNoEdition.java
 src\com\syrus\AMFICOM\Client\General\Scheme\UgoPanel.java
 src\com\syrus\AMFICOM\Client\Schematics\Report\SchemeRenderPanel.java
 src\com\syrus\AMFICOM\Client\Schematics\Report\SchemeReportModel.java
+src\com\syrus\AMFICOM\Client\Schematics\Report\SchemeReportsTreeModel.java
 src\com\syrus\AMFICOM\Client\Schematics\Scheme\ElementsEditorFrame.java
 src\com\syrus\AMFICOM\Client\Schematics\Scheme\PrimaryElementsEditorFrame.java
 src\com\syrus\AMFICOM\Client\Schematics\Scheme\PrimarySchemeEditorFrame.java

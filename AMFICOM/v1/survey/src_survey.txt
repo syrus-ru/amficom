@@ -88,7 +88,8 @@ src/com/syrus/AMFICOM/Client/Survey/Alarm/MessageDialog.java
 src/com/syrus/AMFICOM/Client/Survey/Alarm/UI/AlarmDisplayModel.java                                  
 src/com/syrus/AMFICOM/Client/Survey/ArchiveTreeModel.java          
 src/com/syrus/AMFICOM/Client/Survey/General/ConstStorage.java                                            
-src/com/syrus/AMFICOM/Client/Survey/Report/AlarmReportModel.java                                       
+src/com/syrus/AMFICOM/Client/Survey/Report/AlarmReportModel.java
+src/com/syrus/AMFICOM/Client/Survey/Report/SurveyReportsTreeModel.java
 src/com/syrus/AMFICOM/Client/Survey/Result/ResourceButton.java                                       
 src/com/syrus/AMFICOM/Client/Survey/Result/ResultFrame.java                                          
 src/com/syrus/AMFICOM/Client/Survey/Result/UI/AnalysisDisplayModel.java                                      

@@ -90,6 +90,8 @@ src\com\syrus\AMFICOM\Client\Map\Popup\TransmissionPathPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\VoidMapElementPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Report\MapLinkFeatures.java
 src\com\syrus\AMFICOM\Client\Map\Report\MapReportModel.java
+src\com\syrus\AMFICOM\Client\Map\Report\MapReportsTreeModel.java
+src\com\syrus\AMFICOM\Client\Map\Report\MapRenderPanel.java
 src\com\syrus\AMFICOM\Client\Map\Setup\AMFICOMSearchPanel.java
 src\com\syrus\AMFICOM\Client\Map\Setup\LayerConfig.java
 src\com\syrus\AMFICOM\Client\Map\Setup\OfxControlsFrame.java
