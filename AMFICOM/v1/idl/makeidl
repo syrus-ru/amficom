@@ -18,41 +18,18 @@ JAR=jar
 LIBNAME=$(LIB)\corba.jar
 LIBNAME_SRC=$(LIBSRC)\corbasource.jar
 
-LIBNAME_OBJECT=$(LIB)\ServerObjectInterface.jar
-LIBNAME_ADMIN=$(LIB)\ServerInterface_Admin.jar
-LIBNAME_ALARM=$(LIB)\ServerInterface_Alarm.jar
-LIBNAME_GENERAL=$(LIB)\ServerInterface_General.jar
-LIBNAME_ISM=$(LIB)\ServerInterface_ISM.jar
-LIBNAME_MAP=$(LIB)\ServerInterface_Map.jar
-LIBNAME_NETWORK=$(LIB)\ServerInterface_Network.jar
-LIBNAME_REPORT=$(LIB)\ServerInterface_Report.jar
-LIBNAME_SCHEME=$(LIB)\ServerInterface_Scheme.jar
-LIBNAME_SURVEY=$(LIB)\ServerInterface_Survey.jar
-ALL_LIBS=$(LIBNAME_GENERAL) \
-	$(LIBNAME_ADMIN) \
-	$(LIBNAME_ALARM) \
-	$(LIBNAME_ISM) \
-	$(LIBNAME_MAP) \
-	$(LIBNAME_NETWORK) \
-	$(LIBNAME_REPORT) \
-	$(LIBNAME_SCHEME) \
-	$(LIBNAME_SURVEY)
-
-
 .PHONY:	$(LIBNAME)
 
-$(LIBNAME):	clean $(LIBNAME_OBJECT) jar
+$(LIBNAME):	clean object jar
 
 jar:
 	$(JAR) -cf $(LIBNAME) -C $(CLASSES) com\syrus\AMFICOM\CORBA
 	$(JAR) -cf $(LIBNAME_SRC) -C $(SRC) com
 
-jars:	jar1 jar2 jar3 jar4 jar5 jar6 jar7 jar8 jar9 jar10
-
-$(LIBNAME_OBJECT):	$(ALL_LIBS)
+object:	alllibs
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\AMFICOM.idl
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\client.idl
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(LIBNAME_ADMIN);$(LIBNAME_ALARM);$(LIBNAME_MAP);$(LIBNAME_NETWORK);$(LIBNAME_ISM);$(LIBNAME_SURVEY);$(LIBNAME_REPORT);$(VBJCLASSPATH) -sourcepath $(SRC) \
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) \
 		$(SRC)\com\syrus\AMFICOM\CORBA\_AMFICOMClientStub.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClient.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientHelper.java \
@@ -60,7 +37,7 @@ $(LIBNAME_OBJECT):	$(ALL_LIBS)
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientOperations.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientPOA.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMClientPOATie.java
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(LIBNAME_ADMIN);$(LIBNAME_ALARM);$(LIBNAME_MAP);$(LIBNAME_NETWORK);$(LIBNAME_ISM);$(LIBNAME_SURVEY);$(LIBNAME_REPORT);$(VBJCLASSPATH) -sourcepath $(SRC) \
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) \
 		$(SRC)\com\syrus\AMFICOM\CORBA\_AMFICOMStub.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOM.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMHelper.java \
@@ -69,82 +46,43 @@ $(LIBNAME_OBJECT):	$(ALL_LIBS)
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMPOA.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\AMFICOMPOATie.java
 
-jar1:
-	$(JAR) -cf $(LIBNAME_OBJECT) \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\AMFICOM.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\AMFICOMHolder.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\AMFICOMHelper.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\_AMFICOMImplBase.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\_st_AMFICOM.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\AMFICOMClient.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\AMFICOMClientHolder.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\AMFICOMClientHelper.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\_AMFICOMClientImplBase.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\_st_AMFICOMClient.class \
+alllibs: general admin alarm network ism map scheme survey report
 
-$(LIBNAME_ISM):	$(LIBNAME_GENERAL) $(LIBNAME_NETWORK)
+ism:	general network
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\ISM.idl
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(LIBNAME_NETWORK);$(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\ISM\*.java
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(LIBNAME_NETWORK);$(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\ISMDirectory\*.java
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\ISM\*.java
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\ISMDirectory\*.java
 
-jar2:
-	$(JAR) -cf $(LIBNAME_ISM) \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\ISM \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\ISMDirectory
-
-$(LIBNAME_MAP):	$(LIBNAME_GENERAL) $(LIBNAME_SCHEME)
+map:	general
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\map.idl
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(LIBNAME_SCHEME);$(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Map\*.java
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Map\*.java
 
-jar3:
-	$(JAR) -cf $(LIBNAME_MAP) -C $(CLASSES) com\syrus\AMFICOM\CORBA\Map
-
-$(LIBNAME_SCHEME):	$(LIBNAME_GENERAL) $(LIBNAME_NETWORK)
+scheme:	general
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\scheme.idl
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(LIBNAME_NETWORK);$(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Scheme\*.java
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Scheme\*.java
 
-jar4:
-	$(JAR) -cf $(LIBNAME_SCHEME) -C $(CLASSES) com\syrus\AMFICOM\CORBA\Scheme
-
-$(LIBNAME_SURVEY):	$(LIBNAME_GENERAL)
+survey:	general
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\survey.idl
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Survey\*.java
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Survey\*.java
 
-jar5:
-	$(JAR) -cf $(LIBNAME_SURVEY) -C $(CLASSES) com\syrus\AMFICOM\CORBA\Survey
-
-$(LIBNAME_NETWORK):	$(LIBNAME_GENERAL)
+network:	general
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\network.idl
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Network\*.java
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\NetworkDirectory\*.java
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Network\*.java
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\NetworkDirectory\*.java
 
-jar6:
-	$(JAR) -cf $(LIBNAME_NETWORK) \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\Network \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\NetworkDirectory
-
-$(LIBNAME_REPORT):	$(LIBNAME_GENERAL)
+report:	general
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\report.idl
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Report\*.java
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Report\*.java
 
-jar7:
-	$(JAR) -cf $(LIBNAME_REPORT) -C $(CLASSES) com\syrus\AMFICOM\CORBA\Report
-
-$(LIBNAME_ADMIN):	$(LIBNAME_GENERAL)
+admin:	general
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\admin.idl
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Admin\*.java
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Admin\*.java
 
-jar8:
-	$(JAR) -cf $(LIBNAME_ADMIN) -C $(CLASSES) com\syrus\AMFICOM\CORBA\Admin
-
-$(LIBNAME_ALARM):	$(LIBNAME_GENERAL)
+alarm:	general
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\alarm.idl
-	$(JAVAC) -d $(CLASSES) -classpath $(LIBNAME_GENERAL);$(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Alarm\*.java
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Alarm\*.java
 
-jar9:
-	$(JAR) -cf $(LIBNAME_ALARM) -C $(CLASSES) com\syrus\AMFICOM\CORBA\Alarm
-
-$(LIBNAME_GENERAL):
+general:
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\general.idl
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\resource.idl
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\constants.idl
@@ -160,18 +98,7 @@ $(LIBNAME_GENERAL):
 		$(SRC)\com\syrus\AMFICOM\CORBA\ConstantsPOATie.java \
 		$(SRC)\com\syrus\AMFICOM\CORBA\_ConstantsStub.java
 
-jar10:
-	$(JAR) -cf $(LIBNAME_GENERAL) \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\Constant \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\General \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\Resource \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\Constants.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\ConstantsHelper.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\ConstantsHolder.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\_ConstantsImplBase.class \
-		-C $(CLASSES) com\syrus\AMFICOM\CORBA\_st_Constants.class \
-
 clean:
 	rm -rf $(CLASSES)\com\syrus\AMFICOM
 	rm -rf $(SRC)\com\syrus\AMFICOM
-	rm -f $(ALL_LIBS) $(LIBNAME_OBJECT) $(LIBNAME) $(LIBNAME_SRC)
+	rm -f $(ALL_LIBS) $(LIBNAME) $(LIBNAME_SRC)
