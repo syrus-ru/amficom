@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.14 2004/09/27 09:53:02 bass Exp $
+ * $Id: Environment.java,v 1.15 2005/03/16 10:06:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import javax.swing.plaf.metal.*;
 /**
  * Класс Environment используется для хранения общей для приложения информации.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2004/09/27 09:53:02 $
+ * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/03/16 10:06:40 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -476,7 +476,7 @@ public final class Environment
 			saveProperties();
 			try
 			{
-				SessionInterface.getActiveSession().CloseSession();
+				SessionInterface.getActiveSession().closeSession();
 			}
 			catch (Exception ex)
 			{

@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.Client.General.ConnectionInterface;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.general.ApplicationException;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
@@ -158,7 +159,18 @@ public class SessionOpenDialog extends JDialog
 	{
 		si.setUser(fieldUser.getText());
 		si.setPassword(new String (fieldPassword.getPassword()));
-		SessionInterface ssi = si.OpenSession();
+		SessionInterface ssi = null;
+		try {
+			ssi = si.openSession();
+		} catch (ApplicationException e1) {
+			JOptionPane.showMessageDialog(
+				this,
+				LangModel.getString("Error server connection"),
+				LangModel.getString("errorTitleOpenSession"),
+				JOptionPane.ERROR_MESSAGE,
+				null);
+			return;
+		}
 
 		if(ssi == null)
 		{

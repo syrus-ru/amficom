@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.25 2005/02/17 08:18:46 stas Exp $
+ * $Id: RISDSessionInfo.java,v 1.26 2005/03/16 10:06:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.Collection;
 
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.SystemException;
 import org.omg.CORBA.UserException;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
@@ -72,8 +73,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2005/02/17 08:18:46 $
+ * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2005/03/16 10:06:40 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -132,7 +133,7 @@ public final class RISDSessionInfo extends SessionInterface {
 	/**
 	 * Открыть новую сессию с явным указанием параметров сессии.
 	 */
-	public static SessionInterface OpenSession(ConnectionInterface ci, String u, String p) {
+	public static SessionInterface openSession(ConnectionInterface ci, String u, String p) {
 		try {
 			/*
 			 * создать новый экземпляр сессии и открыть ее
@@ -144,7 +145,7 @@ public final class RISDSessionInfo extends SessionInterface {
 			 * если сессия не открыта, то возвращается null, и созданный здесь
 			 * экземпляр автоматически уничтожается
 			 */
-			return si.OpenSession();
+			return si.openSession();
 		} catch (Exception e) {
 			e.printStackTrace();
 			setActiveSession(null);
@@ -154,15 +155,15 @@ public final class RISDSessionInfo extends SessionInterface {
 
 	/**
 	 * Открыть сессию с установленными для нее параметрами.
+	 * @throws ApplicationException 
 	 */
-	public SessionInterface OpenSession() {
+	public SessionInterface openSession() throws ApplicationException {
 		if(Environment.getConnectionType().equals(Environment.CONNECTION_EMPTY))
-			return OpenLocalSession();
-		return OpenRemoteSession();
+			return openLocalSession();
+		return openRemoteSession();
 	}
 	
-	private SessionInterface OpenRemoteSession() {
-		try {
+	private SessionInterface openRemoteSession() throws ApplicationException {
 			/*
 			 * параметр для возврата идентификатора сессии
 			 */
@@ -172,17 +173,35 @@ public final class RISDSessionInfo extends SessionInterface {
 			if (ci == null)
 				ci = (RISDConnectionInfo) (RISDConnectionInfo.getInstance());
 			if (!ci.isConnected()) {
-				try {
-					ci.setConnected(true);
-				} catch (Exception e) {
-					/**
-					 * @todo Catch different exceptions separately.
-					 */
-					return null;
-				}
+					try {
+						ci.setConnected(true);
+					} catch (SystemException e) {
+						// TODO Auto-generated catch block
+						throw new ApplicationException(e);
+					} catch (UserException e) {
+						// TODO Auto-generated catch block
+						throw new ApplicationException(e);
+					}
 			}
 
-			clientStartup();
+			try {
+				clientStartup();
+			} catch (org.omg.CORBA.ORBPackage.InvalidName e1) {
+				// TODO Auto-generated catch block
+				throw new ApplicationException(e1);
+			} catch (AdapterInactive e1) {
+				// TODO Auto-generated catch block
+				throw new ApplicationException(e1);
+			} catch (CannotProceed e1) {
+				// TODO Auto-generated catch block
+				throw new ApplicationException(e1);
+			} catch (InvalidName e1) {
+				// TODO Auto-generated catch block
+				throw new ApplicationException(e1);
+			} catch (NotFound e1) {
+				// TODO Auto-generated catch block
+				throw new ApplicationException(e1);
+			}
 			String ior = JavaSoftORBUtil.getInstance().getORB().object_to_string(client);
 
 			/*
@@ -191,29 +210,32 @@ public final class RISDSessionInfo extends SessionInterface {
 			try {
 				ecode = ci.getServer().Logon(getUser(), Rewriter.write(getPassword()), ior, accessIdentityHolder);
 			} catch (com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException e) {
-				System.err.println("Error " + e.message);
-				e.printStackTrace();
-				/*
-				 * Another unsuccessful return point after client activation.
-				 */
-				clientShutdown(true);
-				return null;
-			} catch (Exception e) {
-				System.err.println("Error " + e.getMessage());
-				e.printStackTrace();
-				/*
-				 * First unsuccessful return point after client activation.
-				 */
-				clientShutdown(true);
-				return null;
-			}
+//				 TODO Auto-generated catch block
+				throw new ApplicationException(e);
+			} catch (SystemException e) {
+				// TODO Auto-generated catch block
+				throw new ApplicationException(e);
+			} 
 			if (ecode != Constants.ERROR_NO_ERROR) {
 				Log("Failed Logon! status = " + ecode);
 				/*
 				 * Second unsuccessful return point after client activation.
 				 */
-				clientShutdown(true);
-				return null;
+				try {
+					clientShutdown(true);
+				} catch (org.omg.CORBA.ORBPackage.InvalidName e) {
+					// TODO Auto-generated catch block
+					throw new ApplicationException(e);
+				} catch (CannotProceed e) {
+					// TODO Auto-generated catch block
+					throw new ApplicationException(e);
+				} catch (InvalidName e) {
+					// TODO Auto-generated catch block
+					throw new ApplicationException(e);
+				} catch (NotFound e) {
+					// TODO Auto-generated catch block
+					throw new ApplicationException(e);
+				}				
 			}
 
 			this.LogonTime = System.currentTimeMillis();
@@ -224,6 +246,7 @@ public final class RISDSessionInfo extends SessionInterface {
 			CMServer cmServer = this.ci.getCmServer();
 
 			final String oldUserId = this.accessIdentity.user_id;
+			try {
 			final Identifier_Transferable userId
 				= cmServer.reverseLookupUserLogin(
 				server.lookupUserLogin(
@@ -235,7 +258,6 @@ public final class RISDSessionInfo extends SessionInterface {
 				server.lookupUserName(
 				new Identifier_Transferable(oldUserId)))
 				.identifier_string);
-
 			this.accessIdentifier = new AccessIdentifier_Transferable(
 				System.currentTimeMillis(),
 
@@ -247,78 +269,38 @@ public final class RISDSessionInfo extends SessionInterface {
 				userId,
 
 				new Identifier_Transferable("Null_0"));
-
 			this.domainId = new Identifier(this.accessIdentifier.domain_id);
 			this.userId = new Identifier(this.accessIdentifier.user_id);
-
 			final Class clazz = ClientLRUMap.class;
 			final int size = 200;
 			SessionContext.init(new AccessIdentity(this.accessIdentifier));
-
-//			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			//			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), clazz, size);
-
-//			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			//			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), clazz, size);
-
-//			ClientAdministrationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			//			ClientAdministrationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			AdministrationStorableObjectPool.init(new ClientAdministrationObjectLoader(cmServer), clazz, size);
-
-//			ClientGeneralObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			//			ClientGeneralObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			GeneralStorableObjectPool.init(new ClientGeneralObjectLoader(cmServer), clazz, size);
-
 			MapStorableObjectPool.init(new EmptyClientMapObjectLoader(), clazz, size);
-
 			MapViewStorableObjectPool.init(new EmptyClientMapViewObjectLoader(), clazz, size);
-
 			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
-
 			IdentifierPool.init(cmServer);
 //			IdentifierPool.init(new LocalIdentifierGeneratorServer());
-
 			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
 			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);
 			System.err.println("started: " + new java.util.Date(this.accessIdentifier.started));
 			System.err.println("userId: " + this.accessIdentifier.user_id.identifier_string);
-
 			add(this);
 			setActiveSession(this);
-
-			/**
-			 * @todo Later, we'll send client's loglevel to the server.
-			 */
-
 			return this;
 		} catch (AMFICOMRemoteException e) {
-			System.out.println(e.message);
-			e.printStackTrace();
-			setActiveSession(null);
-			/*
-			 * Another unsuccessful return point after client activation.
-			 */
-			try {
-				clientShutdown(true);
-			} catch (UserException ue) {
-				ue.printStackTrace();
-			}
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			setActiveSession(null);
-			/*
-			 * Third unsuccessful return point after client activation.
-			 */
-			try {
-				clientShutdown(true);
-			} catch (UserException ue) {
-				ue.printStackTrace();
-			}
-			return null;
-		}
+			throw new ApplicationException(e);
+		}		
 	}
 	
 	
-	private SessionInterface OpenLocalSession() {
+	private SessionInterface openLocalSession() {
 		
 			final Class clazz = ClientLRUMap.class;
 			final int size = 200;
@@ -465,7 +447,7 @@ public final class RISDSessionInfo extends SessionInterface {
 	/**
 	 * Закрыть сессию.
 	 */
-	public void CloseSession() {
+	public void closeSession() {
 		/*
 		 * если сессия открыта, то закрыть
 		 */

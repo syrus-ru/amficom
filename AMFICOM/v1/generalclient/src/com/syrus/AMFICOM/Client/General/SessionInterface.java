@@ -1,5 +1,5 @@
 /*
- * $Id: SessionInterface.java,v 1.7 2005/02/15 10:40:26 bob Exp $
+ * $Id: SessionInterface.java,v 1.8 2005/03/16 10:06:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -12,11 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/02/15 10:40:26 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/16 10:06:40 $
  * @module generalclient_v1
  */
 public abstract class SessionInterface {
@@ -35,9 +36,9 @@ public abstract class SessionInterface {
 	}
 
 	// открыть сессию с установленными дл€ нее параметрами
-	public abstract SessionInterface OpenSession();
+	public abstract SessionInterface openSession() throws ApplicationException;
 	// закрыть сессию
-	public abstract void CloseSession();
+	public abstract void closeSession();
 
 	public void SetDefaults() {
 	}
@@ -73,7 +74,7 @@ public abstract class SessionInterface {
 	{
 		if(si == null)
 			return;
-		si.CloseSession();
+		si.closeSession();
 	}
 
 	public static void setActiveSession(SessionInterface si)

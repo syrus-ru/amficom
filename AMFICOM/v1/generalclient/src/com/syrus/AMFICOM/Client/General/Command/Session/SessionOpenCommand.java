@@ -1,5 +1,5 @@
 /*
- * $Id: SessionOpenCommand.java,v 1.11 2005/02/10 13:17:07 stas Exp $
+ * $Id: SessionOpenCommand.java,v 1.12 2005/03/16 10:06:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,11 +18,14 @@ import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
 import com.syrus.AMFICOM.Client.General.UI.Session.SessionOpenDialog;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.util.Log;
+
 import java.awt.*;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/02/10 13:17:07 $
+ * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/03/16 10:06:40 $
  * @module generalclient_v1
  */
 public class SessionOpenCommand extends VoidCommand
@@ -73,7 +76,11 @@ public class SessionOpenCommand extends VoidCommand
 	
 	private void executeLocal()
 	{
-		SessionInterface ssi = aContext.getSessionInterface().OpenSession();
+		try {
+			SessionInterface ssi = aContext.getSessionInterface().openSession();
+		} catch (ApplicationException e) {
+			Log.debugException(e, Log.WARNING);
+		}
 
 		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие сессии..."));
 		dispatcher.notify(new ContextChangeEvent(aContext.getSessionInterface(), ContextChangeEvent.SESSION_CHANGING_EVENT));
