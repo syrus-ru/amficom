@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.25 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.26 2004/12/10 12:13:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2004/12/10 12:13:50 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -181,14 +182,18 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 		return this.characteristics;
 	}
     
-    public List getCharacteristics() {
-        return this.characteristics;
+	public List getCharacteristics() {
+        return Collections.unmodifiableList(this.characteristics);
     }
     
-    public void setCharacteristics(final List characteristics) {
+    protected void setCharacteristics0(final List characteristics) {
         this.characteristics.clear();
         if (characteristics != null)
                 this.characteristics.addAll(characteristics);
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.setCharacteristics0(characteristics);
         super.currentVersion = super.getNextVersion();
     }
 }

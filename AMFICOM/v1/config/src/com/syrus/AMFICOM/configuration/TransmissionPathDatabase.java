@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.32 2004/12/10 10:32:15 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.33 2004/12/10 12:13:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/10 10:32:15 $
+ * @version $Revision: 1.33 $, $Date: 2004/12/10 12:13:50 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -192,7 +192,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 				Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MONITORED_ELEMENT_ID);
 				meLink.add(meId);				
 			}
-			transmissionPath.setMonitoredElementIds(meLink);
+			transmissionPath.setMonitoredElementIds0(meLink);
 		}
 		catch (SQLException sqle) {
 			String mesg = "TransmissionPathDatabase.retrieveEquipmentMELink | Cannot retrieve transmission path " + tpIdStr;
@@ -279,7 +279,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
             for (Iterator iter = transmissionPaths.iterator(); iter.hasNext();) {
                 TransmissionPath transmissionPath = (TransmissionPath) iter.next();
                 List meIds = (List)meIdMap.get(transmissionPath);
-                transmissionPath.setMonitoredElementIds(meIds);
+                transmissionPath.setMonitoredElementIds0(meIds);
             }
             
         } catch (SQLException sqle) {

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.22 2004/12/07 15:32:33 max Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.23 2004/12/10 12:13:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.23 $, $Date: 2004/12/10 12:13:50 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -92,7 +92,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 		EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		super.retrieveEntity(equipmentType);
         CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-        equipmentType.setCharacteristics(characteristicDatabase.retrieveCharacteristics(equipmentType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE));
+        equipmentType.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(equipmentType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE));
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
@@ -142,32 +142,38 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		super.insertEntity(equipmentType);
-        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-        characteristicDatabase.insert(equipmentType.getCharacteristics());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(equipmentType);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 
 	public void insert(List storableObjects) throws IllegalDataException,
 			CreateObjectException {
 		super.insertEntities(storableObjects);
-        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-            Domain domain = (Domain) it.next();
-            characteristicDatabase.insert(domain.getCharacteristics()); 
-        }
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(storableObjects);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 	
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+		EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
         switch (updateKind) {
 		case UPDATE_FORCE:
-			super.checkAndUpdateEntity(storableObject, true);
-			characteristicDatabase.updateCharacteristics(storableObject);
+			super.checkAndUpdateEntity(equipmentType, true);
+			characteristicDatabase.updateCharacteristics(equipmentType);
             break;
 		case UPDATE_CHECK: 					
 		default:
-			super.checkAndUpdateEntity(storableObject, false);
-            characteristicDatabase.updateCharacteristics(storableObject);
+			super.checkAndUpdateEntity(equipmentType, false);
+            characteristicDatabase.updateCharacteristics(equipmentType);
 		    break;
 		}
 	}
@@ -183,6 +189,8 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 			super.checkAndUpdateEntities(storableObjects, false);
 			break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 	
 		
@@ -209,7 +217,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
             for (Iterator iter = list.iterator(); iter.hasNext();) {
                 EquipmentType equipmentType = (EquipmentType) iter.next();
                 List characteristics = (List)characteristicMap.get(equipmentType);
-                equipmentType.setCharacteristics(characteristics);
+                equipmentType.setCharacteristics0(characteristics);
             }
         }
         return list;

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.43 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: Equipment.java,v 1.44 2004/12/10 12:13:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2004/12/10 12:13:50 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -254,20 +255,24 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		return this.imageId;
 	}
 
-	public List getCharacteristics() {
-		return this.characteristics;
-	}
-
 	public List getPortIds() {
-		return this.portIds;
+		return Collections.unmodifiableList(this.portIds);
 	}
 
-	public void setCharacteristics(final List characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-				this.characteristics.addAll(characteristics);
-		super.currentVersion = super.getNextVersion();
-	}
+	public List getCharacteristics() {
+        return Collections.unmodifiableList(this.characteristics);
+    }
+    
+    protected void setCharacteristics0(final List characteristics) {
+        this.characteristics.clear();
+        if (characteristics != null)
+                this.characteristics.addAll(characteristics);
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.setCharacteristics0(characteristics);
+        super.currentVersion = super.getNextVersion();
+    }
 
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
@@ -289,11 +294,10 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		this.imageId = imageId;
 	}
 
-	protected synchronized void setPortIds(final List portIds) {
+	protected synchronized void setPortIds0(final List portIds) {
 		this.portIds.clear();
 		if (portIds != null)
 				this.portIds.addAll(portIds);
-		super.currentVersion = super.getNextVersion();
 	}
 	
 	public List getDependencies() {

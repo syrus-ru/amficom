@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.27 2004/12/10 10:32:15 bob Exp $
+ * $Id: MeasurementPort.java,v 1.28 2004/12/10 12:13:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/12/10 10:32:15 $
+ * @version $Revision: 1.28 $, $Date: 2004/12/10 12:13:50 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -246,7 +247,7 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 	}
     
     public List getCharacteristics() {
-        return this.characteristics;
+        return Collections.unmodifiableList(this.characteristics);
     }
     
     protected void setCharacteristics0(final List characteristics) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredDomainMember.java,v 1.4 2004/11/15 14:02:55 bob Exp $
+ * $Id: MonitoredDomainMember.java,v 1.5 2004/12/10 12:13:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,14 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/15 14:02:55 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/10 12:13:50 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -47,11 +48,18 @@ public abstract class MonitoredDomainMember extends DomainMember {
 			  domainId);
 	}
 
-	protected synchronized void setMonitoredElementIds(List monitoredElementIds) {
-		this.monitoredElementIds = monitoredElementIds;
+	protected synchronized void setMonitoredElementIds0(List monitoredElementIds) {
+		this.monitoredElementIds.clear();
+		if (monitoredElementIds != null)
+				this.monitoredElementIds.addAll(monitoredElementIds);
 	}
-	
+
+	protected synchronized void setMonitoredElementIds(List monitoredElementIds) {
+		this.setMonitoredElementIds0(monitoredElementIds);
+		super.currentVersion = super.getNextVersion();
+	}
+
 	public List getMonitoredElementIds() {
-		return this.monitoredElementIds;
+		return Collections.unmodifiableList(this.monitoredElementIds);
 	}
 }

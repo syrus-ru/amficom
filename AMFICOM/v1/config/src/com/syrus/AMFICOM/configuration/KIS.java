@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.42 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: KIS.java,v 1.43 2004/12/10 12:13:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2004/12/10 12:13:50 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -245,21 +246,21 @@ public class KIS extends DomainMember implements Characterized {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						Identifier domainId,
-																						String name,
-																						String description,
-																						String hostname,
-																						short tcpPort,
-																						Identifier equipmentId,
-																						Identifier mcmId) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  Identifier domainId,
+											  String name,
+											  String description,
+											  String hostname,
+											  short tcpPort,
+											  Identifier equipmentId,
+											  Identifier mcmId) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												domainId);
+			modified,
+			creatorId,
+			modifierId,
+			domainId);
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
@@ -284,14 +285,18 @@ public class KIS extends DomainMember implements Characterized {
 		return dependencies;
 	}
     
-    public List getCharacteristics() {
-        return this.characteristics;
+	public List getCharacteristics() {
+        return Collections.unmodifiableList(this.characteristics);
     }
     
-    public void setCharacteristics(final List characteristics) {
+    protected void setCharacteristics0(final List characteristics) {
         this.characteristics.clear();
         if (characteristics != null)
                 this.characteristics.addAll(characteristics);
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.setCharacteristics0(characteristics);
         super.currentVersion = super.getNextVersion();
     }
 }

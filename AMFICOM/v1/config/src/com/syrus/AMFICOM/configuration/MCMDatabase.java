@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.36 2004/12/07 15:32:33 max Exp $
+ * $Id: MCMDatabase.java,v 1.37 2004/12/10 12:13:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.37 $, $Date: 2004/12/10 12:13:50 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -130,7 +130,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		MCM mcm = this.fromStorableObject(storableObject);
 		this.retrieveEntity(mcm);
 		this.retrieveKISs(mcm);
-		mcm.setCharacteristics(characteristicDatabase.retrieveCharacteristics(mcm.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
+		mcm.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(mcm.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -205,10 +205,11 @@ public class MCMDatabase extends StorableObjectDatabase {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
-		mcm.setKISs(kiss);
+		mcm.setKISs0(kiss);
 	}
     
     private void retrieveKISIdsByOneQuery(List mcms) throws RetrieveObjectException {
+    	
     	if ((mcms == null) || (mcms.isEmpty()))
             return;     
         
@@ -283,7 +284,7 @@ public class MCMDatabase extends StorableObjectDatabase {
             for (Iterator iter = mcms.iterator(); iter.hasNext();) {
                 MCM mcm = (MCM) iter.next();
                 List kiss = (List)kisMap.get(mcm);
-                mcm.setKISs(kiss);
+                mcm.setKISs0(kiss);
             }
             
         } catch (SQLException sqle) {
@@ -305,10 +306,10 @@ public class MCMDatabase extends StorableObjectDatabase {
         }
     }
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg)
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		MCM mcm = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+//		MCM mcm = this.fromStorableObject(storableObject);
+		switch (retrieveKind) {
 			default:
 				return null;
 		}
@@ -316,27 +317,41 @@ public class MCMDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		MCM mcm = this.fromStorableObject(storableObject);
-		super.insertEntity(mcm);		
+		super.insertEntity(mcm);	
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(mcm);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException,
 			CreateObjectException {
 		super.insertEntities(storableObjects);
-		
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(storableObjects);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) 
 			throws IllegalDataException, VersionCollisionException, 
 			UpdateObjectException {
+		MCM mcm = this.fromStorableObject(storableObject);
 		switch (updateKind) {
-		case UPDATE_FORCE:
-			super.checkAndUpdateEntity(storableObject, true);
-			break;
-		case UPDATE_CHECK: 					
-		default:
-			super.checkAndUpdateEntity(storableObject, false);
-			break;
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntity(mcm, true);
+				break;
+			case UPDATE_CHECK: 					
+			default:
+				super.checkAndUpdateEntity(mcm, false);
+				break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(mcm);
 	}
 
 	public void update(List storableObjects, int updateKind, Object arg)
@@ -351,6 +366,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 			super.checkAndUpdateEntities(storableObjects, false);
 			break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 	
 	public List retrieveByIds(List ids, String condition)
@@ -367,9 +384,9 @@ public class MCMDatabase extends StorableObjectDatabase {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
             Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MCM);
             for (Iterator iter = list.iterator(); iter.hasNext();) {
-                TransmissionPath transmissionPath = (TransmissionPath) iter.next();
-                List characteristics = (List)characteristicMap.get(transmissionPath);
-                transmissionPath.setCharacteristics(characteristics);
+                MCM mcm = (MCM) iter.next();
+                List characteristics = (List)characteristicMap.get(mcm);
+                mcm.setCharacteristics0(characteristics);
             }
         }
 		return list;	

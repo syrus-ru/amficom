@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.33 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: MCM.java,v 1.34 2004/12/10 12:13:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -27,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2004/12/10 12:13:50 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -187,18 +188,22 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	public List getCharacteristics() {
-		return this.characteristics;
-	}
-
-	public void setCharacteristics(List characteristics) {
-		 this.characteristics.clear();
-	     if (characteristics != null)
-	     	this.characteristics.addAll(characteristics);
-	     super.currentVersion = super.getNextVersion();
-	}
+        return Collections.unmodifiableList(this.characteristics);
+    }
+    
+    protected void setCharacteristics0(final List characteristics) {
+        this.characteristics.clear();
+        if (characteristics != null)
+                this.characteristics.addAll(characteristics);
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.setCharacteristics0(characteristics);
+        super.currentVersion = super.getNextVersion();
+    }
 
 	public List getKISs() {
-		return this.kiss;
+		return Collections.unmodifiableList(this.kiss);
 	}
 
 	public static MCM createInstance(Identifier creatorId,
@@ -227,20 +232,20 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						Identifier domainId,
-																						String name,
-																						String description,
-																						Identifier userId,
-																						Identifier serverId,
-																						short tcpPort) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  Identifier domainId,
+											  String name,
+											  String description,
+											  Identifier userId,
+											  Identifier serverId,
+											  short tcpPort) {
 		super.setAttributes(created,												
-												modified,
-												creatorId,
-												modifierId,
-												domainId);
+				modified,
+				creatorId,
+				modifierId,
+				domainId);
 		this.name = name;
 		this.description = description;
 		this.userId = userId;
@@ -248,11 +253,10 @@ public class MCM extends DomainMember implements Characterized {
 		this.tcpPort = tcpPort;
 	}
 
-	protected synchronized void setKISs(List kiss) {
+	protected synchronized void setKISs0(List kiss) {
 		this.kiss.clear();
 		if (kiss != null)
-			this.kiss.addAll(kiss);
-		super.currentVersion = super.getNextVersion();
+			this.kiss.addAll(kiss);		
 	}
 	
 	public List getDependencies() {
