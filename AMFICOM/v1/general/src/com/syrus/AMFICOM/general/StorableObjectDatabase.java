@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.45 2004/11/16 09:30:17 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.46 2004/11/16 10:26:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseIdentifier;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/11/16 09:30:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.46 $, $Date: 2004/11/16 10:26:42 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -99,16 +99,20 @@ public abstract class StorableObjectDatabase {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE + COLUMN_ID + EQUALS
 					+ storableObjectIdStr);			
-		} catch (SQLException sqle1) {
+		}
+		catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;				
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally{
 				DatabaseConnection.closeConnection(connection);
 			}
 		}
@@ -118,8 +122,7 @@ public abstract class StorableObjectDatabase {
 	
 	public abstract void insert(List storableObjects) throws IllegalDataException, CreateObjectException;
 
-	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException,
-			ObjectNotFoundException, RetrieveObjectException;
+	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
 	public abstract List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException;
 
@@ -134,8 +137,8 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getEnityName();
 
-	protected String getColumns(){
-		if (columns == null){
+	protected String getColumns() {
+		if (columns == null) {
 			columns = COLUMN_ID + COMMA
 				+ COLUMN_CREATED + COMMA
 				+ COLUMN_MODIFIED + COMMA
@@ -145,8 +148,8 @@ public abstract class StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getUpdateMultiplySQLValues(){
-		if (updateMultiplySQLValues == null){
+	protected String getUpdateMultiplySQLValues() {
+		if (updateMultiplySQLValues == null) {
 			updateMultiplySQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -156,32 +159,30 @@ public abstract class StorableObjectDatabase {
 		return updateMultiplySQLValues; 
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException{
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		return storableObject.getId().toSQLString() + COMMA
-		+ DatabaseDate.toUpdateSubString(storableObject.getCreated()) + COMMA
-		+ DatabaseDate.toUpdateSubString(storableObject.getModified()) + COMMA
-		+ storableObject.getCreatorId().toSQLString() + COMMA 
-		+ storableObject.getModifierId().toSQLString();
+			+ DatabaseDate.toUpdateSubString(storableObject.getCreated()) + COMMA
+			+ DatabaseDate.toUpdateSubString(storableObject.getModified()) + COMMA
+			+ storableObject.getCreatorId().toSQLString() + COMMA
+			+ storableObject.getModifierId().toSQLString();
 	}
 
 	protected void insertEntity(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
 		try{
 			String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET + this.getColumns()
-					+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET 
-					+ this.getUpdateSingleSQLValues(storableObject) + CLOSE_BRACKET;
+				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+				+ this.getUpdateSingleSQLValues(storableObject) + CLOSE_BRACKET;
 			Statement statement = null;
 			Connection connection = DatabaseConnection.getConnection();
 			try {
 				statement = connection.createStatement();
-				Log.debugMessage(this.getEnityName() + "Database.insertEntity | Trying: " + sql,
-							Log.DEBUGLEVEL09);
+				Log.debugMessage(this.getEnityName() + "Database.insertEntity | Trying: " + sql, Log.DEBUGLEVEL09);
 				statement.executeUpdate(sql);
 				connection.commit();
-			} catch (SQLException sqle) {
-				String mesg = this.getEnityName() + "Database.insertEntity | Cannot insert "
-						+ this.getEnityName() + " '" + storableObjectIdStr + "' -- "
-						+ sqle.getMessage();
+			}
+			catch (SQLException sqle) {
+				String mesg = this.getEnityName() + "Database.insertEntity | Cannot insert " + this.getEnityName() + " '" + storableObjectIdStr + "' -- " + sqle.getMessage();
 				try {
 					connection.rollback();
 				}
@@ -190,25 +191,28 @@ public abstract class StorableObjectDatabase {
 					Log.errorException(sqle2);
 				}
 				throw new CreateObjectException(mesg, sqle);
-			} finally {
+			}
+			finally {
 				try {
 					if (statement != null)
 						statement.close();
 					statement = null;					
-				} catch (SQLException sqle1) {
+				}
+				catch (SQLException sqle1) {
 					Log.errorException(sqle1);
-				} finally{
+				}
+				finally{
 					DatabaseConnection.closeConnection(connection);
 				}
 			}
 			
-		} catch(UpdateObjectException uoe){
+		}
+		catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
 
 	protected void insertEntities(List storableObjects) throws IllegalDataException, CreateObjectException {
-
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 
@@ -216,9 +220,9 @@ public abstract class StorableObjectDatabase {
 			insertEntity((StorableObject) storableObjects.get(0));
 			return;
 		}
-		
+
 		List idsList = new LinkedList();
-		for(Iterator it=storableObjects.iterator();it.hasNext();){
+		for(Iterator it=storableObjects.iterator();it.hasNext();) {
 			StorableObject storableObject = (StorableObject)it.next();
 			Identifier localId = storableObject.getId();
 			if (idsList.contains(localId))
@@ -228,20 +232,18 @@ public abstract class StorableObjectDatabase {
 		idsList.clear();
 		idsList = null;
 
-
-		String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET				
-				+ this.getColumns()
-				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + this.getUpdateMultiplySQLValues()
-				+ CLOSE_BRACKET;
+		String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET
+			+ this.getColumns()
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + this.getUpdateMultiplySQLValues()
+			+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		String storableObjectIdCode = null;
-		
+
 		Connection connection = DatabaseConnection.getConnection();
-		
+
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			Log.debugMessage(this.getEnityName() + "Database.insertEntities | Trying: " + sql,
-								Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEnityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObjectIdCode = storableObject.getId().getCode();
