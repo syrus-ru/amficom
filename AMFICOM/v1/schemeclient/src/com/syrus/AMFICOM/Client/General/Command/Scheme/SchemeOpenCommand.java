@@ -1,17 +1,19 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.*;
-
-import java.awt.event.ActionEvent;
-import javax.swing.JOptionPane;
-
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Schematics.UI.SchemeController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
+
+import java.util.List;
+
+import javax.swing.JOptionPane;
 
 public class SchemeOpenCommand extends VoidCommand
 {
@@ -33,11 +35,10 @@ public class SchemeOpenCommand extends VoidCommand
 		if (dataSource == null)
 			return;
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(dataSource, Scheme.typ);
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(SchemeController.getInstance(), Scheme.typ);
 
-		List dataSet = Pool.getList(Scheme.typ);
-		ObjectResourceDisplayModel odm = Scheme.getDefaultDisplayModel();
-		mcd.setContents(odm, dataSet);
+		List ms = Pool.getList(Scheme.typ);
+		mcd.setContents(ms);
 
 		// отфильтровываем по домену
 		ObjectResourceTableModel ortm = mcd.getTableModel();
