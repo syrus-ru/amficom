@@ -1,9 +1,12 @@
-/*
- * $Id: NodeLink.java,v 1.19 2005/01/25 13:37:08 bob Exp $
+/**
+ * $Id: NodeLink.java,v 1.20 2005/01/27 14:43:37 krupenn Exp $
  *
- * Copyright ї 2004 Syrus Systems.
- * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
- * рТПЕЛФ: бнжйлпн.
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -36,8 +39,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/01/25 13:37:08 $
- * @author $Author: bob $
+ * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
+ * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
+ * не живут сами по себе, а входят в состав одной и только одной линии
+ * ({@link PhysicalLink}).
+ * @author $Author: krupenn $
+ * @version $Revision: 1.20 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements Characterized, MapElement {
@@ -336,6 +343,12 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 			this.length = length;					
 	}
 
+	/**
+	 * Получить другой концевой узел фрагмента.
+	 * @param node концевой узел
+	 * @return другой концевой узел. В случае, если node не является концевым
+	 * для данного фрагмента, возвращается <code>null</code>.
+	 */
 	public AbstractNode getOtherNode(AbstractNode node)
 	{
 		if ( this.getEndNode().equals(node) )
@@ -421,11 +434,22 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 	}
 
 	/**
-	 * Получить топологическую длинну NodeLink
+	 * Получить топологическую длинну фрагмента.
+	 * @return топологическая длина
 	 */
 	public double getLengthLt()
 	{
 		return getLength();
+	}
+
+	/**
+	 * Установить топологическую длинну фрагмента. Высчитывается в месте, в 
+	 * котором осуществляется управление рисованием фрагментов линий.
+	 * @param length топологическая длина
+	 */
+	public void setLengthLt(double length)
+	{
+		this.setLength(length);
 	}
 
 	public java.util.Map getExportMap() {

@@ -1,9 +1,12 @@
-/*
- * $Id: Map.java,v 1.14 2005/01/25 11:58:24 bob Exp $
+/**
+ * $Id: Map.java,v 1.15 2005/01/27 14:43:37 krupenn Exp $
  *
- * Copyright ї 2004 Syrus Systems.
- * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
- * рТПЕЛФ: бнжйлпн.
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -33,8 +36,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/01/25 11:58:24 $
- * @author $Author: bob $
+ * Топологическая схема, которая содержит в себе набор связанных друг с другом
+ * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
+ * линиях, коллекторов (объединяющих в себе линии).
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public class Map extends StorableObject {
@@ -429,6 +436,10 @@ public class Map extends StorableObject {
 			this.domainId = domainId;
 	}
 
+	/**
+	 * Получить список всех узловых элементов топологической схемы.
+	 * @return список узлов
+	 */
 	public List getNodes() {
 		this.nodeElements.clear();
 		this.nodeElements.addAll(this.siteNodes);
@@ -438,22 +449,24 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Добавить новый MapNodeElement
+	 * Добавить новый узел.
+	 * @param node узел
 	 */
-	public void addNode(AbstractNode ob) {
-		if (ob instanceof SiteNode)
-			this.siteNodes.add(ob);
-		else if (ob instanceof TopologicalNode)
-			this.topologicalNodes.add(ob);
-		else if (ob instanceof Mark)
-			this.marks.add(ob);
-		ob.setMap(this);
-		ob.setRemoved(false);
+	public void addNode(AbstractNode node) {
+		if (node instanceof SiteNode)
+			this.siteNodes.add(node);
+		else if (node instanceof TopologicalNode)
+			this.topologicalNodes.add(node);
+		else if (node instanceof Mark)
+			this.marks.add(node);
+		node.setMap(this);
+		node.setRemoved(false);
 		super.currentVersion = super.getNextVersion();
 	}
 
 	/**
-	 * Удалить MapNodeElement
+	 * Удалить узел.
+	 * @param node узел
 	 */
 	public void removeNode(AbstractNode node) {
 		node.setSelected(false);
@@ -468,7 +481,9 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Получить элемент сетевого узла по ID
+	 * Получить элемент сетевого узла по идентификатору.
+	 * @param siteId идентификатор сетевого узла
+	 * @return сетевой узел или null, если узел не найден
 	 */
 	public SiteNode getSiteNode(Identifier siteId) {
 		Iterator e = this.getSiteNodes().iterator();
@@ -482,7 +497,9 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Получить элемент сетевого узла по ID
+	 * Получить элемент топологического узла по идентификатору.
+	 * @param topologicalNodeId идентификатор топологического узла
+	 * @return топологический узел или null, если узел не найден
 	 */
 	public TopologicalNode getTopologicalNode(Identifier topologicalNodeId) {
 		Iterator e = this.getTopologicalNodes().iterator();
@@ -496,7 +513,9 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Получить элемент сетевого узла по ID
+	 * Получить метку по идентификатору.
+	 * @param markId идентификатор метки
+	 * @return метка или null, если метка не найден
 	 */
 	public Mark getMark(Identifier markId) {
 		Iterator e = this.getMarks().iterator();
@@ -510,7 +529,9 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Получить точечный объект по ID
+	 * Получить узел по идентификатору.
+	 * @param nodeId идентификатор метки
+	 * @return узел или null, если узел не найден
 	 */
 	public AbstractNode getNode(Identifier nodeId) {
 		AbstractNode node = getSiteNode(nodeId);
@@ -521,6 +542,10 @@ public class Map extends StorableObject {
 		return null;
 	}
 
+	/**
+	 * Добавить новый коллектор.
+	 * @param collector новый коллектор
+	 */
 	public void addCollector(Collector collector) {
 		this.collectors.add(collector);
 		collector.setMap(this);
@@ -528,6 +553,10 @@ public class Map extends StorableObject {
 		super.currentVersion = super.getNextVersion();
 	}
 
+	/**
+	 * Удалить коллектор.
+	 * @param collector коллектор
+	 */
 	public void removeCollector(Collector collector) {
 		collector.setSelected(false);
 		this.collectors.remove(collector);
@@ -536,7 +565,9 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * получить коллектор, в составе которого есть тоннель mple
+	 * Получить коллектор, в составе которого есть заданная линия.
+	 * @param physicalLink линия
+	 * @return коллектор
 	 */
 	public Collector getCollector(PhysicalLink physicalLink) {
 		for (Iterator it = this.getCollectors().iterator(); it.hasNext();) {
@@ -548,8 +579,10 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Получить список физических линий, начинающихся или заканчивающихся в узле
-	 * node
+	 * Получить список линий, начинающихся или заканчивающихся в заданном узле.
+	 * 
+	 * @param node узел
+	 * @return список линий
 	 */
 	public List getPhysicalLinksAt(AbstractNode node) {
 		LinkedList returnNodeLink = new LinkedList();
@@ -564,7 +597,8 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Добавить новую физическую линию
+	 * Добавить новую линию.
+	 * @param physicalLink линия
 	 */
 	public void addPhysicalLink(PhysicalLink physicalLink) {
 
@@ -575,7 +609,8 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Удалить физическую линию
+	 * Удалить линию.
+	 * @param physicalLink линия
 	 */
 	public void removePhysicalLink(PhysicalLink physicalLink) {
 
@@ -590,7 +625,9 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Получение MapPhysicalLinkElement по его ID
+	 * Получить линию по ее идентификатору.
+	 * @param phisicalLinkId идентификатор линии
+	 * @return лниия
 	 */
 	public PhysicalLink getPhysicalLink(Identifier phisicalLinkId) {
 		Iterator e = this.getPhysicalLinks().iterator();
@@ -604,7 +641,10 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Получить MapPhysicalLinkElement по начальному и конечному узлам
+	 * Получить линию по концевым узлам.
+	 * @param startNode один концевой узел
+	 * @param endNode другой концевой узел
+	 * @return линия
 	 */
 	public PhysicalLink getPhysicalLink(AbstractNode startNode, AbstractNode endNode) {
 		for (Iterator it = this.getPhysicalLinks().iterator(); it.hasNext();) {
@@ -616,27 +656,31 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * добавить новый MapNodeLinkElement
+	 * добавить новый фрагмент линии.
+	 * @param nodeLink фрагмент линии
 	 */
-	public void addNodeLink(NodeLink ob) {
-		this.nodeLinks.add(ob);
-		ob.setMap(this);
-		ob.setRemoved(false);
+	public void addNodeLink(NodeLink nodeLink) {
+		this.nodeLinks.add(nodeLink);
+		nodeLink.setMap(this);
+		nodeLink.setRemoved(false);
 		super.currentVersion = super.getNextVersion();
 	}
 
 	/**
-	 * Удалить MapNodeLinkElement
+	 * Удалить фрагмент линии.
+	 * @param nodeLink фрагмент линии
 	 */
-	public void removeNodeLink(NodeLink ob) {
-		ob.setSelected(false);
-		this.nodeLinks.remove(ob);
-		ob.setRemoved(true);
+	public void removeNodeLink(NodeLink nodeLink) {
+		nodeLink.setSelected(false);
+		this.nodeLinks.remove(nodeLink);
+		nodeLink.setRemoved(true);
 		super.currentVersion = super.getNextVersion();
 	}
 
 	/**
-	 * Получение MapNodeLinkElement по его ID
+	 * Получить фрагмент линии по идентификатору.
+	 * @param nodeLinkId идентификатор фрагмента линии
+	 * @return фрагмент линии
 	 */
 	public NodeLink getNodeLink(Identifier nodeLinkId) {
 		Iterator e = this.getNodeLinks().iterator();
@@ -649,7 +693,10 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Получить NodeLink по начальному и конечному узлам
+	 * Получить фрагмент линии по концевым узлам.
+	 * @param startNode один концевой узел
+	 * @param endNode другой концевой узел
+	 * @return 
 	 */
 	public NodeLink getNodeLink(AbstractNode startNode, AbstractNode endNode) {
 		for (Iterator it = this.getNodeLinks().iterator(); it.hasNext();) {
@@ -661,7 +708,8 @@ public class Map extends StorableObject {
 	}
 
 	/**
-	 * Получить список всех топологических элементов карты
+	 * Получить список всех топологических элементов карты ({@link MapElement}).
+	 * @return список всех элементов
 	 */
 	public List getAllElements() {
 		this.allElements.clear();
@@ -677,14 +725,28 @@ public class Map extends StorableObject {
 		return Collections.unmodifiableList(this.allElements);
 	}
 
+	/**
+	 * Получить набор всех выделенных элементов топологической схемы. 
+	 * Выделенные элементы - те, для которых  метод 
+	 * <code>{@link MapElement#isSelected()}</code> возвращает <code>true</code>.
+	 * @return набор выделенных элементов
+	 */
 	public Set getSelectedElements() {
 		return this.selectedElements;
 	}
 
+	/**
+	 * Очистить набор выделенных элементов топологической схемы.
+	 */
 	public void clearSelection() {
 		this.selectedElements.clear();
 	}
 
+	/**
+	 * Зарегистрировать изменение флага выделения элемента топологической схемы.
+	 * @param me элемент
+	 * @param selected флаг выделения
+	 */
 	public void setSelected(MapElement me, boolean selected) {
 		if (selected)
 			this.selectedElements.add(me);

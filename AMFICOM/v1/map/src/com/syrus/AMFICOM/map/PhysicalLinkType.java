@@ -1,9 +1,12 @@
-/*
- * $Id: PhysicalLinkType.java,v 1.15 2005/01/25 14:58:41 bob Exp $
+/**
+ * $Id: PhysicalLinkType.java,v 1.16 2005/01/27 14:43:37 krupenn Exp $
  *
- * Copyright ї 2004 Syrus Systems.
- * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
- * рТПЕЛФ: бнжйлпн.
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -33,18 +36,27 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * внутренняя проводка
- * @version $Revision: 1.15 $, $Date: 2005/01/25 14:58:41 $
- * @author $Author: bob $
+ * Тип линии топологической схемы. Существует несколько предустановленных 
+ * типов линий, которые определяются полем {@link #codename}, соответствующим
+ * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
+ * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
+ * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterized {
 
+	/** тоннель */
 	public static final String TUNNEL = "tunnel";
+	/** участок коллектора */
 	public static final String COLLECTOR = "collector";
+	/** внутренняя проводка */
 	public static final String INDOOR = "indoor";
+	/** подводная линия */
 	public static final String SUBMARINE = "submarine";
+	/** навесная линия */
 	public static final String OVERHEAD = "overhead";
+	/** непривязанный кабель */
 	public static final String UNBOUND = "cable";
 
 	/**

@@ -1,11 +1,13 @@
-/*
- * $Id: AbstractNode.java,v 1.8 2005/01/27 06:24:04 bob Exp $
+/**
+ * $Id: AbstractNode.java,v 1.9 2005/01/27 14:43:37 krupenn Exp $
  *
- * Copyright ї 2004 Syrus Systems.
- * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
- * рТПЕЛФ: бнжйлпн.
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
  */
-
 package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Characteristic;
@@ -21,9 +23,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/01/27 06:24:04 $
- * @author $Author: bob $
+ * Абстрактный класс, описывающий узловой элемент топологической схемы 
+ * ({@link Map}). Узловой объект характеризуется наличием координат
+ * ({@link #location}) и изображением ({@link #imageId}).
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.9 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
+ * @see SiteNode
+ * @see TopologicalNode
  */
 public abstract class AbstractNode 
 	extends StorableObject 
@@ -48,8 +56,15 @@ public abstract class AbstractNode
 	 */
 	protected double	latitude;
 
+	/**
+	 * Идентификатор изображения, которое отображается на топологической схеме
+	 * в точке координат узла.
+	 */
 	protected Identifier imageId;
 
+	/**
+	 * Географические координаты узла.
+	 */
 	protected DoublePoint location = new DoublePoint(0, 0);
 
 
@@ -206,7 +221,8 @@ public abstract class AbstractNode
 	}
 
 	/**
-	 * Получить список NodeLinks, содержащих заданный Node
+	 * Получить список NodeLinks, содержащих заданный Node.
+	 * @return Список фрагментов
 	 */
 	public List getNodeLinks()
 	{
@@ -226,10 +242,15 @@ public abstract class AbstractNode
 	}
 
 	/**
-	 * возвращает фрагмент линии, не равный переданному в параметре.
-	 * для топологического узла возвращает единственный противоположный,
+	 * Возвращает фрагмент линии, включающий данный узел, по не равный 
+	 * переданному в параметре. Если фрагмент А и фрагмент Б имеют общую 
+	 * точку Т, то вызов метода <code>Т.getOtherNodeLink(А)</code> вернет Б, а вызов
+	 * <code>Т.getOtherNodeLink(Б)</code> вернет А. Таким образом, для топологического 
+	 * узла возвращает единственный противоположный,
 	 * для сетевого узла их может быть несколько, по этой причине метод
 	 * не должен использоваться и возвращает null
+	 * @param nodeLink фрагмент линии
+	 * @return другой фрагмент линии
 	 */
 	public NodeLink getOtherNodeLink(NodeLink nodeLink)
 	{
@@ -253,8 +274,9 @@ public abstract class AbstractNode
 	}
 
 	/**
-	 * Получить список PhysicalLink, начинающихся или заканчивающихся
-	 * на данном узле
+	 * Получить список линий, начинающихся или заканчивающихся
+	 * на данном узле.
+	 * @return список линий
 	 */
 	public List getPhysicalLinks()
 	{
@@ -273,8 +295,9 @@ public abstract class AbstractNode
 	}
 
 	/**
-	 * Получить вектор Node противоположных у всех элеметов NodeLink, данного
-	 * элемента
+	 * Получить вектор узлов на противоположных концах всех фрагментов линий 
+	 * данного элемента.
+	 * @return список узлов
 	 */
 	public List getOppositeNodes()
 	{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.6 2005/01/20 14:44:30 krupenn Exp $
+ * $Id: MapElement.java,v 1.7 2005/01/27 14:43:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
+
 import java.util.List;
 
 /**
@@ -22,78 +23,120 @@ import java.util.List;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/01/20 14:44:30 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public interface MapElement 
 {
 	/**
-	 * поучить идентификатор элемента
+	 * Поучить идентификатор элемента.
+	 * @return Идентификатор элемента карты.
 	 */
 	Identifier getId();
 
+	/**
+	 * Полуяить название элемента.
+	 * @return Название элемента карты.
+	 */
 	String getName();
 
+	/**
+	 * Установить название элемента.
+	 * @param name Новое название.
+	 */
 	void setName(String name);
 
 	/**
-	 * возвращает карту
+	 * Поулчить ссылку на топологическую схему, на которую нанесен данный элемент.
+	 * @return Ссылка на топологическую схему
 	 */
 	Map getMap();
 	
 	/**
-	 * установить объект карты
+	 * Установить объект карты. Используется при создании нового элемента, при
+	 * подргузке элемента из базы данных и при 
+	 * @param map ссылка на объект карты
 	 */
 	void setMap(Map map);
 
 	/**
-	 * флаг выделения элемента
+	 * Получить флаг выделения элемента.
+	 * @return флаг выделения элемента
 	 */
 	boolean isSelected();
 	
 	/**
-	 * установить выделение элемента
+	 * Установить значения флага выделения элемента.
+	 * @param selected новое значение флага выделения элемента
 	 */
 	void setSelected(boolean selected);
 
+	/**
+	 * Установить значение флага сигнала тревоги.
+	 * @param alarmState новое значение флага сигнала тревоги
+	 */
 	void setAlarmState(boolean alarmState);
 	
+	/**
+	 * Поучить значение флага сигнала тревоги.
+	 * @return значение флага сигнала тревоги
+	 */
 	boolean getAlarmState();
 
 	/**
-	 * центр (ГМТ) элемента
+	 * Получить центр (ГМТ) элемента.
+	 * @return географические коорлинаты центра элемента
 	 */
 	DoublePoint getLocation();
 
 	/**
-	 * получить текущее состояние элемента
+	 * Получить текущее состояние элемента.
+	 * @return текущее состояние элемента
 	 */
 	MapElementState getState();
 	
 	/**
-	 * восстановить состояние элемента
+	 * Восстановить состояние элемента.
+	 * @param state состояние элемента
 	 */
 	void revert(MapElementState state);
 	
 	/**
-	 * флаг того, что элемент удален
+	 * флаг того, что элемент удален.
+	 * @return 1
+	 * @deprecated 1
 	 */
 	boolean isRemoved();
 	
 	/**
-	 * установить флаг удаления элемента
+	 * Установить флаг удаления элемента.
+	 * @param removed 1
+	 * @deprecated 1
 	 */
 	void setRemoved(boolean removed);
 
+	/**
+	 * Получить список атрибутов отображения.
+	 * @return список атрибутов отображения
+	 */
 	List getCharacteristics();
 	
+	/**
+	 * Добавить элементу новый атрибут отображения.
+	 * @param characteristic новый атрибут отображения
+	 */
 	void addCharacteristic(Characteristic characteristic);
 
+	/**
+	 * Убрать из элемента атрибут отображения.
+	 * @param characteristic атрибут отображения
+	 */
 	void removeCharacteristic(Characteristic characteristic);
 
 	/**
-	 * Возвращает набор параметров, описывающих топологическюу схему,
-	 * который используется для экспорта
+	 * Возвращает описывающий элемент набор параметров,
+	 * который используется для экспорта.
+	 * @return хэш-таблица параметров элемента
 	 */
 	java.util.Map getExportMap();
 

@@ -1,9 +1,12 @@
-/*
- * $Id: TopologicalNode.java,v 1.14 2005/01/26 07:54:25 bob Exp $
+/**
+ * $Id: TopologicalNode.java,v 1.15 2005/01/27 14:43:37 krupenn Exp $
  *
- * Copyright ї 2004 Syrus Systems.
- * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
- * рТПЕЛФ: бнжйлпн.
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -34,8 +37,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/01/26 07:54:25 $
- * @author $Author: bob $
+ * Топологический узел нв топологической схеме. Топологический узел может
+ * быть концевым для линии и для фрагмента линии. В физическом смысле
+ * топологический узел соответствует точке изгиба линии и не требует 
+ * дополнительной описательной информации.
+ * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public class TopologicalNode extends AbstractNode {
@@ -291,6 +298,7 @@ public class TopologicalNode extends AbstractNode {
 	 * узел активен, если он находится в середине связи, и не активен, если
 	 * он находится на конце связи. активные и неактивные топологические узлы
 	 * отображаются разными иконками
+	 * @param active флаг активности
 	 */
 	public void setActive(boolean active) {
 		this.active = active;

@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkBinding.java,v 1.4 2005/01/18 15:42:25 bass Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.5 2005/01/27 14:43:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,12 +18,10 @@ import java.util.List;
 /**
  * Объект привязки кабелей к тоннелю. Принадлежит определенному тоннелю.
  * включает всебя список кабелей, которые проходят по данному тоннелю,
- * и матрицу пролегания кабелей по трубам тоннеля
+ * и матрицу пролегания кабелей по трубам тоннеля.
  * 
- * 
- * 
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/01/18 15:42:25 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public final class PhysicalLinkBinding 
@@ -37,29 +35,28 @@ public final class PhysicalLinkBinding
 	/** размерность тоннеля (матрица труб) */
 	private IntDimension dimension = null;
 
-	/**
-	 * порядок нумерации труб сверху вниз
-	 */	
+	/** порядок нумерации труб сверху вниз. */	
 	protected boolean topToBottom = true;
 
-	/**
-	 * порядок нумерации слева направо
-	 */	
+	/** порядок нумерации слева направо. */	
 	protected boolean leftToRight = true;
 
-	/**
-	 * порядок нумерации сначала по горизонтали, затем по вертикали
-	 */	
+	/** порядок нумерации сначала по горизонтали, затем по вертикали. */	
 	protected boolean horizontalVertical = true;
 
 
+	/**
+	 * Конструктор.
+	 * @param bindingDimension размерность привязки
+	 */
 	public PhysicalLinkBinding(IntDimension bindingDimension)
 	{
 		setDimension(bindingDimension);
 	}
 	
 	/**
-	 * добавить кабель в тоннель
+	 * Добавить кабель в тоннель.
+	 * @param object кабель ({@link com.syrus.AMFICOM.scheme.corba.SchemeCableLink})
 	 */
 	public void add(Object object)
 	{
@@ -69,7 +66,8 @@ public final class PhysicalLinkBinding
 	}
 	
 	/**
-	 * удалить кабель из тоннеля
+	 * Удалить кабель из тоннеля.
+	 * @param object кабель ({@link com.syrus.AMFICOM.scheme.corba.SchemeCableLink})
 	 */
 	public void remove(Object object)
 	{
@@ -81,7 +79,7 @@ public final class PhysicalLinkBinding
 	}
 	
 	/**
-	 * удалить все кабели из тоннеля
+	 * Удалить все кабели из тоннеля.
 	 */
 	public void clear()
 	{
@@ -97,7 +95,8 @@ public final class PhysicalLinkBinding
 	}
 	
 	/**
-	 * получить список кабелей
+	 * Получить список кабелей.
+	 * @return список кабелей
 	 */
 	public List getBindObjects()
 	{
@@ -105,7 +104,8 @@ public final class PhysicalLinkBinding
 	}
 	
 	/**
-	 * получить размерность матрицы прокладки кабелей по трубам тоннеля
+	 * Получить размерность матрицы прокладки кабелей по трубам тоннеля.
+	 * @return размерность
 	 */
 	public IntDimension getDimension()
 	{
@@ -113,7 +113,8 @@ public final class PhysicalLinkBinding
 	}
 	
 	/**
-	 * установить размерность матрицы прокладки кабелей по трубам тоннеля
+	 * установить размерность матрицы прокладки кабелей по трубам тоннеля.
+	 * @param dimension рамерность
 	 */
 	public void setDimension(IntDimension dimension)
 	{
@@ -130,7 +131,7 @@ public final class PhysicalLinkBinding
 			}
 		}
 		
-		// копируется привязки из старой матрицы
+		// копируются привязки из старой матрицы
 		if(this.bindingMap != null)
 		{
 			int mini = Math.min(this.bindingMap.length, bindingMap2.length);
@@ -147,6 +148,15 @@ public final class PhysicalLinkBinding
 		this.bindingMap = bindingMap2;
 	}
 	
+	/**
+	 * Получить порядковый номер в тоннеле. Высчитывается по координатам
+	 * в соответствии с порядком нумерации и направлением нумерации
+	 * по горизонтали и вертикали ({@link #horizontalVertical}, 
+	 * {@link #leftToRight}, {@link #topToBottom})
+	 * @param ii координата по горизонтали
+	 * @param jj координата по вертикали
+	 * @return порядковый номер сквозной нумерации
+	 */
 	public int getSequenceNumber(int ii, int jj)
 	{
 		int sequenceNumber = -1;
@@ -200,7 +210,10 @@ public final class PhysicalLinkBinding
 	}
 	
 	/**
-	 * указать прокладку кабеля по трубе
+	 * Указать прокладку кабеля по трубе.
+	 * @param object кабель
+	 * @param i координата по горизонтали
+	 * @param j координата по вертикали
 	 */
 	public void bind(Object object, int i, int j)
 	{
@@ -209,7 +222,8 @@ public final class PhysicalLinkBinding
 	}
 	
 	/**
-	 * убрать привязку кабеля к конкретной трубе в тоннеле
+	 * Убрать привязку кабеля к конкретной трубе в тоннеле.
+	 * @param object кабель
 	 */
 	public void unbind(Object object)
 	{
@@ -219,7 +233,10 @@ public final class PhysicalLinkBinding
 	}
 	
 	/**
-	 * получить список кабелей, проходящих по трубе
+	 * Получить список кабелей, проходящих по трубе.
+	 * @param i координата по горизонтали
+	 * @param j координата по вертикали
+	 * @return список привязанных по заданной координате кабелей
 	 */
 	public List getBound(int i, int j)
 	{
@@ -227,7 +244,10 @@ public final class PhysicalLinkBinding
 	}
 	
 	/**
-	 * проверить, определено ли место прохождения кабеля в тоннеле
+	 * Проверить, определено ли место прохождения кабеля в тоннеле.
+	 * @param object кабель
+	 * @return <code>true</code>, если место кабеля определено, 
+	 * <code>false</code> иначе
 	 */
 	public boolean isBound(Object object)
 	{
@@ -246,8 +266,10 @@ public final class PhysicalLinkBinding
 	}
 
 	/**
-	 * получить координаты трубы, по которой проходит кабель
-	 * @return null если место кабеля не задано
+	 * Gолучить координаты трубы, по которой проходит кабель.
+	 * @param object кабель
+	 * @return координаты прохождения кабеля, или <code>null</code>,
+	 * если место кабеля не задано
 	 */
 	public IntPoint getBinding(Object object)
 	{
@@ -265,36 +287,60 @@ public final class PhysicalLinkBinding
 		return null;
 	}
 
+	/**
+	 * Поменять направление нумерации по вертикали.
+	 */
 	public void flipTopToBottom()
 	{
 		this.topToBottom = !this.topToBottom;
 	}
 
 
+	/**
+	 * Получить направление нумерации по вертикали.
+	 * @return <code>true</code> при нумерации сверху вниз, 
+	 * иначе <code>false</code>
+	 */
 	public boolean isTopToBottom()
 	{
 		return this.topToBottom;
 	}
 
 
+	/**
+	 * Поменять направление нумерации по горизонтали.
+	 */
 	public void flipLeftToRight()
 	{
 		this.leftToRight = !this.leftToRight;
 	}
 
 
+	/**
+	 * Получить направление нумерации по горизонтали.
+	 * @return <code>true</code> при нумерации слева направо, 
+	 * иначе <code>false</code>
+	 */
 	public boolean isLeftToRight()
 	{
 		return this.leftToRight;
 	}
 
 
+	/**
+	 * Поменять порядок нумерации.
+	 */
 	public void flipHorizontalVertical()
 	{
 		this.horizontalVertical = !this.horizontalVertical;
 	}
 
 
+	/**
+	 * Получить порядок нумерации.
+	 * @return <code>true</code> при нумерации сначала по горизонтали, 
+	 * потом по вертикали, иначе <code>false</code>
+	 */
 	public boolean isHorizontalVertical()
 	{
 		return this.horizontalVertical;

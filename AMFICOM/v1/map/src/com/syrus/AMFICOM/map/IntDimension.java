@@ -1,5 +1,5 @@
 /*
-* $Id: IntDimension.java,v 1.5 2005/01/18 06:22:21 bob Exp $
+* $Id: IntDimension.java,v 1.6 2005/01/27 14:43:37 krupenn Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,8 +10,11 @@ package com.syrus.AMFICOM.map;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/18 06:22:21 $
- * @author $Author: bob $
+ * Пара целых чисел, соответствующих размерности чего-либо в двухмерном
+ * пространстве (ширина и высота)
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.6 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 
@@ -22,7 +25,13 @@ public class IntDimension implements java.io.Serializable {
 	 */
 	private static final long	serialVersionUID	= 3256440309234872368L;
 
+	/**
+	 * Ширина.
+	 */
 	private int	width;
+	/**
+	 * Высота.
+	 */
 	private int	height;
 
 	public IntDimension() {

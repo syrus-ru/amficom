@@ -1,9 +1,12 @@
-/*
- * $Id: SiteNode.java,v 1.14 2005/01/24 16:48:55 krupenn Exp $
+/**
+ * $Id: SiteNode.java,v 1.15 2005/01/27 14:43:37 krupenn Exp $
  *
- * Copyright ї 2004 Syrus Systems.
- * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
- * рТПЕЛФ: бнжйлпн.
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -40,8 +43,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/01/24 16:48:55 $
+ * Сетевой узел на топологической схеме. Характеризуется типом 
+ * (<code>{@link SiteNodeType}</code>). 
+ * Предуствновленными являются несколько типов - 
+ * колодец (<code>{@link SiteNodeType#WELL}</code>), 
+ * пикет (<code>{@link SiteNodeType#PIQUET}</code>), 
+ * кабельный ввод (<code>{@link SiteNodeType#CABLE_INLET}</code>) 
+ * здание (<code>{@link SiteNodeType#BUILDING}</code>), 
+ * телефонный узел (<code>{@link SiteNodeType#ATS}</code>). 
+ * Дополнительно описывается полями
+ * {@link #city}, {@link #street}, {@link #building} для поиска по 
+ * географическим параметрам. 
  * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {

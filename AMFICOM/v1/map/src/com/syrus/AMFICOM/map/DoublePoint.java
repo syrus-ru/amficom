@@ -1,14 +1,41 @@
+/**
+ * $Id: DoublePoint.java,v 1.3 2005/01/27 14:43:37 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
 
 package com.syrus.AMFICOM.map;
 
+/**
+ * Пара вещественных чисел, соответствующих географическим координатам.
+ * Класс необходим для работы с географическими объектами, их отображения,
+ * конвертации координат.
+ *  
+ * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2005/01/27 14:43:37 $
+ * @module map_v1
+ */
 public class DoublePoint implements Cloneable {
 
+	/**
+	 * Координата, соответствующая долготе (longitude)
+	 */
 	private double	x;
 
+	/**
+	 * Координата, соответствующая широте (latitude)
+	 */
 	private double	y;
 
+	/**
+	 * empty default constructor.
+	 */
 	public DoublePoint() {
-		// empty default constructor
 	}
 
 	public DoublePoint(double x, double y) {

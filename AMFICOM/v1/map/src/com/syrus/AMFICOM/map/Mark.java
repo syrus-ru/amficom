@@ -1,9 +1,12 @@
-/*
- * $Id: Mark.java,v 1.15 2005/01/25 13:13:51 bob Exp $
+/**
+ * $Id: Mark.java,v 1.16 2005/01/27 14:43:37 krupenn Exp $
  *
- * Copyright ї 2004 Syrus Systems.
- * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
- * рТПЕЛФ: бнжйлпн.
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -34,8 +37,14 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/01/25 13:13:51 $
- * @author $Author: bob $
+ * Метка на линии на топологической схеме. Метка частично характеризуется 
+ * абстрактным узлом, одняко привязан к некоторой дистанции на линии и, 
+ * соответственно, не может быть концевым для линий и фрагментов линий, 
+ * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и 
+ * фрагментами линий, переопределены и бросают 
+ * <code>{@link UnsupportedOperationException}</code>.
+ * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public class Mark extends AbstractNode implements Characterized {
@@ -150,8 +159,6 @@ public class Mark extends AbstractNode implements Characterized {
 		super.currentVersion = super.getNextVersion();
 
 		this.markDatabase = MapDatabaseContext.getMarkDatabase();
-
-//		this.setIconName(IMAGE_NAME);
 	}
 
 	
@@ -365,6 +372,10 @@ public class Mark extends AbstractNode implements Characterized {
 		setDistance(this.getFromStartLengthLt());
 	}
 
+	/**
+	 * Получить топологическую дистанцию от начального узла линии до метки.
+	 * @return дистанция
+	 */
 	public double getFromStartLengthLt()
 	{
 		getPhysicalLink().sortNodeLinks();
@@ -382,6 +393,10 @@ public class Mark extends AbstractNode implements Characterized {
 		return pathLength;
 	}
 
+	/**
+	 * Получить топологическую дистанцию от концевого узла линии до метки.
+	 * @return дистанция
+	 */
 	public double getFromEndLengthLt()
 	{
 		getPhysicalLink().sortNodeLinks();
@@ -403,11 +418,22 @@ public class Mark extends AbstractNode implements Characterized {
 		return pathLength;
 	}
 
+	/**
+	 * Установить листанцию от начального узла фрагмента линии, на которой
+	 * находится метка, до метки. Вычисление осуществляется в том месте, где
+	 * осуществляется управление передвижением метки.
+	 * @param sizeInDoubleLt дистанция
+	 */
 	public void setSizeInDoubleLt(double sizeInDoubleLt)
 	{
 		this.sizeInDoubleLt = sizeInDoubleLt;
 	}
 
+	/**
+	 * Получить листанцию от начального узла фрагмента линии, на которой
+	 * находится метка, до метки. 
+	 * @return дистанция
+	 */
 	public double getSizeInDoubleLt()
 	{
 		return this.sizeInDoubleLt;

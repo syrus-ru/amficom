@@ -1,9 +1,12 @@
-/*
- * $Id: PhysicalLink.java,v 1.20 2005/01/27 06:24:04 bob Exp $
+/**
+ * $Id: PhysicalLink.java,v 1.21 2005/01/27 14:43:37 krupenn Exp $
  *
- * Copyright ї 2004 Syrus Systems.
- * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
- * рТПЕЛФ: бнжйлпн.
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -39,8 +42,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/01/27 06:24:04 $
- * @author $Author: bob $
+ * Линия топологический схемы. Линия имеет начальный и конечный узлы, 
+ * внутренние топологические узлы (список не хранится явно) и состоит из
+ * фрагментов. Фрагменты образуют цепочку. Последовательность фрагментов 
+ * не хранится. Линия характеризуется типом (<code>{@link PhysicalLinkType}</code>). 
+ * Предуствновленными являются  два типа - 
+ * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
+ * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
+ * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -538,13 +548,20 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			this.endNode = endNode;
 	}
 
+	/**
+	 * Получить объект, описывающий привязку кабелей ({@link SchemeCableLink})
+	 * к линии.
+	 * @return 
+	 */
 	public PhysicalLinkBinding getBinding()
 	{
 		return this.binding;
 	}
 
 	/**
-	 * Возвращяет топологическую длинну линии
+	 * Возвращяет топологическую длинну линии, которая представляет собой
+	 * суммарную длину фрагментов, составляющих линию
+	 * @return топологическая длинна линии
 	 */
 	public double getLengthLt()
 	{
@@ -558,7 +575,9 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 
 	/**
-	 * Внимание! концевые точки линии не обновляются
+	 * Убрать фрагмент из состава линии.
+	 * Внимание! концевые точки линии не обновляются.
+	 * @param nodeLink фрагмент линии
 	 */
 	public void removeNodeLink(NodeLink nodeLink)
 	{
@@ -568,7 +587,9 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 
 	/**
-	 * Внимание! концевые точки линии не обновляются
+	 * Добавить фрагмент в состав линии.
+	 * Внимание! концевые точки линии не обновляются.
+	 * @param addNodeLink фрагмент линии
 	 */
 	public void addNodeLink(NodeLink addNodeLink)
 	{
@@ -578,6 +599,9 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 
 
+	/**
+	 * Убрать все фрагмента из состава линии.
+	 */
 	public void clearNodeLinks()
 	{	
 		this.nodeLinks.clear();
@@ -586,7 +610,11 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 
 	/**
-	 * Получить NodeLinks содержащие данный node в данном transmissionPath
+	 * Получить список фрагментов этой линии, имеющие заданный узел концевым.
+	 * Список включает  не более двух фрагментов (поскольку фрагменты образуют
+	 * цепочку).
+	 * @param node узел
+	 * @return список фрагментов
 	 */
 	public java.util.List getNodeLinksAt(AbstractNode node)
 	{
@@ -602,27 +630,45 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return returnNodeLink;
 	}
 
+	/**
+	 * Получить первый фрагмент в цепочке фрагментов, из которых строится
+	 * линия. Первый фрагмент определяется начальным узлом линии.
+	 * @return первый фрагмент, или <code>null</code>, если в линии не найден
+	 * фрагмент, вклучающий начальный узел линии
+	 */
 	public NodeLink getStartNodeLink()
 	{
 		NodeLink startNodeLink = null;
 
 		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
 		{
-			startNodeLink = (NodeLink )it.next();
-			if(startNodeLink.getStartNode().equals(getStartNode())
-				|| startNodeLink.getEndNode().equals(getStartNode()))
+			NodeLink nodeLink = (NodeLink )it.next();
+			if(nodeLink.getStartNode().equals(getStartNode())
+				|| nodeLink.getEndNode().equals(getStartNode()))
 			{
+				startNodeLink = nodeLink;
 				break;
 			}
 		}
 		return startNodeLink;
 	}
 
+	/**
+	 * Сортировать узлы, входящие в состав линии, начиная от начального узла.
+	 * Сортировка узлов неразрывно связана с сортировкой фрагментов
+	 */
 	public void sortNodes()
 	{
 		sortNodeLinks();
 	}
 	
+	/**
+	 * Получить список отсортированных узлов, входящих в состав линии, начиная
+	 * от начального узла линии. Сортировка узлов должна производиться явно 
+	 * ({@link #sortNodes()}) до вызова этой функции
+	 * @return список отсортированных узлов, или <code>null</code>, если
+	 * узлы не отсортированы
+	 */
 	public List getSortedNodes()
 	{
 		if(!this.nodeLinksSorted)
@@ -630,6 +676,10 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.sortedNodes;
 	}
 
+	/**
+	 * Сортировать фрагменты линии по цепочке начиная от начального узла.
+	 * При сортировке фрагментов сортируются также узлы
+	 */
 	public void sortNodeLinks()
 	{
 		if(!this.nodeLinksSorted)
@@ -676,6 +726,12 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		}
 	}
 
+	/**
+	 * Получить следующий фрагмент по цепочке сортированных фрагментов.
+	 * @param nl фрагмент
+	 * @return следующий фрагмент, или <code>null</code>, если nl - последний 
+	 * в списке
+	 */
 	public NodeLink nextNodeLink(NodeLink nl)
 	{
 		sortNodeLinks();
@@ -685,6 +741,12 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return (NodeLink )getNodeLinks().get(index + 1);
 	}
 
+	/**
+	 * Получить предыдущий фрагмент по цепочке сортированных фрагментов.
+	 * @param nl фрагмент
+	 * @return предыдущий фрагмент, или <code>null</code>, если nl - первый 
+	 * в списке
+	 */
 	public NodeLink previousNodeLink(NodeLink nl)
 	{
 		sortNodeLinks();
@@ -693,7 +755,6 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			return null;
 		return (NodeLink )getNodeLinks().get(index - 1);
 	}
-
 
 	/**
 	 * получить наличие сигнала тревоги
@@ -748,6 +809,11 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		this.map = map;
 	}
 
+	/**
+	 * Получить другой конечный узел линии для заданного конечного узла.
+	 * @param node узел
+	 * @return другой конечный узел 
+	 */
 	public AbstractNode getOtherNode(AbstractNode node)
 	{
 		if ( this.getEndNode().equals(node) )
@@ -916,13 +982,6 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
   					true,
   					true);
   					
-//  			for(Iterator it = nodeLinkIds.iterator(); it.hasNext();){
-//  				Identifier nodeLinkId = (Identifier)it.next();
-//  				NodeLink nodeLink = (NodeLink) 
-//  					MapStorableObjectPool.getStorableObject(
-//  						nodeLinkId, false);
-//  				link.addNodeLink(nodeLink);
-//  			}
   			return link;
   		} catch (ApplicationException e) {
   			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);

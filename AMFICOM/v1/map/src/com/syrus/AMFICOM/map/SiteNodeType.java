@@ -1,9 +1,12 @@
-/*
- * $Id: SiteNodeType.java,v 1.12 2005/01/24 16:48:55 krupenn Exp $
+/**
+ * $Id: SiteNodeType.java,v 1.13 2005/01/27 14:43:37 krupenn Exp $
  *
- * Copyright ї 2004 Syrus Systems.
- * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
- * рТПЕЛФ: бнжйлпн.
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -33,8 +36,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/01/24 16:48:55 $
+ * Тип сетевого узла топологической схемы. Существует несколько 
+ * предустановленных  типов сетевых узлов, которые определяются полем 
+ * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
+ * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
+ * {@link #CABLE_INLET}, {@link #TOWER}
  * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterized {

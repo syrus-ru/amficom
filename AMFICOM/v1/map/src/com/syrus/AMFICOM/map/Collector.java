@@ -1,9 +1,12 @@
-/*
- * $Id: Collector.java,v 1.18 2005/01/25 11:11:49 bob Exp $
+/**
+ * $Id: Collector.java,v 1.19 2005/01/27 14:43:37 krupenn Exp $
  *
- * Copyright ї 2004 Syrus Systems.
- * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
- * рТПЕЛФ: бнжйлпн.
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -34,8 +37,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/01/25 11:11:49 $
- * @author $Author: bob $
+ * Коллектор на топологической схеме, который характеризуется набором входящих
+ * в него линий. Линии не обязаны быть связными.
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/01/27 14:43:37 $
  * @module map_v1
  */
 public class Collector 
@@ -270,7 +276,8 @@ public class Collector
 	}
 
 	/**
-	 * Внимание! концевые точки линии не обновляются
+	 * Убрать линию из состава коллектора. Внимание! концевые точки линии не обновляются.
+	 * @param link линия
 	 */
 	public void removePhysicalLink(PhysicalLink link)
 	{
@@ -279,7 +286,8 @@ public class Collector
 	}
 
 	/**
-	 * Внимание! концевые точки линии не обновляются
+	 * Добавить линию в состав коллектора. Внимание! концевые точки линии не обновляются.
+	 * @param link линия
 	 */
 	public void addPhysicalLink(PhysicalLink link)
 	{
@@ -311,7 +319,9 @@ public class Collector
 	}
 
 	/**
-	 * Возвращает топологическую длинну в метрах
+	 * Возвращает суммарную топологическую длинну всех линий в составе 
+	 * коллектора в метрах.
+	 * @return суммарная длина
 	 */
 	public double getLengthLt()
 	{
@@ -366,9 +376,6 @@ public class Collector
 		return this.alarmState;
 	}
 
-	/**
-	 * получить текущее состояние
-	 */
 	public MapElementState getState()
 	{
 		throw new UnsupportedOperationException();
