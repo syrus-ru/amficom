@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.43 2005/03/21 09:05:10 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.44 2005/03/21 11:29:22 arseniy Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/03/21 09:05:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.44 $, $Date: 2005/03/21 11:29:22 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -36,34 +36,19 @@ public abstract class StorableObjectPool {
 	/**
 	 * ‚·Í·Ó-symbol {@value}
 	 */
-	public static final String	‚·Í·Ó	= "[:]/\\/\\/\\/\\/|||||||||||||||||||||||||||[:]";
+	public static final String ‚·Í·Ó = "[:]/\\/\\/\\/\\/|||||||||||||||||||||||||||[:]";
 
-	protected Class				cacheMapClass;
+	protected Class cacheMapClass;
 
-	protected Map				objectPoolMap;
+	protected Map objectPoolMap;
 
-	private short				selfGroupCode;
-	private String				selfGroupName;
+	private short selfGroupCode;
+	private String selfGroupName;
 
-	// private List savingObjects; //List <Map <Short entityKey, Collection
-	// <StorableObject> levelEntitySavingObjects > >
-	private Map					savingObjectsMap;											// Map
-																							// <
-																							// Integer
-																							// dependencyLevel,
-																							// <
-																							// Map
-																							// <Short
-																							// entityCode,
-																							// Collection
-																							// <StorableObject>
-																							// levelEntitySavingObjects
-																							// > >
-																							// >
-	private HashSet				savingObjectIds;											// HashSet
-																							// <Identifier>
+	private Map savingObjectsMap; // Map <Integer dependencyLevel, Map <Short entityCode, Collection <StorableObject> levelEntitySavingObjects > >
+	private HashSet savingObjectIds; // HashSet <Identifier>
 
-	private Collection			deletedIds;
+	private Collection deletedIds; // Collection <Identifier>
 
 	public StorableObjectPool(short selfGroupCode) {
 		this(selfGroupCode, LRUMap.class);
@@ -75,17 +60,7 @@ public abstract class StorableObjectPool {
 		this.cacheMapClass = cacheMapClass;
 	}
 
-	/**
-	 * @param objectEntityCode
-	 *            mustn't lie within [SCHEME_MIN_ENTITY_CODE,
-	 *            SCHEME_MAX_ENTITY_CODE]
-	 * @param poolSize
-	 */
-	protected void addObjectPool(	final short objectEntityCode,
-									final int poolSize) {
-		assert (objectEntityCode < ObjectEntities.SCHEME_MIN_ENTITY_CODE)
-				|| (ObjectEntities.SCHEME_MAX_ENTITY_CODE < objectEntityCode) : "Invalid storable object pool used...";
-
+	protected void addObjectPool(	final short objectEntityCode, final int poolSize) {
 		try {
 			LRUMap objectPool = null;
 			// LRUMap objectPool = new LRUMap(poolSize);
@@ -95,35 +70,34 @@ public abstract class StorableObjectPool {
 				objectPool = (LRUMap) obj;
 				Short short1 = new Short(objectEntityCode);
 				this.objectPoolMap.put(short1, objectPool);
-				// Log.debugMessage("StorableObjectPool.addObjectPool | pool for
-				// " + ObjectEntities.codeToString(short1.shortValue()) + "/" +
-				// short1 + "(" + objectEntityCode +") size " + poolSize + "
-				// added", Log.DEBUGLEVEL07);
-			} else
-				throw new UnsupportedOperationException(this.selfGroupName
-						+ "StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-						+ " must extend LRUMap");
-		} catch (SecurityException e) {
-			throw new UnsupportedOperationException(this.selfGroupName
-					+ "StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " SecurityException " + e.getMessage());
-		} catch (IllegalArgumentException e) {
-			throw new UnsupportedOperationException(this.selfGroupName
-					+ "StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " IllegalArgumentException " + e.getMessage());
-		} catch (NoSuchMethodException e) {
-			throw new UnsupportedOperationException(this.selfGroupName
-					+ "StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " NoSuchMethodException " + e.getMessage());
-		} catch (InstantiationException e) {
-			throw new UnsupportedOperationException(this.selfGroupName
-					+ "StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " InstantiationException " + e.getMessage());
-		} catch (IllegalAccessException e) {
-			throw new UnsupportedOperationException(this.selfGroupName
-					+ "StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-					+ " IllegalAccessException " + e.getMessage());
-		} catch (InvocationTargetException e) {
+//				 Log.debugMessage("StorableObjectPool.addObjectPool | pool for" + ObjectEntities.codeToString(short1.shortValue())
+//						+ "/" + short1 + "(" + objectEntityCode + ") size " + poolSize + "added", Log.DEBUGLEVEL07);
+			}
+			else
+				throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
+						+ this.cacheMapClass.getName() + " must extend LRUMap");
+		}
+		catch (SecurityException e) {
+			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
+					+ this.cacheMapClass.getName() + " SecurityException " + e.getMessage());
+		}
+		catch (IllegalArgumentException e) {
+			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
+					+ this.cacheMapClass.getName() + " IllegalArgumentException " + e.getMessage());
+		}
+		catch (NoSuchMethodException e) {
+			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
+					+ this.cacheMapClass.getName() + " NoSuchMethodException " + e.getMessage());
+		}
+		catch (InstantiationException e) {
+			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
+					+ this.cacheMapClass.getName() + " InstantiationException " + e.getMessage());
+		}
+		catch (IllegalAccessException e) {
+			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
+					+ this.cacheMapClass.getName() + " IllegalAccessException " + e.getMessage());
+		}
+		catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
@@ -131,10 +105,10 @@ public abstract class StorableObjectPool {
 					assert false;
 				else
 					assert false : message;
-			} else
-				throw new UnsupportedOperationException(this.selfGroupName
-						+ "StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
-						+ " InvocationTargetException " + e.getMessage());
+			}
+			else
+				throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
+						+ this.cacheMapClass.getName() + " InvocationTargetException " + e.getMessage());
 		}
 
 	}
