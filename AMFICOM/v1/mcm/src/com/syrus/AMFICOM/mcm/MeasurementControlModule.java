@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.12 2004/07/28 16:02:00 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.13 2004/07/30 11:28:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Hashtable;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.SleepButWorkThread;
 //import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -32,12 +33,12 @@ import com.syrus.util.corba.CORBAServer;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/07/28 16:02:00 $
+ * @version $Revision: 1.13 $, $Date: 2004/07/30 11:28:48 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
-public class MeasurementControlModule extends Thread {
+public class MeasurementControlModule extends SleepButWorkThread {
 	public static final String ID = "mcm_1";
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
@@ -67,13 +68,12 @@ public class MeasurementControlModule extends Thread {
 
 	private long tickTime;
 	private long forwardProcessing;
-	private int resultTransferDelayMultiplier;
 	private boolean running;
 
 	public MeasurementControlModule() {
-		this.tickTime = ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000;
+		super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
+		this.tickTime = super.initialTimeToSleep;
 		this.forwardProcessing = ApplicationProperties.getInt("ForwardProcessing", FORWARD_PROCESSING)*1000;
-		this.resultTransferDelayMultiplier = ApplicationProperties.getInt("ResultTransferDelayMultiplier", RESULT_TRANSFER_DELAY_MULTIPLIER);
 		this.running = true;
 	}
 
@@ -122,33 +122,13 @@ public class MeasurementControlModule extends Thread {
 
 	public void run() {
 		Result_Transferable[] rts;
-		int numberOfIdleRounds = 1;
-		int counterOfIdleRounds = 0;
 		while (this.running) {
 			if (!testList.isEmpty())
 				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing)
 					startTestProcessor((Test)testList.remove(0));
 
 			if (!resultList.isEmpty()) {
-				if (counterOfIdleRounds == 0) {
-					rts = new Result_Transferable[resultList.size()];
-					int i = 0;
-					for (Iterator it = resultList.iterator(); it.hasNext(); i++)
-						rts[i++] = (Result_Transferable)((Result)it.next()).getTransferable();
-					try {
-//						measurementServer.transmitResults(rts);
-						resultList.clear();
-						numberOfIdleRounds = 1;
-						counterOfIdleRounds = 0;
-					}
-					catch (Exception e) {
-						Log.errorException(e);
-						numberOfIdleRounds *= this.resultTransferDelayMultiplier;
-						counterOfIdleRounds = numberOfIdleRounds;
-					}
-				}
-				else
-					counterOfIdleRounds --;
+				
 			}
 
 			try {
@@ -184,7 +164,7 @@ public class MeasurementControlModule extends Thread {
 		return new Identifier(entity);
 	}
 
-	public void shutdown() {/*!!	Need synchronization	*/
+	protected void shutdown() {/*!!	Need synchronization	*/
 //		this.running = false;
 //
 //		Enumeration enumeration = ((Hashtable)testProcessors).elements();

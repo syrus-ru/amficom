@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.10 2004/07/28 16:02:01 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.11 2004/07/30 11:28:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Result;
@@ -20,7 +21,7 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/28 16:02:01 $
+ * @version $Revision: 1.11 $, $Date: 2004/07/30 11:28:48 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -36,7 +37,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	protected List measurementResultQueue;//List <Result>
 
 	public TestProcessor(Test test) {
-		super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000);
+		super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
 
 		this.test = test;
 		this.tickTime = super.initialTimeToSleep;
@@ -58,7 +59,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 	public abstract void run();
 	
-	void shutdown() {
+	protected void shutdown() {
 		this.running = false;
 		try {
 			this.test.setStatus(TestStatus.TEST_STATUS_ABORTED, MeasurementControlModule.iAm.getUserId());

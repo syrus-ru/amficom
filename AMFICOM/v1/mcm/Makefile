@@ -48,7 +48,6 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/SleepButWorkThread.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationException.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementException.java \

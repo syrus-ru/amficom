@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.9 2004/07/28 16:02:01 arseniy Exp $
+ * $Id: Transceiver.java,v 1.10 2004/07/30 11:28:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Hashtable;
 import java.util.Collections;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
@@ -23,7 +24,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/07/28 16:02:01 $
+ * @version $Revision: 1.10 $, $Date: 2004/07/30 11:28:48 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -45,7 +46,7 @@ public class Transceiver extends SleepButWorkThread {
 	}
 	
 	public Transceiver(Identifier kisId) {
-		super(MAX_FALLS, ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME));
+		super(ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
 
 		String kisIdStr = kisId.toString();
 		this.taskFileName = "task" + kisIdStr;
