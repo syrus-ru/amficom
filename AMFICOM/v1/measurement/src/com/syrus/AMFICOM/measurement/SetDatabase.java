@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.74 2005/03/04 19:50:01 bass Exp $
+ * $Id: SetDatabase.java,v 1.75 2005/03/05 09:58:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/03/04 19:50:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.75 $, $Date: 2005/03/05 09:58:23 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -293,9 +293,10 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		Set set = this.fromStorableObject(storableObject);
+		Set set = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  set.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

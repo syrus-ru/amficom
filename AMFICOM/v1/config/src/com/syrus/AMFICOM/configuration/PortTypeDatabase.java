@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.43 2005/03/04 19:50:00 bass Exp $
+ * $Id: PortTypeDatabase.java,v 1.44 2005/03/05 09:57:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/03/05 09:57:16 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -119,9 +119,10 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	}	
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		PortType portType = this.fromStorableObject(storableObject);
+		PortType portType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  portType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

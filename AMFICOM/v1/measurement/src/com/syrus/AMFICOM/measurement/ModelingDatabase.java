@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.33 2005/03/04 19:50:01 bass Exp $
+ * $Id: ModelingDatabase.java,v 1.34 2005/03/05 09:58:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/03/04 19:50:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/03/05 09:58:23 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 
@@ -124,9 +125,10 @@ public class ModelingDatabase extends StorableObjectDatabase {
 	}
 
   public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//  	Modeling modeling = this.fromStorableObject(storableObject);
+  	Modeling modeling = this.fromStorableObject(storableObject);
     switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  modeling.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.34 2005/03/04 19:50:00 bass Exp $
+ * $Id: LinkDatabase.java,v 1.35 2005/03/05 09:57:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/03/05 09:57:16 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -196,9 +196,10 @@ public class LinkDatabase extends StorableObjectDatabase {
 	}	
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		//Link link = this.fromStorableObject(storableObject);
+		Link link = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  link.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

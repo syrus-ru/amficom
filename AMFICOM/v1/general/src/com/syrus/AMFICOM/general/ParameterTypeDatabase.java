@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.17 2005/03/04 19:50:01 bass Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.18 2005/03/05 09:56:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,13 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/04 19:50:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/03/05 09:56:46 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -99,9 +100,10 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		ParameterType parameterType = this.fromStorableObject(storableObject);
+		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  parameterType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}	

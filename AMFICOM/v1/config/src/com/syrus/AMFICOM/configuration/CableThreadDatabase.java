@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.19 2005/03/04 19:50:00 bass Exp $
+ * $Id: CableThreadDatabase.java,v 1.20 2005/03/05 09:57:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/03/05 09:57:16 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableThreadDatabase extends StorableObjectDatabase  {
@@ -154,12 +154,11 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException,
-				ObjectNotFoundException,
-				RetrieveObjectException {
-		//        CableThread cableThread = this.fromStorableObject(storableObject);
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		CableThread cableThread = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  cableThread.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

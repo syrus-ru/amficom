@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.45 2005/03/04 19:50:02 bass Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.46 2005/03/05 09:58:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/03/04 19:50:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/03/05 09:58:23 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -98,11 +98,11 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		return temporalPattern;
 	}
 
-	
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws ObjectNotFoundException, RetrieveObjectException, IllegalDataException {
-//		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
+		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  temporalPattern.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.55 2005/03/04 19:50:00 bass Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.56 2005/03/05 09:57:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +33,13 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/03/05 09:57:16 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -116,16 +116,6 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		return i;
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
-		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
-		this.retrieveEntity(transmissionPath);
-
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
-		transmissionPath.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(transmissionPath.getId(),
-			CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH));
-	}
-
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TransmissionPath transmissionPath = (storableObject == null) ? new TransmissionPath(DatabaseIdentifier
@@ -157,11 +147,22 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		return transmissionPath;
 	}
 
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
+			RetrieveObjectException {
+		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
+		this.retrieveEntity(transmissionPath);
+
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
+		transmissionPath.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(transmissionPath.getId(),
+			CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH));
+	}
+
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  transmissionPath.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -183,7 +184,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
+		this.insertEntities(storableObjects);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
 			characteristicDatabase.updateCharacteristics(storableObjects);
@@ -241,7 +242,6 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			objects = this.retrieveByIdsOneQuery(ids, condition);
 
 		if (objects != null) {
-			this.retrieveTransmissionPathMEIdsByOneQuery(objects);
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(objects,
 					CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH);

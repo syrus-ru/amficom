@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.70 2005/03/04 13:32:12 bass Exp $
+ * $Id: Equipment.java,v 1.71 2005/03/05 09:57:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -36,8 +35,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/03/04 13:32:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.71 $, $Date: 2005/03/05 09:57:16 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -59,7 +58,6 @@ public class Equipment extends DomainMember implements MonitoredDomainMember, Ch
 	private String                 swVersion;
 	private String                 inventoryNumber;
 
-	private Collection portIds;
 	private List characteristics;
 
 	private StorableObjectDatabase equipmentDatabase;
@@ -67,7 +65,6 @@ public class Equipment extends DomainMember implements MonitoredDomainMember, Ch
 	public Equipment(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.portIds = new ArrayList();
 		this.characteristics = new ArrayList();
 
 		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
@@ -102,10 +99,6 @@ public class Equipment extends DomainMember implements MonitoredDomainMember, Ch
 		this.swSerial = et.swSerial;
 		this.swVersion = et.swVersion;
 		this.inventoryNumber = et.inventoryNumber;
-
-		this.portIds = new ArrayList(et.port_ids.length);
-		for (int i = 0; i < et.port_ids.length; i++)
-			this.portIds.add(new Identifier(et.port_ids[i]));
 
 		try {
 			this.characteristics = new ArrayList(et.characteristic_ids.length);
@@ -157,8 +150,6 @@ public class Equipment extends DomainMember implements MonitoredDomainMember, Ch
 		this.swSerial = swSerial;
 		this.swVersion = swVersion;
 		this.inventoryNumber = inventoryNumber;
-
-		this.portIds = new ArrayList();
 
 		this.characteristics = new ArrayList();
 
@@ -233,17 +224,10 @@ public class Equipment extends DomainMember implements MonitoredDomainMember, Ch
 	}
 
 	public Object getTransferable() {
-		int i;
-
-		i = 0;
+		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
-
-		i = 0;
-		Identifier_Transferable[] pIds = new Identifier_Transferable[this.portIds.size()];
-		for (Iterator iterator = this.portIds.iterator(); iterator.hasNext();)
-			pIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
 		return new Equipment_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.getDomainId().getTransferable(),
@@ -260,7 +244,6 @@ public class Equipment extends DomainMember implements MonitoredDomainMember, Ch
 				new String(this.swVersion),
 				new String(this.inventoryNumber),
 				(Identifier_Transferable) this.imageId.getTransferable(),
-				pIds,
 				charIds);
 	}
 
@@ -283,10 +266,6 @@ public class Equipment extends DomainMember implements MonitoredDomainMember, Ch
 
 	public Identifier getImageId() {
 		return this.imageId;
-	}
-
-	public Collection getPortIds() {
-		return Collections.unmodifiableCollection(this.portIds);
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -353,21 +332,8 @@ public class Equipment extends DomainMember implements MonitoredDomainMember, Ch
 		this.inventoryNumber = inventoryNumber;
 	}
 
-	protected synchronized void setPortIds0(final Collection portIds) {
-		this.portIds.clear();
-		if (portIds != null)
-			this.portIds.addAll(portIds);
-	}
-	
-	public void setPortIds(final Collection portIds) {
-		this.setPortIds0(portIds);
-		super.changed = true;
-	}
-
 	public List getDependencies() {
-		List dependencies = new LinkedList();
-		dependencies.addAll(this.portIds);
-		return dependencies;
+		return Collections.EMPTY_LIST;
 	}
 
 	public String getSupplier() {

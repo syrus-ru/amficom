@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.24 2005/03/04 19:50:01 bass Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.25 2005/03/05 09:58:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/03/04 19:50:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/03/05 09:58:23 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -279,9 +279,10 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		ModelingType modelingType = this.fromStorableObject(storableObject);
+		ModelingType modelingType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  modelingType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

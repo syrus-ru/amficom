@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.38 2005/03/04 19:50:00 bass Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.39 2005/03/05 09:57:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.39 $, $Date: 2005/03/05 09:57:16 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -126,10 +126,11 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		return measurementPortType;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
+		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  measurementPortType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

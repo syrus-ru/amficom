@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.30 2005/03/04 19:50:00 bass Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.31 2005/03/05 09:57:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/03/05 09:57:17 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -121,9 +121,10 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//        TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
+		TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  transmissionPathType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

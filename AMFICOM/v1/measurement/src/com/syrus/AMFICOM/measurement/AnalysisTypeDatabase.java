@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.73 2005/03/04 19:50:01 bass Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.74 2005/03/05 09:58:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/03/04 19:50:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.74 $, $Date: 2005/03/05 09:58:22 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -299,9 +299,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		AnalysisType analysisType = this.fromStorableObject(storableObject);
+		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  analysisType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

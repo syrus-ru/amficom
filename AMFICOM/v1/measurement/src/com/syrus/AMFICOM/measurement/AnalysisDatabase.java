@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.49 2005/03/04 19:50:01 bass Exp $
+ * $Id: AnalysisDatabase.java,v 1.50 2005/03/05 09:58:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,11 +24,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/03/04 19:50:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.50 $, $Date: 2005/03/05 09:58:22 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -135,9 +136,10 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		Analysis analysis = this.fromStorableObject(storableObject);
+		Analysis analysis = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  analysis.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

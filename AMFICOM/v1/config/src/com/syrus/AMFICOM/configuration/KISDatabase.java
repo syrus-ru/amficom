@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.66 2005/03/04 19:50:00 bass Exp $
+ * $Id: KISDatabase.java,v 1.67 2005/03/05 09:57:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.67 $, $Date: 2005/03/05 09:57:16 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -209,12 +209,13 @@ public class KISDatabase extends StorableObjectDatabase {
 		kis.setMeasurementPortIds(measurementPortIds);
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		KIS kis = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+		switch (retrieveKind) {
 			case RETRIEVE_MONITORED_ELEMENTS:
 				return this.retrieveMonitoredElements(kis);
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  kis.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
