@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.27 2005/03/30 13:01:27 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.28 2005/03/31 16:02:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/03/30 13:01:27 $
+ * @version $Revision: 1.28 $, $Date: 2005/03/31 16:02:34 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -65,7 +65,9 @@ public class MCMImplementation extends MCMPOA {
 		}
 		catch (Throwable throwable) {
 			Log.errorException(throwable);
-			throw new AMFICOMRemoteException();
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE,
+					CompletionStatus.COMPLETED_PARTIALLY,
+					"Receive tests -- " + throwable.getMessage());
 		}
 	}
 
@@ -290,8 +292,8 @@ public class MCMImplementation extends MCMPOA {
 
 
 
-	public void ping(int i) {
-		System.out.println("i == " + i);
+	public void ping(byte i) {
+		Log.debugMessage("Ping value: " + i, Log.DEBUGLEVEL10);
 	}
 	
 	

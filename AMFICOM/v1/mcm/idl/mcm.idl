@@ -51,8 +51,7 @@ module corba {
 				in general::corba::StorableObjectCondition_Transferable storableObjectCondition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void ping(in long i)
-			raises (general::corba::AMFICOMRemoteException);
+		void ping(in octet i);
 	};
 
 };
