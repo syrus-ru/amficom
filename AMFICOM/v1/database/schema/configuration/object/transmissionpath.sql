@@ -10,8 +10,8 @@ CREATE TABLE TransmissionPath (
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
 --
- start_port_id VARCHAR2(32),
- finish_port_id VARCHAR2(32),
+ start_port_id VARCHAR2(32) NOT NULL,
+ finish_port_id VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT tpath_pk PRIMARY KEY (id),
  CONSTRAINT tpath_creator_fk FOREIGN KEY (creator_id)
