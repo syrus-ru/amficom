@@ -204,9 +204,9 @@ public class SchemeElementPropsPanel extends JPanel
 		ugoNameTextField.setText(element.label());
 		ugoNameTextField.setCaretPosition(0);
 
-		if (p != null)
+		if (element != null)
 		{
-			EquipmentType eqt = p.getEquipmentType();
+			EquipmentType eqt = element.getEquipmentType();
 			if (eqt != null)
 				manufacturerTextField.setText(eqt.getManufacturer());
 			else
