@@ -118,7 +118,7 @@ public class MapDataSourceImage extends SchemeDataSourceImage
 
 	public void LoadMaps()
 	{
-		ResourceDescriptor_Transferable[] desc = GetDescriptors("mapcontext");
+		ResourceDescriptor_Transferable[] desc = GetDomainDescriptors("mapcontext");
 
 //		Pool.removeHash("mapcontext");
 //		Pool.removeHash("mapequipmentelement");
