@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/11 16:40:32 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2005/01/14 11:04:09 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ObjListModel extends AbstractListModel implements MutableComboBoxModel, Serializable {
@@ -33,7 +33,7 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	 */
 	protected ObjectResourceController	controller;
 
-	private String						key;
+	protected String						key;
 
 	/**
 	 * @param controller
@@ -80,8 +80,7 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	public Object getElementAt(int index) {
 		Object obj = null;
 		if (index >= 0 && index < this.objects.size()) {
-			Object object = this.objects.get(index);
-			obj = getFieldByObject(object);
+			obj = this.objects.get(index);
 		}
 		return obj;
 	}

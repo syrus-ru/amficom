@@ -1,6 +1,8 @@
 package com.syrus.AMFICOM.client_.general.ui_;
 
 import java.awt.Component;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -11,9 +13,11 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.2 $, $Date: 2004/10/07 06:07:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/14 11:04:09 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -27,6 +31,16 @@ public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 
 	private JComponent	component;
 	
+	private ObjectResourceController controller;
+	
+	private String key;
+	
+	protected LabelCheckBoxRenderer(ObjectResourceController controller, String key) {
+		this();
+		this.controller = controller;
+		this.key = key;
+	}
+	
 	private LabelCheckBoxRenderer() {
 		super();
 		if (noFocusBorder == null) {
@@ -37,6 +51,7 @@ public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 	}
 	
 	/**
+	 * @deprecated
 	 * There is no need in more than one instance of this renderer.
 	 * @return LabelCheckBoxRenderer instance. 
 	 */
@@ -53,15 +68,35 @@ public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 							boolean cellHasFocus) {
 		setComponentOrientation(list.getComponentOrientation());
 		this.component = this;
-		if (value instanceof Icon) {
-			setIcon((Icon) value);
+
+		Object object;
+		if (this.controller == null && this.key == null) {
+			object = value;
+		} else {
+			object = this.controller.getValue(value, this.key);
+			if (this.controller.getPropertyValue(this.key) instanceof Map) {
+				Map map = (Map) this.controller.getPropertyValue(this.key);
+				Object keyObject = null;
+				for (Iterator it = map.keySet().iterator(); it.hasNext();) {
+					Object keyObj = it.next();
+					if (map.get(keyObj).equals(object)) {
+						keyObject = keyObj;
+						break;
+					}
+				}
+				object = keyObject;
+			}
+		}
+
+		if (object instanceof Icon) {
+			setIcon((Icon) object);
 			setText("");
 		} else {
-			if (value instanceof JComponent)
-				this.component = (JComponent) value;
+			if (object instanceof JComponent)
+				this.component = (JComponent) object;
 			else {
 				setIcon(null);
-				setText((value == null) ? "" : value.toString());
+				setText((object == null) ? "" : object.toString());
 			}
 		}
 		
@@ -80,5 +115,5 @@ public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 		
 		return (this.component == null) ? this : this.component;
 	}
-
+	
 }

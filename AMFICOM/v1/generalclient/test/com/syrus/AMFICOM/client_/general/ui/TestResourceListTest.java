@@ -1,5 +1,5 @@
 /*
- * $Id: TestResourceListTest.java,v 1.4 2004/12/23 12:52:33 bass Exp $
+ * $Id: TestResourceListTest.java,v 1.5 2005/01/14 11:04:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,21 +10,27 @@ package com.syrus.AMFICOM.client_.general.ui;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentListener;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.client_.resource.TestResource;
 import com.syrus.AMFICOM.client_.resource.TestResourceController;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/12/23 12:52:33 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/01/14 11:04:09 $
  * @module general_v1
  */
 public class TestResourceListTest {
@@ -48,23 +54,29 @@ public class TestResourceListTest {
 		list.add(tr2);
 
 		ObjListModel listModel = new ObjListModel(controller, list, TestResourceController.KEY_STATUS);
-		ObjList objList = new ObjList(listModel); 
+		ObjList objList = new ObjList(listModel);
+		objList.addListSelectionListener(new ListSelectionListener() {
+
+			public void valueChanged(ListSelectionEvent e) {
+				ObjList objList = (ObjList) e.getSource();
+				System.out.println(objList.getSelectedValue());
+
+			}
+		});
 
 		JPanel panel = new JPanel(new GridLayout(0, 1));
-		Dimension d = new Dimension(100,100);
+		Dimension d = new Dimension(100, 100);
 		objList.setPreferredSize(d);
 		panel.add(objList);
 
-		
 		objList.setSelectedValue(tr2, true);
-		//objList.setSelectedItem(tr2);		
-		//comboBox.setSelectedIndex(1);
+		// objList.setSelectedItem(tr2);
+		// comboBox.setSelectedIndex(1);
 
-		frame.getContentPane().add(panel);		
+		frame.getContentPane().add(panel);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
 	}
 }
-

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjComboBox.java,v 1.6 2004/11/19 10:15:26 stas Exp $
+ * $Id: ObjComboBox.java,v 1.7 2005/01/14 11:04:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2004/11/19 10:15:26 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/01/14 11:04:09 $
  * @module generalclient_v1
  */
 public class ObjComboBox extends AComboBox {
@@ -27,7 +27,8 @@ public class ObjComboBox extends AComboBox {
 	private ObjListModel	model;
 
 	public ObjComboBox(ObjListModel model) {
-		this.setRenderer(LabelCheckBoxRenderer.getInstance());
+		LabelCheckBoxRenderer renderer = new LabelCheckBoxRenderer(model.controller, model.key);
+		this.setRenderer(renderer);
 		this.model = model;
 		this.setModel(model);
 	}
@@ -38,12 +39,7 @@ public class ObjComboBox extends AComboBox {
 
 	public ObjComboBox(ObjectResourceController controller, String key) {
 		this(new ObjListModel(controller, new LinkedList(), key));
-	}
-
-	public void setSelectedItem(Object anObject) {
-		Object fieldByObject = this.model.getFieldByObject(anObject);
-		super.setSelectedItem(fieldByObject);
-	}
+	}	
 
 	public void removeAll() {
 		super.removeAll();

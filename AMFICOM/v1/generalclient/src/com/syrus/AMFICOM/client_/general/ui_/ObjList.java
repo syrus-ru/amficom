@@ -1,5 +1,5 @@
 /*
- * $Id: ObjList.java,v 1.6 2004/11/19 10:15:26 stas Exp $
+ * $Id: ObjList.java,v 1.7 2005/01/14 11:04:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import javax.swing.JList;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2004/11/19 10:15:26 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/01/14 11:04:09 $
  * @module generalclient_v1
  */
 public class ObjList extends JList {
@@ -28,9 +28,10 @@ public class ObjList extends JList {
 	private ObjListModel	model;
 
 	public ObjList(ObjListModel model) {
-		this.setCellRenderer(LabelCheckBoxRenderer.getInstance());
+		LabelCheckBoxRenderer renderer = new LabelCheckBoxRenderer(model.controller, model.key);
+		this.setCellRenderer(renderer);
 		this.model = model;
-		this.setModel(model);
+		this.setModel(model);		
 	}
 
 	public ObjList(ObjectResourceController controller, List objects, String key) {
@@ -39,17 +40,7 @@ public class ObjList extends JList {
 
 	public ObjList(ObjectResourceController controller, String key) {
 		this(new ObjListModel(controller, new LinkedList(), key));
-	}
-
-	public void setSelectedValue(Object anObject, boolean shouldScroll) {
-		int index = this.model.getIndexOf(anObject);
-		super.setSelectedIndex(index);
-	}
-
-	public Object getSelectedValue() {
-		Object selectedValue = this.model.getObjectByField(super.getSelectedValue());
-		return selectedValue;
-	}
+	}	
 
 	public void removeAll() {
 		super.removeAll();
