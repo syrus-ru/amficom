@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigureTestCase.java,v 1.2 2004/08/16 09:05:09 bob Exp $
+ * $Id: ConfigureTestCase.java,v 1.3 2004/08/27 15:15:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/16 09:05:09 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/27 15:15:16 $
  * @author $Author: bob $
  * @module tools
  */
@@ -58,7 +58,7 @@ public class ConfigureTestCase extends TestCase{
 		establishDatabaseConnection();
 		DatabaseContextSetup.initDatabaseContext();
 		DatabaseContextSetup.initObjectPools();
-		ConfigureTestCase.creatorId = new Identifier("Users_9");
+		ConfigureTestCase.creatorId = new Identifier("Users_1");
 		ConfigureTestCase.domainId = new Identifier("Domain_26");
 	}
 

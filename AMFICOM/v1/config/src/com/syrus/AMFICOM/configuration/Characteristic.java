@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.12 2004/08/23 20:48:15 arseniy Exp $
+ * $Id: Characteristic.java,v 1.13 2004/08/27 15:18:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/23 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2004/08/27 15:18:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -79,7 +79,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 		}
 	}
 	
-	private Characteristic(Identifier id,
+	protected Characteristic(Identifier id,
 						Identifier creatorId,
 						CharacteristicType type,
 						String name,
@@ -104,7 +104,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * create new instance for client 
 	 * @param id
 	 * @param creatorId
-	 * @param type
+	 * @param type see {@link CharacteristicType}
 	 * @param name
 	 * @param description
 	 * @param sort
