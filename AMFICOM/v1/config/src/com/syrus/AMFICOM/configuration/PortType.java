@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.33 2005/01/20 15:31:09 arseniy Exp $
+ * $Id: PortType.java,v 1.34 2005/01/25 12:13:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/01/20 15:31:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/01/25 12:13:08 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -224,15 +224,5 @@ public class PortType extends StorableObjectType implements Characterized {
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
-	}
-
-	public synchronized void exportColumns() {
-		super.exportColumns();
-
-		this.exportedColumns.put(COLUMN_NAME, this.name);
-		this.exportedColumns.put(COLUMN_SORT, Integer.toString(this.sort));
-
-		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
-			this.exportedColumns.putAll(((Characteristic)it.next()).getExportedColumns());
-	}
+	}	
 }

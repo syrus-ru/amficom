@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.38 2005/01/20 15:31:09 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.39 2005/01/25 12:13:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/01/20 15:31:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/01/25 12:13:08 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -237,6 +237,7 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 
 	public void setManufacturer(String manufacturer) {
 		this.manufacturer = manufacturer;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public String getManufacturerCode() {
@@ -245,16 +246,6 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 
 	public void setManufacturerCode(String manufacturerCode) {
 		this.manufacturerCode = manufacturerCode;
-	}
-
-	public synchronized void exportColumns() {
-		super.exportColumns();
-
-		this.exportedColumns.put(COLUMN_NAME, this.name);
-		this.exportedColumns.put(COLUMN_MANUFACTURER, this.manufacturer);
-		this.exportedColumns.put(COLUMN_MANUFACTURER_CODE, this.manufacturerCode);
-
-		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
-			this.exportedColumns.putAll(((Characteristic)it.next()).getExportedColumns());
-	}
+		super.currentVersion = super.getNextVersion();
+	}	
 }

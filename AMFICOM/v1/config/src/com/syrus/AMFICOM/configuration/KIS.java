@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.52 2005/01/20 15:31:09 arseniy Exp $
+ * $Id: KIS.java,v 1.53 2005/01/25 12:13:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/01/20 15:31:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2005/01/25 12:13:08 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -322,22 +322,5 @@ public class KIS extends DomainMember implements Characterized {
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
-	}
-
-	public synchronized void exportColumns() {
-		super.exportColumns();
-
-		this.exportedColumns.put(COLUMN_EQUIPMENT_ID, this.equipmentId.toString());
-		this.exportedColumns.put(COLUMN_MCM_ID, this.mcmId.toString());
-		this.exportedColumns.put(COLUMN_NAME, this.name);
-		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
-		this.exportedColumns.put(COLUMN_HOSTNAME, this.hostname);
-		this.exportedColumns.put(COLUMN_TCP_PORT, Short.toString(this.tcpPort));
-
-		for (Iterator it = this.measurementPortIds.iterator(); it.hasNext();)
-			this.exportedColumns.put(COLUMN_MEASUREMENT_PORT_IDS, ((Identifier)it.next()).toString());
-
-		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
-			this.exportedColumns.putAll(((Characteristic)it.next()).getExportedColumns());		
-	}
+	}	
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.7 2005/01/20 15:31:09 arseniy Exp $
+ * $Id: CableThread.java,v 1.8 2005/01/25 12:13:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/20 15:31:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/01/25 12:13:08 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
@@ -167,13 +167,5 @@ public class CableThread extends DomainMember implements TypedObject {
 
 	public List getDependencies() {
 		return Collections.singletonList(this.type);
-	}
-
-	public synchronized void exportColumns() {
-		super.exportColumns();
-
-		this.exportedColumns.put(COLUMN_TYPE_ID, this.type.getId().toString());
-		this.exportedColumns.put(COLUMN_NAME, this.name);
-		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
 	}
 }

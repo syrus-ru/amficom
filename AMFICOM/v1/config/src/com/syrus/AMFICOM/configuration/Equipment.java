@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.57 2005/01/20 15:31:09 arseniy Exp $
+ * $Id: Equipment.java,v 1.58 2005/01/25 12:13:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/01/20 15:31:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/01/25 12:13:08 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -406,6 +406,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setSupplier(String supplier) {
 		this.supplier = supplier;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public float getLatitude() {
@@ -414,6 +415,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public float getLongitude() {
@@ -422,6 +424,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setLongitude(float longitude) {
 		this.longitude = longitude;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public String getHwSerial() {
@@ -430,6 +433,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setHwSerial(String hwSerial) {
 		this.hwSerial = hwSerial;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public String getHwVersion() {
@@ -438,6 +442,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setHwVersion(String hwVersion) {
 		this.hwVersion = hwVersion;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public String getInventoryNumber() {
@@ -446,6 +451,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setInventoryNumber(String inventoryNumber) {
 		this.inventoryNumber = inventoryNumber;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public String getSupplierCode() {
@@ -454,6 +460,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setSupplierCode(String supplierCode) {
 		this.supplierCode = supplierCode;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public String getSwSerial() {
@@ -462,6 +469,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setSwSerial(String swSerial) {
 		this.swSerial = swSerial;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public String getSwVersion() {
@@ -470,29 +478,6 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public void setSwVersion(String swVersion) {
 		this.swVersion = swVersion;
-	}
-
-	public synchronized void exportColumns() {
-		super.exportColumns();
-
-		this.exportedColumns.put(COLUMN_TYPE_ID, this.type.getId().toString());
-		this.exportedColumns.put(COLUMN_NAME, "");
-		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
-		this.exportedColumns.put(COLUMN_IMAGE_ID, this.imageId.toString());
-		this.exportedColumns.put(COLUMN_LATITUDE, Float.toString(this.latitude));
-		this.exportedColumns.put(COLUMN_LONGITUDE, Float.toString(this.longitude));
-		this.exportedColumns.put(COLUMN_SUPPLIER, this.supplier);
-		this.exportedColumns.put(COLUMN_SUPPLIER_CODE, this.supplierCode);
-		this.exportedColumns.put(COLUMN_HW_SERIAL, this.hwSerial);
-		this.exportedColumns.put(COLUMN_HW_VERSION, this.hwVersion);
-		this.exportedColumns.put(COLUMN_SW_SERIAL, this.swSerial);
-		this.exportedColumns.put(COLUMN_SW_VERSION, this.swVersion);
-		this.exportedColumns.put(COLUMN_INVENTORY_NUMBER, this.inventoryNumber);
-
-		for (Iterator it = this.portIds.iterator(); it.hasNext();)
-			this.exportedColumns.put(COLUMN_PORT_IDS, ((Identifier)it.next()).toString());
-
-		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
-			this.exportedColumns.putAll(((Characteristic)it.next()).getExportedColumns());		
-	}
+		super.currentVersion = super.getNextVersion();
+	}	
 }
