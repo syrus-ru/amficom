@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.14 2004/08/31 15:33:36 bob Exp $
+ * $Id: TransmissionPath.java,v 1.15 2004/09/27 11:59:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/31 15:33:36 $
+ * @version $Revision: 1.15 $, $Date: 2004/09/27 11:59:58 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -104,7 +104,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		}
 
 
-	private TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
+	public TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
 		super(new Identifier(tpt.id),
 					new Date(tpt.created),
 					new Date(tpt.modified),
