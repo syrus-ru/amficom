@@ -117,6 +117,8 @@ corbaportable_v1	AMFICOM/v1/corbaportable
 importmif_v1	AMFICOM/v1/importmif
 #M	agent_v1	Agent
 agent_v1	AMFICOM/v1/agent
+#M	mcm_v1		Measurement Control Module
+mcm_v1		AMFICOM/v1/mcm
 
 database_v1	AMFICOM/v1/database
 
