@@ -41,35 +41,22 @@ Segment* Segment::createFromData(unsigned int length, char* data) {
 	}
 	return segment;
 }
-/*
-SegmentType Segment::getSegmentType(char* data) {
-	SegmentType segmentType;
-	switch ((int)data[0]) {
-		case SEGMENT_KIS_INFO:
-			segmentType = SEGMENT_KIS_INFO;
-		case SEGMENT_MCM_INFO:
-			segmentType = SEGMENT_MCM_INFO;
-		case SEGMENT_MEASUREMENT:
-			segmentType = SEGMENT_MEASUREMENT;
-		case SEGMENT_RESULT:
-			segmentType = SEGMENT_RESULT;
-		default:
-			segmentType = SEGMENT_UNKNOWN;
-	}
-	return segmentType;
-}
-*/
+
 SegmentType Segment::getType() const {
 	SegmentType ret;
-	switch ((int)this->data[0]) {
+	switch ((int) this->data[0]) {
 		case SEGMENT_KIS_INFO:
 			ret = SEGMENT_KIS_INFO;
+			break;
 		case SEGMENT_MCM_INFO:
 			ret = SEGMENT_MCM_INFO;
+			break;
 		case SEGMENT_MEASUREMENT:
 			ret = SEGMENT_MEASUREMENT;
+			break;
 		case SEGMENT_RESULT:
 			ret = SEGMENT_RESULT;
+			break;
 		default:
 			ret = SEGMENT_UNKNOWN;
 	}
