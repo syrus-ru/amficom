@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.8 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.9 2005/03/15 14:32:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/05 21:37:24 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/15 14:32:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -58,6 +58,14 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		boolean condition = false;
 		DomainMember domainMember = null;
 		switch (this.entityCode.shortValue()) {
+			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
+				CableThreadType cableThreadType = (CableThreadType) object;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
+						condition = super.conditionTest(cableThreadType.getLinkType().getId());
+						break;
+				}
+				break;
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 				domainMember = (Equipment) object;
 				break;
@@ -102,6 +110,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 
 	public void setEntityCode(Short entityCode) {
 		switch (entityCode.shortValue()) {
+			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:
 			case ObjectEntities.KIS_ENTITY_CODE:
