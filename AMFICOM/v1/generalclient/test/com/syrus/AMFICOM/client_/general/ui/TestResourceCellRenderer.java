@@ -6,7 +6,6 @@ import java.awt.Color;
 import javax.swing.JTable;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.AbstractLabelCellRenderer;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.client_.resource.TestResource;
@@ -17,6 +16,7 @@ import com.syrus.AMFICOM.client_.resource.TestResourceController;
  */
 public class TestResourceCellRenderer extends AbstractLabelCellRenderer {
 
+	private static final long	serialVersionUID	= 5175325260719712484L;
 	private static TestResourceCellRenderer	instance;
 
 	private TestResourceCellRenderer() {
@@ -30,11 +30,11 @@ public class TestResourceCellRenderer extends AbstractLabelCellRenderer {
 	}
 
 	protected void customRendering(	JTable table,
-					ObjectResource objectResource,
+					Object object,
 					ObjectResourceController controller,
 					String key) {
-		if (objectResource instanceof TestResource) {
-			TestResource tr = (TestResource) objectResource;
+		if (object instanceof TestResource) {
+			TestResource tr = (TestResource) object;
 			if (key.equals(TestResourceController.KEY_NAME)) {
 				Color color = null;
 				switch (tr.getStatus().value()) {

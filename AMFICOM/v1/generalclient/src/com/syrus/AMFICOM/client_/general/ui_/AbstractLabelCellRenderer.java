@@ -9,15 +9,14 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.2 $, $Date: 2004/08/26 10:26:40 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2004/10/07 11:31:15 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public abstract class AbstractLabelCellRenderer extends JLabel implements TableCellRenderer {
@@ -44,15 +43,14 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 	 * objectResourceController
 	 * 
 	 * @param table
-	 * @param objectResource
-	 *                see {@link ObjectResource}
+	 * @param object
 	 * @param controller
 	 *                see {@link ObjectResourceController}
 	 * @param key
 	 *                see {@link ObjectResourceController#getKeys()}
 	 */
 	protected abstract void customRendering(JTable table,
-						ObjectResource objectResource,
+						Object object,
 						ObjectResourceController controller,
 						String key);
 
@@ -71,16 +69,34 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 			setText((value == null) ? "" : value.toString());
 		} else if (value instanceof Component) {
 			this.component = (Component) value;
+		} else if (value instanceof Boolean){
+			BooleanRenderer renderer = BooleanRenderer.getInstance();
+			return renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
+		} else if (value instanceof Color){
+			ColorCellRenderer renderer = ColorCellRenderer.getInstance();
+			return renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
 		}
 
-		ObjectResourceTableModel model = (ObjectResourceTableModel) table.getModel();
-		ObjectResource objectResource = model.getObjectResource(rowIndex);
-
+		Object obj = null;
+		String colId = null;
 		int mColIndex = table.convertColumnIndexToModel(vColIndex);
-		String colId = model.controller.getKey(mColIndex);
-
 		super.setBackground(table.getBackground());
-		customRendering(table, objectResource, model.controller, colId);
+		
+		Object tableModel = table.getModel();
+		if (tableModel instanceof ObjectResourceTableModel){
+			ObjectResourceTableModel model = (ObjectResourceTableModel)tableModel; 
+			obj = model.getObjectResource(rowIndex);
+			colId = model.controller.getKey(mColIndex);
+			customRendering(table, obj, model.controller, colId);
+		} else if (tableModel instanceof ObjPropertyTableModel){
+			ObjPropertyTableModel model = (ObjPropertyTableModel)tableModel; 
+			obj = model.getObject();
+			colId = model.controller.getKey(mColIndex);
+			customRendering(table, obj, model.controller, colId);
+		}
+
+
+
 		Color color = super.getBackground();
 
 		if (isSelected) {
