@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.109 2005/02/28 11:12:34 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.110 2005/02/28 11:48:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.109 $, $Date: 2005/02/28 11:12:34 $
+ * @version $Revision: 1.110 $, $Date: 2005/02/28 11:48:01 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -114,24 +114,21 @@ public abstract class StorableObjectDatabase {
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
-			String s = new String();
-			switch (mode) {
-				case MODE_INSERT:
-					s = StorableObjectWrapper.COLUMN_ID + COMMA;
-					break;
-				case MODE_UPDATE:
-					break;
-				default:
-					Log.errorMessage(this.getEnityName() + "Database.getColumns | Unknown mode: " + mode);
-			}
-			columns = s
-				+ StorableObjectWrapper.COLUMN_CREATED + COMMA
-				+ StorableObjectWrapper.COLUMN_MODIFIED + COMMA
-				+ StorableObjectWrapper.COLUMN_CREATOR_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_MODIFIER_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_VERSION;
+			columns = StorableObjectWrapper.COLUMN_CREATED + COMMA
+					+ StorableObjectWrapper.COLUMN_MODIFIED + COMMA
+					+ StorableObjectWrapper.COLUMN_CREATOR_ID + COMMA
+					+ StorableObjectWrapper.COLUMN_MODIFIER_ID + COMMA
+					+ StorableObjectWrapper.COLUMN_VERSION;
 		}
-		return columns;
+		switch (mode) {
+			case MODE_INSERT:
+				return StorableObjectWrapper.COLUMN_ID + COMMA + columns;
+			case MODE_UPDATE:
+				return columns;
+			default:
+				Log.errorMessage(this.getEnityName() + "Database.getColumns | Unknown mode: " + mode);
+				return null;
+		}
 	}
 
 	protected String getInsertMultiplySQLValues() {
@@ -612,7 +609,7 @@ public abstract class StorableObjectDatabase {
 			return;
 		}
 
-		List idsList = new LinkedList();
+		Collection idsList = new HashSet();
 		for(Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject)it.next();
 			Identifier localId = storableObject.getId();
