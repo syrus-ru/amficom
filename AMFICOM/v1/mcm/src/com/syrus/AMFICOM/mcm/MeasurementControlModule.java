@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.53 2004/12/22 12:46:46 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.54 2005/01/11 16:23:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2004/12/22 12:46:46 $
+ * @version $Revision: 1.54 $, $Date: 2005/01/11 16:23:17 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -232,7 +232,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void activateCORBAServer() {
 		/*	Create local CORBA server end activate servant*/
 		try {
-			corbaServer = new CORBAServer();
+			Server server = (Server)ConfigurationStorableObjectPool.getStorableObject(iAm.getServerId(), true);
+	
+			corbaServer = new CORBAServer(server.getHostName());
 			corbaServer.activateServant(new MCMImplementation(), iAm.getId().toString());
 		}
 		catch (Exception e) {
