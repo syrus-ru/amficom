@@ -16,25 +16,29 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TestLine extends JLabel implements ActionListener, OperationListener {
 
-	public static final Color	COLOR_ABORDED		= Color.RED;
-	public static final Color	COLOR_COMPLETED		= Color.GREEN;
-	public static final Color	COLOR_PROCCESSING	= new Color(0, 128, 128);
+	public static final Color	COLOR_ABORDED				= Color.RED;
+	public static final Color	COLOR_ABORDED_SELECTED		= new Color(255, 128, 128);
+	public static final Color	COLOR_COMPLETED				= Color.GREEN;
+	public static final Color	COLOR_COMPLETED_SELECTED	= new Color(128, 255, 128);
+	public static final Color	COLOR_PROCCESSING			= new Color(0, 128, 128);
+	public static final Color	COLOR_PROCCESSING_SELECTED	= new Color(64, 192, 192);
 
-	public static final Color	COLOR_SCHEDULED		= Color.WHITE;
-	public static final Color	COLOR_UNRECOGNIZED	= new Color(20, 20, 60);
-	public static final int		MINIMAL_WIDTH		= 7;
+	public static final Color	COLOR_SCHEDULED				= new Color(128, 128, 128);
+	public static final Color	COLOR_SCHEDULED_SELECTED	= new Color(255, 255, 255);
+	public static final Color	COLOR_UNRECOGNIZED			= new Color(20, 20, 60);
+	public static final int		MINIMAL_WIDTH				= 7;
 
-	public static final int		TIME_OUT			= 500;
+	public static final int		TIME_OUT					= 500;
 	ArrayList					allTests;
-	Test						currentTest;
+	//Test currentTest;
 
 	Dispatcher					dispatcher;
 
-	boolean						flash				= false;
+	boolean						flash						= false;
 	int							height;
 	int							margin;
 	double						scale;
-	boolean						skipTestUpdate		= false;
+//	boolean						skipTestUpdate				= false;
 	long						start;
 
 	int							titleHeight;
@@ -42,10 +46,11 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	int							width;
 	private long				end;
 
-	private HashMap				tests				= new HashMap();
-	private javax.swing.Timer	timer;											//		=
+	private HashMap				tests						= new HashMap();
+	private javax.swing.Timer	timer;													//		=
 	//private ApplicationContext aContext;
 	private String				title;
+	Test						test;
 
 	private HashMap				unsavedTests;
 
@@ -88,9 +93,9 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 					//for (Iterator it = getTests().iterator(); it.hasNext();)
 					// {
-					for (int i = 0; i < TestLine.this.allTests.size(); i++) {
+					for (Iterator it = TestLine.this.allTests.iterator(); it.hasNext();) {
 						//	Test test = (Test) it.next();
-						Test test = (Test) TestLine.this.allTests.get(i);
+						Test test = (Test) it.next();
 						TimeStamp timeStamp = test.getTimeStamp();
 						int st = TestLine.this.margin
 								+ (int) (TestLine.this.scale * (test.getTimeStamp().getPeriodStart() - TestLine.this.start))
@@ -137,11 +142,11 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 							//							System.out.println("TestLine>onClick: test==null
 							// : " //$NON-NLS-1$
 							//									+ (test.isChanged()));
-							TestLine.this.skipTestUpdate = true;
+							//TestLine.this.skipTestUpdate = true;
 							TestLine.this.dispatcher.notify(new TestUpdateEvent(this, test,
 																				TestUpdateEvent.TEST_SELECTED_EVENT));
-							TestLine.this.skipTestUpdate = false;
-							TestLine.this.currentTest = test;
+							//TestLine.this.skipTestUpdate = false;
+							//TestLine.this.test = test;
 							break;
 						}
 					}
@@ -150,16 +155,16 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			}
 
 			public void mouseReleased(MouseEvent e) {
-				if (TestLine.this.currentTest != null) {
-					TestLine.this.currentTest = null;
-				}
+//				if (TestLine.this.test != null) {
+//					TestLine.this.test = null;
+//				}
 
 			}
 		});
 		this.addMouseMotionListener(new MouseMotionListener() {
 
 			public void mouseDragged(MouseEvent e) {
-				if (TestLine.this.currentTest != null) {
+				if (TestLine.this.test != null) {
 					//nothing
 				}
 
@@ -183,41 +188,45 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	}
 
 	public void addTest(Test test) {
-		if (!skipTestUpdate) {
+//		if (!this.skipTestUpdate) {
 			if (test.isChanged()) {
 				System.out.println("test is changed");
-				if (unsavedTests == null) {
-					unsavedTests = new HashMap();
-					timer = new javax.swing.Timer(TIME_OUT, this);
-					timer.start();
-					//System.out.println("timer created");
+				if (this.unsavedTests == null) {
+					this.unsavedTests = new HashMap();
+					this.timer = new javax.swing.Timer(TIME_OUT, this);
+					this.timer.start();
+					System.out.println("timer created");
 				}
-				if (unsavedTests.containsValue(test)) {
+				if (this.unsavedTests.containsValue(test)) {
 					System.out.println("unsavedTests.contains(test)"); //$NON-NLS-1$
 				} else {
 					System.out.println("unsavedTests.put(" + test.getId() + ", test);");
-					unsavedTests.put(test.getId(), test);
+					this.unsavedTests.put(test.getId(), test);
 				}
 			} else {
 				System.out.println("test is NOT changed");
-				tests.put(test.getId(), test);
+				this.tests.put(test.getId(), test);
 			}
-			if (allTests == null)
-				allTests = new ArrayList();
-			if (!allTests.contains(test))
-			allTests.add(test);
+			if (this.allTests == null)
+				this.allTests = new ArrayList();
+			if (!this.allTests.contains(test))
+				this.allTests.add(test);
 			this.revalidate();
-		}
+	//	}
 	}
 
 	public void flashUnsavedTest() {
-		if ((this.isVisible()) && (unsavedTests != null)) {
+		if ((this.isVisible()) && (this.unsavedTests != null)) {
 			Graphics g = this.getGraphics();
 			if (g != null) {
-				flash = !flash;
-				for (Iterator it = unsavedTests.keySet().iterator(); it.hasNext();) {
-					Test test = (Test) unsavedTests.get(it.next());
-					g.setColor(flash ? COLOR_SCHEDULED : COLOR_UNRECOGNIZED);
+				this.flash = !this.flash;
+				for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
+					Test test = (Test) this.unsavedTests.get(it.next());
+					System.out.println("testID:" + test.getId());
+					System.out.println("test:" + (this.test == null ? " is null" : test.getId()));
+					g.setColor(this.flash ? (((this.test == null) || (!this.test.getId().equals(test.getId())))
+							? COLOR_SCHEDULED : COLOR_SCHEDULED_SELECTED) : COLOR_UNRECOGNIZED);
+					System.out.println(g.getColor());
 					drawTestRect(g, test);
 				}
 			}
@@ -262,7 +271,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 					Object key = it.next();
 					Test test = (Test) this.unsavedTests.get(key);
 					if (!test.isChanged()) {
-//						System.out.println("remove " + key);
+						//						System.out.println("remove " + key);
 						this.unsavedTests.remove(key);
 						this.tests.put(test.getId(), test);
 					}
@@ -273,43 +282,66 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				this.unsavedTests.clear();
 			if (this.tests != null)
 				this.tests.clear();
+		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
+			TestUpdateEvent tue = (TestUpdateEvent) e;
+			Test test = tue.test;
+			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
+				this.test = test;
+				System.out.println("set test :"+test.getId());
+				this.repaint();
+			}
 		}
 	}
 
 	public void paintComponent(Graphics g) {
-		height = getHeight();
-		width = getWidth();
+		this.height = getHeight();
+		this.width = getWidth();
 
-		if (allTests != null) {
-			scale = (double) (width - 2 * margin) / (double) (end - start);
+		if (this.allTests != null) {
+			this.scale = (double) (this.width - 2 * this.margin) / (double) (this.end - this.start);
 			Font font = UIStorage.ARIAL_12_FONT;
 			g.setFont(font);
 			this.titleHeight = g.getFontMetrics().getHeight();
 			//		System.out.println("titleHeight:"+titleHeight);
 			g.setColor(Color.gray);
-			g.clearRect(0, 0, width, this.titleHeight / 2 + 3);
+			g.clearRect(0, 0, this.width, this.titleHeight / 2 + 3);
 			g.setColor(Color.black);
-			g.drawString(title, 5, this.titleHeight / 2 + 2);
-			g.drawLine(0, this.titleHeight / 2 + 3, width, this.titleHeight / 2 + 3);
-			g.drawLine(0, height - 1, width, height - 1);
+			g.drawString(this.title, 5, this.titleHeight / 2 + 2);
+			g.drawLine(0, this.titleHeight / 2 + 3, this.width, this.titleHeight / 2 + 3);
+			g.drawLine(0, this.height - 1, this.width, this.height - 1);
 			//for (Iterator it = tests.values().iterator(); it.hasNext();) {
 			//			System.out.println(":" + allTests.size() + "\t"
 			//					+ System.currentTimeMillis());
 			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
 				Color color;
 				Test test = (Test) it.next();
-//				System.out.println("paint:" + test.getId());
-				if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
-					color = COLOR_COMPLETED;
-				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
-					color = COLOR_SCHEDULED;
-				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
-					color = COLOR_PROCCESSING;
-				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
-					color = COLOR_ABORDED;
+
+				if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
+					if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
+						color = COLOR_COMPLETED;
+					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
+						color = COLOR_SCHEDULED;
+					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
+						color = COLOR_PROCCESSING;
+					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
+						color = COLOR_ABORDED;
+					} else {
+						color = COLOR_UNRECOGNIZED;
+					}
 				} else {
-					color = COLOR_UNRECOGNIZED;
+					if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
+						color = COLOR_COMPLETED_SELECTED;
+					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
+						color = COLOR_SCHEDULED_SELECTED;
+					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
+						color = COLOR_PROCCESSING_SELECTED;
+					} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
+						color = COLOR_ABORDED_SELECTED;
+					} else {
+						color = COLOR_UNRECOGNIZED;
+					}
 				}
+				//System.out.println("color:" + color);
 				if ((this.unsavedTests == null) || (!this.unsavedTests.containsValue(test))) {
 					g.setColor(color);
 					drawTestRect(g, test);
@@ -330,39 +362,42 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		String testId = test.getId();
 		if (this.unsavedTests != null) {
 			this.unsavedTests.remove(test.getId());
-//			System.out.println("this.unsavedTests.remove(" + test.getId() + "):"
-//					+ this.unsavedTests.containsKey(test.getId()));
+			//			System.out.println("this.unsavedTests.remove(" + test.getId() +
+			// "):"
+			//					+ this.unsavedTests.containsKey(test.getId()));
 		}
 		if (this.allTests != null) {
-//			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
-//				Test t = (Test) it.next();
-//				System.out.println(t.getId());
-//			}
+			//			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
+			//				Test t = (Test) it.next();
+			//				System.out.println(t.getId());
+			//			}
 			this.allTests.remove(test);
-//			System.out.println("this.allTests.remove(test):" + this.allTests.contains(test));
+			//			System.out.println("this.allTests.remove(test):" +
+			// this.allTests.contains(test));
 		}
 		this.tests.remove(testId);
-//		System.out.println("this.tests.remove(testId):" + this.tests.containsKey(testId));
+		//		System.out.println("this.tests.remove(testId):" +
+		// this.tests.containsKey(testId));
 	}
 
 	private void drawTestRect(Graphics g, Test test) {
 		TimeStamp timeStamp = test.getTimeStamp();
-		int x = margin + (int) (scale * (test.getTimeStamp().getPeriodStart() - start));
-		int en = margin + (int) (scale * (test.getTimeStamp().getPeriodEnd() - start));
+		int x = this.margin + (int) (this.scale * (test.getTimeStamp().getPeriodStart() - this.start));
+		int en = this.margin + (int) (this.scale * (test.getTimeStamp().getPeriodEnd() - this.start));
 		int w = en - x + 1;
 		if (timeStamp.getType() == TimeStamp.TIMESTAMPTYPE_CONTINUOS)
 			w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
 		else
 			w = MINIMAL_WIDTH;
-		int y = titleHeight / 2 + 4;
-		int h = height - (titleHeight / 2 + 4) - 2;
+		int y = this.titleHeight / 2 + 4;
+		int h = this.height - (this.titleHeight / 2 + 4) - 2;
 		//System.out.println(">>"+timeStamp.getType());
 		switch (timeStamp.getType()) {
 			case TimeStamp.TIMESTAMPTYPE_PERIODIC:
 
 				long[] times = timeStamp.getTestTimes();
 				for (int i = 0; i < times.length; i++) {
-					x = margin + (int) (scale * (times[i] - start));
+					x = this.margin + (int) (this.scale * (times[i] - this.start));
 					g.fillRect(x + 2, y + 2, w - 3, h - 3);
 					//System.out.println(i + "\t" + times[i] + "\tx:" + x);
 					g.draw3DRect(x, y, w, h, true);
@@ -386,6 +421,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}

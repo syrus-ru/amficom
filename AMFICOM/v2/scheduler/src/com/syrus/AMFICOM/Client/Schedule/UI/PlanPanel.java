@@ -90,7 +90,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
 		this.aContext = aContext;
 		this.parent = parent;
-		toolBar = new PlanToolBar(aContext, this);
+		this.toolBar = new PlanToolBar(aContext, this);
 
 		setLayout(new VerticalFlowLayout());
 		//setLayout(new GridLayout(0,1));
@@ -113,11 +113,11 @@ public class PlanPanel extends JPanel implements OperationListener {
 			}
 
 			public void mousePressed(MouseEvent e) {
-				startpos = e.getPoint();
-				currpos = e.getPoint();
+				PlanPanel.this.startpos = e.getPoint();
+				PlanPanel.this.currpos = e.getPoint();
 				if (e.getButton() == MouseEvent.BUTTON1) {
 					setCursor(UIStorage.CROSS_HAIR_CURSOR);
-					selectedByMouse = true;
+					PlanPanel.this.selectedByMouse = true;
 				}
 			}
 
@@ -125,15 +125,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 				if (e.getClickCount() > 0) {
 					setCursor(UIStorage.DEFAULT_CURSOR);
 
-					if (currpos.x == startpos.x) {
+					if (PlanPanel.this.currpos.x == PlanPanel.this.startpos.x) {
 						PlanPanel.this.parent.repaint();
 						return;
 					}
-					if (selectedByMouse) {
-						selectedByMouse = false;
-						double k = (PlanPanel.this.parent.getVisibleRect().width - 2 * margin)
-								/ Math.abs((double) (startpos.x - currpos.x));
-						int viewX = Math.min(startpos.x, currpos.x);
+					if (PlanPanel.this.selectedByMouse) {
+						PlanPanel.this.selectedByMouse = false;
+						double k = (PlanPanel.this.parent.getVisibleRect().width - 2 * PlanPanel.this.margin)
+								/ Math.abs((double) (PlanPanel.this.startpos.x - PlanPanel.this.currpos.x));
+						int viewX = Math.min(PlanPanel.this.startpos.x, PlanPanel.this.currpos.x);
 						updateScale(k, viewX);
 					}
 				}
@@ -209,15 +209,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 
 	public int getScale() {
-		return scale;
+		return this.scale;
 	}
 
 	public Date getStartDate() {
-		return startDate;
+		return this.startDate;
 	}
 
 	public PlanToolBar getToolBar() {
-		return toolBar;
+		return this.toolBar;
 	}
 
 	//	public void actionPerformed(ActionEvent e) {
@@ -330,49 +330,51 @@ public class PlanPanel extends JPanel implements OperationListener {
 			return;
 		}
 		this.scale = n;
+		setStartDate(this.scaleStart);
 	}
 
 	public void setStartDate(Date start) {
 		this.startDate = start;
+		if (start != null) {
+			this.cal.setTime(start);
+			switch (this.scale) {
+				case 4:
+				case 5:
+					this.cal.set(Calendar.HOUR_OF_DAY, 0);
+				case 2:
+				case 3:
+					this.cal.set(Calendar.MINUTE, 0);
+				case 0:
+				case 1:
+					this.cal.set(Calendar.SECOND, 0);
+			}
 
-		cal.setTime(start);
-		switch (scale) {
-			case 4:
-			case 5:
-				cal.set(Calendar.HOUR_OF_DAY, 0);
-			case 2:
-			case 3:
-				cal.set(Calendar.MINUTE, 0);
-			case 0:
-			case 1:
-				cal.set(Calendar.SECOND, 0);
+			//округляем до шага
+			int num = this.cal.get(STEPS[this.scale].scale);
+			while (num / STEPS[this.scale].align * STEPS[this.scale].align != num) {
+				this.cal.add(STEPS[this.scale].scale, -1);
+				num = this.cal.get(STEPS[this.scale].scale);
+			}
+
+			this.scaleStart = this.cal.getTime();
+			//scroll calendar to end of period
+			this.cal.add(STEPS[this.scale].scale, STEPS[this.scale].total);
+			this.scaleEnd = this.cal.getTime();
+			//scroll calendar to start point
+			this.cal.setTime(this.startDate);
 		}
-
-		//округляем до шага
-		int num = cal.get(STEPS[scale].scale);
-		while (num / STEPS[scale].align * STEPS[scale].align != num) {
-			cal.add(STEPS[scale].scale, -1);
-			num = cal.get(STEPS[scale].scale);
-		}
-
-		scaleStart = cal.getTime();
-		//scroll calendar to end of period
-		cal.add(STEPS[scale].scale, STEPS[scale].total);
-		scaleEnd = cal.getTime();
-		//scroll calendar to start point
-		cal.setTime(startDate);
 	}
 
 	protected void paintComponent(Graphics g) {
 		// for paint testlines
 
 		super.paintComponent(g);
-		cal.setTimeInMillis(0);
-		cal.add(STEPS[actualScale].scale, STEPS[actualScale].one);
-		long diff = cal.getTimeInMillis();
-		double delta = (getWidth() - 2 * margin)
-				/ ((double) (scaleEnd.getTime() - scaleStart.getTime()) / (double) diff);
-		double subDelta = delta / STEPS[actualScale].subscales;
+		this.cal.setTimeInMillis(0);
+		this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
+		long diff = this.cal.getTimeInMillis();
+		double delta = (getWidth() - 2 * this.margin)
+				/ ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) / (double) diff);
+		double subDelta = delta / STEPS[this.actualScale].subscales;
 
 		paintScales(g, diff, delta, subDelta);
 		/*
@@ -394,31 +396,31 @@ public class PlanPanel extends JPanel implements OperationListener {
 		double tmpDelta = delta;
 		if (subDelta > 60) {
 			tmpDelta = subDelta;
-			tmpDiff = diff / STEPS[actualScale].subscales;
-		} else if (actualScale == 0)
-			sdf.applyPattern("HH:mm"); //$NON-NLS-1$
+			tmpDiff = diff / STEPS[this.actualScale].subscales;
+		} else if (this.actualScale == 0)
+			this.sdf.applyPattern("HH:mm"); //$NON-NLS-1$
 
-		int shift = (int) g.getFontMetrics().getStringBounds(sdf.format(cal.getTime()), g).getCenterX();
+		int shift = (int) g.getFontMetrics().getStringBounds(this.sdf.format(this.cal.getTime()), g).getCenterX();
 
-		cal.setTime(scaleStart);
+		this.cal.setTime(this.scaleStart);
 		g.setColor(Color.black);
 		int counter = 0;
 		Color c = new Color(240, 240, 240);
-		while (cal.getTime().compareTo(scaleEnd) <= 0) {
+		while (this.cal.getTime().compareTo(this.scaleEnd) <= 0) {
 			g.setColor(c);
-			g.drawLine((int) (tmpDelta * counter) + margin, 0, (int) (tmpDelta * counter) + margin, h);
+			g.drawLine((int) (tmpDelta * counter) + this.margin, 0, (int) (tmpDelta * counter) + this.margin, h);
 			g.setColor(Color.BLACK);
-			g.drawLine((int) (tmpDelta * counter) + margin, h, (int) (tmpDelta * counter) + margin, h - 5);
+			g.drawLine((int) (tmpDelta * counter) + this.margin, h, (int) (tmpDelta * counter) + this.margin, h - 5);
 
-			String value = sdf.format(cal.getTime());
-			cal.setTimeInMillis(cal.getTimeInMillis() + tmpDiff);
-			g.drawString(value, (int) (tmpDelta * counter) + margin - shift, h - 7);
+			String value = this.sdf.format(this.cal.getTime());
+			this.cal.setTimeInMillis(this.cal.getTimeInMillis() + tmpDiff);
+			g.drawString(value, (int) (tmpDelta * counter) + this.margin - shift, h - 7);
 			if (value.startsWith("00:00")) //$NON-NLS-1$
-				g.drawString(new SimpleDateFormat("dd.MM.yyyy").format(cal //$NON-NLS-1$
-						.getTime()), (int) (tmpDelta * counter) + margin - 27, h - 17);
+				g.drawString(new SimpleDateFormat("dd.MM.yyyy").format(this.cal //$NON-NLS-1$
+						.getTime()), (int) (tmpDelta * counter) + this.margin - 27, h - 17);
 			counter++;
 		}
-		cal.setTime(scaleStart);
+		this.cal.setTime(this.scaleStart);
 	}
 
 	protected void paintScales(Graphics g, long diff, double delta, double subDelta) {
@@ -430,18 +432,18 @@ public class PlanPanel extends JPanel implements OperationListener {
 		double tmpDelta = delta;
 		if (subDelta > 10) {
 			tmpDelta = subDelta;
-			tmpDiff = diff / STEPS[actualScale].subscales;
+			tmpDiff = diff / STEPS[this.actualScale].subscales;
 		}
 
-		cal.setTime(scaleStart);
+		this.cal.setTime(this.scaleStart);
 		g.setColor(Color.black);
 		int counter = 0;
-		while (cal.getTime().compareTo(scaleEnd) <= 0) {
-			cal.setTimeInMillis(cal.getTimeInMillis() + tmpDiff);
-			g.drawLine((int) (tmpDelta * counter) + margin, h, (int) (tmpDelta * counter) + margin, h - 3);
+		while (this.cal.getTime().compareTo(this.scaleEnd) <= 0) {
+			this.cal.setTimeInMillis(this.cal.getTimeInMillis() + tmpDiff);
+			g.drawLine((int) (tmpDelta * counter) + this.margin, h, (int) (tmpDelta * counter) + this.margin, h - 3);
 			counter++;
 		}
-		cal.setTime(scaleStart);
+		this.cal.setTime(this.scaleStart);
 
 		/*
 		 * int h = getHeight() - 1; int w = getWidth(); double range =
@@ -463,52 +465,54 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	protected void paintSelect(Graphics g) {
 		g.setXORMode(Color.gray);
-		g.drawLine(startpos.x, 0, startpos.x, getHeight());
-		g.drawLine(startpos.x, 0, startpos.x, getHeight());
-		g.drawLine(tmppos.x, 0, tmppos.x, getHeight());
-		g.drawLine(currpos.x, 0, currpos.x, getHeight());
+		g.drawLine(this.startpos.x, 0, this.startpos.x, getHeight());
+		g.drawLine(this.startpos.x, 0, this.startpos.x, getHeight());
+		g.drawLine(this.tmppos.x, 0, this.tmppos.x, getHeight());
+		g.drawLine(this.currpos.x, 0, this.currpos.x, getHeight());
 
 	}
 
-	void updateDate(Date date, int scale) {
+	void updateDate(Date startDate, int scale) {
+		this.setCursor(UIStorage.WAIT_CURSOR);
 		setScale(scale);
-		setStartDate(date);
-		SchedulerModel model = (SchedulerModel) aContext.getApplicationModel();
-		model.updateTests(scaleStart.getTime(), scaleEnd.getTime());
+		setStartDate(startDate);
+		SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
+		model.updateTests(this.scaleStart.getTime(), this.scaleEnd.getTime());
 		updateTests();
+		this.setCursor(UIStorage.DEFAULT_CURSOR);
 	}
 
 	void updateScale(double k) {
-		updateScale(k, (int) (parent.getViewport().getViewPosition().x + parent.getVisibleRect().width
-				* (k * 0.5 - 0.5) - margin));
+		updateScale(k, (int) (this.parent.getViewport().getViewPosition().x + this.parent.getVisibleRect().width
+				* (k * 0.5 - 0.5) - this.margin));
 		updateRealScale();
-		parent.revalidate();
+		this.parent.revalidate();
 	}
 
 	void updateScale(double k, int view_x) {
-		if (getSize().width / parent.getVisibleRect().width >= maxZoom - 1 && k > 1) {
-			parent.repaint();
+		if (getSize().width / this.parent.getVisibleRect().width >= this.maxZoom - 1 && k > 1) {
+			this.parent.repaint();
 			return;
 		}
 
-		if (getSize().width * k > maxZoom * parent.getVisibleRect().width)
-			k = (double) (maxZoom * parent.getVisibleRect().width) / (double) getSize().width;
+		if (getSize().width * k > this.maxZoom * this.parent.getVisibleRect().width)
+			k = (double) (this.maxZoom * this.parent.getVisibleRect().width) / (double) getSize().width;
 
-		setPreferredSize(new Dimension((int) ((getSize().width - 2 * margin) * k), getPreferredSize().height));
-		setSize(new Dimension((int) ((getSize().width - 2 * margin) * k), Math.max(getSize().height,
-																					getPreferredSize().height)));
+		setPreferredSize(new Dimension((int) ((getSize().width - 2 * this.margin) * k), getPreferredSize().height));
+		setSize(new Dimension((int) ((getSize().width - 2 * this.margin) * k), Math.max(getSize().height,
+																						getPreferredSize().height)));
 		/*
 		 * for (Iterator it = testLines.values().iterator(); it.hasNext();) {
 		 * TestLine testLine = (TestLine)it.next();
 		 * testLine.setPreferredSize(new Dimension(getPreferredSize().width,
 		 * 20)); }
 		 */
-		Point p = new Point((int) ((view_x - margin) * k), view_x);
-		parent.getViewport().setViewPosition(p);
+		Point p = new Point((int) ((view_x - this.margin) * k), view_x);
+		this.parent.getViewport().setViewPosition(p);
 
 		updateRealScale();
 
-		parent.revalidate();
+		this.parent.revalidate();
 	}
 
 	void updateScale2Fit() {
@@ -516,7 +520,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		setSize(new Dimension(600, getPreferredSize().height));
 
 		updateRealScale();
-		parent.revalidate();
+		this.parent.revalidate();
 	}
 
 	private void initModule(Dispatcher dispatcher) {
@@ -528,56 +532,59 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 
 	private void updateRealScale() {
-		actualScale = scale;
+		if ((this.scaleEnd != null) && (this.scaleEnd != null)) {
+			this.actualScale = this.scale;
 
-		double k = (double) parent.getViewport().getViewRect().width / (double) getSize().width;
-		long visibleTime = (long) ((scaleEnd.getTime() - scaleStart.getTime()) * k);
-		while (visibleTime != 0 && actualScale > 0) {
-			cal.setTimeInMillis(0);
-			cal.add(STEPS[actualScale].scale, STEPS[actualScale].total / STEPS[actualScale].one);
-			if (cal.getTimeInMillis() > visibleTime)
-				actualScale--;
-			else
-				break;
-		}
+			double k = (double) this.parent.getViewport().getViewRect().width / (double) getSize().width;
+			long visibleTime = (long) ((this.scaleEnd.getTime() - this.scaleStart.getTime()) * k);
+			while (visibleTime != 0 && this.actualScale > 0) {
+				this.cal.setTimeInMillis(0);
+				this.cal
+						.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].total / STEPS[this.actualScale].one);
+				if (this.cal.getTimeInMillis() > visibleTime)
+					this.actualScale--;
+				else
+					break;
+			}
 
-		cal.setTimeInMillis(0);
-		cal.add(STEPS[actualScale].scale, STEPS[actualScale].one);
-		long diff = cal.getTimeInMillis();
-		double delta = (getWidth() - 2 * margin)
-				/ ((double) (scaleEnd.getTime() - scaleStart.getTime()) / (double) diff);
+			this.cal.setTimeInMillis(0);
+			this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
+			long diff = this.cal.getTimeInMillis();
+			double delta = (getWidth() - 2 * this.margin)
+					/ ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) / (double) diff);
 
-		//double sub_delta = delta / STEPS[actualScale].subscales;
-		if (delta >= 0 && delta < 35 && actualScale < STEPS.length - 1)
-			actualScale++;
+			//double sub_delta = delta / STEPS[actualScale].subscales;
+			if (delta >= 0 && delta < 35 && this.actualScale < STEPS.length - 1)
+				this.actualScale++;
 
-		switch (actualScale) {
-			case 1:
-				sdf.applyPattern("HH:mm"); //$NON-NLS-1$
-				break;
-			case 0:
-				sdf.applyPattern("HH:mm:ss"); //$NON-NLS-1$
-				break;
-			case 2:
-			case 3:
-				sdf.applyPattern("HH:mm"); //$NON-NLS-1$
-				break;
-			case 5:
-				STEPS[5].total = cal.getActualMaximum(STEPS[5].scale);
-			case 4:
-				sdf.applyPattern("dd.MM"); //$NON-NLS-1$
-		}
-		cal.setTime(startDate);
-		switch (actualScale) {
-			case 4:
-			case 5:
-				cal.set(Calendar.HOUR_OF_DAY, 0);
-			case 3:
-				cal.set(Calendar.MINUTE, 0);
-			case 0:
-			case 1:
-			case 2:
-				cal.set(Calendar.SECOND, 0);
+			switch (this.actualScale) {
+				case 1:
+					this.sdf.applyPattern("HH:mm"); //$NON-NLS-1$
+					break;
+				case 0:
+					this.sdf.applyPattern("HH:mm:ss"); //$NON-NLS-1$
+					break;
+				case 2:
+				case 3:
+					this.sdf.applyPattern("HH:mm"); //$NON-NLS-1$
+					break;
+				case 5:
+					STEPS[5].total = this.cal.getActualMaximum(STEPS[5].scale);
+				case 4:
+					this.sdf.applyPattern("dd.MM"); //$NON-NLS-1$
+			}
+			this.cal.setTime(this.startDate);
+			switch (this.actualScale) {
+				case 4:
+				case 5:
+					this.cal.set(Calendar.HOUR_OF_DAY, 0);
+				case 3:
+					this.cal.set(Calendar.MINUTE, 0);
+				case 0:
+				case 1:
+				case 2:
+					this.cal.set(Calendar.SECOND, 0);
+			}
 		}
 	}
 
@@ -585,42 +592,49 @@ public class PlanPanel extends JPanel implements OperationListener {
 		Environment.log(Environment.LOG_LEVEL_INFO, "updateTests", getClass().getName()); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
 		// clear old tests
-		if (testLines == null)
-			testLines = new HashMap();
+		if (this.testLines == null)
+			this.testLines = new HashMap();
 		else
-			testLines.clear();
+			this.testLines.clear();
 		// and fill with new ones
 
 		removeAll();
 		java.util.List tests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
+		java.util.List unsavedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getUnsavedTests();
+		if (unsavedTests != null) {
+			if (tests == null)
+				tests = unsavedTests;
+			else
+				tests.addAll(unsavedTests);
+		}
+
+		System.out.println("tests:" + (tests == null ? " is null" : "" + tests.size()));
+
 		if (tests != null) {
 			for (Iterator it = tests.iterator(); it.hasNext();) {
 				TestLine testLine;
 				Test test = (Test) it.next();
-				if (testLines.containsKey(test.getMonitoredElementId()))
-					testLine = (TestLine) testLines.get(test.getMonitoredElementId());
+				System.out.println(">>test:" + test.getId());
+				if (this.testLines.containsKey(test.getMonitoredElementId()))
+					testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
 				else {
 					String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
-					testLine = new TestLine(aContext,
+					testLine = new TestLine(this.aContext,
 					//parent.getViewport(),
-											meName, scaleStart.getTime(), scaleEnd.getTime(), margin / 2);
+											meName, this.scaleStart.getTime(), this.scaleEnd.getTime(), this.margin / 2);
 					testLine.setPreferredSize(new Dimension(0, 20));
-					testLines.put(test.getMonitoredElementId(), testLine);
+					this.testLines.put(test.getMonitoredElementId(), testLine);
 				}
 				testLine.addTest(test);
 				add(testLine);
 			}
 		}
-
-		//adding testlines to panel
-		//		removeAll();
-		//		for (Iterator it = testLines.values().iterator(); it.hasNext();)
-		//		{
-		//			testLine = (TestLine)it.next();
-		//			add(testLine);
-		//		}
-		setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * testLines.values().size()));
-		parent.repaint();
+		setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
+		updateRealScale();
+		revalidate();
+		repaint();
+		this.parent.revalidate();
+		this.parent.repaint();
 		//		this.setCursor(UIStorage.DEFAULT_CURSOR);
 	}
 }

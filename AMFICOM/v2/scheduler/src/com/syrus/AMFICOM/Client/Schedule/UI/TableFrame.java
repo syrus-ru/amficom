@@ -157,7 +157,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			}
 
 			if (isSelected) {
-				super.setForeground((unselectedForeground != null) ? unselectedForeground : table.getForeground());
+				super.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table.getForeground());
 				Font font = table.getFont();
 				font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font.getSize());
 				setFont(font);
@@ -168,7 +168,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 						* (1.0 - k) + k * color.getGreen()) % 256,
 												(int) (c.getBlue() * (1.0 - k) + k * color.getBlue()) % 256));
 			} else {
-				super.setForeground((unselectedForeground != null) ? unselectedForeground : table.getForeground());
+				super.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table.getForeground());
 				setFont(table.getFont());
 				super.setBackground(color);
 			}
@@ -209,7 +209,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		 */
 		public void setForeground(Color c) {
 			super.setForeground(c);
-			unselectedForeground = c;
+			this.unselectedForeground = c;
 		}
 
 		protected void setValue(Object value) {
@@ -222,7 +222,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 		private int				columnCount	= 7;
 
-		private boolean[]		sortOrders	= new boolean[columnCount];
+		private boolean[]		sortOrders	= new boolean[this.columnCount];
 
 		private java.util.List	testLines;
 
@@ -295,8 +295,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 		public int getRowCount() {
 			int count = 0;
-			if (testLines != null)
-				count = testLines.size();
+			if (this.testLines != null)
+				count = this.testLines.size();
 			return count;
 		}
 
@@ -306,7 +306,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 
 		public boolean getSortOrder(int columnIndex) {
-			return sortOrders[columnIndex];
+			return this.sortOrders[columnIndex];
 		}
 
 		public int getTestRowIndex(Test test) {
@@ -349,14 +349,14 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 
 		public void setValueAt(Object value, int rowIndex, int columnIndex) {
-			if (testLines == null)
-				testLines = new ArrayList();
+			if (this.testLines == null)
+				this.testLines = new ArrayList();
 			TestTableRow line;
-			if (testLines.size() < rowIndex) {
+			if (this.testLines.size() < rowIndex) {
 				line = new TestTableRow();
-				testLines.add(rowIndex, line);
+				this.testLines.add(rowIndex, line);
 			} else
-				line = (TestTableRow) testLines.get(rowIndex);
+				line = (TestTableRow) this.testLines.get(rowIndex);
 			/**
 			 * @todo setValue
 			 */
@@ -366,13 +366,13 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 
 		public void sortRows(int columnIndex) {
-			sortRows(columnIndex, sortOrders[columnIndex]);
-			sortOrders[columnIndex] = !sortOrders[columnIndex];
+			sortRows(columnIndex, this.sortOrders[columnIndex]);
+			this.sortOrders[columnIndex] = !this.sortOrders[columnIndex];
 		}
 
 		public void sortRows(int columnIndex, boolean ascending) {
-			if (testLines != null)
-				Collections.sort(testLines, new ColumnSorter(columnIndex, ascending));
+			if (this.testLines != null)
+				Collections.sort(this.testLines, new ColumnSorter(columnIndex, ascending));
 		}
 
 	}
@@ -404,15 +404,15 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 
 		public java.util.List getData() {
-			if (data == null) {
-				data = new ArrayList();
-				data.add(temporalType);
-				data.add(rtu);
-				data.add(port);
-				data.add(me);
-				data.add(testType);
-				data.add(time);
-				data.add(statusName);
+			if (this.data == null) {
+				this.data = new ArrayList();
+				this.data.add(this.temporalType);
+				this.data.add(this.rtu);
+				this.data.add(this.port);
+				this.data.add(this.me);
+				this.data.add(this.testType);
+				this.data.add(this.time);
+				this.data.add(this.statusName);
 			}
 			return this.data;
 		}
@@ -500,6 +500,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	ApplicationContext	aContext;
 	private JPanel		panel;
 	private Test test;
+	java.util.List rowToRemove;
 	//ArrayList savedTests;
 	//boolean				skipTestUpdate	= false;
 
@@ -520,9 +521,9 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			Test test = tue.test;
 			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
 				java.util.List savedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
-				java.util.List unsavedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getUnsavedTests();				
+				//java.util.List unsavedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getUnsavedTests();				
 				this.test = test;
-				boolean found = false;
+				//boolean found = false;
 				//				if (savedTests != null) {
 				//					if (savedTests.contains(test))
 				//						found = true;
@@ -538,12 +539,12 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 				if (rowIndex < 0) {
 					if (test.isChanged()) {
-						TestTableModel model = (TestTableModel) listTable.getModel();
+						TestTableModel model = (TestTableModel) this.listTable.getModel();
 						//model.removeAll();
 						TestTableRow row = new TestTableRow(test);
 						model.addRow(row);
-						listTable.repaint();
-						listTable.revalidate();
+						this.listTable.repaint();
+						this.listTable.revalidate();
 					} else
 						savedTests.add(test);
 				}
@@ -615,18 +616,27 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					} else if (SwingUtilities.isRightMouseButton(evt)) {
 						final int[] rowIndices = table.getSelectedRows();
 						if ((rowIndices != null) && (rowIndices.length > 0)) {
-							final TestTableModel model = (TestTableModel) table.getModel();
+							final TestTableModel model = (TestTableModel) table.getModel();							
 							JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString("delete_tests")); //$NON-NLS-1$
 							deleteTestMenuItem.addActionListener(new ActionListener() {
 
-								public void actionPerformed(ActionEvent e) {
+								public void actionPerformed(ActionEvent e) {	
+									if (TableFrame.this.rowToRemove==null)
+										TableFrame.this.rowToRemove = new ArrayList();
+									else TableFrame.this.rowToRemove.clear();
 									for (int i = 0; i < rowIndices.length; i++) {
 										TestTableRow line = (TestTableRow) model.getRow(rowIndices[i]);
 										Test test = line.getTest();
+										TableFrame.this.rowToRemove.add(test);
+									}
+									for(Iterator it=TableFrame.this.rowToRemove.iterator();it.hasNext();){
+										Test test = (Test)it.next();
+										int index = model.getTestRowIndex(test); 
 										test.setDeleted(System.currentTimeMillis());
 										TableFrame.this.dispatcher
 												.notify(new OperationEvent(test, 0, SchedulerModel.COMMAND_REMOVE_TEST));
-										model.remove(rowIndices[i]);
+										//System.out.println("remove index:"+index+"\ttest:"+test.getId());
+										model.remove(index);
 									}
 									table.revalidate();
 									table.repaint();
@@ -705,13 +715,13 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				}
 			});
 
-			panel.add(header, BorderLayout.NORTH);
-			panel.add(new JScrollPane(listTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+			this.panel.add(header, BorderLayout.NORTH);
+			this.panel.add(new JScrollPane(this.listTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 										ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
 			//panel.add(listPane, BorderLayout.CENTER);
 
 		}
-		return panel;
+		return this.panel;
 
 	}
 
@@ -721,8 +731,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);
-		panel = getPanel();
-		setContentPane(panel);
+		this.panel = getPanel();
+		setContentPane(this.panel);
 	}
 
 	private void initModule(Dispatcher dispatcher) {
