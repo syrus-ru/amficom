@@ -62,6 +62,7 @@ AMFICOM_v1	&idl_v1\
 		&servermisc_v1\
 		&load_v1\
 		&connjdbc_v1\
+		&corbaportable_v1\
 		&importmif_v1
 
 #M	idl_v1		Client-side AMFICOM CORBA object & interface
@@ -100,6 +101,8 @@ servermisc_v1	AMFICOM/v1/servermisc
 load_v1		AMFICOM/v1/load
 #M	connjdbc_v1	Client-side JDBC connection stub
 connjdbc_v1	AMFICOM/v1/connjdbc
+#M	corbaportable_v1	Client-side JDBC connection stub
+corbaportable_v1	AMFICOM/v1/corbaportable
 #M	importmif_v1	Patch for SpatialFX libraries which allows for TEXT spatial objects
 importmif_v1	AMFICOM/v1/importmif
 #M	agent_v1	Agent
