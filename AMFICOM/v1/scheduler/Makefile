@@ -3,6 +3,8 @@ MODULE_NAME = scheduler_v1
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
+JAVAC=$(JAVA_HOME)/bin/javac
+
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
