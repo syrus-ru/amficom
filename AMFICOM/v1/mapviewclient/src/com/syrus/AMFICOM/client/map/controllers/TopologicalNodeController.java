@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.10 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.11 2005/03/04 14:36:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер топологического узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/04 14:36:54 $
  * @module mapviewclient_v1
  */
 public class TopologicalNodeController extends AbstractNodeController
@@ -136,9 +136,36 @@ public class TopologicalNodeController extends AbstractNodeController
 	{
 		node.setActive(active);
 
-		if(needInit)
+		Identifier creatorId = getLogicalNetLayer().getUserId();
+		init(creatorId);
+
+		if(active)
+			node.setImageId(openImageId);
+		else
+			node.setImageId(closedImageId);
+	}
+
+	public Identifier getImageId(AbstractNode node)
+	{
+		if(node.getImageId() == null)
 		{
 			Identifier creatorId = getLogicalNetLayer().getUserId();
+			init(creatorId);
+
+			TopologicalNode topologicalNode = (TopologicalNode )node;
+
+			if(topologicalNode.isActive())
+				topologicalNode.setImageId(openImageId);
+			else
+				topologicalNode.setImageId(closedImageId);
+		}
+		return node.getImageId();
+	}
+	
+	private void init(Identifier creatorId)
+	{
+		if(needInit)
+		{
 
 			openImageId = NodeTypeController.getImageId(
 					creatorId, 
@@ -158,35 +185,15 @@ public class TopologicalNodeController extends AbstractNodeController
 				
 			needInit = false;
 		}
-
-		if(active)
-			node.setImageId(openImageId);
-		else
-			node.setImageId(closedImageId);
 	}
-
 	/**
 	 * {@inheritDoc}
 	 */
 	public Image getImage(AbstractNode node)
 	{
-		if(needInit)
-		{
-			Identifier creatorId = 
-				((RISDSessionInfo )(getLogicalNetLayer().getContext().getSessionInterface())).getUserIdentifier();
-
-			openImageId = NodeTypeController.getImageId(creatorId, OPEN_NODE, OPEN_NODE_IMAGE);
-			closedImageId = NodeTypeController.getImageId(creatorId, CLOSED_NODE, CLOSED_NODE_IMAGE);
-
-			MapPropertiesManager.setOriginalImage(
-				openImageId,
-				new ImageIcon(OPEN_NODE_IMAGE).getImage());
-			MapPropertiesManager.setOriginalImage(
-				closedImageId,
-				new ImageIcon(CLOSED_NODE_IMAGE).getImage());
-				
-			needInit = false;
-		}
+		Identifier creatorId = 
+			((RISDSessionInfo )(getLogicalNetLayer().getContext().getSessionInterface())).getUserIdentifier();
+		init(creatorId);
 
 		TopologicalNode topologicalNode = (TopologicalNode )node;
 
