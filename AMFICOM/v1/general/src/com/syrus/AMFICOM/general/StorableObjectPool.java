@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.62 2005/04/06 12:57:45 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.63 2005/04/06 13:50:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/04/06 12:57:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.63 $, $Date: 2005/04/06 13:50:34 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -664,6 +664,9 @@ public abstract class StorableObjectPool {
 					+ ObjectEntities.codeToString(entityCode) + "' entity", Log.DEBUGLEVEL08);
 
 			final Set returnedStorableObjectsIds = this.refreshStorableObjects(storableObjects);
+			if (returnedStorableObjectsIds.isEmpty())
+				continue;
+
 			Set loadedRefreshedObjects = this.loadStorableObjects(entityCode, returnedStorableObjectsIds);
 			for (Iterator iter = loadedRefreshedObjects.iterator(); iter.hasNext();) {
 				try {
