@@ -47,6 +47,7 @@ database_v2	AMFICOM/v2/database
 AMFICOM_v1	&idl_v1\
 		&kisserver_v1\
 		&general_v1\
+		&generalclient_v1\
 		&admin_v1\
 		&config_v1\
 		&main_v1\
@@ -69,8 +70,10 @@ AMFICOM_v1	&idl_v1\
 idl_v1		AMFICOM/v1/idl
 #M	kisserver_v1	Agent-side AMFICOM CORBA object & interface
 kisserver_v1	AMFICOM/v1/kisserver
-#M	general_v1	Client common classes
+#M	general_v1	Common classes
 general_v1	AMFICOM/v1/general
+#M	generalclient_v1	Client common classes
+generalclient_v1	AMFICOM/v1/generalclient
 #M	admin_v1	Administrative module
 admin_v1	AMFICOM/v1/admin
 #M	config_v1	Configuring module
