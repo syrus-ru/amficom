@@ -80,6 +80,7 @@ public class FileAddCommand extends VoidCommand
 		int returnVal = chooser.showOpenDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
+			System.out.println("DEBUG: the user has added file " + chooser.getSelectedFile().getAbsolutePath()); // FIXME: debugging purpose only
 			String id = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			if (Pool.getMap("bellcorestructure") != null )
 			{

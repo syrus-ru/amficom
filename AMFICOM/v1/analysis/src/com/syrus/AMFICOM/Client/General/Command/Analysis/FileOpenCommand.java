@@ -92,6 +92,7 @@ public class FileOpenCommand extends VoidCommand
 		int returnVal = chooser.showOpenDialog(Environment.getActiveWindow());
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
+			System.out.println("DEBUG: the user has opened file " + chooser.getSelectedFile().getAbsolutePath()); // FIXME: debugging purpose only
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			TraceReader tr = new TraceReader();
 			try
