@@ -14,5 +14,8 @@ lib
 .all
 .idl
 .sqlj
+.classpath
+.project
+.settings
 SQLChecker.cache
 sqlj.properties
