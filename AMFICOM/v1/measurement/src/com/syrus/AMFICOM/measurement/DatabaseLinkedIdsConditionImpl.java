@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.9 2005/03/10 19:36:40 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.10 2005/03/15 16:16:22 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/10 19:36:40 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/15 16:16:22 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -58,12 +58,34 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 					ObjectEntities.MSMELINK_ENTITY);
 			break;
 		case ObjectEntities.RESULT_ENTITY_CODE:
-			stringBuffer = new StringBuffer();
-			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_MEASUREMENT_ID));
-			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_ANALYSIS_ID));
-			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_EVALUATION_ID));
-			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_MODELING_ID));
-			query = stringBuffer.toString();
+			switch (super.condition.getLinkedEntityCode()) {
+				case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+					stringBuffer = new StringBuffer();
+					stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_MEASUREMENT_ID));
+					stringBuffer.append(StorableObjectDatabase.SQL_OR);
+					stringBuffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					stringBuffer.append(super.getLinkedQuery(ResultWrapper.COLUMN_ANALYSIS_ID,
+							StorableObjectWrapper.COLUMN_ID,
+							AnalysisWrapper.COLUMN_MEASUREMENT_ID,
+							ObjectEntities.ANALYSIS_ENTITY));
+					stringBuffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					stringBuffer.append(StorableObjectDatabase.SQL_OR);
+					stringBuffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					stringBuffer.append(super.getLinkedQuery(ResultWrapper.COLUMN_EVALUATION_ID,
+							StorableObjectWrapper.COLUMN_ID,
+							AnalysisWrapper.COLUMN_MEASUREMENT_ID,
+							ObjectEntities.EVALUATION_ENTITY));
+					stringBuffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					query = stringBuffer.toString();
+					break;
+				case ObjectEntities.ANALYSIS_ENTITY_CODE:
+					query = super.getQuery(ResultWrapper.COLUMN_ANALYSIS_ID);
+					break;
+				case ObjectEntities.EVALUATION_ENTITY_CODE:
+					query = super.getQuery(ResultWrapper.COLUMN_EVALUATION_ID);
+				case ObjectEntities.MODELING_ENTITY_CODE:
+					query = super.getQuery(ResultWrapper.COLUMN_MODELING_ID);
+			}
 			break;
 		case ObjectEntities.TEST_ENTITY_CODE:
 			switch (super.condition.getLinkedEntityCode()) {
@@ -104,8 +126,7 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 			}
 			break;
 		default:
-			throw new IllegalDataException(
-					"Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity type");
+			throw new IllegalDataException("Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity type");
 		}
 		return query;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.23 2005/03/15 14:23:14 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.24 2005/03/15 16:16:22 arseniy Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/15 14:23:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/03/15 16:16:22 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -97,7 +97,8 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				break;
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				Identifier parentActionId = ((Action)object).getParentAction().getId();
+				Action action = (Action) object;
+				Identifier parentActionId = action.getParentAction().getId();
 				condition = super.conditionTest(parentActionId);
 				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
@@ -120,8 +121,13 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				condition = super.conditionTest(params);
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				Identifier actionId = ((Result) object).getAction().getId();
-				condition = super.conditionTest(actionId);
+				Result result = (Result) object;
+				for (Action a = result.getAction(); a != null; a = a.getParentAction()) {
+					if (super.conditionTest(a.getId())) {
+						condition = true;
+						break;
+					}
+				}
 				break;
 			case ObjectEntities.TEST_ENTITY_CODE:
 				Test test = (Test) object;
