@@ -2,7 +2,6 @@
 #define RTUTRANSCEIVER_H
 
 #include <pthread.h>
-#include <netinet/in.h>
 #include "general.h"
 
 class RTUTransceiver {
