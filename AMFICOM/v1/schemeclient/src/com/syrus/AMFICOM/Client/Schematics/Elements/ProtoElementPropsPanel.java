@@ -204,8 +204,8 @@ public class ProtoElementPropsPanel extends JPanel
 			{
 				if (ProtoElementPropsPanel.this.schemeProtoElement == null)
 					return;
-				ProtoElementPropsPanel.this.schemeProtoElement.label(ugoNameTextField.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(ProtoElementPropsPanel.this.schemeProtoElement.getId(), ProtoElementPropsPanel.this.schemeProtoElement.label(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
+				ProtoElementPropsPanel.this.schemeProtoElement.setLabel(ugoNameTextField.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(ProtoElementPropsPanel.this.schemeProtoElement.getId(), ProtoElementPropsPanel.this.schemeProtoElement.getLabel(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -227,7 +227,7 @@ public class ProtoElementPropsPanel extends JPanel
 	public void init(SchemeProtoElement proto, boolean show_is_kis)
 	{
 		this.schemeProtoElement = proto;
-		this.schemeProtoGroup = proto.parent();
+		this.schemeProtoGroup = proto.getParentSchemeProtoGroup();
 
 		if (show_is_kis)
 			compPanel.add(cl2Panel, BorderLayout.SOUTH);
@@ -244,7 +244,7 @@ public class ProtoElementPropsPanel extends JPanel
 		nameTextField.setText(proto.getName());
 		descriptionTextArea.setText(eqt.getDescription());
 		manufacturerTextField.setText(eqt.getManufacturer());
-		ugoNameTextField.setText(proto.label());
+		ugoNameTextField.setText(proto.getLabel());
 		nameTextField.setCaretPosition(0);
 		manufacturerTextField.setCaretPosition(0);
 		ugoNameTextField.setCaretPosition(0);
@@ -270,7 +270,7 @@ public class ProtoElementPropsPanel extends JPanel
 		undoType = eqt.getName();
 		undoDescription = eqt.getDescription();
 		undoManufacturer = eqt.getManufacturer();
-		undoUgoName = proto.label();
+		undoUgoName = proto.getLabel();
 		updateUI();
 	}
 
@@ -302,8 +302,8 @@ public class ProtoElementPropsPanel extends JPanel
 		}
 		if (this.schemeProtoElement != null)
 		{
-			this.schemeProtoElement.label(undoUgoName);
-			this.schemeProtoElement.parent(undo_scheme_proto);
+			this.schemeProtoElement.setLabel(undoUgoName);
+			this.schemeProtoElement.setParentSchemeProtoGroup(undo_scheme_proto);
 		}
 		this.schemeProtoGroup = undo_scheme_proto;
 	}
@@ -363,7 +363,7 @@ public class ProtoElementPropsPanel extends JPanel
 		if (ret == ChooseMapGroupDialog.OK)
 		{
 			this.schemeProtoGroup = newMapProtoDialog.getSelectedElement();
-			this.schemeProtoElement.parent(this.schemeProtoGroup);
+			this.schemeProtoElement.setParentSchemeProtoGroup(this.schemeProtoGroup);
 			mapProtoTextField.setText(this.schemeProtoGroup.getName());
 			mapProtoTextField.setCaretPosition(0);
 		}

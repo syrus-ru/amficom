@@ -14,7 +14,6 @@ public final class SchemeElementController implements ObjectResourceController
 	public static final String COLUMN_SCHEME_ID = "scheme_id";
 	public static final String COLUMN_INTERNAL_SCHEME_ID = "internal_scheme_id";
 	public static final String COLUMN_KIS_ID = "kis_id";
-	public static final String COLUMN_PROTO_ID = "proto_id";
 	public static final String COLUMN_SITE_NODE_ID = "site_node_id";
 	public static final String COLUMN_SCHEME_LINK_IDS = "link_ids";
 	public static final String COLUMN_SCHEME_DEVICE_IDS = "device_ids";
@@ -45,7 +44,6 @@ public final class SchemeElementController implements ObjectResourceController
 				COLUMN_SCHEME_ID,
 				COLUMN_INTERNAL_SCHEME_ID,
 				COLUMN_KIS_ID,
-				COLUMN_PROTO_ID,
 				COLUMN_SITE_NODE_ID,
 				COLUMN_SCHEME_LINK_IDS,
 				COLUMN_SCHEME_DEVICE_IDS,
@@ -112,8 +110,6 @@ public final class SchemeElementController implements ObjectResourceController
 				result = element.internalScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_KIS_ID))
 				result = element.getKis().getId().getIdentifierString();
-			else if (key.equals(COLUMN_PROTO_ID))
-				result = element.schemeProtoElement().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SITE_NODE_ID))
 				result = element.getSiteNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_DEVICE_IDS)) {

@@ -188,11 +188,7 @@ public class SchemeElementPropsPanel extends JPanel
 		if (show_is_kis)
 			compPanel.add(cl2Panel, BorderLayout.SOUTH);
 
-		SchemeProtoElement p = element.schemeProtoElement();
-		if (p != null && p.parent() != null)
-			mapProtoTextField.setText(p.parent().getName());
-		else
-			mapProtoTextField.setText("");
+		this.mapProtoTextField.setText(""); //$NON-NLS-1$
 		mapProtoTextField.setCaretPosition(0);
 
 		mapProtoTextField.setEnabled(false);

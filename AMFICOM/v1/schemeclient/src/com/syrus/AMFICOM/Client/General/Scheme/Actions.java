@@ -392,7 +392,6 @@ class GroupSEAction extends AbstractAction
 				scheme_el = SchemeElement.createInstance();
 
 			group.setSchemeElementId(scheme_el.getId());
-			group.setProtoElementId(scheme_el.schemeProtoElement().getId());
 			group.setSchemeId(scheme_el.internalScheme().getId());
 
 			if (graph.getScheme() != null)
@@ -564,7 +563,7 @@ class GroupAction extends AbstractAction
 				ex.printStackTrace();
 			}
 			group.setProtoElementId(proto.getId());
-			proto.label(text);
+			proto.setLabel(text);
 
 			cells = new_cells.toArray();
 			Map viewMap = new HashMap();
@@ -926,7 +925,7 @@ class CreateUgoAction
 			{
 				proto.setCharacteristics(old_proto.getCharacteristics());
 				proto.setSymbol(old_proto.getSymbol());
-				proto.label(old_proto.label());
+				proto.setLabel(old_proto.getLabel());
 //				proto.scheme_proto_group = old_proto.scheme_proto_group;
 				proto.setName(old_proto.getName());
 				proto.setEquipmentType(old_proto.getEquipmentType());
@@ -945,7 +944,7 @@ class CreateUgoAction
 				for (Enumeration en = ((DeviceGroup)old_devs[0]).children(); en.hasMoreElements(); ) {
 					Object child = en.nextElement();
 					if (child instanceof DeviceCell) {
-						proto.label((String)((DeviceCell)child).getUserObject());
+						proto.setLabel((String)((DeviceCell)child).getUserObject());
 						break;
 					}
 				}
@@ -962,7 +961,7 @@ class CreateUgoAction
 		Rectangle bounds = new Rectangle(
 				graph.snap(new Point(grid*2, grid*2)),//oldrect.x, oldrect.y
 				graph.snap(new Dimension(grid*4, grid*(max+1))));
-		DefaultGraphCell cell = GraphActions.CreateDeviceAction(graph, proto.label(), bounds, false, Color.black);
+		DefaultGraphCell cell = GraphActions.CreateDeviceAction(graph, proto.getLabel(), bounds, false, Color.black);
 		graph.setSelectionCell(cell);
 		for (int i = 0; i < blockports_out.size(); i++)
 		{

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.45 2005/03/18 19:19:49 bass Exp $
+ * $Id: StorableObject.java,v 1.46 2005/03/21 16:43:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,15 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
+ * {@link Object#equals(Object)}and {@link Object#hashCode()} methods are
+ * intentionally unimplemented, as it seems reasonable to compare only object
+ * identifiers (which serve just as object references in
+ * <em>Storable Object Framework</em>). Since within a single VM instance
+ * there can only be a single inctance of <code>StorableObject</code> with the
+ * same identifier, comparison of object references (in Java terms) is enough.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/03/18 19:19:49 $
+ * @version $Revision: 1.46 $, $Date: 2005/03/21 16:43:46 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -180,8 +187,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 	protected final void rollbackUpdate() {
 		if (this.savedModified == null || this.savedModifierId == null || this.savedVersion == VERSION_ILLEGAL) {
-			Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())
-					+ "' -- saved values are in illegal states!");
+			Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())  //$NON-NLS-1$//$NON-NLS-2$
+					+ "' -- saved values are in illegal states!"); //$NON-NLS-1$
 			return;
 		}
 

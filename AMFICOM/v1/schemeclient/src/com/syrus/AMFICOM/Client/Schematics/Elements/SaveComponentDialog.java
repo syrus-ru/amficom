@@ -119,7 +119,7 @@ public class SaveComponentDialog extends JDialog
 
 		//ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 
-		proto.parent(scheme_proto);
+		proto.setParentSchemeProtoGroup(scheme_proto);
 
 		proto.setName(componentPanel.getProtoName());
 		EquipmentType eqt = proto.getEquipmentType();
