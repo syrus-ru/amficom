@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreCreator.java,v 1.2 2005/03/01 14:40:10 saa Exp $
+ * $Id: BellcoreCreator.java,v 1.3 2005/03/17 08:49:04 saa Exp $
  * Very poor bellcore creator for development purposes
  * 
  * Copyright © Syrus Systems.
@@ -10,7 +10,7 @@ package com.syrus.io;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/03/01 14:40:10 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 08:49:04 $
  * @module
  */
 public class BellcoreCreator
@@ -24,24 +24,24 @@ public class BellcoreCreator
 		for (int i = 0; i < N; i++)
 			y[i] = 65535 - (int )(yarr[i] * 1000);
 		bs.dataPts = bs.new DataPts();
-		bs.dataPts.TNDP = y.length;
-		System.out.println("BellcoreCreator: TNDP set to " + bs.dataPts.TNDP);
-		bs.dataPts.DSF = new int[][] { y };
-		bs.dataPts.TSF = 1;
-		bs.dataPts.TPS = new int[] { N };
-		bs.dataPts.SF = new short[] { 1000 };
+		bs.dataPts.tndp = y.length;
+		System.out.println("BellcoreCreator: TNDP set to " + bs.dataPts.tndp);
+		bs.dataPts.dsf = new int[][] { y };
+		bs.dataPts.tsf = 1;
+		bs.dataPts.tps = new int[] { N };
+		bs.dataPts.sf = new short[] { 1000 };
 		bs.fxdParams = bs.new FxdParams();
-		bs.fxdParams.TPW = 1;
-		bs.fxdParams.PWU = new short[] { 0 };
-		bs.fxdParams.DS = new int[] { 0 };
-		bs.fxdParams.NPPW = new int[] { y.length };
-		bs.fxdParams.AR = y.length * 1000 * bs.fxdParams.GI / 3;
+		bs.fxdParams.tpw = 1;
+		bs.fxdParams.pwu = new short[] { 0 };
+		bs.fxdParams.ds = new int[] { 0 };
+		bs.fxdParams.nppw = new int[] { y.length };
+		bs.fxdParams.ar = y.length * 1000 * bs.fxdParams.gi / 3;
 		bs.supParams = bs.new SupParams();
 		bs.map = bs.new Map();
-		bs.map.NB = 4;
-		bs.map.B_id = new String[] { "", "FxdParams", "SupParams", "DataPts" };
-		bs.map.B_rev = new int[] {0, 0, 0, 0};
-		bs.map.B_size = new int[] {
+		bs.map.nb = 4;
+		bs.map.bId = new String[] { "", "FxdParams", "SupParams", "DataPts" };
+		bs.map.bRev = new int[] {0, 0, 0, 0};
+		bs.map.bSize = new int[] {
 				1,
 				bs.fxdParams.getSize(),
 				bs.supParams.getSize(),
