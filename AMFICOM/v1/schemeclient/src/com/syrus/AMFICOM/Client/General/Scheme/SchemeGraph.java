@@ -532,7 +532,7 @@ public class SchemeGraph extends GPGraph
 		public transient JToggleButton pathButt = new JToggleButton();
 		public transient JToggleButton linkButt = new JToggleButton();
 
-		transient ProtoElement setting_proto = null;
+		transient ProtoElement settingProto = null;
 		private transient boolean isEditable = true;
 //		private transient boolean sendEvents = true;
 
@@ -566,8 +566,8 @@ public class SchemeGraph extends GPGraph
 			{
 				int ports = 0;
 				PortCell port = null;
-				int cable_ports = 0;
-				CablePortCell cable_port = null;
+				int cablePorts = 0;
+				CablePortCell cablePort = null;
 				int devices = 0;
 				DeviceCell device = null;
 				int groups = 0;
@@ -581,10 +581,10 @@ public class SchemeGraph extends GPGraph
 					else if (cells[i] instanceof PortCell)
 							{ ports++; port = (PortCell)cells[i]; }
 					else if (cells[i] instanceof CablePortCell)
-							{ cable_ports++; cable_port = (CablePortCell)cells[i]; }
+							{ cablePorts++; cablePort = (CablePortCell)cells[i]; }
 				}
-				if ((ports == 1 && cable_ports == 0 && devices == 0 && groups == 0) ||
-						(ports == 0 && cable_ports == 1 && devices == 0 && groups == 0))
+				if ((ports == 1 && cablePorts == 0 && devices == 0 && groups == 0) ||
+						(ports == 0 && cablePorts == 1 && devices == 0 && groups == 0))
 					bp.setEnabled(true);
 				if (devices == 1 && groups == 0)
 				{
@@ -707,16 +707,16 @@ public class SchemeGraph extends GPGraph
 
 						boolean inserted = false;
 						getScheme().cablelinks.add(link);
-						if (!getScheme().scheme_type.equals(Scheme.CABLESUBNETWORK))
+						if (!getScheme().schemeType.equals(Scheme.CABLESUBNETWORK))
 						{
-							if (link.source_port_id.length() != 0)
+							if (link.sourcePortId.length() != 0)
 							{
 								SchemeElement se = getScheme().getTopLevelElement(
-										getScheme().getSchemeElementByCablePort(link.source_port_id));
+										getScheme().getSchemeElementByCablePort(link.sourcePortId));
 								if (se.getInternalSchemeId().length() != 0)
 								{
 									Scheme source_scheme = se.getInternalScheme();
-									if (source_scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
+									if (source_scheme.schemeType.equals(Scheme.CABLESUBNETWORK))
 									{
 										link.setSchemeId(source_scheme.getId());
 //										source_scheme.cablelinks.add(link);
@@ -724,14 +724,14 @@ public class SchemeGraph extends GPGraph
 									}
 								}
 							}
-							if (!inserted && link.target_port_id.length() != 0)
+							if (!inserted && link.targetPortId.length() != 0)
 							{
 								SchemeElement se = getScheme().getTopLevelElement(
-										getScheme().getSchemeElementByCablePort(link.target_port_id));
+										getScheme().getSchemeElementByCablePort(link.targetPortId));
 								if (se.getInternalSchemeId().length() != 0)
 								{
 									Scheme target_scheme = se.getInternalScheme();
-									if (target_scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
+									if (target_scheme.schemeType.equals(Scheme.CABLESUBNETWORK))
 									{
 										link.setSchemeId(target_scheme.getId());
 //										target_scheme.cablelinks.add(link);
@@ -862,7 +862,7 @@ public class SchemeGraph extends GPGraph
 			if (!isEditable)
 				return;
 
-			 if (!s.isSelected() && !event.isConsumed() || setting_proto != null)
+			 if (!s.isSelected() && !event.isConsumed() || settingProto != null)
 			 {
 				setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 				event.consume();

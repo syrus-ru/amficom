@@ -41,7 +41,7 @@ public class ComponentSaveCommand extends VoidCommand
 		{
 			DeviceGroup[] groups = GraphActions.findTopLevelGroups(cell_graph, cells);
 			ProtoElement proto = groups[0].getProtoElement();
-			if (proto.equipment_type_id.equals(""))
+			if (proto.equipmentTypeId.equals(""))
 			{
 				System.out.println("Error! Equipment_type_id is empty.");
 				return;
@@ -74,7 +74,7 @@ public class ComponentSaveCommand extends VoidCommand
 				if (groups.length == 1)
 				{
 					ProtoElement proto = groups[0].getProtoElement();
-					if (proto.equipment_type_id.equals(""))
+					if (proto.equipmentTypeId.equals(""))
 					{
 						System.out.println("Error! Equipment_type_id is empty.");
 						return;
@@ -166,10 +166,10 @@ public class ComponentSaveCommand extends VoidCommand
 			for (Iterator it = cable_link_types.values().iterator(); it.hasNext();)
 			{
 				CableLinkType type = (CableLinkType)it.next();
-				if (save_all || type.is_modified)
+				if (save_all || type.isChanged())
 				{
 					types.add(type.getId());
-					type.is_modified = false;
+					type.setChanged(false);
 				}
 			}
 			if (!types.isEmpty())
@@ -182,10 +182,10 @@ public class ComponentSaveCommand extends VoidCommand
 			for (Iterator it = eq_types.values().iterator(); it.hasNext();)
 			{
 				EquipmentType type = (EquipmentType)it.next();
-				if (save_all || type.is_modified)
+				if (save_all || type.isChanged())
 				{
 					types.add(type.getId());
-					type.is_modified = false;
+					type.setChanged(false);
 				}
 			}
 			if (!types.isEmpty())

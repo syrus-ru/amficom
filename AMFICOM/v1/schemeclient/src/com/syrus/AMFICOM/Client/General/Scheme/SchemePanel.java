@@ -324,7 +324,7 @@ public class SchemePanel extends ElementsPanel
 
 	public void removeAllPathsFromScheme()
 	{
-		getGraph().getScheme().paths.clear();
+		getGraph().getScheme().solution.paths.clear();
 	}
 
 	public boolean updatePathsAtScheme(Collection paths)
@@ -337,13 +337,13 @@ public class SchemePanel extends ElementsPanel
 
 	public void removePathFromScheme(SchemePath path)
 	{
-		getGraph().getScheme().paths.remove(path);
+		getGraph().getScheme().solution.paths.remove(path);
 	}
 
 	public void insertPathToScheme(SchemePath path)
 	{
-		if (!getGraph().getScheme().paths.contains(path))
-			getGraph().getScheme().paths.add(path);
+		if (!getGraph().getScheme().solution.paths.contains(path))
+			getGraph().getScheme().solution.paths.add(path);
 		editing_path = null;
 	}
 

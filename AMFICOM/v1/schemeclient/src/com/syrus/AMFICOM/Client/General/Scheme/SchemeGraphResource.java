@@ -73,37 +73,4 @@ public class SchemeGraphResource
 		}
 		return new_cells.toArray();
 	}
-
-	public Object[] getPathElements(TransmissionPath path)
-	{
-		Object[] cells = graph.getAll();
-		List new_cells = new ArrayList();
-		List links = new ArrayList(path.links.size());
-		for (Iterator it = path.links.iterator(); it.hasNext();)
-		{
-			TransmissionPathElement tpe = (TransmissionPathElement)it.next();
-			links.add(tpe.link_id);
-		}
-
-		for (int i = 0; i < cells.length; i++)
-		{
-			if (cells[i] instanceof DefaultCableLink)
-			{
-				DefaultCableLink cable = (DefaultCableLink) cells[i];
-				if (!cable.getSchemeCableLinkId().equals(""))
-					if (links.contains(cable.getSchemeCableLink().cable_link_id))
-						new_cells.add(cable);
-			}
-			else if (cells[i] instanceof DefaultLink)
-			{
-				DefaultLink link = (DefaultLink) cells[i];
-				if (!link.getSchemeLinkId().equals(""))
-					if (links.contains(link.getSchemeLink().link_id))
-						new_cells.add(link);
-			}
-		}
-		return new_cells.toArray();
-	}
-
-
 }

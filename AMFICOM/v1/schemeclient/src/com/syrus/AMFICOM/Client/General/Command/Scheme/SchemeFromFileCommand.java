@@ -39,7 +39,8 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	public void execute()
 	{
-		DirectoryToFile.readAll();
+//		DirectoryToFile.readAll();
+
 		dispatcher.notify(new TreeListSelectionEvent("",  TreeListSelectionEvent.REFRESH_EVENT));
 
 		int res = JOptionPane.showConfirmDialog(
@@ -90,7 +91,7 @@ public class SchemeFromFileCommand extends VoidCommand
 			for (Iterator it = Pool.getMap(ProtoElement.typ).values().iterator(); it.hasNext();)
 			{
 				ProtoElement element = (ProtoElement)it.next();
-				for (Iterator iit = element.protoelement_ids.iterator(); iit.hasNext();)
+				for (Iterator iit = element.protoelementIds.iterator(); iit.hasNext();)
 					ids.add((String)iit.next());
 				ht.put(element.getId(), element);
 			}
@@ -106,7 +107,7 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	ArrayList get_proto_ids (ArrayList ids, ProtoElement proto)
 	{
-		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
+		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 		{
 			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			get_proto_ids(ids, p);

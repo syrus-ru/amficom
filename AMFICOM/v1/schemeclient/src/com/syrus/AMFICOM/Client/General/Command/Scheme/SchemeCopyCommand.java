@@ -66,10 +66,10 @@ public class SchemeCopyCommand extends VoidCommand
 		scheme.name = sd.name;
 		scheme.description = sd.description;
 		scheme.created = System.currentTimeMillis();
-		scheme.created_by = dataSource.getSession().getUserId();
-		scheme.modified_by = dataSource.getSession().getUserId();
-		scheme.owner_id = dataSource.getSession().getUserId();
-		scheme.domain_id = dataSource.getSession().getDomainId();
+		scheme.createdBy = dataSource.getSession().getUserId();
+		scheme.modifiedBy = dataSource.getSession().getUserId();
+		scheme.ownerId = dataSource.getSession().getUserId();
+		scheme.domainId = dataSource.getSession().getDomainId();
 
 		Pool.put(Scheme.typ, scheme.getId(), scheme);
 

@@ -95,7 +95,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 		{
 			SchemeElement se = (SchemeElement)it.next();
-			if (!se.element_ids.isEmpty())
+			if (!se.elementIds.isEmpty())
 			{
 				se.unpack();
 				SchemePanel.copySchemeElementFromArchivedState_virtual(se.serializable_cell);
@@ -127,12 +127,12 @@ public class SchemeSaveAsCommand extends VoidCommand
 
 		scheme.name = sd.name;
 		scheme.description = sd.description;
-		scheme.scheme_type = sd.type;
+		scheme.schemeType = sd.type;
 		scheme.created = System.currentTimeMillis();
-		scheme.created_by = dataSource.getSession().getUserId();
-		scheme.modified_by = dataSource.getSession().getUserId();
-		scheme.owner_id = dataSource.getSession().getUserId();
-		scheme.domain_id = dataSource.getSession().getDomainId();
+		scheme.createdBy = dataSource.getSession().getUserId();
+		scheme.modifiedBy = dataSource.getSession().getUserId();
+		scheme.ownerId = dataSource.getSession().getUserId();
+		scheme.domainId = dataSource.getSession().getDomainId();
 		Pool.put(Scheme.typ, scheme.getId(), scheme);
 
 //		schemePanel.scheme = scheme;
@@ -212,7 +212,7 @@ class SaveDialog extends JDialog
 		panel = new SchemePropsPanel(aContext, dispatcher, show_ugo);
 		panel.schemeNameTextField.setText(name);
 		panel.schemeDescrTextArea.setText(scheme.description);
-		panel.schemeTypeComboBox.setSelectedItem(LangModelSchematics.getString(scheme.scheme_type));
+		panel.schemeTypeComboBox.setSelectedItem(LangModelSchematics.getString(scheme.schemeType));
 	//	panel.init(graph.scheme, aContext.getDataSourceInterface());
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(panel, BorderLayout.CENTER);

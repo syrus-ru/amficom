@@ -1,3 +1,4 @@
+/*
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import java.util.*;
@@ -201,7 +202,7 @@ public class InsertToCatalogCommand extends VoidCommand
 					/*
 						 разремарчено 04.03.04 потому как без внутренних элементов не вносятся
 						 порты и соответственно глючат пасы и линки
-					 */
+					 /
 
 					for (Iterator it = element.getAllChilds().iterator(); it.hasNext(); )
 					{
@@ -213,7 +214,7 @@ public class InsertToCatalogCommand extends VoidCommand
 						SchemeLink sl = (SchemeLink) it.next();
 						links_to_save.put(sl.getId(), sl);
 					}
-					/**/
+					/
 				}
 				else
 				{
@@ -254,7 +255,7 @@ public class InsertToCatalogCommand extends VoidCommand
 						links_to_save.put(l.getId(), l);
 					}
 				}
-			 }*/
+			 }/
 			}
 			if (cells[i] instanceof DefaultCableLink)
 			{
@@ -281,7 +282,7 @@ public class InsertToCatalogCommand extends VoidCommand
 						links_to_save.put(l.getId(), l);
 					}
 				}
-			}*/
+			}/
 			}
 		}
 	}
@@ -375,7 +376,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			}
 
 			path.access_port_id = access_port_id;
-*/
+/
 			path.links = new ArrayList();
 
 			for (Iterator it = scheme_path.links.iterator(); it.hasNext();)
@@ -822,3 +823,4 @@ public class InsertToCatalogCommand extends VoidCommand
 	}
 }
 
+*/

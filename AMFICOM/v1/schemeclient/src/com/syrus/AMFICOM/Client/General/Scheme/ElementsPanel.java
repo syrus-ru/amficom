@@ -127,51 +127,7 @@ public class ElementsPanel extends UgoPanel
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if (ae.getActionCommand().equals(CatalogNavigateEvent.type))
-		{
-			if (SchemeGraph.skip_notify)
-				return;
-			SchemeGraph.skip_notify = true;
-			CatalogNavigateEvent ev = (CatalogNavigateEvent)ae;
-			//graph.removeSelectionCells();
-			if (ev.CATALOG_EQUIPMENT_SELECTED)
-			{
-				Equipment eq = (Equipment)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findEquipmentById(getGraph(), eq.getId()));
-			}
-			else if (ev.CATALOG_ACCESS_PORT_SELECTED)
-			{
-				AccessPort aport = (AccessPort)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findAccessPortById(getGraph(), aport.getId()));
-			}
-			else if (ev.CATALOG_PORT_SELECTED)
-			{
-				Port port = (Port)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findPortById(getGraph(), port.getId()));
-			}
-			else if (ev.CATALOG_CABLE_PORT_SELECTED)
-			{
-				CablePort port = (CablePort)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findCablePortById(getGraph(), port.getId()));
-			}
-			else if (ev.CATALOG_LINK_SELECTED)
-			{
-				Link link = (Link)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findLinkById(getGraph(), link.getId()));
-			}
-			else if (ev.CATALOG_CABLE_LINK_SELECTED)
-			{
-				CableLink link = (CableLink)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findCableLinkById(getGraph(), link.getId()));
-			}
-			else if (ev.CATALOG_PATH_SELECTED)
-			{
-				TransmissionPath path = (TransmissionPath)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCells(getGraph().getGraphResource().getPathElements(path));
-			}
-			SchemeGraph.skip_notify = false;
-		}
-		else if (ae.getActionCommand().equals(SchemeNavigateEvent.type))
+		if (ae.getActionCommand().equals(SchemeNavigateEvent.type))
 		{
 			SchemeNavigateEvent ev = (SchemeNavigateEvent)ae;
 			if (ev.SCHEME_PATH_SELECTED)

@@ -75,10 +75,10 @@ public class SchemeNewCommand extends VoidCommand
 
 		Scheme scheme = new Scheme();
 		scheme.name = "Новая схема";
-		scheme.created_by = dataSource.getSession().getUserId();
-		scheme.modified_by = dataSource.getSession().getUserId();
-		scheme.owner_id = dataSource.getSession().getUserId();
-		scheme.domain_id = dataSource.getSession().getDomainId();
+		scheme.createdBy = dataSource.getSession().getUserId();
+		scheme.modifiedBy = dataSource.getSession().getUserId();
+		scheme.ownerId = dataSource.getSession().getUserId();
+		scheme.domainId = dataSource.getSession().getDomainId();
 
 //		GraphActions.clearGraph(spanel.getGraph());
 //		GraphActions.clearGraph(upanel.getGraph());

@@ -38,7 +38,11 @@ public class SchemeToFileCommand extends VoidCommand
 
 //    dataSource.SaveSchemeProtos();
 //    dataSource.RemoveSchemeProtos();
-		DirectoryToFile.writeAll();
+
+
+//DirectoryToFile.writeAll();
+
+
 //		DirectoryToFile.readAll();
 	}
 }

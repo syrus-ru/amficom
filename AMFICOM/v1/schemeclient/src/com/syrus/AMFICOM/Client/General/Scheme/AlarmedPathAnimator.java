@@ -134,7 +134,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 				if (cells[i] instanceof DefaultLink)
 				{
 					SchemeLink sl = ((DefaultLink)cells[i]).getSchemeLink();
-					if (sl.link_id.equals(alarmed_link_id))
+					if (sl.linkId.equals(alarmed_link_id))
 					{
 						edges_to_paint.add(cells[i]);
 						sl.alarmed = true;
@@ -148,7 +148,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 				else if (cells[i] instanceof DefaultCableLink)
 				{
 					SchemeCableLink sl = ((DefaultCableLink)cells[i]).getSchemeCableLink();
-					if (sl.cable_link_id.equals(alarmed_link_id))
+					if (sl.cableLinkId.equals(alarmed_link_id))
 					{
 						edges_to_paint.add(cells[i]);
 						sl.alarmed = true;
@@ -172,12 +172,12 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 						for (Iterator it = se.getAllElementsLinks().iterator(); it.hasNext();)
 						{
 							SchemeLink sl = (SchemeLink)it.next();
-							if (sl.link_id.equals(alarmed_link_id))
+							if (sl.linkId.equals(alarmed_link_id))
 							{
 								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements();)
 									edges_to_paint.add(e.nextElement());
 								se.alarmed = true;
-								se.alarmed_link_id = alarmed_link_id;
+								se.alarmedLinkId = alarmed_link_id;
 								return edges_to_paint.toArray();
 							}
 						}
@@ -191,7 +191,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 							for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements();)
 								edges_to_paint.add(e.nextElement());
 							se.alarmed = true;
-							se.alarmed_link_id = alarmed_link_id;
+							se.alarmedLinkId = alarmed_link_id;
 							return edges_to_paint.toArray();
 						}
 					}

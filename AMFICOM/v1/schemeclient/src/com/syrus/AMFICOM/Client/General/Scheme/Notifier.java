@@ -115,7 +115,7 @@ public class Notifier
 					}
 					else if (graph.mode.equals(Constants.PATH_MODE))
 					{
-						for (Iterator it = graph.getScheme().paths.iterator(); it.hasNext();)
+						for (Iterator it = graph.getScheme().solution.paths.iterator(); it.hasNext();)
 						{
 							SchemePath path = (SchemePath)it.next();
 							if (path.isElementInPath(link.getId()))
@@ -138,7 +138,7 @@ public class Notifier
 					}
 					else if (graph.mode.equals(Constants.PATH_MODE))
 					{
-						for (Iterator it = graph.getScheme().paths.iterator(); it.hasNext();)
+						for (Iterator it = graph.getScheme().solution.paths.iterator(); it.hasNext();)
 						{
 							SchemePath path = (SchemePath)it.next();
 							if (path.isElementInPath(link.getId()))
@@ -270,10 +270,10 @@ public class Notifier
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemeElement: " + o[i].getId());
-				System.out.println("\t proto_id = \"" + o[i].proto_element_id + "\"");
+				System.out.println("\t proto_id = \"" + o[i].protoElementId + "\"");
 				System.out.println("\t internal_scheme_id = \"" + o[i].getInternalSchemeId() + "\"");
 				System.out.println("\t scheme_id = \"" + o[i].getSchemeId() + "\"");
-				System.out.println("\t equipment_id = \"" + o[i].equipment_id + "\"");
+				System.out.println("\t equipment = \"" + o[i].equipment + "\"");
 				System.out.print("\t device_id =");
 				for (Iterator it = o[i].devices.iterator(); it.hasNext();)
 					System.out.print(" \"" + ((SchemeDevice)it.next()).getId() + "\"");
@@ -295,7 +295,7 @@ public class Notifier
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("ProtoElement: " + o[i].getId());
-				System.out.println("\t equipment_type_id = \"" + o[i].equipment_type_id + "\"");
+				System.out.println("\t equipment_type_id = \"" + o[i].equipmentTypeId + "\"");
 				System.out.print("\t device_id =");
 				for (Iterator it = o[i].devices.iterator(); it.hasNext();)
 					System.out.print(" \"" + ((SchemeDevice)it.next()).getId() + "\"");
@@ -317,9 +317,9 @@ public class Notifier
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemePath: " + o[i].getId());
-				System.out.println("\t start_device_id = \"" + o[i].start_device_id + "\"");
-				System.out.println("\t end_device_id = \"" + o[i].end_device_id + "\"");
-				System.out.println("\t path_id = \"" + o[i].path_id + "\"");
+				System.out.println("\t start_device_id = \"" + o[i].startDeviceId + "\"");
+				System.out.println("\t end_device_id = \"" + o[i].endDeviceId + "\"");
+				System.out.println("\t path_id = \"" + o[i].pathId + "\"");
 			}
 		}
 		if (selectedType == SchemeNavigateEvent.SCHEME_LINK_SELECTED_EVENT)
@@ -328,12 +328,12 @@ public class Notifier
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemeLink: " + o[i].getId());
-				System.out.println("\t source_port_id = \"" + o[i].source_port_id + "\"");
-				System.out.println("\t target_port_id = \"" + o[i].target_port_id + "\"");
-				System.out.println("\t link_id = \"" + o[i].link_id + "\"");
-				System.out.println("\t link_type_id = \"" + o[i].link_type_id + "\"");
-				System.out.println("\t optical_length = \"" + o[i].optical_length + "\"");
-				System.out.println("\t physical_length = \"" + o[i].physical_length + "\"");
+				System.out.println("\t source_port_id = \"" + o[i].sourcePortId + "\"");
+				System.out.println("\t target_port_id = \"" + o[i].targetPortId + "\"");
+				System.out.println("\t link = \"" + o[i].link + "\"");
+				System.out.println("\t link_type_id = \"" + o[i].linkTypeId + "\"");
+				System.out.println("\t optical_length = \"" + o[i].opticalLength + "\"");
+				System.out.println("\t physical_length = \"" + o[i].physicalLength + "\"");
 			}
 		}
 		if (selectedType == SchemeNavigateEvent.SCHEME_CABLE_LINK_SELECTED_EVENT)
@@ -342,12 +342,12 @@ public class Notifier
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemeCableLink: " + o[i].getId());
-				System.out.println("\t source_port_id = \"" + o[i].source_port_id + "\"");
-				System.out.println("\t target_port_id = \"" + o[i].target_port_id + "\"");
-				System.out.println("\t cable_link_id = \"" + o[i].cable_link_id + "\"");
-				System.out.println("\t cable_link_type_id = \"" + o[i].cable_link_type_id + "\"");
-				System.out.println("\t optical_length = \"" + o[i].optical_length + "\"");
-				System.out.println("\t physical_length = \"" + o[i].physical_length + "\"");
+				System.out.println("\t source_port_id = \"" + o[i].sourcePortId + "\"");
+				System.out.println("\t target_port_id = \"" + o[i].sourcePortId + "\"");
+				System.out.println("\t cable_link = \"" + o[i].cableLink + "\"");
+				System.out.println("\t cable_link_type_id = \"" + o[i].cableLinkTypeId + "\"");
+				System.out.println("\t optical_length = \"" + o[i].opticalLength + "\"");
+				System.out.println("\t physical_length = \"" + o[i].physicalLength + "\"");
 			}
 		}
 		if (selectedType == SchemeNavigateEvent.SCHEME_PORT_SELECTED_EVENT)
@@ -356,13 +356,13 @@ public class Notifier
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemePort: " + o[i].getId());
-				System.out.println("\t access_port_id = \"" + o[i].access_port_id + "\"");
-				System.out.println("\t access_port_type_id = \"" + o[i].access_port_type_id + "\"");
-				System.out.println("\t device_id = \"" + o[i].device_id + "\"");
-				System.out.println("\t direction_type = \"" + o[i].direction_type + "\"");
-				System.out.println("\t link_id = \"" + o[i].link_id + "\"");
-				System.out.println("\t port_id = \"" + o[i].port_id + "\"");
-				System.out.println("\t port_type_id = \"" + o[i].port_type_id + "\"");
+				System.out.println("\t access_port_id = \"" + o[i].measurementPortId + "\"");
+				System.out.println("\t access_port_type_id = \"" + o[i].measurementPortTypeId + "\"");
+				System.out.println("\t device_id = \"" + o[i].deviceId + "\"");
+				System.out.println("\t direction_type = \"" + o[i].directionType + "\"");
+				System.out.println("\t link_id = \"" + o[i].linkId + "\"");
+				System.out.println("\t port = \"" + o[i].port + "\"");
+				System.out.println("\t port_type_id = \"" + o[i].portTypeId + "\"");
 			}
 		}
 		if (selectedType == SchemeNavigateEvent.SCHEME_CABLE_PORT_SELECTED_EVENT)
@@ -371,13 +371,13 @@ public class Notifier
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemeCablePort: " + o[i].getId());
-				System.out.println("\t access_port_id = \"" + o[i].access_port_id + "\"");
-				System.out.println("\t access_port_type_id = \"" + o[i].access_port_type_id + "\"");
-				System.out.println("\t device_id = \"" + o[i].device_id + "\"");
-				System.out.println("\t direction_type = \"" + o[i].direction_type + "\"");
-				System.out.println("\t cable_link_id = \"" + o[i].cable_link_id + "\"");
-				System.out.println("\t cable_port_id = \"" + o[i].cable_port_id + "\"");
-				System.out.println("\t cable_port_type_id = \"" + o[i].cable_port_type_id + "\"");
+				System.out.println("\t access_port_id = \"" + o[i].measurementPortId + "\"");
+				System.out.println("\t access_port_type_id = \"" + o[i].measurementPortTypeId + "\"");
+				System.out.println("\t device_id = \"" + o[i].deviceId + "\"");
+				System.out.println("\t direction_type = \"" + o[i].directionType + "\"");
+				System.out.println("\t cable_link_id = \"" + o[i].cableLinkId + "\"");
+				System.out.println("\t cable_port = \"" + o[i].cablePort + "\"");
+				System.out.println("\t cable_port_type_id = \"" + o[i].cablePortTypeId + "\"");
 			}
 		}
 	}

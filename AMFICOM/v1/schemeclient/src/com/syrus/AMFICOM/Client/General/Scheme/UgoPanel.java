@@ -288,14 +288,14 @@ public class UgoPanel extends JPanel
 						for (int j = 0; j < ports.length; j++)
 							if (ports[j].equals(port))
 							{
-								if (port.link_id.equals(""))
+								if (port.linkId.equals(""))
 									non_connected_ports.add(cells[i]);
 								else
 									connected_ports.add(cells[i]);
 							}
 					}
 				Color color = Color.white;
-				if (((PortType)see.obj).p_class.equals("splice"))
+				if (((PortType)see.obj).pClass.equals("splice"))
 					color = Color.black;
 
 				GraphActions.setObjectsBackColor(getGraph(), connected_ports.toArray(new PortCell[connected_ports.size()]), color);
@@ -315,7 +315,7 @@ public class UgoPanel extends JPanel
 					for (int j = 0; j < ports.length; j++)
 						if (ports[j].equals(port))
 						{
-						if (port.cable_link_id.equals(""))
+						if (port.cableLinkId.equals(""))
 							non_connected_ports.add(cells[i]);
 						else
 							connected_ports.add(cells[i]);
@@ -348,13 +348,13 @@ public class UgoPanel extends JPanel
 					if (res instanceof ProtoElement)
 					{
 						ProtoElement proto = (ProtoElement) res;
-						new_eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
+						new_eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipmentTypeId);
 					}
 					else
 						new_eqt = (EquipmentType)res;
 
 					ProtoElement p = ((DeviceGroup)obj).getProtoElement();
-					p.equipment_type_id = new_eqt.getId();
+					p.equipmentTypeId = new_eqt.getId();
 				}
 				if (obj instanceof PortCell)
 				{
@@ -366,13 +366,13 @@ public class UgoPanel extends JPanel
 					{
 						Color color = Color.white;
 						if (res instanceof PortType)
-							if (((PortType)res).p_class.equals("splice"))
+							if (((PortType)res).pClass.equals("splice"))
 								color = Color.black;
 
 						ArrayList connected_ports = new ArrayList();
 						ArrayList non_connected_ports = new ArrayList();
 						for (int i = 0; i < ncells.length; i++)
-							if (((PortCell)ncells[i]).getSchemePort().link_id.equals(""))
+							if (((PortCell)ncells[i]).getSchemePort().linkId.equals(""))
 								non_connected_ports.add(ncells[i]);
 						else
 							connected_ports.add(ncells[i]);
@@ -380,7 +380,7 @@ public class UgoPanel extends JPanel
 						GraphActions.setObjectsBackColor(getGraph(), connected_ports.toArray(new PortCell[connected_ports.size()]), color);
 						GraphActions.setObjectsBackColor(getGraph(), non_connected_ports.toArray(new PortCell[non_connected_ports.size()]), Color.yellow);
 						for (int i = 0; i < ncells.length; i++)
-							((PortCell)ncells[i]).getSchemePort().port_type_id = res.getId();
+							((PortCell)ncells[i]).getSchemePort().portTypeId = res.getId();
 					}
 				}
 				if (obj instanceof CablePortCell)
@@ -392,7 +392,7 @@ public class UgoPanel extends JPanel
 					if (counter == ncells.length)
 						GraphActions.setObjectsBackColor(getGraph(), ncells, Color.white);
 					for (int i = 0; i < ncells.length; i++)
-						((CablePortCell)ncells[i]).getSchemeCablePort().cable_port_type_id = res.getId();
+						((CablePortCell)ncells[i]).getSchemeCablePort().cablePortTypeId = res.getId();
 				}
 				if (obj instanceof DefaultLink)
 				{
@@ -403,7 +403,7 @@ public class UgoPanel extends JPanel
 					if (counter == ncells.length)
 					{
 						for (int i = 0; i < ncells.length; i++)
-							((DefaultLink)ncells[i]).getSchemeLink().link_type_id = res.getId();
+							((DefaultLink)ncells[i]).getSchemeLink().linkTypeId = res.getId();
 					}
 				}
 				if (obj instanceof DefaultCableLink)
@@ -415,7 +415,7 @@ public class UgoPanel extends JPanel
 					if (counter == ncells.length)
 					{
 						for (int i = 0; i < ncells.length; i++)
-							((DefaultCableLink)ncells[i]).getSchemeCableLink().cable_link_type_id = res.getId();
+							((DefaultCableLink)ncells[i]).getSchemeCableLink().cableLinkTypeId = res.getId();
 					}
 				}
 			}

@@ -10,7 +10,7 @@ import javax.swing.tree.TreeNode;
 
 import com.jgraph.graph.*;
 import com.jgraph.pad.ImageCell;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.InsertToCatalogCommand;
+//import com.syrus.AMFICOM.Client.General.Command.Scheme.InsertToCatalogCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -80,32 +80,32 @@ public class GraphActions
 		Map viewMap = new HashMap();
 		DefaultLink cell;
 
-		PortCell s_port_cell = null;
-		PortCell t_port_cell = null;
+		PortCell sPort_cell = null;
+		PortCell tPort_cell = null;
 
 		if (firstPort != null)
 		{
 			Object o = ((DefaultPort)firstPort.getCell()).getParent();
 			if (o instanceof PortCell)
-				s_port_cell = (PortCell)o;
+				sPort_cell = (PortCell)o;
 		}
 		if (port != null)
 		{
 			Object o = ((DefaultPort)port.getCell()).getParent();
 			if (o instanceof PortCell)
-				t_port_cell = (PortCell)o;
+				tPort_cell = (PortCell)o;
 		}
 
 		boolean b1 = false;
 		if (firstPort == null)
 			b1 = true;
-		else if (s_port_cell != null)
+		else if (sPort_cell != null)
 			b1 = true;
 
 		boolean b2 = false;
 		if (port == null)
 			b2 = true;
-		else if (t_port_cell != null)
+		else if (tPort_cell != null)
 			b2 = true;
 
 		if (b1 && b2)
@@ -124,15 +124,15 @@ public class GraphActions
 			cell.setSchemeLinkId(link.getId());
 			link.name = name;
 
-//			if (s_port_cell != null)
-//				SchemeActions.connectSchemeLink(graph, cell, s_port_cell, true);
-//			if (t_port_cell != null)
-//				SchemeActions.connectSchemeLink(graph, cell, t_port_cell, false);
+//			if (sPort_cell != null)
+//				SchemeActions.connectSchemeLink(graph, cell, sPort_cell, true);
+//			if (tPort_cell != null)
+//				SchemeActions.connectSchemeLink(graph, cell, tPort_cell, false);
 
-			//link.source_port_id = s_port_cell.getSchemePortId();
-			//link.target_port_id = t_port_cell.getSchemePortId();
-			//t_port_cell.getSchemePort().link_id = link.getId();
-			//s_port_cell.getSchemePort().link_id = link.getId();
+			//link.sourcePortId = sPort_cell.getSchemePortId();
+			//link.targetPortId = tPort_cell.getSchemePortId();
+			//tPort_cell.getSchemePort().linkId = link.getId();
+			//sPort_cell.getSchemePort().linkId = link.getId();
 	}
 		else
 			return null;
@@ -140,9 +140,9 @@ public class GraphActions
 		viewMap.put(cell, map);
 		Object[] insert = new Object[] { cell };
 		ConnectionSet cs = new ConnectionSet();
-		if (s_port_cell != null)
+		if (sPort_cell != null)
 			cs.connect(cell, firstPort.getCell(), true);
-		if (t_port_cell != null)
+		if (tPort_cell != null)
 			cs.connect(cell, port.getCell(), false);
 		graph.getModel().insert(insert, viewMap, cs, null, null);
 
@@ -171,32 +171,32 @@ public class GraphActions
 		Map viewMap = new HashMap();
 		DefaultCableLink cell;
 
-		CablePortCell s_cable_port_cell = null;
-		CablePortCell t_cable_port_cell = null;
+		CablePortCell s_cablePort_cell = null;
+		CablePortCell t_cablePort_cell = null;
 
 		if (firstPort != null)
 		{
 			Object o = ((DefaultPort)firstPort.getCell()).getParent();
 			if (o instanceof CablePortCell)
-				s_cable_port_cell = (CablePortCell)o;
+				s_cablePort_cell = (CablePortCell)o;
 		}
 		if (port != null)
 		{
 			Object o = ((DefaultPort)port.getCell()).getParent();
 			if (o instanceof CablePortCell)
-				t_cable_port_cell = (CablePortCell)o;
+				t_cablePort_cell = (CablePortCell)o;
 		}
 
 		boolean b1 = false;
 		if (firstPort == null)
 			b1 = true;
-		else if (s_cable_port_cell != null)
+		else if (s_cablePort_cell != null)
 			b1 = true;
 
 		boolean b2 = false;
 		if (port == null)
 			b2 = true;
-		else if (t_cable_port_cell != null)
+		else if (t_cablePort_cell != null)
 			b2 = true;
 
 		if (b1 && b2)
@@ -215,10 +215,10 @@ public class GraphActions
 			((DefaultCableLink)cell).setSchemeCableLinkId(link.getId());
 			link.setName(name);
 
-//			if (s_cable_port_cell != null)
-//				SchemeActions.connectSchemeCableLink(graph, cell, s_cable_port_cell, true);
-//			if (t_cable_port_cell != null)
-//				SchemeActions.connectSchemeCableLink(graph, cell, t_cable_port_cell, false);
+//			if (s_cablePort_cell != null)
+//				SchemeActions.connectSchemeCableLink(graph, cell, s_cablePort_cell, true);
+//			if (t_cablePort_cell != null)
+//				SchemeActions.connectSchemeCableLink(graph, cell, t_cablePort_cell, false);
 
 			GraphConstants.setLineWidth(map, 2.49f);
 		}
@@ -228,9 +228,9 @@ public class GraphActions
 		viewMap.put(cell, map);
 		Object[] insert = new Object[] { cell };
 		ConnectionSet cs = new ConnectionSet();
-		if (s_cable_port_cell != null)
+		if (s_cablePort_cell != null)
 			cs.connect(cell, firstPort.getCell(), true);
-		if (t_cable_port_cell != null)
+		if (t_cablePort_cell != null)
 			cs.connect(cell, port.getCell(), false);
 		graph.getModel().insert(insert, viewMap, cs, null, null);
 
@@ -238,7 +238,7 @@ public class GraphActions
 		return link;
 	}
 
-	public static DefaultGraphCell CreateVisualPortAction(SchemeGraph graph, Point p, boolean is_port, String name)
+	public static DefaultGraphCell CreateVisualPortAction(SchemeGraph graph, Point p, boolean isPort, String name)
 	{
 		Font f = graph.getFont();
 
@@ -275,7 +275,7 @@ public class GraphActions
 		Rectangle dev_bounds = GraphConstants.getBounds(dev.getAttributes());
 		if (p.x >= dev_bounds.x + dev_bounds.width / 2)
 		{
-			if (is_port)
+			if (isPort)
 			{
 				visualPort = addVisualPort(graph, "", new Rectangle(p.x - 6, p.y - 3, 7, 7), dev, "out");
 				((SchemeDevice)dev.getSchemeDevice()).ports.add(((PortCell)visualPort).getSchemePort());
@@ -294,7 +294,7 @@ public class GraphActions
 		}
 		else
 		{
-			if (is_port)
+			if (isPort)
 			{
 				visualPort = addVisualPort(graph, "", new Rectangle(p.x, p.y - 3, 7, 7), dev, "in");
 				((SchemeDevice)dev.getSchemeDevice()).ports.add(((PortCell)visualPort).getSchemePort());
@@ -357,10 +357,10 @@ public class GraphActions
 		// Create Vertex
 		PortCell cell = new PortCell(userObject);
 		SchemePort sp = new SchemePort(dataSource.GetUId(SchemePort.typ));
-		sp.direction_type = direction;
+		sp.directionType = direction;
 		Pool.put(SchemePort.typ, sp.getId(), sp);
 		cell.setSchemePortId(sp.getId());
-		sp.device_id = dev.getSchemeDeviceId();
+		sp.deviceId = dev.getSchemeDeviceId();
 
 		map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);
@@ -397,10 +397,10 @@ public class GraphActions
 		// Create Vertex
 		CablePortCell cell = new CablePortCell(userObject);
 		SchemeCablePort scp = new SchemeCablePort(dataSource.GetUId(SchemeCablePort.typ));
-		scp.direction_type = direction;
+		scp.directionType = direction;
 		Pool.put(SchemeCablePort.typ, scp.getId(), scp);
 		((CablePortCell)cell).setSchemeCablePortId(scp.getId());
-		scp.device_id = dev.getSchemeDeviceId();
+		scp.deviceId = dev.getSchemeDeviceId();
 
 		map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);
@@ -732,7 +732,7 @@ public class GraphActions
 				}
 				else if (cells[i] instanceof PortCell)
 				{
-					if (((PortCell)cells[i]).getSchemePort().direction_type.equals("out"))
+					if (((PortCell)cells[i]).getSchemePort().directionType.equals("out"))
 					{
 						bounds.x = ((int)(bounds.x / grid) + 1) * grid - 6;
 						bounds.y = ((int)(bounds.y / grid) + 1) * grid - 3;
@@ -745,7 +745,7 @@ public class GraphActions
 				}
 				else if (cells[i] instanceof CablePortCell)
 				{
-					if (((CablePortCell)cells[i]).getSchemeCablePort().direction_type.equals("out"))
+					if (((CablePortCell)cells[i]).getSchemeCablePort().directionType.equals("out"))
 					{
 						bounds.x = ((int)(bounds.x / grid) + 1) * grid - 6;
 						bounds.y = ((int)(bounds.y / grid) + 1) * grid - 3;
@@ -903,8 +903,8 @@ public class GraphActions
 			JPopupMenu pop = new JPopupMenu();
 			if (!group.getSchemeId().equals(""))
 			{
-				final String scheme_id = group.getSchemeId();
-				Scheme sc = (Scheme)Pool.get(Scheme.typ, scheme_id);
+				final String schemeId = group.getSchemeId();
+				Scheme sc = (Scheme)Pool.get(Scheme.typ, schemeId);
 
 				if (sc != null)
 				{
@@ -912,11 +912,11 @@ public class GraphActions
 					{
 						public void actionPerformed(ActionEvent ev)
 						{
-							aContext.getDispatcher().notify(new OperationEvent(scheme_id, 0, "addschemeevent"));
+							aContext.getDispatcher().notify(new OperationEvent(schemeId, 0, "addschemeevent"));
 
 							if (se != null && se.alarmed)
 								aContext.getDispatcher().notify(new SchemeElementsEvent(this,
-										se.alarmed_link_id, SchemeElementsEvent.CREATE_ALARMED_LINK_EVENT));
+										se.alarmedLinkId, SchemeElementsEvent.CREATE_ALARMED_LINK_EVENT));
 						}
 					});
 					menu1.setText("Открыть схему");
@@ -933,21 +933,21 @@ public class GraphActions
 
 			if (!group.getSchemeElementId().equals(""))
 			{
-				final String se_id = se.getId();
+				final String seId = se.getId();
 
 				List v = (List)se.serializable_ugo;
-				if (!se.element_ids.isEmpty() ||
+				if (!se.elementIds.isEmpty() ||
 						(v != null && v.size() != 0 && ((Object[])v.get(0)).length != 0))
 						{
 							JMenuItem menu1 = new JMenuItem(new AbstractAction()
 							{
 							public void actionPerformed(ActionEvent ev)
 							{
-								aContext.getDispatcher().notify(new OperationEvent(se_id, 0, "addschemeelementevent"));
+								aContext.getDispatcher().notify(new OperationEvent(seId, 0, "addschemeelementevent"));
 
 								if (se.alarmed)
 									aContext.getDispatcher().notify(new SchemeElementsEvent(this,
-											se.alarmed_link_id, SchemeElementsEvent.CREATE_ALARMED_LINK_EVENT));
+											se.alarmedLinkId, SchemeElementsEvent.CREATE_ALARMED_LINK_EVENT));
 							}
 							});
 							menu1.setText("Открыть компонент");
@@ -977,7 +977,7 @@ public class GraphActions
 		if (!link.getSchemeLinkId().equals("") && graph.isEditable() && graph.panel instanceof SchemePanel)
 		{
 			SchemeLink sl = link.getSchemeLink();
-			final String sl_id = sl.getId();
+			final String slId = sl.getId();
 
 			JMenuItem menu1 = new JMenuItem(new AbstractAction()
 			{
@@ -1072,129 +1072,74 @@ public class GraphActions
 		return pop;
 	}
 */
-	static DeviceGroup findSchemeElementById(SchemeGraph graph, String scheme_element_id)
+	static DeviceGroup findSchemeElementById(SchemeGraph graph, String scheme_elementId)
 	{
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof DeviceGroup)
-				if (((DeviceGroup)cells[i]).getSchemeElementId().equals(scheme_element_id))
+				if (((DeviceGroup)cells[i]).getSchemeElementId().equals(scheme_elementId))
 					return (DeviceGroup)cells[i];
 		return null;
 	}
 
-	static DeviceGroup findProtoElementById(SchemeGraph graph, String proto_id)
+	static DeviceGroup findProtoElementById(SchemeGraph graph, String protoId)
 	{
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof DeviceGroup)
-				if (((DeviceGroup)cells[i]).getProtoElementId().equals(proto_id))
+				if (((DeviceGroup)cells[i]).getProtoElementId().equals(protoId))
 					return (DeviceGroup)cells[i];
 		return null;
 	}
 
-	static DeviceGroup findEquipmentById(SchemeGraph graph, String eq_id)
-	{
-		Object[] cells = graph.getAll();
-		for (int i = 0; i < cells.length; i++)
-			if (cells[i] instanceof DeviceGroup)
-				if (!((DeviceGroup)cells[i]).getSchemeElementId().equals(""))
-					if (((DeviceGroup)cells[i]).getSchemeElement().equipment_id.equals(eq_id))
-						return (DeviceGroup)cells[i];
-		return null;
-	}
-
-	static PortCell findSchemePortById(SchemeGraph graph, String scheme_port_id)
+	static PortCell findSchemePortById(SchemeGraph graph, String schemePortId)
 	{
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof PortCell)
-				if (((PortCell)cells[i]).getSchemePortId().equals(scheme_port_id))
+				if (((PortCell)cells[i]).getSchemePortId().equals(schemePortId))
 					return (PortCell)cells[i];
 		return null;
 	}
 
-	static PortCell findPortById(SchemeGraph graph, String port_id)
+	static PortCell findAccessPortById(SchemeGraph graph, String aportId)
 	{
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof PortCell)
 				if (!((PortCell)cells[i]).getSchemePortId().equals(""))
-					if (((PortCell)cells[i]).getSchemePort().port_id.equals(port_id))
+					if (((PortCell)cells[i]).getSchemePort().measurementPortId.equals(aportId))
 						return (PortCell)cells[i];
 		return null;
 	}
 
-	static PortCell findAccessPortById(SchemeGraph graph, String aport_id)
-	{
-		Object[] cells = graph.getAll();
-		for (int i = 0; i < cells.length; i++)
-			if (cells[i] instanceof PortCell)
-				if (!((PortCell)cells[i]).getSchemePortId().equals(""))
-					if (((PortCell)cells[i]).getSchemePort().access_port_id.equals(aport_id))
-						return (PortCell)cells[i];
-		return null;
-	}
-
-	static CablePortCell findSchemeCablePortById(SchemeGraph graph, String scheme_cable_port_id)
+	static CablePortCell findSchemeCablePortById(SchemeGraph graph, String scheme_cablePortId)
 	{
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof CablePortCell)
-				if (((CablePortCell)cells[i]).getSchemeCablePortId().equals(scheme_cable_port_id))
+				if (((CablePortCell)cells[i]).getSchemeCablePortId().equals(scheme_cablePortId))
 					return (CablePortCell)cells[i];
 		return null;
 	}
 
-	static CablePortCell findCablePortById(SchemeGraph graph, String cable_port_id)
-	{
-		Object[] cells = graph.getAll();
-		for (int i = 0; i < cells.length; i++)
-			if (cells[i] instanceof CablePortCell)
-				if (!((CablePortCell)cells[i]).getSchemeCablePortId().equals(""))
-					if (((CablePortCell)cells[i]).getSchemeCablePort().cable_port_id.equals(cable_port_id))
-						return (CablePortCell)cells[i];
-		return null;
-	}
-
-	static DefaultLink findSchemeLinkById(SchemeGraph graph, String scheme_link_id)
+	static DefaultLink findSchemeLinkById(SchemeGraph graph, String schemeLinkId)
 	{
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof DefaultLink)
-				if (((DefaultLink)cells[i]).getSchemeLinkId().equals(scheme_link_id))
+				if (((DefaultLink)cells[i]).getSchemeLinkId().equals(schemeLinkId))
 					return (DefaultLink)cells[i];
 		return null;
 	}
 
-	static DefaultLink findLinkById(SchemeGraph graph, String link_id)
-	{
-		Object[] cells = graph.getAll();
-		for (int i = 0; i < cells.length; i++)
-			if (cells[i] instanceof DefaultLink)
-				if (!((DefaultLink)cells[i]).getSchemeLinkId().equals(""))
-					if (((DefaultLink)cells[i]).getSchemeLink().link_id.equals(link_id))
-						return (DefaultLink)cells[i];
-		return null;
-	}
-
-	static DefaultCableLink findSchemeCableLinkById(SchemeGraph graph, String scheme_cable_link_id)
+	static DefaultCableLink findSchemeCableLinkById(SchemeGraph graph, String scheme_cableLinkId)
 	{
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof DefaultCableLink)
-				if (((DefaultCableLink)cells[i]).getSchemeCableLinkId().equals(scheme_cable_link_id))
+				if (((DefaultCableLink)cells[i]).getSchemeCableLinkId().equals(scheme_cableLinkId))
 					return (DefaultCableLink)cells[i];
-		return null;
-	}
-
-	static DefaultCableLink findCableLinkById(SchemeGraph graph, String cable_link_id)
-	{
-		Object[] cells = graph.getAll();
-		for (int i = 0; i < cells.length; i++)
-			if (cells[i] instanceof DefaultCableLink)
-				if (!((DefaultCableLink)cells[i]).getSchemeCableLinkId().equals(""))
-					if (((DefaultCableLink)cells[i]).getSchemeCableLink().cable_link_id.equals(cable_link_id))
-						return (DefaultCableLink)cells[i];
 		return null;
 	}
 
@@ -1213,7 +1158,7 @@ public class GraphActions
 			return false;
 		}
 
-		if (!sp.link_id.equals("") && !sp.link_id.equals(sl.getId()))
+		if (!sp.linkId.equals("") && !sp.linkId.equals(sl.getId()))
 		{
 			try
 			{
@@ -1233,7 +1178,7 @@ public class GraphActions
 					LookAndFeel.makeIcon(JDialog.class, "images/general.gif"));
 
 
-			SchemeLink old = (SchemeLink)Pool.get(SchemeLink.typ, sp.link_id);
+			SchemeLink old = (SchemeLink)Pool.get(SchemeLink.typ, sp.linkId);
 			if (old != null)
 			{
 				String message = "К порту " + sp.getName() + " уже подключена линия связи " + old.getName() + ".\n";
@@ -1244,18 +1189,18 @@ public class GraphActions
 			}
 		}
 
-		sp.link_id = sl.getId();
+		sp.linkId = sl.getId();
 		if (is_source)
-			sl.source_port_id = sp.getId();
+			sl.sourcePortId = sp.getId();
 		else
-			sl.target_port_id = sp.getId();
+			sl.targetPortId = sp.getId();
 
-		sp.link_id = sl.getId();
+		sp.linkId = sl.getId();
 
-		PortType pt = (PortType)Pool.get(PortType.typ, sp.port_type_id);
+		PortType pt = (PortType)Pool.get(PortType.typ, sp.portTypeId);
 		if (pt == null)
 			GraphActions.setObjectBackColor(graph, port, Color.red);
-		else if (pt.p_class.equals("splice"))
+		else if (pt.pClass.equals("splice"))
 			GraphActions.setObjectBackColor(graph, port, Color.black);
 		else
 			GraphActions.setObjectBackColor(graph, port, Color.white);
@@ -1271,25 +1216,25 @@ public class GraphActions
 			System.err.println("GraphActions.disconnectSchemeLink() link not found " + link.getSchemeLinkId());
 			return;
 		}
-		String port_id;
+		String portId;
 		if (is_source)
 		{
-			port_id = sl.source_port_id;
-			sl.source_port_id = "";
+			portId = sl.sourcePortId;
+			sl.sourcePortId = "";
 		}
 		else
 		{
-			port_id = sl.target_port_id;
-			sl.target_port_id = "";
+			portId = sl.targetPortId;
+			sl.targetPortId = "";
 		}
-		SchemePort sp = (SchemePort)Pool.get(SchemePort.typ, port_id);
+		SchemePort sp = (SchemePort)Pool.get(SchemePort.typ, portId);
 		if (sp != null)
 		{
-			sp.link_id = "";
+			sp.linkId = "";
 			PortCell port = findSchemePortById(graph, sp.getId());
 			if (port != null)
 			{
-				PortType pt = (PortType)Pool.get(PortType.typ, sp.port_type_id);
+				PortType pt = (PortType)Pool.get(PortType.typ, sp.portTypeId);
 				if (pt == null)
 					GraphActions.setObjectBackColor(graph, port, Color.red);
 				else
@@ -1312,9 +1257,9 @@ public class GraphActions
 			System.err.println("GraphActions.connectSchemeCableLink() link not found " + link.getSchemeCableLinkId());
 			return false;
 		}
-		if (!sp.cable_link_id.equals("") && !sp.cable_link_id.equals(sl.getId()))
+		if (!sp.cableLinkId.equals("") && !sp.cableLinkId.equals(sl.getId()))
 		{
-			SchemeCableLink old = (SchemeCableLink)Pool.get(SchemeCableLink.typ, sp.cable_link_id);
+			SchemeCableLink old = (SchemeCableLink)Pool.get(SchemeCableLink.typ, sp.cableLinkId);
 			if (old != null)
 			{
 				String message = "К порту " + sp.getName() + " уже подключена линия связи " + old.getName() + ".\n";
@@ -1326,15 +1271,15 @@ public class GraphActions
 			}
 		}
 
-		sp.cable_link_id = sl.getId();
+		sp.cableLinkId = sl.getId();
 		if (is_source)
-			sl.source_port_id = sp.getId();
+			sl.sourcePortId = sp.getId();
 		else
-			sl.target_port_id = sp.getId();
+			sl.targetPortId = sp.getId();
 
-		sp.cable_link_id = sl.getId();
+		sp.cableLinkId = sl.getId();
 
-		CablePortType pt = (CablePortType)Pool.get(CablePortType.typ, sp.cable_port_type_id);
+		CablePortType pt = (CablePortType)Pool.get(CablePortType.typ, sp.cablePortTypeId);
 		if (pt == null)
 			GraphActions.setObjectBackColor(graph, port, Color.red);
 		else
@@ -1351,25 +1296,25 @@ public class GraphActions
 			System.err.println("GraphActions.disconnectSchemeCableLink() link not found " + link.getSchemeCableLinkId());
 			return;
 		}
-		String port_id;
+		String portId;
 		if (is_source)
 		{
-			port_id = sl.source_port_id;
-			sl.source_port_id = "";
+			portId = sl.sourcePortId;
+			sl.sourcePortId = "";
 		}
 		else
 		{
-			port_id = sl.target_port_id;
-			sl.target_port_id = "";
+			portId = sl.targetPortId;
+			sl.targetPortId = "";
 		}
-		SchemeCablePort sp = (SchemeCablePort)Pool.get(SchemeCablePort.typ, port_id);
+		SchemeCablePort sp = (SchemeCablePort)Pool.get(SchemeCablePort.typ, portId);
 		if (sp != null)
 		{
-			sp.cable_link_id = "";
+			sp.cableLinkId = "";
 			CablePortCell port = findSchemeCablePortById(graph, sp.getId());
 			if (port != null)
 			{
-				CablePortType pt = (CablePortType)Pool.get(CablePortType.typ, sp.cable_port_type_id);
+				CablePortType pt = (CablePortType)Pool.get(CablePortType.typ, sp.cablePortTypeId);
 				if (pt == null)
 					GraphActions.setObjectBackColor(graph, port, Color.red);
 				else
