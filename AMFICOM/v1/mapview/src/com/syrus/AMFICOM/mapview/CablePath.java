@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.3 2005/02/02 15:17:30 krupenn Exp $
+ * $Id: CablePath.java,v 1.4 2005/02/25 13:45:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,13 +38,11 @@ import java.util.ListIterator;
 /**
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/02 15:17:30 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/25 13:45:05 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
 {
-	private static final long serialVersionUID = 02L;
-
 	/**
 	 * Идентификатор.
 	 */

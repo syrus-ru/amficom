@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.5 2005/02/02 15:17:30 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.6 2005/02/25 13:45:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,13 +44,11 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/02 15:17:30 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/25 13:45:05 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
 {
-	private static final long serialVersionUID = 02L;
-
 	/**
 	 * Идентификатор.
 	 */
