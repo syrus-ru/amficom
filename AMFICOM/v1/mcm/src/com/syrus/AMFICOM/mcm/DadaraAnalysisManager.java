@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.24 2005/03/15 17:04:15 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.25 2005/03/15 17:11:31 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/03/15 17:04:15 $
+ * @version $Revision: 1.25 $, $Date: 2005/03/15 17:11:31 $
  * @author $Author: saa $
  * @module mcm_v1
  */
@@ -118,7 +118,7 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 
 	public SetParameter[] analyse() throws AnalysisException
 	{
-		// output alarms; only 0 or 1 at present version
+		// output alarms; only 0 or 1 alarms at present version
 		List alarmList = new ArrayList();
 
 		// output parameters (not SetParameter[] yet)
