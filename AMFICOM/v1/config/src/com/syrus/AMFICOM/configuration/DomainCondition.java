@@ -1,5 +1,5 @@
 /*
- * $Id: DomainCondition.java,v 1.3 2004/10/03 12:43:06 bob Exp $
+ * $Id: DomainCondition.java,v 1.4 2004/10/04 06:40:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/03 12:43:06 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/04 06:40:19 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -37,14 +37,15 @@ public class DomainCondition implements StorableObjectCondition {
 		this.entityCode = new Short(transferable.entity_code);
 	}
 
-	public DomainCondition(Domain domain) {
-		this.domain = domain;
-	}
-    
     public DomainCondition(Domain domain, Short entityCode) {
-        this(domain);
+        this.domain = domain;
         this.entityCode = entityCode; 
     }
+
+	public DomainCondition(Domain domain, short entityCode) {
+		this.domain = domain;
+		this.entityCode = new Short(entityCode);
+	}
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
@@ -174,7 +175,7 @@ public class DomainCondition implements StorableObjectCondition {
 	}
 
 	public Short getEntityCode() {
-		return null;
+		return this.entityCode;
 	}
 
 	public Domain getDomain() {
