@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.8 2005/02/18 18:03:22 arseniy Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.9 2005/02/24 16:13:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -29,11 +28,10 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/18 18:03:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/02/24 16:13:59 $
+ * @author $Author: bob $
  * @module admin_v1
  */
 public class XMLAdministrationObjectLoader implements AdministrationObjectLoader {
@@ -58,11 +56,11 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		this.administrationXML.flush();
 	}
 
-	public Domain loadDomain(Identifier id) throws DatabaseException, CommunicationException {
+	public Domain loadDomain(Identifier id) throws ApplicationException {
 		return (Domain) this.loadStorableObject(id);
 	}
 
-	public Collection loadDomains(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadDomains(Collection ids) throws ApplicationException {
 		Collection objects = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -71,16 +69,15 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return objects;
 	}
 
-	public Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public MCM loadMCM(Identifier id) throws DatabaseException, CommunicationException {
+	public MCM loadMCM(Identifier id) throws ApplicationException {
 		return (MCM) this.loadStorableObject(id);
 	}
 
-	public Collection loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadMCMs(Collection ids) throws ApplicationException {
 		Collection objects = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -89,16 +86,15 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return objects;
 	}
 
-	public Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Server loadServer(Identifier id) throws DatabaseException, CommunicationException {
+	public Server loadServer(Identifier id) throws ApplicationException {
 		return (Server) this.loadStorableObject(id);
 	}
 
-	public Collection loadServers(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadServers(Collection ids) throws ApplicationException {
 		Collection objects = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -107,16 +103,15 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return objects;
 	}
 
-	public Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public User loadUser(Identifier id) throws DatabaseException, CommunicationException {
+	public User loadUser(Identifier id) throws ApplicationException {
 		return (User) this.loadStorableObject(id);
 	}
 
-	public Collection loadUsers(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadUsers(Collection ids) throws ApplicationException {
 		Collection objects = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -125,110 +120,86 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return objects;
 	}
 
-	public Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
+	public Set refresh(Set storableObjects) throws ApplicationException {
 		// TODO Auto-generated method stub
 		return Collections.EMPTY_SET;
 	}
 
-	public void saveDomain(Domain domain, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveDomain(Domain domain, boolean force) throws ApplicationException {
 		this.saveStorableObject(domain, force);
 		this.administrationXML.flush();
 	}
 
-	public void saveDomains(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveDomains(Collection collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 
 	}
 
-	public void saveMCM(MCM mcm, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveMCM(MCM mcm, boolean force) throws ApplicationException {
 		this.saveStorableObject(mcm, force);
 		this.administrationXML.flush();
 
 	}
 
-	public void saveMCMs(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveMCMs(Collection collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 
 	}
 
-	public void saveServer(Server server, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveServer(Server server, boolean force) throws ApplicationException {
 		this.saveStorableObject(server, force);
 		this.administrationXML.flush();
 	}
 
-	public void saveServers(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveServers(Collection collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 
 	}
 
-	public void saveUser(User user, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveUser(User user, boolean force) throws ApplicationException {
 		this.saveStorableObject(user, force);
 		this.administrationXML.flush();
 	}
 
-	public void saveUsers(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveUsers(Collection collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 
 	}
 
-	private StorableObject loadStorableObject(Identifier id) throws CommunicationException {
+	private StorableObject loadStorableObject(Identifier id) throws ApplicationException {
 		try {
 			return this.administrationXML.retrieve(id);
 		} catch (ObjectNotFoundException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.load"
+			throw new ApplicationException("XMLAdministrationObjectLoader.load"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		} catch (RetrieveObjectException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.load"
-					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.load"
-					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		}
+		} 
 	}
 
-	private List loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws CommunicationException {
+	private List loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		try {
 			return this.administrationXML.retrieveByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.loadStorableObjectButIds | caught "
+			throw new ApplicationException("XMLAdministrationObjectLoader.loadStorableObjectButIds | caught "
 					+ e.getMessage(), e);
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.loadStorableObjectButIds | caught "
-					+ e.getMessage(), e);
-		}
+		} 
 	}
 
-	private void saveStorableObject(StorableObject storableObject, boolean force) throws CommunicationException {
+	private void saveStorableObject(StorableObject storableObject, boolean force) throws ApplicationException {
 		Identifier id = storableObject.getId();
 		Identifier modifierId = SessionContext.getAccessIdentity().getUserId();
 		try {
 			this.administrationXML.updateObject(storableObject, force, modifierId);
 		} catch (UpdateObjectException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.save"
+			throw new ApplicationException("XMLAdministrationObjectLoader.save"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.save"
-					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		} catch (VersionCollisionException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.save"
-					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
-		}
+		} 
 	}
 
-	private void saveStorableObjects(Collection storableObjects, boolean force) throws CommunicationException {
+	private void saveStorableObjects(Collection storableObjects, boolean force) throws ApplicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			this.saveStorableObject(storableObject, force);
