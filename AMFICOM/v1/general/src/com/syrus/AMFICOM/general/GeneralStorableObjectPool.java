@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.2 2005/01/19 20:42:59 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.3 2005/02/08 09:17:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/19 20:42:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 09:17:47 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -228,8 +228,8 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List ids) throws DatabaseException, CommunicationException {
-		instance.deleteImpl(ids);
+	public static void delete(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+		instance.deleteImpl(objects);
 	}
 
 	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
@@ -246,9 +246,9 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		}
 	}
 	
-	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObjects(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		try {
-			gObjectLoader.delete(ids);
+			gObjectLoader.delete(objects);
 		}
 		catch (DatabaseException e) {
 			Log.errorMessage("GeneralStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage());

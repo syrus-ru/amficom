@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.84 2005/02/07 14:21:39 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.85 2005/02/08 09:12:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/02/07 14:21:39 $
+ * @version $Revision: 1.85 $, $Date: 2005/02/08 09:12:59 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -171,8 +171,8 @@ public abstract class StorableObjectDatabase {
 		this.delete(storableObject.getId());
 	}
 
-	public void delete(List ids) throws IllegalDataException {
-		if ( (ids == null) || (ids.isEmpty()))
+	public void delete(List objects) throws IllegalDataException {
+		if ((objects == null) || (objects.isEmpty()))
 			return;
 		String sql;
 		{
@@ -181,18 +181,20 @@ public abstract class StorableObjectDatabase {
 			buffer.append(SQL_WHERE);
 			buffer.append(OPEN_BRACKET);
 			buffer.append(StorableObjectWrapper.COLUMN_ID);
-			int idsLength = ids.size();
+			int idsLength = objects.size();
 			if (idsLength == 1) {
 				buffer.append(EQUALS);
-				Object object = ids.iterator().next();
+				Object object = objects.iterator().next();
 				Identifier identifier = null;
 				if (object instanceof Identifier)
-					identifier = (Identifier)object;
-				else if (object instanceof Identified)
-					identifier = ((Identified)object).getId();
-				else throw new IllegalDataException("StorableObjectDatabase.delete | Object " + 
-													object.getClass().getName() 
-													+ " isn't Identifier or Identified");
+					identifier = (Identifier) object;
+				else
+					if (object instanceof Identified)
+						identifier = ((Identified) object).getId();
+					else
+						throw new IllegalDataException("StorableObjectDatabase.delete | Object "
+								+ object.getClass().getName()
+								+ " isn't Identifier or Identified");
 				buffer.append(DatabaseIdentifier.toSQLString(identifier));
 			}
 			else {
@@ -200,19 +202,21 @@ public abstract class StorableObjectDatabase {
 				buffer.append(OPEN_BRACKET);
 
 				int i = 1;
-				for (Iterator it = ids.iterator(); it.hasNext(); i++) {						
+				for (Iterator it = objects.iterator(); it.hasNext(); i++) {
 					Object object = it.next();
 					Identifier id = null;
 					if (object instanceof Identifier)
-						id = (Identifier)object;
-					else if (object instanceof Identified)
-						id = ((Identified)object).getId();
-					else throw new IllegalDataException("StorableObjectDatabase.delete | Object " + 
-														object.getClass().getName() 
-														+ " isn't Identifier or Identified");
+						id = (Identifier) object;
+					else
+						if (object instanceof Identified)
+							id = ((Identified) object).getId();
+						else
+							throw new IllegalDataException("StorableObjectDatabase.delete | Object "
+									+ object.getClass().getName()
+									+ " isn't Identifier or Identified");
 					buffer.append(DatabaseIdentifier.toSQLString(id));
 					if (it.hasNext()) {
-						if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+						if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 							buffer.append(COMMA);
 						else {
 							buffer.append(CLOSE_BRACKET);
@@ -225,13 +229,13 @@ public abstract class StorableObjectDatabase {
 				}
 				buffer.append(CLOSE_BRACKET);
 			}
-			buffer.append(CLOSE_BRACKET);			
+			buffer.append(CLOSE_BRACKET);
 
 			sql = buffer.toString();
 		}
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
-		try {			
+		try {
 			statement = connection.createStatement();
 			Log.debugMessage("StorableObjectDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
@@ -243,7 +247,7 @@ public abstract class StorableObjectDatabase {
 			try {
 				if (statement != null)
 					statement.close();
-				statement = null;				
+				statement = null;
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
