@@ -1,5 +1,5 @@
 /*
- * $Id: ServerMain.java,v 1.2 2004/09/14 13:42:59 bass Exp $
+ * $Id: ServerMain.java,v 1.3 2004/09/23 15:11:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,9 @@ import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.corba.portable.reflect.*;
 import com.syrus.AMFICOM.server.measurement.AmficomRtuImpl;
 import com.syrus.AMFICOM.server.object.AmficomImpl;
-import com.syrus.AMFICOM.server.prefs.JdbcConnectionManager;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import java.io.IOException;
 import java.net.InetAddress;
-import oracle.jdbc.pool.OracleDataSource;
 import org.omg.CORBA.*;
 import org.omg.CosNaming.*;
 import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
@@ -24,7 +22,7 @@ import org.omg.PortableServer.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/09/14 13:42:59 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/23 15:11:27 $
  * @module corbaportable_v1
  */
 final class ServerMain {
