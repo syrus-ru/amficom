@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDataTestCase.java,v 1.1 2004/12/02 14:02:59 bass Exp $
+ * $Id: ImageResourceDataTestCase.java,v 1.2 2004/12/15 09:42:49 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,13 @@
 
 package com.syrus.AMFICOM.resource.corba;
 
+import com.syrus.AMFICOM.resource.corba.ImageResourceDataPackage.*;
 import junit.framework.TestCase;
 import org.omg.CORBA.BAD_OPERATION;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/12/02 14:02:59 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/15 09:42:49 $
  * @module idl_v1
  */
 public final class ImageResourceDataTestCase extends TestCase {
@@ -27,7 +28,7 @@ public final class ImageResourceDataTestCase extends TestCase {
 
 	public void testFileName() {
 		final ImageResourceData imageResourceData = new ImageResourceData();
-		imageResourceData.image(ImageResourceSort.BYTES, new byte[0]);
+		imageResourceData.image(ImageResourceSort.SCHEME, new byte[0]);
 		try {
 			imageResourceData.fileName();
 			fail(ERROR_MESSAGE);

@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.37 2004/12/07 10:11:10 bass Exp $
+ * $Id: general.idl,v 1.38 2004/12/15 09:42:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,21 @@
 #ifndef GENERAL_IDL
 #define GENERAL_IDL
 
+#include <streams.idl>
+
 module com {
 module syrus {
 module AMFICOM {
 module general {
 module corba {
+	typedef string<32> String32;
+
+	typedef wstring<32> WString32;
+
+	typedef wstring<64> WString64;
+
+	typedef wstring<256> WString256;
+
 	struct Identifier_Transferable {
 		wstring identifier_string;
 	};
@@ -72,17 +82,17 @@ module corba {
 	};
 
 	abstract interface NameResolver {
-		wstring<64> lookupDomainName(in Identifier_Transferable id) raises (AMFICOMRemoteException);
+		WString64 lookupDomainName(in Identifier_Transferable id) raises (AMFICOMRemoteException);
 
-		string<32> lookupUserLogin(in Identifier_Transferable id) raises (AMFICOMRemoteException);
+		String32 lookupUserLogin(in Identifier_Transferable id) raises (AMFICOMRemoteException);
 
-		wstring<64> lookupUserName(in Identifier_Transferable id) raises (AMFICOMRemoteException);
+		WString64 lookupUserName(in Identifier_Transferable id) raises (AMFICOMRemoteException);
 
-		Identifier_Transferable reverseLookupDomainName(in wstring<64> domainName) raises (AMFICOMRemoteException);
+		Identifier_Transferable reverseLookupDomainName(in WString64 domainName) raises (AMFICOMRemoteException);
 
-		Identifier_Transferable reverseLookupUserLogin(in string<32> userLogin) raises (AMFICOMRemoteException);
+		Identifier_Transferable reverseLookupUserLogin(in String32 userLogin) raises (AMFICOMRemoteException);
 
-		Identifier_Transferable reverseLookupUserName(in wstring<64> userName) raises (AMFICOMRemoteException);
+		Identifier_Transferable reverseLookupUserName(in WString64 userName) raises (AMFICOMRemoteException);
 	};
 
 //	abstract
@@ -138,7 +148,7 @@ module General {
 				long long end_time;
 			} ptpars;
 		case TEST_TEMPORAL_TYPE_TIMETABLE:
-			sequence<long long> ti;
+			::CORBA::LongLongSeq ti;
 	};
 
 	enum TestStatus

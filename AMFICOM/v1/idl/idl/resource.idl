@@ -1,5 +1,5 @@
 /*
- * $Id: resource.idl,v 1.9 2004/11/25 16:42:10 bass Exp $
+ * $Id: resource.idl,v 1.10 2004/12/15 09:42:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,16 +18,17 @@ module com {
 		module AMFICOM {
 			module resource {
 				module corba {
-					enum ImageResourceSort {
-						BYTES,
-						FILE,
-						SCHEME
-					};
-
-					union ImageResourceData switch (ImageResourceSort) {
+					union ImageResourceData switch (enum ImageResourceSort {
+							BITMAP,
+							FILE,
+							SCHEME}) {
+						case BITMAP:
+							struct BitmapImageResourceData {
+								general::corba::WString32 codename;
+								::CORBA::OctetSeq image;
+							} bitmapImageResourceData;
 						case FILE:
-							string fileName;
-						case BYTES:
+							general::corba::WString256 fileName;
 						case SCHEME:
 							::CORBA::OctetSeq image;
 					};
