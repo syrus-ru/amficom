@@ -169,6 +169,9 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 3, new Color(0, 96, 0));
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 4, new Color(0, 64, 128));
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 5, new Color(128, 128, 0));
+		
+		defaults.put(AnalysisResourceKeys.COLOR_WARNING_THRESHOLD, new Color(255, 220, 0));
+		defaults.put(AnalysisResourceKeys.COLOR_ALARM_THRESHOLD, new Color(255, 150, 60));
 	}
 	/*
 	 * public DataSourceInterface getDataSource(SessionInterface si) { String
