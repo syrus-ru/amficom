@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.46 2005/04/05 09:02:31 arseniy Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.47 2005/04/05 10:32:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,15 +20,13 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/04/05 09:02:31 $
+ * @version $Revision: 1.47 $, $Date: 2005/04/05 10:32:44 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -101,429 +99,159 @@ public class DatabaseConfigurationObjectLoader extends AbstractObjectLoader impl
 
 	// for multiple objects
 
-	public Set loadEquipmentTypes(Set ids) throws RetrieveObjectException {
+	public Set loadEquipmentTypes(Set ids) throws ApplicationException {
 		EquipmentTypeDatabase database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadPortTypes(Set ids) throws RetrieveObjectException {
+	public Set loadPortTypes(Set ids) throws ApplicationException {
 		PortTypeDatabase database = ConfigurationDatabaseContext.getPortTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadMeasurementPortTypes(Set ids) throws RetrieveObjectException {
+	public Set loadMeasurementPortTypes(Set ids) throws ApplicationException {
 		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadLinkTypes(Set ids) throws RetrieveObjectException {
+	public Set loadLinkTypes(Set ids) throws ApplicationException {
 		LinkTypeDatabase database = ConfigurationDatabaseContext.getLinkTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinkType | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadLinkTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadCableLinkTypes(Set ids) throws RetrieveObjectException {
+	public Set loadCableLinkTypes(Set ids) throws ApplicationException {
 		CableLinkTypeDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableLinkTypes | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadCableLinkTypes | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadCableThreadTypes(Set ids) throws RetrieveObjectException {
+	public Set loadCableThreadTypes(Set ids) throws ApplicationException {
 		CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadEquipments(Set ids) throws RetrieveObjectException {
+	public Set loadEquipments(Set ids) throws ApplicationException {
 		EquipmentDatabase database = ConfigurationDatabaseContext.getEquipmentDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadPorts(Set ids) throws RetrieveObjectException {
+	public Set loadPorts(Set ids) throws ApplicationException {
 		PortDatabase database = ConfigurationDatabaseContext.getPortDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadMeasurementPorts(Set ids) throws RetrieveObjectException {
+	public Set loadMeasurementPorts(Set ids) throws ApplicationException {
 		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadTransmissionPaths(Set ids) throws RetrieveObjectException {
+	public Set loadTransmissionPaths(Set ids) throws ApplicationException {
 		TransmissionPathDatabase database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadTransmissionPathTypes(Set ids) throws RetrieveObjectException {
+	public Set loadTransmissionPathTypes(Set ids) throws ApplicationException {
 		TransmissionPathTypeDatabase database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathTypes | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadTransmissionPathTypes | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadKISs(Set ids) throws RetrieveObjectException {
+	public Set loadKISs(Set ids) throws ApplicationException {
 		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadMonitoredElements(Set ids) throws RetrieveObjectException {
+	public Set loadMonitoredElements(Set ids) throws ApplicationException {
 		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMonitoredElements | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadMonitoredElements | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadLinks(Set ids) throws RetrieveObjectException {
+	public Set loadLinks(Set ids) throws ApplicationException {
 		LinkDatabase database = ConfigurationDatabaseContext.getLinkDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinks | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadLinks | Illegal Storable Object: " + e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadCableThreads(Set ids) throws RetrieveObjectException {
+	public Set loadCableThreads(Set ids) throws ApplicationException {
 		CableThreadDatabase database = ConfigurationDatabaseContext.getCableThreadDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableThreads | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadCableThreads | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
 
 
-
-	public Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		CableLinkTypeDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableLinkTypesButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadCableLinkTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
-	}
-
-	public Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		CableThreadDatabase database = ConfigurationDatabaseContext.getCableThreadDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableThreadsButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadCableThreadsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
-	}
 
 	/* Load Configuration StorableObject but argument ids */
 
-	public Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		CableLinkTypeDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+	}
+
+	public Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		CableThreadDatabase database = ConfigurationDatabaseContext.getCableThreadDatabase();
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+	}
+
+	public Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableThreadTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadCableThreadTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		EquipmentDatabase database = ConfigurationDatabaseContext.getEquipmentDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipmentsButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadEquipmentsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		EquipmentTypeDatabase database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipmentTypesButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadEquipmentTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISsButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadKISsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadLinksButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		LinkDatabase database = ConfigurationDatabaseContext.getLinkDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinksButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadLinksButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		LinkTypeDatabase database = ConfigurationDatabaseContext.getLinkTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinkTypesButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadLinkTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadMeasurementPortsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadMeasurementPortTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMonitoredElementsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadMonitoredElementsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		PortDatabase database = ConfigurationDatabaseContext.getPortDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadPortsButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadPortsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		PortTypeDatabase database = ConfigurationDatabaseContext.getPortTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadPortTypesButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadPortTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		TransmissionPathDatabase database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		TransmissionPathTypeDatabase database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
-		Set objects = null;
-		try {
-			objects = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-			throw new RetrieveObjectException("DatabaseConfigurationObjectLoader.loadTransmissionPathTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return objects;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

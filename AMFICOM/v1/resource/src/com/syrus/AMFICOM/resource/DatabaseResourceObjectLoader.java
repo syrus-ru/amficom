@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.13 2005/04/05 09:00:21 arseniy Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.14 2005/04/05 10:34:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,16 +19,14 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/05 09:00:21 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/05 10:34:00 $
  * @author $Author: arseniy $
  * @module resource_v1
  */
@@ -49,7 +47,7 @@ public class DatabaseResourceObjectLoader extends AbstractObjectLoader implement
 				storableObject = new SchemeImageResource(id);
 				return storableObject;
 			default:
-				throw new RetrieveObjectException("ResourceObjectLoader.loadImageResource | wrong sort" + sort); //$NON-NLS-1$
+				throw new IllegalDataException("ResourceObjectLoader.loadImageResource | wrong sort" + sort); //$NON-NLS-1$
 		}
 	}
 
@@ -57,34 +55,18 @@ public class DatabaseResourceObjectLoader extends AbstractObjectLoader implement
 
 
 
-	public Set loadImageResources(Set ids) throws RetrieveObjectException {
+	public Set loadImageResources(Set ids) throws ApplicationException {
 		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
-		Set set = Collections.EMPTY_SET;
-		try {
-			set = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.loadImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMeasumentObjectLoader.loadImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-		}
-		return set;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
 
 
 
 
-	public Set loadImageResourcesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
+	public Set loadImageResourcesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
-		Set list = Collections.EMPTY_SET;
-		try {
-			list = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("ResourceObjectLoader.loadImageResourcesButIds | IllegalDataException: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("ResourceObjectLoader.loadImageResourcesButIds | IllegalDataException: " + e.getMessage()); //$NON-NLS-1$
-		}
-		return list;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 

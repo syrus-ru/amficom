@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.19 2005/04/05 09:01:33 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.20 2005/04/05 10:31:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,10 +15,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.util.Log;
-
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/05 09:01:33 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/05 10:31:58 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -43,93 +41,34 @@ public class DatabaseGeneralObjectLoader extends AbstractObjectLoader implements
 
 	// for multiple objects
 
-	public Set loadParameterTypes(Set ids) throws RetrieveObjectException {
+	public Set loadParameterTypes(Set ids) throws ApplicationException {
 		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
-		Set collection = null;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadCharacteristicTypes(Set ids) throws RetrieveObjectException {
+	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
 		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
-		Set collection = null;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadCharacteristicTypes | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return collection;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadCharacteristics(Set ids) throws RetrieveObjectException {
+	public Set loadCharacteristics(Set ids) throws ApplicationException {
 		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
-		Set collection = null;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-
-
-
-
-	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids)
-			throws RetrieveObjectException {
+	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
-		Set collection = null;
-		try {
-			collection = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.loadParameterTypesButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadParameterTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return collection;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids)
-			throws RetrieveObjectException {
+	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
-		Set collection = null;
-		try {
-			collection = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristicTypesButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadCharacteristicTypesButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return collection;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids)
-			throws RetrieveObjectException {
+	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
-		Set collection = null;
-		try {
-			collection = database.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: " + e.getMessage());
-			throw new RetrieveObjectException("DatabaseGeneralObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		return collection;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.14 2005/04/05 09:03:10 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.15 2005/04/05 10:33:44 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,15 +19,13 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/05 09:03:10 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/05 10:33:44 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -47,91 +45,37 @@ public class DatabaseEventObjectLoader extends AbstractObjectLoader implements E
 
 
 
-	public Set loadEventTypes(Set ids) throws RetrieveObjectException {
-		EventTypeDatabase eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
-		Set collection = null;
-		try {
-			collection = eventTypeDatabase.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseEventObjectLoader.loadEventTypes | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new RetrieveObjectException(mesg, e);
-		}
-		return collection;
+	public Set loadEventTypes(Set ids) throws ApplicationException {
+		EventTypeDatabase database = EventDatabaseContext.getEventTypeDatabase();
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadEvents(Set ids) throws RetrieveObjectException {
-		EventDatabase eventDatabase = EventDatabaseContext.getEventDatabase();
-		Set collection = null;
-		try {
-			collection = eventDatabase.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseEventObjectLoader.loadEvents | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new RetrieveObjectException(mesg, e);
-		}
-		return collection;
+	public Set loadEvents(Set ids) throws ApplicationException {
+		EventDatabase database = EventDatabaseContext.getEventDatabase();
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadEventSources(Set ids) throws RetrieveObjectException {
-		EventSourceDatabase eventSourceDatabase = EventDatabaseContext.getEventSourceDatabase();
-		Set collection = null;
-		try {
-			collection = eventSourceDatabase.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseEventObjectLoader.loadEventSources | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new RetrieveObjectException(mesg, e);
-		}
-		return collection;
+	public Set loadEventSources(Set ids) throws ApplicationException {
+		EventSourceDatabase database = EventDatabaseContext.getEventSourceDatabase();
+		return super.retrieveFromDatabase(database, ids);
 	}
 
 
 
 
-	public Set loadEventTypesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		EventTypeDatabase eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
-		Set collection = null;
-		try {
-			collection = eventTypeDatabase.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseEventObjectLoader.loadEventTypesButIds | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new RetrieveObjectException(mesg, e);
-		}
-		return collection;
+	public Set loadEventTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		EventTypeDatabase database = EventDatabaseContext.getEventTypeDatabase();
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadEventsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		EventDatabase eventDatabase = EventDatabaseContext.getEventDatabase();
-		Set collection = null;
-		try {
-			collection = eventDatabase.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseEventObjectLoader.loadEventsButIds | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new RetrieveObjectException(mesg, e);
-		}
-		return collection;
+	public Set loadEventsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		EventDatabase database = EventDatabaseContext.getEventDatabase();
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadEventSourcesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		EventSourceDatabase eventSourceDatabase = EventDatabaseContext.getEventSourceDatabase();
-		Set collection = null;
-		try {
-			collection = eventSourceDatabase.retrieveButIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseEventObjectLoader.loadEventSourcesButIds | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new RetrieveObjectException(mesg, e);
-		}
-		return collection;
+	public Set loadEventSourcesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		EventSourceDatabase database = EventDatabaseContext.getEventSourceDatabase();
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 

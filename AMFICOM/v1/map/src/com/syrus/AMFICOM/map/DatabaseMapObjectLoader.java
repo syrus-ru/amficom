@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMapObjectLoader.java,v 1.14 2005/04/05 09:00:26 arseniy Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.15 2005/04/05 10:34:15 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -19,15 +19,13 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/05 09:00:26 $
+ * @version $Revision: 1.15 $, $Date: 2005/04/05 10:34:15 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -73,257 +71,98 @@ public class DatabaseMapObjectLoader extends AbstractObjectLoader implements Map
 
 
 
-	public Set loadCollectors(final Set ids) throws RetrieveObjectException {
+	public Set loadCollectors(final Set ids) throws ApplicationException {
 		CollectorDatabase database = MapDatabaseContext.getCollectorDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadCollectors | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadCollectors | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadMaps(final Set ids) throws RetrieveObjectException {
+	public Set loadMaps(final Set ids) throws ApplicationException {
 		MapDatabase database = MapDatabaseContext.getMapDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadMaps | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadMaps | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-		}
-		return list;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadMarks(final Set ids) throws RetrieveObjectException {
+	public Set loadMarks(final Set ids) throws ApplicationException {
 		MarkDatabase database = MapDatabaseContext.getMarkDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadMarks | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadMarks | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadNodeLinks(final Set ids) throws RetrieveObjectException {
+	public Set loadNodeLinks(final Set ids) throws ApplicationException {
 		NodeLinkDatabase database = MapDatabaseContext.getNodeLinkDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadNodeLinks | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadNodeLinks | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadPhysicalLinks(final Set ids) throws RetrieveObjectException {
+	public Set loadPhysicalLinks(final Set ids) throws ApplicationException {
 		PhysicalLinkDatabase database = MapDatabaseContext.getPhysicalLinkDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadPhysicalLinks | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadPhysicalLinks | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadPhysicalLinkTypes(final Set ids) throws RetrieveObjectException {
+	public Set loadPhysicalLinkTypes(final Set ids) throws ApplicationException {
 		PhysicalLinkTypeDatabase database = MapDatabaseContext.getPhysicalLinkTypeDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadPhysicalLinkTypes | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadPhysicalLinkTypes | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadSiteNodes(final Set ids) throws RetrieveObjectException {
+	public Set loadSiteNodes(final Set ids) throws ApplicationException {
 		SiteNodeDatabase database = MapDatabaseContext.getSiteNodeDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadSiteNodes | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("loadSiteNodes.loadSiteNodes | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
-	public Set loadSiteNodeTypes(final Set ids) throws RetrieveObjectException {
+	public Set loadSiteNodeTypes(final Set ids) throws ApplicationException {
 		SiteNodeTypeDatabase database = MapDatabaseContext.getSiteNodeTypeDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadSiteNodeTypes | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("loadSiteNodes.loadSiteNodeTypes | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-		}
-		return list;
+		return super.retrieveFromDatabase(database, ids);
 	}	
 
-	public Set loadTopologicalNodes(final Set ids) throws RetrieveObjectException {
+	public Set loadTopologicalNodes(final Set ids) throws ApplicationException {
 		TopologicalNodeDatabase database = MapDatabaseContext.getTopologicalNodeDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadTopologicalNodes | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-			throw new RetrieveObjectException("loadSiteNodes.loadTopologicalNodes | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabase(database, ids);
 	}
 
 
 
 
 
-	public Set loadCollectorsButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public Set loadCollectorsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		CollectorDatabase database = MapDatabaseContext.getCollectorDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadCollectorsButIds | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadCollectorsButIds | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadMapsButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public Set loadMapsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		MapDatabase database = MapDatabaseContext.getMapDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadMapsButIds | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadMapsButIds | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-		}
-		return list;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadMarksButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public Set loadMarksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		MarkDatabase database = MapDatabaseContext.getMarkDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadMarksButIds | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadMarksButIds | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadNodeLinksButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public Set loadNodeLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		NodeLinkDatabase database = MapDatabaseContext.getNodeLinkDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadNodeLinksButIds | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadNodeLinksButIds | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadPhysicalLinksButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public Set loadPhysicalLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		PhysicalLinkDatabase database = MapDatabaseContext.getPhysicalLinkDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadPhysicalLinksButIds | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadPhysicalLinksButIds | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadPhysicalLinkTypesButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public Set loadPhysicalLinkTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		PhysicalLinkTypeDatabase database = MapDatabaseContext.getPhysicalLinkTypeDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadPhysicalLinkTypesButIds | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-			throw new RetrieveObjectException("DatabaseMapObjectLoader.loadPhysicalLinkTypesButIds | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 	
-	public Set loadSiteNodesButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public Set loadSiteNodesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		SiteNodeDatabase database = MapDatabaseContext.getSiteNodeDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, condition);
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadSiteNodesButIds | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("loadSiteNodes.loadSiteNodesButIds | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadSiteNodeTypesButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public Set loadSiteNodeTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		SiteNodeTypeDatabase database = MapDatabaseContext.getSiteNodeTypeDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, condition);
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadSiteNodeTypesButIds | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-			throw new RetrieveObjectException("loadSiteNodes.loadSiteNodeTypesButIds | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
-		}
-		return list;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	public Set loadTopologicalNodesButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public Set loadTopologicalNodesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		TopologicalNodeDatabase database = MapDatabaseContext.getTopologicalNodeDatabase();
-		Set list = null;
-		try {
-			list = database.retrieveByIdsByCondition(ids, condition);
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMapObjectLoader.loadTopologicalNodesButIds | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-			throw new RetrieveObjectException("loadSiteNodes.loadTopologicalNodesButIds | Illegal Storable Object: " //$NON-NLS-1$
-					+ e.getMessage());
-		}
-		return list;
+		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 
