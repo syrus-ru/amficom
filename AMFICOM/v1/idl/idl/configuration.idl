@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.49 2004/11/16 12:32:38 bass Exp $
+ * $Id: configuration.idl,v 1.50 2004/11/19 10:12:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -116,26 +116,55 @@ module corba {
 	typedef MeasurementPortType_Transferable MeasurementPortType;
 	typedef sequence<MeasurementPortType> MeasurementPortTypeSeq;
 	
-/////////////////////// LinkType /////////////////////
-	enum LinkTypeSort {
-		LINKTYPE_SORT_FIBER
+/////////////////////// LinkType /////////////////////	
+	enum AbstractLinkTypeSort {
+		LINK_TYPE,
+		CABLE_LINK_TYPE,
+		CABLE_THREAD_TYPE
 	};
-	
-	struct LinkType_Transferable{
+
+	enum LinkTypeSort {
+		LINKTYPESORT_OPTICAL_FIBER,
+		LINKTYPESORT_ETHERNET,
+		LINKTYPESORT_GSM
+	};
+
+	struct LinkType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 	  
-	  wstring codename;
-	  wstring description;
-	  wstring name;
-	  LinkTypeSort sort;
-	  wstring manufacturer;
-	  wstring manufacturerCode;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
-	  
+		wstring codename;
+		wstring description;
+		wstring name;
+		LinkTypeSort sort;
+		wstring manufacturer;
+		wstring manufacturerCode;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
 	};
-	typedef sequence <LinkType_Transferable> LinkTypeSeq_Transferable;
-	typedef LinkType_Transferable LinkType;
-	typedef sequence<LinkType> LinkTypeSeq;
+
+	struct CableThreadType_Transferable {
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		
+		wstring codename;
+		wstring description;
+		wstring manufacturer;
+		wstring manufacturerCode;
+		wstring mark;
+		wstring color;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable cable_link_type_id;
+	};
+	
+	union AbstractLinkType_Transferable switch (AbstractLinkTypeSort) {
+		case LINK_TYPE:
+			LinkType_Transferable linkType;
+		case CABLE_LINK_TYPE:
+			LinkType_Transferable cableLinkType;
+		case CABLE_THREAD_TYPE:
+			CableThreadType_Transferable cableThreadType;
+	};
+	
+	typedef sequence <AbstractLinkType_Transferable> AbstractLinkTypeSeq_Transferable;	
+	typedef AbstractLinkType_Transferable AbstractLinkType;	
+	typedef sequence <AbstractLinkType> AbstractLinkTypeSeq;	
 
 //////////////////////////////////// User /////////////////////////////////
 	enum UserSort {
