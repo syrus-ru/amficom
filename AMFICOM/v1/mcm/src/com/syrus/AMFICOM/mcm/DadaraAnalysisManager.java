@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.23 2005/03/15 13:51:34 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.24 2005/03/15 17:04:15 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,13 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/15 13:51:34 $
+ * @version $Revision: 1.24 $, $Date: 2005/03/15 17:04:15 $
  * @author $Author: saa $
  * @module mcm_v1
  */
 
 //*
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,6 +52,7 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
 	public static final String CODENAME_DADARA_ETALON_MTM_MT_SE = "dadara_etalon_mtm_mt_se";
 	public static final String CODENAME_DADARA_ETALON_MTM_THRESH = "dadara_etalon_mtm_thresh";
+	public static final String CODENAME_DADARA_ETALON_BREAK_THRESH = "dadara_etalon_break_thresh";
 
 	// output SetParameters codenames
 	public static final String CODENAME_DADARA_TRACELENGTH = "tracelength";
@@ -130,53 +132,55 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 		// Определяем длину до ухода р/г в шум
 		int traceLength = CoreAnalysisManager.calcTraceLength(y);
 
+		// получаем из эталона уровень обнаружения обрыва
+		double breakThresh = 0;
+		try {
+			breakThresh = getParBA(CODENAME_DADARA_ETALON_BREAK_THRESH).toDouble();
+		}
+		catch (IOException e) {
+			throw new AnalysisException("Couldn't get " + CODENAME_DADARA_ETALON_BREAK_THRESH + ": " + e + ", " + e.getMessage());
+		}
+
 		// Получаем эталонный MTM (пороговые кривые и события)
 		ModelTraceManager etMTM = obtainEtalonMTM();
-
-		// сравниваем длину с началом последнего события в эталоне
-		int etMinLength = etMTM.getSimpleEvent(etMTM.getNEvents() - 1).getBegin();
-		boolean testLengthFailed = traceLength < etMinLength;
+		int etMinLength = etMTM.getSimpleEvent(etMTM.getNEvents() - 1).getBegin(); // начало конца волокна
 
 		// в любом случае - определение шума и фитировка
 		double[] noise = CoreAnalysisManager.calcNoiseArray(y, traceLength);
 		ModelFunction mf = CoreAnalysisManager.fitTrace(y, traceLength, noise);
+		ModelTrace mt = new ModelTraceImplMF(mf, traceLength);
 
 		// добавляем к результатам анализа найденную длину р/г и фитированную кривую
 		outParameters.put(CODENAME_DADARA_TRACELENGTH, ByteArray.toByteArray(traceLength));
 		outParameters.put(CODENAME_DARARA_MODELFUNCTION, mf.toByteArray());
 
-		// проверяем, если ли выход за пределы масок
-		ModelTrace mt = new ModelTraceImplMF(mf, traceLength);
-		ReflectogramAlarm alarm = ModelTraceComparer.compare(mt, etMTM);
+		// пытаемся обнаружить обрыв волокна:
+		// (1) на участке до ухода в шум (x < traceLength) - по уходу м.ф. ниже уровня breakThresh  
+		// XXX - надо ли было предварительно смещать р/г по вертикали?
+		int breakPos = ModelTraceComparer.compareToMinLevel(mt, breakThresh);
+		// (2) на участке шума (x >= traceLength) - не ушли ли в шум до начала последнего коннектора?
+		if (breakPos < 0 && traceLength < etMinLength)
+			breakPos = traceLength;
 
-		if (testLengthFailed) // если был обнаружен обрыв
+		if (breakPos >= 0) // если был обнаружен обрыв
 		{
-			// если был выход за HARD порог масок,
-			// то в качестве начального аларма используем этот аларм (нас интересует его начало)
-			// если HARD пороги не нарушены - игнорируем SOFT пороги и создаем новый аларм
-			if (alarm == null || alarm.level < ReflectogramAlarm.LEVEL_HARD)
-			{
-				alarm = new ReflectogramAlarm();
-				alarm.level = ReflectogramAlarm.LEVEL_HARD;
-				alarm.pointCoord = traceLength;
-			}
-			// устанавливаем тип аларма := "обрыв"
+			ReflectogramAlarm alarm = new ReflectogramAlarm();
+			alarm.level = ReflectogramAlarm.LEVEL_HARD;
 			alarm.alarmType = ReflectogramAlarm.TYPE_LINEBREAK;
-			// уточняем начальную дистанцию аларма на случай, если HARD-пороги сработали позднее ухода в шум
-			alarm.pointCoord = Math.min(alarm.pointCoord, traceLength);
+			alarm.pointCoord = breakPos;
 			// конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)
 			alarm.endPointCoord = Math.min(y.length, etMinLength);
-			// Теперь начало аларма указывает либо
-			// на точку выхода за пределы HARD порогов (если такой выход произошел),
-			// либо на "lastNonZeroPoint", если HARD порог так ничего и не дал.
-
-			// XXX - если HARD порог не сработал, то получится дистанция ухода р/г в шум - заметно больше, чем дистанция обрыва.
-			// XXX - если HARD порог сработал, то сгенерированное событие может быть неправильно отнесено к любому HARD-выходу за маски.
+			
+			// XXX - если на обрыве есть заметное отражение, то дистанция будет завышена
+			// мб, в таком случае не надо игнорировать HARD алармы? 
 
 			alarmList.add(alarm);
 		}
 		else // обрыв не обнаружен
 		{
+			// проверяем, если ли выход за пределы масок
+			ReflectogramAlarm alarm = ModelTraceComparer.compareToMTM(mt, etMTM);
+
 			// @todo: IA - пока не делаем
 //			getParBA(ParameterTypeCodenames.MIN_EVENT_LEVEL).toDouble();
 //			getParBA(ParameterTypeCodenames.MIN_SPLICE).toDouble();
