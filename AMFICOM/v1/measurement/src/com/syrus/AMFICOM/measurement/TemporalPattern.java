@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.43 2004/10/12 14:15:43 bob Exp $
+ * $Id: TemporalPattern.java,v 1.44 2004/10/13 09:11:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/10/12 14:15:43 $
+ * @version $Revision: 1.44 $, $Date: 2004/10/13 09:11:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -120,8 +120,6 @@ public class TemporalPattern extends StorableObject {
 				if (this.hours == null)
 					parseTemplate();
 				StringBuffer desc = new StringBuffer();
-				//SimpleDateFormat SDF = new
-				// SimpleDateFormat("HH:mm");
 				// //$NON-NLS-1$
 				if (this.hours.isAll()) {
 					desc.append(this.minutes.toString());
@@ -218,7 +216,7 @@ public class TemporalPattern extends StorableObject {
 			//String template = timeLine.getTemplate();
 			//String template = (String) templates.get(k);
 			long startTimeCalc = System.currentTimeMillis();
-			Pattern p = Pattern.compile("(.*)\\s+(.*)\\s+(.*)\\s+(.*)\\s+(.*)"); //$NON-NLS-1$
+			Pattern p = Pattern.compile("(.+)\\s+(.+)\\s+(.+)\\s+(.+)\\s+(.+)"); //$NON-NLS-1$
 			//Pattern p = Pattern.compile("(.*)");
 			if (this.dateList != null)
 				this.dateList.clear();
@@ -271,6 +269,8 @@ public class TemporalPattern extends StorableObject {
 					}
 
 				}
+			} else{
+				throw new IllegalArgumentException("illegial cron string");
 			}
 			fillAllData();
 
