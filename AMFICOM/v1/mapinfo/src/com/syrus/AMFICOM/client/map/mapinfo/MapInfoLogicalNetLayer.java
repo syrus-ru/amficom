@@ -12,20 +12,30 @@ import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
 
 import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
+import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 import java.awt.geom.Rectangle2D;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.ObjectInputStream;
+import java.io.OptionalDataException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MapInfoLogicalNetLayer extends LogicalNetLayer 
 {
-	protected VisualMapJ visualMapJ = null;
+	protected MapImagePanel mapImagePanel = null;
 	
-	MapTool logicalLayerMapTool = null;
+//	MapTool logicalLayerMapTool = null;
 	
 	public static final double ZOOM_FACTOR = 2D;
 
@@ -38,7 +48,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 				getClass().getName(), 
 				"SpatialLogicalNetLayer(" + viewer + ")");
 
-		logicalLayerMapTool = new LogicalLayerMapTool(this);
+//		logicalLayerMapTool = new LogicalLayerMapTool(this);
 		setMapViewer(viewer);
 	}
 
@@ -47,17 +57,41 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public Point convertMapToScreen(DoublePoint point)
 	{
-		try
-		{
-			com.mapinfo.util.DoublePoint mapdp = new com.mapinfo.util.DoublePoint(point.x, point.y);
-			com.mapinfo.util.DoublePoint screendp = visualMapJ.getMapJ().transformNumericToScreen(mapdp);
-			return new Point((int )screendp.x, (int )screendp.y);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
+    Point result = new Point();
+    String url = ((MapInfoNetMapViewer)viewer).mapperServletURL;
+    url += "?commandName=" + ServletCommandNames.CONVERT_MAP_SCREEN;
+    url += mapImagePanel.getMapMainParamString();    
+    url += "&par1=" + point.x;
+    url += "&par2=" + point.y;
+    
+    try
+    {
+      URL mapServer = new URL(url);
+      System.out.println("url: " + mapServer);
+      URLConnection s = mapServer.openConnection();
+
+      ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+      Object objRead = ois.readObject();
+      
+      if (objRead instanceof String)
+      {
+        Environment.log(
+            Environment.LOG_LEVEL_FINER, 
+            (String)objRead);
+        return null;
+      }
+      
+      result.x = ((Integer)objRead).intValue();
+      result.y = ((Integer)ois.readObject()).intValue();
+
+      ois.close();
+      return result;
+    }
+    catch (Throwable th)
+    {
+    }
+    
+    return null;
 	}
 	
 	/**
@@ -65,26 +99,75 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public DoublePoint convertScreenToMap(Point point)
 	{
-		try
-		{
-			com.mapinfo.util.DoublePoint screendp = new com.mapinfo.util.DoublePoint(point.x, point.y);
-			com.mapinfo.util.DoublePoint mapdp = visualMapJ.getMapJ().transformScreenToNumeric(screendp);
-			return new DoublePoint(mapdp.x, mapdp.y);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
+    DoublePoint result = new DoublePoint();
+    String url = ((MapInfoNetMapViewer)viewer).mapperServletURL;
+    url += "?commandName=" + ServletCommandNames.CONVERT_SCREEN_MAP_POINT;
+    url += mapImagePanel.getMapMainParamString();
+    url += "&par1=" + point.x;
+    url += "&par2=" + point.y;
+    
+    try
+    {
+      URL mapServer = new URL(url);
+      System.out.println("url: " + mapServer);
+      URLConnection s = mapServer.openConnection();
+
+      ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+      Object objRead = ois.readObject();
+      
+      if (objRead instanceof String)
+      {
+        Environment.log(
+            Environment.LOG_LEVEL_FINER, 
+            (String)objRead);
+        return null;
+      }
+      
+      result.x = ((Double)objRead).doubleValue();
+      result.y = ((Double)ois.readObject()).doubleValue();
+      ois.close();
+      return result;
+    }
+    catch (Throwable th)
+    {
+    }
+    
+    return null;
 	}
 
 	public double convertScreenToMap(double screenDistance)
 	{
-		DoublePoint p1 = convertScreenToMap(new Point(0, 0));
-		DoublePoint p2 = convertScreenToMap(new Point((int )screenDistance, 0));
-		double d = distance(p1, p2);
+    String url = ((MapInfoNetMapViewer)viewer).mapperServletURL;
+    url += "?commandName=" + ServletCommandNames.CONVERT_SCREEN_MAP_DOUBLE;
+    url += mapImagePanel.getMapMainParamString();    
+    url += "&par1=" + screenDistance;
+    
+    try
+    {
+      URL mapServer = new URL(url);
+      System.out.println("url: " + mapServer);
+      URLConnection s = mapServer.openConnection();
 
-		return d;
+      ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+      Object objRead = ois.readObject();
+      
+      if (objRead instanceof String)
+      {
+        Environment.log(
+            Environment.LOG_LEVEL_FINER, 
+            (String)objRead);
+        return 0.0D;
+      }
+
+      double result = ((Double)ois.readObject()).doubleValue();
+      ois.close();
+      return result;
+    }
+    catch (Throwable th)
+    {
+    }
+    
+    return 0.0D;
 	}
 	
 	public double convertMapToScreen(double topologicalDistance)
@@ -97,13 +180,43 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			DoublePoint endPoint, 
 			double dist)
 	{
-		DoublePoint point = new DoublePoint(startPoint.x, startPoint.y);
-		double len = distance(
-				startPoint, 
-				endPoint);
-		point.x += (endPoint.x - startPoint.x) / len * dist;
-		point.y += (endPoint.y - startPoint.y) / len * dist;
-		return point;
+    DoublePoint result = new DoublePoint();
+    String url = ((MapInfoNetMapViewer)viewer).mapperServletURL;
+    url += "?commandName=" + ServletCommandNames.POINT_AT_DISTANCE;
+    url += mapImagePanel.getMapMainParamString();    
+    url += "&par1=" + startPoint.x;
+    url += "&par2=" + startPoint.y;
+    url += "&par3=" + endPoint.x;
+    url += "&par4=" + endPoint.y;
+    url += "&par5=" + dist;
+    
+    try
+    {
+      URL mapServer = new URL(url);
+      System.out.println("url: " + mapServer);
+      URLConnection s = mapServer.openConnection();
+
+      ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+      Object objRead = ois.readObject();
+      
+      if (objRead instanceof String)
+      {
+        Environment.log(
+            Environment.LOG_LEVEL_FINER, 
+            (String)objRead);
+        return null;
+      }
+      
+      result.x = ((Double)objRead).doubleValue();
+      result.y = ((Double)ois.readObject()).doubleValue();
+      ois.close();
+      return result;
+    }
+    catch (Throwable th)
+    {
+    }
+    
+    return null;
 	}
 
 	/**
@@ -111,16 +224,39 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public double distance(DoublePoint from, DoublePoint to)
 	{
-		try
-		{
-			return visualMapJ.getMapJ().sphericalDistance(
-				new com.mapinfo.util.DoublePoint(from.x, from.y),
-				new com.mapinfo.util.DoublePoint(to.x, to.y));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+    String url = ((MapInfoNetMapViewer)viewer).mapperServletURL;
+    url += "?commandName=" + ServletCommandNames.DISTANCE;
+    url += mapImagePanel.getMapMainParamString();
+    url += "&par1=" + from.x;
+    url += "&par2=" + from.y;
+    url += "&par3=" + to.x;
+    url += "&par4=" + to.y;
+    
+    try
+    {
+      URL mapServer = new URL(url);
+      System.out.println("url: " + mapServer);
+      URLConnection s = mapServer.openConnection();
+
+      ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+      Object objRead = ois.readObject();
+      
+      if (objRead instanceof String)
+      {
+        Environment.log(
+            Environment.LOG_LEVEL_FINER, 
+            (String)objRead);
+        return 0.0D;
+      }
+      
+      double result = ((Double)objRead).doubleValue();
+      ois.close();
+      return result;
+    }
+    catch (Throwable th)
+    {
+    }
+    
 		return 0.0D;
 	}
 
@@ -129,51 +265,51 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setCenter(DoublePoint center)
 	{
-		System.out.println("Set center (" + center.x + ", " +center.y + ")");
-		try
-		{
-			visualMapJ.setOffsets(0, 0);
-			visualMapJ.getMapJ().setCenter(new com.mapinfo.util.DoublePoint(center.x, center.y));
-			repaint(true);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+    this.mapImagePanel.setCenter(center);
+    this.repaint(true);
+  }
 
 	/**
 	 * Получить центральную точку вида карты
 	 */
 	public DoublePoint getCenter()
 	{
-		DoublePoint center;
-		try 
-		{
-			center = new DoublePoint(
-				visualMapJ.getMapJ().getCenter().x,
-				visualMapJ.getMapJ().getCenter().y);
-		} 
-		catch (Exception ex) 
-		{
-			center = null;
-			ex.printStackTrace();
-		} 
-		
-		return center;
+    return mapImagePanel.getCenter();    
 	}
 
 	public Rectangle2D.Double getVisibleBounds()
 	{
-		try 
-		{
-			DoubleRect rect = visualMapJ.getMapJ().getBounds();
-			return new Rectangle2D.Double(rect.xmin, rect.ymin, rect.width(), rect.height());
-		} 
-		catch (Exception ex) 
-		{
-			ex.printStackTrace();
-		} 
+    String url = ((MapInfoNetMapViewer)viewer).mapperServletURL;
+    url += "?commandName=" + ServletCommandNames.GET_VISIBLE_BOUNDS;
+    url += mapImagePanel.getMapMainParamString();
+    
+    try
+    {
+      URL mapServer = new URL(url);
+      System.out.println("url: " + mapServer);
+      URLConnection s = mapServer.openConnection();
+
+      ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+      Object objRead = ois.readObject();
+      
+      if (objRead instanceof String)
+      {
+        Environment.log(
+            Environment.LOG_LEVEL_FINER, 
+            (String)objRead);
+        return null;
+      }
+      
+      Rectangle2D.Double rect = new Rectangle2D.Double();      
+      rect.width = ((Double)objRead).doubleValue();
+      rect.height = ((Double)ois.readObject()).doubleValue();
+      ois.close();
+      return rect;
+    }
+    catch (Throwable th)
+    {
+    }
+    
 		return null;
 	}
 
@@ -189,7 +325,62 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void repaint(boolean fullRepaint)
 	{
-		visualMapJ.repaint(fullRepaint);
+    if (!mapImagePanel.getImageChanged())
+      mapImagePanel.repaint();
+    else
+    {  
+      String url = ((MapInfoNetMapViewer)viewer).mapperServletURL;
+      url += "?commandName=" + ServletCommandNames.RENDER_MAP;
+      url += mapImagePanel.getMapMainParamString();    
+  
+      try
+      {
+        URL mapServer = new URL(url);
+        System.out.println("url: " + mapServer);
+        URLConnection s = mapServer.openConnection();
+  
+        System.out.println("MIFLNL - repaint - Conection opened");
+        ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+        System.out.println("MIFLNL - repaint - ObjectInputStream exists");
+        
+        int dataSize = mapImagePanel.getWidth() * mapImagePanel.getHeight() * 2;
+        byte[] img = new byte[dataSize];
+  
+  /*      try
+        {
+          Object readObject = ois.readObject();
+          if (readObject instanceof String)
+          {
+            Environment.log(
+                Environment.LOG_LEVEL_FINER, 
+                (String)readObject);
+            return;
+          }
+        }
+        catch (Exception optExc)
+        {}*/
+  
+  
+        try
+        {
+          ois.readFully(img);
+        }
+        catch (EOFException eofExc)
+        {}
+        System.out.println("MIFLNL - repaint - Image read");
+          
+        ois.close();
+        System.out.println("MIFLNL - repaint - Stream closed");
+        
+        Image imageReceived = Toolkit.getDefaultToolkit().createImage(img);
+        mapImagePanel.setImage(imageReceived);
+        System.out.println("MIFLNL - repaint - Image setted");
+      }
+      catch(Exception exc)
+      {
+        exc.printStackTrace();
+      }
+    }
 	}
 	
 	/**
@@ -198,12 +389,12 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public void setCursor(Cursor cursor)
 	{
 		System.out.println("Set cursor " + cursor.getName());
-		visualMapJ.setCursor(cursor);
+		mapImagePanel.setCursor(cursor);
 	}
 
 	public Cursor getCursor()
 	{
-		return visualMapJ.getCursor();
+		return mapImagePanel.getCursor();
 	}
 
 
@@ -212,15 +403,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public double getScale()
 	{
-		try
-		{
-			return visualMapJ.getMapJ().getZoom();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return 0.0D;
+    return mapImagePanel.getZoom();
 	}
 
 	/**
@@ -228,21 +411,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setScale(double scale)
 	{
-		System.out.println("Set scale " + scale);
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"setScale(" + scale + ")");
-		try
-		{
-			if(scale != 0.0D)
-				visualMapJ.getMapJ().setZoom(scale);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+    mapImagePanel.setZoom(scale);
 		updateZoom();
 		repaint(true);
 	}
@@ -252,23 +421,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void scaleTo(double scaleСoef)
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"scaleTo(" + scaleСoef + ")");
-		
-		try
-		{
-			visualMapJ.getMapJ().setZoom(getScale() * scaleСoef);
-			System.out.println("Set scale " + getScale() * scaleСoef);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		updateZoom();
-		repaint(true);
+    mapImagePanel.scaleTo(scaleСoef);
 	}
 
 	/**
@@ -276,13 +429,9 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomIn()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"zoomIn()");
-		
-		scaleTo(1.0D / ZOOM_FACTOR);
+		mapImagePanel.zoomIn();
+		updateZoom();
+		repaint(true);
 	}
 
 	/**
@@ -290,36 +439,58 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomOut()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"zoomIn()");
-		
-		scaleTo(ZOOM_FACTOR);
+		mapImagePanel.zoomOut();
+		updateZoom();
+		repaint(true);
 	}
-	
+
 	/**
 	 * Приблизить вид выделенного участка карты (в координатах карты)
 	 * по координатам угловых точек
 	 */
 	public void zoomToBox(DoublePoint from, DoublePoint to)
 	{
-		System.out.println("Zoom to box (" + from.x + ", " + from.y + ") - (" + to.x + ", " + to.y + ")");
-		try
-		{
-			visualMapJ.getMapJ().setBounds(new DoubleRect(
-					from.x, 
-					from.y,
-					to.x, 
-					to.y));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		updateZoom();
-		repaint(true);
+    DoublePoint newCenter = new DoublePoint((to.x + from.x)/2,(to.y + from.y)/2);
+    this.mapImagePanel.setCenter(newCenter);
+  
+		String url = ((MapInfoNetMapViewer)viewer).mapperServletURL;
+    url += "?commandName=" + ServletCommandNames.ZOOM_TO_BOX;
+    url += mapImagePanel.getMapMainParamString();
+    url += "&par1=" + from.x;
+    url += "&par2=" + from.y;
+    url += "&par3=" + to.x;
+    url += "&par4=" + to.y;
+  
+    try
+    {
+			URL mapServer = new URL(url);
+			System.out.println("url: " + mapServer);
+			URLConnection s = mapServer.openConnection();
+
+      ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+      
+      double newScale = ((Double)ois.readObject()).doubleValue();
+      this.mapImagePanel.setZoom(newScale);
+      
+      int dataSize = mapImagePanel.getWidth() * mapImagePanel.getHeight() * 2;
+      byte[] img = new byte[dataSize];
+      try
+      {
+        ois.readFully(img);
+      }
+      catch (EOFException eofExc)
+      {}
+      System.out.println("MIFLNL - zoomToBox - Image read");      
+      
+      ois.close();
+      mapImagePanel.setImage(Toolkit.getDefaultToolkit().createImage(img));
+  
+      updateZoom();
+    }
+    catch(Exception exc)
+    {
+      exc.printStackTrace();    
+    }
 	}
 
 	public void updateZoom()
@@ -337,13 +508,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 
 	public void handDragged(MouseEvent me)
 	{
-		visualMapJ.interruptRenderer();
-		visualMapJ.setOffsets(
-				me.getX() - startPoint.x, 
-				me.getY() - startPoint.y);
 		repaint(false);
-//		spatialViewer.getMapCanvas().repaint();
-//		repaint();
 	}
 
 	public List findSpatialObjects(String searchText)
@@ -367,8 +532,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		super.setMapViewer(mapViewer);
 		
 		MapInfoNetMapViewer snmv = (MapInfoNetMapViewer)mapViewer;
-		this.visualMapJ = snmv.visualMapJ;
-		System.out.println("Units " + this.visualMapJ.getMapJ().getDistanceUnits().toString());
-		this.visualMapJ.getMapJ().setDistanceUnits(LinearUnit.meter);
+		this.mapImagePanel = snmv.mapImagePanel;
+//		System.out.println("Units " + this.visualMapJ.getMapJ().getDistanceUnits().toString());
+//		this.visualMapJ.getMapJ().setDistanceUnits(LinearUnit.meter);
 	}
 }

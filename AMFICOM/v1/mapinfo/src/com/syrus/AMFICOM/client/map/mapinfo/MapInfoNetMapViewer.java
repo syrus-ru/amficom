@@ -9,6 +9,8 @@ import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 
 import com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapKeyAdapter;
+import com.syrus.AMFICOM.Client.Map.UI.MapMouseListener;
+import com.syrus.AMFICOM.Client.Map.UI.MapMouseMotionListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapScrollPane;
 import com.syrus.AMFICOM.Client.Map.UI.MapToolTippedPanel;
 import java.awt.Component;
@@ -32,12 +34,16 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	
 	protected DropTarget dropTarget = null;
 	
+	protected MouseListener ml = null;
+	protected MouseMotionListener mml = null;
+	protected MapKeyAdapter mka = null;
 	protected DropTargetListener dtl = null;
 
 	protected static MapInfoNetMapViewer mapViewer = null;
 	protected static boolean dbset = false;
 
-	protected VisualMapJ visualMapJ = null;
+	protected MapImagePanel mapImagePanel = null;
+  protected String mapperServletURL = null;
 	protected MapScrollPane scrollPane = null;
 
 	public void init()
@@ -52,8 +58,8 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		
 		if(lnl != null)
 		{
-			visualMapJ.removeMouseListener(mttp.ls);
-			visualMapJ.removeMouseMotionListener(mttp.ls);
+			mapImagePanel.removeMouseListener(mttp.ls);
+			mapImagePanel.removeMouseMotionListener(mttp.ls);
 //			dropTarget.setActive(false);
 			dropTarget.removeDropTargetListener(dtl);
 			ttm.unregisterComponent(mttp);
@@ -65,19 +71,24 @@ public class MapInfoNetMapViewer extends NetMapViewer
 //			lnl.getMapState().setActionMode(MapState.DRAW_ACTION_MODE);
 
 			dtl = new MapDropTargetListener(lnl);
-			dropTarget = visualMapJ.getDropTarget();
+			dropTarget = mapImagePanel.getDropTarget();
 			if(dropTarget == null)
 			{
-				dropTarget = new DropTarget(visualMapJ, dtl);
-				visualMapJ.setDropTarget(dropTarget);
+				dropTarget = new DropTarget(mapImagePanel, dtl);
+				mapImagePanel.setDropTarget(dropTarget);
 			}
 			else
 				dropTarget.addDropTargetListener(dtl);
+        
 			dropTarget.setActive(true);
 
 			mttp = new MapToolTippedPanel(this);
-			visualMapJ.addMouseListener(mttp.ls);
-			visualMapJ.addMouseMotionListener(mttp.ls);
+			mapImagePanel.addMouseListener(mttp.ls);
+			mapImagePanel.addMouseMotionListener(mttp.ls);
+
+			mka = new MapKeyAdapter(lnl);
+			getVisualComponent().addKeyListener(mka);
+			getVisualComponent().grabFocus();
 
 			ttm = ToolTipManager.sharedInstance();
 			ttm.registerComponent(mttp);
@@ -85,6 +96,16 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		catch(Exception e)
 		{
 			e.printStackTrace();
+		}
+		if(ml == null)
+		{
+			ml = new MapMouseListener(lnl);
+			mapImagePanel.addMouseListener(ml);
+		}
+		if(mml == null)
+		{
+			mml = new MapMouseMotionListener(lnl);
+			mapImagePanel.addMouseMotionListener(mml);
 		}
 	}
 
@@ -105,22 +126,31 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 * отобразить указанный вид кортографии
 	 * 
 	 */
-	public void setMap(String dataBasePath, String dataBaseView)
+//	public void setMap(String dataBasePath, String dataBaseView)
+//	{
+//		try
+//		{
+//			visualMapJ.getMapJ().loadGeoset(
+//					dataBasePath + "\\" + dataBaseView, 
+//					dataBasePath, 
+//					null);
+//
+//			mapImagePanel.add(lnl.logicalLayerMapTool);          
+///*      VisualMapJ visualMapJ;
+//			visualMapJ.add(lnl.logicalLayerMapTool);
+//			lnl.logicalLayerMapTool.setSelected(true);*/
+//	}
+//		catch(Exception e)
+//		{
+//			e.printStackTrace();
+//		}
+//	}
+	public void setMap(String servletURL,String nullString)
 	{
-		try
-		{
-			visualMapJ.getMapJ().loadGeoset(
-					dataBasePath + "\\" + dataBaseView, 
-					dataBasePath, 
-					null);
-			visualMapJ.add(lnl.logicalLayerMapTool);
-			lnl.logicalLayerMapTool.setSelected(true);
+    //this.mapperServletURL = mapperServletURL;
+    this.mapperServletURL = "http://amficom:8081/samples47/servlet/cmapper";
 	}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
+
 	
 	/**
 	 * «акрывает сессию и соединение с картой 
@@ -170,8 +200,8 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public JComponent getVisualComponent()
 	{
-		if(visualMapJ == null)
-			visualMapJ = new VisualMapJ();
+		if(mapImagePanel == null)
+			mapImagePanel = new MapImagePanel();
 		if(scrollPane == null)
 			scrollPane = new MapScrollPane(this);
 		return scrollPane;
@@ -189,7 +219,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	
 	public Component getComponent()
 	{
-		return visualMapJ;
+		return mapImagePanel;
 	}
 	
 	public List getAvailableViews()
