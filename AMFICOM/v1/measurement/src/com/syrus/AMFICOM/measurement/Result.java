@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.14 2004/08/27 12:14:57 bob Exp $
+ * $Id: Result.java,v 1.15 2004/08/30 15:00:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/27 12:14:57 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/30 15:00:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -129,13 +129,7 @@ public class Result extends StorableObject {
 
 		super.currentVersion = super.getNextVersion();
 
-//		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
-//		try {
-//			this.resultDatabase.insert(this);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
+		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 	}
 
 	public Object getTransferable() {

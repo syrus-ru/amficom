@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.22 2004/08/27 12:14:57 bob Exp $
+ * $Id: Measurement.java,v 1.23 2004/08/30 15:00:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/08/27 12:14:57 $
+ * @version $Revision: 1.23 $, $Date: 2004/08/30 15:00:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -112,7 +112,8 @@ public class Measurement extends Action {
 		this.testId = testId;
 
 		super.currentVersion = super.getNextVersion();
-
+		
+		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 	}
 
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.25 2004/08/26 14:15:39 bob Exp $
+ * $Id: AnalysisType.java,v 1.26 2004/08/30 15:00:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/08/26 14:15:39 $
+ * @version $Revision: 1.26 $, $Date: 2004/08/30 15:00:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -126,6 +126,8 @@ public class AnalysisType extends ActionType {
 		this.outParameterTypes = outParameterTypes;
 
 		super.currentVersion = super.getNextVersion();
+		
+		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 	}
 	
 	/**
