@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.6 2004/09/16 09:51:52 bob Exp $
+ * $Id: LRUMap.java,v 1.7 2004/09/16 11:14:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/09/16 09:51:52 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/16 11:14:03 $
  * @author $Author: bob $
  * @module util
  */
@@ -27,6 +27,8 @@ public class LRUMap implements Serializable {
 	protected Entry[] array;
 	
 	protected transient int modCount = 0;
+	
+	protected transient int entityCount = 0;
 
 	public LRUMap() {
 		this (SIZE);
@@ -44,6 +46,7 @@ public class LRUMap implements Serializable {
 		for (int i = 0; i < this.array.length; i++) {
 			this.array[i] = null;
 		}
+		this.entityCount = 0;
 	}
 	
     public Iterator iterator() {
@@ -52,6 +55,7 @@ public class LRUMap implements Serializable {
 	
 	public synchronized Object put(Object key, Object value) {
 		this.modCount++;
+		this.entityCount += (this.entityCount == this.array.length) ? 0 : 1;  
 		Entry newEntry = new Entry(key, value);
 		Object ret = null;
 		if (this.array[this.array.length - 1] != null)
@@ -80,9 +84,10 @@ public class LRUMap implements Serializable {
 			Object ret = null;
 			for (int i = 0; i < this.array.length; i++)
 				if (key.equals(this.array[i].key)) {
-					ret = this.array[i].value;
+					ret = this.array[i].value;					
 					for (int j = i; j < this.array.length - 1; j++)
 						this.array[j] = this.array[j + 1];
+					this.entityCount -= (this.entityCount == 0) ? 0 : 1;
 					break;
 				}				
 			return ret;
@@ -129,14 +134,17 @@ public class LRUMap implements Serializable {
     	int expectedModCount = LRUMap.this.modCount;
 
     	public boolean hasNext() {
-    	    return this.cursor != LRUMap.this.array.length;
+    	    return this.cursor != LRUMap.this.entityCount;
     	}
 
     	public Object next() {
                 checkForComodification();
     	    try {
-    		Object next = LRUMap.this.array[this.cursor].value;
-    		this.lastRet = this.cursor++;
+    		Object next = null;
+    		while(next == null){
+    			next = LRUMap.this.array[this.cursor].value;
+    			this.lastRet = this.cursor++;
+    		}
     		return next;
     	    } catch(IndexOutOfBoundsException e) {
     		checkForComodification();
