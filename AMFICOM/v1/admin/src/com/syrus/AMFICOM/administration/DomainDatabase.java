@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.8 2005/02/07 08:58:17 bob Exp $
+ * $Id: DomainDatabase.java,v 1.9 2005/02/08 12:26:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,20 +25,18 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/07 08:58:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/02/08 12:26:20 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -200,14 +198,14 @@ public class DomainDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(List ids ,String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
-		
-    List retrivedDomains = this.retrieveByIdsOneQuery(ids, condition);
-        
-    if (retrivedDomains != null && !retrivedDomains.isEmpty()) {
-			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+
+		List retrivedDomains = this.retrieveByIdsOneQuery(ids, condition);
+
+		if (retrivedDomains != null && !retrivedDomains.isEmpty()) {
+			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
 			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(retrivedDomains,
 					CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN);
 			if (characteristicMap != null)
@@ -219,40 +217,23 @@ public class DomainDatabase extends StorableObjectDatabase {
 		}
 		return retrivedDomains;
 
-    //return retriveByIdsPreparedStatement(ids);
+		// return retriveByIdsPreparedStatement(ids);
 	}
 
-	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-		List list = null;
+// private List retrieveButIdsByDomain(List ids, Domain domain) throws
+// RetrieveObjectException {
+//		List list = null;
+//
+//		String condition = StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
+//
+//		try {
+//			list = retrieveButIds(ids, condition);
+//		}
+//		catch (IllegalDataException ide) {           
+//			Log.debugMessage("DomainDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+//		}
+//
+//		return list;
+//	}
 
-		String condition = StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
-
-		try {
-			list = retrieveButIds(ids, condition);
-		}
-		catch (IllegalDataException ide) {           
-			Log.debugMessage("DomainDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-
-		return list;
-	}
-
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		List list = null;
-		if (condition instanceof DomainCondition) {
-			DomainCondition domainCondition = (DomainCondition)condition;
-			short entityCode = domainCondition.getEntityCode().shortValue();
-			if ( entityCode != ObjectEntities.DOMAIN_ENTITY_CODE)
-				throw new IllegalDataException("DomainDatabase.retrieveByCondition | illegal entity code '" 
-											   + ObjectEntities.codeToString(entityCode) + "', expected '"
-											   + ObjectEntities.codeToString(ObjectEntities.DOMAIN_ENTITY_CODE) + '\'');
-			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-		} else {
-			Log.errorMessage("DomainDatabase.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
-			list = this.retrieveButIds(ids);
-		} 
-		return list;
-	}
 }

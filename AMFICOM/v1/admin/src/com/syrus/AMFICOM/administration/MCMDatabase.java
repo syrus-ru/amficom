@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.6 2005/02/08 12:23:41 bob Exp $
+ * $Id: MCMDatabase.java,v 1.7 2005/02/08 12:26:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,33 +10,29 @@ package com.syrus.AMFICOM.administration;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
-import java.util.List;
-
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.Log;
@@ -45,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/08 12:23:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/02/08 12:26:20 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -366,68 +362,49 @@ public class MCMDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids);
 	}
 
-	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-		List list = null;
+//	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+//		List list = null;
+//
+//		String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
+//
+//		try {
+//				list = this.retrieveButIds(ids, condition);
+//		}
+//		catch (IllegalDataException ide) {           
+//				Log.debugMessage(this.getEnityName() + "Database.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+//		}
+//
+//		return list;
+//	}
 
-		String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
+//	private List retrieveByKISs(List kisIds) throws RetrieveObjectException, IllegalDataException{
+//		if (kisIds == null || kisIds.isEmpty())
+//			return Collections.EMPTY_LIST;
+//
+//		StringBuffer sql = new StringBuffer(
+//			StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET + 
+//				SQL_SELECT + LINK_COLUMN_MCM_ID + SQL_FROM
+//				+ ObjectEntities.KIS_ENTITY + SQL_WHERE	+ StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET);
+//		int i = 1;
+//		for (Iterator it = kisIds.iterator(); it.hasNext(); i++) {
+//			Identifier kidId = (Identifier) it.next();
+//			sql.append(DatabaseIdentifier.toSQLString(kidId));
+//			if (it.hasNext()) {
+//				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+//					sql.append(COMMA);
+//				else {
+//					sql.append(CLOSE_BRACKET);
+//					sql.append(SQL_OR);
+//					sql.append(StorableObjectWrapper.COLUMN_ID);
+//					sql.append(SQL_IN);
+//					sql.append(OPEN_BRACKET);
+//				}
+//			}
+//		}
+//		sql.append(CLOSE_BRACKET);
+//		sql.append(CLOSE_BRACKET);
+//
+//		return this.retrieveByIds(null, sql.toString());
+//	}
 
-		try {
-				list = this.retrieveButIds(ids, condition);
-		}
-		catch (IllegalDataException ide) {           
-				Log.debugMessage(this.getEnityName() + "Database.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-
-		return list;
-	}
-
-	private List retrieveByKISs(List kisIds) throws RetrieveObjectException, IllegalDataException{
-		if (kisIds == null || kisIds.isEmpty())
-			return Collections.EMPTY_LIST;
-
-		StringBuffer sql = new StringBuffer(
-			StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET + 
-				SQL_SELECT + LINK_COLUMN_MCM_ID + SQL_FROM
-				+ ObjectEntities.KIS_ENTITY + SQL_WHERE	+ StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET);
-		int i = 1;
-		for (Iterator it = kisIds.iterator(); it.hasNext(); i++) {
-			Identifier kidId = (Identifier) it.next();
-			sql.append(DatabaseIdentifier.toSQLString(kidId));
-			if (it.hasNext()) {
-				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(StorableObjectWrapper.COLUMN_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}
-			}
-		}
-		sql.append(CLOSE_BRACKET);
-		sql.append(CLOSE_BRACKET);
-
-		return this.retrieveByIds(null, sql.toString());
-	}
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		List list = null;
-		if (condition instanceof DomainCondition) {
-			DomainCondition domainCondition = (DomainCondition)condition;
-			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-		}
-		else
-			if (condition instanceof LinkedIdsCondition) {
-				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-				List kisIds = linkedIdsCondition.getLinkedIds();
-				list = this.retrieveByKISs(kisIds);
-			}
-			else {
-				Log.errorMessage(this.getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
-				list = this.retrieveButIds(ids);
-			}
-		return list;
-	}
 }
