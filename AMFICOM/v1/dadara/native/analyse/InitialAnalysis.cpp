@@ -223,13 +223,14 @@ void InitialAnalysis::SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1
    if(ep.end>=lastNonZeroPoint){ep.end = lastNonZeroPoint;}
 
    double max = -1;
-   for(int i=sp1.begin_conn_n ; i<sp1.end_conn_n; i++)
+   int i;	
+   for(i=sp1.begin_conn_n ; i<sp1.end_conn_n; i++)
    { double res = (f_wlet[i]-minimalConnector)/noise[i];
      if(max<res) max = res;
    }
    ep.R1 = max;
    max = -1;
-   for(int i=sp2.begin_thr ; i<sp2.end_thr; i++)
+   for(i=sp2.begin_thr ; i<sp2.end_thr; i++)
    { double res = fabs(f_wlet[i])/minimalThreshold - 1;
      if(max<res) max = res;
    }
@@ -373,65 +374,6 @@ void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, d
 	SineWavelet wavelet;
 	wavelet.transform(freq, f, lastNonZeroPoint, begin, end - 1, f_wlet + begin, norma);
 }
-//------------------------------------------------------------------------------------------------------------
-/* //--- Outdated and testing code
-void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, double* f_wlet, int freq, double norma)
-{
-	int len = end - begin;
-	double *test = new double[len ? len : 1];
-	prf_b("performTransformationOnly: method 0");
-	performTransformationOnly0(f, begin, end, f_wlet, freq, norma);
-	prf_b("performTransformationOnly: SineWavelet:");
-	SineWavelet wavelet;
-	wavelet.transform(freq, f, lastNonZeroPoint, begin, end - 1, test, norma);
-	prf_b("performTransformationOnly: etc");
-
-	{
-		int i;
-		double minDiff = 0;
-		double maxDiff = 0;
-		for (i = 0; i < len; i++)
-		{
-			double diff = fabs(f_wlet[i + begin] - test[i]);
-			if (diff > maxDiff)
-				maxDiff = diff;
-			if (i == 0 || diff < minDiff)
-				minDiff = diff;
-		}
-		fprintf(stderr, "nMakeTransform: scale %3d len %4d minDiff %g maxDiff %g\n",
-			freq, len, minDiff, maxDiff);
-		fflush(stderr);
-	}
-
-	delete[] test;
-	prf_b("performTransformationOnly: return");
-}
-
-// f- исходная ф-ция,
-// f_wlet - вейвлет-образ
-void InitialAnalysis::performTransformationOnly0(double* f, int begin, int end, double* f_wlet, int freq, double norma)
-{	double tmp;
-	int i;
-	double *wLetData = new double[freq * 2 + 1];
-	assert(wLetData);
-	for (i = -freq; i <= freq; i++)
-	{	wLetData[i+freq] = wLet(i, freq, norma);
-    }
-	for (i=begin; i<end; i++)
-	{	tmp = 0;
-		int jL = i-freq;
-		int jMin = max(i-freq, 0);
-		int jMax = min(i+freq+1, lastNonZeroPoint);
-		int jR = i+freq+1;
-		int j;
-		for (j = jL;   j < jMin; j++)	tmp += f[jMin]   * wLetData[j-i+freq];
-		for (j = jMin; j < jMax; j++)	tmp += f[j]	     * wLetData[j-i+freq];
-		for (j = jMax; j < jR;   j++)	tmp += f[jMax-1] * wLetData[j-i+freq];
-		f_wlet[i] = tmp;
-	}
-	delete[] wLetData;
-}
-*/
 //------------------------------------------------------------------------------------------------------------
 // вычислить среднее значение вейвлет-образа 
 double InitialAnalysis::calcWletMeanValue(double *fw, double from, double to, int columns)
