@@ -161,6 +161,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			{
 				c_TH.release();
 				parent.repaint();
+				dispatcher.notify(new RefUpdateEvent(this,
+					RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 				c_TH = null;
 			}
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
