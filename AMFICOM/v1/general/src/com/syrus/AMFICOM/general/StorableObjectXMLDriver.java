@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.8 2005/02/01 06:02:16 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.9 2005/02/01 11:07:02 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.8 $, $Date: 2005/02/01 06:02:16 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/01 11:07:02 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -169,9 +169,13 @@ public class StorableObjectXMLDriver {
 			} else {
 				/* just simple objects */
 				NodeList childNodes = node.getChildNodes();
-				if (childNodes.getLength() != 1)
+				if (childNodes.getLength() > 1)
 					Log.errorMessage("StorableObjectXMLDriver.parse | more that one child for : " + node.getNodeName());
-				object = this.getObject(childNodes.item(0).getNodeValue(), className);
+//				System.out.println("name: " + node.getNodeName() + "\tclassName:" + className);
+				if (childNodes.getLength() == 1)
+					object = this.getObject(childNodes.item(0).getNodeValue(), className);
+				else
+					object = null;
 			}
 		} else
 			Log.errorMessage("StorableObjectXMLDriver.parse | there is no attributes for : " + node.getNodeName());
