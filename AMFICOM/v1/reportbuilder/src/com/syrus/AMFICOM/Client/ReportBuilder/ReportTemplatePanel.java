@@ -1898,6 +1898,11 @@ getHeight();
 	{
 		if (oe.getActionCommand().equals(SelectReportsPanel.ev_onlyReportRealized))
 		{
+			this.removeAll();
+			this.reportTemplate.objectRenderers.clear();
+			this.reportTemplate.labels.clear();
+			this.reportTemplate.images.clear();
+
 			Point location = new Point (this.imagableRect.x + 10,this.imagableRect.y + 70);
 			Dimension size = new Dimension (this.imagableRect.width - 30,500);
 			this.addReport((ObjectsReport)oe.getSource(),location,size);
