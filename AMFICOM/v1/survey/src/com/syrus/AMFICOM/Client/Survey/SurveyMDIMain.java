@@ -62,7 +62,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapSurveyISMApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.SchematicsApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanelNoEdition;
+import com.syrus.AMFICOM.Client.Schematics.General.SchemePanelNoEdition;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;

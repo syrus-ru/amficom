@@ -105,5 +105,3 @@ src/com/syrus/AMFICOM/Client/Survey/SurveyToolBar.java
 src/com/syrus/AMFICOM/Client/Survey/UI/ReloadAttributes.java
 src/com/syrus/AMFICOM/Client/Survey/UI/SchemeAlarmUpdater.java
 src/com/syrus/AMFICOM/Client/Test/ObserverTreeModel.java                                             
-src/com/syrus/AMFICOM/analysis/dadara/OpticalAlarmDescriptor.java                                          
-src/com/syrus/AMFICOM/analysis/dadara/OpticalAlarmDescriptorEvent.java                                          
