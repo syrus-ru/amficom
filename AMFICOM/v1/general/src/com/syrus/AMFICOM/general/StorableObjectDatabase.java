@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.110 2005/02/28 11:48:01 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.111 2005/02/28 15:29:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/02/28 11:48:01 $
+ * @version $Revision: 1.111 $, $Date: 2005/02/28 15:29:22 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -70,7 +70,7 @@ public abstract class StorableObjectDatabase {
 	public static final String SQL_UPDATE			= " UPDATE ";
 	public static final String SQL_VALUES			= " VALUES ";
 	public static final String SQL_WHERE			= " WHERE ";
-	public static final String SQL_EMPTY_BLOB 		= " EMPTY_BLOB() ";
+	public static final String SQL_FUNCTION_EMPTY_BLOB 		= " EMPTY_BLOB() ";
 	
 	public static final int UPDATE_TOTAL 		= -1;
 	public static final int UPDATE_FORCE 		= -2;
@@ -329,8 +329,8 @@ public abstract class StorableObjectDatabase {
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
 	protected void retrieveEntity(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		String strorableObjectTypeIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
-		String sql = retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + strorableObjectTypeIdStr);
+		String strorableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
+		String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + strorableObjectIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -341,10 +341,10 @@ public abstract class StorableObjectDatabase {
 			if (resultSet.next())
 				this.updateEntityFromResultSet(storableObject, resultSet);
 			else
-				throw new ObjectNotFoundException("No such " + getEnityName() + ": " + strorableObjectTypeIdStr);
+				throw new ObjectNotFoundException("No such " + getEnityName() + ": " + strorableObjectIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.retrieveEntity | Cannot retrieve " + getEnityName() + " '" + strorableObjectTypeIdStr + "' -- " + sqle.getMessage();
+			String mesg = this.getEnityName() + "Database.retrieveEntity | Cannot retrieve " + getEnityName() + " '" + strorableObjectIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -570,11 +570,7 @@ public abstract class StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = this.getEnityName() + "Database.insertEntity | Cannot insert "
-					+ this.getEnityName()
-					+ " '"
-					+ storableObjectIdStr
-					+ "' -- "
-					+ sqle.getMessage();
+					+ this.getEnityName() + " '" + storableObjectIdStr + "' -- " + sqle.getMessage();
 			try {
 				connection.rollback();
 			}
@@ -622,28 +618,28 @@ public abstract class StorableObjectDatabase {
 
 		String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET
 			+ this.getColumns(MODE_INSERT)
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + this.getInsertMultiplySQLValues()
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ this.getInsertMultiplySQLValues()
 			+ CLOSE_BRACKET;
+
 		PreparedStatement preparedStatement = null;
-		String storableObjectIdCode = null;
-
+		String storableObjectIdStr = null;
 		Connection connection = DatabaseConnection.getConnection();
-
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage(this.getEnityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
-				storableObjectIdCode = storableObject.getId().getIdentifierString();
+				storableObjectIdStr = storableObject.getId().toString();
 				this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_INSERT);
-				Log.debugMessage(this.getEnityName() + "Database.insertEntities | Inserting  " + this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
+				Log.debugMessage(this.getEnityName() + "Database.insertEntities | Inserting  " + this.getEnityName() + " " + storableObjectIdStr, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 
 			connection.commit();			
 		}
 		catch (SQLException sqle) {
-			String mesg = "StorableObejctDatabase.insertEntities | Cannot insert " + this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
+			String mesg = "StorableObejctDatabase.insertEntities | Cannot insert " + this.getEnityName() + " '" + storableObjectIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
