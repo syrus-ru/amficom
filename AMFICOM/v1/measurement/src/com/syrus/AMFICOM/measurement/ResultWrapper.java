@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.4 2005/02/03 15:29:45 arseniy Exp $
+ * $Id: ResultWrapper.java,v 1.5 2005/02/03 15:50:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/03 15:29:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 15:50:16 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -49,7 +49,7 @@ public class ResultWrapper implements StorableObjectWrapper {
 
 	private ResultWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_ACTION_ID, COLUMN_SORT};
+		String[] keysArray = new String[] { COLUMN_ACTION_ID, COLUMN_SORT, LINK_FIELD_RESULT_PARAMETERS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
