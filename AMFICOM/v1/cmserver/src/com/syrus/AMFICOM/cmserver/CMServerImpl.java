@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.73 2004/12/06 10:59:36 bob Exp $
+ * $Id: CMServerImpl.java,v 1.74 2004/12/08 13:40:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,8 +56,6 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
-import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
-import com.syrus.AMFICOM.configuration.corba.StringFieldSort;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.configuration.corba.User_Transferable;
@@ -79,6 +77,8 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.DomainCondition;
@@ -123,7 +123,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2004/12/06 10:59:36 $
+ * @version $Revision: 1.74 $, $Date: 2004/12/08 13:40:46 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -5969,7 +5969,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 	public Identifier_Transferable getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
 		try {
 			Log.debugMessage("CMServerImpl.getGeneratedIdentifier | generate new Identifer for "
-					+ entityCode, Log.DEBUGLEVEL07);
+					+ ObjectEntities.codeToString(entityCode), Log.DEBUGLEVEL07);
 			Identifier identifier = IdentifierGenerator.generateIdentifier(entityCode);
 			return (Identifier_Transferable) identifier.getTransferable();
 		} catch (IllegalObjectEntityException ioee) {
@@ -5995,6 +5995,8 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 
 	public Identifier_Transferable[] getGeneratedIdentifierRange(short entityCode, int size)
 			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.getGeneratedIdentifierRange | generate new Identifer range " + size + " for "
+			+ ObjectEntities.codeToString(entityCode), Log.DEBUGLEVEL07);
 		try {
 			Identifier[] identifiers = IdentifierGenerator.generateIdentifierRange(entityCode, size);
 			Identifier_Transferable[] identifiersT = new Identifier_Transferable[identifiers.length];
