@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapPropertiesCommand.java,v 1.4 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: ViewMapPropertiesCommand.java,v 1.5 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 
 import java.awt.Dimension;
@@ -25,7 +26,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/21 13:49:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -48,20 +49,7 @@ public class ViewMapPropertiesCommand extends VoidCommand
 
 	public void execute()
 	{
-		frame = null;
-		for(int i = 0; i < desktop.getComponents().length; i++)
-		{
-			try
-			{
-				MapPropertyFrame comp = (MapPropertyFrame)desktop.getComponent(i);
-				// уже есть окно карты
-				frame = comp;
-				break;
-			}
-			catch(Exception ex)
-			{
-			}
-		}
+		frame = MapDesktopCommand.findMapPropertyFrame(desktop);
 
 		if(frame == null)
 		{

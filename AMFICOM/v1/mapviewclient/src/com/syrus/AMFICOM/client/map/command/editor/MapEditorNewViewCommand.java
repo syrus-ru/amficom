@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewViewCommand.java,v 1.7 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapEditorNewViewCommand.java,v 1.8 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,17 +17,19 @@ import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactor
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.map.Map;
+import javax.swing.JDesktopPane;
 
 /**
  * Класс $RCSfile: MapEditorNewViewCommand.java,v $ используется для создания новой топологической схемы в
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/21 13:49:27 $
  * @module
  * @author $Author: krupenn $
  * @see MapNewCommand, ViewMapAllCommand
@@ -35,26 +37,22 @@ import com.syrus.AMFICOM.map.Map;
 public class MapEditorNewViewCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-	MapEditorMainFrame mainFrame;
+	JDesktopPane desktop;
 
-	public MapEditorNewViewCommand()
+	public MapEditorNewViewCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
-	}
-
-	public MapEditorNewViewCommand(MapEditorMainFrame mainFrame, ApplicationContext aContext)
-	{
-		this.mainFrame = mainFrame;
+		this.desktop = desktop;
 		this.aContext = aContext;
 	}
 
 	public void execute()
 	{
-		MapFrame mapFrame = mainFrame.getMapFrame();
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
 	
 		if(mapFrame == null)
 		{
-			new ViewMapAllCommand(mainFrame.getDesktop(), aContext, new MapMapEditorApplicationModelFactory()).execute();
-			mapFrame = mainFrame.getMapFrame();
+			new ViewMapAllCommand(desktop, aContext, new MapMapEditorApplicationModelFactory()).execute();
+			mapFrame = MapDesktopCommand.findMapFrame(desktop);
 		}
 
 		if(!mapFrame.checkCanCloseMap())

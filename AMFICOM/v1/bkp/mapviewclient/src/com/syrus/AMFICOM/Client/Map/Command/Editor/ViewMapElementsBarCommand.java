@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapElementsBarCommand.java,v 1.7 2004/12/27 16:49:34 krupenn Exp $
+ * $Id: ViewMapElementsBarCommand.java,v 1.8 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsBarFrame;
 
 import java.awt.Dimension;
@@ -26,7 +27,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/27 16:49:34 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/21 13:49:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -55,21 +56,7 @@ public class ViewMapElementsBarCommand extends VoidCommand
 /**todo*/		
 //		new MapDataSourceImage(aContext.getDataSource()).loadProtoElements();
 			
-		frame = null;
-		for(int i = 0; i < desktop.getComponents().length; i++)
-		{
-			try
-			{
-				MapElementsBarFrame comp = (MapElementsBarFrame)desktop.getComponent(i);
-				// уже есть окно карты
-				frame = comp;
-				break;
-			}
-			catch(Exception ex)
-			{
-				// не окно карты
-			}
-		}
+		frame = MapDesktopCommand.findMapElementsBarFrame(desktop);
 
 		if(frame == null)
 		{

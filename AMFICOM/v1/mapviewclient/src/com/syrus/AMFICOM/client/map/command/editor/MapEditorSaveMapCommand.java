@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveMapCommand.java,v 1.4 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapEditorSaveMapCommand.java,v 1.5 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,9 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapSaveCommand;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import javax.swing.JDesktopPane;
 
 /**
  * Класс MapEditorSaveContextCommand используется для сохранения топологической схемы в модуле
@@ -22,14 +24,14 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/21 13:49:27 $
  * @module
  * @author $Author: krupenn $
  * @see MapSaveCommand
  */
 public class MapEditorSaveMapCommand extends VoidCommand
 {
-	MapFrame mapFrame;
+	JDesktopPane desktop;
 	ApplicationContext aContext;
 
 	/**
@@ -37,23 +39,19 @@ public class MapEditorSaveMapCommand extends VoidCommand
 	 * @param mapFrame окно карты, из которого сохранять схему
 	 * @param aContext контекст модуля "Редактор топологических схем"
 	 */
-	public MapEditorSaveMapCommand(MapFrame mapFrame, ApplicationContext aContext)
+	public MapEditorSaveMapCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
-		this.mapFrame = mapFrame;
+		this.desktop = desktop;
 		this.aContext = aContext;
-	}
-
-	public void setParameter(String param, Object val)
-	{
-		if(param.equals("mapFrame"))
-			this.mapFrame = (MapFrame)val;
 	}
 
 	public void execute()
 	{
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
+
 		if(mapFrame == null)
 		{
-			System.out.println("map frame is null! Cannot create new map.");
+			System.out.println("map frame is null! Cannot save map.");
 			setResult(Command.RESULT_NO);
 			return;
 		}

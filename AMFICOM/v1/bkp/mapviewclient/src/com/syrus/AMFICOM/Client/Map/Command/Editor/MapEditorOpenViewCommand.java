@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.9 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.10 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
@@ -29,7 +30,7 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/21 13:49:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -62,11 +63,12 @@ public class MapEditorOpenViewCommand extends VoidCommand
 
 	public void execute()
 	{
-		if(mapFrame.getMapMainFrame() != null)
+		mapFrame = MapDesktopCommand.findMapFrame(desktop);
+		if(mapFrame != null)
 		{
-			if(!mapFrame.getMapMainFrame().checkCanCloseMap())
+			if(!mapFrame.checkCanCloseMap())
 				return;
-			if(!mapFrame.getMapMainFrame().checkCanCloseMapView())
+			if(!mapFrame.checkCanCloseMapView())
 				return;
 		}
 
@@ -80,7 +82,7 @@ public class MapEditorOpenViewCommand extends VoidCommand
 		{
 			mapView = moc.getMapView();
 		
-			MapFrame mapFrame = MapFrame.getMapMainFrame();
+			mapFrame = MapDesktopCommand.findMapFrame(desktop);
 			if(mapFrame == null)
 			{
 				ViewMapWindowCommand mapCommand = new ViewMapWindowCommand(

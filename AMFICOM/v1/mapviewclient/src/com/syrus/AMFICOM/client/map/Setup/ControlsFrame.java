@@ -1,5 +1,5 @@
 /*
- * Ќазвание: $Id: ControlsFrame.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
+ * Ќазвание: $Id: ControlsFrame.java,v 1.5 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JTabbedPane;
  * 
  * 
  * 
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author $Author: krupenn $
  * @see
  */
@@ -118,20 +118,20 @@ import javax.swing.JTabbedPane;
 		}
 	}
 
-	public void setVisible(boolean isVisible)
-	{
-		super.setVisible(isVisible);
-		if(!isVisible)
-			return;
-		
-		// огда окно становитс€ видимым, проверить, есть ли видимое окно карты,
-		//и прицепитьс€ к нему
-		MapFrame mmf = MapFrame.getMapMainFrame();
-		if(mmf != null)
-			if(mmf.isVisible())
-				if(mmf.getParent().equals(this.getParent()))
-					setMapFrame(mmf);
-	}
+//	public void setVisible(boolean isVisible)
+//	{
+//		super.setVisible(isVisible);
+//		if(!isVisible)
+//			return;
+//		
+//		// огда окно становитс€ видимым, проверить, есть ли видимое окно карты,
+//		//и прицепитьс€ к нему
+//		MapFrame mmf = MapFrame.getMapMainFrame();
+//		if(mmf != null)
+//			if(mmf.isVisible())
+//				if(mmf.getParent().equals(this.getParent()))
+//					setMapFrame(mmf);
+//	}
 
 	public void operationPerformed(OperationEvent ae)
 	{

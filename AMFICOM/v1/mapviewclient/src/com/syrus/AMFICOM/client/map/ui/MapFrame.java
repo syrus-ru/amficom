@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.18 2005/01/12 15:32:34 krupenn Exp $
+ * $Id: MapFrame.java,v 1.19 2005/01/21 13:49:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,7 +79,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2005/01/12 15:32:34 $
+ * @version $Revision: 1.19 $, $Date: 2005/01/21 13:49:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -120,7 +120,7 @@ public class MapFrame extends JInternalFrame
 		setContext(aContext);
 	}
 	
-	protected MapFrame()
+	public MapFrame()
 	{
 		super();
 
@@ -153,7 +153,7 @@ public class MapFrame extends JInternalFrame
 		mapToolBar.setLogicalNetLayer(mapViewer.getLogicalNetLayer());
 	}
 	
-	public static MapFrame getMapMainFrame()
+	private static MapFrame getMapMainFrame()
 	{
 		if(singleton == null)
 			singleton = new MapFrame();

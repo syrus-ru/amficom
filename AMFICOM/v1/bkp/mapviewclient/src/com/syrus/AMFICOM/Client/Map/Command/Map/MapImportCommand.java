@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.13 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.14 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Command.ImportCommand;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -47,6 +48,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import javax.swing.JDesktopPane;
 
 /**
  *  ласс $RCSfile: MapImportCommand.java,v $ используетс€ дл€ закрыти€ 
@@ -54,7 +56,7 @@ import java.util.List;
  * самого окна карты. ѕри этом в азголовке окна отображаетс€ информаци€ о том,
  * что активной карты нет, и карта центрируетс€ по умолчанию
  * 
- * @version $Revision: 1.13 $, $Date: 2005/01/20 14:37:52 $
+ * @version $Revision: 1.14 $, $Date: 2005/01/21 13:49:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -68,20 +70,26 @@ public class MapImportCommand extends ImportCommand
 	public static final String NODELINK_TYPE = "mapnodelinkelement";
 	public static final String COLLECTOR_TYPE = "mappipepathelement";
 	public static final String LINK_TYPE = "maplinkelement";
+
+	JDesktopPane desktop;
+	ApplicationContext aContext;
+
 	/**
 	 * окно карты
 	 */
 	MapFrame mapFrame;
 
-	public MapImportCommand(MapFrame mapFrame)
+	public MapImportCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
-		this.mapFrame = mapFrame;
+		super();
+		this.desktop = desktop;
+		this.aContext = aContext;
 	}
 
 	public void execute()
 	{
-		if(mapFrame == null)
-			mapFrame = MapFrame.getMapMainFrame();
+		mapFrame = MapDesktopCommand.findMapFrame(desktop);
+
 		if(mapFrame == null)
 			return;
 			

@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.6 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.7 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactor
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapOpenCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
@@ -32,7 +33,7 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/21 13:49:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -49,10 +50,6 @@ public class MapEditorOpenMapCommand extends VoidCommand
 	Map map = null;
 	MapView mapView = null;
 
-	public MapEditorOpenMapCommand()
-	{
-	}
-
 	/**
 	 * 
 	 * @param desktop куда класть окно карты
@@ -66,11 +63,12 @@ public class MapEditorOpenMapCommand extends VoidCommand
 
 	public void execute()
 	{
-		if(mapFrame.getMapMainFrame() != null)
+		mapFrame = MapDesktopCommand.findMapFrame(desktop);
+		if(mapFrame != null)
 		{
-			if(!mapFrame.getMapMainFrame().checkCanCloseMap())
+			if(!mapFrame.checkCanCloseMap())
 				return;
-			if(!mapFrame.getMapMainFrame().checkCanCloseMapView())
+			if(!mapFrame.checkCanCloseMapView())
 				return;
 		}
 
@@ -84,7 +82,6 @@ public class MapEditorOpenMapCommand extends VoidCommand
 		{
 			map = moc.getMap();
 
-			MapFrame mapFrame = MapFrame.getMapMainFrame();
 			if(mapFrame == null)
 			{
 				ViewMapWindowCommand mapCommand = new ViewMapWindowCommand(

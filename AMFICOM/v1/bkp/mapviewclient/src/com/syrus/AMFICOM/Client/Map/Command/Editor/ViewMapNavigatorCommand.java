@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapNavigatorCommand.java,v 1.3 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: ViewMapNavigatorCommand.java,v 1.4 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ViewNavigatorCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreePanel;
 
@@ -29,7 +30,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/21 13:49:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -71,20 +72,7 @@ public class ViewMapNavigatorCommand extends ViewNavigatorCommand
 
 	public void execute()
 	{
-		frame = null;
-		for(int i = 0; i < desktop.getComponents().length; i++)
-		{
-			try
-			{
-				frame = (MapSchemeTreeFrame)desktop.getComponent(i);
-				// уже есть окно карты
-				break;
-			}
-			catch(Exception ex)
-			{
-				// не окно карты
-			}
-		}
+		frame = MapDesktopCommand.findMapSchemeTreeFrame(desktop);
 
 		if(frame == null)
 		{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.5 2004/12/24 15:42:13 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.6 2005/01/21 13:49:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/24 15:42:13 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/21 13:49:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -76,7 +76,7 @@ public class MapElementLabel extends JLabel
 	public MapElementLabel(SiteNodeType proto)
 	{
 		this.proto = proto;
-		this.ntc = (NodeTypeController)com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController.getInstance();
+		this.ntc = (NodeTypeController )NodeTypeController.getInstance();
 //		this.ntc = (NodeTypeController )MapFrame
 //			.getMapMainFrame()
 //				.getMapViewer()
@@ -139,7 +139,6 @@ public class MapElementLabel extends JLabel
 		if(SwingUtilities.isRightMouseButton(e))
 		{
 			ProtoPopupMenu menu = ProtoPopupMenu.getInstance();
-			menu.setLogicalNetLayer(MapFrame.getMapMainFrame().getMapViewer().getLogicalNetLayer());
 			menu.setElementLabel(this);
 			menu.setElement(proto);
 			menu.show(this, e.getPoint().x, e.getPoint().y);

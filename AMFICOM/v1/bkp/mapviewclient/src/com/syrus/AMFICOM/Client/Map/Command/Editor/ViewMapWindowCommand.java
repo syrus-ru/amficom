@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.8 2004/12/29 19:05:20 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.9 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.UI.MessageBox;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
@@ -37,7 +38,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/29 19:05:20 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/21 13:49:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -50,10 +51,6 @@ public class ViewMapWindowCommand extends VoidCommand
 	ApplicationModelFactory factory;
 
 	public MapFrame frame;
-
-	public ViewMapWindowCommand()
-	{
-	}
 
 	public ViewMapWindowCommand(Dispatcher dispatcher, JDesktopPane desktop, ApplicationContext aContext, ApplicationModelFactory factory)
 	{
@@ -93,8 +90,26 @@ public class ViewMapWindowCommand extends VoidCommand
 		if(dataSource == null)
 			return;
 
-		frame = MapFrame.getMapMainFrame();
+		frame = MapDesktopCommand.findMapFrame(desktop);
 		
+		if(frame == null)
+		{
+			frame = new MapFrame();
+			desktop.add(frame);
+			frame.setContext(aC);
+			Dimension dim = desktop.getSize();
+			frame.setLocation(0, 0);
+			frame.setSize(dim.width * 4 / 5, dim.height * 7 / 8);
+		}
+
+		showMapFrame(frame);
+		dispatcher.notify(new MapEvent(frame, MapEvent.MAP_FRAME_SHOWN));
+		aContext.getDispatcher().notify(new StatusMessageEvent(
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModel.getString("Finished")));
+		setResult(Command.RESULT_OK);
+	}
+/*	
 		if(frame.isVisible())
 		{
 			if(frame.getParent() != null)
@@ -128,7 +143,7 @@ public class ViewMapWindowCommand extends VoidCommand
 				LangModel.getString("Finished")));
 		setResult(Command.RESULT_OK);
 	}
-
+*/
 	protected void showMapFrame(MapFrame mapFrame)
 	{
 		MapView mapView = null;
@@ -157,7 +172,7 @@ public class ViewMapWindowCommand extends VoidCommand
 		mapView.setLogicalNetLayer(frame.getMapViewer().getLogicalNetLayer());
 
 		frame.setMapView(mapView);
-		frame.show();
+		frame.setVisible(true);
 	}
 
 	protected void setMapFrame(MapFrame mapFrame, ApplicationContext aC)

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorAddSchemeToViewCommand.java,v 1.4 2004/12/27 16:49:35 krupenn Exp $
+ * $Id: MapEditorAddSchemeToViewCommand.java,v 1.5 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,43 +16,29 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import javax.swing.JDesktopPane;
 
 /**
  * добавить в вид схему из списка
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/27 16:49:35 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/21 13:49:27 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class MapEditorAddSchemeToViewCommand extends VoidCommand
 {
-	MapFrame mapFrame;
+	JDesktopPane desktop;
 	ApplicationContext aContext;
 
 	protected ObjectResource retObj;
 
-	public MapEditorAddSchemeToViewCommand()
+	public MapEditorAddSchemeToViewCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
-	}
-
-	public MapEditorAddSchemeToViewCommand(MapFrame mapFrame, ApplicationContext aContext)
-	{
-		this.mapFrame = mapFrame;
+		this.desktop = desktop;
 		this.aContext = aContext;
-	}
-
-	public void setParameter(String param, Object val)
-	{
-		if(param.equals("mapFrame"))
-			this.mapFrame = (MapFrame)val;
-	}
-
-	public Object clone()
-	{
-		return new MapEditorAddSchemeToViewCommand(mapFrame, aContext);
 	}
 
 	public ObjectResource getReturnObject()
@@ -62,10 +48,6 @@ public class MapEditorAddSchemeToViewCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSource();
-
-		if(dataSource == null)
-			return;
 /*
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,

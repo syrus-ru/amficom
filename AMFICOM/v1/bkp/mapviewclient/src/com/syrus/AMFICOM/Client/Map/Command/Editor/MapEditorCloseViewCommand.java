@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseViewCommand.java,v 1.6 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapEditorCloseViewCommand.java,v 1.7 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,10 +17,12 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.map.Map;
+import javax.swing.JDesktopPane;
 
 /**
  * Класс MapMapCloseCommand используется для закрытия карты в окне карты в модуле 
@@ -28,25 +30,25 @@ import com.syrus.AMFICOM.map.Map;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/21 13:49:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapCloseCommand
  */
 public class MapEditorCloseViewCommand extends VoidCommand
 {
-	MapEditorMainFrame mainFrame;
+	JDesktopPane desktop;
 	Dispatcher dispatcher;
 
-	public MapEditorCloseViewCommand(MapEditorMainFrame mainFrame, Dispatcher dispatcher)
+	public MapEditorCloseViewCommand(JDesktopPane desktop, Dispatcher dispatcher)
 	{
-		this.mainFrame = mainFrame;
+		this.desktop = desktop;
 		this.dispatcher = dispatcher;
 	}
 
 	public void execute()
 	{
-		MapFrame mapFrame = mainFrame.getMapFrame();
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
 
 		if(mapFrame == null)
 			return;

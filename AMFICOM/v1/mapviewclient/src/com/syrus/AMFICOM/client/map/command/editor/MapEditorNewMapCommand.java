@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewMapCommand.java,v 1.7 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapEditorNewMapCommand.java,v 1.8 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,17 +16,19 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapCloseCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.map.Map;
+import javax.swing.JDesktopPane;
 
 /**
  * Класс $RCSfile: MapEditorNewMapCommand.java,v $ используется для создания новой топологической схемы в
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/21 13:49:27 $
  * @module
  * @author $Author: krupenn $
  * @see MapNewCommand, ViewMapAllCommand
@@ -34,29 +36,25 @@ import com.syrus.AMFICOM.map.Map;
 public class MapEditorNewMapCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-	MapEditorMainFrame mainFrame;
+	JDesktopPane desktop;
 
-	public MapEditorNewMapCommand()
+	public MapEditorNewMapCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
-	}
-
-	public MapEditorNewMapCommand(MapEditorMainFrame mainFrame, ApplicationContext aContext)
-	{
-		this.mainFrame = mainFrame;
+		this.desktop = desktop;
 		this.aContext = aContext;
 	}
 
 	public void execute()
 	{
-		MapFrame mapFrame = mainFrame.getMapFrame();
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
 	
 		if(mapFrame == null)
 		{
 			new ViewMapAllCommand(
-					mainFrame.getDesktop(), 
+					desktop, 
 					aContext, 
 					new MapMapEditorApplicationModelFactory()).execute();
-			mapFrame = mainFrame.getMapFrame();
+			mapFrame = MapDesktopCommand.findMapFrame(desktop);
 		}
 
 		if(!mapFrame.checkCanCloseMap())
@@ -74,7 +72,6 @@ public class MapEditorNewMapCommand extends VoidCommand
 		MapView mapView = mapFrame.getMapView();
 
 		mapView.setMap(map);
-
 
 		setResult(Command.RESULT_OK);
 	}

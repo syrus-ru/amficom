@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveSchemeFromViewCommand.java,v 1.4 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapEditorRemoveSchemeFromViewCommand.java,v 1.5 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,10 +19,12 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,24 +32,20 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/21 13:49:27 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class MapEditorRemoveSchemeFromViewCommand extends VoidCommand
 {
-	MapFrame mapFrame;
+	JDesktopPane desktop;
 	ApplicationContext aContext;
 	Scheme sch;
 
-	public MapEditorRemoveSchemeFromViewCommand()
+	public MapEditorRemoveSchemeFromViewCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
-	}
-
-	public MapEditorRemoveSchemeFromViewCommand(MapFrame mapFrame, ApplicationContext aContext)
-	{
-		this.mapFrame = mapFrame;
+		this.desktop = desktop;
 		this.aContext = aContext;
 	}
 	
@@ -55,23 +53,16 @@ public class MapEditorRemoveSchemeFromViewCommand extends VoidCommand
 	{
 		if(key.equals("scheme"))
 			sch = (Scheme )val;
-		if(key.equals("mapFrame"))
-			this.mapFrame = (MapFrame)val;
-	}
-
-	public Object clone()
-	{
-		return new MapEditorRemoveSchemeFromViewCommand(mapFrame, aContext);
 	}
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSource();
-
-		if(dataSource == null)
-			return;
-			
 		if(sch == null)
+			return;
+
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
+
+		if(mapFrame == null)
 			return;
 
 		aContext.getDispatcher().notify(new StatusMessageEvent(

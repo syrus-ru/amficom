@@ -297,7 +297,7 @@ public final class MapSchemeTreePanel extends JPanel
 	{
 		DataSourceInterface dataSource = aContext.getDataSource();
 
-		if(dataSource == null)
+		if(mapView == null)
 			return;
 
 		aContext.getDispatcher().notify(new StatusMessageEvent(
@@ -342,21 +342,13 @@ public final class MapSchemeTreePanel extends JPanel
 		{
 			Scheme retObj = (Scheme )mcd.getReturnObject();
 
-			MapFrame mapFrame = MapFrame.getMapMainFrame();
-			if(mapFrame == null)
+			if(!mapView.getSchemes().contains(retObj))
 			{
-				System.out.println("mapviewer is NULL");
-			}
-			else
-			{
-				if(!mapFrame.getMapView().getSchemes().contains(retObj))
-				{
-					mapFrame.getMapView().addScheme((Scheme )retObj);
-					mapFrame.getContext().getDispatcher().notify(new MapEvent(
-							mapFrame.getMapView(),
-							MapEvent.MAP_VIEW_CHANGED));
-					mapFrame.getMapViewer().getLogicalNetLayer().repaint(false);
-				}
+				mapView.addScheme((Scheme )retObj);
+				aContext.getDispatcher().notify(new MapEvent(
+						mapView,
+						MapEvent.MAP_VIEW_CHANGED));
+				mapView.getLogicalNetLayer().repaint(false);
 			}
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
@@ -370,19 +362,12 @@ public final class MapSchemeTreePanel extends JPanel
 				treePanel.getTree().getSelectionPath().getLastPathComponent();
 		Scheme scheme = (Scheme )node.getObject();
 
-		MapFrame mapFrame = MapFrame.getMapMainFrame();
-		if(mapFrame == null)
-		{
-			System.out.println("mapviewer is NULL");
-		}
-		else
-		{
-			mapFrame.getMapView().removeScheme(scheme);
-			mapFrame.getContext().getDispatcher().notify(new MapEvent(
-					mapFrame.getMapView(),
-					MapEvent.MAP_VIEW_CHANGED));
-			mapFrame.getMapViewer().getLogicalNetLayer().repaint(false);
-		}
+		mapView.removeScheme(scheme);
+		aContext.getDispatcher().notify(new MapEvent(
+				mapView,
+				MapEvent.MAP_VIEW_CHANGED));
+		mapView.getLogicalNetLayer().repaint(false);
+
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("Finished")));

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.5 2004/11/12 19:09:54 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.6 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.awt.event.ActionListener;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/12 19:09:54 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/21 13:49:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -42,15 +42,45 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 {
 	private ApplicationModel aModel;
 
+	/**
+	 * <img src="images/open_session.gif">
+	 */
 	JButton sessionOpen = new JButton();
+	/**
+	 * <img src="images/close_session.gif">
+	 */
 	JButton buttonCloseSession = new JButton();
+	/**
+	 * <img src="images/domains.gif">
+	 */
 	JButton menuSessionDomain = new JButton();
+	/**
+	 * <img src="images/new.gif">
+	 */
 	JButton menuMapNew = new JButton();
+	/**
+	 * <img src="images/map_mini.gif">
+	 */
 	JButton menuMapOpen = new JButton();
+	/**
+	 * <img src="images/save.gif">
+	 */
 	JButton menuMapSave = new JButton();
+	/**
+	 * <img src="images/newview.gif">
+	 */
 	JButton menuMapViewNew = new JButton();
+	/**
+	 * <img src="images/openview.gif">
+	 */
 	JButton menuMapViewOpen = new JButton();
+	/**
+	 * <img src="images/saveview.gif">
+	 */
 	JButton menuMapViewSave = new JButton();
+	/**
+	 * <img src="images/mapsetup.gif">
+	 */
 	JButton menuViewSetup = new JButton();
 
 	public final static int imgSize = 16;

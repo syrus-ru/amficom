@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.15 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.16 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -98,7 +98,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2005/01/20 14:37:52 $
+ * @version $Revision: 1.16 $, $Date: 2005/01/21 13:49:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -337,41 +337,45 @@ public class MapEditorMainFrame extends JFrame
 
 		aModel.setCommand("menuMapNew", 
 				new MapEditorNewMapCommand(
-					this, 
+					desktopPane, 
 					aContext));
 		aModel.setCommand("menuMapOpen", 
 				new MapEditorOpenMapCommand(
-					getDesktop(), 
+					desktopPane, 
 					aContext));
 		aModel.setCommand("menuMapClose", 
 				new MapEditorCloseMapCommand(
-					this, 
+					desktopPane, 
 					internalDispatcher));
 		aModel.setCommand("menuMapSave", 
 				new MapEditorSaveMapCommand(
-					null, 
+					desktopPane, 
 					aContext));
 		aModel.setCommand("menuMapSaveAs", 
 				new MapEditorSaveMapAsCommand(
-					null, 
+					desktopPane, 
 					aContext));
 		aModel.setCommand("menuMapExport", 
-				new MapExportCommand(null));
+				new MapExportCommand(
+					desktopPane, 
+					aContext));
 		aModel.setCommand("menuMapImport", 
-				new MapImportCommand(null));
+				new MapImportCommand(
+					desktopPane, 
+					aContext));
 
 		aModel.setCommand("menuSchemeAddToView", 
 				new MapEditorAddSchemeToViewCommand(
-					null, 
+					desktopPane, 
 					aContext));
 		aModel.setCommand("menuSchemeRemoveFromView", 
 				new MapEditorRemoveSchemeFromViewCommand(
-					null, 
+					desktopPane, 
 					aContext));
 
 		aModel.setCommand("menuMapViewNew", 
 				new MapEditorNewViewCommand(
-					this, 
+					desktopPane, 
 					aContext));
 		aModel.setCommand("menuMapViewOpen", 
 				new MapEditorOpenViewCommand(
@@ -379,15 +383,15 @@ public class MapEditorMainFrame extends JFrame
 					aContext));
 		aModel.setCommand("menuMapViewClose", 
 				new MapEditorCloseViewCommand(
-					this, 
+					desktopPane, 
 					internalDispatcher));
 		aModel.setCommand("menuMapViewSave", 
 				new MapEditorSaveViewCommand(
-					null, 
+					desktopPane, 
 					aContext));
 		aModel.setCommand("menuMapViewSaveAs", 
 				new MapEditorSaveViewAsCommand(
-					null, 
+					desktopPane, 
 					aContext));
 
 		aModel.setCommand("menuViewProto", 

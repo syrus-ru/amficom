@@ -1,10 +1,18 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.Props.MapPropertiesPane;
+import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementLabel;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -74,7 +82,30 @@ public final class ProtoPopupMenu extends MapPopupMenu
 
 	private void showProperties()
 	{
-		super.showProperties(proto);
+		ObjectResourcePropertiesPane prop = MapPropsManager.getPropsPane(proto);
+		if(prop == null)
+			return;
+		((MapPropertiesPane )prop).setLogicalNetLayer(logicalNetLayer);
+		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
+				Environment.getActiveWindow(), 
+				LangModel.getString("Properties"), 
+				true, 
+				proto,
+				prop);
+
+		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frameSize =  dialog.getSize();
+
+		if (frameSize.height > screenSize.height)
+			frameSize.height = screenSize.height;
+		if (frameSize.width > screenSize.width)
+			frameSize.width = screenSize.width;
+		dialog.setLocation(
+				(screenSize.width - frameSize.width)/2, 
+				(screenSize.height - frameSize.height)/2);
+				
+		dialog.setVisible(true);
+
 		lab.updateIcon();
 	}
 

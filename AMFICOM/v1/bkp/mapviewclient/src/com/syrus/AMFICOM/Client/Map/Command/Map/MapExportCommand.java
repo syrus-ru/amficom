@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.8 2005/01/20 14:37:52 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.9 2005/01/21 13:49:27 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,6 +12,8 @@ package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExportCommand;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -23,6 +25,7 @@ import java.io.File;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import javax.swing.JDesktopPane;
 
 /**
  *  ласс $RCSfile: MapExportCommand.java,v $ используетс€ дл€ закрыти€ 
@@ -30,10 +33,10 @@ import java.util.Iterator;
  * самого окна карты. ѕри этом в азголовке окна отображаетс€ информаци€ о том,
  * что активной карты нет, и карта центрируетс€ по умолчанию
  * 
- * @version $Revision: 1.8 $, $Date: 2005/01/20 14:37:52 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/21 13:49:27 $
  * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @see 
  */
 public class MapExportCommand extends ExportCommand
 {
@@ -46,6 +49,9 @@ public class MapExportCommand extends ExportCommand
 	public static final String LINK_TYPE = "maplinkelement";
 	
 	private static java.util.Map typesMap = new HashMap();
+
+	JDesktopPane desktop;
+	ApplicationContext aContext;
 	
 	/**
 	 * окно карты
@@ -63,18 +69,20 @@ public class MapExportCommand extends ExportCommand
 		typesMap.put(ObjectEntities.PHYSICAL_LINK_ENTITY, LINK_TYPE);
 	}
 
-	public MapExportCommand(MapFrame mapFrame)
+	public MapExportCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
 		super();
-		this.mapFrame = mapFrame;
+		this.desktop = desktop;
+		this.aContext = aContext;
 	}
 
 	public void execute()
 	{
-		if(mapFrame == null)
-			mapFrame = MapFrame.getMapMainFrame();
+		mapFrame = MapDesktopCommand.findMapFrame(desktop);
+
 		if(mapFrame == null)
 			return;
+
         System.out.println("Closing map");
 
 		Map map = mapFrame.getMap();
