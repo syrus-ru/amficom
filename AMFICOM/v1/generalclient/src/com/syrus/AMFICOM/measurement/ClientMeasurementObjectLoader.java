@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.18 2005/02/08 11:55:39 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.19 2005/02/10 13:29:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/02/08 11:55:39 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/10 13:29:27 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -905,12 +905,24 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+	
+	private void updateStorableObjectHeader(List storableObjects, StorableObject_Transferable[] transferables) {
+		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			StorableObject storableObject = (StorableObject) it.next();
+			Identifier_Transferable id = (Identifier_Transferable) storableObject.getId().getTransferable();
+			for (int i = 0; i < transferables.length; i++) {
+				if (transferables[i].id.equals(id)) {
+					storableObject.updateFromHeaderTransferable(transferables[i]);
+				}
+			}
+		}
+	}
 
 	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		MeasurementType_Transferable transferables = (MeasurementType_Transferable) measurementType.getTransferable();
 		try {
-			this.server.receiveMeasurementType(transferables, force, accessIdentifierTransferable);
+			measurementType.updateFromHeaderTransferable(this.server.receiveMeasurementType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveMeasurementType| receiveMeasurementTypes";
 
@@ -927,7 +939,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		AnalysisType_Transferable transferables = (AnalysisType_Transferable) analysisType.getTransferable();
 
 		try {
-			this.server.receiveAnalysisType(transferables, force, accessIdentifierTransferable);
+			analysisType.updateFromHeaderTransferable(this.server.receiveAnalysisType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveAnalysisType | receiveAnalysisTypes";
 
@@ -942,7 +954,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			DatabaseException, CommunicationException {
 		EvaluationType_Transferable transferables = (EvaluationType_Transferable) evaluationType.getTransferable();
 		try {
-			this.server.receiveEvaluationType(transferables, force, accessIdentifierTransferable);
+			evaluationType.updateFromHeaderTransferable(this.server.receiveEvaluationType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveEvaluationType | receiveEvaluationTypes";
 
@@ -957,7 +969,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			CommunicationException {
 		Set_Transferable transferables = (Set_Transferable) set.getTransferable();
 		try {
-			this.server.receiveSet(transferables, force, accessIdentifierTransferable);
+			set.updateFromHeaderTransferable(this.server.receiveSet(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveSet | receiveSets";
 
@@ -973,7 +985,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		MeasurementSetup_Transferable transferables = (MeasurementSetup_Transferable) measurementSetup
 				.getTransferable();
 		try {
-			this.server.receiveMeasurementSetup(transferables, force, accessIdentifierTransferable);
+			measurementSetup.updateFromHeaderTransferable(this.server.receiveMeasurementSetup(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveMeasurementSetup | receiveMeasurementSetups";
 
@@ -988,7 +1000,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			CommunicationException {
 		Modeling_Transferable transferables = (Modeling_Transferable) modeling.getTransferable();
 		try {
-			this.server.receiveModeling(transferables, force, accessIdentifierTransferable);
+			modeling.updateFromHeaderTransferable(this.server.receiveModeling(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveModeling | receiveModelings";
 
@@ -999,11 +1011,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveModelingType(ModelingType modeling, boolean force) throws VersionCollisionException,
+	public void saveModelingType(ModelingType modelingType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		ModelingType_Transferable transferables = (ModelingType_Transferable) modeling.getTransferable();
+		ModelingType_Transferable transferables = (ModelingType_Transferable) modelingType.getTransferable();
 		try {
-			this.server.receiveModelingType(transferables, force, accessIdentifierTransferable);
+			modelingType.updateFromHeaderTransferable(this.server.receiveModelingType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveModelingType | receiveModelingTypes";
 
@@ -1018,7 +1030,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			DatabaseException, CommunicationException {
 		Measurement_Transferable transferables = (Measurement_Transferable) measurement.getTransferable();
 		try {
-			this.server.receiveMeasurement(transferables, force, accessIdentifierTransferable);
+			measurement.updateFromHeaderTransferable(this.server.receiveMeasurement(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveMeasurement | receiveMeasurements";
 
@@ -1033,7 +1045,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			CommunicationException {
 		Analysis_Transferable transferables = (Analysis_Transferable) analysis.getTransferable();
 		try {
-			this.server.receiveAnalysis(transferables, force, accessIdentifierTransferable);
+			analysis.updateFromHeaderTransferable(this.server.receiveAnalysis(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveAnalysis | receiveAnalysiss";
 
@@ -1048,7 +1060,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			DatabaseException, CommunicationException {
 		Evaluation_Transferable transferables = (Evaluation_Transferable) evaluation.getTransferable();
 		try {
-			this.server.receiveEvaluation(transferables, force, accessIdentifierTransferable);
+			evaluation.updateFromHeaderTransferable(this.server.receiveEvaluation(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveEvaluation | receiveEvaluations";
 
@@ -1063,7 +1075,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			CommunicationException {
 		Test_Transferable transferables = (Test_Transferable) test.getTransferable();
 		try {
-			this.server.receiveTest(transferables, force, accessIdentifierTransferable);
+			test.updateFromHeaderTransferable(this.server.receiveTest(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveTest | receiveTests";
 
@@ -1078,7 +1090,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			CommunicationException {
 		Result_Transferable transferables = (Result_Transferable) result.getTransferable();
 		try {
-			this.server.receiveResult(transferables, force, accessIdentifierTransferable);
+			result.updateFromHeaderTransferable(this.server.receiveResult(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveResult | receiveResults";
 
@@ -1093,7 +1105,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			DatabaseException, CommunicationException {
 		TemporalPattern_Transferable transferables = (TemporalPattern_Transferable) temporalPattern.getTransferable();
 		try {
-			this.server.receiveTemporalPattern(transferables, force, accessIdentifierTransferable);
+			temporalPattern.updateFromHeaderTransferable(this.server.receiveTemporalPattern(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveTemporalPattern | receiveTemporalPatterns";
 
@@ -1112,7 +1124,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (MeasurementType_Transferable) ((MeasurementType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveMeasurementTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(measurementTypes, this.server.receiveMeasurementTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveMeasurementType | receiveMeasurementTypes";
 
@@ -1132,7 +1144,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (AnalysisType_Transferable) ((AnalysisType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveAnalysisTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(analysisTypes, this.server.receiveAnalysisTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveAnalysisTypes | receiveAnalysisTypes";
 
@@ -1151,7 +1163,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (EvaluationType_Transferable) ((EvaluationType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveEvaluationTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(evaluationTypes, this.server.receiveEvaluationTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveEvaluationType | receiveEvaluationTypes";
 
@@ -1170,7 +1182,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (Set_Transferable) ((Set) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveSets(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(sets, this.server.receiveSets(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveSets | receiveSets";
 
@@ -1189,7 +1201,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (Modeling_Transferable) ((Modeling) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveModelings(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(modelings, this.server.receiveModelings(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientModelingObjectLoader.saveModelings | receiveModelings";
 
@@ -1200,15 +1212,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public void saveModelingTypes(List modelings, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveModelingTypes(List modelingTypes, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		ModelingType_Transferable[] transferables = new ModelingType_Transferable[modelings.size()];
+		ModelingType_Transferable[] transferables = new ModelingType_Transferable[modelingTypes.size()];
 		int i = 0;
-		for (Iterator it = modelings.iterator(); it.hasNext(); i++) {
+		for (Iterator it = modelingTypes.iterator(); it.hasNext(); i++) {
 			transferables[i] = (ModelingType_Transferable) ((ModelingType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveModelingTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(modelingTypes, this.server.receiveModelingTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientModelingTypeObjectLoader.saveModelingTypes | receiveModelingTypes";
 
@@ -1227,7 +1239,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (MeasurementSetup_Transferable) ((MeasurementSetup) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveMeasurementSetups(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(measurementSetups, this.server.receiveMeasurementSetups(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementSetupObjectLoader.saveMeasurementSetups | receiveMeasurementSetups";
 
@@ -1246,7 +1258,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (Measurement_Transferable) ((Measurement) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveMeasurements(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(measurements, this.server.receiveMeasurements(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveMeasurements | receiveMeasurements";
 
@@ -1265,7 +1277,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (Analysis_Transferable) ((Analysis) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveAnalyses(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(analyses, this.server.receiveAnalyses(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.receiveAnalyses | receiveAnalyses";
 
@@ -1284,7 +1296,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (Evaluation_Transferable) ((Evaluation) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveEvaluations(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(evaluations, this.server.receiveEvaluations(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveEvaluations | receiveEvaluations";
 
@@ -1303,7 +1315,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (Test_Transferable) ((Test) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveTests(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(tests, this.server.receiveTests(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.saveTests | receiveTests";
 
@@ -1322,7 +1334,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (Result_Transferable) ((Result) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveResults(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(results, this.server.receiveResults(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientResultObjectLoader.saveResults | receiveResults";
 
@@ -1341,7 +1353,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			transferables[i] = (TemporalPattern_Transferable) ((TemporalPattern) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveTemporalPatterns(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(temporalPatterns, this.server.receiveTemporalPatterns(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientTemporalPaternObjectLoader.saveTemporalPaterns | receiveTemporalPaterns";
 

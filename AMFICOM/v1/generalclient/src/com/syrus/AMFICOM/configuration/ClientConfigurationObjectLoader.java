@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.17 2005/02/08 11:55:39 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.18 2005/02/10 13:29:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.TypicalCondition_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/02/08 11:55:39 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/10 13:29:26 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -1051,12 +1051,24 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			throw new CommunicationException(e);
 		}
 	}
+	
+	private void updateStorableObjectHeader(List storableObjects, StorableObject_Transferable[] transferables) {
+		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			StorableObject storableObject = (StorableObject) it.next();
+			Identifier_Transferable id = (Identifier_Transferable) storableObject.getId().getTransferable();
+			for (int i = 0; i < transferables.length; i++) {
+				if (transferables[i].id.equals(id)) {
+					storableObject.updateFromHeaderTransferable(transferables[i]);
+				}
+			}
+		}
+	}
 
 	public void saveCableThread(CableThread cableThread, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		CableThread_Transferable transferables = (CableThread_Transferable) cableThread.getTransferable();
 		try {
-			this.server.receiveCableThread(transferables, force, accessIdentifierTransferable);
+			cableThread.updateFromHeaderTransferable(this.server.receiveCableThread(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableThread ";
 
@@ -1071,7 +1083,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			DatabaseException, CommunicationException {
 		CableLinkType_Transferable transferables = (CableLinkType_Transferable) cableLinkType.getTransferable();
 		try {
-			this.server.receiveCableLinkType(transferables, force, accessIdentifierTransferable);
+			cableLinkType.updateFromHeaderTransferable(this.server.receiveCableLinkType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableLinkType ";
 
@@ -1090,7 +1102,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (CableLinkType_Transferable) ((CableLinkType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveCableLinkTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveCableLinkTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableLinkTypes ";
 
@@ -1109,7 +1121,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (CableThread_Transferable) ((CableThread) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveCableThreads(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveCableThreads(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableThreads ";
 
@@ -1124,7 +1136,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			DatabaseException, CommunicationException {
 		CableThreadType_Transferable transferables = (CableThreadType_Transferable) cableThreadType.getTransferable();
 		try {
-			this.server.receiveCableThreadType(transferables, force, accessIdentifierTransferable);
+			cableThreadType.updateFromHeaderTransferable(this.server.receiveCableThreadType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableThreadType ";
 
@@ -1143,7 +1155,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (CableThreadType_Transferable) ((CableThreadType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveCableThreadTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveCableThreadTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableThreadTypes ";
 
@@ -1164,7 +1176,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			CommunicationException {
 		Equipment_Transferable transferables = (Equipment_Transferable) equipment.getTransferable();
 		try {
-			this.server.receiveEquipment(transferables, force, accessIdentifierTransferable);
+			equipment.updateFromHeaderTransferable(this.server.receiveEquipment(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveEquipment ";
 
@@ -1183,7 +1195,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (Equipment_Transferable) ((Equipment) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveEquipments(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveEquipments(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveEquipments ";
 
@@ -1198,7 +1210,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			DatabaseException, CommunicationException {
 		EquipmentType_Transferable transferables = (EquipmentType_Transferable) equipmentType.getTransferable();
 		try {
-			this.server.receiveEquipmentType(transferables, force, accessIdentifierTransferable);
+			equipmentType.updateFromHeaderTransferable(this.server.receiveEquipmentType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveEquipmentType ";
 
@@ -1217,7 +1229,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (EquipmentType_Transferable) ((EquipmentType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveEquipmentTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveEquipmentTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveEquipmentTypes ";
 
@@ -1232,7 +1244,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			CommunicationException {
 		KIS_Transferable transferables = (KIS_Transferable) kis.getTransferable();
 		try {
-			this.server.receiveKIS(transferables, force, accessIdentifierTransferable);
+			kis.updateFromHeaderTransferable(this.server.receiveKIS(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveKIS ";
 
@@ -1251,7 +1263,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (KIS_Transferable) ((KIS) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveKISs(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveKISs(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveKISs ";
 
@@ -1266,7 +1278,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			CommunicationException {
 		Link_Transferable transferables = (Link_Transferable) link.getTransferable();
 		try {
-			this.server.receiveLink(transferables, force, accessIdentifierTransferable);
+			link.updateFromHeaderTransferable(this.server.receiveLink(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveLink ";
 
@@ -1285,7 +1297,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (Link_Transferable) ((Link) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveLinks(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveLinks(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveLinks ";
 
@@ -1300,7 +1312,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			CommunicationException {
 		LinkType_Transferable transferables = (LinkType_Transferable) linkType.getTransferable();
 		try {
-			this.server.receiveLinkType(transferables, force, accessIdentifierTransferable);
+			linkType.updateFromHeaderTransferable(this.server.receiveLinkType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveLinkType ";
 
@@ -1319,7 +1331,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (AbstractLinkType_Transferable) ((LinkType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveLinkTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveLinkTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveLinkTypes ";
 
@@ -1334,7 +1346,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			DatabaseException, CommunicationException {
 		MeasurementPort_Transferable transferables = (MeasurementPort_Transferable) measurementPort.getTransferable();
 		try {
-			this.server.receiveMeasurementPort(transferables, force, accessIdentifierTransferable);
+			measurementPort.updateFromHeaderTransferable(this.server.receiveMeasurementPort(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMeasurementPort ";
 
@@ -1353,7 +1365,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (MeasurementPort_Transferable) ((MeasurementPort) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveMeasurementPorts(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveMeasurementPorts(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMeasurementPorts ";
 
@@ -1369,7 +1381,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		MeasurementPortType_Transferable transferables = (MeasurementPortType_Transferable) measurementPortType
 				.getTransferable();
 		try {
-			this.server.receiveMeasurementPortType(transferables, force, accessIdentifierTransferable);
+			measurementPortType.updateFromHeaderTransferable(this.server.receiveMeasurementPortType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMeasurementPortType ";
 
@@ -1388,7 +1400,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (MeasurementPortType_Transferable) ((MeasurementPortType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveMeasurementPortTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveMeasurementPortTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMeasurementPortTypes ";
 
@@ -1404,7 +1416,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		MonitoredElement_Transferable transferables = (MonitoredElement_Transferable) monitoredElement
 				.getTransferable();
 		try {
-			this.server.receiveMonitoredElement(transferables, force, accessIdentifierTransferable);
+			monitoredElement.updateFromHeaderTransferable(this.server.receiveMonitoredElement(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMonitoredElement ";
 
@@ -1423,7 +1435,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (MonitoredElement_Transferable) ((MonitoredElement) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveMonitoredElements(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveMonitoredElements(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveMonitoredElements ";
 
@@ -1438,7 +1450,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			CommunicationException {
 		Port_Transferable transferables = (Port_Transferable) port.getTransferable();
 		try {
-			this.server.receivePort(transferables, force, accessIdentifierTransferable);
+			port.updateFromHeaderTransferable(this.server.receivePort(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveEquipment ";
 
@@ -1457,7 +1469,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (Port_Transferable) ((Port) it.next()).getTransferable();
 		}
 		try {
-			this.server.receivePorts(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receivePorts(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.savePorts ";
 
@@ -1472,7 +1484,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			CommunicationException {
 		PortType_Transferable transferables = (PortType_Transferable) portType.getTransferable();
 		try {
-			this.server.receivePortType(transferables, force, accessIdentifierTransferable);
+			portType.updateFromHeaderTransferable(this.server.receivePortType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.savePortType ";
 
@@ -1491,7 +1503,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (PortType_Transferable) ((PortType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receivePortTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receivePortTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.savePortTypes ";
 
@@ -1507,7 +1519,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		TransmissionPath_Transferable transferables = (TransmissionPath_Transferable) transmissionPath
 				.getTransferable();
 		try {
-			this.server.receiveTransmissionPath(transferables, force, accessIdentifierTransferable);
+			transmissionPath.updateFromHeaderTransferable(this.server.receiveTransmissionPath(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveTransmissionPath ";
 
@@ -1526,7 +1538,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (TransmissionPath_Transferable) ((TransmissionPath) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveTransmissionPaths(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveTransmissionPaths(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveTransmissionPaths ";
 
@@ -1542,7 +1554,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		TransmissionPathType_Transferable transferables = (TransmissionPathType_Transferable) transmissionPathType
 				.getTransferable();
 		try {
-			this.server.receiveTransmissionPathType(transferables, force, accessIdentifierTransferable);
+			transmissionPathType.updateFromHeaderTransferable(this.server.receiveTransmissionPathType(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveTransmissionPathType ";
 
@@ -1561,7 +1573,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables[i] = (TransmissionPathType_Transferable) ((TransmissionPathType) it.next()).getTransferable();
 		}
 		try {
-			this.server.receiveTransmissionPathTypes(transferables, force, accessIdentifierTransferable);
+			this.updateStorableObjectHeader(list, this.server.receiveTransmissionPathTypes(transferables, force, accessIdentifierTransferable));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveTransmissionPathTypes ";
 
