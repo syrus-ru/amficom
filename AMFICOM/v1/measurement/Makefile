@@ -57,11 +57,16 @@ JPUB_FLAGS = \
 JAR=jar-3.3.1
 
 
+$(LIBNAME): mach
+	$(JAR) -cf $@ \
+		-C $(CLASSDIR) com
+
 .PHONY:	mach
 mach:	.mach
 .mach:	corba ora $(CLASSDIR)
 	$(JAVAC) $(JAVAC_FLAGS) \
 		-classpath $(CLASSDIR):$(APPCLASSPATH) \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPattern.java
 	touch $@
 

@@ -45,14 +45,14 @@ public class Evaluation_Database extends StorableObject_Database {
 			Log.debugMessage("Evaluation_Database.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				Set threshold_set = new Set(new Identifier(resultSet.getLong("threshold_set_id")));
-				Set etalon = new Set(new Identifier(resultSet.getLong("etalon_id")));
+				Set threshold_set = new Set(new Identifier(resultSet.getString("threshold_set_id")));
+				Set etalon = new Set(new Identifier(resultSet.getString("etalon_id")));
 				evaluation.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
 																 DatabaseDate.fromQuerySubString(resultSet, "modified"),
-																 new Identifier(resultSet.getLong("creator_id")),
-																 new Identifier(resultSet.getLong("modifier_id")),
-																 new Identifier(resultSet.getLong("type_id")),
-																 new Identifier(resultSet.getLong("monitored_element_id")),
+																 new Identifier(resultSet.getString("creator_id")),
+																 new Identifier(resultSet.getString("modifier_id")),
+																 new Identifier(resultSet.getString("type_id")),
+																 new Identifier(resultSet.getString("monitored_element_id")),
 																 threshold_set,
 																 etalon);
 			}

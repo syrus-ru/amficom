@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.measurement;
 
 import com.syrus.AMFICOM.general.StorableObject_Database;
 
-public class MeasurementDatabaseContext {
+public abstract class MeasurementDatabaseContext {
 	public static StorableObject_Database measurementDatabase;
 	public static StorableObject_Database temporalPatternDatabase;
 
