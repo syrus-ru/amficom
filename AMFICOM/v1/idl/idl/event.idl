@@ -1,5 +1,5 @@
 /*
- * $Id: event.idl,v 1.5 2005/01/13 12:08:38 arseniy Exp $
+ * $Id: event.idl,v 1.6 2005/01/21 17:06:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,9 @@
 #ifndef EVENT_IDL
 #define	EVENT_IDL
 
-#include "measurement.idl"
+#include "administration.idl"
 #include "configuration.idl"
+#include "measurement.idl"
 
 module com {
 module syrus {
@@ -57,13 +58,23 @@ module corba {
 /////////////////////// Event ////////////////////////
 
 	struct EventType_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject_Transferable header;
 
-		com::syrus::AMFICOM::general::corba::WString32 codename;
-		com::syrus::AMFICOM::general::corba::WString256 description;
+		general::corba::WString32 codename;
+		general::corba::WString256 description;
+
+		general::corba::IdentifierSeq_Transferable parameter_type_ids;
 	};
 
 	typedef sequence <EventType_Transferable> EventTypeSeq_Transferable;
+
+	struct EventParameter_Transferable {
+		general::corba::Identifier_Transferable id;
+		general::corba::Identifier_Transferable type_id;
+		sequence <octet> value;
+	};
+
+	typedef sequence <EventParameter_Transferable> EventParameterSeq_Transferable;
 
 	enum EventStatus {
 		EVENT_STATUS_GENERATED,
@@ -71,11 +82,13 @@ module corba {
 	};
 
 	struct Event_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject_Transferable header;
 
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
+		general::corba::Identifier_Transferable type_id;
 		EventStatus status;
-		com::syrus::AMFICOM::general::corba::WString256 description;
+		general::corba::WString256 description;
+
+		EventParameterSeq_Transferable parameters;
 	};
 
 	typedef sequence <Event_Transferable> EventSeq_Transferable;
@@ -83,10 +96,10 @@ module corba {
 /////////////////////// Alarm ////////////////////////
 
 	struct AlarmType_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject_Transferable header;
 
-		com::syrus::AMFICOM::general::corba::WString32 codename;
-		com::syrus::AMFICOM::general::corba::WString256 description;
+		general::corba::WString32 codename;
+		general::corba::WString256 description;
 	};
 
 	typedef sequence <AlarmType_Transferable> AlarmTypeSeq_Transferable;
@@ -105,13 +118,13 @@ module corba {
 	};
 
 	struct Alarm_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject_Transferable header;
 
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable event_id;
+		general::corba::Identifier_Transferable type_id;
+		general::corba::Identifier_Transferable event_id;
 		AlarmStatus status;
 		AlarmLevel level;
-		com::syrus::AMFICOM::general::corba::WString256 description;
+		general::corba::WString256 description;
 	};
 
 	typedef sequence <Alarm_Transferable> AlarmSeq_Transferable;
