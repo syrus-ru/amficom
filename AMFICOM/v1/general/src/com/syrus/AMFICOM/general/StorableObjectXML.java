@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.18 2005/02/15 09:36:39 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.19 2005/02/17 08:32:15 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.18 $, $Date: 2005/02/15 09:36:39 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/17 08:32:15 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -183,6 +183,7 @@ public class StorableObjectXML {
 		objectMap.put(StorableObjectWrapper.COLUMN_VERSION, new Long(storableObject.getVersion()));
 
 		this.driver.putObjectMap(storableObject.getId(), objectMap);
+		storableObject.changed = false;
 	}
 
 	private StorableObject getStorableObject(	final Identifier identifier,
