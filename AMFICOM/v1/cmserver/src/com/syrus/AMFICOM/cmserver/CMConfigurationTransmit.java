@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.8 2005/02/15 09:55:46 arseniy Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.9 2005/02/22 10:49:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -70,8 +70,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/15 09:55:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/02/22 10:49:47 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -1495,7 +1495,6 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 																		AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Log.debugMessage(
 				"CMConfigurationTransmit.transmitMonitoredElements | requiere "
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
@@ -1991,7 +1990,6 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 																		AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Log.debugMessage(
 				"CMConfigurationTransmit.transmitTransmissionPaths | requiere "
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
@@ -2169,7 +2167,6 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 																				AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Log.debugMessage(
 				"CMConfigurationTransmit.transmitTransmissionPathTypes | requiere "
 						+ (identifier_Transferables.length == 0 ? "all" : Integer
