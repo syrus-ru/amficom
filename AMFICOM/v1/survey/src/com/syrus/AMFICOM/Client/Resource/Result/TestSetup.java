@@ -28,20 +28,49 @@ public class TestSetup extends ObjectResource implements Serializable
 	 * @deprecated
 	 */	
 	public long created = 0;
+	/**
+	 * @deprecated
+	 */	
 	public long modified = 0;
+	/**
+	 * @deprecated
+	 */	
 	public String created_by = "";
+	/**
+	 * @deprecated
+	 */	
 	public String description = "";
-
+	/**
+	 * @deprecated
+	 */	
 	public String test_type_id = "";
+	/**
+	 * @deprecated
+	 */	
 	public String test_argument_set_id = "";
-
+	/**
+	 * @deprecated
+	 */	
 	public String analysis_type_id = "";
+	/**
+	 * @deprecated
+	 */	
 	public String criteria_set_id = "";
-
+	/**
+	 * @deprecated
+	 */	
 	public String evaluation_type_id = "";
+	/**
+	 * @deprecated
+	 */	
 	public String threshold_set_id = "";
+	/**
+	 * @deprecated
+	 */	
 	public String etalon_id = "";
-
+	/**
+	 * @deprecated
+	 */	
 	public String[] monitored_element_ids;
 
 	public TestSetup()
