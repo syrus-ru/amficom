@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.35 2005/02/24 14:59:36 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.36 2005/02/25 12:54:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/02/24 14:59:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/02/25 12:54:47 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -679,8 +679,8 @@ public abstract class StorableObjectPool {
 	}
 
 	/**
-	 * Code that invokes this method, should preliminarly call
-	 * {@link #hasSingleTypeEntities(List)} with the same parameter and
+	 * Code that invokes this method, should preliminarily call
+	 * {@link #hasSingleTypeEntities(Collection)} with the same parameter and
 	 * ensure that return value is <code>true</code>, e.g.:<pre>
 	 * assert hasSingleTypeEntities(storableObjects) :
 	 * 	"Storable objects of different type are saved separately...";
