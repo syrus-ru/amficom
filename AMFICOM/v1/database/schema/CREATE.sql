@@ -14,3 +14,7 @@ REM measurement
 
 @@./measurement/CREATE.sql
 
+REM mapletty
+
+@@./mapletty/CREATE.sql
+
