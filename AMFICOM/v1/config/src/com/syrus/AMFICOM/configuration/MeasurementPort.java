@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.18 2004/11/25 15:00:58 bob Exp $
+ * $Id: MeasurementPort.java,v 1.19 2004/11/25 15:26:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/11/25 15:00:58 $
+ * @version $Revision: 1.19 $, $Date: 2004/11/25 15:26:40 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -50,6 +50,7 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 		super(id);
 		
 		this.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
+		this.characteristics = new LinkedList();
 		try {
 			this.measurementPortDatabase.retrieve(this);
 		}
@@ -231,13 +232,9 @@ public class MeasurementPort extends StorableObject implements TypedObject{
     }
     
     public void setCharacteristics(final List characteristics) {
-    	Log.debugMessage("MeasurementPort.setCharacteristics | " +
-    		(characteristics == null ? "null" : ""+characteristics.size()), Log.DEBUGLEVEL05);
         this.characteristics.clear();
         if (characteristics != null)
                 this.characteristics.addAll(characteristics);
-    	Log.debugMessage("MeasurementPort.setCharacteristics | this.characteristics.size() : " +
-    		this.characteristics.size(), Log.DEBUGLEVEL05);
         super.currentVersion = super.getNextVersion();
     }
 }
