@@ -54,6 +54,7 @@ $(LIBNAME_INTERFACE):	.corba
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mserver/MServerMeasurementObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/MeasurementServer.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/MServerImplementation.java \
 		$(SRCDIR)/com/syrus/AMFICOM/setup/MeasurementServerSetup.java

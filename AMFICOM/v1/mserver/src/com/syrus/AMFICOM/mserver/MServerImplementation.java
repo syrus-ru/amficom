@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.8 2004/08/18 18:11:53 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.9 2004/08/22 18:58:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -55,6 +56,7 @@ import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -73,11 +75,12 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/18 18:11:53 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/22 18:58:07 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -133,16 +136,20 @@ public class MServerImplementation extends MServerPOA {
 
 
 ////////////////////////////////////////////	Receive ///////////////////////////////////////////////////
-	public void receiveResults(Result_Transferable[] resultsT) throws AMFICOMRemoteException {
-		Log.debugMessage("Received " + resultsT.length + " results", Log.DEBUGLEVEL03);
-		Result result;
-		for (int i = 0; i < resultsT.length; i++) {
-			try {
-				result = new Result(resultsT[i]);
-			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
+	public void receiveResults(Result_Transferable[] resultsT, Identifier_Transferable mcmIdT) throws AMFICOMRemoteException {
+		Identifier mcmId = new Identifier(mcmIdT);
+		Log.debugMessage("Received " + resultsT.length + " results from MCM '" + mcmId + "'", Log.DEBUGLEVEL03);
+		synchronized (MServerMeasurementObjectLoader.lock) {
+			MServerMeasurementObjectLoader.mcmId = mcmId;
+			Result result;
+			for (int i = 0; i < resultsT.length; i++) {
+				try {
+					result = new Result(resultsT[i]);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+					throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
+				}
 			}
 		}
 	}
@@ -549,6 +556,24 @@ public class MServerImplementation extends MServerPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
 		}
 	}
+
+	public void updateTestStatus(Identifier_Transferable idT, TestStatus status) {
+		Identifier id = new Identifier(idT);
+		Log.debugMessage("Updating status of test '" + id + "' to " + status.value(), Log.DEBUGLEVEL07);
+		Test test = (Test)MeasurementStorableObjectPool.getStorableObject(id, true);
+		if (test != null) {
+			try {
+				test.updateStatus(status, MeasurementServer.iAm.getUserId());
+			}
+			catch (UpdateObjectException uoe) {
+				Log.errorException(uoe);
+			}
+		}
+		else
+			Log.errorMessage("updateTestStatus | Cannot find test '" + id + "'");
+	}
+
+
 
 	public void ping(int i) throws AMFICOMRemoteException {
 		System.out.println("i == " + i);

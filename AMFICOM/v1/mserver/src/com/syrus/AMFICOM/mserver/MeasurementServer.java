@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.12 2004/08/17 18:23:15 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.13 2004/08/22 18:58:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,11 +20,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.configuration.Server;
-//import com.syrus.AMFICOM.configuration.MCM;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
@@ -35,7 +36,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/17 18:23:15 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/22 18:58:07 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -59,7 +60,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static CORBAServer corbaServer;
 
 	/*	References to MCMs*/
-	private static Map mcmRefs;	/*	Map <Identifier mcmId, com.syrus.AMFICOM.mcm.corba.MCM mcmRef>*/
+	protected static Map mcmRefs;	/*	Map <Identifier mcmId, com.syrus.AMFICOM.mcm.corba.MCM mcmRef>*/
 
 	private boolean running;
 
@@ -158,7 +159,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 	}
 
-	private static void activateMCMReferenceWithId(Identifier mcmId) {
+	protected static void activateMCMReferenceWithId(Identifier mcmId) {
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		try {
 			mcmRef = com.syrus.AMFICOM.mcm.corba.MCMHelper.narrow(corbaServer.resolveReference(mcmId.toString()));
@@ -197,7 +198,7 @@ public class MeasurementServer extends SleepButWorkThread {
 								testQueue.clear();
 								super.clearFalls();
 							}
-							catch (org.omg.CORBA.COMM_FAILURE se) {
+							catch (org.omg.CORBA.SystemException se) {
 								Log.errorException(se);
 								super.fallCode = FALL_CODE_RECEIVE_TESTS;
 								this.mcmIdToAbortTests = mcmId;
@@ -264,8 +265,13 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	private static void updateTestsStatus(List tests, TestStatus status) {
 //		synchronized (tests) {
-			for (Iterator it = tests.iterator(); it.hasNext();)
-				((Test)it.next()).setStatus(status);
+			try {
+				for (Iterator it = tests.iterator(); it.hasNext();)
+					((Test)it.next()).updateStatus(status, iAm.getUserId());
+			}
+			catch (UpdateObjectException uoe) {
+				Log.errorException(uoe);
+			}
 //		}
 	}
 
@@ -346,6 +352,12 @@ public class MeasurementServer extends SleepButWorkThread {
 					for (Iterator it = tests.iterator(); it.hasNext();) {
 						test = (Test)it.next();
 						if (! queue.contains(test)) {
+							try {
+								MeasurementStorableObjectPool.putStorableObject(test);
+							}
+							catch (IllegalObjectEntityException ioee) {
+								Log.errorException(ioee);
+							}
 							queue.add(test);
 							Log.debugMessage("Added test '" + test.getId() + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
 						}

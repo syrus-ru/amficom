@@ -14,7 +14,8 @@ module corba {
 	interface MServer : com::syrus::AMFICOM::general::corba::IdentifierGeneratorServer {
 
 ////////////////////////////////////////////	Receive ///////////////////////////////////////////////////
-		void receiveResults(in com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable results)
+		void receiveResults(in com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable results,
+												in com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 
 
@@ -94,6 +95,11 @@ module corba {
 		com::syrus::AMFICOM::measurement::corba::TemporalPattern_Transferable transmitTemporalPattern(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 
+
+		void updateTestStatus(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id, in com::syrus::AMFICOM::measurement::corba::TestStatus status);
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 		void ping(in long i)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 	};
