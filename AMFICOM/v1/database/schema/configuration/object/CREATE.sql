@@ -1,4 +1,3 @@
-@@server
 @@mcm
 @@kis
 @@monitoredelement

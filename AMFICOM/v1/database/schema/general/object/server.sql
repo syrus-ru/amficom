@@ -30,3 +30,4 @@ CREATE TABLE Server (
 );
 
 CREATE SEQUENCE server_seq ORDER;
+
