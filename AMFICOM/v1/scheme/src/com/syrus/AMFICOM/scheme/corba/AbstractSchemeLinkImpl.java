@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeLinkImpl.java,v 1.1 2004/11/23 13:11:13 bass Exp $
+ * $Id: AbstractSchemeLinkImpl.java,v 1.2 2004/11/23 15:46:47 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,62 +16,18 @@ import com.syrus.AMFICOM.general.corba.Identifier;
  * generated from IDL files to compile cleanly.
  *
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/11/23 13:11:13 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/23 15:46:47 $
  * @deprecated Use other implementations of {@link AbstractSchemeLink} instead.
  * @module schemecommon_v1
  */
 final class AbstractSchemeLinkImpl extends AbstractSchemeLink {
 	private static final long serialVersionUID = 1419449466646507243L;
 
-	public AbstractSchemePort sourceAbstractSchemePort() {
-		throw new UnsupportedOperationException();
-	}
-
-	public AbstractSchemePort targetAbstractSchemePort() {
-		throw new UnsupportedOperationException();
-	}
-
 	public AbstractLinkType_Transferable abstractLinkType() {
 		throw new UnsupportedOperationException();
 	}
 
 	public void abstractLinkType(AbstractLinkType_Transferable abstractLinkType) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Link_Transferable link() {
-		throw new UnsupportedOperationException();
-	}
-
-	public double physicalLength() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void physicalLength(double physicalLength) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double opticalLength() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void opticalLength(double opticalLength) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Scheme scheme() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void scheme(Scheme scheme) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Characteristic_Transferable[] characteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void characteristics(Characteristic_Transferable[] characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -83,23 +39,15 @@ final class AbstractSchemeLinkImpl extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
+	public Characteristic_Transferable[] characteristics() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void characteristics(Characteristic_Transferable[] characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
 	public long created() {
-		throw new UnsupportedOperationException();
-	}
-
-	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
-	public long version() {
-		throw new UnsupportedOperationException();
-	}
-
-	public String name() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void name(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -112,6 +60,58 @@ final class AbstractSchemeLinkImpl extends AbstractSchemeLink {
 	}
 
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Link_Transferable link() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long modified() {
+		throw new UnsupportedOperationException();
+	}
+
+	public String name() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void name(String name) {
+		throw new UnsupportedOperationException();
+	}
+
+	public double opticalLength() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void opticalLength(double opticalLength) {
+		throw new UnsupportedOperationException();
+	}
+
+	public double physicalLength() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void physicalLength(double physicalLength) {
+		throw new UnsupportedOperationException();
+	}
+
+	public Scheme scheme() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void scheme(Scheme scheme) {
+		throw new UnsupportedOperationException();
+	}
+
+	public AbstractSchemePort sourceAbstractSchemePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	public AbstractSchemePort targetAbstractSchemePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long version() {
 		throw new UnsupportedOperationException();
 	}
 }

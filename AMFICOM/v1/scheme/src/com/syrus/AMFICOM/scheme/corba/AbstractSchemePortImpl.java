@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemePortImpl.java,v 1.1 2004/11/23 13:11:13 bass Exp $
+ * $Id: AbstractSchemePortImpl.java,v 1.2 2004/11/23 15:46:47 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,38 +17,14 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
  * generated from IDL files to compile cleanly.
  *
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/11/23 13:11:13 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/23 15:46:47 $
  * @deprecated Use other implementations of {@link AbstractSchemePort} instead.
  * @module schemecommon_v1
  */
 final class AbstractSchemePortImpl extends AbstractSchemePort {
 	private static final long serialVersionUID = 4761568761565209353L;
 
-	public SchemeDevice schemeDevice() {
-		throw new UnsupportedOperationException();
-	}
-
 	public AbstractSchemeLink abstractSchemeLink() {
-		throw new UnsupportedOperationException();
-	}
-
-	public PortType_Transferable portType() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Port_Transferable port() {
-		throw new UnsupportedOperationException();
-	}
-
-	public MeasurementPortType_Transferable measurementPortType() {
-		throw new UnsupportedOperationException();
-	}
-
-	public MeasurementPort_Transferable measurementPort() {
-		throw new UnsupportedOperationException();
-	}
-
-	public DirectionType directionType() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -64,11 +40,31 @@ final class AbstractSchemePortImpl extends AbstractSchemePort {
 		throw new UnsupportedOperationException();
 	}
 
-	public long modified() {
+	public String description() {
 		throw new UnsupportedOperationException();
 	}
 
-	public long version() {
+	public void description(String description) {
+		throw new UnsupportedOperationException();
+	}
+
+	public DirectionType directionType() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	public MeasurementPort_Transferable measurementPort() {
+		throw new UnsupportedOperationException();
+	}
+
+	public MeasurementPortType_Transferable measurementPortType() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long modified() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -80,15 +76,19 @@ final class AbstractSchemePortImpl extends AbstractSchemePort {
 		throw new UnsupportedOperationException();
 	}
 
-	public String description() {
+	public Port_Transferable port() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public PortType_Transferable portType() {
 		throw new UnsupportedOperationException();
 	}
 
-	public Identifier id() {
+	public SchemeDevice schemeDevice() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long version() {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElementImpl.java,v 1.1 2004/11/23 13:11:13 bass Exp $
+ * $Id: AbstractSchemeElementImpl.java,v 1.2 2004/11/23 15:46:47 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,18 +16,18 @@ import com.syrus.AMFICOM.general.corba.Identifier;
  * generated from IDL files to compile cleanly.
  *
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/11/23 13:11:13 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/23 15:46:47 $
  * @deprecated Use other implementations of {@link AbstractSchemeElement} instead.
  * @module schemecommon_v1
  */
 final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 	private static final long serialVersionUID = -494520769118198959L;
 
-	public Scheme scheme() {
+	public boolean alarmed() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void scheme(Scheme scheme) {
+	public void alarmed(boolean alarmed) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -39,31 +39,7 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
-	public boolean alarmed() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void alarmed(boolean alarmed) {
-		throw new UnsupportedOperationException();
-	}
-
 	public long created() {
-		throw new UnsupportedOperationException();
-	}
-
-	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
-	public long version() {
-		throw new UnsupportedOperationException();
-	}
-
-	public String name() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void name(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -76,6 +52,30 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 	}
 
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long modified() {
+		throw new UnsupportedOperationException();
+	}
+
+	public String name() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void name(String name) {
+		throw new UnsupportedOperationException();
+	}
+
+	public Scheme scheme() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void scheme(Scheme scheme) {
+		throw new UnsupportedOperationException();
+	}
+
+	public long version() {
 		throw new UnsupportedOperationException();
 	}
 }
