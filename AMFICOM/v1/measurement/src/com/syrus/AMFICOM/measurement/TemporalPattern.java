@@ -50,22 +50,17 @@ public class TemporalPattern extends StorableObject {
 
 		public void fillAllData() {
 			if (this.minutes == null)
-				this.minutes = parseExpression(LangModelMeasurement
-						.getString("min"), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
+				this.minutes = parseExpression(LangModelMeasurement.getString("min"), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.hours == null)
-				this.hours = parseExpression(LangModelMeasurement
-						.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
+				this.hours = parseExpression(LangModelMeasurement.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.dayOfMonth == null)
-				this.dayOfMonth = parseExpression(LangModelMeasurement
-						.getString("day_of_month"), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
+				this.dayOfMonth = parseExpression(LangModelMeasurement.getString("day_of_month"), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.month == null)
-				this.month = parseExpression(LangModelMeasurement
-						.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
+				this.month = parseExpression(LangModelMeasurement.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
 			this.month.names = MONTH_NAMES;
 			if (this.dayOfWeek == null)
-				this.dayOfWeek = parseExpression(LangModelMeasurement
-						.getString("day_of_week"), //$NON-NLS-1$
-						"*", 0, 6); //$NON-NLS-1$ //$NON-NLS-2$
+				this.dayOfWeek = parseExpression(LangModelMeasurement.getString("day_of_week"), //$NON-NLS-1$
+													"*", 0, 6); //$NON-NLS-1$ //$NON-NLS-2$
 			this.dayOfWeek.names = DAY_OF_WEEK_NAMES;
 		}
 
@@ -109,8 +104,7 @@ public class TemporalPattern extends StorableObject {
 					for (int h = 0; h < this.hours.host.length; h++) {
 						for (int m = 0; m < this.minutes.host.length; m++) {
 							list.add((this.hours.host[h] < 10 ? "0" : "") //$NON-NLS-1$ //$NON-NLS-2$
-									+ Integer.toString(this.hours.host[h])
-									+ ":" //$NON-NLS-1$
+									+ Integer.toString(this.hours.host[h]) + ":" //$NON-NLS-1$
 									+ (this.minutes.host[m] < 10 ? "0" : "") //$NON-NLS-1$ //$NON-NLS-2$
 									+ Integer.toString(this.minutes.host[m]));
 						}
@@ -203,43 +197,36 @@ public class TemporalPattern extends StorableObject {
 					int begin = matcher.start(i);
 					int end = matcher.end(i);
 					if ((begin >= 0) && (end <= this.template.length())) {
-						String subString = this.template.substring(matcher
-								.start(i), matcher.end(i));
+						String subString = this.template.substring(matcher.start(i), matcher.end(i));
 						if (DEBUG)
 							System.out.println(i + "\t" + subString); //$NON-NLS-1$
 						switch (i) {
 							case 1:
 								//minute
-								this.minutes = parseExpression(
-										LangModelMeasurement.getString("min"), subString, 0, //$NON-NLS-1$
-										59);
+								this.minutes = parseExpression(LangModelMeasurement.getString("min"), subString, 0, //$NON-NLS-1$
+																59);
 								break;
 							case 2:
 								//hour
-								this.hours = parseExpression(LangModelMeasurement
-										.getString("hour"), //$NON-NLS-1$
-										subString, 0, //$NON-NLS-1$
-										23);
+								this.hours = parseExpression(LangModelMeasurement.getString("hour"), //$NON-NLS-1$
+																subString, 0, //$NON-NLS-1$
+																23);
 								break;
 							case 3:
 								//day of month
 								this.dayOfMonth = parseExpression(
-										LangModelMeasurement
-												.getString("day_of_month"), subString, //$NON-NLS-1$
-										1, 31);
+																	LangModelMeasurement.getString("day_of_month"), subString, //$NON-NLS-1$
+																	1, 31);
 								break;
 							case 4:
 								//month
-								this.month = parseExpression(LangModelMeasurement
-										.getString("month"), subString, 0, //$NON-NLS-1$
-										11);
+								this.month = parseExpression(LangModelMeasurement.getString("month"), subString, 0, //$NON-NLS-1$
+																11);
 								break;
 							case 5:
 								//day of week
-								this.dayOfWeek = parseExpression(
-										LangModelMeasurement
-												.getString("day_of_week"), //$NON-NLS-1$
-										subString, 0, 6);
+								this.dayOfWeek = parseExpression(LangModelMeasurement.getString("day_of_week"), //$NON-NLS-1$
+																	subString, 0, 6);
 								break;
 						}
 
@@ -264,8 +251,7 @@ public class TemporalPattern extends StorableObject {
 				c.setTimeInMillis(backTime);
 				c.set(Calendar.MONTH, this.month.host[m]);
 				long mTime = c.getTimeInMillis();
-				if ((this.startPeriod - MONTH_LONG / 2 <= mTime)
-						&& (mTime <= this.endPeriod + MONTH_LONG / 2)) {
+				if ((this.startPeriod - MONTH_LONG / 2 <= mTime) && (mTime <= this.endPeriod + MONTH_LONG / 2)) {
 					if (DEBUG)
 						System.out.println("month\t" //$NON-NLS-1$
 								+ c.getTime().toString());
@@ -274,20 +260,17 @@ public class TemporalPattern extends StorableObject {
 						c.setTimeInMillis(backMTime);
 						c.set(Calendar.DAY_OF_MONTH, this.dayOfMonth.host[dm]);
 						mTime = c.getTimeInMillis();
-						if ((this.startPeriod - DAY_LONG / 2 <= mTime)
-								&& (mTime <= this.endPeriod + DAY_LONG / 2)) {
+						if ((this.startPeriod - DAY_LONG / 2 <= mTime) && (mTime <= this.endPeriod + DAY_LONG / 2)) {
 							if (DEBUG)
 								System.out.println("dayOfMonth\t" //$NON-NLS-1$
 										+ c.getTime().toString());
 							long backDMTime = c.getTimeInMillis();
 							for (int dw = 0; dw < this.dayOfWeek.host.length; dw++) {
 								c.setTimeInMillis(backDMTime);
-								c.set(Calendar.DAY_OF_WEEK,
-										weekNumber[this.dayOfWeek.host[dw]]);
+								c.set(Calendar.DAY_OF_WEEK, weekNumber[this.dayOfWeek.host[dw]]);
 								mTime = c.getTimeInMillis();
 								if ((this.startPeriod - DAY_LONG / 2 <= mTime)
-										&& (mTime <= this.endPeriod + DAY_LONG
-												/ 2)) {
+										&& (mTime <= this.endPeriod + DAY_LONG / 2)) {
 									if (DEBUG)
 										System.out.println("dayOfWeek\t" //$NON-NLS-1$
 												+ c.getTime().toString());
@@ -298,43 +281,31 @@ public class TemporalPattern extends StorableObject {
 										//												System.out.println(" * hour:"
 										// //$NON-NLS-1$
 										//														+ hours.host[h]);
-										c.set(Calendar.HOUR_OF_DAY,
-												this.hours.host[h]);
+										c.set(Calendar.HOUR_OF_DAY, this.hours.host[h]);
 										mTime = c.getTimeInMillis();
 										if ((this.startPeriod - HOUR_LONG / 2 <= mTime)
-												&& (mTime <= this.endPeriod
-														+ HOUR_LONG / 2)) {
+												&& (mTime <= this.endPeriod + HOUR_LONG / 2)) {
 											if (DEBUG)
 												System.out.println("hour\t" //$NON-NLS-1$
-														+ c.getTime()
-																.toString());
-											long backHTime = c
-													.getTimeInMillis();
+														+ c.getTime().toString());
+											long backHTime = c.getTimeInMillis();
 											for (int mm = 0; mm < this.minutes.host.length; mm++) {
 												//System.out.println("backHTime"+new
 												// Date(backHTime)+"\t"+new
 												// Date(startPeriod)+", "+new
 												// Date(endPeriod));
 												c.setTimeInMillis(backHTime);
-												c.set(Calendar.MINUTE,
-														this.minutes.host[mm]);
+												c.set(Calendar.MINUTE, this.minutes.host[mm]);
 												mTime = c.getTimeInMillis();
-												if ((this.startPeriod
-														- MINUTE_LONG / 2 <= mTime)
-														&& (mTime <= this.endPeriod
-																+ MINUTE_LONG
-																/ 2)) {
+												if ((this.startPeriod - MINUTE_LONG / 2 <= mTime)
+														&& (mTime <= this.endPeriod + MINUTE_LONG / 2)) {
 													c.set(Calendar.SECOND, 0);
 													if (this.dateList == null)
 														this.dateList = new ArrayList();
-													this.dateList.add(c
-															.getTime());
+													this.dateList.add(c.getTime());
 													if (DEBUG)
-														System.out
-																.println("minutes\t" //$NON-NLS-1$
-																		+ c
-																				.getTime()
-																				.toString());
+														System.out.println("minutes\t" //$NON-NLS-1$
+																+ c.getTime().toString());
 												}
 
 											}
@@ -351,10 +322,8 @@ public class TemporalPattern extends StorableObject {
 				}
 			}
 			if (DEBUG)
-				System.out
-						.println("Calc time:" //$NON-NLS-1$
-								+ (System.currentTimeMillis() - startTimeCalc)
-								+ " ms."); //$NON-NLS-1$
+				System.out.println("Calc time:" //$NON-NLS-1$
+						+ (System.currentTimeMillis() - startTimeCalc) + " ms."); //$NON-NLS-1$
 
 		}
 
@@ -404,8 +373,7 @@ public class TemporalPattern extends StorableObject {
 		 *            maximal value for expression type
 		 * @return a host of values
 		 */
-		private TimeValue parseExpression(String name, String exp, int min,
-				int max) {
+		private TimeValue parseExpression(String name, String exp, int min, int max) {
 			TimeValue timeValue = new TimeValue(name);
 			boolean[] indices = new boolean[max + 1];
 			for (int i = 0; i < indices.length; i++)
@@ -430,8 +398,7 @@ public class TemporalPattern extends StorableObject {
 				int rvalue = -1;
 				String substr = params[j];
 				//System.out.println("->" + substr);
-				Pattern pattern = Pattern
-						.compile("(\\*(\\/(\\d+))?)|((\\d+)(\\-(\\d+))?)"); //$NON-NLS-1$
+				Pattern pattern = Pattern.compile("(\\*(\\/(\\d+))?)|((\\d+)(\\-(\\d+))?)"); //$NON-NLS-1$
 				Matcher matcher = pattern.matcher(params[j]);
 				if (matcher.find()) {
 					for (int i = 1; i <= matcher.groupCount(); i++) {
@@ -498,18 +465,15 @@ public class TemporalPattern extends StorableObject {
 			timeValue.max = max;
 			timeValue.divisor = new int[this.divisorList.size()];
 			for (int i = 0; i < timeValue.divisor.length; i++)
-				timeValue.divisor[i] = ((Integer) this.divisorList.get(i))
-						.intValue();
+				timeValue.divisor[i] = ((Integer) this.divisorList.get(i)).intValue();
 
 			timeValue.starts = new int[this.startsList.size()];
 			timeValue.ends = new int[this.endsList.size()];
 			// count of start and end have to be equal !
 			if (timeValue.starts.length == timeValue.ends.length) {
 				for (int i = 0; i < timeValue.starts.length; i++) {
-					timeValue.starts[i] = ((Integer) this.startsList.get(i))
-							.intValue();
-					timeValue.ends[i] = ((Integer) this.endsList.get(i))
-							.intValue();
+					timeValue.starts[i] = ((Integer) this.startsList.get(i)).intValue();
+					timeValue.ends[i] = ((Integer) this.endsList.get(i)).intValue();
 				}
 			}
 
@@ -628,7 +592,7 @@ public class TemporalPattern extends StorableObject {
 			LangModelMeasurement.getString("Sunday"), LangModelMeasurement.getString("Monday"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("Tuesday"), LangModelMeasurement.getString("Wednesday"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("Thursday"), LangModelMeasurement.getString("Friday"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelMeasurement.getString("Saturday"),	};										//$NON-NLS-1$
+			LangModelMeasurement.getString("Saturday"),	};													//$NON-NLS-1$
 
 	public static final String[]	MONTH_NAMES			= new String[] {
 			LangModelMeasurement.getString("January"), LangModelMeasurement.getString("February"), //$NON-NLS-1$ //$NON-NLS-2$
@@ -636,12 +600,10 @@ public class TemporalPattern extends StorableObject {
 			LangModelMeasurement.getString("May"), LangModelMeasurement.getString("June"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("July"), LangModelMeasurement.getString("Augest"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("September"), LangModelMeasurement.getString("October"), //$NON-NLS-1$ //$NON-NLS-2$
-			LangModelMeasurement.getString("November"), LangModelMeasurement.getString("December")};	//$NON-NLS-1$ //$NON-NLS-2$
+			LangModelMeasurement.getString("November"), LangModelMeasurement.getString("December")};		//$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final int[]		weekNumber			= new int[] {
-			Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY,
-			Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY,
-			Calendar.SATURDAY							};
+	public static final int[]		weekNumber			= new int[] { Calendar.SUNDAY, Calendar.MONDAY,
+			Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY};
 
 	final static boolean			DEBUG				= false;
 
@@ -663,11 +625,9 @@ public class TemporalPattern extends StorableObject {
 		}
 	}
 
-	public TemporalPattern(TemporalPattern_Transferable tpt)
-			throws CreateObjectException {
-		super(new Identifier(tpt.id), new Date(tpt.created), new Date(
-				tpt.modified), new Identifier(tpt.creator_id), new Identifier(
-				tpt.modifier_id));
+	public TemporalPattern(TemporalPattern_Transferable tpt) throws CreateObjectException {
+		super(new Identifier(tpt.id), new Date(tpt.created), new Date(tpt.modified), new Identifier(tpt.creator_id),
+				new Identifier(tpt.modifier_id));
 		this.description = new String(tpt.description);
 		//this.cronStrings = new String[tpt.cron_strings.length];
 		removeAll();
@@ -684,8 +644,12 @@ public class TemporalPattern extends StorableObject {
 		}
 	}
 
-	private TemporalPattern(Identifier id, Date created, Date modified,
-			Identifier creator_id, Identifier modifier_id, String description,
+	private TemporalPattern(Identifier id,
+			Date created,
+			Date modified,
+			Identifier creator_id,
+			Identifier modifier_id,
+			String description,
 			String[] cronStrings) {
 		super(id, created, modified, creator_id, modifier_id);
 		this.description = description;
@@ -697,16 +661,18 @@ public class TemporalPattern extends StorableObject {
 		}
 	}
 
-	public static TemporalPattern create(Identifier id, Date created,
-			Date modified, Identifier creator_id, Identifier modifier_id,
-			String description, String[] cronStrings) {
-		return new TemporalPattern(id, created, modified, creator_id,
-				modifier_id, description, cronStrings);
+	public static TemporalPattern create(	Identifier id,
+											Date created,
+											Date modified,
+											Identifier creator_id,
+											Identifier modifier_id,
+											String description,
+											String[] cronStrings) {
+		return new TemporalPattern(id, created, modified, creator_id, modifier_id, description, cronStrings);
 	}
 
-	public String[] getCronStrings() {		
-		if ((this.cronStrings == null)
-				|| (this.cronStrings.length != this.templates.size()))
+	public String[] getCronStrings() {
+		if ((this.cronStrings == null) || (this.cronStrings.length != this.templates.size()))
 			this.cronStrings = new String[this.templates.size()];
 		{
 			int i = 0;
@@ -724,17 +690,18 @@ public class TemporalPattern extends StorableObject {
 
 	public Object getTransferable() {
 
-		return new TemporalPattern_Transferable(
-				(Identifier_Transferable) this.id.getTransferable(),
-				this.created.getTime(), this.modified.getTime(),
-				(Identifier_Transferable) this.creator_id.getTransferable(),
-				(Identifier_Transferable) this.modifier_id.getTransferable(),
-				new String(this.description), getCronStrings());
+		return new TemporalPattern_Transferable((Identifier_Transferable) this.id.getTransferable(), this.created
+				.getTime(), this.modified.getTime(), (Identifier_Transferable) this.creator_id.getTransferable(),
+												(Identifier_Transferable) this.modifier_id.getTransferable(),
+												new String(this.description), getCronStrings());
 	}
 
-	protected synchronized void setAttributes(Date created, Date modified,
-			Identifier creator_id, Identifier modifier_id, String description,
-			String[] cronStrings) {
+	protected synchronized void setAttributes(	Date created,
+												Date modified,
+												Identifier creator_id,
+												Identifier modifier_id,
+												String description,
+												String[] cronStrings) {
 		super.setAttributes(created, modified, creator_id, modifier_id);
 		this.description = description;
 		this.cronStrings = cronStrings;
@@ -761,7 +728,9 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	/**
-	 * get times in ms that describes by temporal patterns and between start and end
+	 * get times in ms that describes by temporal patterns and between start and
+	 * end
+	 * 
 	 * @param start
 	 * @param end
 	 * @return
@@ -777,8 +746,7 @@ public class TemporalPattern extends StorableObject {
 				timeLine.setEndPeriod(end);
 				timeLine.parseTemplate();
 				if (timeLine.dateList != null) {
-					for (Iterator it2 = timeLine.dateList.iterator(); it2
-							.hasNext();) {
+					for (Iterator it2 = timeLine.dateList.iterator(); it2.hasNext();) {
 						Object obj = it2.next();
 						if (!timeList.contains(obj))
 							timeList.add(obj);
