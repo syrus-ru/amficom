@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.46 2004/11/25 10:37:15 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.47 2004/11/25 10:43:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/11/25 10:37:15 $
+ * @version $Revision: 1.47 $, $Date: 2004/11/25 10:43:58 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -181,7 +181,7 @@ public class ConfigurationStorableObjectPool extends StorableObjectPool {
 								boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
-
+	
 	protected StorableObject loadStorableObject(Identifier objectId) throws DatabaseException,
 			CommunicationException {
 		StorableObject storableObject;
@@ -396,7 +396,7 @@ public class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return loadedList;
 	}
 	
-	protected StorableObject putStorableObject(StorableObject storableObject)
+	public static StorableObject putStorableObject(StorableObject storableObject)
 			throws IllegalObjectEntityException {
 		return instance.putStorableObjectImpl(storableObject);
 	}
