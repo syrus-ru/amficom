@@ -1,7 +1,7 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.11 2005/03/15 08:22:40 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.12 2005/03/21 08:41:34 bob Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/03/15 08:22:40 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/21 08:41:34 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -95,20 +95,15 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 	private AddDeleteItems[]	addDeleteItems		= new AddDeleteItems[0];
 
-	public LogicalSchemeUI(Collection rootItems) {
-		this.rootServiceItem = new ViewItem(true);
+	public LogicalSchemeUI(Item rootItem) {
+		this.rootServiceItem = new ViewItem(rootItem);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 
 		this.selectedItems = new HashSet();
 
 		this.items = new LinkedList();
-		for (Iterator it = rootItems.iterator(); it.hasNext();) {
-			Item item = (Item) it.next();
-			if (item.getMaxParentCount() == 0 || item.getParents() == null || item.getParents().isEmpty()) {
-				this.addItem(item);
-			}
-		}
+		this.addItem(rootItem, false);
 		this.newItem = null;
 	}
 
@@ -123,8 +118,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		}
 
 		static Point getInstance() {
-			if (instance == null)
-				instance = new Point();
+			if (instance == null) instance = new Point();
 			return instance;
 		}
 	}
@@ -134,8 +128,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		this.boldFont = new Font(this.regularFont.getName(), Font.BOLD, this.regularFont.getSize());
 
 		this.fontMetrics = this.getFontMetrics(this.regularFont);
-		if (this.fontXOffset == -1)
-			this.fontXOffset = this.fontMetrics.stringWidth("XX");
+		if (this.fontXOffset == -1) this.fontXOffset = this.fontMetrics.stringWidth("XX");
 		if (this.items != null) {
 			for (Iterator it = this.items.iterator(); it.hasNext();) {
 				ViewItem item = (ViewItem) it.next();
@@ -145,11 +138,9 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		}
 		// init misc graphical features
 
-		if (this.boldStroke == null)
-			this.boldStroke = new BasicStroke(2.0f);
+		if (this.boldStroke == null) this.boldStroke = new BasicStroke(2.0f);
 
-		if (this.regularStroke == null)
-			this.regularStroke = new BasicStroke(1.0f);
+		if (this.regularStroke == null) this.regularStroke = new BasicStroke(1.0f);
 
 		this.arrange();
 	}
@@ -202,11 +193,9 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		}
 	}
 
-	private void paintItem(	Graphics2D g2d,
-							ViewItem item) {
+	private void paintItem(Graphics2D g2d, ViewItem item) {
 
-		if (item.isService())
-			return;
+		if (item.isService()) return;
 
 		boolean selected = (this.selectedItems.contains(item))
 				|| ((this.selectedItem != null && this.selectedItem.equals(item)));
@@ -250,18 +239,13 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		g2d.drawString(item.getName(), this.fontXOffset + item.x, item.y + g2d.getFontMetrics().getHeight());
 	}
 
-	private void drawLineFromItemToItem(Graphics2D g2d,
-										ViewItem item,
-										ViewItem otherItem) {
+	private void drawLineFromItemToItem(Graphics2D g2d, ViewItem item, ViewItem otherItem) {
 		Point lineFromItem = this.getLineFromItem(otherItem, item.x + item.getWidth() / 2, item.y + item.getHeight()
 				/ 2);
 		this.drawLineFromItem(g2d, item, lineFromItem.x, lineFromItem.y);
 	}
 
-	private void drawLineFromItem(	Graphics2D g2d,
-									ViewItem item,
-									int toX,
-									int toY) {
+	private void drawLineFromItem(Graphics2D g2d, ViewItem item, int toX, int toY) {
 		if (!(toX > item.x - ARROW_LENGTH / 2 && toX < item.x + item.getWidth() + ARROW_LENGTH / 2
 				&& toY > item.y - ARROW_LENGTH / 2 && toY < item.y + item.getHeight() + ARROW_LENGTH / 2)) {
 			Point lineFromItem = this.getLineFromItem(item, toX, toY);
@@ -273,9 +257,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 	/**
 	 * &copy by Stratonnikov Alexey aka saa
 	 */
-	private Point getLineFromItem(	ViewItem item,
-									int toX,
-									int toY) {
+	private Point getLineFromItem(ViewItem item, int toX, int toY) {
 		int x1 = item.x + item.getWidth() / 2;
 		int y1 = item.y + item.getHeight() / 2;
 		toX -= x1;
@@ -296,17 +278,10 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 	public synchronized void arrange() {
 		if (this.items != null) {
-			int deep = 0;
-			List rootItems = new LinkedList();
 			List deepItems = new LinkedList();
 			for (Iterator it = this.items.iterator(); it.hasNext();) {
 				ViewItem item = (ViewItem) it.next();
-				if (item.getMaxParentCount() == deep || item.getParents() == null || item.getParents().isEmpty()) {
-					rootItems.add(item);
-				}
-
-				if (item.getChildren() == null || item.getChildren().isEmpty())
-					deepItems.add(item);
+				if (item.getChildren() == null || item.getChildren().isEmpty()) deepItems.add(item);
 			}
 
 			int w = 10;
@@ -320,7 +295,6 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 					int width = viewItem.getHierarchicalWidth();
 					int count = viewItem.getHierarchicalCount();
 					w = (componentWidth - width) / count;
-					w = (componentWidth - width) / count;
 					for (Iterator iter = deepItems.iterator(); iter.hasNext();) {
 						ViewItem viewItem2 = (ViewItem) iter.next();
 						width = viewItem2.getHierarchicalWidth();
@@ -333,11 +307,6 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			}
 
 			w = (w > EDGE_THICK) ? w : EDGE_THICK;
-
-			for (Iterator it = rootItems.iterator(); it.hasNext();) {
-				ViewItem viewItem = (ViewItem) it.next();
-				this.rootServiceItem.addChild(viewItem);
-			}
 
 			this.rootServiceItem.separateChildrenY();
 			this.rootServiceItem.separateChildrenX(w);
@@ -362,11 +331,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 	 * @param endX
 	 * @param endY
 	 */
-	private void drawArrow(	Graphics2D g2d,
-							double startX,
-							double startY,
-							double endX,
-							double endY) {
+	private void drawArrow(Graphics2D g2d, double startX, double startY, double endX, double endY) {
 
 		double len = Math.sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
 		double cos = (endX - startX) / len;
@@ -386,8 +351,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		// g2d.draw(new Polygon(xArray, yArray, 2));
 	}
 
-	private ViewItem getItem(	int pointX,
-								int pointY) {
+	private ViewItem getItem(int pointX, int pointY) {
 		ViewItem item = null;
 		if (this.items != null) {
 			for (Iterator it = this.items.iterator(); it.hasNext();) {
@@ -402,10 +366,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		return item;
 	}
 
-	private void selectItemsInRect(	int x1,
-									int y1,
-									int x2,
-									int y2) {
+	private void selectItemsInRect(int x1, int y1, int x2, int y2) {
 		x2 += x1;
 		y2 += y1;
 		if (x2 < x1) {
@@ -454,10 +415,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		if (this.items != null) {
 			for (Iterator it = this.items.iterator(); it.hasNext();) {
 				ViewItem item = (ViewItem) it.next();
-				if (item.x + item.getWidth() > width)
-					width = item.x + item.getWidth();
-				if (item.y + item.getHeight() > height)
-					height = item.y + item.getHeight();
+				if (item.x + item.getWidth() > width) width = item.x + item.getWidth();
+				if (item.y + item.getHeight() > height) height = item.y + item.getHeight();
 			}
 		}
 		if (width != this.getWidth() || height != this.getHeight()) {
@@ -468,8 +427,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		}
 	}
 
-	private void detectLine(int x1,
-							int y1) {
+	private void detectLine(int x1, int y1) {
 		if (this.items != null) {
 			this.firstSelectedLineItem = null;
 			this.secondSelectedLineItem = null;
@@ -510,18 +468,31 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 	public void deleteSelectedItems() {
 
 		if (this.selectedItem != null) {
+			/* TODO: perfomance problem */
 			List list = new ArrayList(this.selectedItems);
+			List moveToRoot = new LinkedList();
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				ViewItem item = (ViewItem) it.next();
-				for (Iterator iter = this.items.iterator(); iter.hasNext();) {
-					ViewItem item2 = (ViewItem) iter.next();
-					item2.removeChild(item);
-					item2.removeParent(item);
+				List children = item.getChildren();
+				for (Iterator iter = children.iterator(); iter.hasNext();) {
+					ViewItem childItem = (ViewItem) iter.next();
+					if (!list.contains(childItem)) {
+						moveToRoot.add(childItem);
+					}
 				}
+			}
+			
+			for (Iterator iterator = moveToRoot.iterator(); iterator.hasNext();) {
+				ViewItem item2 = (ViewItem) iterator.next();
+				item2.setParent(this.rootServiceItem);
+			}
+			
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				ViewItem item = (ViewItem) it.next();
+				item.setParent(null);
 				for (int i = 0; i < this.addDeleteItems.length; i++) {
 					this.addDeleteItems[i].deleteItem(item.getSourceItem());
 				}
-				it.remove();
 				this.items.remove(item);
 
 			}
@@ -531,13 +502,17 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			this.repaint();
 		} else {
 			if (this.firstSelectedLineItem != null && this.secondSelectedLineItem != null) {
-				this.firstSelectedLineItem.removeChild(this.secondSelectedLineItem);
+				this.secondSelectedLineItem.setParent(this.rootServiceItem);
 				this.repaint();
 			}
 		}
 	}
 
 	public void addItem(Item item) {
+		this.addItem(item, true);
+	}
+
+	private void addItem(Item item, boolean toRoot) {
 		if (item instanceof ViewItem) {
 			this.newItem = (ViewItem) item;
 		} else {
@@ -562,6 +537,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 		this.items.add(this.newItem);
 
+		if (toRoot) this.rootServiceItem.addChild(this.newItem);
+
 		for (int i = 0; i < this.addDeleteItems.length; i++) {
 			this.addDeleteItems[i].addItem(this.newItem.getSourceItem());
 		}
@@ -570,7 +547,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		if (children != null && !children.isEmpty()) {
 			for (Iterator it = children.iterator(); it.hasNext();) {
 				Item item2 = (Item) it.next();
-				this.addItem(item2);
+				this.addItem(item2, toRoot);
 			}
 		}
 	}
@@ -655,8 +632,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 				if (!this.selectedItems.isEmpty()) {
 					for (Iterator it = this.selectedItems.iterator(); it.hasNext();) {
 						ViewItem item = (ViewItem) it.next();
-						if (item.equals(this.selectedItem))
-							continue;
+						if (item.equals(this.selectedItem)) continue;
 						item.x += sDx;
 						item.y += sDy;
 					}
@@ -728,12 +704,15 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 				try {
 					this.linkItem.addChild(this.selectedItem);
 				} catch (UnsupportedOperationException uoe) {
-					uoe.printStackTrace();
+//					uoe.printStackTrace();
 					JOptionPane.showMessageDialog(this, uoe.getMessage(), "Error", JOptionPane.OK_OPTION);
 				}
 			}
 			this.linkItem = null;
 			this.selectedItems.clear();
+			this.firstSelectedLineItem = null;
+			this.secondSelectedLineItem = null;
+
 			this.fireSelectionChanged();
 		}
 
@@ -792,6 +771,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 	public void selectedItems(Collection selectedItems) {
 		this.selectedItems.clear();
+		this.firstSelectedLineItem = null;
+		this.secondSelectedLineItem = null;
 		for (Iterator it = selectedItems.iterator(); it.hasNext();) {
 			Item item = (Item) it.next();
 			ViewItem viewItem;
@@ -802,8 +783,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 			this.selectedItems.add(viewItem);
 		}
-		if (!this.selectedItems.isEmpty())
-			this.selectedItem = (ViewItem) this.selectedItems.iterator().next();
+		if (!this.selectedItems.isEmpty()) this.selectedItem = (ViewItem) this.selectedItems.iterator().next();
 		this.repaint();
 	}
 

@@ -1,19 +1,20 @@
 /*
-* $Id: AbstractItem.java,v 1.1 2005/03/10 15:17:48 bob Exp $
-*
-* Copyright ¿ 2005 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+ * $Id: AbstractItem.java,v 1.2 2005/03/21 08:41:34 bob Exp $
+ *
+ * Copyright ? 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.logic;
 
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/10 15:17:48 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/21 08:41:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -22,21 +23,25 @@ public abstract class AbstractItem implements Item {
 
 	protected List				children;
 
-	protected List				parents;	
+	protected Item				parent;
 
-	protected ItemListener[]	listener		= new ItemListener[0];	
-	
-	protected boolean checkForRecursion(Item child, Item parent) {
-		List children2 = child.getChildren();
+	protected ItemListener[]	listener	= new ItemListener[0];
+
+	protected boolean checkForRecursion(Item child,
+										Item parentItem) {
+		if (child.equals(parentItem)) {
+			return true;
+		}
 		boolean recursionExists = false;
+		List children2 = child.getChildren();
 		if (children2 != null && !children2.isEmpty()) {
 			for (Iterator it = children2.iterator(); it.hasNext();) {
 				Item item1 = (Item) it.next();
-				if (item1.equals(parent)) {
+				if (item1.equals(parentItem)) {
 					recursionExists = true;
 					break;
-				} 
-				recursionExists = this.checkForRecursion(item1, parent);
+				}
+				recursionExists = this.checkForRecursion(item1, parentItem);
 				if (recursionExists)
 					break;
 			}
@@ -67,4 +72,56 @@ public abstract class AbstractItem implements Item {
 		}
 	}
 
+	public void addChild(Item childItem) {
+		System.out.println("AbstractItem.addChild | this.name: " + this.getName() + " \n\t name: "
+				+ childItem.getName());
+		if (this.children == null) {
+			this.children = new LinkedList();
+		}
+
+		if (this.checkForRecursion(childItem, this)) { throw new UnsupportedOperationException("Recursion isn't supported."); }
+
+		if (this.children.contains(childItem))
+			return;
+
+		if (this.isService() || childItem.isParentAllow()) {
+			this.children.add(childItem);
+			childItem.setParent(this);
+		} else {
+			throw new UnsupportedOperationException("Parent for " + childItem.getName() + " isn't allow.");
+		}
+	}
+
+	public List getChildren() {
+		return this.children == null ? Collections.EMPTY_LIST : this.children;
+	}
+
+	public void setParent(Item parent) {
+		System.out.println("AbstractItem.setParent | name:" + this.getName() + "\n\tparent:"
+				+ (parent == null ? "'null'" : parent.getName()));
+
+		Item oldParent = this.parent;
+		if (parent == oldParent)
+			return;
+
+		if (oldParent != null) {
+			List oldParentChildren = oldParent.getChildren();
+			if (!oldParentChildren.isEmpty()) {
+				oldParentChildren.remove(this);
+			}
+		}
+
+		this.parent = parent;
+		if (this.parent != null) {
+			this.parent.addChild(this);
+		}
+
+		for (int i = 0; i < this.listener.length; i++) {
+			this.listener[i].setParentPerformed(this, oldParent, this.parent);
+		}
+	}
+
+	public Item getParent() {
+		return this.parent;
+	}
 }

@@ -1,7 +1,7 @@
 /*
-* $Id: Item.java,v 1.2 2005/03/10 15:17:48 bob Exp $
+* $Id: Item.java,v 1.3 2005/03/21 08:41:34 bob Exp $
 *
-* Copyright © 2004 Syrus Systems.
+* Copyright ? 2004 Syrus Systems.
 * Dept. of Science & Technology.
 * Project: AMFICOM.
 */
@@ -12,15 +12,16 @@ import java.util.List;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/10 15:17:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/21 08:41:34 $
  * @author $Author: bob $
+ * @author Vladimir Dolzhenko
  * @module filter_v1
  */
 public interface Item {
 	
 	int getMaxChildrenCount();
 	
-	int getMaxParentCount();
+	boolean isParentAllow();
 	
 	String getName();
 	
@@ -30,15 +31,13 @@ public interface Item {
 	
 	void addChild(Item childItem);
 	
-	void removeChild(Item childItem);
+	void setParent(Item parent);
 	
-	List getParents();
-	
-	void addParent(Item parent);
-	
-	void removeParent(Item parent);
+	Item getParent();
 	
 	void addChangeListener(ItemListener itemListener);
 	
 	void removeChangeListener(ItemListener itemListener);
+	
+	boolean isService();
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.7 2005/03/16 13:26:42 max Exp $
+ * $Id: LogicalConditionUI.java,v 1.8 2005/03/21 08:41:34 bob Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -13,8 +13,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -25,27 +23,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ScrollPaneConstants;
 
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.AMFICOM.logic.LogicalSchemeUI;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
+import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/16 13:26:42 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2005/03/21 08:41:34 $
+ * @author $Author: bob $
  * @module filter_v1
  */
 public class LogicalConditionUI {
 
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long	serialVersionUID	= 3760566377651844662L;
-
-	private List				items;
-
-	private List				rootItems;
+	private Item				rootItem;
 
 	private LogicalSchemeUI		logicalSchemeUI;
 
@@ -71,7 +62,7 @@ public class LogicalConditionUI {
 		panel.setMinimumSize(dimension);
 		panel.setPreferredSize(dimension);
 
-		this.logicalSchemeUI = new LogicalSchemeUI(this.getItems());
+		this.logicalSchemeUI = new LogicalSchemeUI(this.getRootItem());
 
 		final LogicalSchemeUI logicalSchemeUI = this.logicalSchemeUI;
 
@@ -154,7 +145,7 @@ public class LogicalConditionUI {
 
 	public JSplitPane getSplitPane() {
 		JPanel panel = this.getPanel();
-		LogicalTreeUI logicalTreeUI = new LogicalTreeUI();
+		LogicalTreeUI logicalTreeUI = new LogicalTreeUI(this.getRootItem());
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, logicalTreeUI.getPanel(), panel);
 		if (this.logicalSchemeUI != null) {
 			logicalTreeUI.addSelectionListener(this.logicalSchemeUI);
@@ -163,17 +154,14 @@ public class LogicalConditionUI {
 		}
 		splitPane.setOneTouchExpandable(false);
 		splitPane.setResizeWeight(0.2);
-		logicalTreeUI.addItems(this.rootItems);
 		return splitPane;
 	}
 
-	private List getItems() {
-		if (this.items == null) {
-			this.items = new LinkedList();
+	private Item getRootItem() {
+		if (this.rootItem == null) {
+			this.rootItem = new ServiceItem();
 			LogicalItem result = new LogicalItem(LogicalItem.ROOT);
-			if (this.rootItems == null)
-				this.rootItems = new LinkedList();
-			this.rootItems.add(result);
+			this.rootItem.addChild(result);
 
 			LogicalItem andOperator0 = new LogicalItem(LogicalItem.AND);
 			
@@ -198,19 +186,8 @@ public class LogicalConditionUI {
 			andOperator4.addChild(andOperator6);
 			andOperator4.addChild(andOperator7);
 			
-			this.items.add(result);
-			this.items.add(andOperator0);
-			this.items.add(andOperator1);
-			this.items.add(andOperator2);
-			this.items.add(andOperator3);
-			this.items.add(andOperator4);
-			this.items.add(andOperator5);
-			this.items.add(andOperator6);
-			this.items.add(andOperator7);
-			this.items.add(condition1);
-			this.items.add(condition2);
 		}
-		return this.items;
+		return this.rootItem;
 	}
 
 }

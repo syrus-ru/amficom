@@ -1,23 +1,18 @@
 /*
- * $Id: LogicalItem.java,v 1.4 2005/03/16 08:18:30 max Exp $
+ * $Id: LogicalItem.java,v 1.5 2005/03/21 08:41:34 bob Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.logic;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/16 08:18:30 $
- * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2005/03/21 08:41:34 $
+ * @author $Author: bob $
  * @module filter_v1
  */
 public class LogicalItem extends AbstractItem {
@@ -83,57 +78,41 @@ public class LogicalItem extends AbstractItem {
 							+ " is not supported.");
 		}
 	}
-
-	public void addChild(Item childItem) {
-		Log.debugMessage("LogicalItem.addChild | this.name: " + this.name
-				+ " \n\t name: " + childItem.getName(), Log.FINEST);
-		if (this.children == null)
-			this.children = new LinkedList();
-
-		if (checkForRecursion(childItem, this)) {
-			throw new UnsupportedOperationException(
-					"Recursion isn't supported.");
-		}
-
-		if (this.children.contains(childItem))
-			return;
-
-		this.children.add(childItem);
-		Collection parents1 = childItem.getParents();
-		if (parents1 == null || !parents1.contains(this))
-			childItem.addParent(this);
-
-		for (int i = 0; i < this.listener.length; i++) {
-			this.listener[i].addChildPerformed(this, childItem);
-		}
+	
+	public boolean isService() {
+		return false;
 	}
+	
+	public boolean isParentAllow() {
+		return !this.type.equals(ROOT);
+	}	
 
-	public void addParent(Item parent) {
-		Log.debugMessage("LogicalItem.addParent | this.name: " + this.name
-				+ " \n\t name: " + parent.getName(), Log.FINEST);
-		if ((this.parents == null && this.maxParentCount == 0)
-				|| (this.parents != null && this.parents.size() > this.maxParentCount))
-			throw new UnsupportedOperationException(
-					"There cannot be more than " + this.maxParentCount
-							+ " parent items at item '" + this.name
-							+ "', parent item '" + parent.getName() + '\'');
-		if (this.parents == null)
-			this.parents = new LinkedList();
+//	public void addParent(Item parent) {
+//		System.out.println("LogicalItem.addParent | this.name: " + this.name
+//				+ " \n\t name: " + parent.getName());
+//		if ((this.parents == null && this.maxParentCount == 0)
+//				|| (this.parents != null && this.parents.size() > this.maxParentCount))
+//			throw new UnsupportedOperationException(
+//					"There cannot be more than " + this.maxParentCount
+//							+ " parent items at item '" + this.name
+//							+ "', parent item '" + parent.getName() + '\'');
+//		if (this.parents == null)
+//			this.parents = new LinkedList();
+//
+//		if (this.parents.contains(parent))
+//			return;
+//
+//		this.parents.add(parent);
+//
+//		Collection children1 = parent.getChildren();
+//		if (children1 == null || !children1.contains(this))
+//			parent.addChild(this);
+//
+//		for (int i = 0; i < this.listener.length; i++) {
+//			this.listener[i].addParentPerformed(this, parent);
+//		}
 
-		if (this.parents.contains(parent))
-			return;
-
-		this.parents.add(parent);
-
-		Collection children1 = parent.getChildren();
-		if (children1 == null || !children1.contains(this))
-			parent.addChild(this);
-
-		for (int i = 0; i < this.listener.length; i++) {
-			this.listener[i].addParentPerformed(this, parent);
-		}
-
-	}
+//	}
 
 	public void childClone(LogicalItem currentParentItem,
 			LogicalItem newParentItem) {
@@ -150,7 +129,7 @@ public class LogicalItem extends AbstractItem {
 						item.getName());
 				newParentItem.addChild(newItem);
 			} else {
-				Log.errorMessage("LogicalItem.childClone() | wrong type");
+				System.err.println("LogicalItem.childClone() | wrong type");
 			}
 		}
 	}
@@ -159,10 +138,6 @@ public class LogicalItem extends AbstractItem {
 		LogicalItem newRoot = new LogicalItem(ROOT);
 		childClone(this, newRoot);
 		return newRoot;
-	}
-
-	public List getChildren() {
-		return this.children;
 	}
 
 	public int getChildrenCount() {
@@ -191,40 +166,40 @@ public class LogicalItem extends AbstractItem {
 		return this.type;
 	}
 
-	public List getParents() {
-		return this.parents;
-	}
+//	public List getParents() {
+//		return this.parents;
+//	}
 
 	public void removeChild(Item childItem) {
-		Log.debugMessage("LogicalItem.removeChild | this.name: " + this.name
-				+ "\n\t name: " + childItem.getName(), Log.FINEST);
+		System.out.println("LogicalItem.removeChild | this.name: " + this.name
+				+ "\n\t name: " + childItem.getName());
 		if (this.children != null) {
 			this.children.remove(childItem);
 		}
 
-		Collection parents1 = childItem.getParents();
-		if (parents1 != null && parents1.contains(this))
-			childItem.removeParent(this);
-
-		for (int i = 0; i < this.listener.length; i++) {
-			this.listener[i].removeChildPerformed(this, childItem);
-		}
+//		Collection parents1 = childItem.getParents();
+//		if (parents1 != null && parents1.contains(this))
+//			childItem.removeParent(this);
+//
+//		for (int i = 0; i < this.listener.length; i++) {
+//			this.listener[i].removeChildPerformed(this, childItem);
+//		}
 
 	}
 
-	public void removeParent(Item parent) {
-		Log.debugMessage("LogicalItem.removeParent | this.name: " + this.name
-				+ "\n\t name: " + parent.getName(), Log.FINEST);
-		if (this.parents != null) {
-			this.parents.remove(parent);
-		}
-
-		Collection children1 = parent.getChildren();
-		if (children1 != null && children1.contains(this))
-			parent.removeChild(this);
-
-		for (int i = 0; i < this.listener.length; i++) {
-			this.listener[i].removeParentPerformed(this, parent);
-		}
-	}
+//	public void removeParent(Item parent) {
+//		System.out.println("LogicalItem.removeParent | this.name: " + this.name
+//				+ "\n\t name: " + parent.getName());
+//		if (this.parents != null) {
+//			this.parents.remove(parent);
+//		}
+//
+//		Collection children1 = parent.getChildren();
+//		if (children1 != null && children1.contains(this))
+//			parent.removeChild(this);
+//
+//		for (int i = 0; i < this.listener.length; i++) {
+//			this.listener[i].removeParentPerformed(this, parent);
+//		}
+//	}
 }
