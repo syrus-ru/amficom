@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.1 2004/12/10 16:49:52 max Exp $
+ * $Id: CableLinkType.java,v 1.2 2004/12/14 12:50:42 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/10 16:49:52 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/14 12:50:42 $
  * @author $Author: max $
  * @module config_v1
  */
@@ -200,8 +200,16 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
         return this.manufacturer;
     }
     
-    public String getManufacturerCode() {
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+    
+	public String getManufacturerCode() {
         return this.manufacturerCode;
+    }
+    
+    public void setManufacturerCode(String manufacturerCode) {
+        this.manufacturerCode = manufacturerCode;
     }
     
     public LinkTypeSort getSort() {
