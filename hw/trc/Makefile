@@ -1,10 +1,18 @@
-OUT=tracedata.a
-OUTSO=libtracedata.so
-CPP=g++#-3.4.1
-CFLAGS=-W -Wall -g -ggdb -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
-AR=ar
-ARFLAGS=rcsv
-OBJS=TraceReader.o \
+OUT := tracedata.a
+OUTSO := libtracedata.so
+
+CXX := g++#-3.4.1
+CXXFLAGS := -W -Wall
+
+CC := gcc#-3.4.1
+CFLAGS := -W -Wall
+
+CPPFLAGS := -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+
+AR := ar
+ARFLAGS := rcsv
+
+#OBJS=TraceReader.o \
 	T5.o \
 	crc32.o \
 	util.o \
@@ -13,7 +21,9 @@ OBJS=TraceReader.o \
 	BellcoreStructure.o \
 	BellcoreWriter.o \
 	IntelDataOutputStream.o
-ARCHFILE=trc.tar.gz
+OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+
+ARCHFILE := trc.tar.gz
 
 $(OUT):		$(OBJS)
 	$(AR) $(ARFLAGS) $(OUT) $(OBJS)
@@ -31,11 +41,11 @@ BellcoreStructure.o:		BellcoreStructure.h
 BellcoreWriter.o:		BellcoreStructure.h IntelDataOutputStream.h BellcoreWriter.h
 IntelDataOutputStream.o:	IntelDataOutputStream.h
 
-.cpp.o:
-	$(CPP) -c $(CFLAGS) -o $@ $<
+#.cpp.o:
+#	$(CPP) -c $(CFLAGS) -o $@ $<
 
-.c.o:
-	$(CPP) -c $(CFLAGS) -o $@ $<
+#.c.o:
+#	$(CPP) -c $(CFLAGS) -o $@ $<
 
 .PHONY:	clean arch
 
