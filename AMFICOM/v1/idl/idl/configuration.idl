@@ -161,7 +161,7 @@ module corba {
 
 	enum EquipmentSort {
 		EQUIPMENT_SORT_KIS,
-		EQUIPMEN_SORT_HZ_CHO
+		EQUIPMENT_SORT_HZ_CHO
 	};
 
 	struct Equipment_Transferable	{
