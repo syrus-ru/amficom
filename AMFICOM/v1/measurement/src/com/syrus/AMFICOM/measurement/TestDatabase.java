@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.47 2004/11/16 15:48:45 bob Exp $
+ * $Id: TestDatabase.java,v 1.48 2004/11/19 15:30:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.48 $, $Date: 2004/11/19 15:30:31 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -846,4 +846,16 @@ public class TestDatabase extends StorableObjectDatabase {
 		return list;
 	}
 	
+	
+	public void delete(Identifier id) throws IllegalDataException {
+		throw new IllegalDataException("Deleting tests is imprincipal");
+	}
+	
+	public void delete(List ids) throws IllegalDataException {
+		throw new IllegalDataException("Deleting tests is imprincipal");
+	}
+	
+	public void delete(StorableObject storableObject) throws IllegalDataException {
+		throw new IllegalDataException("Deleting tests is imprincipal");
+	}
 }
