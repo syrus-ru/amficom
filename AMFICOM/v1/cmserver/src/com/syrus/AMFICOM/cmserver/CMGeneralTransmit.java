@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.2 2005/01/26 15:43:17 arseniy Exp $
+ * $Id: CMGeneralTransmit.java,v 1.3 2005/01/28 12:18:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,17 +46,19 @@ import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:43:17 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/28 12:18:19 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
 public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
+	private static final long serialVersionUID = 6832454869836527727L;
+
 	public ParameterType_Transferable transmitParameterType(Identifier_Transferable identifier_Transferable,
 																				AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitParameterType | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMGeneralTransmit.transmitParameterType | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			ParameterType parameterType = (ParameterType)GeneralStorableObjectPool.getStorableObject(id, true);
 			return (ParameterType_Transferable) parameterType.getTransferable();
@@ -87,7 +89,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 																				AccessIdentifier_Transferable accessIdentifier)
       throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("CMServerImpl.transmitCharacteristic | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMGeneralTransmit.transmitCharacteristic | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Characteristic characteristic = (Characteristic) GeneralStorableObjectPool.getStorableObject(id, true);
 			return (Characteristic_Transferable) characteristic.getTransferable();
@@ -118,7 +120,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 																						AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("CMServerImpl.CharacteristicType | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMGeneralTransmit.CharacteristicType | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			CharacteristicType characteristicType = (CharacteristicType) GeneralStorableObjectPool.getStorableObject(id, true);
 			return (CharacteristicType_Transferable) characteristicType.getTransferable();
@@ -147,7 +149,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("CMServerImpl.transmitCharacteristics | require "
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristics | require "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)", Log.DEBUGLEVEL07);
 			List list;
 			if (ids_Transferable.length > 0) {
@@ -193,7 +195,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	public Characteristic_Transferable[] transmitCharacteristicsButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("CMServerImpl.transmitCharacteristicsButIds | requiere "
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIds | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)", Log.DEBUGLEVEL07);
 			List list;
 			if (ids_Transferable.length > 0) {
@@ -243,7 +245,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 																					LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
 			throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("CMServerImpl.transmitCharacteristicsButIdsCondition | requiere "
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicsButIdsCondition | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s) ", Log.DEBUGLEVEL07);
 			List list;
 			if (ids_Transferable.length > 0) {
@@ -288,7 +290,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("CMServerImpl.transmitCharacteristicTypes | requiere "
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypes | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)", Log.DEBUGLEVEL07);
 			List list;
 			if (ids_Transferable.length > 0) {
@@ -334,7 +336,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("CMServerImpl.transmitCharacteristicTypes | requiere "
+			Log.debugMessage("CMGeneralTransmit.transmitCharacteristicTypes | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length)) + " item(s)", Log.DEBUGLEVEL07);
 			List list;
 			if (ids_Transferable.length > 0) {
@@ -385,7 +387,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	public ParameterType_Transferable[] transmitParameterTypes(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("CMServerImpl.transmitParameterTypes | requiere "
+			Log.debugMessage("CMGeneralTransmit.transmitParameterTypes | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s)", Log.DEBUGLEVEL07);
 			List list;
@@ -436,7 +438,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	public ParameterType_Transferable[] transmitParameterTypesButIds(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("CMServerImpl.transmitParameterTypesButIds | requiere "
+			Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIds | requiere "
 					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 					+ " item(s)", Log.DEBUGLEVEL07);
 			List list;
@@ -489,7 +491,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	public ParameterType_Transferable[] transmitParameterTypesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StringFieldCondition_Transferable stringFieldCondition_Transferable) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitParameterTypesButIdsCondition | requiere "
+		Log.debugMessage("CMGeneralTransmit.transmitParameterTypesButIdsCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {

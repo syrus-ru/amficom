@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationTransmit.java,v 1.1 2005/01/26 15:43:17 arseniy Exp $
+ * $Id: CMAdministrationTransmit.java,v 1.2 2005/01/28 12:18:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,18 +46,20 @@ import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 15:43:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/28 12:18:19 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
 public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
+	private static final long serialVersionUID = 5322471674445475587L;
+
 	public User_Transferable transmitUser(Identifier_Transferable id_Transferable,
       													AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("CMServerImpl.User | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationTransmit.User | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			User user = (User) AdministrationStorableObjectPool.getStorableObject(id, true);
 			return (User_Transferable) user.getTransferable();
@@ -88,7 +90,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 																	AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
-		Log.debugMessage("CMServerImpl.transmitDomain | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationTransmit.transmitDomain | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
 			return (Domain_Transferable) domain.getTransferable();
@@ -119,7 +121,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 																	AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("CMServerImpl.Server | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationTransmit.Server | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			Server server = (Server) AdministrationStorableObjectPool.getStorableObject(id, true);
 			return (Server_Transferable) server.getTransferable();
@@ -150,7 +152,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 															AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("CMServerImpl.MCM | require " + id.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationTransmit.MCM | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			MCM mcm = (MCM) AdministrationStorableObjectPool.getStorableObject(id, true);
 			return (MCM_Transferable) mcm.getTransferable();
@@ -184,7 +186,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitUsers | requiere "
+			Log.debugMessage("CMAdministrationTransmit.transmitUsers | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
@@ -235,7 +237,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitUsersButIds | requiere "
+			Log.debugMessage("CMAdministrationTransmit.transmitUsersButIds | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
@@ -288,7 +290,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitDomainsButIds | requiere "
+			Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIds | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
@@ -333,7 +335,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Domain_Transferable[] transmitDomainsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitDomainsButIdsCondition | requiere "
+		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIdsCondition | requiere "
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -382,7 +384,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitServers | requiere "
+			Log.debugMessage("CMAdministrationTransmit.transmitServers | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
@@ -430,7 +432,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitServersButIds | requiere "
+			Log.debugMessage("CMAdministrationTransmit.transmitServersButIds | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
@@ -478,7 +480,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 																		AccessIdentifier_Transferable accessIdentifier,
 																		DomainCondition_Transferable domainCondition)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitServersButIdsCondition | requiere "
+		Log.debugMessage("CMAdministrationTransmit.transmitServersButIdsCondition | requiere "
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 				+ " item(s)", Log.DEBUGLEVEL07);
 		try {
@@ -527,7 +529,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		try {	
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitMCMs | requiere "
+			Log.debugMessage("CMAdministrationTransmit.transmitMCMs | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
@@ -575,7 +577,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
-			Log.debugMessage("CMServerImpl.transmitMCMsButIds | requiere "
+			Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIds | requiere "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
@@ -620,7 +622,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public MCM_Transferable[] transmitMCMsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.transmitMCMsButIdsCondition | requiere "
+		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIdsCondition | requiere "
 				+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
@@ -671,7 +673,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		List idsList = new ArrayList();
 
-		Log.debugMessage("CMServerImpl.transmitDomains | requiere "
+		Log.debugMessage("CMAdministrationTransmit.transmitDomains | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
 				+ " item(s)", Log.DEBUGLEVEL07);
 		try {
