@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.5 2004/09/23 10:05:29 krupenn Exp $
+ * $Id: Map.java,v 1.6 2004/10/04 15:58:19 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/23 10:05:29 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/04 15:58:19 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -909,7 +909,7 @@ public final class Map extends StubResource implements Serializable
 	/**
 	 * ѕолучить список всех олементов контекста карты
 	 */
-	public List getAllElements1()
+	public List getAllElements()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getAllElements()");
 		
@@ -930,6 +930,13 @@ public final class Map extends StubResource implements Serializable
 		}
 
 		e = physicalLinks.iterator();
+		while (e.hasNext())
+		{
+			MapElement mapElement = (MapElement )e.next();
+			returnVector.add( mapElement);
+		}
+
+		e = this.collectors.iterator();
 		while (e.hasNext())
 		{
 			MapElement mapElement = (MapElement )e.next();

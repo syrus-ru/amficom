@@ -84,7 +84,7 @@ public class EmptyMapDataSource
 		ImageCatalogue.add(
 				"mark",
 				new ImageResource("mark", "mark", "images/mark.gif"));
-
+/*
 	    mnpe = new MapNodeProtoElement(
 			"building",
 			"Дом",
@@ -151,6 +151,7 @@ public class EmptyMapDataSource
 		mlpe.setLineSize(1);
 		mlpe.setColor(Color.RED);
 		Pool.put(MapLinkProtoElement.typ, mlpe.getId(), mlpe);
+*/
 	}
 
 	public void LoadAttributeTypes()
