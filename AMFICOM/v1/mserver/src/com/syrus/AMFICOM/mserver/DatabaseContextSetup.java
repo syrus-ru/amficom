@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.6 2004/08/11 14:49:34 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.7 2004/08/11 17:28:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,13 @@
 
 package com.syrus.AMFICOM.mserver;
 
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.configuration.ConfigurationObjectTypePool;
+import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
-//import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
+import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.UserDatabase;
 import com.syrus.AMFICOM.configuration.DomainDatabase;
@@ -22,12 +22,11 @@ import com.syrus.AMFICOM.configuration.ServerDatabase;
 import com.syrus.AMFICOM.configuration.MCMDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.PortDatabase;
-//import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
+import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 
-//import com.syrus.AMFICOM.configuration.ServerDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
@@ -43,10 +42,9 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/11 14:49:34 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/11 17:28:43 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -60,7 +58,7 @@ public abstract class DatabaseContextSetup {
 		ConfigurationDatabaseContext.init(new CharacteristicTypeDatabase(),
 																			new EquipmentTypeDatabase(),
 																			new PortTypeDatabase(),
-																			null, //new MeasurementPortTypeDatabase(),
+																			new MeasurementPortTypeDatabase(),
 																			new CharacteristicDatabase(),
 																			new UserDatabase(),
 																			new DomainDatabase(),
@@ -68,7 +66,7 @@ public abstract class DatabaseContextSetup {
 																			new MCMDatabase(),
 																			new EquipmentDatabase(),
 																			new PortDatabase(),
-																			null, //new MeasurementPortDatabase(),
+																			new MeasurementPortDatabase(),
 																			new TransmissionPathDatabase(),
 																			new KISDatabase(),
 																			new MonitoredElementDatabase());
@@ -88,5 +86,6 @@ public abstract class DatabaseContextSetup {
 
 	public static void initObjectPools() {
 		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader());
+		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader());
 	}
 }

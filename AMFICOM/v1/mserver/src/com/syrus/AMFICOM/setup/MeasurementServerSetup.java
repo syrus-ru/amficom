@@ -139,7 +139,6 @@ public class MeasurementServerSetup {
 	private static void createDomain(Identifier creatorId) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE);
-			System.out.println("Id: '" + id.toString() + "', major: " + id.getMajor() + ", majorString: '" + id.getMajorString() + "', minor: " + id.getMinor());
 			Domain domain = Domain.createInstance(id,
 																						creatorId,
 																						null,
