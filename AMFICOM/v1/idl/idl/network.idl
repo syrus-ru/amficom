@@ -140,6 +140,7 @@ module NetworkDirectory
 		wstring name;
 		wstring description;
 		wstring manufacturer;
+		wstring manufacturerCode;
 		wstring eqClass;
 
 		wstring imageId;
