@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/02/08 12:01:45 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/02/08 15:01:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/08 12:01:45 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 15:01:02 $
+ * @author $Author: bob $
  * @module admin_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
@@ -41,17 +41,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 			case ObjectEntities.MCM_ENTITY_CODE:
 				if (object instanceof MCM) {
 					MCM mcm = (MCM) object;
-					List kisIds = mcm.getKISIds();
-
-					for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-						Identifier kisId = (Identifier) it.next();
-						for (Iterator it1 = kisIds.iterator(); it1.hasNext();) {
-							if (((Identifier)it1.next()).equals(kisId)) {
-								condition = true;
-								break;
-							}
-						}
-					}
+					condition = super.conditionTest(mcm.getKISIds());
 				}
 				break;
 			default:
