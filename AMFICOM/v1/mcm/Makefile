@@ -43,8 +43,8 @@ $(LIBNAME_INTERFACE):	.corba
 .head:	.mach
 	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(TRANSCEIVER_DIR) \
-		com.syrus.AMFICOM.mcm.Transceiver
-	$(JAVAH) $(JAVAH_FLAGS) \
+		com.syrus.AMFICOM.mcm.TransmissionManager
+#	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(TRANSCEIVER_DIR) \
 		com.syrus.AMFICOM.mcm.TCPServer
 	$(JAVAH) $(JAVAH_FLAGS) \
@@ -65,7 +65,7 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMImplementation.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/TransmissionManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationException.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementException.java \
@@ -73,8 +73,8 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java\
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/TCPServer.java
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java
+#		$(SRCDIR)/com/syrus/AMFICOM/mcm/TCPServer.java
 	touch $@
 
 .corba:	$(CLASSDIR)

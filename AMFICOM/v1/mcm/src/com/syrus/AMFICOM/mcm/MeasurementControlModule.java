@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.40 2004/11/15 20:14:20 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.41 2004/11/16 13:15:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,6 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.net.UnknownServiceException;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -45,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/11/15 20:14:20 $
+ * @version $Revision: 1.41 $, $Date: 2004/11/16 13:15:56 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -156,8 +153,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Create map of test processors*/
 		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
 
-
-		transmissionManager = new TransmissionManager();
+		/*	Create and start transceiver manager*/
+		activateTransceiverManager();
 
 		/*	Start main loop	*/
 		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
@@ -242,6 +239,18 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	protected static void resetMServerConnection() {
 		activateMServerReference();
 		NewIdentifierPool.setIdentifierGeneratorServer(mServerRef);
+	}
+
+	private static void activateTransceiverManager() {
+		try {
+			transmissionManager = new TransmissionManager();
+			transmissionManager.start();
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+			DatabaseConnection.closeConnection();
+			System.exit(-1);
+		}
 	}
 
 	public void run() {
