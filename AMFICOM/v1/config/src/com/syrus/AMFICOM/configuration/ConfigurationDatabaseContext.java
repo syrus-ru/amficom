@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.18 2004/08/10 19:01:08 arseniy Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.19 2004/08/11 10:45:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,15 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/10 19:01:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2004/08/11 10:45:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase characteristicTypeDatabase;
 	protected static StorableObjectDatabase equipmentTypeDatabase;
+	protected static StorableObjectDatabase portTypeDatabase;
 	protected static StorableObjectDatabase characteristicDatabase;
 	protected static StorableObjectDatabase userDatabase;
 	protected static StorableObjectDatabase domainDatabase;
@@ -35,6 +36,7 @@ public class ConfigurationDatabaseContext {
 
 	public static void init(StorableObjectDatabase characteristicTypeDatabase1,
 													StorableObjectDatabase equipmentTypeDatabase1,
+													StorableObjectDatabase portTypeDatabase1,
 													StorableObjectDatabase characteristicDatabase1,
 													StorableObjectDatabase userDatabase1,
 													StorableObjectDatabase domainDatabase1,
@@ -47,6 +49,7 @@ public class ConfigurationDatabaseContext {
 													StorableObjectDatabase monitoredElementDatabase1) {
 		characteristicTypeDatabase = characteristicTypeDatabase1;
 		equipmentTypeDatabase = equipmentTypeDatabase1;
+		portTypeDatabase = portTypeDatabase1;
 		characteristicDatabase = characteristicDatabase1;
 		userDatabase = userDatabase1;
 		domainDatabase = domainDatabase1;
