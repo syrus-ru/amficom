@@ -1,5 +1,5 @@
 /*
- * $Id: client.idl,v 1.4 2004/12/23 11:13:01 bass Exp $
+ * $Id: client.idl,v 1.5 2004/12/23 12:30:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,33 +10,30 @@
 #define CLIENT_IDL
 
 #include "alarm.idl"
-#include "general.idl"
 
-module com
-{
-module syrus
-{
-module AMFICOM
-{
-module CORBA
-{
-//////////////////////////////////////////////////////////////////////////////
-// * Интерфейс объекта РИСД - сервера ИСМ
-// *
-//////////////////////////////////////////////////////////////////////////////
-interface AMFICOMClient
-{
-	void syncPing(
-		out long long clientTimeMillis)
-		raises (General::AMFICOMRemoteException);
+module com {
+	module syrus {
+		module AMFICOM {
+			module CORBA {
+				module General {
+					exception AMFICOMRemoteException {
+						long code;
+						wstring message;
+					};
+				};
 
-	void reportMessage(
-		in Alarm::MessageSeq_Transferable messages)
-		raises (General::AMFICOMRemoteException);
-};
-};
-};
-};
+				interface AMFICOMClient {
+					void syncPing(
+						out long long clientTimeMillis)
+						raises (General::AMFICOMRemoteException);
+
+					void reportMessage(
+						in Alarm::MessageSeq_Transferable messages)
+						raises (General::AMFICOMRemoteException);
+				};
+			};
+		};
+	};
 };
 
 #endif

@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.40 2004/12/23 12:24:37 bob Exp $
+ * $Id: general.idl,v 1.41 2004/12/23 12:30:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -126,16 +126,6 @@ module corba {
 			short	entity_code;
 			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 			com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable linked_ids;		
-	};
-};
-};
-
-module CORBA {
-module General {
-	exception AMFICOMRemoteException
-	{
-		long code;
-		wstring message;
 	};
 };
 };
