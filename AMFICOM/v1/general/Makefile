@@ -5,6 +5,8 @@ SRCDIR=./src
 CLASSDIR=./classes
 IDLDIR=../idl_v1/idl
 LIBDIR=../lib
+EXTLIBDIR=../../extlib
+
 DBHOSTNAME=research
 CONNECTSTRING=shaitan
 USER = amficom
