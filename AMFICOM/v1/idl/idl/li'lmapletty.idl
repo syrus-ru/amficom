@@ -1,5 +1,5 @@
 /*
- * $Id: li'lmapletty.idl,v 1.5 2004/11/25 11:20:04 bob Exp $
+ * $Id: li'lmapletty.idl,v 1.6 2004/11/25 16:28:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,9 +51,10 @@ module com {
 					// was MapLinkProtoElement
 					// MapLinkProtoElement is physical line type such as tunnel, subway
 					struct PhysicalLinkType_Transferable {
-							general::corba::StorableObject_Transferable header;
-							
+							general::corba::StorableObject_Transferable header;							
+
 							general::corba::Identifier_Transferable domain_id;
+							wstring codename;
 							wstring name;
 							wstring description;
 							
@@ -245,8 +246,8 @@ module com {
 							general::corba::IdentifierSeq_Transferable schemeIds;
 					};
 					
+				};
 			};
-		};
 		};
 	};
 };
