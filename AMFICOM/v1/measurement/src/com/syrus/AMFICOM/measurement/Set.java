@@ -3,6 +3,8 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import com.syrus.util.Log;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -22,7 +24,7 @@ public class Set extends StorableObject {
 	private int sort;
 	private String description;
 	private SetParameter[] parameters;
-	private ArrayList monitoredElementIds;
+	private List monitoredElementIds;
 
 	private StorableObjectDatabase setDatabase;
 
@@ -80,7 +82,7 @@ public class Set extends StorableObject {
 			throw new UpdateObjectException("MeasurementSetup.attachToMonitoredElement | Cannot attach measurement setup '" + this.id + "' to monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
 		}
 		this.monitoredElementIds.add(monitoredElementId);
-		this.monitoredElementIds.trimToSize();
+		//this.monitoredElementIds.trimToSize();
 	}
 
 	public void detachFromMonitoredElement(Identifier monitoredElementId,
@@ -95,7 +97,7 @@ public class Set extends StorableObject {
 			throw new UpdateObjectException("MeasurementSetup.detachFromMonitoredElement | Cannot dettach measurement setup '" + this.id + "' from monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
 		}
 		this.monitoredElementIds.remove(monitoredElementId);
-		this.monitoredElementIds.trimToSize();
+		//this.monitoredElementIds.trimToSize();
   }
 
 	public Object getTransferable() {
@@ -131,7 +133,7 @@ public class Set extends StorableObject {
 		return this.parameters;
 	}
 
-	public ArrayList getMonitoredElementIds() {
+	public List getMonitoredElementIds() {
 		return this.monitoredElementIds;
 	}
 
@@ -153,7 +155,7 @@ public class Set extends StorableObject {
 		this.parameters = parameters;
 	}
 
-	protected synchronized void setMonitoredElementIds(ArrayList monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds(List monitoredElementIds) {
 		this.monitoredElementIds = monitoredElementIds;
 	}
 }

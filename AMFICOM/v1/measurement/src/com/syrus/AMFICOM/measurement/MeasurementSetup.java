@@ -2,7 +2,8 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
 import java.util.Date;
-import com.syrus.util.Log;
+import java.util.List;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -157,7 +158,7 @@ public class MeasurementSetup extends StorableObject {
 		return this.measurementDuration;
 	}
 
-	public ArrayList getMonitoredElementIds() {
+	public List getMonitoredElementIds() {
 		return this.monitoredElementIds;
 	}
 

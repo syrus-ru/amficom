@@ -3,7 +3,8 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
-import com.syrus.AMFICOM.general.StorableObject;
+import java.util.List;
+
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -12,10 +13,10 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
 public class EvaluationType extends ActionType {
-	private ArrayList inParameterTypes;
-	private ArrayList thresholdParameterTypes;
-	private ArrayList etalonParameterTypes;
-	private ArrayList outParameterTypes;
+	private List inParameterTypes;
+	private List thresholdParameterTypes;
+	private List etalonParameterTypes;
+	private List outParameterTypes;
 
 	private StorableObjectDatabase evaluationTypeDatabase;
 
@@ -99,19 +100,19 @@ public class EvaluationType extends ActionType {
 																					 outParTypes);
 	}
 
-	public ArrayList getInParameterTypes() {
+	public List getInParameterTypes() {
 		return this.inParameterTypes;
 	}
 
-	public ArrayList getThresholdParameterTypes() {
+	public List getThresholdParameterTypes() {
 		return this.thresholdParameterTypes;
 	}
 
-	public ArrayList getEtalonParameterTypes() {
+	public List getEtalonParameterTypes() {
 		return this.etalonParameterTypes;
 	}
 
-	public ArrayList getOutParameterTypes() {
+	public List getOutParameterTypes() {
 		return this.outParameterTypes;
 	}
 
@@ -129,10 +130,10 @@ public class EvaluationType extends ActionType {
 												description);
 	}
 
-	protected synchronized void setParameterTypes(ArrayList inParameterTypes,
-																								ArrayList thresholdParameterTypes,
-																								ArrayList etalonParameterTypes,
-																	 ArrayList outParameterTypes) {
+	protected synchronized void setParameterTypes(List inParameterTypes,
+												  List thresholdParameterTypes,
+												  List etalonParameterTypes,
+												  List outParameterTypes) {
 		this.inParameterTypes = inParameterTypes;
 		this.thresholdParameterTypes = thresholdParameterTypes;
 		this.etalonParameterTypes = etalonParameterTypes;

@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
