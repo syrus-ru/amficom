@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -137,7 +138,7 @@ public class CatalogElementsPanel extends JPanel
 	{
 		ObjectResourceSorter sorter = new ObjectResourceTypSorter();
 		sorter.setDataSet(data);
-		java.util.List ds = sorter.sort("typ", ObjectResourceSorter.SORT_ASCENDING);
+		List ds = sorter.sort("typ", ObjectResourceSorter.SORT_ASCENDING);
 		elementsList.setContents(ds);
 
 		for (Iterator it = ds.iterator(); it.hasNext(); )
@@ -182,17 +183,19 @@ public class CatalogElementsPanel extends JPanel
 		if (schemeElement_selected == null || !schemeElement_selected.getTyp().equals(elementsList.getSelectedObjectResource().getTyp()))
 		{
 			schemeElement_selected = elementsList.getSelectedObjectResource();
-			Map ds = new HashMap();
+			Map ds;
 			catalogElementNameField.setText("");
 
 			if (schemeElement_selected instanceof SchemeElement)
-				ds = Pool.getHash("kisequipment");
+				ds = Pool.getMap("kisequipment");
 			else if (schemeElement_selected instanceof SchemeLink)
-				ds = Pool.getHash(Link.typ);
+				ds = Pool.getMap(Link.typ);
 			else if (schemeElement_selected instanceof SchemeCableLink)
-				ds = Pool.getHash(CableLink.typ);
+				ds = Pool.getMap(CableLink.typ);
 			else if (schemeElement_selected instanceof SchemePath)
-				ds = Pool.getHash(TransmissionPath.typ);
+				ds = Pool.getMap(TransmissionPath.typ);
+			else
+				ds = new HashMap();
 
 			ObjectResourceFilter filter = new ObjectResourceDomainFilter(aContext.getSessionInterface().getDomainId());
 			ObjectResourceSorter sorter = new ObjectResourceNameSorter();

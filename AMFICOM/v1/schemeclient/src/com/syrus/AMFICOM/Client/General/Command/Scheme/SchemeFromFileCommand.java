@@ -64,8 +64,8 @@ public class SchemeFromFileCommand extends VoidCommand
 		dataSource.SaveMapProtoElements(createMapProtoIdsList());
 		dataSource.SaveMapProtoGroups(createMapProtoGroupsIdsList());
 
-		if (Pool.getHash(Scheme.typ) != null)
-			for (Iterator it = Pool.getHash(Scheme.typ).keySet().iterator(); it.hasNext();)
+		if (Pool.getMap(Scheme.typ) != null)
+			for (Iterator it = Pool.getMap(Scheme.typ).keySet().iterator(); it.hasNext();)
 				dataSource.SaveScheme((String)it.next());
 
 			JOptionPane.showMessageDialog(
@@ -77,7 +77,7 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	String[] createEqtIdsList()
 	{
-		Map m = Pool.getHash(EquipmentType.typ);
+		Map m = Pool.getMap(EquipmentType.typ);
 		if (m != null)
 			return (String[])m.keySet().toArray(new String[m.size()]);
 		return new String[0];
@@ -88,8 +88,8 @@ public class SchemeFromFileCommand extends VoidCommand
 		Map ht = new HashMap();
 		ArrayList ids = new ArrayList();
 
-		if (Pool.getHash(ProtoElement.typ) != null)
-			for (Iterator it = Pool.getHash(ProtoElement.typ).values().iterator(); it.hasNext();)
+		if (Pool.getMap(ProtoElement.typ) != null)
+			for (Iterator it = Pool.getMap(ProtoElement.typ).values().iterator(); it.hasNext();)
 			{
 				ProtoElement element = (ProtoElement)it.next();
 				for (Iterator iit = element.protoelement_ids.iterator(); iit.hasNext();)
@@ -130,7 +130,7 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	String[] createMapProtoIdsList()
 	{
-		Map m = Pool.getHash(MapProtoElement.typ);
+		Map m = Pool.getMap(MapProtoElement.typ);
 		if (m != null)
 			return (String[])m.keySet().toArray(new String[m.size()]);
 		return new String[0];
@@ -138,7 +138,7 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	String[] createMapProtoGroupsIdsList()
 	{
-		Map m = Pool.getHash(MapProtoGroup.typ);
+		Map m = Pool.getMap(MapProtoGroup.typ);
 		if (m != null)
 			return (String[])m.keySet().toArray(new String[m.size()]);
 		return new String[0];
@@ -147,7 +147,7 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	String[] createLinkTypesList()
 	{
-		Map m = Pool.getHash(LinkType.typ);
+		Map m = Pool.getMap(LinkType.typ);
 		if (m != null)
 			return (String[])m.keySet().toArray(new String[m.size()]);
 		return new String[0];
@@ -155,7 +155,7 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	String[] createCableLinkTypesList()
 	{
-		Map m = Pool.getHash(CableLinkType.typ);
+		Map m = Pool.getMap(CableLinkType.typ);
 		if (m != null)
 			return (String[])m.keySet().toArray(new String[m.size()]);
 		return new String[0];
@@ -164,7 +164,7 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	String[] createPortTypesList()
 	{
-		Map m = Pool.getHash(PortType.typ);
+		Map m = Pool.getMap(PortType.typ);
 		if (m != null)
 			return (String[])m.keySet().toArray(new String[m.size()]);
 		return new String[0];
@@ -172,7 +172,7 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	String[] createCablePortTypesList()
 	{
-		Map m = Pool.getHash(CablePortType.typ);
+		Map m = Pool.getMap(CablePortType.typ);
 		if (m != null)
 			return (String[])m.keySet().toArray(new String[m.size()]);
 		return new String[0];

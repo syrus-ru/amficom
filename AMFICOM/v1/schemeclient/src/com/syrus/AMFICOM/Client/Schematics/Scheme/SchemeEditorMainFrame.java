@@ -608,14 +608,14 @@ public class SchemeEditorMainFrame extends JFrame
 	{
 //		new ImportSchemeCommand(internal_dispatcher, aContext).execute();
 //		new ExportSchemeCommand(internal_dispatcher, aContext).execute();
-		Pool.removeHash(Scheme.typ);
-		Pool.removeHash(SchemeElement.typ);
-//		Pool.removeHash(SchemeLink.typ);
-		Pool.removeHash(SchemeCableLink.typ);
-		Pool.removeHash(KIS.typ);
-		Pool.removeHash(Equipment.typ);
-		Pool.removeHash(Link.typ);
-		Pool.removeHash(CableLink.typ);
+		Pool.removeMap(Scheme.typ);
+		Pool.removeMap(SchemeElement.typ);
+//		Pool.removeMap(SchemeLink.typ);
+		Pool.removeMap(SchemeCableLink.typ);
+		Pool.removeMap(KIS.typ);
+		Pool.removeMap(Equipment.typ);
+		Pool.removeMap(Link.typ);
+		Pool.removeMap(CableLink.typ);
 
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 		new SchemeDataSourceImage(dataSource).LoadSchemes();
@@ -641,7 +641,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.fireModelChanged("");
 
 		String domain_id = aContext.getSessionInterface().getDomainId();
-		statusBar.setText("domain", Pool.getName("domain", domain_id));
+		statusBar.setText("domain", ((ObjectResource)Pool.get("domain", domain_id)).getName());
 
 		internal_dispatcher.notify(new TreeListSelectionEvent("",  TreeListSelectionEvent.REFRESH_EVENT));
 	}

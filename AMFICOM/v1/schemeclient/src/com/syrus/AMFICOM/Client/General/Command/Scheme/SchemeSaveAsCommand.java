@@ -83,7 +83,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 
 		Scheme scheme = (Scheme)schemePanel.scheme.clone(aContext.getDataSourceInterface());
-//		Map ht = Pool.getHash("clonedids");
+//		Map ht = Pool.getMap("clonedids");
 //		scheme.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
 //		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
 
@@ -167,7 +167,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		scheme.unpack();
 
 		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
-		Pool.removeHash("clonedids");
+		Pool.removeMap("clonedids");
 		Pool.remove("serialized", "serialized");
 		ret_code = OK;
 	}

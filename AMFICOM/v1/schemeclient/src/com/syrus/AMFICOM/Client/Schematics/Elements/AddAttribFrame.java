@@ -138,7 +138,7 @@ public class AddAttribFrame extends JDialog
 		}
 		else
 		{
-			/*h = Pool.getHash(CharacteristicType.typ);
+			/*h = Pool.getMap(CharacteristicType.typ);
 			for (Enumeration enum = h.elements(); enum.hasMoreElements();)
 			{
 				CharacteristicType type = (CharacteristicType)enum.nextElement();
@@ -176,7 +176,7 @@ public class AddAttribFrame extends JDialog
 
 	public int showDialog(Collection attribs)
 	{
-		Map h = Pool.getHash(ElementAttributeType.typ);
+		Map h = Pool.getMap(ElementAttributeType.typ);
 
 		Map used = new HashMap(attribs.size());
 		for (Iterator it = attribs.iterator(); it.hasNext();)

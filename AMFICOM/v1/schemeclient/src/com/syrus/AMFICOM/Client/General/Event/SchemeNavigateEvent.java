@@ -5,6 +5,7 @@ public class SchemeNavigateEvent extends OperationEvent
 	public boolean SCHEME_PATH_SELECTED = false;
 	public boolean SCHEME_ELEMENT_SELECTED = false;
 	public boolean SCHEME_PROTO_ELEMENT_SELECTED = false;
+	public boolean SCHEME_DEVICE_SELECTED = false;
 	public boolean SCHEME_PORT_SELECTED = false;
 	public boolean SCHEME_CABLE_PORT_SELECTED = false;
 	public boolean SCHEME_LINK_SELECTED = false;
@@ -27,10 +28,11 @@ public class SchemeNavigateEvent extends OperationEvent
 	public static final long SCHEME_CABLE_PORT_SELECTED_EVENT = 0x00000010;
 	public static final long SCHEME_LINK_SELECTED_EVENT = 0x00000020;
 	public static final long SCHEME_CABLE_LINK_SELECTED_EVENT = 0x00000040;
+	public static final long SCHEME_DEVICE_SELECTED_EVENT = 0x00000080;
 
 	public static final long SCHEME_PATH_DESELECTED_EVENT = 0x00000100;
 	public static final long SCHEME_ELEMENT_DESELECTED_EVENT = 0x00000200;
-	public static final long SCHEME_PROTO_ELEMENT_DESELECTED_EVENT = 0x00000200;
+	public static final long SCHEME_PROTO_ELEMENT_DESELECTED_EVENT = 0x00000400;
 	public static final long SCHEME_PORT_DESELECTED_EVENT = 0x00000800;
 	public static final long SCHEME_CABLE_PORT_DESELECTED_EVENT = 0x00001000;
 	public static final long SCHEME_LINK_DESELECTED_EVENT = 0x00002000;
@@ -70,6 +72,8 @@ public class SchemeNavigateEvent extends OperationEvent
 			SCHEME_LINK_SELECTED = true;
 		if((typ == SCHEME_CABLE_LINK_SELECTED_EVENT))
 			SCHEME_CABLE_LINK_SELECTED = true;
+		if((typ == SCHEME_DEVICE_SELECTED_EVENT))
+			SCHEME_DEVICE_SELECTED = true;
 
 		if((typ == SCHEME_PATH_DESELECTED_EVENT))
 			SCHEME_PATH_DESELECTED = true;

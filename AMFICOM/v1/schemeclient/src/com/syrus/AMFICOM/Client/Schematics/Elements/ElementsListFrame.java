@@ -268,6 +268,10 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			{
 				showPathCharacteristics((SchemePath)((Object[])ev.getSource())[0], ev.isEditable);
 			}
+			if (ev.SCHEME_DEVICE_SELECTED)
+			{
+				showDeviceCharacteristics((SchemeDevice)((Object[])ev.getSource())[0], ev.isEditable);
+			}
 		}
 		else if (ae.getActionCommand().equals(TreeDataSelectionEvent.type))
 		{
@@ -319,6 +323,17 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			else
 				showNoSelection();
 		}
+	}
+
+	void showDeviceCharacteristics(SchemeDevice dev, boolean isEditable)
+	{
+		if (dev == null)
+			return;
+		this.getContentPane().removeAll();
+		DevicePropsPanel devpanel = new DevicePropsPanel(aContext);
+		devpanel.setEditable(isEditable);
+		this.getContentPane().add(devpanel, BorderLayout.CENTER);
+		devpanel.init(dev, aContext.getDataSourceInterface(), isEditable);
 	}
 
 	void showPathCharacteristics(SchemePath path, boolean isEditable)

@@ -152,7 +152,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 		{
 			ProtoElement proto = (ProtoElement)selectedObject;
 			dispatcher.notify(new SchemeElementsEvent(this, proto, SchemeElementsEvent.OPEN_ELEMENT_EVENT));
-			Pool.removeHash("clonedids");
+			Pool.removeMap("clonedids");
 		}
 		if (selectedObject instanceof Scheme)
 		{
@@ -198,7 +198,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 				Pool.remove(MapProtoElement.typ, id);
 
 				ArrayList groups = new ArrayList();
-				for(Iterator it = Pool.getHash(MapProtoGroup.typ).values().iterator(); it.hasNext();)
+				for(Iterator it = Pool.getMap(MapProtoGroup.typ).values().iterator(); it.hasNext();)
 				{
 					MapProtoGroup group = (MapProtoGroup)it.next();
 					if (group.mapproto_ids.contains(id));
@@ -235,7 +235,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 
 				aContext.getDataSourceInterface().RemoveSchemeProtos(new String[] {proto_id});
 
-				Map hash = Pool.getHash(MapProtoElement.typ);
+				Map hash = Pool.getMap(MapProtoElement.typ);
 				for (Iterator it = hash.keySet().iterator(); it.hasNext();)
 				{
 					MapProtoElement map_proto = (MapProtoElement)it.next();

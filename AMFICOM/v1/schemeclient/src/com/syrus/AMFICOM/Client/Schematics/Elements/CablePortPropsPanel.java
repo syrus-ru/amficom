@@ -165,9 +165,9 @@ public class CablePortPropsPanel extends JPanel
 		classComboBox.removeAllItems();
 		Map hash = new HashMap();
 
-		if (Pool.getHash(CablePortType.typ) != null)
+		if (Pool.getMap(CablePortType.typ) != null)
 		{
-			for(Iterator it = Pool.getHash(CablePortType.typ).values().iterator(); it.hasNext();)
+			for(Iterator it = Pool.getMap(CablePortType.typ).values().iterator(); it.hasNext();)
 			{
 				CablePortType pt = (CablePortType)it.next();
 				hash.put(pt.p_class, pt.p_class);
@@ -301,9 +301,9 @@ public class CablePortPropsPanel extends JPanel
 		typeComboBox.removeAllItems();
 		String selected_class = (String)classComboBox.getSelectedItem();
 
-		if (Pool.getHash(CablePortType.typ) != null)
+		if (Pool.getMap(CablePortType.typ) != null)
 		{
-			for(Iterator it = Pool.getHash(CablePortType.typ).values().iterator(); it.hasNext();)
+			for(Iterator it = Pool.getMap(CablePortType.typ).values().iterator(); it.hasNext();)
 			{
 				CablePortType pt = (CablePortType)it.next();
 				if (pt.p_class.equals(selected_class))

@@ -434,7 +434,7 @@ public class ElementsEditorMainFrame extends JFrame
 		aModel.fireModelChanged("");
 
 		String domain_id = aContext.getSessionInterface().getDomainId();
-		statusBar.setText("domain", Pool.getName("domain", domain_id));
+		statusBar.setText("domain", ((ObjectResource)Pool.get("domain", domain_id)).getName());
 	}
 
 	public void setSessionClosed()

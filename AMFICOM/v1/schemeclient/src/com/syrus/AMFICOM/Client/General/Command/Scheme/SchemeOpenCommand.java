@@ -38,12 +38,12 @@ public class SchemeOpenCommand extends VoidCommand
 
 		SchemeChooserDialog mcd = new SchemeChooserDialog(aContext.getDataSourceInterface());//mapFrame, "Выберите карту", true);
 
-		Map dataSet = Pool.getHash(Scheme.typ);
+		Map dataSet = Pool.getMap(Scheme.typ);
 		java.util.HashMap h;
 		ObjectResourceDisplayModel odm = new SchemeDisplayModel();
 		ObjectResourceSorter sorter = Scheme.getDefaultSorter();
 		sorter.setDataSet(dataSet);
-		mcd.setContents(odm, new DataSet(sorter.default_sort()));
+		mcd.setContents(odm, sorter.default_sort());
 
 		// отфильтровываем по домену
 		ObjectResourceTableModel ortm = (ObjectResourceTableModel )mcd.listPane.getTable().getModel();

@@ -257,9 +257,9 @@ public class LinkPropsPanel extends JPanel
 		classComboBox.removeAllItems();
 		Map hash = new HashMap();
 
-		if (Pool.getHash(LinkType.typ) != null)
+		if (Pool.getMap(LinkType.typ) != null)
 		{
-			for(Iterator it = Pool.getHash(LinkType.typ).values().iterator(); it.hasNext();)
+			for(Iterator it = Pool.getMap(LinkType.typ).values().iterator(); it.hasNext();)
 			{
 				LinkType pt = (LinkType)it.next();
 				hash.put(pt.link_class, pt.link_class);
@@ -357,9 +357,9 @@ public class LinkPropsPanel extends JPanel
 		typeComboBox.setContents(new Hashtable(), false);
 		String selected_class = (String)classComboBox.getSelectedItem();
 
-		if (Pool.getHash(LinkType.typ) != null)
+		if (Pool.getMap(LinkType.typ) != null)
 		{
-			for(Iterator it = Pool.getHash(LinkType.typ).values().iterator(); it.hasNext();)
+			for(Iterator it = Pool.getMap(LinkType.typ).values().iterator(); it.hasNext();)
 			{
 				LinkType lt = (LinkType)it.next();
 				if (lt.link_class.equals(selected_class))

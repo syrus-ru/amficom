@@ -271,9 +271,9 @@ public class CableLinkPropsPanel extends JPanel
 		classComboBox.removeAllItems();
 		Map hash = new HashMap();
 
-		if (Pool.getHash(CableLinkType.typ) != null)
+		if (Pool.getMap(CableLinkType.typ) != null)
 		{
-			for(Iterator it = Pool.getHash(CableLinkType.typ).values().iterator(); it.hasNext();)
+			for(Iterator it = Pool.getMap(CableLinkType.typ).values().iterator(); it.hasNext();)
 			{
 				CableLinkType pt = (CableLinkType)it.next();
 				hash.put(pt.link_class, pt.link_class);
@@ -369,9 +369,9 @@ public class CableLinkPropsPanel extends JPanel
 		typeComboBox.setContents(new Hashtable(), false);
 		String selected_class = (String)classComboBox.getSelectedItem();
 
-		if (Pool.getHash(CableLinkType.typ) != null)
+		if (Pool.getMap(CableLinkType.typ) != null)
 		{
-			for(Iterator it = Pool.getHash(CableLinkType.typ).values().iterator(); it.hasNext();)
+			for(Iterator it = Pool.getMap(CableLinkType.typ).values().iterator(); it.hasNext();)
 			{
 				CableLinkType clt = (CableLinkType)it.next();
 				if (clt.link_class.equals(selected_class))

@@ -197,9 +197,9 @@ public class PortPropsPanel extends JPanel
 		classComboBox.removeAllItems();
 		Map hash = new HashMap();
 
-		if (Pool.getHash(PortType.typ) != null)
+		if (Pool.getMap(PortType.typ) != null)
 		{
-			for(Iterator it = Pool.getHash(PortType.typ).values().iterator(); it.hasNext();)
+			for(Iterator it = Pool.getMap(PortType.typ).values().iterator(); it.hasNext();)
 			{
 				PortType pt = (PortType)it.next();
 				hash.put(pt.p_class, pt.p_class);
@@ -214,9 +214,9 @@ public class PortPropsPanel extends JPanel
 		}
 		skip_changes = false;
 
-		if (Pool.getHash(AccessPortType.typ) != null)
+		if (Pool.getMap(AccessPortType.typ) != null)
 		{
-			accessTypeComboBox.setContents(Pool.getHash(AccessPortType.typ), false);
+			accessTypeComboBox.setContents(Pool.getMap(AccessPortType.typ).values().iterator(), false);
 		}
 	}
 
@@ -326,7 +326,7 @@ public class PortPropsPanel extends JPanel
 		{
 			for (int i = 0; i < ports.length; i++)
 			{
-				System.out.println("setting for " + ports[i].getId() + " access false");
+//				System.out.println("setting for " + ports[i].getId() + " access false");
 				ports[i].is_access_port = false;
 			}
 		}
@@ -337,9 +337,9 @@ public class PortPropsPanel extends JPanel
 		typeComboBox.removeAllItems();
 		String selected_class = (String)classComboBox.getSelectedItem();
 
-		if (Pool.getHash(PortType.typ) != null)
+		if (Pool.getMap(PortType.typ) != null)
 		{
-			for(Iterator it = Pool.getHash(PortType.typ).values().iterator(); it.hasNext();)
+			for(Iterator it = Pool.getMap(PortType.typ).values().iterator(); it.hasNext();)
 			{
 				PortType pt = (PortType)it.next();
 				if (pt.p_class.equals(selected_class))

@@ -135,7 +135,10 @@ public class Notifier
 				{
 					SchemeDevice dev = ((DeviceCell)cells[0]).getSchemeDevice();
 					if (dev != null)
+					{
 						devices.add(dev);
+						dev.createDefaultCrossRoute();
+					}
 				}
 //         obj_res.add(((DeviceCell)cells[i]).getSchemeDevice());
 				else if (obj instanceof DefaultLink)
@@ -316,6 +319,9 @@ public class Notifier
 			if (scheme.size() != 0)
 				dispatcher.notify(new SchemeNavigateEvent(scheme.toArray(new Scheme[scheme.size()]),
 						SchemeNavigateEvent.SCHEME_SELECTED_EVENT, isEditable));
+			if (devices.size() != 0)
+				dispatcher.notify(new SchemeNavigateEvent(devices.toArray(new SchemeDevice[devices.size()]),
+						SchemeNavigateEvent.SCHEME_DEVICE_SELECTED_EVENT, isEditable));
 			if (scheme_paths.size() != 0)
 				dispatcher.notify(new SchemeNavigateEvent(scheme_paths.toArray(new SchemePath[scheme_paths.size()]),
 						SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT, isEditable));

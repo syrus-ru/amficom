@@ -112,7 +112,7 @@ public class ComponentSaveCommand extends VoidCommand
 
 	public static void saveTypes(DataSourceInterface dsi, boolean save_all)
 	{
-		Map port_types = Pool.getHash(PortType.typ);
+		Map port_types = Pool.getMap(PortType.typ);
 		if (port_types != null)
 		{
 			ArrayList types = new ArrayList();
@@ -128,7 +128,7 @@ public class ComponentSaveCommand extends VoidCommand
 			if (!types.isEmpty())
 				dsi.SavePortTypes((String[])types.toArray(new String[types.size()]));
 		}
-		Map cable_port_types = Pool.getHash(CablePortType.typ);
+		Map cable_port_types = Pool.getMap(CablePortType.typ);
 		if (cable_port_types != null)
 		{
 			ArrayList types = new ArrayList();
@@ -144,7 +144,7 @@ public class ComponentSaveCommand extends VoidCommand
 			if (!types.isEmpty())
 				dsi.SaveCablePortTypes((String[])types.toArray(new String[types.size()]));
 		}
-		Map link_types = Pool.getHash(LinkType.typ);
+		Map link_types = Pool.getMap(LinkType.typ);
 		if (link_types != null)
 		{
 			ArrayList types = new ArrayList();
@@ -160,7 +160,7 @@ public class ComponentSaveCommand extends VoidCommand
 			if (!types.isEmpty())
 				dsi.SaveLinkTypes((String[])types.toArray(new String[types.size()]));
 		}
-		Map cable_link_types = Pool.getHash(CableLinkType.typ);
+		Map cable_link_types = Pool.getMap(CableLinkType.typ);
 		if (cable_link_types != null)
 		{
 			ArrayList types = new ArrayList();
@@ -176,7 +176,7 @@ public class ComponentSaveCommand extends VoidCommand
 			if (!types.isEmpty())
 				dsi.SaveCableLinkTypes((String[])types.toArray(new String[types.size()]));
 		}
-		Map eq_types = Pool.getHash(EquipmentType.typ);
+		Map eq_types = Pool.getMap(EquipmentType.typ);
 		if (eq_types != null)
 		{
 			ArrayList types = new ArrayList();

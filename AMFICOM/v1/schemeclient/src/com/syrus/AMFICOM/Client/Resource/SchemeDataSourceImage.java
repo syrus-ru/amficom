@@ -63,7 +63,7 @@ public class SchemeDataSourceImage extends DataSourceImage
 	{
 		ResourceDescriptor_Transferable[] desc = GetDescriptors(ProtoElement.typ);
 
-//		Pool.removeHash(ProtoElement.typ);
+//		Pool.removeMap(ProtoElement.typ);
 
 		load("imageresource", ImageCatalogue.hash);
 		load(ProtoElement.typ);
@@ -85,12 +85,12 @@ public class SchemeDataSourceImage extends DataSourceImage
 		ResourceDescriptor_Transferable[] desc5 = GetDescriptors(CableLinkType.typ);
 		ResourceDescriptor_Transferable[] desc6 = GetDescriptors(CharacteristicType.typ);
 
-//		Pool.removeHash(PortType.typ);
-//		Pool.removeHash(EquipmentType.typ);
-//		Pool.removeHash(LinkType.typ);
-//		Pool.removeHash(CablePortType.typ);
-//		Pool.removeHash(CableLinkType.typ);
-//		Pool.removeHash(CharacteristicType.typ);
+//		Pool.removeMap(PortType.typ);
+//		Pool.removeMap(EquipmentType.typ);
+//		Pool.removeMap(LinkType.typ);
+//		Pool.removeMap(CablePortType.typ);
+//		Pool.removeMap(CableLinkType.typ);
+//		Pool.removeMap(CharacteristicType.typ);
 
 		load(PortType.typ);
 		load(EquipmentType.typ);
@@ -129,9 +129,9 @@ public class SchemeDataSourceImage extends DataSourceImage
 		ResourceDescriptor_Transferable[] desc2 = GetDescriptors(AccessPortType.typ);
 		ResourceDescriptor_Transferable[] desc3 = GetDescriptors(TransmissionPathType.typ);
 
-//		Pool.removeHash(KISType.typ);
-//		Pool.removeHash(AccessPortType.typ);
-//		Pool.removeHash(TransmissionPathType.typ);
+//		Pool.removeMap(KISType.typ);
+//		Pool.removeMap(AccessPortType.typ);
+//		Pool.removeMap(TransmissionPathType.typ);
 
 		load(KISType.typ);
 		load(AccessPortType.typ);
@@ -155,9 +155,9 @@ public class SchemeDataSourceImage extends DataSourceImage
 	{
 		ResourceDescriptor_Transferable[] desc = GetDomainDescriptors(Scheme.typ);
 
-//		Pool.removeHash("scheme");
-//		Pool.removeHash("schemeelement");
-//		Pool.removeHash("schemecablelink");
+//		Pool.removeMap("scheme");
+//		Pool.removeMap("schemeelement");
+//		Pool.removeMap("schemecablelink");
 
 		load("imageresource", ImageCatalogue.hash);
 		load("scheme");
@@ -174,7 +174,7 @@ public class SchemeDataSourceImage extends DataSourceImage
 	{
 		ResourceDescriptor_Transferable[] desc = GetDescriptors(ElementAttributeType.typ);
 
-//		Pool.removeHash(ElementAttributeType.typ);
+//		Pool.removeMap(ElementAttributeType.typ);
 
 		load(ElementAttributeType.typ);
 		Vector ids = filter(ElementAttributeType.typ, desc, true);

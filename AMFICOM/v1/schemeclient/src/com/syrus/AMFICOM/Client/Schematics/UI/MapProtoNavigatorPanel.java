@@ -199,7 +199,7 @@ public class MapProtoNavigatorPanel extends JPanel implements OperationListener
 				Pool.remove(MapProtoElement.typ, id);
 
 				ArrayList groups = new ArrayList();
-				for(Iterator it = Pool.getHash(MapProtoGroup.typ).values().iterator(); it.hasNext();)
+				for(Iterator it = Pool.getMap(MapProtoGroup.typ).values().iterator(); it.hasNext();)
 				{
 					MapProtoGroup group = (MapProtoGroup)it.next();
 					if (group.mapproto_ids.contains(id));

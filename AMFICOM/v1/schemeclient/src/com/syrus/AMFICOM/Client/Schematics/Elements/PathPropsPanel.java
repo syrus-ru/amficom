@@ -167,9 +167,9 @@ public class PathPropsPanel extends JPanel
 		typeComboBox.removeAllItems();
 		Map hash = new HashMap();
 
-		if (Pool.getHash(TransmissionPathType.typ) != null)
+		if (Pool.getMap(TransmissionPathType.typ) != null)
 		{
-			for(Iterator it = Pool.getHash(TransmissionPathType.typ).values().iterator(); it.hasNext();)
+			for(Iterator it = Pool.getMap(TransmissionPathType.typ).values().iterator(); it.hasNext();)
 			{
 				TransmissionPathType tpt = (TransmissionPathType)it.next();
 				typeComboBox.add(tpt);

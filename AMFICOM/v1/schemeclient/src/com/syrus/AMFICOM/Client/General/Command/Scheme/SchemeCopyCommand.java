@@ -91,7 +91,7 @@ public class SchemeCopyCommand extends VoidCommand
 		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ,
 				TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
 
-		Pool.removeHash("clonedids");
+		Pool.removeMap("clonedids");
 	}
 }
 

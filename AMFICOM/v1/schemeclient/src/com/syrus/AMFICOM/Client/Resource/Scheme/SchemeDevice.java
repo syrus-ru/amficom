@@ -18,6 +18,7 @@ public class SchemeDevice extends StubResource implements Serializable
 	public Collection ports;
 	public Collection cableports;
 
+	public Map crossroute;
 	public Map attributes;
 
 	public SchemeDevice(SchemeDevice_Transferable transferable)
@@ -32,6 +33,7 @@ public class SchemeDevice extends StubResource implements Serializable
 		ports = new ArrayList();
 		cableports = new ArrayList();
 		attributes = new HashMap();
+		crossroute = new HashMap();
 		transferable = new SchemeDevice_Transferable();
 	}
 
@@ -49,6 +51,105 @@ public class SchemeDevice extends StubResource implements Serializable
 	{
 		return id;
 	}
+
+	public void createDefaultCrossRoute()
+	{
+		crossroute = new HashMap();
+		if (ports.isEmpty() || cableports.isEmpty())
+			return;
+
+		List inputCables = new LinkedList();
+		List outputCables = new LinkedList();
+		//для входных кабельных портов ищем выходные порты
+		//для выходных кабельных портов ищем входные порты
+		for (Iterator it = cableports.iterator(); it.hasNext(); )
+		{
+			SchemeCablePort p = (SchemeCablePort)it.next();
+			if (p.cable_link_id.length() != 0)
+			{
+				if (p.direction_type.equals("out"))
+					outputCables.add(Pool.get(SchemeCableLink.typ, p.cable_link_id));
+				else
+					inputCables.add(Pool.get(SchemeCableLink.typ, p.cable_link_id));
+			}
+		}
+		if (!inputCables.isEmpty())
+			findCrossRoute(inputCables, "out", crossroute);
+		if (!outputCables.isEmpty())
+			findCrossRoute(outputCables, "in", crossroute);
+	}
+
+	private static int parseNumber(String str)
+	{
+		StringBuffer s = new StringBuffer(str);
+		boolean key = true;
+		while (key)
+		{
+			key = false;
+			for (int i = 0; i < s.length(); i++)
+				if (!Character.isDigit(s.charAt(i)))
+				{
+					key = true;
+					s = s.deleteCharAt(i);
+					break;
+				}
+		}
+		int n;
+		try
+		{
+			n = Integer.parseInt(s.toString());
+		}
+		catch (NumberFormatException ex)
+		{
+			n = -1;
+		}
+		return n;
+	}
+
+	private static SchemePort getPortByNumber(Collection ports, int number)
+	{
+		for (Iterator it = ports.iterator(); it.hasNext();)
+		{
+			SchemePort port = (SchemePort)it.next();
+			int num = parseNumber(port.getName());
+			if (num == number)
+				return port;
+		}
+		return null;
+	}
+
+	private void findCrossRoute(Collection cables, String direction, Map crossroute)
+	{
+		List freePorts = new ArrayList(ports.size());
+		for (Iterator it = ports.iterator(); it.hasNext(); )
+		{
+			SchemePort p = (SchemePort) it.next();
+			if (p.direction_type.equals(direction))
+				freePorts.add(p);
+		}
+		if (!freePorts.isEmpty())
+		{
+			for (Iterator it = cables.iterator(); it.hasNext(); )
+			{
+				SchemeCableLink cable = (SchemeCableLink) it.next();
+				for (Iterator tit = cable.cable_threads.iterator(); tit.hasNext(); )
+				{
+					SchemeCableThread thread = (SchemeCableThread) tit.next();
+					int num = parseNumber(thread.getName());
+					SchemePort p = null;
+					if (num != -1)
+						p = getPortByNumber(freePorts, num);
+					if (p == null)
+						p = (SchemePort) freePorts.get(0);
+					crossroute.put(p.getId(), thread.getId());
+					freePorts.remove(p);
+					if (freePorts.isEmpty())
+						break;
+				}
+			}
+		}
+	}
+
 
 	public Object getTransferable()
 	{

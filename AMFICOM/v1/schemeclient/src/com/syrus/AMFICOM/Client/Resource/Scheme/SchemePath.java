@@ -234,7 +234,7 @@ public class SchemePath extends StubResource
 					return new Vector();
 
 
-				for (Enumeration e = Pool.getHash(SchemeElement.typ).elements(); e.hasMoreElements();)
+				for (Enumeration e = Pool.getMap(SchemeElement.typ).elements(); e.hasMoreElements();)
 				{
 					se = (SchemeElement)e.nextElement();
 					if (se.devices.size() > 0)
@@ -268,7 +268,7 @@ public class SchemePath extends StubResource
 				else
 					return new Vector();
 
-				for (Enumeration e = Pool.getHash(SchemeElement.typ).elements(); e.hasMoreElements();)
+				for (Enumeration e = Pool.getMap(SchemeElement.typ).elements(); e.hasMoreElements();)
 				{
 					se = (SchemeElement)e.nextElement();
 					if (se.devices.size() > 0)
