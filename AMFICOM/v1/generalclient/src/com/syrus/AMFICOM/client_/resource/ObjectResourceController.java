@@ -16,8 +16,8 @@ import java.util.List;
  * using a static method <code>getInstance()</code>. 
  *
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2004/11/03 10:50:31 $
- * @see <a href = "http://bass.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
+ * @version $Revision: 1.4 $, $Date: 2004/11/17 17:33:06 $
+ * @see <a href = "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module generalclient_v1
  */
 
