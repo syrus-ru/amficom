@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.53 2005/03/03 21:35:31 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.54 2005/03/04 13:11:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/03/03 21:35:31 $
+ * @version $Revision: 1.54 $, $Date: 2005/03/04 13:11:58 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -47,17 +47,12 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 
 	// table :: TransmissionPathMELink
 	// monitored_element_id Identifier,
-	public static final String	LINK_COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
+//	public static final String	LINK_COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
 	// transmission_path_id Identifier,
-	public static final String	LINK_COLUMN_TRANSMISSION_PATH_ID	= "transmission_path_id";
-
-	public static final int		CHARACTER_NUMBER_OF_RECORDS			= 1;
+//	public static final String	LINK_COLUMN_TRANSMISSION_PATH_ID	= "transmission_path_id";
 
 	private static String		columns;
 	private static String		updateMultiplySQLValues;
-
-	protected static final int	UPDATE_ATTACH_ME					= 1;
-	protected static final int	UPDATE_DETACH_ME					= 2;
 
 	private TransmissionPath fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TransmissionPath)
@@ -73,17 +68,24 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = COMMA + DomainMember.COLUMN_DOMAIN_ID + COMMA
-					+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA + StorableObjectWrapper.COLUMN_NAME + COMMA
-					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA + TransmissionPathWrapper.COLUMN_START_PORT_ID
-					+ COMMA + TransmissionPathWrapper.COLUMN_FINISH_PORT_ID;
+					+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+					+ StorableObjectWrapper.COLUMN_NAME + COMMA
+					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+					+ TransmissionPathWrapper.COLUMN_START_PORT_ID + COMMA
+					+ TransmissionPathWrapper.COLUMN_FINISH_PORT_ID;
 		}
 		return super.getColumns(mode) + columns;
 	}
 
 	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA + QUESTION + COMMA + QUESTION
-					+ COMMA + QUESTION + COMMA + QUESTION + COMMA + QUESTION + COMMA + QUESTION;
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION;
 		}
 		return updateMultiplySQLValues;
 	}
@@ -92,11 +94,10 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getDomainId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(transmissionPath.getType().getId()) + COMMA + APOSTOPHE
-				+ DatabaseString.toQuerySubString(transmissionPath.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE
-				+ DatabaseString.toQuerySubString(transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN)
-				+ APOSTOPHE + COMMA + DatabaseIdentifier.toSQLString(transmissionPath.getStartPortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(transmissionPath.getType().getId()) + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(transmissionPath.getStartPortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getFinishPortId());
 	}
 
@@ -109,8 +110,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getDomainId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getType().getId());
 		DatabaseString.setString(preparedStatement, ++i, transmissionPath.getName(), SIZE_NAME_COLUMN);
-		DatabaseString
-				.setString(preparedStatement, ++i, transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getStartPortId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getFinishPortId());
 		return i;
@@ -118,11 +118,10 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext
-				.getCharacteristicDatabase());
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		this.retrieveEntity(transmissionPath);
-		this.retrieveTransmissionPathMEIdsByOneQuery(Collections.singletonList(transmissionPath));
+
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
 		transmissionPath.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(transmissionPath.getId(),
 			CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH));
 	}
@@ -133,14 +132,14 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 				.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, null)
 				: this.fromStorableObject(storableObject);
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
-		String description = DatabaseString.fromQuerySubString(resultSet
-				.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 
 		TransmissionPathType type;
 		try {
-			type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier
-					.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
-		} catch (ApplicationException ae) {
+			type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					StorableObjectWrapper.COLUMN_TYPE_ID), true);
+		}
+		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 		transmissionPath.setAttributes(
@@ -158,26 +157,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		return transmissionPath;
 	}
 
-	private void retrieveTransmissionPathMEIdsByOneQuery(Collection transmissionPaths) throws RetrieveObjectException,
-			IllegalDataException {
-		if ((transmissionPaths == null) || (transmissionPaths.isEmpty()))
-			return;
-
-		Map linkedEntityIdsMap = this.retrieveLinkedEntityIds(transmissionPaths, ObjectEntities.TRANSPATHMELINK_ENTITY,
-			LINK_COLUMN_TRANSMISSION_PATH_ID, LINK_COLUMN_MONITORED_ELEMENT_ID);
-		TransmissionPath transmissionPath;
-		Collection meIds;
-		for (Iterator it = transmissionPaths.iterator(); it.hasNext();) {
-			transmissionPath = (TransmissionPath) it.next();
-			meIds = (Collection) linkedEntityIdsMap.get(transmissionPath.getId());
-
-			transmissionPath.setMonitoredElementIds0(meIds);
-		}
-	}
-
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
+		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -187,11 +169,15 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		this.insertEntity(transmissionPath);
+
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
 			characteristicDatabase.updateCharacteristics(transmissionPath);
 		}
 		catch (UpdateObjectException e) {
+			Throwable cause = e.getCause();
+			if (cause != null && cause instanceof CreateObjectException)
+				throw (CreateObjectException) cause;
 			throw new CreateObjectException(e);
 		}
 	}
@@ -203,6 +189,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			characteristicDatabase.updateCharacteristics(storableObjects);
 		}
 		catch (UpdateObjectException e) {
+			Throwable cause = e.getCause();
+			if (cause != null && cause instanceof CreateObjectException)
+				throw (CreateObjectException) cause;
 			throw new CreateObjectException(e);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.6 2005/02/03 08:37:01 bob Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.7 2005/03/04 13:11:58 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/03 08:37:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/03/04 13:11:58 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class TransmissionPathWrapper implements StorableObjectWrapper {
@@ -100,8 +100,6 @@ public final class TransmissionPathWrapper implements StorableObjectWrapper {
 				path.setFinishPortId((Identifier) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
 				path.setCharacteristics((List) value);
-			else if (key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
-				path.setMonitoredElementIds((List) value);
 		}
 	}
 

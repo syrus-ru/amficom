@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.68 2005/02/24 09:25:40 arseniy Exp $
+ * $Id: Equipment.java,v 1.69 2005/03/04 13:11:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,39 +8,40 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
 
+import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.Characterized;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/02/24 09:25:40 $
+ * @version $Revision: 1.69 $, $Date: 2005/03/04 13:11:58 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
-public class Equipment extends MonitoredDomainMember implements Characterized, TypedObject {
+public class Equipment extends DomainMember implements MonitoredDomainMember, Characterized, TypedObject {
 
 	private static final long serialVersionUID = -6115401698444070841L;
 
@@ -67,8 +68,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		super(id);
 
 		this.portIds = new ArrayList();
-		super.monitoredElementIds = new ArrayList();
 		this.characteristics = new ArrayList();
+
 		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 		try {
 			this.equipmentDatabase.retrieve(this);
@@ -81,10 +82,6 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	public Equipment(Equipment_Transferable et) throws CreateObjectException {
 		super(et.header,
 				new Identifier(et.domain_id));
-
-		super.monitoredElementIds = new ArrayList(et.monitored_element_ids.length);
-		for (int i = 0; i < et.monitored_element_ids.length; i++)
-			super.monitoredElementIds.add(new Identifier(et.monitored_element_ids[i]));
 
 		try {
 			this.type = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
@@ -123,55 +120,54 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	}
 
 	protected Equipment(Identifier id,
-						Identifier creatorId,
-						long version,
-						Identifier domainId,
-						EquipmentType type,
-						String name,
-						String description,
-						Identifier imageId,
-						String supplier,
-						String supplierCode,
-						float longitude,
-						float latitude,
-						String hwSerial,
-						String hwVersion,
-						String swSerial,
-						String swVersion,
-						String inventoryNumber) {
-				super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					version,
-					domainId);
+			Identifier creatorId,
+			long version,
+			Identifier domainId,
+			EquipmentType type,
+			String name,
+			String description,
+			Identifier imageId,
+			String supplier,
+			String supplierCode,
+			float longitude,
+			float latitude,
+			String hwSerial,
+			String hwVersion,
+			String swSerial,
+			String swVersion,
+			String inventoryNumber) {
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				domainId);
 
-				super.monitoredElementIds = new LinkedList();
+		this.type = type;
+		this.name = name;
+		this.description = description;
+		this.imageId = imageId;
+		this.supplier = supplier;
+		this.supplierCode = supplierCode;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.hwSerial = hwSerial;
+		this.hwVersion = hwVersion;
+		this.swSerial = swSerial;
+		this.swVersion = swVersion;
+		this.inventoryNumber = inventoryNumber;
 
-				this.type = type;
-				this.name = name;
-				this.description = description;
-				this.imageId = imageId;
-				this.supplier = supplier;
-				this.supplierCode = supplierCode;
-				this.longitude = longitude;
-				this.latitude = latitude;
-				this.hwSerial = hwSerial;
-				this.hwVersion = hwVersion;
-				this.swSerial = swSerial;
-				this.swVersion = swVersion;
-				this.inventoryNumber = inventoryNumber;
+		this.portIds = new ArrayList();
 
-				this.portIds = new ArrayList();
+		this.characteristics = new ArrayList();
 
-				this.characteristics = new ArrayList();
-
-				this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
+		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 	}
 
 	/**
 	 * create new instance for client
+	 * 
 	 * @param creatorId
 	 * @param domainId
 	 * @param type
@@ -181,43 +177,53 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	 * @throws CreateObjectException
 	 */
 	public static Equipment createInstance(Identifier creatorId,
-														 Identifier domainId,
-														 EquipmentType type,
-														 String name,
-														 String description,
-														 Identifier imageId,
-														 String supplier,
-														 String supplierCode,
-														 float longitude,
-														 float latitude,
-														 String hwSerial,
-														 String hwVersion,
-														 String swSerial,
-														 String swVersion,
-														 String inventoryNumber) throws CreateObjectException {
-		if (creatorId == null || domainId == null || type == null || name == null
-								|| description == null || imageId == null || supplier == null || supplierCode == null
-								|| hwSerial == null || hwVersion == null || swSerial == null || swVersion == null
-								|| inventoryNumber == null)
+			Identifier domainId,
+			EquipmentType type,
+			String name,
+			String description,
+			Identifier imageId,
+			String supplier,
+			String supplierCode,
+			float longitude,
+			float latitude,
+			String hwSerial,
+			String hwVersion,
+			String swSerial,
+			String swVersion,
+			String inventoryNumber) throws CreateObjectException {
+		if (creatorId == null
+				|| domainId == null
+				|| type == null
+				|| name == null
+				|| description == null
+				|| imageId == null
+				|| supplier == null
+				|| supplierCode == null
+				|| hwSerial == null
+				|| hwVersion == null
+				|| swSerial == null
+				|| swVersion == null
+				|| inventoryNumber == null)
 			throw new IllegalArgumentException("Argument is 'null'");
+
 		try {
 			Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE),
-											creatorId,
-											0L,
-											domainId,
-											type,
-											name,
-											description,
-											imageId,
-											supplier,
-											supplierCode,
-											longitude,
-											latitude,
-											hwSerial,
-											hwVersion,
-											swSerial,
-											swVersion,
-											inventoryNumber);
+					creatorId,
+					0L,
+					domainId,
+					type,
+					name,
+					description,
+					imageId,
+					supplier,
+					supplierCode,
+					longitude,
+					latitude,
+					hwSerial,
+					hwVersion,
+					swSerial,
+					swVersion,
+					inventoryNumber);
 			equipment.changed = true;
 			return equipment;
 		}
@@ -227,40 +233,35 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	}
 
 	public Object getTransferable() {
-		int i = 0;
-
-		Identifier_Transferable[] meIds = new Identifier_Transferable[super.monitoredElementIds.size()];
-		for (Iterator iterator = super.monitoredElementIds.iterator(); iterator.hasNext();)
-			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		int i;
 
 		i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
 
 		i = 0;
 		Identifier_Transferable[] pIds = new Identifier_Transferable[this.portIds.size()];
 		for (Iterator iterator = this.portIds.iterator(); iterator.hasNext();)
-			pIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+			pIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
 		return new Equipment_Transferable(super.getHeaderTransferable(),
-										(Identifier_Transferable)this.getDomainId().getTransferable(),
-										meIds,
-										(Identifier_Transferable)this.type.getId().getTransferable(),
-										new String(this.name),
-										new String(this.description),
-										new String(this.supplier),
-										new String(this.supplierCode),
-										this.longitude,
-										this.latitude,
-										new String(this.hwSerial),
-										new String(this.hwVersion),
-										new String(this.swSerial),
-										new String(this.swVersion),
-										new String(this.inventoryNumber),
-										(Identifier_Transferable)this.imageId.getTransferable(),
-										pIds,
-										charIds);
+				(Identifier_Transferable) this.getDomainId().getTransferable(),
+				(Identifier_Transferable) this.type.getId().getTransferable(),
+				new String(this.name),
+				new String(this.description),
+				new String(this.supplier),
+				new String(this.supplierCode),
+				this.longitude,
+				this.latitude,
+				new String(this.hwSerial),
+				new String(this.hwVersion),
+				new String(this.swSerial),
+				new String(this.swVersion),
+				new String(this.inventoryNumber),
+				(Identifier_Transferable) this.imageId.getTransferable(),
+				pIds,
+				charIds);
 	}
 
 	public StorableObjectType getType() {
@@ -318,30 +319,25 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	}
 
 	protected synchronized void setAttributes(Date created,
-											Date modified,
-											Identifier creatorId,
-											Identifier modifierId,
-											long version,
-											Identifier domainId,
-											EquipmentType type,
-											String name,
-											String description,
-											Identifier imageId,
-											String supplier,
-											String supplierCode,
-											float longitude,
-											float latitude,
-											String hwSerial,
-											String hwVersion,
-											String swSerial,
-											String swVersion,
-											String inventoryNumber) {
-		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version,
-							domainId);
+			Date modified,
+			Identifier creatorId,
+			Identifier modifierId,
+			long version,
+			Identifier domainId,
+			EquipmentType type,
+			String name,
+			String description,
+			Identifier imageId,
+			String supplier,
+			String supplierCode,
+			float longitude,
+			float latitude,
+			String hwSerial,
+			String hwVersion,
+			String swSerial,
+			String swVersion,
+			String inventoryNumber) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 		this.type = type;
 		this.name = name;
 		this.description = description;
@@ -370,7 +366,6 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	public List getDependencies() {
 		List dependencies = new LinkedList();
-		dependencies.addAll(this.monitoredElementIds);
 		dependencies.addAll(this.portIds);
 		return dependencies;
 	}
@@ -475,5 +470,13 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	public void setImageId(Identifier imageId) {
 		this.imageId = imageId;
 		super.changed = true;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.configuration.MonitoredDomainMember#getMonitoredElementIds()
+	 */
+	public Collection getMonitoredElementIds() {
+		// TODO Implement
+		throw new UnsupportedOperationException("Not implemented yet");
 	}
 }

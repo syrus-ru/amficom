@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.48 2005/02/14 09:15:46 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.49 2005/03/04 13:11:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,36 +8,39 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
+
+import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.48 $, $Date: 2005/02/14 09:15:46 $
+ * @version $Revision: 1.49 $, $Date: 2005/03/04 13:11:58 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
-public class TransmissionPath extends MonitoredDomainMember implements Characterized, TypedObject {
+public class TransmissionPath extends DomainMember implements MonitoredDomainMember, Characterized, TypedObject {
 
 	private static final long serialVersionUID = 8129503678304843903L;
 
@@ -55,7 +58,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		super(id);
 
 		this.characteristics = new ArrayList();
-		super.monitoredElementIds = new ArrayList();
+
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 		try {
 			this.transmissionPathDatabase.retrieve(this);
@@ -68,9 +71,6 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
 		super(tpt.header,
 				new Identifier(tpt.domain_id));
-		super.monitoredElementIds = new ArrayList(tpt.monitored_element_ids.length);
-		for (int i = 0; i < tpt.monitored_element_ids.length; i++)
-			super.monitoredElementIds.add(new Identifier(tpt.monitored_element_ids[i]));
 
 		this.name = new String(tpt.name);
 		this.description = new String(tpt.description);
@@ -92,35 +92,29 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	}
 
 	protected TransmissionPath(Identifier id,
-								Identifier creatorId,
-								long version,
-								Identifier domainId,
-								String name,
-								String description,
-								TransmissionPathType type,
-								Identifier startPortId,
-								Identifier finishPortId){
-		super(id,
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
-				creatorId,
-				creatorId,
-				version,
-				domainId);
+			Identifier creatorId,
+			long version,
+			Identifier domainId,
+			String name,
+			String description,
+			TransmissionPathType type,
+			Identifier startPortId,
+			Identifier finishPortId) {
+		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId, version, domainId);
 		this.name = name;
 		this.description = description;
 		this.type = type;
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
 
-		super.monitoredElementIds = new LinkedList();
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 	}
 
 	/**
 	 * create new instance for client
+	 * 
 	 * @param creatorId
 	 * @param domainId
 	 * @param name
@@ -142,14 +136,14 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 
 		try {
 			TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_ENTITY_CODE),
-											creatorId,
-											0L,
-											domainId,
-											name,
-											description,
-											type,
-											startPortId,
-											finishPortId);
+					creatorId,
+					0L,
+					domainId,
+					name,
+					description,
+					type,
+					startPortId,
+					finishPortId);
 			transmissionPath.changed = true;
 			return transmissionPath;
 		}
@@ -160,26 +154,18 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 
 	public Object getTransferable() {
 		int i = 0;
-
-		Identifier_Transferable[] meIds = new Identifier_Transferable[super.monitoredElementIds.size()];
-		for (Iterator iterator = super.monitoredElementIds.iterator(); iterator.hasNext();)
-			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
-
+			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
 
 		return new TransmissionPath_Transferable(super.getHeaderTransferable(),
-												 (Identifier_Transferable)this.getDomainId().getTransferable(),
-												 meIds,
-												 new String(this.name),
-												 new String(this.description),
-												 (Identifier_Transferable)this.type.getId().getTransferable(),
-												 (Identifier_Transferable)this.startPortId.getTransferable(),
-												 (Identifier_Transferable)this.finishPortId.getTransferable(),
-												 charIds);
+				(Identifier_Transferable) this.getDomainId().getTransferable(),
+				new String(this.name),
+				new String(this.description),
+				(Identifier_Transferable) this.type.getId().getTransferable(),
+				(Identifier_Transferable) this.startPortId.getTransferable(),
+				(Identifier_Transferable) this.finishPortId.getTransferable(),
+				charIds);
 	}
 
 	public String getName() {
@@ -294,5 +280,13 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public void setType(TransmissionPathType type) {
 		this.type = type;
 		super.changed = true;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.configuration.MonitoredDomainMember#getMonitoredElementIds()
+	 */
+	public Collection getMonitoredElementIds() {
+		//TODO Implement
+		throw new UnsupportedOperationException("Not implemented yet");
 	}
 }

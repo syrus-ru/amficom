@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.21 2005/02/28 14:11:56 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.22 2005/03/04 13:11:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/02/28 14:11:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/03/04 13:11:55 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -319,6 +320,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				storableObject.getClass().getName() + " is not a type of Characterized";
 			throw new UpdateObjectException(mesg);           
 		}
+
 		Characterized characterizedStorableObject = (Characterized) storableObject;
 		List characteristics = characterizedStorableObject.getCharacteristics();
 		List characteristicIds = new ArrayList(characteristics.size());
@@ -328,14 +330,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 
     Map databaseIdCharacteristics = new HashMap();
-		String sql;
-		StringBuffer buff = new StringBuffer();
-		buff.append(CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
-		buff.append(EQUALS);
-		buff.append(APOSTOPHE);
-		buff.append(storableObject.getId());
-		buff.append(APOSTOPHE);
-		sql = retrieveQuery(buff.toString());
+		String str = CharacteristicWrapper.COLUMN_CHARACTERIZED_ID + EQUALS + APOSTOPHE + storableObject.getId() + APOSTOPHE;
+		String sql = retrieveQuery(str);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -349,11 +345,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			}
 
 			//  delete
+			Collection deleteCharacteristicIds = new HashSet();
 			for (Iterator it = databaseIdCharacteristics.keySet().iterator(); it.hasNext();) {
 				Identifier dbCharacteristicId = (Identifier) it.next();
 				if(!characteristicIds.contains(dbCharacteristicId))
-					this.delete(dbCharacteristicId);
+					deleteCharacteristicIds.add(dbCharacteristicId);
 			}
+			this.delete(deleteCharacteristicIds);
 
 			//  insert or update
 			super.checkAndUpdateEntities(characteristics, storableObject.modifierId, true);
@@ -391,12 +389,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 								storableObject.getClass().getName() + " is not a type of Characterized";
 				throw new UpdateObjectException(mesg);                
 			}
+
 			List characteristics = (List) modifierIdCharacteristics.get(storableObject.getModifierId());
 			if (characteristics == null) {
 				characteristics = new LinkedList();
 				modifierIdCharacteristics.put(storableObject.getModifierId(), characteristics);
 			}
-				
+
 			for (Iterator iter = ((Characterized) storableObject).getCharacteristics().iterator(); iter.hasNext();) {
 				Characteristic characteristic = (Characteristic) iter.next();
 				characteristics.add(characteristic);
