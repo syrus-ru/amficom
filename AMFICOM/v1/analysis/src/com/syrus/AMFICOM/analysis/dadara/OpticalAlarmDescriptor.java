@@ -1,7 +1,8 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-import java.util.Enumeration;
+import java.util.Iterator;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
@@ -34,14 +35,14 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 
 			Result res = (Result)Pool.get(Result.typ, event.descriptor); // получили резулт
 
-			String id = new SurveyDataSourceImage(dataSource).GetTestForEvaluation(res.evaluation_id);
+			String id = new SurveyDataSourceImage(dataSource).GetTestForEvaluation(res.getEvaluationId());
 			if(id == null)
 				return;
 			Test test = (Test )Pool.get("test", id);
 			dataSource.LoadTestArgumentSets(new String[] {test.test_argument_set_id});
 			TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.typ, test.test_argument_set_id);
-			Evaluation eval = (Evaluation)Pool.get(Evaluation.typ, res.evaluation_id);
-			MonitoredElement me = (MonitoredElement )Pool.get(MonitoredElement.typ, eval.monitored_element_id);
+			Evaluation eval = (Evaluation)Pool.get(Evaluation.typ, res.getEvaluationId());
+			MonitoredElement me = (MonitoredElement )Pool.get(MonitoredElement.typ, eval.getMonitoredElementId());
 			if(!me.element_type.equals("path"))
 			{
 				return;
@@ -54,8 +55,9 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 //			new SurveyDataSourceImage(dataSource).GetTestResult(id);
 
 			Result tres = null;
-			for(int i = 0; i < eval.result_ids.length; i++)
-				if(eval.result_ids[i].equals(event.descriptor))
+			String[] r_ids = eval.getResultIds();
+			for(int i = 0; i < r_ids.length; i++)
+				if(r_ids[i].equals(event.descriptor))
 				{
 					new SurveyDataSourceImage(dataSource).GetResult(test.result_ids[i]);
 					tres = (Result )Pool.get(Result.typ, test.result_ids[i]);
@@ -67,12 +69,12 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 
 			BellcoreStructure bs = null;
 
-			java.util.Enumeration enum = tres.parameters.elements();
-			while (enum.hasMoreElements())
+			java.util.Iterator it = tres.getParameterList().iterator();
+			while (it.hasNext())
 			{
-				Parameter param = (Parameter)enum.nextElement();
-				if (param.gpt.id.equals("reflectogramm"))
-				 bs = new BellcoreReader().getData(param.value);
+				Parameter param = (Parameter)it.next();
+				if (param.getGpt().getId().equals(AnalysisUtil.REFLECTOGRAMM))
+				 bs = new BellcoreReader().getData(param.getValue());
 			}
 			if (bs == null)
 				 return;
@@ -96,28 +98,28 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 				}
 			}
 */
-			Enumeration  parameters = res.parameters.elements();
+			Iterator parameters = res.getParameterList().iterator();
 
-			while (parameters.hasMoreElements())
+			while (parameters.hasNext())
 			{
-				Parameter param = (Parameter )parameters.nextElement();
+				Parameter param = (Parameter)parameters.next();
 				String codename = "";
 				String name = "";
-				String data_type = param.gpt.value_type;
-				if(param.apt != null)
+				String data_type = param.getGpt().getValueType();
+				if(param.getApt() != null)
 				{
-					codename = param.apt.codename;
-					name = param.apt.name;
+					codename = param.getApt().getCodename();
+					name = param.getApt().getName();
 				}
-				else if(param.gpt != null)
+				else if(param.getGpt() != null)
 				{
-					codename = param.gpt.codename;
-					name = param.gpt.name;
+					codename = param.getGpt().getCodename();
+					name = param.getGpt().getName();
 				}
 
 				if (codename.equals("dadara_alarm_array"))
 				{
-					ra = ReflectogramAlarm.fromByteArray(param.value);
+					ra = ReflectogramAlarm.fromByteArray(param.getValue());
 					for(int i = 0; i < ra.length; i++)
 						add(new OpticalAlarmDescriptorEvent(test.monitored_element_id, delta_x, ra[i]));
 					break;

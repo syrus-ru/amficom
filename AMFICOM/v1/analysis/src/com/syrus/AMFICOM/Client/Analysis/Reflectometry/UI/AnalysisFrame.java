@@ -2,21 +2,14 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.ComponentEvent;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
 
-
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
-
-//import com.syrus.AMFICOM.Client.Analysis.HistoAnalysis.WorkWithReflectoArray;
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
@@ -181,16 +174,16 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 			double len = 0;
 			try
 			{
-				for (int i = 0; i <metas.arguments.size(); i++)
+				for (Iterator it = metas.getArgumentList().iterator(); it.hasNext();)
 				{
-					Parameter p = (Parameter)metas.arguments.get(i);
-					if (p.codename.equals("ref_res"))
+					Parameter p = (Parameter)it.next();
+					if (p.getCodename().equals("ref_res"))
 					{
-						delta_x = new ByteArray(p.value).toDouble();
+						delta_x = new ByteArray(p.getValue()).toDouble();
 					}
-					if (p.codename.equals("ref_trclen"))
+					if (p.getCodename().equals("ref_trclen"))
 					{
-						len = new ByteArray(p.value).toDouble();
+						len = new ByteArray(p.getValue()).toDouble();
 					}
 				}
 				if (delta_x == 0 || len == 0)
@@ -214,7 +207,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 							y[j] = ep[i].refAmpl(j)[0];
 					}
 					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, delta_x);
-					epPanel.setColorModel("etalon");
+					epPanel.setColorModel(AnalysisUtil.ETALON);
 					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);
 					panel.updScale2fit();
 					traces.put(id, epPanel);

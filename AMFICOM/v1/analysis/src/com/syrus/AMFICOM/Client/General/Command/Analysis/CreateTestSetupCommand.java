@@ -69,15 +69,13 @@ public class CreateTestSetupCommand extends VoidCommand
 			return;
 
 		TestSetup ts = new TestSetup();
-		ts.name = ret;
-		ts.test_type_id = _ts.test_type_id;
-		ts.id = dataSource.GetUId(TestSetup.typ);
-		ts.test_argument_set_id = _ts.test_argument_set_id;
+		ts.setName(ret);
+		ts.settestTypeId(_ts.getTestTypeId());
+		ts.setId(dataSource.GetUId(TestSetup.typ));
+		ts.setTestArgumentSetId(_ts.getTestArgumentSetId());
 
 		bs.test_setup_id = ts.getId();
 		Pool.put(TestSetup.typ, ts.getId(), ts);
-
-		bs.test_setup_id = ts.getId();
 
 		aContext.getDispatcher().notify(new RefChangeEvent(traceid,
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));

@@ -126,7 +126,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 					setTitle(LangModelAnalyse.String("analysisSelectionTitle") + " (шаблон: " +
 									 (ts.getName().equals("") ? ts.getId() : ts.getName()) + ")");
 
-					if (!ts.criteria_set_id.equals(""))
+					if (ts.getCriteriaSetId().length() != 0)
 					{
 						double[] minuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
 						setDefaults(minuitParams);

@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 public class RemoveEtalonCommand extends VoidCommand
 {
 	ApplicationContext aContext;
@@ -31,6 +31,6 @@ public class RemoveEtalonCommand extends VoidCommand
 
 	public void execute()
 	{
-		aContext.getDispatcher().notify(new RefChangeEvent("etalon", RefChangeEvent.CLOSE_EVENT));
+		aContext.getDispatcher().notify(new RefChangeEvent(AnalysisUtil.ETALON, RefChangeEvent.CLOSE_EVENT));
 	}
 }

@@ -98,36 +98,37 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 		TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
 		TestSetup newts = new TestSetup();
-		newts.id = aContext.getDataSourceInterface().GetUId(TestSetup.typ);
+		newts.setId(aContext.getDataSourceInterface().GetUId(TestSetup.typ));
 		Pool.put(TestSetup.typ, newts.getId(), newts);
-		newts.name = s;
+		newts.setName(s);
 		bs.test_setup_id = newts.getId();
 
 		CriteriaSet newcs = AnalysisUtil.createDefaultCriteriaSet(dataSource);
 		AnalysisUtil.setCriteriaSetFromParams(newcs);
-		newts.criteria_set_id = newcs.getId();
+		newts.setCriteriaSetId(newcs.getId());
 
 		Etalon newet = AnalysisUtil.createEtalon(dataSource, (ReflectogramEvent[])Pool.get("eventparams", traceid));
-		newet.name = newet.getId();
-		newts.etalon_id = newet.getId();
+		newet.setName(newet.getId());
+		newts.setEthalonId(newet.getId());
 
 		if ((type & SaveTestSetupCommand.THRESHOLDS) != 0)
 		{
-			ThresholdSet tset = (ThresholdSet)Pool.get(ThresholdSet.typ, ts.threshold_set_id);
+			ThresholdSet tset = (ThresholdSet)Pool.get(ThresholdSet.typ, ts.getThresholdSetId());
 			ThresholdSet newtset = AnalysisUtil.createDefaultThresholdSet(
 					dataSource, (ReflectogramEvent[])Pool.get("eventparams", traceid));
-			newts.threshold_set_id = newtset.getId();
+			newts.setThresholdSetId(newtset.getId());
 		}
 
-		newts.analysis_type_id = ts.analysis_type_id;
-		newts.description = ts.description;
-		newts.evaluation_type_id = ts.evaluation_type_id;
-		newts.test_argument_set_id = ts.test_argument_set_id;
-		newts.test_type_id = ts.test_type_id;
+		newts.setAnalysisTypeId(ts.getAnalysisTypeId());
+		newts.setDescription(ts.getDescription());
+		newts.setEvaluationTypeId(ts.getEvaluationTypeId());
+		newts.setTestArgumentSetId(ts.getTestArgumentSetId());
+		newts.settestTypeId(ts.getTestTypeId());
 
-		newts.monitored_element_ids = new String[ts.monitored_element_ids.length];
-		for (int i = 0; i < ts.monitored_element_ids.length; i++)
-			newts.monitored_element_ids[i] = new String(ts.monitored_element_ids[i]);
+		String[] me_ids = new String[ts.getMonitoredElementIds().length];
+		for (int i = 0; i < me_ids.length; i++)
+			me_ids[i] = new String(ts.getMonitoredElementIds()[i]);
+		newts.setMonitoredElementIds(me_ids);
 
 		new SaveTestSetupCommand(aContext, traceid, type).execute();
 

@@ -1,42 +1,19 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JViewport;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.*;
+import javax.swing.table.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-import com.syrus.io.BellcoreStructure;
 import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.io.BellcoreStructure;
 
 public class DetailedEventsFrame extends JInternalFrame
 															 implements OperationListener
@@ -138,7 +115,7 @@ public class DetailedEventsFrame extends JInternalFrame
 					tabbedPane.setEnabledAt(1, false);
 					setVisible(false);
 				}
-				else if(id.equals("etalon"))
+				else if(id.equals(AnalysisUtil.ETALON))
 				{
 					data_ = null;
 					ctModel.clearTable();
@@ -150,7 +127,7 @@ public class DetailedEventsFrame extends JInternalFrame
 			}
 			if(rce.OPEN_ETALON)
 			{
-				this.etalon = (ReflectogramEvent[])Pool.get("eventparams", "etalon");
+				this.etalon = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
 				if(data !=null)
 					this.data_ = ReflectogramMath.alignClone(data, etalon);
 				else

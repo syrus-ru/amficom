@@ -5,11 +5,10 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.io.BellcoreStructure;
 
 public class LoadEtalonCommand extends VoidCommand
@@ -52,7 +51,7 @@ public class LoadEtalonCommand extends VoidCommand
 			return;
 		}
 
-		if (ts.etalon_id.equals(""))
+		if (ts.getEthalonId().length() == 0)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -62,6 +61,6 @@ public class LoadEtalonCommand extends VoidCommand
 			return;
 		}
 
-		aContext.getDispatcher().notify(new RefChangeEvent("etalon", RefChangeEvent.OPEN_ETALON_EVENT));
+		aContext.getDispatcher().notify(new RefChangeEvent(AnalysisUtil.ETALON, RefChangeEvent.OPEN_ETALON_EVENT));
 	}
 }

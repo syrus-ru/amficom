@@ -5,22 +5,13 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.ActionParameterType;
-import com.syrus.AMFICOM.Client.Resource.Result.Analysis;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.AnalysisType;
-
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.io.BellcoreStructure;
-import com.syrus.io.BellcoreWriter;
-import com.syrus.io.ByteArrayCollector;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.io.*;
 
 public class SaveAnalysisCommand extends VoidCommand
 {
@@ -88,27 +79,27 @@ public class SaveAnalysisCommand extends VoidCommand
 			return;
 
 		Analysis a = new Analysis(dataSource.GetUId("analysis"));
-		a.name = s;
+		a.setName(s);
 		//SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
 		//a.name = sdf.format(new Date(System.currentTimeMillis()));
-		a.type_id = "dadara";
-		a.criteria_set_id = ts.criteria_set_id;
-		a.result_ids = new String[0];
-		AnalysisType atype = (AnalysisType)Pool.get(AnalysisType.typ, a.type_id);
+		a.setTypeId(AnalysisUtil.DADARA);
+		a.setCriteriaSetId(ts.getCriteriaSetId());
+		a.setResultIds(new String[0]);
+		AnalysisType atype = (AnalysisType)Pool.get(AnalysisType.typ, a.getTypeId());
 
 		byte[] value = new byte[0];
 
-		ActionParameterType apt = (ActionParameterType )atype.sorted_arguments.get("reflectogramm");
+		ActionParameterType apt = (ActionParameterType )atype.getSortedArguments().get(AnalysisUtil.REFLECTOGRAMM);
 		Parameter arg1 = new Parameter();
-		arg1.id = dataSource.GetUId(Parameter.typ);
-		arg1.parameter_type_id = "reflectogramm";
-		arg1.type_id = apt.getId();
-		arg1.value = new BellcoreWriter().write(bs);
-		arg1.codename = "reflectogramm";
+		arg1.setId(dataSource.GetUId(Parameter.typ));
+		arg1.setParameterTypeId(AnalysisUtil.REFLECTOGRAMM);
+		arg1.setTypeId(apt.getId());
+		arg1.setValue(new BellcoreWriter().write(bs));
+		arg1.setCodename(AnalysisUtil.REFLECTOGRAMM);
 		a.addArgument(arg1);
 
-		a.user_id = aContext.getSessionInterface().getUserId();
-		a.monitored_element_id = bs.monitored_element_id;
+		a.setUserId(aContext.getSessionInterface().getUserId());
+		a.setMonitoredElementId(bs.monitored_element_id);
 
 		a.setTransferableFromLocal();
 
@@ -122,27 +113,27 @@ public class SaveAnalysisCommand extends VoidCommand
 			byte [] b = refanalysis.events[i].toByteArray();
 			bac.add(b);
 		}
-		apt = (ActionParameterType )atype.sorted_parameters.get("traceevents");
+		apt = (ActionParameterType )atype.getSortedParameters().get("traceevents");
 
 		Parameter resparam1 = new Parameter();
-		resparam1.id = dataSource.GetUId(Parameter.typ);
-		resparam1.parameter_type_id = "traceeventarray";
-		resparam1.type_id = apt.getId();
-		resparam1.value = bac.encode();
-		resparam1.codename = "traceevents";
+		resparam1.setId(dataSource.GetUId(Parameter.typ));
+		resparam1.setParameterTypeId("traceeventarray");
+		resparam1.setTypeId(apt.getId());
+		resparam1.setValue(bac.encode());
+		resparam1.setCodename("traceevents");
 
 		bac = new ByteArrayCollector();
 		for (int i = 0; i < refanalysis.concavities.length; i++)
 			bac.add(refanalysis.concavities[i].toByteArray());
 
-		apt = (ActionParameterType )atype.sorted_parameters.get("dadara_event_array");
+		apt = (ActionParameterType )atype.getSortedParameters().get("dadara_event_array");
 
 		Parameter resparam2 = new Parameter();
-		resparam2.id = dataSource.GetUId(Parameter.typ);
-		resparam2.parameter_type_id = apt.parameter_type_id;
-		resparam2.type_id = apt.getId();
-		resparam2.value = ReflectogramEvent.toByteArray(ep);
-		resparam2.codename = "dadara_event_array";
+		resparam2.setId(dataSource.GetUId(Parameter.typ));
+		resparam2.setParameterTypeId(apt.getParameterTypeId());
+		resparam2.setTypeId(apt.getId());
+		resparam2.setValue(ReflectogramEvent.toByteArray(ep));
+		resparam2.setCodename("dadara_event_array");
 
 /*
 		apt = (ActionParameterType )atype.sorted_parameters.get("concavities");
@@ -157,7 +148,7 @@ public class SaveAnalysisCommand extends VoidCommand
 		r.addParameter(resparam1);
 		r.addParameter(resparam2);
 		r.setTransferableFromLocal();
-		Pool.put("result", r.id, r);
+		Pool.put("result", r.getId(), r);
 
 		dataSource.SaveAnalysis(a.getId(), r.getId());
 	}

@@ -2,25 +2,16 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
 
+
+import com.syrus.AMFICOM.Client.Analysis.*;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
-import com.syrus.AMFICOM.Client.Resource.Result.Test;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
-import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.Analysis.ReflectogrammLoadDialog;
-import com.syrus.io.BellcoreReader;
-import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.io.*;
 
 public class LoadTraceFromDatabaseCommand extends VoidCommand
 {
@@ -101,12 +92,12 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		BellcoreStructure bs = null;
 		Result res = dialog.getResult();
 
-		java.util.Enumeration enum = res.parameters.elements();
-		while (enum.hasMoreElements())
+		java.util.Iterator it = res.getParameterList().iterator();
+		while (it.hasNext())
 		{
-			Parameter param = (Parameter)enum.nextElement();
-			if (param.gpt.id.equals("reflectogramm"))
-				bs = new BellcoreReader().getData(param.value);
+			Parameter param = (Parameter)it.next();
+			if (param.getGpt().getId().equals(AnalysisUtil.REFLECTOGRAMM))
+				bs = new BellcoreReader().getData(param.getValue());
 		}
 		if (bs == null)
 			return;
@@ -118,7 +109,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		}
 		Pool.put("bellcorestructure", "primarytrace", bs);
 
-		Test test = (Test)Pool.get(Test.typ, res.action_id);
+		Test test = (Test)Pool.get(Test.typ, res.getActionId());
 		bs.title = res.getName();
 
 		TestSetup ts;
@@ -131,9 +122,9 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			if (test.test_setup_id.equals(""))
 			{
 				ts = new TestSetup();
-				ts.test_type_id = test.test_type_id;
-				ts.id = dataSource.GetUId(TestSetup.typ);
-				ts.test_argument_set_id = test.test_argument_set_id;
+				ts.settestTypeId(test.test_type_id);
+				ts.setId(dataSource.GetUId(TestSetup.typ));
+				ts.setTestArgumentSetId(test.test_argument_set_id);
 
 				bs.test_setup_id = ts.getId();
 				Pool.put(TestSetup.typ, ts.getId(), ts);
@@ -147,17 +138,17 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 			AnalysisUtil.load_CriteriaSet(dataSource, ts);
 
-			if (!ts.etalon_id.equals(""))
+			if (ts.getEthalonId().length() != 0)
 				AnalysisUtil.load_Etalon(dataSource, ts);
 			else
-				Pool.remove("bellcorestructure", "etalon");
+				Pool.remove("bellcorestructure", AnalysisUtil.ETALON);
 
 			AnalysisUtil.load_Thresholds(dataSource, ts);
 
 			new InitialAnalysisCommand().execute();
 			//new MinuitAnalyseCommand(aContext.getDispatcher(), "primarytrace", aContext).execute();
 
-			ReflectogramEvent[] etalon = (ReflectogramEvent[])Pool.get("eventparams", "etalon");
+			ReflectogramEvent[] etalon = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
 			ReflectogramEvent[] revents = (ReflectogramEvent[])Pool.get("eventparams", "primarytrace");
 
 /*
@@ -211,7 +202,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			dispatcher.notify(new RefUpdateEvent("primarytrace",
 					RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
-			dispatcher.notify(new RefUpdateEvent("etalon",
+			dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,
 					RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

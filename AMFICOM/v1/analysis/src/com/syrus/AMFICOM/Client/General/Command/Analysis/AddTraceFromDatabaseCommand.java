@@ -1,18 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import com.syrus.AMFICOM.Client.Analysis.*;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
-
-import com.syrus.AMFICOM.Client.Analysis.ReflectogrammLoadDialog;
-import com.syrus.io.BellcoreReader;
-import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.io.*;
 
 public class AddTraceFromDatabaseCommand extends VoidCommand
 {
@@ -99,12 +94,12 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 		BellcoreStructure bs = null;
 		Result res = dialog.getResult();
 
-		java.util.Enumeration enum = res.parameters.elements();
-		while (enum.hasMoreElements())
+		java.util.Iterator it = res.getParameterList().iterator();
+		while (it.hasNext())
 		{
-			Parameter param = (Parameter)enum.nextElement();
-			if (param.gpt.id.equals("reflectogramm"))
-				bs = new BellcoreReader().getData(param.value);
+			Parameter param = (Parameter)it.next();
+			if (param.getGpt().getId().equals(AnalysisUtil.REFLECTOGRAMM))
+				bs = new BellcoreReader().getData(param.getValue());
 		}
 		if (bs == null)
 			return;

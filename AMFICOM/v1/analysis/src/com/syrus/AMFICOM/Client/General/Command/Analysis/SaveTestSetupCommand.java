@@ -79,7 +79,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		}
 
 		TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
-		if (ts.test_argument_set_id.equals(""))
+		if (ts.getTestArgumentSetId().length() == 0)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -110,12 +110,12 @@ public class SaveTestSetupCommand extends VoidCommand
 					LangModelAnalyse.String("newname"), JOptionPane.OK_CANCEL_OPTION);
 			if (s == null || s.equals(""))
 				return;
-			ts.name = s;
+			ts.setName(s);
 		}
 
-		dataSource.attachTestArgumentSetToME(ts.test_argument_set_id, bs.monitored_element_id);
+		dataSource.attachTestArgumentSetToME(ts.getTestArgumentSetId(), bs.monitored_element_id);
 
-		ts.created_by = dataSource.getSession().getUserId();
+		ts.setCreatedBy(dataSource.getSession().getUserId());
 
 		if ((type & CRITERIA) != 0)
 			AnalysisUtil.save_CriteriaSet(dataSource, bs);

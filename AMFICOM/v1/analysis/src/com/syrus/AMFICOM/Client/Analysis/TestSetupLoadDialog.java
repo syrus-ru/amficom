@@ -232,10 +232,11 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 						for(Enumeration e = ht.elements(); e.hasMoreElements(); )
 						{
 							TestSetup t = (TestSetup)e.nextElement();
-							for (int i = 0; i < t.monitored_element_ids.length; i++)
-								if(t.monitored_element_ids[i].equals(me_id))
+							String[] me_ids = t.getMonitoredElementIds();
+							for (int i = 0; i < me_ids.length; i++)
+								if(me_ids[i].equals(me_id))
 								{
-								testsHt.put(t.id, t);
+								testsHt.put(t.getId(), t);
 								break;
 							}
 						}

@@ -2,18 +2,14 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.Analysis.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.Analysis.TestSetupLoadDialog;
 import com.syrus.io.BellcoreStructure;
 
 public class LoadTestSetupCommand extends VoidCommand
@@ -60,21 +56,21 @@ public class LoadTestSetupCommand extends VoidCommand
 
 		bs.test_setup_id = ts.getId();
 
-		if (Pool.get("eventparams", "etalon") != null)
+		if (Pool.get("eventparams", AnalysisUtil.ETALON) != null)
 		{
-			aContext.getDispatcher().notify(new RefChangeEvent("etalon", RefChangeEvent.CLOSE_EVENT));
+			aContext.getDispatcher().notify(new RefChangeEvent(AnalysisUtil.ETALON, RefChangeEvent.CLOSE_EVENT));
 			aContext.getDispatcher().notify(new RefChangeEvent("primarytrace", RefChangeEvent.SELECT_EVENT));
 		}
 
 		AnalysisUtil.load_CriteriaSet(dataSource, ts);
 
-		if (!ts.etalon_id.equals(""))
+		if (!ts.getEthalonId().equals(""))
 			AnalysisUtil.load_Etalon(dataSource, ts);
 
 		//		if (!ts.threshold_set_id.equals(""))
 		AnalysisUtil.load_Thresholds(dataSource, ts);
 
-		aContext.getDispatcher().notify(new RefUpdateEvent("etalon",
+		aContext.getDispatcher().notify(new RefUpdateEvent(AnalysisUtil.ETALON,
 				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));
