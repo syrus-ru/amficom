@@ -1,5 +1,5 @@
 /*
- * $Id: ItemTreeModel.java,v 1.1 2005/03/23 10:19:14 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.2 2005/03/23 15:06:50 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.client_.general.ui_.tree_;
 
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemListener;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,8 +26,8 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/23 10:19:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/03/23 15:06:50 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.1 2005/03/23 10:19:14 bob Exp $
+ * $Id: AbstractItem.java,v 1.2 2005/03/23 15:06:50 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/23 10:19:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/03/23 15:06:50 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -86,7 +88,7 @@ public abstract class AbstractItem implements Item {
 		if (this.children.contains(childItem))
 			return;
 
-		if (this.isService() || childItem.isParentAllow()) {
+		if (this.isService() || childItem.allowsParents()) {
 			this.children.add(childItem);
 			childItem.setParent(this);
 		} else {

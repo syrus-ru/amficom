@@ -5,6 +5,7 @@
  */
 package com.syrus.AMFICOM.client_.general.ui_.tree_;
 
+import com.syrus.AMFICOM.logic.Item;
 
 public class ServiceItem extends AbstractItem {
 
@@ -25,7 +26,7 @@ public class ServiceItem extends AbstractItem {
 		return Integer.MAX_VALUE;
 	}
 
-	public boolean isParentAllow() {
+	public boolean allowsParents() {
 		return true;
 	}
 
