@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.12 2004/11/12 07:43:15 max Exp $
+ * $Id: LRUMap.java,v 1.13 2004/11/12 09:38:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/12 07:43:15 $
- * @author $Author: max $
+ * @version $Revision: 1.13 $, $Date: 2004/11/12 09:38:26 $
+ * @author $Author: bob $
  * @module util
  */
 
@@ -49,8 +49,20 @@ public class LRUMap implements Serializable {
 		this.entityCount = 0;
 	}
 	
+	/**
+	 * value iterator
+	 * @return
+	 */
     public Iterator iterator() {
-    	return new Itr();
+    	return new Itr(false);
+    }
+    
+    /**
+     * key iterator
+     * @return
+     */
+    public Iterator keyIterator(){
+    	return new Itr(true);
     }
     
     public int indexOf(Object key){
@@ -150,6 +162,12 @@ public class LRUMap implements Serializable {
     	 * has detected concurrent modification.
     	 */
     	int expectedModCount = LRUMap.this.modCount;
+    	
+    	private boolean keyIterator = false;
+    	
+    	public Itr(boolean keyIterator){
+    		this.keyIterator = keyIterator;
+    	}
 
     	public boolean hasNext() {
     	    return this.cursor != LRUMap.this.entityCount;
@@ -160,7 +178,7 @@ public class LRUMap implements Serializable {
     	    try {
     		Object next = null;
     		while(next == null){
-    			next = LRUMap.this.array[this.cursor].value;
+    			next = keyIterator ? LRUMap.this.array[this.cursor].key : LRUMap.this.array[this.cursor].value;
     			this.lastRet = this.cursor++;
     		}
     		return next;
