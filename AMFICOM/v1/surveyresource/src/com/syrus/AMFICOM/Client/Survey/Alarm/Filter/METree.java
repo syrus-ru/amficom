@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Survey.Alarm.Filter;
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import java.util.*;
@@ -12,10 +11,6 @@ import javax.swing.*;
 public class METree extends FilterTree
 {
 	FilterTreeNode root = new FilterTreeNode(LangModel.getString("labelRoot"), "root");
-
-	public METree()
-	{
-	}
 
 	public void setTree(ApplicationContext aContext)
 	{
@@ -27,9 +22,9 @@ public class METree extends FilterTree
 			FilterTreeNode kisnode = new FilterTreeNode(kis.getName(), kis.getId());
 			root.add(kisnode);
 
-			for(Enumeration enu = kis.access_ports.elements(); enu.hasMoreElements();)
+			for(Iterator iter = kis.access_ports.iterator(); iter.hasNext();)
 			{
-				AccessPort ap = (AccessPort )enu.nextElement();
+				AccessPort ap = (AccessPort )iter.next();
 
 				Hashtable ht2 = Pool.getHash(MonitoredElement.typ);
 				if(ht2 != null)

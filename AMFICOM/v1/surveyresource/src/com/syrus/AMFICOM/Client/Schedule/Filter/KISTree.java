@@ -35,16 +35,16 @@ public class KISTree extends FilterTree
 			KIS kis = (KIS)dSet.get(it.next());
 			FilterTreeNode kisnode = new FilterTreeNode(kis.getName(), kis.getId());
 			root.add(kisnode);
-			for(Enumeration enu = kis.access_ports.elements(); enu.hasMoreElements();)
+			for(Iterator iter = kis.access_ports.iterator(); iter.hasNext();)
 			{
-				AccessPort ap = (AccessPort )enu.nextElement();
+				AccessPort ap = (AccessPort )iter.next();
 				FilterTreeNode portnode = new FilterTreeNode(ap.getName(), ap.getId());
 				kisnode.add(portnode);
 				FilterTreeNode vol_ = new FilterTreeNode(LangModelSchedule.getString("TestTypes"), "mone");
 				FilterTreeNode tt_ = new FilterTreeNode(LangModelSchedule.getString("TestTypes"), "testtypes");
 				portnode.add(vol_);
 				portnode.add(tt_);
-				List daSet = new DataSet(Pool.getHash(MonitoredElement.typ));
+				List daSet = Pool.getList(MonitoredElement.typ);
 				daSet = filter.filter(daSet);
 				for(Iterator it2 = daSet.iterator(); it2.hasNext();)
 				{
@@ -56,7 +56,7 @@ public class KISTree extends FilterTree
 					}
 				}
 				AccessPortType apt = (AccessPortType )Pool.get("accessporttype", ap.type_id);
-				Vector vec = new Vector();
+				
 				for(Enumeration enum = Pool.getHash("testtype").elements(); enum.hasMoreElements();)
 				{
 					TestType tt = (TestType )enum.nextElement();
