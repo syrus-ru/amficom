@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.39 2004/09/20 14:06:50 bob Exp $
+ * $Id: TestDatabase.java,v 1.40 2004/10/18 09:43:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/09/20 14:06:50 $
+ * @version $Revision: 1.40 $, $Date: 2004/10/18 09:43:56 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -289,7 +290,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ SQL_WHERE + LINK_COLMN_TEST_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		ArrayList arraylist = new ArrayList();
+		List msList = new LinkedList();
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
@@ -299,7 +300,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				/**
 				  * @todo when change DB Identifier model ,change getString() to getLong()
 				  */
-				arraylist.add(new Identifier(resultSet.getString(LINK_COLMN_MEASUREMENT_SETUP_ID)));
+				msList.add(new Identifier(resultSet.getString(LINK_COLMN_MEASUREMENT_SETUP_ID)));
 			}
 		}
 		catch (SQLException sqle) {
@@ -321,7 +322,10 @@ public class TestDatabase extends StorableObjectDatabase {
 				DatabaseConnection.closeConnection(connection);
 			}
 		}
-		test.setMeasurementSetupIds(arraylist);
+		if (!msList.isEmpty())
+			test.setMeasurementSetupIds(msList);
+		else 
+			throw new RetrieveObjectException("TestDatabase.retrieveMeasurementSetupTestLinks | Measurement setup ids for test '" + testIdStr + "' not found.");
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
