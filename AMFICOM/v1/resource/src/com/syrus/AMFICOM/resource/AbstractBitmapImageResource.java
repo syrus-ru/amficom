@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractBitmapImageResource.java,v 1.3 2004/12/21 10:37:42 arseniy Exp $
+ * $Id: AbstractBitmapImageResource.java,v 1.4 2005/02/08 10:23:46 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import java.util.Date;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2004/12/21 10:37:42 $
+ * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 10:23:46 $
  * @module resource_v1
  */
 public abstract class AbstractBitmapImageResource extends AbstractImageResource {
@@ -37,4 +37,6 @@ public abstract class AbstractBitmapImageResource extends AbstractImageResource 
 	}
 
 	public abstract String getCodename();
+	
+	public abstract void setCodename(String codename);
 }

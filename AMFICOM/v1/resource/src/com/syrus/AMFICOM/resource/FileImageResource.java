@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.7 2004/12/21 10:37:42 arseniy Exp $
+ * $Id: FileImageResource.java,v 1.8 2005/02/08 10:22:50 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import java.util.Date;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2004/12/21 10:37:42 $
+ * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/02/08 10:22:50 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -86,7 +86,12 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	public String getCodename() {
 		return getFileName();
 	}
-
+	
+	
+	public void setCodename(String codename) {
+		this.setFileName(codename);
+	}
+	
 	public String getFileName() {
 		return this.fileName;
 	}
