@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.17 2005/02/10 08:29:18 bob Exp $
+ * $Id: CableLinkType.java,v 1.18 2005/02/10 15:02:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/02/10 08:29:18 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/10 15:02:18 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -95,6 +95,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 
 	protected CableLinkType(Identifier id,
 							Identifier creatorId,
+							long version,
 							String codename,
 							String description,
 							String name,
@@ -107,6 +108,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
+				version,
 				codename,
 				description);
 		this.name = name;
@@ -116,8 +118,6 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 		this.imageId = imageId;
 		this.characteristics = new ArrayList();
 		this.cableThreadTypes = new ArrayList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 	}
@@ -145,8 +145,9 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new CableLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINKTYPE_ENTITY_CODE),
+			CableLinkType cableLinkType = new CableLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINKTYPE_ENTITY_CODE),
 					creatorId,
+					0L,
 					codename,
 					description,
 					name,
@@ -154,6 +155,8 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 					manufacturer,
 					manufacturerCode,
 					imageId);
+			cableLinkType.changed = true;
+			return cableLinkType;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("CableLinkType.createInstance | cannot generate identifier ", e);
@@ -181,17 +184,18 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						String codename,
-																						String description,
-																						String name,
-																						int sort,
-																						String manufacturer,
-																						String manufacturerCode,
-																						Identifier imageId) {
-			super.setAttributes(created, modified, creatorId, modifierId, codename, description);
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												long version,
+												String codename,
+												String description,
+												String name,
+												int sort,
+												String manufacturer,
+												String manufacturerCode,
+												Identifier imageId) {
+			super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 			this.name = name;
 			this.sort = sort;
 			this.manufacturer = manufacturer;
@@ -215,7 +219,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 
 	public void setImageId(Identifier imageId) {
 		this.imageId = imageId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	
@@ -224,7 +228,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 	}
 
 	public void setManufacturer(String manufacturer) {
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.manufacturer = manufacturer;
 	}
 
@@ -233,7 +237,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 	}
 
 	public void setManufacturerCode(String manufacturerCode) {
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.manufacturerCode = manufacturerCode;
 	}
 
@@ -243,7 +247,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 	
 	public void setSort(LinkTypeSort sort) {
 		this.sort = sort.value();
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getName() {
@@ -251,7 +255,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 	}
 
 	public void setName(String name){
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.name = name;
 	}
 
@@ -271,20 +275,20 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 
 	public void setCableThreadTypes(List cableThreadTypes) {
 		this.setCableThreadTypes0(cableThreadTypes);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -300,7 +304,7 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 }

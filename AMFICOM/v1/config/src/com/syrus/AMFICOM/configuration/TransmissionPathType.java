@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.28 2005/02/09 12:49:56 bob Exp $
+ * $Id: TransmissionPathType.java,v 1.29 2005/02/10 15:02:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/02/09 12:49:56 $
+ * @version $Revision: 1.29 $, $Date: 2005/02/10 15:02:18 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -77,20 +77,20 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 
 	protected TransmissionPathType(Identifier id,
 								Identifier creatorId,
+								long version,
 								String codename,
 								String description,
 								String name) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					codename,
-					description);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
 		this.name = name;
 		this.characteristics = new ArrayList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
 	}
@@ -110,11 +110,14 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE),
+			TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE),
 											creatorId,
+											0L,
 											codename,
 											description,
 											name);
+			transmissionPathType.changed = true;
+			return transmissionPathType;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("TransmissionPathType.createInstance | cannot generate identifier ", e);
@@ -149,23 +152,25 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	}
 
 	public void setName(String name) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.name = name;
 	}
 
 	protected synchronized void setAttributes(Date created,
-																	Date modified,
-																	Identifier creatorId,
-																	Identifier modifierId,
-																	String codename,
-																	String description,
-																	String name) {
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												long version,
+												String codename,
+												String description,
+												String name) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												codename,
-												description);
+							modified,
+							creatorId,
+							modifierId,
+							version,
+							codename,
+							description);
 		this.name = name;
 	}
 
@@ -176,14 +181,14 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	public void addCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.currentVersion = super.getNextVersion();
+			super.changed = true;
 		}
 	}
 
@@ -199,6 +204,6 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.8 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: AbstractLinkType.java,v 1.9 2005/02/10 15:02:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/01/14 18:07:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/02/10 15:02:18 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public abstract class AbstractLinkType extends StorableObjectType {
@@ -38,6 +38,7 @@ public abstract class AbstractLinkType extends StorableObjectType {
 			Date modified,
 			Identifier creatorId,
 			Identifier modifierId,
+			long version,
 			String codename,
 			String description) {
 		super(id,
@@ -45,6 +46,7 @@ public abstract class AbstractLinkType extends StorableObjectType {
 			modified,
 			creatorId,
 			modifierId,
+			version,
 			codename,
 			description);		
 	}
@@ -58,7 +60,7 @@ public abstract class AbstractLinkType extends StorableObjectType {
 	}
 	
 	public void setDescription(final String description){
-		this.currentVersion = getNextVersion();
+		this.changed = true;
 		setDescription0(description);
 	}	
 
