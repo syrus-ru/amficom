@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.56 2005/02/03 14:57:22 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.57 2005/02/03 14:59:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/02/03 14:57:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/02/03 14:59:29 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -406,31 +406,31 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
-		List list = null;
-		if (condition instanceof LinkedIdsCondition) {
-			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-			List testIds = linkedIdsCondition.getLinkedIds();
-			if (testIds == null)
-				testIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
-			for (Iterator it = testIds.iterator(); it.hasNext();) {
-				Identifier testId = (Identifier) it.next();
-				Log.errorMessage("MeasurementDatabase.retrieveByCondition | get measurements for test " + testId.toString());
-			}
-			if (testIds != null && !testIds.isEmpty())
-				list = this.retrieveButIdsByTest(ids, testIds);
-			else 
-				Log.errorMessage("MeasurementDatabase.retrieveByCondition | there are no tests to retrieve measurements");
-		}
-		else
-			if (condition instanceof DomainCondition) {
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			}
-			else {
-				Log.errorMessage("MeasurementDatabase.retrieveByCondition | Unknown condition class: " + condition);
-				list = this.retrieveButIds(ids);
-			}
-		return list;
-	}
+//	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
+//		List list = null;
+//		if (condition instanceof LinkedIdsCondition) {
+//			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+//			List testIds = linkedIdsCondition.getLinkedIds();
+//			if (testIds == null)
+//				testIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
+//			for (Iterator it = testIds.iterator(); it.hasNext();) {
+//				Identifier testId = (Identifier) it.next();
+//				Log.errorMessage("MeasurementDatabase.retrieveByCondition | get measurements for test " + testId.toString());
+//			}
+//			if (testIds != null && !testIds.isEmpty())
+//				list = this.retrieveButIdsByTest(ids, testIds);
+//			else 
+//				Log.errorMessage("MeasurementDatabase.retrieveByCondition | there are no tests to retrieve measurements");
+//		}
+//		else
+//			if (condition instanceof DomainCondition) {
+//				DomainCondition domainCondition = (DomainCondition)condition;
+//				list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+//			}
+//			else {
+//				Log.errorMessage("MeasurementDatabase.retrieveByCondition | Unknown condition class: " + condition);
+//				list = this.retrieveButIds(ids);
+//			}
+//		return list;
+//	}
 }
