@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.20 2004/11/22 12:51:55 bass Exp $
+# $Id: Makefile,v 1.21 2004/11/23 09:05:53 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -35,7 +35,7 @@ $(LIBNAME): .mach
 
 .corba:	$(CLASSDIR)
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general.idl
-	$(IDLJ) $(IDLJFLAGS) -DGENERAL_COMMON $(IDLDIR)/general.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general-vt.idl
 	$(JAVAC) \
 		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-sourcepath $(SRCDIR) \

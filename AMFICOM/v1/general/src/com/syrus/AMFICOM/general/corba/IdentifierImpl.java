@@ -1,10 +1,11 @@
 /*
- * $Id: IdentifierImpl.java,v 1.1 2004/11/22 12:51:55 bass Exp $
+ * $Id: IdentifierImpl.java,v 1.2 2004/11/23 09:05:53 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general.corba;
 
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -14,7 +15,7 @@ import java.io.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/11/22 12:51:55 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/23 09:05:53 $
  * @module general_v1
  */
 final class IdentifierImpl extends Identifier implements Cloneable, Comparable {

@@ -1,10 +1,11 @@
 /*
- * $Id: StorableObjectImpl.java,v 1.1 2004/11/22 12:51:55 bass Exp $
+ * $Id: StorableObjectImpl.java,v 1.2 2004/11/23 09:05:53 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general.corba;
 
 /**
@@ -12,7 +13,7 @@ package com.syrus.AMFICOM.general.corba;
  * generated from IDL files to compile cleanly.
  *
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/11/22 12:51:55 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/23 09:05:53 $
  * @deprecated Use other implementations of {@link StorableObject} instead.
  * @module general_v1
  */
