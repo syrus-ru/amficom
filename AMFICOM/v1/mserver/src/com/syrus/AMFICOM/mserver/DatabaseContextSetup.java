@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.4 2004/08/10 19:00:15 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.5 2004/08/11 13:56:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,14 @@ import com.syrus.AMFICOM.configuration.ConfigurationObjectTypePool;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
+import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.UserDatabase;
 import com.syrus.AMFICOM.configuration.DomainDatabase;
 import com.syrus.AMFICOM.configuration.ServerDatabase;
 import com.syrus.AMFICOM.configuration.MCMDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
-//import com.syrus.AMFICOM.configuration.PortDatabase;
+import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/10 19:00:15 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/11 13:56:12 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -56,13 +57,14 @@ public abstract class DatabaseContextSetup {
 	public static void initDatabaseContext() {
 		ConfigurationDatabaseContext.init(new CharacteristicTypeDatabase(),
 																			new EquipmentTypeDatabase(),
+																			new PortTypeDatabase(),
 																			new CharacteristicDatabase(),
 																			new UserDatabase(),
 																			new DomainDatabase(),
 																			new ServerDatabase(),
 																			new MCMDatabase(),
 																			new EquipmentDatabase(),
-																			null,	//PortDatabase
+																			new PortDatabase(),
 																			new TransmissionPathDatabase(),
 																			new KISDatabase(),
 																			new MonitoredElementDatabase());
