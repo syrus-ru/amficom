@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.sqlj,v 1.1.2.2 2004/09/09 11:35:21 bass Exp $
+ * $Id: MonitoredElement.sqlj,v 1.1.2.3 2004/12/23 12:06:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,11 @@
 
 package com.syrus.AMFICOM.server.object;
 
-import com.syrus.AMFICOM.CORBA.ISM.MonitoredElement_Transferable;
 import java.sql.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/09/09 11:35:21 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/12/23 12:06:02 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -29,8 +28,6 @@ final class MonitoredElement {
 	private String domain_id = "";
 
 	private Timestamp modified;
-
-	private MonitoredElement_Transferable transferable;
 
 	MonitoredElement(final Connection conn, String me_id) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);

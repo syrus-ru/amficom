@@ -1,5 +1,5 @@
 /*
- * $Id: ResultSetdbInterface.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
+ * $Id: ResultSetdbInterface.sqlj,v 1.1.2.5 2004/12/23 12:06:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,226 +10,17 @@ package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.CORBA.Survey.*;
 import java.sql.*;
 import java.util.Vector;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/12/23 12:06:02 $
  * @author $Author: bass $
  * @module server_v1
  */
 final class ResultSetdbInterface {
 	private ResultSetdbInterface() {
-	}
-
-	static int getResultSets(final Connection conn, String domain_id, ResultSetSeq_TransferableHolder resultsets) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		String It_id = "";
-		String It_name = "";
-		long It_start_time = 0;
-		long It_end_time = 0;
-
-		String It_domain_id = "";
-
-		long It_created = 0;
-		long It_modified = 0;
-
-		boolean It_active = false;
-		String It_comments = "";
-
-		Vector vector = new Vector();
-
-		ResultSet_Transferable rs_t;
-		ResultSet_Transferable[] rs_ts;
-		ResultSetIterator rsIt = null;
-		Vector vector2;
-
-		try
-		{
-			#sql [connCtx] rsIt = {
-				select
-						ID,
-						NAME,
-						COMMENTS,
-						DOMAIN_ID,
-						ACTIVE,
-						CREATED,
-						MODIFIED,
-						START_TIME,
-						END_TIME
-					from AMFICOM.RESULTSETS
-			};
-
-			while (rsIt.next())
-			{
-				try { It_id = rsIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_name = rsIt.name(); }
-				catch(SQLException e) { }
-				if(It_name == null) It_name = "";
-				try { It_domain_id = rsIt.domain_id(); }
-				catch(SQLException e) { }
-				if(It_domain_id == null) It_domain_id = "";
-				try { It_comments = rsIt.comments(); }
-				catch(SQLException e) { }
-				if(It_comments == null) It_comments = "";
-				try { It_active = (rsIt.active() == 1)? true : false; }
-				catch(SQLException e) { }
-				try { It_created = rsIt.created().getTime(); }
-				catch(Exception e) { }
-				try { It_modified = rsIt.modified().getTime(); }
-				catch(Exception e) { }
-				try { It_start_time = rsIt.start_time().getTime(); }
-				catch(Exception e) { }
-				try { It_end_time = rsIt.end_time().getTime(); }
-				catch(Exception e) { }
-
-				rs_t = new ResultSet_Transferable(
-					It_id,
-					It_name,
-					It_start_time,
-					It_end_time,
-					It_domain_id,
-					It_created,
-					It_modified,
-					It_active,
-					It_comments);
-
-				vector.add(rs_t);
-			}
-			rsIt.close();
-			rs_ts = new ResultSet_Transferable[vector.size()];
-			vector.copyInto(rs_ts);
-			resultsets.value = rs_ts;
-		}
-		catch(SQLException e)
-		{
-			if(rsIt != null) try {
-			rsIt.close();
-			}catch(Exception exe) {}
-			System.out.println("error loading result sets: " + e.getMessage());
-			e.printStackTrace();
-			return Constants.ERROR_LOADING;
-		}
-		finally
-		{
-			try {
-				rsIt.close();
-			}catch(Exception exe) {}
-		}
-		
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	static int getResultSets(final Connection conn, String domain_id, ResultSetSeq_TransferableHolder resultsets, String[] ids) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		String It_id = "";
-		String It_name = "";
-		long It_start_time = 0;
-		long It_end_time = 0;
-
-		String It_domain_id = "";
-
-		long It_created = 0;
-		long It_modified = 0;
-
-		boolean It_active = false;
-		String It_comments = "";
-
-		Vector vector = new Vector();
-
-		ResultSet_Transferable rs_t;
-		ResultSet_Transferable[] rs_ts;
-		ResultSetIterator rsIt = null;
-		Vector vector2;
-
-		Vector loadvec = new Vector();
-		for(int i = 0; i < ids.length; i++)
-			loadvec.add(ids[i]);
-		try
-		{
-			#sql [connCtx] rsIt = {
-				select
-						ID,
-						NAME,
-						COMMENTS,
-						DOMAIN_ID,
-						ACTIVE,
-						CREATED,
-						MODIFIED,
-						START_TIME,
-						END_TIME
-					from AMFICOM.RESULTSETS
-			};
-
-			while (rsIt.next())
-			{
-				if(! loadvec.contains(rsIt.id()))
-					continue;
-
-				try { It_id = rsIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_name = rsIt.name(); }
-				catch(SQLException e) { }
-				if(It_name == null) It_name = "";
-				try { It_domain_id = rsIt.domain_id(); }
-				catch(SQLException e) { }
-				if(It_domain_id == null) It_domain_id = "";
-				try { It_comments = rsIt.comments(); }
-				catch(SQLException e) { }
-				if(It_comments == null) It_comments = "";
-				try { It_active = (rsIt.active() == 1)? true : false; }
-				catch(SQLException e) { }
-				try { It_created = rsIt.created().getTime(); }
-				catch(SQLException e) { }
-				try { It_modified = rsIt.modified().getTime(); }
-				catch(SQLException e) { }
-				try { It_start_time = rsIt.start_time().getTime(); }
-				catch(SQLException e) { }
-				try { It_end_time = rsIt.end_time().getTime(); }
-				catch(SQLException e) { }
-
-				rs_t = new ResultSet_Transferable(
-					It_id,
-					It_name,
-					It_start_time,
-					It_end_time,
-					It_domain_id,
-					It_created,
-					It_modified,
-					It_active,
-					It_comments);
-
-				vector.add(rs_t);
-			}
-			rsIt.close();
-			rs_ts = new ResultSet_Transferable[vector.size()];
-			vector.copyInto(rs_ts);
-			resultsets.value = rs_ts;
-		}
-		catch(SQLException e)
-		{
-			if(rsIt != null) try {
-			rsIt.close();
-			}catch(Exception exe) {}
-			System.out.println("error loading result sets: " + e.getMessage());
-			e.printStackTrace();
-			return Constants.ERROR_LOADING;
-		}
-		finally
-		{
-			try {
-				rsIt.close();
-			}catch(Exception exe) {}
-		}
-		
-		return Constants.ERROR_NO_ERROR;
 	}
 
 	static int getResultIds(final Connection conn, String result_set_id, ResourceDescriptorSeq_TransferableHolder result_ids) throws SQLException {
@@ -352,15 +143,4 @@ final class ResultSetdbInterface {
 		String id,
 		Timestamp elementary_start_time,
 		String test_id);
-
-	#sql private static iterator ResultSetIterator(
-		String id,
-		String name,
-		String comments,
-		String domain_id,
-		int active,
-		Timestamp created,
-		Timestamp modified,
-		Timestamp start_time,
-		Timestamp end_time);
 }

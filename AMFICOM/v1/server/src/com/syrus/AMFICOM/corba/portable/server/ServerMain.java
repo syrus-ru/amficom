@@ -1,5 +1,5 @@
 /*
- * $Id: ServerMain.java,v 1.1.2.2 2004/10/20 10:51:42 bass Exp $
+ * $Id: ServerMain.java,v 1.1.2.3 2004/12/23 12:06:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.corba.portable.server;
 
 import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.corba.portable.reflect.*;
-import com.syrus.AMFICOM.server.measurement.AmficomRtuImpl;
 import com.syrus.AMFICOM.server.object.AmficomImpl;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import java.io.*;
@@ -23,7 +22,7 @@ import org.omg.PortableServer.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1.2.2 $, $Date: 2004/10/20 10:51:42 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/12/23 12:06:01 $
  * @module corbaportable_v1
  */
 final class ServerMain {
@@ -136,12 +135,6 @@ final class ServerMain {
 			= rootNamingCtx.to_name("Amficom");
 		childNamingCtx.rebind(amficomPath, amficom);
 
-		AMFICOMKIS amficomRtu = (new AMFICOMKISPOATie(
-			new AmficomRtuImpl(), rootPOA))._this(orb);
-		NameComponent amficomRtuPath[]
-			= rootNamingCtx.to_name("AmficomRtu");
-		childNamingCtx.rebind(amficomRtuPath, amficomRtu);
-
 		System.err.println(
 			"The server is now running. Press enter to terminate it...");
 		System.in.read();
@@ -157,7 +150,6 @@ final class ServerMain {
 		childNamingCtx.unbind(messageTypeUtilitiesPath);
 		childNamingCtx.unbind(userUtilitiesPath);
 		childNamingCtx.unbind(amficomPath);
-		childNamingCtx.unbind(amficomRtuPath);
 
 		/*
 		 * Do not unbind as this path may be shared with other servers

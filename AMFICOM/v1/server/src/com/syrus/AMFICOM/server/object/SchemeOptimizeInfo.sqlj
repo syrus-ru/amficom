@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeOptimizeInfo.sqlj,v 1.1.2.6 2004/10/18 15:31:42 bass Exp $
+ * $Id: SchemeOptimizeInfo.sqlj,v 1.1.2.7 2004/12/23 12:06:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.server.object;
 
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeOptimizeInfo_Transferable;
 import com.syrus.util.ByteArray;
 import com.syrus.util.database.JdbcBlobManager;
 import java.io.*;
@@ -17,13 +16,11 @@ import java.util.Vector;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2004/10/18 15:31:42 $
+ * @version $Revision: 1.1.2.7 $, $Date: 2004/12/23 12:06:02 $
  * @author $Author: bass $
  * @module server_v1
  */
 final class SchemeOptimizeInfo {
-	private SchemeOptimizeInfo_Transferable soi;
-
 	private String id = "";
 	private String scheme_id = "";
 	private String solution_compact_id = "";
@@ -60,76 +57,6 @@ final class SchemeOptimizeInfo {
 
 	private byte[] refl_ranges_b = new byte[0];
 	private byte[] switch_nports_b = new byte[0];
-
-	SchemeOptimizeInfo(final Connection conn, SchemeOptimizeInfo_Transferable soi) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		this.soi = soi;
-		this.id = soi.id;
-		this.scheme_id = soi.schemeId;
-		this.solution_compact_id = soi.solutionCompactId;
-	    	this.date = soi.date;
-		this.optimize_mode = soi.optimizeMode;
-		this.iterations = soi.iterations;
-		this.price = soi.price;
-		this.wavelength = soi.wavelength;
-		this.len_margin = soi.lenMargin;
-		this.mutation_rate = soi.mutationRate;
-		this.mutation_degree = soi.mutationDegree;
-		this.rtu_delete_prob = soi.rtuDeleteProb;
-		this.rtu_create_prob = soi.rtuCreateProb;
-		this.nodes_splice_prob = soi.nodesSpliceProb;
-		this.nodes_cut_prob = soi.nodesCutProb;
-		this.survivor_rate = soi.survivorRate;
-		this.price = soi.price;
-		this.iterations = soi.iterations;
-		this.refl_prices = new double[soi.reflPrices.length];
-		for (int i = 0; i < soi.reflPrices.length; i++)
-			this.refl_prices[i] = soi.reflPrices[i];
-		this.switchPrices = new double[soi.switchPrices.length];
-		for (int i = 0; i < soi.switchPrices.length; i++)
-			this.switchPrices[i] = soi.switchPrices[i];
-		this.refl_names = new String[soi.reflNames.length];
-		for (int i = 0; i < soi.reflNames.length; i++)
-			this.refl_names[i] = soi.reflNames[i];
-		this.switch_names = new String[soi.switchNames.length];
-		for (int i = 0; i < soi.switchNames.length; i++)
-			this.switch_names[i] = soi.switchNames[i];
-		this.refl_ranges = new double[soi.reflRanges.length];
-		for (int i = 0; i < soi.reflRanges.length; i++)
-			this.refl_ranges[i] = soi.reflRanges[i];
-		this.switch_nports = new double[soi.switchNports.length];
-		for (int i = 0; i < soi.switchNports.length; i++)
-			this.switch_nports[i] = soi.switchNports[i];
-		#sql [connCtx] {
-			INSERT INTO amficom.schemeoptimizeinfo (id, scheme_id, solution_compact_id, opt_date, optimize_mode, iterations, price, wavelength, len_margin, mutation_rate, mutation_degree, rtu_delete_prob, rtu_create_prob, nodes_splice_prob, nodes_cut_prob, survivor_rate, refl_prices, refl_names, refl_ranges, switch_prices, switch_nports, switch_names) VALUES (:id, :scheme_id, :solution_compact_id, :date, :optimize_mode, :iterations, :price, :wavelength, :len_margin, :mutation_rate, :mutation_degree, :rtu_delete_prob, :rtu_create_prob, :nodes_splice_prob, :nodes_cut_prob, :survivor_rate, empty_blob(), empty_blob(), empty_blob(), empty_blob(), empty_blob(), empty_blob())
-		};
-		try {
-			refl_prices_b = ByteArray.toByteArray(refl_prices);
-			refl_ranges_b = ByteArray.toByteArray(refl_ranges);
-			switch_prices_b = ByteArray.toByteArray(switchPrices);
-			switch_nports_b = ByteArray.toByteArray(switch_nports);
-		} catch (IOException ex) {
-			refl_prices_b = new byte[0];
-			refl_ranges_b = new byte[0];
-			switch_prices_b = new byte[0];
-			switch_nports_b = new byte[0];
-		}
-		try {
-			refl_names_b = toByteArray(refl_names);
-			switch_names_b = toByteArray(switch_names);
-		} catch(Exception ex) {
-			refl_names_b = new byte[0];
-			switch_names_b = new byte[0];
-		}
-		JdbcBlobManager.setData(conn, "refl_prices", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, refl_prices_b);
-		JdbcBlobManager.setData(conn, "refl_names", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, refl_names_b);
-		JdbcBlobManager.setData(conn, "refl_ranges", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, refl_ranges_b);
-		JdbcBlobManager.setData(conn, "switchPrices", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, switch_prices_b);
-		JdbcBlobManager.setData(conn, "switch_nports", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, switch_nports_b);
-		JdbcBlobManager.setData(conn, "switch_names", "amficom.schemeoptimizeinfo", "id = '" + id + '\'', false, switch_names_b);
-		conn.commit();
-	}
 
 	SchemeOptimizeInfo(final Connection conn, String soi_id) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
@@ -245,51 +172,4 @@ final class SchemeOptimizeInfo {
 			return new String[0];
 		}
 	}
-
-    private SchemeOptimizeInfo_Transferable getTransferable() {
-    	soi = new SchemeOptimizeInfo_Transferable(
-				id,
-		    	scheme_id,
-				solution_compact_id,
-				date,
-		optimize_mode,
-		iterations,
-		price,
-		wavelength,
-		    	len_margin,
-				mutation_rate,
-				mutation_degree,
-				rtu_delete_prob,
-				rtu_create_prob,
-				nodes_splice_prob,
-				nodes_cut_prob,
-				survivor_rate,
-		refl_prices,
-		refl_names,
-		refl_ranges,
-		switchPrices,
-		switch_nports,
-		switch_names);
-		return soi;
-	}
-
-	static SchemeOptimizeInfo_Transferable[] getSOIs(final Connection conn) throws SQLException {
-		DefaultContext connCtx = new DefaultContext(conn);
-
-		IdIterator idIt = null;
-		try {
-			#sql [connCtx] idIt = {
-				SELECT id FROM schemeoptimizeinfo
-			};
-			Vector vec = new Vector();
-			while (idIt.next())
-				vec.add(new SchemeOptimizeInfo(conn, idIt.id()).getTransferable());
-			return (SchemeOptimizeInfo_Transferable[]) vec.toArray(new SchemeOptimizeInfo_Transferable[vec.size()]);
-		} finally {
-			if (idIt != null)
-				idIt.close();
-		}
-	}
-
-	#sql public static iterator IdIterator( String id );
 }
