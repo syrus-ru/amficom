@@ -1,84 +1,46 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
 import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.MapModelingApplicationModelFactory;
+import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorOpenViewCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapElementsCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapPropertiesCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapWindowCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
+import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Model.ModelMDIMain;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import javax.swing.JDesktopPane;
 
-public class MapModelOpenCommand extends VoidCommand
+public class MapModelOpenCommand extends MapEditorOpenViewCommand
 {
-	Dispatcher dispatcher;
-	ApplicationContext aContext;
-	ModelMDIMain parent;
 	Checker checker;
 
-	public MapModelOpenCommand()
+	public MapModelOpenCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
-	}
-
-	public MapModelOpenCommand(Dispatcher dispatcher, ApplicationContext aContext, ModelMDIMain parent)
-	{
-		this.dispatcher = dispatcher;
-		this.parent = parent;
-		this.aContext = aContext;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher)value);
-		else
-		if(field.equals("aContext"))
-			setApplicationContext((ApplicationContext )value);
-	}
-
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
-	public void setApplicationContext(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
-	}
-
-	public Object clone()
-	{
-		return new MapModelOpenCommand(dispatcher, aContext, parent);
+		super(desktop, aContext);
 	}
 
 	public void execute()
 	{
-		boolean forFirst = true;
 		this.checker = new Checker(this.aContext.getSessionInterface());
-		if(!checker.checkCommand
-			 (checker.openMapForModeling))
-		return;
 
-		MapViewOpenCommand viewOpen = new MapViewOpenCommand(parent.desktopPane, null, aContext);
-		viewOpen.execute();
-		if (viewOpen.getReturnObject() == null)
+		if(!checker.checkCommand(checker.openMapForModeling))
 			return;
+		
+		super.setCanDelete(false);
+		super.setCheckSave(false);
+		super.execute();
 
-		MapView view = (MapView) viewOpen.getReturnObject();
-		ViewMapWindowCommand com2 = new ViewMapWindowCommand(
-				aContext.getDispatcher(), parent.desktopPane, aContext,
-				new MapModelingApplicationModelFactory());
-		com2.execute();
-		com2.frame.setMapView(view);
-		com2.frame.setLocation(500, 0);
-		parent.mapframe = com2.frame;
+		if(super.getResult() == Command.RESULT_OK)
+			super.mapFrame.setLocation(500, 0);
 
-		if (forFirst) {
-			new ViewModelMapPropertiesCommand(parent, parent.desktopPane, aContext).
-					execute();
-			new ViewModelMapElementsCommand(parent, parent.desktopPane, aContext).
-					execute();
-		}
-		dispatcher.notify(new OperationEvent(view.getSchemes(), 0, "mapopenevent"));
 	}
 }

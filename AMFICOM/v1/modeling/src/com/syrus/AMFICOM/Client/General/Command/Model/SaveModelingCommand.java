@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import java.util.*;
 
 import javax.swing.JOptionPane;
@@ -39,13 +40,40 @@ public class SaveModelingCommand extends VoidCommand
 		return new SaveModelingCommand(dispatcher, aContext, traceid);
 	}
 
+	public static ModelingType getModelingType(String codename)
+	{
+		StorableObjectCondition aTypeCondition = new StringFieldCondition(
+				codename,
+				ObjectEntities.MODELINGTYPE_ENTITY_CODE,
+				StringFieldSort.STRINGSORT_BASE);
+
+		try
+		{
+			List aTypes =
+				MeasurementStorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
+			for (Iterator it = aTypes.iterator(); it.hasNext();)
+			{
+				ModelingType type = (ModelingType )it.next();
+				if (type.getCodename().equals(codename))
+					return type;
+			}
+		}
+		catch(ApplicationException ex)
+		{
+			System.err.println("Exception searching ModelingType.");
+			ex.printStackTrace();
+		}
+
+		return null;
+	}
+
 	public void execute()
 	{
 		this.checker = new Checker(aContext.getDataSource());
 		if(!checker.checkCommand(checker.saveReflectoModeling))
 			return;
 
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
+		BellcoreStructure bs = (BellcoreStructure )Pool.get("bellcorestructure", traceid);
 		if(bs == null)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении модели.", "Ошибка", JOptionPane.OK_OPTION);
@@ -75,11 +103,10 @@ public class SaveModelingCommand extends VoidCommand
 
 			Modeling m = Modeling.createInstance(
 					userId,
-					new Identifier(bs.schemePathId),
+					getModelingType(ParameterTypeCodenames.DADARA_MODELING),
 					new Identifier(bs.monitoredElementId),
 					name,
-					argumentSet,
-					ModelingSort.MODELINGSORT_MODELING);
+					argumentSet);
 
 			parameters = new SetParameter[1];
 			ParameterType ptype = AnalysisUtil.getParameterType(userId,

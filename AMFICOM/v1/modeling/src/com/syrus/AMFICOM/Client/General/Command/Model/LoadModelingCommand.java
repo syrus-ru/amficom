@@ -1,25 +1,41 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
-import java.util.*;
-
-import javax.swing.*;
-
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.InitialAnalysisCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.DomainCondition;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainCondition;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.Modeling;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
-import com.syrus.io.*;
+import com.syrus.io.BellcoreReader;
+import com.syrus.io.BellcoreStructure;
+
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class LoadModelingCommand extends VoidCommand
 {
@@ -127,7 +143,7 @@ public class LoadModelingCommand extends VoidCommand
 					List tpathIds = me.getMonitoredDomainMemberIds();
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.SCHEME_PATH_ENTITY_CODE);

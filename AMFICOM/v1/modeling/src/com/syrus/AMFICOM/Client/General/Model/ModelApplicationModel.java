@@ -22,9 +22,9 @@ public class ModelApplicationModel extends ApplicationModel
 		add("menuExit");
 
 		add("menuView");
-		add("menuViewMapOpen");
-		add("menuViewMapEdit");
-		add("menuViewMapClose");
+		add("menuViewMapViewOpen");
+		add("menuViewMapViewEdit");
+		add("menuViewMapViewClose");
 		add("menuViewSchemeOpen");
 		add("menuViewSchemeEdit");
 		add("menuViewSchemeClose");
@@ -43,7 +43,6 @@ public class ModelApplicationModel extends ApplicationModel
 		add("menuFileClose");
 		add("menuFileAddCompare");
 		add("menuFileRemoveCompare");
-		add("menuExit");
 
 		add("menuTrace");
 		add("menuTraceAddCompare");

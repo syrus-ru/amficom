@@ -1,11 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
-import java.awt.Dimension;
-import javax.swing.*;
-
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapElementsCommand;
 import com.syrus.AMFICOM.Client.Model.ModelMDIMain;
+
+import java.awt.Dimension;
+
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 
 public class ViewModelMapElementsCommand extends ViewMapElementsCommand
 {
