@@ -1,5 +1,5 @@
 /*
- * $Id: CloneableStorableObject.java,v 1.1 2005/03/11 17:26:28 bass Exp $
+ * $Id: CloneableStorableObject.java,v 1.2 2005/03/12 20:09:58 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,12 @@ import com.syrus.util.Log;
 import java.util.Date;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/03/11 17:26:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/03/12 20:09:58 $
  * @module general_v1
  */
-public abstract class CloneableStorableObject extends StorableObject implements
-		Cloneable {
+public abstract class CloneableStorableObject extends StorableObject implements Cloneable {
+	private static final long serialVersionUID = 8657340060738270948L;
 	/**
 	 * @param id
 	 */
