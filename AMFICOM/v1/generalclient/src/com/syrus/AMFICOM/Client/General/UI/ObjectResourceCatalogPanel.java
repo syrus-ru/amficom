@@ -89,7 +89,7 @@ public class ObjectResourceCatalogPanel extends JPanel
 	private JButton filterclearButton = new JButton();
 
 	ObjectResourceDisplayModel dmod;
-	DataSet dataSet;
+	DataSet dataSet = new DataSet();
 	Class orclass;
 
 	JPanel jPanel = new JPanel();
