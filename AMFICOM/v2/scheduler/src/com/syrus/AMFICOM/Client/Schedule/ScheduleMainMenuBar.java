@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class ScheduleMainMenuBar extends JMenuBar implements ApplicationModelListener

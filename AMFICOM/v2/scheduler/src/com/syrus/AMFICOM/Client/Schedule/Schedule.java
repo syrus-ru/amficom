@@ -2,15 +2,9 @@ package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.Toolkit;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ScheduleApplicationModelFactory;
-
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.General.Model.DefaultScheduleApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class Schedule
 {
@@ -31,8 +25,6 @@ public class Schedule
 	public static void main(String[] args)
 	{
 		Environment.initialize();
-		LangModelSchedule.initialize();
-
 		try {
 			UIManager.setLookAndFeel(Environment.getLookAndFeel());
 		}

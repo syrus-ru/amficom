@@ -11,16 +11,17 @@ import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Command.Session.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Schedule.UI.*;
+import com.syrus.AMFICOM.Client.Scheduler.General.*;
 import com.syrus.io.*;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
-	public static final boolean		DEBUG			= true;
+	public static final int			DEBUG			= 3;
 
 	public ApplicationContext		aContext;
 
@@ -49,16 +50,12 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	ScheduleMainMenuBar				menuBar			= new ScheduleMainMenuBar();
 
 	PlanFrame						planFrame;
-
 	TestParametersFrame				paramsFrame;
-
 	TestRequestFrame				propsFrame;
-
 	TimeParametersFrame				timeFrame;
-
 	ElementsTreeFrame				treeFrame;
-
 	SaveParametersFrame				saveFrame;
+	TableFrame						tableFrame;
 
 	public ScheduleMainFrame(ApplicationContext aContext) {
 		super();
@@ -88,7 +85,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		setContentPane(mainPanel);
 		setResizable(true);
-		setTitle(LangModelSchedule.getString("AppTitle"));
+		setTitle(I18N.getString("Scheduling_AMFICOM"));
 		setJMenuBar(menuBar);
 
 		mainPanel.setLayout(new BorderLayout());
@@ -132,6 +129,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		saveFrame = new SaveParametersFrame(aContext);
 		desktopPane.add(saveFrame);
+
+		tableFrame = new TableFrame(aContext);
+		desktopPane.add(tableFrame);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = new Dimension(screenSize.width,
@@ -264,7 +264,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (DEBUG)
+		if (DEBUG >= 5)
 				System.out.println(getClass().getName() + " > commandName:"
 						+ commandName + "\t" + ae.getClass().getName());
 		if (commandName.equals(StatusMessageEvent.type)) {
@@ -397,6 +397,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		timeFrame.setVisible(true);
 		planFrame.setVisible(true);
 		saveFrame.setVisible(true);
+		tableFrame.setVisible(true);
 	}
 
 	public void setSessionOpened() {
@@ -406,8 +407,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		aContext.getDispatcher()
 				.notify(
-						new StatusMessageEvent(LangModelSchedule
-								.getString("statusBD")));
+						new StatusMessageEvent(I18N.getString("Loading_BD")));
 		//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
@@ -423,8 +423,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		sdsi.LoadEvaluationTypes();
 
 		aContext.getDispatcher().notify(
-				new StatusMessageEvent(LangModelSchedule
-						.getString("statusBDFinish")));
+				new StatusMessageEvent(I18N
+						.getString("Loding_BD_finished")));
 
 		treeFrame.init();
 
@@ -499,6 +499,7 @@ class ScheduleWindowArranger extends WindowArranger {
 		normalize(f.treeFrame);
 		normalize(f.timeFrame);
 		normalize(f.saveFrame);
+		normalize(f.tableFrame);
 
 		f.treeFrame.setSize(min_w, h / 2);
 		f.propsFrame.setSize(min_w, h / 4);
@@ -506,6 +507,7 @@ class ScheduleWindowArranger extends WindowArranger {
 		f.saveFrame.setSize(min_w, 3 * h / 4 - f.timeFrame.getHeight());
 		f.paramsFrame.setSize(min_w, h / 2);
 		f.planFrame.setSize(w - 2 * min_w, h / 4 + f.timeFrame.getHeight());
+		f.tableFrame.setSize(w - 2 * min_w, h - f.planFrame.getHeight());
 
 		f.treeFrame.setLocation(0, 0);
 		f.planFrame.setLocation(min_w, 0);
@@ -513,6 +515,7 @@ class ScheduleWindowArranger extends WindowArranger {
 		f.timeFrame.setLocation(w - min_w, h / 4);
 		f.saveFrame.setLocation(w - min_w, h / 4 + f.timeFrame.getHeight());
 		f.paramsFrame.setLocation(0, f.treeFrame.getHeight());
+		f.tableFrame.setLocation(min_w, f.planFrame.getHeight());
 
 	}
 }
