@@ -74,15 +74,15 @@ public final class SchemeLinkController implements ObjectResourceController
 		{
 			SchemeLink link = (SchemeLink)object;
 			if (key.equals(COLUMN_ID))
-				result = link.id().toString();
+				result = link.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(link.created());
+				result = Long.toString(link.getCreated());
 			else if (key.equals(COLUMN_CREATOR_ID))
-				result = link.creatorId().identifierString();
+				result = link.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(link.modified());
+				result = Long.toString(link.getModified());
 			else if (key.equals(COLUMN_MODIFIER_ID))
-				result = link.modifierId().identifierString();
+				result = link.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				result = link.description();
 			else if (key.equals(COLUMN_NAME))
@@ -92,9 +92,9 @@ public final class SchemeLinkController implements ObjectResourceController
 			else if (key.equals(COLUMN_TYPE_ID))
 				result = link.linkTypeImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID))
-				result = link.sourceSchemePort().id().identifierString();
+				result = link.sourceSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID))
-				result = link.targetSchemePort().id().identifierString();
+				result = link.targetSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SITE_NODE_ID))
 				result = link.siteNodeImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_OPTICAL_LENGTH))
@@ -102,7 +102,7 @@ public final class SchemeLinkController implements ObjectResourceController
 			else if (key.equals(COLUMN_PHYSICAL_LENGTH))
 				result = Double.toString(link.physicalLength());
 			else if (key.equals(COLUMN_SCHEME_ID))
-				result = link.scheme().id().identifierString();
+				result = link.scheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(link.characteristics().length);
 				for (Iterator it = link.characteristicsImpl().getValue().iterator(); it.hasNext(); ) {

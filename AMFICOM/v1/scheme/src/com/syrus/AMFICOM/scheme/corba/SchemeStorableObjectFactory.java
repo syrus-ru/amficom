@@ -118,7 +118,7 @@ public final class SchemeStorableObjectFactory implements StorableObjectFactory 
 		if (schemeElementFactory == null)
 			schemeElementFactory = new SchemeElementDefaultFactory();
 		SchemeElement se = schemeElementFactory.newDefaultInstance();
-		se.name(proto.name() + " (" + se.id().identifierString() + ")");
+		se.name(proto.name() + " (" + se.getId().getIdentifierString() + ")");
 		se.schemeProtoElement(proto);
 		se.equipmentType(proto.equipmentType());
 

@@ -62,15 +62,15 @@ public final class SchemeDeviceController implements ObjectResourceController
 		{
 			SchemeDevice device = (SchemeDevice)object;
 			if (key.equals(COLUMN_ID))
-				result = device.id().toString();
+				result = device.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(device.created());
+				result = Long.toString(device.getCreated());
 			else if (key.equals(COLUMN_CREATOR_ID))
-				result = device.creatorId().identifierString();
+				result = device.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(device.modified());
+				result = Long.toString(device.getModified());
 			else if (key.equals(COLUMN_MODIFIER_ID))
-				result = device.modifierId().identifierString();
+				result = device.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				result = device.description();
 			else if (key.equals(COLUMN_NAME))
@@ -79,7 +79,7 @@ public final class SchemeDeviceController implements ObjectResourceController
 				SchemePort[] ports = device.schemePorts();
 				List res = new ArrayList(ports.length);
 				for (int i = 0; i < ports.length; i++) {
-					res.add(ports[i].id().identifierString());
+					res.add(ports[i].getId().getIdentifierString());
 				}
 				result = res;
 			}
@@ -87,7 +87,7 @@ public final class SchemeDeviceController implements ObjectResourceController
 				SchemeCablePort[] ports = device.schemeCablePorts();
 				List res = new ArrayList(ports.length);
 				for (int i = 0; i < ports.length; i++) {
-					res.add(ports[i].id().identifierString());
+					res.add(ports[i].getId().getIdentifierString());
 				}
 				result = res;
 			}

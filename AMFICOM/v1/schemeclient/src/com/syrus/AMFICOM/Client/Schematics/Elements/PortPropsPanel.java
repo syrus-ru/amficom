@@ -170,7 +170,7 @@ public class PortPropsPanel extends JPanel
 				if (ports == null || ports.length != 1)
 					return;
 				ports[0].name(nameText.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(ports[0].id(), ports[0].name(), SchemeElementsEvent.PORT_NAME_UPDATE_EVENT));
+				aContext.getDispatcher().notify(new SchemeElementsEvent(ports[0].getId(), ports[0].name(), SchemeElementsEvent.PORT_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}

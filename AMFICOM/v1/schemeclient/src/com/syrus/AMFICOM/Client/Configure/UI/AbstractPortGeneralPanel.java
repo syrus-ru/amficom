@@ -126,7 +126,7 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 	{
 		port = (AbstractSchemePort)or;
 
-		idField.setText(port.id().identifierString());
+		idField.setText(port.getId().getIdentifierString());
 		nameField.setText(port.name());
 
 		typeBox.setSelectedItem(port.portType());

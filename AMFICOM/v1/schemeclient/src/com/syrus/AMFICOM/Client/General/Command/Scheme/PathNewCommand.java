@@ -52,7 +52,7 @@ public class PathNewCommand extends VoidCommand
 		try {
 			Characteristic ea = Characteristic.createInstance(user_id, type, "Сигнал тревоги", "",
 					CharacteristicSort._CHARACTERISTIC_SORT_SCHEMEPATH, "false",
-					new Identifier(path.id().transferable()), true, true);
+					new Identifier(path.getId().getTransferable()), true, true);
 			path.addCharacteristic(ea);
 		}
 		catch (CreateObjectException ex) {

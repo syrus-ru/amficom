@@ -120,7 +120,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 			{
 				SchemePort port = (SchemePort)objs[0];
 				attributes = port.characteristicsImpl().getValue();
-				attributedId = new Identifier(port.id().transferable());
+				attributedId = new Identifier(port.getId().getTransferable());
 				attributedObj = port;
 				attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPORT;
 				attributesEditable = true;
@@ -149,7 +149,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 			{
 				SchemeCablePort port = (SchemeCablePort)objs[0];
 				attributes = port.characteristicsImpl().getValue();
-				attributedId = new Identifier(port.id().transferable());
+				attributedId = new Identifier(port.getId().getTransferable());
 				attributedObj = port;
 				attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLEPORT;
 				attributesEditable = true;
@@ -178,7 +178,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 			{
 				SchemeLink link = (SchemeLink)objs[0];
 				attributes = link.characteristicsImpl().getValue();
-				attributedId = new Identifier(link.id().transferable());
+				attributedId = new Identifier(link.getId().getTransferable());
 				attributedObj = link;
 				attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMELINK;
 				attributesEditable = true;
@@ -207,7 +207,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 			{
 				SchemeCableLink link = (SchemeCableLink)objs[0];
 				attributes = link.characteristicsImpl().getValue();
-				attributedId = new Identifier(link.id().transferable());
+				attributedId = new Identifier(link.getId().getTransferable());
 				attributedObj = link;
 				attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLELINK;
 				attributesEditable = true;
@@ -276,7 +276,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 	void setSchemeProtoSelected(SchemeProtoElement element)
 	{
 		attributes = element.characteristicsImpl().getValue();
-		attributedId = new Identifier(element.id().transferable());
+		attributedId = new Identifier(element.getId().getTransferable());
 		attributedObj = element;
 		attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPROTOELEMENT;
 		attributesEditable = true;
@@ -293,7 +293,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 	void setSchemeElementSelected(SchemeElement element)
 	{
 		attributes = element.characteristicsImpl().getValue();
-		attributedId = new Identifier(element.id().transferable());
+		attributedId = new Identifier(element.getId().getTransferable());
 		attributedObj = element;
 		attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEELEMENT;
 		attributesEditable = true;

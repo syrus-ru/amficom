@@ -86,15 +86,15 @@ public final class SchemeElementController implements ObjectResourceController
 		{
 			SchemeElement element = (SchemeElement)object;
 			if (key.equals(COLUMN_ID))
-				result = element.id().toString();
+				result = element.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(element.created());
+				result = Long.toString(element.getCreated());
 			else if (key.equals(COLUMN_CREATOR_ID))
-				result = element.creatorId().identifierString();
+				result = element.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(element.modified());
+				result = Long.toString(element.getModified());
 			else if (key.equals(COLUMN_MODIFIER_ID))
-				result = element.modifierId().identifierString();
+				result = element.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				result = element.description();
 			else if (key.equals(COLUMN_NAME))
@@ -108,20 +108,20 @@ public final class SchemeElementController implements ObjectResourceController
 			else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID))
 				result = element.equipmentTypeImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_ID))
-				result = element.scheme().id().identifierString();
+				result = element.scheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_INTERNAL_SCHEME_ID))
-				result = element.internalScheme().id().identifierString();
+				result = element.internalScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_KIS_ID))
 				result = element.rtuImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_PROTO_ID))
-				result = element.schemeProtoElement().id().identifierString();
+				result = element.schemeProtoElement().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SITE_NODE_ID))
 				result = element.siteNodeImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_DEVICE_IDS)) {
 				SchemeDevice[] devices = element.schemeDevices();
 				List res = new ArrayList(devices.length);
 				for (int i = 0; i < devices.length; i++) {
-					res.add(devices[i].id().identifierString());
+					res.add(devices[i].getId().getIdentifierString());
 				}
 				result = res;
 			}
@@ -129,7 +129,7 @@ public final class SchemeElementController implements ObjectResourceController
 				SchemeElement[] elements = element.schemeElements();
 				List res = new ArrayList(elements.length);
 				for (int i = 0; i < elements.length; i++) {
-					res.add(elements[i].id().identifierString());
+					res.add(elements[i].getId().getIdentifierString());
 				}
 				result = res;
 			}
@@ -137,7 +137,7 @@ public final class SchemeElementController implements ObjectResourceController
 				SchemeLink[] links = element.schemeLinks();
 				List res = new ArrayList(links.length);
 				for (int i = 0; i < links.length; i++) {
-					res.add(links[i].id().identifierString());
+					res.add(links[i].getId().getIdentifierString());
 				}
 				result = res;
 			}

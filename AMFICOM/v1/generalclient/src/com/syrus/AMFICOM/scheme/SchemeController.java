@@ -91,15 +91,15 @@ public final class SchemeController implements ObjectResourceController
 		{
 			Scheme scheme = (Scheme)object;
 			if (key.equals(COLUMN_ID))
-				result = scheme.id().toString();
+				result = scheme.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(scheme.created());
+				result = Long.toString(scheme.getCreated());
 			else if (key.equals(COLUMN_CREATOR_ID))
-				result = scheme.creatorId().identifierString();
+				result = scheme.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(scheme.modified());
+				result = Long.toString(scheme.getModified());
 			else if (key.equals(COLUMN_MODIFIER_ID))
-				result = scheme.modifierId().identifierString();
+				result = scheme.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				result = scheme.description();
 			else if (key.equals(COLUMN_NAME))
@@ -118,7 +118,7 @@ public final class SchemeController implements ObjectResourceController
 				SchemeElement[] elements = scheme.schemeElements();
 				List res = new ArrayList(elements.length);
 				for (int i = 0; i < elements.length; i++) {
-					res.add(elements[i].id().identifierString());
+					res.add(elements[i].getId().getIdentifierString());
 				}
 				result = res;
 			}
@@ -126,7 +126,7 @@ public final class SchemeController implements ObjectResourceController
 				SchemeLink[] links = scheme.schemeLinks();
 				List res = new ArrayList(links.length);
 				for (int i = 0; i < links.length; i++) {
-					res.add(links[i].id().identifierString());
+					res.add(links[i].getId().getIdentifierString());
 				}
 				result = res;
 			}
@@ -134,12 +134,12 @@ public final class SchemeController implements ObjectResourceController
 				SchemeCableLink[] links = scheme.schemeCableLinks();
 				List res = new ArrayList(links.length);
 				for (int i = 0; i < links.length; i++) {
-					res.add(links[i].id().identifierString());
+					res.add(links[i].getId().getIdentifierString());
 				}
 				result = res;
 			}
 			else if (key.equals(COLUMN_MONITORING_SOLUTION_ID))
-				result = scheme.schemeMonitoringSolution().id().identifierString();
+				result = scheme.schemeMonitoringSolution().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CELL_ID))
 				result = scheme.schemeCellImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_UGO_CELL_ID))

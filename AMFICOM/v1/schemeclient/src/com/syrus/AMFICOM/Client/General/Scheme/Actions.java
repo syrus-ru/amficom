@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 
@@ -99,7 +98,7 @@ class DeleteAction extends AbstractAction
 							if (element.equipment() != null)
 								ConfigurationStorableObjectPool.delete(element.equipmentImpl().getId());
 							try {
-								SchemeStorableObjectPool.delete(element.id());
+								SchemeStorableObjectPool.delete(element.getId());
 							}
 							catch (ApplicationException ex) {
 								ex.printStackTrace();
@@ -135,7 +134,7 @@ class DeleteAction extends AbstractAction
 							ConfigurationStorableObjectPool.delete(link.linkImpl().getId());
 						}
 					try {
-						SchemeStorableObjectPool.delete(link.id());
+						SchemeStorableObjectPool.delete(link.getId());
 					}
 					catch (ApplicationException ex) {
 						ex.printStackTrace();
@@ -163,7 +162,7 @@ class DeleteAction extends AbstractAction
 						ConfigurationStorableObjectPool.delete(link.linkImpl().getId());
 					}
 					try {
-						SchemeStorableObjectPool.delete(link.id());
+						SchemeStorableObjectPool.delete(link.getId());
 					}
 					catch (ApplicationException ex) {
 						ex.printStackTrace();
@@ -189,7 +188,7 @@ class DeleteAction extends AbstractAction
 							ConfigurationStorableObjectPool.delete(port.portImpl().getId());
 						}
 						try {
-							SchemeStorableObjectPool.delete(port.id());
+							SchemeStorableObjectPool.delete(port.getId());
 						}
 						catch (ApplicationException ex) {
 							ex.printStackTrace();
@@ -218,7 +217,7 @@ class DeleteAction extends AbstractAction
 							ConfigurationStorableObjectPool.delete(port.portImpl().getId());
 						}
 						try {
-							SchemeStorableObjectPool.delete(port.id());
+							SchemeStorableObjectPool.delete(port.getId());
 						}
 						catch (ApplicationException ex) {
 							ex.printStackTrace();
@@ -417,9 +416,9 @@ class GroupSEAction extends AbstractAction
 			else
 				scheme_el = SchemeStorableObjectFactory.createSchemeElement();
 
-			group.setSchemeElementId(scheme_el.id());
-			group.setProtoElementId(scheme_el.schemeProtoElement().id());
-			group.setSchemeId(scheme_el.internalScheme().id());
+			group.setSchemeElementId(scheme_el.getId());
+			group.setProtoElementId(scheme_el.schemeProtoElement().getId());
+			group.setSchemeId(scheme_el.internalScheme().getId());
 
 			if (graph.getScheme() != null)
 			{
@@ -589,7 +588,7 @@ class GroupAction extends AbstractAction
 			catch (IllegalObjectEntityException ex) {
 				ex.printStackTrace();
 			}
-			group.setProtoElementId(proto.id());
+			group.setProtoElementId(proto.getId());
 			proto.label(text);
 
 			cells = new_cells.toArray();
@@ -999,7 +998,7 @@ class CreateUgoAction
 			{
 				CablePortCell newport = (CablePortCell)GraphActions.CreateVisualPortAction(graph, p, false, name);
 				SchemeCablePort cport = b.getSchemeCablePort();
-				newport.setSchemeCablePortId(cport.id());
+				newport.setSchemeCablePortId(cport.getId());
 				cport.name(name);
 				GraphActions.setObjectsBackColor(graph, new Object[] {newport}, Color.white);
 			}
@@ -1007,7 +1006,7 @@ class CreateUgoAction
 			{
 				PortCell newport = (PortCell)GraphActions.CreateVisualPortAction(graph, p, true, name);
 				SchemePort port = b.getSchemePort();
-				newport.setSchemePortId(port.id());
+				newport.setSchemePortId(port.getId());
 				Color c = Color.white;
 				PortType ptype = port.portTypeImpl();
 				if (ptype.getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
@@ -1026,7 +1025,7 @@ class CreateUgoAction
 				CablePortCell newport = (CablePortCell)GraphActions.CreateVisualPortAction(graph, p, false, (String)b.getUserObject());
 				SchemeCablePort cport = b.getSchemeCablePort();
 				cport.name(name);
-				newport.setSchemeCablePortId(cport.id());
+				newport.setSchemeCablePortId(cport.getId());
 				GraphActions.setObjectsBackColor(graph, new Object[] {newport}, Color.white);
 			}
 			else
@@ -1034,7 +1033,7 @@ class CreateUgoAction
 				PortCell newport = (PortCell)GraphActions.CreateVisualPortAction(graph, p, true, (String)b.getUserObject());
 				SchemePort port = b.getSchemePort();
 				port.name(name);
-				newport.setSchemePortId(port.id());
+				newport.setSchemePortId(port.getId());
 				Color c = Color.white;
 				PortType ptype = port.portTypeImpl();
 				if (ptype.getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
@@ -1078,7 +1077,7 @@ class CreateUgoAction
 		SchemeProtoElement cloned_proto = group.getProtoElement();
 		if (proto.devices().length == 0)
 			proto.devices(cloned_proto.devices());
-		group.setProtoElementId(proto.id());
+		group.setProtoElementId(proto.getId());
 		proto.ugoCellImpl().setData((List)graph.getArchiveableState(cells));
 		graph.setSelectionCells(new Object[0]);
 		//Notifier.selectionNotify(graph.dispatcher, cells, true);
@@ -1276,7 +1275,7 @@ class CreateSchemeUgoAction
 			{
 				CablePortCell newport = (CablePortCell)GraphActions.CreateVisualPortAction(graph, p, false, name);
 				SchemeCablePort cport = b.getSchemeCablePort();
-				newport.setSchemeCablePortId(cport.id());
+				newport.setSchemeCablePortId(cport.getId());
 				cport.name(name);
 				GraphActions.setObjectsBackColor(graph, new Object[] {newport}, Color.white);
 			}
@@ -1284,7 +1283,7 @@ class CreateSchemeUgoAction
 			{
 				PortCell newport = (PortCell)GraphActions.CreateVisualPortAction(graph, p, true, name);
 				SchemePort port = b.getSchemePort();
-				newport.setSchemePortId(port.id());
+				newport.setSchemePortId(port.getId());
 				Color c = Color.white;
 				PortType ptype = port.portTypeImpl();
 				if (ptype.getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
@@ -1301,14 +1300,14 @@ class CreateSchemeUgoAction
 			{
 				CablePortCell newport = (CablePortCell)GraphActions.CreateVisualPortAction(graph, p, false, (String)b.getUserObject());
 				SchemeCablePort cport = b.getSchemeCablePort();
-				newport.setSchemeCablePortId(cport.id());
+				newport.setSchemeCablePortId(cport.getId());
 				GraphActions.setObjectsBackColor(graph, new Object[] {newport}, Color.white);
 			}
 			else
 			{
 				PortCell newport = (PortCell)GraphActions.CreateVisualPortAction(graph, p, true, (String)b.getUserObject());
 				SchemePort port = b.getSchemePort();
-				newport.setSchemePortId(port.id());
+				newport.setSchemePortId(port.getId());
 				Color c = Color.white;
 				PortType ptype = port.portTypeImpl();
 				if (ptype.getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
@@ -1321,7 +1320,7 @@ class CreateSchemeUgoAction
 
 		Object[] cells = graph.getRoots();
 		DeviceGroup group = (DeviceGroup)cells[0];
-		group.setSchemeId(scheme.id());
+		group.setSchemeId(scheme.getId());
 		if (scheme.symbol() != null)
 		{
 			for (Enumeration en = group.children(); en.hasMoreElements();)
@@ -1436,7 +1435,7 @@ class CreateBlockPortAction extends AbstractAction
 		{
 			PortCell port = (PortCell)cell;
 			SchemePort sport = port.getSchemePort();
-			port_id = sport.id();
+			port_id = sport.getId();
 			name = sport.name();
 			for (Enumeration enumeration = port.children(); enumeration.hasMoreElements(); )
 			{
@@ -1464,7 +1463,7 @@ class CreateBlockPortAction extends AbstractAction
 		{
 			CablePortCell port = (CablePortCell)cell;
 			SchemeCablePort scport = port.getSchemeCablePort();
-			port_id = scport.id();
+			port_id = scport.getId();
 			name = scport.name();
 			for (Enumeration enumeration = port.children(); enumeration.hasMoreElements(); )
 			{

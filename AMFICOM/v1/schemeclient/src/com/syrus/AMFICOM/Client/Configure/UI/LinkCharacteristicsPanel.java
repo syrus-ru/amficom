@@ -64,7 +64,7 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 	public void setObject(Object or)
 	{
 		link = (SchemeLink)or;
-		linkId = new Identifier(link.id().transferable());
+		linkId = new Identifier(link.getId().getTransferable());
 		charPane.clear();
 		
 		for (int i = 0; i < sorts.length; i++)

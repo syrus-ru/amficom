@@ -14,7 +14,6 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
 
@@ -202,7 +201,7 @@ public class CableLinkPropsPanel extends JPanel
 				if (links == null || links.length != 1)
 					return;
 				links[0].name(nameText.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].id(), links[0].name(), SchemeElementsEvent.CABLE_LINK_NAME_UPDATE_EVENT));
+				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].getId(), links[0].name(), SchemeElementsEvent.CABLE_LINK_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -424,7 +423,7 @@ public class CableLinkPropsPanel extends JPanel
 						SchemeCableThread thread = (SchemeCableThread)threads.get(j);
 						threads.remove(thread);
 						//CableTypeThread ctt = (CableTypeThread)clt.cable_threads.get(i);
-						toDelete.add(thread.id());
+						toDelete.add(thread.getId());
 					}
 					try {
 						SchemeStorableObjectPool.delete(toDelete);

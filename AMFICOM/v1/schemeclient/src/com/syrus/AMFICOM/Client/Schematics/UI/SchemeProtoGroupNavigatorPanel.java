@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
@@ -180,7 +179,7 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 			if (ret == JOptionPane.YES_OPTION)
 			{
 				try {
-					SchemeStorableObjectPool.delete(group.id());
+					SchemeStorableObjectPool.delete(group.getId());
 				}
 				catch (ApplicationException ex) {
 					ex.printStackTrace();

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoGroupImpl.java,v 1.10 2005/02/28 14:24:19 bass Exp $
+ * $Id: SchemeProtoGroupImpl.java,v 1.11 2005/03/01 14:00:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,15 +15,22 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/02/28 14:24:19 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/01 14:00:39 $
  * @module scheme_v1
  */
 final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
+	private static final Identifier EMPTY_DEPENDENCIES[] = new Identifier[0];
+
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
 
 	private static final long serialVersionUID = 3257003267744937273L;
 
+	private Identifier cachedDependencies[];
+
+	private final Identifier ownDependencies[] = new Identifier[1];
+
 	SchemeProtoGroupImpl() {
+		// empty
 	}
 
 	/**
@@ -56,41 +63,106 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 		}
 	}
 
-	public long created() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see Describable#description()
 	 */
-	public Identifier creatorId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#dependencies()
-	 */
-	public Identifier[] dependencies() {
-		throw new UnsupportedOperationException();
-	}
-
 	public String description() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void description(String description) {
-		throw new UnsupportedOperationException();
+		return this.thisDescription;
 	}
 
 	/**
-	 * @see StorableObject#headerTransferable()
+	 * @param description
+	 * @see Describable#description(String)
 	 */
-	public StorableObject_Transferable headerTransferable() {
-		throw new UnsupportedOperationException();
+	public void description(final String description) {
+		this.thisDescription = description;
 	}
 
-	public Identifier id() {
-		throw new UnsupportedOperationException();
+	/**
+	 * @see IStorableObject#getCreated()
+	 */
+	public long getCreated() {
+		return this.delegate.getCreated();
+	}
+
+	/**
+	 * @see IStorableObject#getCreatorId()
+	 */
+	public Identifier getCreatorId() {
+		return this.delegate.getCreatorId();
+	}
+
+	/**
+	 * @see IStorableObject#getDependencies()
+	 */
+	public synchronized Identifier[] getDependencies() {
+		Identifier localOwnDependencies[];
+		if (this.parentSchemeProtoGroupId == null) {
+			assert parentSchemeProtoGroup() == null;
+			localOwnDependencies = EMPTY_DEPENDENCIES;
+		} else { 
+			assert parentSchemeProtoGroup().getId().equals(this.parentSchemeProtoGroupId);
+			this.ownDependencies[0] = this.parentSchemeProtoGroupId;
+			localOwnDependencies = this.ownDependencies;
+		}
+
+		final Identifier delegateDependencies[] = this.delegate.getDependencies();
+		assert delegateDependencies != null;
+
+		final int delegateDependenciesLength = delegateDependencies.length;
+		final int localOwnDependenciesLength = localOwnDependencies.length;
+
+		if (delegateDependenciesLength == 0)
+			return localOwnDependencies;
+		else if (localOwnDependenciesLength == 0)
+			return delegateDependencies;
+		else {
+			if (this.cachedDependencies == null
+					|| this.cachedDependencies.length != delegateDependenciesLength + localOwnDependenciesLength)
+				this.cachedDependencies = new Identifier[delegateDependenciesLength + localOwnDependenciesLength];
+			System.arraycopy(delegateDependencies, 0,
+					this.cachedDependencies, 0,
+					delegateDependenciesLength);
+			System.arraycopy(localOwnDependencies, 0,
+					this.cachedDependencies, delegateDependenciesLength,
+					localOwnDependenciesLength);
+			return this.cachedDependencies;
+		}
+	}
+
+	/**
+	 * @see IStorableObject#getHeaderTransferable()
+	 */
+	public StorableObject_Transferable getHeaderTransferable() {
+		return this.delegate.getHeaderTransferable();
+	}
+
+	/**
+	 * @see Identifiable#getId()
+	 */
+	public Identifier getId() {
+		return this.delegate.getId();
+	}
+
+	/**
+	 * @see IStorableObject#getModified()
+	 */
+	public long getModified() {
+		return this.delegate.getModified();
+	}
+
+	/**
+	 * @see IStorableObject#getModifierId()
+	 */
+	public Identifier getModifierId() {
+		return this.delegate.getModifierId();
+	}
+
+	/**
+	 * @see IStorableObject#getVersion()
+	 */
+	public long getVersion() {
+		return this.delegate.getVersion();
 	}
 
 	/**
@@ -102,35 +174,19 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 		return this.delegate.isChanged();
 	}
 
-	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @see StorableObject#modifierId()
+	 * @see Namable#name()
 	 */
-	public Identifier modifierId() {
-		throw new UnsupportedOperationException();
-	}
-
 	public String name() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void name(String name) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeProtoGroup parent() {
-		throw new UnsupportedOperationException();
+		return this.thisName;
 	}
 
 	/**
-	 * @param newParent
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup#parent(com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup)
+	 * @param name
+	 * @see Namable#name(String)
 	 */
-	public void parent(SchemeProtoGroup newParent) {
-		throw new UnsupportedOperationException();
+	public void name(final String name) {
+		this.thisName = name;
 	}
 
 	/**
@@ -140,8 +196,12 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see ISchemeProtoGroup#schemeProtoElements()
+	 * @todo Implement.
+	 */
 	public SchemeProtoElement[] schemeProtoElements() {
-		throw new UnsupportedOperationException();
+		return new SchemeProtoElement[0];
 	}
 
 	/**
@@ -152,8 +212,12 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see ISchemeProtoGroup#schemeProtoGroups()
+	 * @todo Implement.
+	 */
 	public SchemeProtoGroup[] schemeProtoGroups() {
-		throw new UnsupportedOperationException();
+		return new SchemeProtoGroup[0];
 	}
 
 	/**
@@ -183,12 +247,12 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 	/**
 	 * Setter for <code>changed</code> property.
 	 *
-	 * @param storableObjectFactory
+	 * @param invoker
 	 * @param changed
 	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
 	 */
-	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
-		this.delegate.setChanged(storableObjectFactory, changed);
+	public void setChanged(final StorableObjectFactory invoker, final boolean changed) {
+		this.delegate.setChanged(invoker, changed);
 	}
 
 	/**
@@ -214,10 +278,6 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbolImpl(BitmapImageResource)
 	 */
 	public void symbolImpl(BitmapImageResource symbolImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public long version() {
 		throw new UnsupportedOperationException();
 	}
 

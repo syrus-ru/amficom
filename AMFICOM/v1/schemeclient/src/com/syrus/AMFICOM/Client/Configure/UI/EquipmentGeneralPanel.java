@@ -167,7 +167,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 	{
 		this.element = (SchemeElement)or;
 
-		idField.setText(element.id().identifierString());
+		idField.setText(element.getId().getIdentifierString());
 		nameField.setText(element.name());
 		descTextArea.setText(element.description());
 

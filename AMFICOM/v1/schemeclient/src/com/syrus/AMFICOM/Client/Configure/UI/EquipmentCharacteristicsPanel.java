@@ -63,7 +63,7 @@ public class EquipmentCharacteristicsPanel extends GeneralPanel
 	public void setObject(Object or)
 	{
 		element = (SchemeElement)or;
-		elementId = new Identifier(element.id().transferable());
+		elementId = new Identifier(element.getId().getTransferable());
 		charPane.clear();
 		
 		for (int i = 0; i < sorts.length; i++)

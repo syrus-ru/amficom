@@ -160,7 +160,7 @@ public class CableLinkFibrePanel extends GeneralPanel
 			return;
 		SchemeCableThread clt = (SchemeCableThread)threadsList.getSelectedValue();
 
-		linksIdField.setText(clt.id().identifierString());
+		linksIdField.setText(clt.getId().getIdentifierString());
 		linksNameField.setText(clt.name());
 
 		LinkType type = clt.cableThreadTypeImpl().getLinkType();

@@ -162,7 +162,7 @@ public class SchemeElementPropsPanel extends JPanel
 				if (element == null)
 					return;
 				element.label(ugoNameTextField.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(element.id(), element.label(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
+				aContext.getDispatcher().notify(new SchemeElementsEvent(element.getId(), element.label(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}

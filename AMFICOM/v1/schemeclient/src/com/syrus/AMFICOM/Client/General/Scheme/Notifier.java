@@ -115,7 +115,7 @@ public class Notifier
 						SchemePath[] paths = graph.getScheme().schemeMonitoringSolution().schemePaths();
 						for (int i = 0; i < paths.length; i++)
 						{
-							if (SchemeUtils.isElementInPath(paths[i], link.id()))
+							if (SchemeUtils.isElementInPath(paths[i], link.getId()))
 							{
 								selectedObjects = new SchemePath[1];
 								selectedObjects[0] = paths[i];
@@ -138,7 +138,7 @@ public class Notifier
 						SchemePath[] paths = graph.getScheme().schemeMonitoringSolution().schemePaths();
 						for (int i = 0; i < paths.length; i++)
 						{
-							if (SchemeUtils.isElementInPath(paths[i], link.id()))
+							if (SchemeUtils.isElementInPath(paths[i], link.getId()))
 							{
 								selectedObjects = new SchemePath[1];
 								selectedObjects[0] = paths[i];

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThreadImpl.java,v 1.13 2005/02/28 14:24:19 bass Exp $
+ * $Id: SchemeCableThreadImpl.java,v 1.14 2005/03/01 14:00:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/02/28 14:24:19 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/01 14:00:39 $
  * @module scheme_v1
  */
 final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable {
@@ -95,21 +95,21 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		}
 	}
 
-	public long created() {
+	public long getCreated() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see StorableObject#getCreatorId()
 	 */
-	public Identifier creatorId() {
+	public Identifier getCreatorId() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#dependencies()
+	 * @see StorableObject#getDependencies()
 	 */
-	public Identifier[] dependencies() {
+	public Identifier[] getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -129,9 +129,9 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		assert schemeDevice != null;
 		final SchemePort sourceSchemePort = sourceSchemePort();
 		final SchemePort targetSchemePort = targetSchemePort();
-		final Identifier sourceSchemeDeviceId = sourceSchemePort.schemeDevice().id();
-		final Identifier targetSchemeDeviceId = targetSchemePort.schemeDevice().id();
-		final Identifier schemeDeviceId = schemeDevice.id();
+		final Identifier sourceSchemeDeviceId = sourceSchemePort.schemeDevice().getId();
+		final Identifier targetSchemeDeviceId = targetSchemePort.schemeDevice().getId();
+		final Identifier schemeDeviceId = schemeDevice.getId();
 		if (schemeDeviceId.equals(sourceSchemeDeviceId))
 			return sourceSchemePort;
 		else if (schemeDeviceId.equals(targetSchemeDeviceId))
@@ -141,13 +141,13 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	}
 
 	/**
-	 * @see StorableObject#headerTransferable()
+	 * @see StorableObject#getHeaderTransferable()
 	 */
-	public StorableObject_Transferable headerTransferable() {
+	public StorableObject_Transferable getHeaderTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
-	public Identifier id() {
+	public Identifier getId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -158,14 +158,14 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		throw new UnsupportedOperationException();
 	}
 
-	public long modified() {
+	public long getModified() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#modifierId()
+	 * @see StorableObject#getModifierId()
 	 */
-	public Identifier modifierId() {
+	public Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -274,7 +274,7 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		throw new UnsupportedOperationException();
 	}
 
-	public long version() {
+	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 

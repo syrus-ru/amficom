@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.14 2005/02/28 14:24:19 bass Exp $
+ * $Id: SchemeElementImpl.java,v 1.15 2005/03/01 14:00:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -21,7 +21,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/02/28 14:24:19 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/01 14:00:39 $
  * @module scheme_v1
  */
 final class SchemeElementImpl extends SchemeElement implements Cloneable {
@@ -95,21 +95,21 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 		}
 	}
 
-	public long created() {
+	public long getCreated() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see StorableObject#getCreatorId()
 	 */
-	public Identifier creatorId() {
+	public Identifier getCreatorId() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#dependencies()
+	 * @see StorableObject#getDependencies()
 	 */
-	public Identifier[] dependencies() {
+	public Identifier[] getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -168,13 +168,13 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	/**
-	 * @see StorableObject#headerTransferable()
+	 * @see StorableObject#getHeaderTransferable()
 	 */
-	public StorableObject_Transferable headerTransferable() {
+	public StorableObject_Transferable getHeaderTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
-	public Identifier id() {
+	public Identifier getId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -208,14 +208,14 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public long modified() {
+	public long getModified() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#modifierId()
+	 * @see StorableObject#getModifierId()
 	 */
-	public Identifier modifierId() {
+	public Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -418,7 +418,7 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public long version() {
+	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 

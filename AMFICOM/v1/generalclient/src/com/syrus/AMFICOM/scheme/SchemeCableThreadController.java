@@ -67,15 +67,15 @@ public final class SchemeCableThreadController implements ObjectResourceControll
 		{
 			SchemeCableThread thread = (SchemeCableThread)object;
 			if (key.equals(COLUMN_ID))
-				result = thread.id().toString();
+				result = thread.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(thread.created());
+				result = Long.toString(thread.getCreated());
 			else if (key.equals(COLUMN_CREATOR_ID))
-				result = thread.creatorId().identifierString();
+				result = thread.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(thread.modified());
+				result = Long.toString(thread.getModified());
 			else if (key.equals(COLUMN_MODIFIER_ID))
-				result = thread.modifierId().identifierString();
+				result = thread.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				result = thread.description();
 			else if (key.equals(COLUMN_NAME))
@@ -85,11 +85,11 @@ public final class SchemeCableThreadController implements ObjectResourceControll
 			else if (key.equals(COLUMN_THREAD_ID))
 				result = thread.threadImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID))
-				result = thread.sourceSchemePort().id().identifierString();
+				result = thread.sourceSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID))
-				result = thread.targetSchemePort().id().identifierString();
+				result = thread.targetSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CABLE_LINK_ID))
-				result = thread.schemeCablelink().id().identifierString();
+				result = thread.schemeCablelink().getId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(thread.characteristics().length);
 				for (Iterator it = thread.characteristicsImpl().getValue().iterator(); it.hasNext(); ) {

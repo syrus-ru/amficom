@@ -205,7 +205,7 @@ public class ProtoElementPropsPanel extends JPanel
 				if (proto == null)
 					return;
 				proto.label(ugoNameTextField.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(proto.id(), proto.label(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
+				aContext.getDispatcher().notify(new SchemeElementsEvent(proto.getId(), proto.label(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -344,7 +344,7 @@ public class ProtoElementPropsPanel extends JPanel
 			ugoIconButton.setIcon(icon);
 			proto.symbolImpl(ir);
 
-			aContext.getDispatcher().notify(new SchemeElementsEvent(proto.id(), icon, SchemeElementsEvent.UGO_ICON_UPDATE_EVENT));
+			aContext.getDispatcher().notify(new SchemeElementsEvent(proto.getId(), icon, SchemeElementsEvent.UGO_ICON_UPDATE_EVENT));
 		}
 	}
 

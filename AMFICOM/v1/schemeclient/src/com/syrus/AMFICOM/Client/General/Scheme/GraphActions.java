@@ -98,7 +98,7 @@ public class GraphActions
 		Object obj = (userObject instanceof String) ? userObject : "";
 		DeviceCell cell = new DeviceCell(obj);
 		SchemeDevice device = SchemeStorableObjectFactory.createSchemeDevice();
-		cell.setSchemeDeviceId(device.id());
+		cell.setSchemeDeviceId(device.getId());
 		try {
 			SchemeStorableObjectPool.putStorableObject(device);
 		}
@@ -182,7 +182,7 @@ public class GraphActions
 			GraphConstants.setRouting(map, cell.getRouting());
 			link = SchemeStorableObjectFactory.createSchemeLink();
 			link.name(name);
-			cell.setSchemeLinkId(link.id());
+			cell.setSchemeLinkId(link.getId());
 			try {
 				SchemeStorableObjectPool.putStorableObject(link);
 			}
@@ -265,7 +265,7 @@ public class GraphActions
 			cell = new DefaultCableLink(name);
 			GraphConstants.setRouting(map, cell.getRouting());
 			link = SchemeStorableObjectFactory.createSchemeCableLink();
-			cell.setSchemeCableLinkId(link.id());
+			cell.setSchemeCableLinkId(link.getId());
 			link.name(name);
 
 			try {
@@ -419,7 +419,7 @@ public class GraphActions
 		SchemePort sp = SchemeStorableObjectFactory.createSchemePort();
 		sp.directionType(direction);
 		sp.schemeDevice(dev.getSchemeDevice());
-		cell.setSchemePortId(sp.id());
+		cell.setSchemePortId(sp.getId());
 
 		map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);
@@ -454,7 +454,7 @@ public class GraphActions
 		SchemeCablePort scp = SchemeStorableObjectFactory.createSchemeCablePort();
 		scp.schemeDevice(dev.getSchemeDevice());
 		scp.directionType(direction);
-		cell.setSchemeCablePortId(scp.id());
+		cell.setSchemeCablePortId(scp.getId());
 
 		map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);
@@ -963,7 +963,7 @@ public class GraphActions
 					{
 						public void actionPerformed(ActionEvent ev)
 						{
-							aContext.getDispatcher().notify(new OperationEvent(sc.id(), 0, "addschemeevent"));
+							aContext.getDispatcher().notify(new OperationEvent(sc.getId(), 0, "addschemeevent"));
 
 							if (se != null && se.alarmed())
 								aContext.getDispatcher().notify(new SchemeElementsEvent(this,
@@ -991,7 +991,7 @@ public class GraphActions
 							{
 							public void actionPerformed(ActionEvent ev)
 							{
-								aContext.getDispatcher().notify(new OperationEvent(se.id(), 0, "addschemeelementevent"));
+								aContext.getDispatcher().notify(new OperationEvent(se.getId(), 0, "addschemeelementevent"));
 
 								if (se.alarmed())
 									aContext.getDispatcher().notify(new SchemeElementsEvent(this,

@@ -1,5 +1,5 @@
 /*
- * $Id: CableChannelingItemImpl.java,v 1.10 2005/02/28 14:24:19 bass Exp $
+ * $Id: CableChannelingItemImpl.java,v 1.11 2005/03/01 14:00:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/02/28 14:24:19 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/01 14:00:39 $
  * @module scheme_v1
  */
 final class CableChannelingItemImpl extends CableChannelingItem implements Cloneable {
@@ -42,23 +42,23 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	}
 
 	/**
-	 * @see StorableObject#created()
+	 * @see StorableObject#getCreated()
 	 */
-	public long created() {
+	public long getCreated() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see StorableObject#getCreatorId()
 	 */
-	public Identifier creatorId() {
+	public Identifier getCreatorId() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#dependencies()
+	 * @see StorableObject#getDependencies()
 	 */
-	public Identifier[] dependencies() {
+	public Identifier[] getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -121,16 +121,16 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	}
 
 	/**
-	 * @see StorableObject#headerTransferable()
+	 * @see StorableObject#getHeaderTransferable()
 	 */
-	public StorableObject_Transferable headerTransferable() {
+	public StorableObject_Transferable getHeaderTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see Identifiable#id()
+	 * @see Identifiable#getId()
 	 */
-	public Identifier id() {
+	public Identifier getId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -142,16 +142,16 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	}
 
 	/**
-	 * @see StorableObject#modified()
+	 * @see StorableObject#getModified()
 	 */
-	public long modified() {
+	public long getModified() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#modifierId()
+	 * @see StorableObject#getModifierId()
 	 */
-	public Identifier modifierId() {
+	public Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -294,9 +294,9 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	}
 
 	/**
-	 * @see StorableObject#version()
+	 * @see StorableObject#getVersion()
 	 */
-	public long version() {
+	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 

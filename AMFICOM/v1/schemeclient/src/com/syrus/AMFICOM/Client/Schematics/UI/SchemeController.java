@@ -69,7 +69,7 @@ public final class SchemeController implements ObjectResourceController
 		else if (key.equals(KEY_USER)) {
 			try {
 				User user = (User)ConfigurationStorableObjectPool.getStorableObject(
-						new Identifier(sc.creatorId().transferable()), true);
+						new Identifier(sc.getCreatorId().getTransferable()), true);
 				result = user.getName();
 			}
 			catch (Exception ex) {
@@ -77,10 +77,10 @@ public final class SchemeController implements ObjectResourceController
 			}
 		}
 		else if (key.equals(KEY_CREATED)) {
-			result = sdf.format(new Date(sc.created()));
+			result = sdf.format(new Date(sc.getCreated()));
 		}
 		else if (key.equals(KEY_MODIFIED)) {
-			result = sdf.format(new Date(sc.modified()));
+			result = sdf.format(new Date(sc.getModified()));
 		}
 		return result;
 	}

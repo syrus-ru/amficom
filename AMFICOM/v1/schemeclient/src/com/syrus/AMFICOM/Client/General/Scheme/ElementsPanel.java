@@ -151,32 +151,32 @@ public class ElementsPanel extends UgoPanel
 			else if (ev.SCHEME_ELEMENT_SELECTED)
 			{
 				SchemeElement element = (SchemeElement)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findSchemeElementById(getGraph(), element.id()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeElementById(getGraph(), element.getId()));
 			}
 			else if (ev.SCHEME_PROTO_ELEMENT_SELECTED)
 			{
 				SchemeProtoElement proto = (SchemeProtoElement)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findProtoElementById(getGraph(), proto.id()));
+				getGraph().setSelectionCell(SchemeActions.findProtoElementById(getGraph(), proto.getId()));
 			}
 			else if (ev.SCHEME_PORT_SELECTED)
 			{
 				SchemePort port = (SchemePort)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findSchemePortById(getGraph(), port.id()));
+				getGraph().setSelectionCell(SchemeActions.findSchemePortById(getGraph(), port.getId()));
 			}
 			else if (ev.SCHEME_CABLE_PORT_SELECTED)
 			{
 				SchemeCablePort port = (SchemeCablePort)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findSchemeCablePortById(getGraph(), port.id()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeCablePortById(getGraph(), port.getId()));
 			}
 			else if (ev.SCHEME_LINK_SELECTED)
 			{
 				SchemeLink link = (SchemeLink)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findSchemeLinkById(getGraph(), link.id()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeLinkById(getGraph(), link.getId()));
 			}
 			else if (ev.SCHEME_CABLE_LINK_SELECTED)
 			{
 				SchemeCableLink link = (SchemeCableLink)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findSchemeCableLinkById(getGraph(), link.id()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeCableLinkById(getGraph(), link.getId()));
 
 		/*		String sp = link.source_port_id;
 				SchemeElement se = ((SchemePanel)this).scheme.getSchemeElementByCablePort(sp);

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.7 2005/02/28 14:24:19 bass Exp $
+ * $Id: SchemeUtils.java,v 1.8 2005/03/01 14:00:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.*;
  * Functionality will be partially moved to {@link PathElement}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/02/28 14:24:19 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/01 14:00:39 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -108,7 +108,7 @@ public class SchemeUtils {
 	{
 		PathElement[] pes = path.links();
 		for (int i = 0; i < pes.length; i++)
-			if (pes[i].id().equals(pathElementId))
+			if (pes[i].getId().equals(pathElementId))
 				return pes[i];
 		return null;
 	}
@@ -300,7 +300,7 @@ public class SchemeUtils {
 	{
 		SchemeLink[] links = scheme.schemeLinks();
 		for (int i = 0; i < links.length; i++) {
-			if (links[i].id().equals(link_id))
+			if (links[i].getId().equals(link_id))
 				return true;
 		}
 		SchemeElement[] elements = scheme.schemeElements();
@@ -346,7 +346,7 @@ public class SchemeUtils {
 	{
 		SchemeLink[] links = se.schemeLinks();
 		for (int i = 0; i < links.length; i++) {
-			if (links[i].id().equals(link_id))
+			if (links[i].getId().equals(link_id))
 				return true;
 		}
 		SchemeElement[] elements = se.schemeElements();
@@ -408,7 +408,7 @@ public class SchemeUtils {
 	{
 		SchemeCableLink[] links = scheme.schemeCableLinks();
 		for (int i = 0; i < links.length; i++) {
-			if (links[i].id().equals(cable_link_id))
+			if (links[i].getId().equals(cable_link_id))
 				return true;
 		}
 
@@ -427,7 +427,7 @@ public class SchemeUtils {
 	{
 		PathElement[] pes = path.links();
 		for (int i = 0; i < pes.length; i++) {
-			if (pes[i].abstractSchemeElement().id().equals(element_id))
+			if (pes[i].abstractSchemeElement().getId().equals(element_id))
 				return true;
 		}
 		return false;

@@ -55,15 +55,15 @@ public final class SchemeCableLinkController implements ObjectResourceController
 		if (object instanceof SchemeCableLink) {
 			SchemeCableLink link = (SchemeCableLink) object;
 			if (key.equals(COLUMN_ID))
-				result = link.id().toString();
+				result = link.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(link.created());
+				result = Long.toString(link.getCreated());
 			else if (key.equals(COLUMN_CREATOR_ID))
-				result = link.creatorId().identifierString();
+				result = link.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(link.modified());
+				result = Long.toString(link.getModified());
 			else if (key.equals(COLUMN_MODIFIER_ID))
-				result = link.modifierId().identifierString();
+				result = link.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				result = link.description();
 			else if (key.equals(COLUMN_NAME))
@@ -73,27 +73,27 @@ public final class SchemeCableLinkController implements ObjectResourceController
 			else if (key.equals(COLUMN_TYPE_ID))
 				result = link.cableLinkTypeImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID))
-				result = link.sourceSchemeCablePort().id().identifierString();
+				result = link.sourceSchemeCablePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID))
-				result = link.targetSchemeCablePort().id().identifierString();
+				result = link.targetSchemeCablePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_OPTICAL_LENGTH))
 				result = Double.toString(link.opticalLength());
 			else if (key.equals(COLUMN_PHYSICAL_LENGTH))
 				result = Double.toString(link.physicalLength());
 			else if (key.equals(COLUMN_SCHEME_ID))
-				result = link.scheme().id().identifierString();
+				result = link.scheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CABLE_THREADS)) {
 				SchemeCableThread[] threads = link.schemeCableThreads();
 				List res = new ArrayList(threads.length);
 				for (int i = 0; i < threads.length; i++) {
-					res.add(threads[i].id().identifierString());
+					res.add(threads[i].getId().getIdentifierString());
 				}
 				result = res;
 			} else if (key.equals(COLUMN_CABLE_CHANNELING_ITEMS)) {
 				CableChannelingItem[] items = link.cableChannelingItems();
 				List res = new ArrayList(items.length);
 				for (int i = 0; i < items.length; i++) {
-					res.add(items[i].id().identifierString());
+					res.add(items[i].getId().getIdentifierString());
 				}
 				result = res;
 			} else if (key.equals(COLUMN_CHARACTERISTICS)) {

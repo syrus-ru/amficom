@@ -70,15 +70,15 @@ public final class SchemePathController implements ObjectResourceController
 		{
 			SchemePath path = (SchemePath)object;
 			if (key.equals(COLUMN_ID))
-				result = path.id().toString();
+				result = path.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(path.created());
+				result = Long.toString(path.getCreated());
 			else if (key.equals(COLUMN_CREATOR_ID))
-				result = path.creatorId().identifierString();
+				result = path.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(path.modified());
+				result = Long.toString(path.getModified());
 			else if (key.equals(COLUMN_MODIFIER_ID))
-				result = path.modifierId().identifierString();
+				result = path.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				result = path.description();
 			else if (key.equals(COLUMN_NAME))
@@ -88,16 +88,16 @@ public final class SchemePathController implements ObjectResourceController
 			else if (key.equals(COLUMN_TYPE_ID))
 				result = path.typeImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_START_DEVICE_ID))
-				result = path.startDevice().id().identifierString();
+				result = path.startDevice().getId().getIdentifierString();
 			else if (key.equals(COLUMN_END_DEVICE_ID))
-				result = path.endDevice().id().identifierString();
+				result = path.endDevice().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_ID))
-				result = path.scheme().id().identifierString();
+				result = path.scheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_LINK_IDS)) {
 				PathElement[] pes = path.links();
 				List res = new ArrayList(pes.length);
 				for (int i = 0; i < pes.length; i++) {
-					res.add(pes[i].id().identifierString());
+					res.add(pes[i].getId().getIdentifierString());
 				}
 				result = res;
 			}

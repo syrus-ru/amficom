@@ -73,15 +73,15 @@ public final class PathElementController implements ObjectResourceController
 		{
 			PathElement pe = (PathElement)object;
 			if (key.equals(COLUMN_ID))
-				result = pe.id().toString();
+				result = pe.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(pe.created());
+				result = Long.toString(pe.getCreated());
 			else if (key.equals(COLUMN_CREATOR_ID))
-				result = pe.creatorId().identifierString();
+				result = pe.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(pe.modified());
+				result = Long.toString(pe.getModified());
 			else if (key.equals(COLUMN_MODIFIER_ID))
-				result = pe.modifierId().identifierString();
+				result = pe.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				result = pe.description();
 			else if (key.equals(COLUMN_NAME))
@@ -89,17 +89,17 @@ public final class PathElementController implements ObjectResourceController
 			else if (key.equals(COLUMN_SEQUENTIAL_NUMBER))
 				result = Integer.toString(pe.sequentialNumber());
 			else if (key.equals(COLUMN_SCHEME_ID))
-				result = pe.scheme().id().identifierString();
+				result = pe.scheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_ELEMENT_ID))
-				result = pe.abstractSchemeElement().id().identifierString();
+				result = pe.abstractSchemeElement().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CABLE_THREAD_ID))
-				result = pe.schemeCableThread().id().identifierString();
+				result = pe.schemeCableThread().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TYPE))
 				result = Integer.toString(pe.type().value());
 			else if (key.equals(COLUMN_START_ABSTRACT_PORT_ID))
-				result = pe.startAbstractSchemePort().id().identifierString();
+				result = pe.startAbstractSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_END_ABSTRACT_PORT_ID))
-				result = pe.endAbstractSchemePort().id().identifierString();
+				result = pe.endAbstractSchemePort().getId().getIdentifierString();
 
 		}
 		return result;

@@ -105,12 +105,12 @@ public class SchemePanelNoEdition extends SchemePanel
 			return;
 
 		AlarmedPathAnimator ap;
-		if (animators.containsKey(pe.id()))
-			ap = (AlarmedPathAnimator)animators.get(pe.id());
+		if (animators.containsKey(pe.getId()))
+			ap = (AlarmedPathAnimator)animators.get(pe.getId());
 		else
 		{
 			ap = new AlarmedPathAnimator(aContext, this, path, pe);
-			animators.put(pe.id(), ap);
+			animators.put(pe.getId(), ap);
 			ap.mark();
 		}
 	}

@@ -171,7 +171,7 @@ public class LinkPropsPanel extends JPanel
 				if (links == null || links.length != 1)
 					return;
 				links[0].name(nameText.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].id(), links[0].name(), SchemeElementsEvent.LINK_NAME_UPDATE_EVENT));
+				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].getId(), links[0].name(), SchemeElementsEvent.LINK_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}

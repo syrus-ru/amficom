@@ -500,28 +500,28 @@ public class UgoPanel extends JPanel
 			if (cloned_cell instanceof DeviceGroup)
 			{
 				Identifier or_id = ((DeviceGroup)cloned_cell).getProtoElementId();
-				Identifier new_id = (Identifier)Pool.get("clonedids", or_id.identifierString());
+				Identifier new_id = (Identifier)Pool.get("clonedids", or_id.getIdentifierString());
 				if (new_id != null)
 					((DeviceGroup)cloned_cell).setProtoElementId(new_id);
 
 				or_id = ((DeviceGroup)cloned_cell).getProtoElementId();
-				new_id = (Identifier)Pool.get("proto2schemeids", or_id.identifierString());
+				new_id = (Identifier)Pool.get("proto2schemeids", or_id.getIdentifierString());
 				if (new_id != null)
 					((DeviceGroup)cloned_cell).setSchemeElementId(new_id);
 
 				or_id = ((DeviceGroup)cloned_cell).getSchemeElementId();
-				new_id = (Identifier)Pool.get("clonedids", or_id.identifierString());
+				new_id = (Identifier)Pool.get("clonedids", or_id.getIdentifierString());
 				if (new_id != null)
 					((DeviceGroup)cloned_cell).setSchemeElementId(new_id);
 
 				or_id = ((DeviceGroup)cloned_cell).getSchemeId();
-				new_id = (Identifier)Pool.get("clonedids", or_id.identifierString());
+				new_id = (Identifier)Pool.get("clonedids", or_id.getIdentifierString());
 				if (new_id != null)
 					((DeviceGroup)cloned_cell).setSchemeId(new_id);
 			}
 			else if (cloned_cell instanceof DeviceCell)
 			{
-				Identifier c_id = (Identifier)Pool.get("clonedids", ((DeviceCell)cloned_cell).getSchemeDeviceId().identifierString());
+				Identifier c_id = (Identifier)Pool.get("clonedids", ((DeviceCell)cloned_cell).getSchemeDeviceId().getIdentifierString());
 				if (c_id == null)
 				{
 					//SchemeDevice dev = ((DeviceCell)cells[i]).getSchemeDevice();
@@ -533,21 +533,21 @@ public class UgoPanel extends JPanel
 			else if (cloned_cell instanceof PortCell)
 			{
 				Identifier id = ((PortCell)cloned_cell).getSchemePortId();
-				Identifier new_id = (Identifier)Pool.get("clonedids", id.identifierString());
+				Identifier new_id = (Identifier)Pool.get("clonedids", id.getIdentifierString());
 				if (new_id != null)
 					((PortCell)cloned_cell).setSchemePortId(new_id);
 			}
 			else if (cloned_cell instanceof CablePortCell)
 			{
 				Identifier id = ((CablePortCell)cloned_cell).getSchemeCablePortId();
-				Identifier new_id = (Identifier)Pool.get("clonedids", id.identifierString());
+				Identifier new_id = (Identifier)Pool.get("clonedids", id.getIdentifierString());
 				if (new_id != null)
 					((CablePortCell)cloned_cell).setSchemeCablePortId(new_id);
 			}
 			else if (cloned_cell instanceof DefaultCableLink)
 			{
 				Identifier id = ((DefaultCableLink)cloned_cell).getSchemeCableLinkId();
-				Identifier new_id = (Identifier)Pool.get("clonedids", id.identifierString());
+				Identifier new_id = (Identifier)Pool.get("clonedids", id.getIdentifierString());
 				if (new_id != null)
 					((DefaultCableLink)cloned_cell).setSchemeCableLinkId(new_id);
 
@@ -560,7 +560,7 @@ public class UgoPanel extends JPanel
 			else if (cloned_cell instanceof DefaultLink)
 			{
 				Identifier id = ((DefaultLink)cloned_cell).getSchemeLinkId();
-				Identifier new_id = (Identifier)Pool.get("clonedids", id.identifierString());
+				Identifier new_id = (Identifier)Pool.get("clonedids", id.getIdentifierString());
 				if (new_id != null)
 					((DefaultLink)cloned_cell).setSchemeLinkId(new_id);
 
@@ -573,7 +573,7 @@ public class UgoPanel extends JPanel
 			else if (cloned_cell instanceof BlockPortCell)
 			{
 				BlockPortCell bpc = (BlockPortCell)cloned_cell;
-				Identifier p_id = (Identifier)Pool.get("clonedids", bpc.getSchemePortId().identifierString());
+				Identifier p_id = (Identifier)Pool.get("clonedids", bpc.getSchemePortId().getIdentifierString());
 				if (bpc.isCablePort())
 				{
 					if (p_id != null)

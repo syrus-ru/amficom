@@ -53,15 +53,15 @@ public final class SchemeCablePortController implements ObjectResourceController
 		if (object instanceof SchemeCablePort) {
 			SchemeCablePort port = (SchemeCablePort) object;
 			if (key.equals(COLUMN_ID))
-				result = port.id().toString();
+				result = port.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(port.created());
+				result = Long.toString(port.getCreated());
 			else if (key.equals(COLUMN_CREATOR_ID))
-				result = port.creatorId().identifierString();
+				result = port.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(port.modified());
+				result = Long.toString(port.getModified());
 			else if (key.equals(COLUMN_MODIFIER_ID))
-				result = port.modifierId().identifierString();
+				result = port.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				result = port.description();
 			else if (key.equals(COLUMN_NAME))
@@ -77,9 +77,9 @@ public final class SchemeCablePortController implements ObjectResourceController
 			else if (key.equals(COLUMN_PORT_TYPE_ID))
 				result = port.portTypeImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CABLE_LINK_ID))
-				result = port.schemeCableLink().id().identifierString();
+				result = port.schemeCableLink().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_DEVICE_ID))
-				result = port.schemeDevice().id().identifierString();
+				result = port.schemeDevice().getId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(port.characteristics().length);
 				for (Iterator it = port.characteristicsImpl().getValue().iterator(); it.hasNext();) {

@@ -231,7 +231,7 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel {
 	public void setObject(Object or) {
 		this.link = (AbstractSchemeLink) or;
 
-		this.idField.setText(this.link.id().identifierString());
+		this.idField.setText(this.link.getId().getIdentifierString());
 		this.nameField.setText(this.link.name());
 		this.physLengthField.setText(String.valueOf(this.link.physicalLength()));
 		this.optLengthField.setText(String.valueOf(this.link.opticalLength()));

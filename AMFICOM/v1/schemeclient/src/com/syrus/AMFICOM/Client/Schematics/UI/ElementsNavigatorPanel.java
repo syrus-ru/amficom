@@ -197,7 +197,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			if (ret == JOptionPane.YES_OPTION)
 			{
 				try {
-					SchemeStorableObjectPool.delete(group.id());
+					SchemeStorableObjectPool.delete(group.getId());
 					if (group.parentSchemeProtoGroup() != null)
 						Arrays.asList(group.parentSchemeProtoGroup().schemeProtoGroups()).remove(group);
 				dispatcher.notify(new TreeListSelectionEvent("", TreeListSelectionEvent.REFRESH_EVENT));
@@ -219,7 +219,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			{
 				SchemeProtoElement proto = (SchemeProtoElement)selectedObject;
 				try {
-					SchemeStorableObjectPool.delete(proto.id());
+					SchemeStorableObjectPool.delete(proto.getId());
 				}
 				catch (ApplicationException ex) {
 					ex.printStackTrace();
@@ -258,7 +258,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 				Scheme scheme = (Scheme)selectedObject;
 
 				try {
-					SchemeStorableObjectPool.delete(scheme.id());
+					SchemeStorableObjectPool.delete(scheme.getId());
 				}
 				catch (ApplicationException ex) {
 					ex.printStackTrace();

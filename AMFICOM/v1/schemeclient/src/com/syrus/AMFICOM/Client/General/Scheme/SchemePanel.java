@@ -126,7 +126,7 @@ public class SchemePanel extends ElementsPanel
 					SchemeElement se = (SchemeElement)ds.get(ev.getSelectionNumber());
 					if (Arrays.asList(getGraph().getScheme().schemeElements()).contains(se))
 					{
-						Object cell = SchemeActions.findSchemeElementById(getGraph(), se.id());
+						Object cell = SchemeActions.findSchemeElementById(getGraph(), se.getId());
 						SchemeGraph.skip_notify = true;
 						getGraph().setSelectionCell(cell);
 						SchemeGraph.skip_notify = false;
@@ -137,7 +137,7 @@ public class SchemePanel extends ElementsPanel
 					SchemeLink l = (SchemeLink)ds.get(ev.getSelectionNumber());
 					if (Arrays.asList(getGraph().getScheme().schemeLinks()).contains(l))
 					{
-						Object cell = SchemeActions.findSchemeLinkById(getGraph(), l.id());
+						Object cell = SchemeActions.findSchemeLinkById(getGraph(), l.getId());
 						SchemeGraph.skip_notify = true;
 						getGraph().setSelectionCell(cell);
 						SchemeGraph.skip_notify = false;
@@ -148,7 +148,7 @@ public class SchemePanel extends ElementsPanel
 					SchemeCableLink l = (SchemeCableLink)ds.get(ev.getSelectionNumber());
 					if (Arrays.asList(getGraph().getScheme().schemeCableLinks()).contains(l))
 					{
-						Object cell = SchemeActions.findSchemeCableLinkById(getGraph(), l.id());
+						Object cell = SchemeActions.findSchemeCableLinkById(getGraph(), l.getId());
 						SchemeGraph.skip_notify = true;
 						getGraph().setSelectionCell(cell);
 						SchemeGraph.skip_notify = false;
@@ -215,7 +215,7 @@ public class SchemePanel extends ElementsPanel
 				element.ugoCell(proto.ugoCell());
 
 				DeviceGroup clone = (DeviceGroup)clones.get(cells[0]);
-				clone.setSchemeElementId(element.id());
+				clone.setSchemeElementId(element.getId());
 
 				assignClonedIds(clones.values().toArray());
 			}
@@ -293,7 +293,7 @@ public class SchemePanel extends ElementsPanel
 				element.schemeCell(sch.ugoCell());
 
 				DeviceGroup clone = (DeviceGroup)clones.get(cells[0]);
-				clone.setSchemeElementId(element.id());
+				clone.setSchemeElementId(element.getId());
 				//((DeviceGroup)cells[0]).setSchemeElementId(element.getId());
 
 //				Pool.put(SchemeElement.typ, element.getId(), element);
