@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.22 2005/02/25 09:16:15 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.23 2005/04/04 13:50:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -32,6 +30,7 @@ import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -50,7 +49,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/02/25 09:16:15 $
+ * @version $Revision: 1.23 $, $Date: 2005/04/04 13:50:53 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -77,7 +76,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Set ids) throws IllegalDataException {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
@@ -125,7 +124,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadCableLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadCableLinkTypes(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -135,17 +134,17 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			CableLinkType_Transferable[] transferables = this.server.transmitCableLinkTypes(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new CableLinkType(transferables[j]));
+				set.add(new CableLinkType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public Collection loadCableThreads(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadCableThreads(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -155,17 +154,17 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			CableThread_Transferable[] transferables = this.server.transmitCableThreads(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new CableThread(transferables[j]));
+				set.add(new CableThread(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public Collection loadCableThreadTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadCableThreadTypes(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -175,17 +174,17 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			CableThreadType_Transferable[] transferables = this.server.transmitCableThreadTypes(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new CableThreadType(transferables[j]));
+				set.add(new CableThreadType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public Collection loadCableThreadTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -196,11 +195,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			CableThreadType_Transferable[] transferables = this.server.transmitCableThreadTypesButIds(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new CableThreadType(transferables[j]));
+				set.add(new CableThreadType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
@@ -220,7 +219,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadEquipments(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadEquipments(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -230,11 +229,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			Equipment_Transferable[] transferables = this.server.transmitEquipments(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Equipment(transferables[j]));
+				set.add(new Equipment(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -242,7 +241,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadEquipmentsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -254,11 +253,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			transferables = this.server.transmitEquipmentsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));			
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Equipment(transferables[j]));
+				set.add(new Equipment(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -280,7 +279,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadEquipmentTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadEquipmentTypes(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -290,11 +289,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			EquipmentType_Transferable[] transferables = this.server.transmitEquipmentTypes(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new EquipmentType(transferables[j]));
+				set.add(new EquipmentType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -302,7 +301,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadEquipmentTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -313,11 +312,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			EquipmentType_Transferable[] transferables = this.server.transmitEquipmentTypesButIds(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new EquipmentType(transferables[j]));
+				set.add(new EquipmentType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -338,7 +337,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadKISs(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadKISs(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -348,11 +347,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			KIS_Transferable[] transferables = this.server.transmitKISs(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new KIS(transferables[j]));
+				set.add(new KIS(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -360,7 +359,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -372,11 +371,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			transferables = this.server.transmitKISsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new KIS(transferables[j]));
+				set.add(new KIS(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -397,7 +396,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadLinks(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadLinks(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -407,11 +406,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			Link_Transferable[] transferables = this.server.transmitLinks(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Link(transferables[j]));
+				set.add(new Link(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -419,7 +418,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadLinksButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -430,11 +429,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			Link_Transferable[] transferables = this.server.transmitLinksButIds(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Link(transferables[j]));
+				set.add(new Link(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -455,7 +454,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadLinkTypes(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -465,7 +464,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			AbstractLinkType_Transferable[] transferables = this.server.transmitLinkTypes(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 
 				LinkType linkType;
@@ -473,24 +472,24 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				switch (transferables[i].discriminator().value()) {
 					case AbstractLinkTypeSort._CABLE_LINK_TYPE:
 						cableLinkType = new CableLinkType(transferables[i].cableLinkType());
-						list.add(cableLinkType);
+						set.add(cableLinkType);
 						break;
 					case AbstractLinkTypeSort._LINK_TYPE:
 						linkType = new LinkType(transferables[i].linkType());
-						list.add(linkType);
+						set.add(linkType);
 						break;
 					default:
 						throw new CommunicationException("ClientConfigurationObjectLoader.loadLinkTypesButIds"
 								+ " | Wrong AbstractLinkTypeSort");
 				}
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public Collection loadLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -502,7 +501,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			AbstractLinkType_Transferable[] transferables = this.server.transmitLinkTypesButIds(
 				identifierTransferables, getAccessIdentifierTransferable());
 
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 
 				LinkType linkType;
@@ -510,24 +509,24 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				switch (transferables[i].discriminator().value()) {
 					case AbstractLinkTypeSort._CABLE_LINK_TYPE:
 						cableLinkType = new CableLinkType(transferables[i].cableLinkType());
-						list.add(cableLinkType);
+						set.add(cableLinkType);
 						break;
 					case AbstractLinkTypeSort._LINK_TYPE:
 						linkType = new LinkType(transferables[i].linkType());
-						list.add(linkType);
+						set.add(linkType);
 						break;
 					default:
 						throw new CommunicationException("ClientConfigurationObjectLoader.loadLinkTypesButIds"
 								+ " | Wrong AbstractLinkTypeSort");
 				}
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public Collection loadCableLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -539,11 +538,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			transferables = this.server.transmitCableLinkTypesButIdsCondition(identifierTransferables, getAccessIdentifierTransferable(),
 				StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new CableLinkType(transferables[j]));
+				set.add(new CableLinkType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -551,8 +550,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadCableThreadsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
+	public Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			CableThread_Transferable[] transferables;
@@ -563,11 +561,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			transferables = this.server.transmitCableThreadButIdsCondition(identifierTransferables, getAccessIdentifierTransferable(),
 				StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new CableThread(transferables[j]));
+				set.add(new CableThread(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -590,7 +588,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadMeasurementPorts(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadMeasurementPorts(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -600,11 +598,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			MeasurementPort_Transferable[] transferables = this.server.transmitMeasurementPorts(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MeasurementPort(transferables[j]));
+				set.add(new MeasurementPort(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -612,7 +610,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadMeasurementPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -625,11 +623,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables = this.server.transmitMeasurementPortsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(),
 				StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MeasurementPort(transferables[j]));
+				set.add(new MeasurementPort(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -653,7 +651,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadMeasurementPortTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadMeasurementPortTypes(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -663,11 +661,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			MeasurementPortType_Transferable[] transferables = this.server.transmitMeasurementPortTypes(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MeasurementPortType(transferables[j]));
+				set.add(new MeasurementPortType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -675,7 +673,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadMeasurementPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -686,11 +684,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			MeasurementPortType_Transferable[] transferables = this.server.transmitMeasurementPortTypesButIds(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MeasurementPortType(transferables[j]));
+				set.add(new MeasurementPortType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -698,18 +696,18 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public MonitoredElement loadMonitoredElement(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public MonitoredElement loadMonitoredElement(Identifier id) throws ApplicationException {
 		try {
 			return new MonitoredElement(this.server.transmitMonitoredElement((Identifier_Transferable) id
 					.getTransferable(), getAccessIdentifierTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.loadMonitoredElement | server.loadMonitoredElement("
 					+ id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new RetrieveObjectException(msg, e);
 		}
 	}
 
-	public Collection loadMonitoredElements(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadMonitoredElements(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -719,17 +717,17 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			MonitoredElement_Transferable[] transferables = this.server.transmitMonitoredElements(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MonitoredElement(transferables[j]));
+				set.add(new MonitoredElement(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public Collection loadMonitoredElementsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -743,11 +741,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables = this.server.transmitMonitoredElementsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MonitoredElement(transferables[j]));
+				set.add(new MonitoredElement(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
@@ -766,7 +764,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadPorts(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadPorts(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -776,11 +774,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			Port_Transferable[] transferables = this.server.transmitPorts(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Port(transferables[j]));
+				set.add(new Port(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -788,7 +786,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -801,11 +799,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables = this.server.transmitPortsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Port(transferables[j]));
+				set.add(new Port(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -827,7 +825,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadPortTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadPortTypes(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -837,7 +835,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			PortType_Transferable[] transferables = this.server.transmitPortTypes(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set list = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new PortType(transferables[j]));
 			}
@@ -849,7 +847,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -860,11 +858,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			PortType_Transferable[] transferables = this.server.transmitPortTypesButIds(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new PortType(transferables[j]));
+				set.add(new PortType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -887,7 +885,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadTransmissionPaths(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadTransmissionPaths(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -897,11 +895,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			TransmissionPath_Transferable[] transferables = this.server.transmitTransmissionPaths(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new TransmissionPath(transferables[j]));
+				set.add(new TransmissionPath(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -909,7 +907,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadTransmissionPathsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -922,11 +920,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			transferables = this.server.transmitTransmissionPathsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
 			
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new TransmissionPath(transferables[j]));
+				set.add(new TransmissionPath(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -955,7 +953,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadTransmissionPathTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadTransmissionPathTypes(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -965,11 +963,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			TransmissionPathType_Transferable[] transferables = this.server.transmitTransmissionPathTypes(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new TransmissionPathType(transferables[j]));
+				set.add(new TransmissionPathType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -977,7 +975,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public Collection loadTransmissionPathTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -988,11 +986,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			}
 			TransmissionPathType_Transferable[] transferables = this.server.transmitTransmissionPathTypesButIds(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new TransmissionPathType(transferables[j]));
+				set.add(new TransmissionPathType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -1030,7 +1028,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 	
-	private void updateStorableObjectHeader(Collection storableObjects, StorableObject_Transferable[] transferables) {
+	private void updateStorableObjectHeader(Set storableObjects, StorableObject_Transferable[] transferables) {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			Identifier_Transferable id = (Identifier_Transferable) storableObject.getId().getTransferable();
@@ -1072,7 +1070,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveCableLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCableLinkTypes(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		CableLinkType_Transferable[] transferables = new CableLinkType_Transferable[list.size()];
 		int i = 0;
@@ -1091,7 +1089,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveCableThreads(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCableThreads(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		CableThread_Transferable[] transferables = new CableThread_Transferable[list.size()];
 		int i = 0;
@@ -1125,7 +1123,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveCableThreadTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCableThreadTypes(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		CableThreadType_Transferable[] transferables = new CableThreadType_Transferable[list.size()];
 		int i = 0;
@@ -1165,7 +1163,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveEquipments(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveEquipments(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		Equipment_Transferable[] transferables = new Equipment_Transferable[list.size()];
 		int i = 0;
@@ -1199,7 +1197,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveEquipmentTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveEquipmentTypes(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		EquipmentType_Transferable[] transferables = new EquipmentType_Transferable[list.size()];
 		int i = 0;
@@ -1233,7 +1231,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveKISs(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveKISs(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		KIS_Transferable[] transferables = new KIS_Transferable[list.size()];
 		int i = 0;
@@ -1267,7 +1265,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveLinks(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		Link_Transferable[] transferables = new Link_Transferable[list.size()];
 		int i = 0;
@@ -1301,7 +1299,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveLinkTypes(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		AbstractLinkType_Transferable[] transferables = new AbstractLinkType_Transferable[list.size()];
 		int i = 0;
@@ -1335,7 +1333,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveMeasurementPorts(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMeasurementPorts(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		MeasurementPort_Transferable[] transferables = new MeasurementPort_Transferable[list.size()];
 		int i = 0;
@@ -1370,7 +1368,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveMeasurementPortTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMeasurementPortTypes(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		MeasurementPortType_Transferable[] transferables = new MeasurementPortType_Transferable[list.size()];
 		int i = 0;
@@ -1405,7 +1403,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveMonitoredElements(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMonitoredElements(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		MonitoredElement_Transferable[] transferables = new MonitoredElement_Transferable[list.size()];
 		int i = 0;
@@ -1439,7 +1437,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void savePorts(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePorts(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		Port_Transferable[] transferables = new Port_Transferable[list.size()];
 		int i = 0;
@@ -1473,15 +1471,15 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void savePortTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePortTypes(Set set, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		PortType_Transferable[] transferables = new PortType_Transferable[list.size()];
+		PortType_Transferable[] transferables = new PortType_Transferable[set.size()];
 		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+		for (Iterator it = set.iterator(); it.hasNext(); i++) {
 			transferables[i] = (PortType_Transferable) ((PortType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receivePortTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(set, this.server.receivePortTypes(transferables, force, getAccessIdentifierTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.savePortTypes ";
 
@@ -1508,15 +1506,15 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveTransmissionPaths(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveTransmissionPaths(Set set, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		TransmissionPath_Transferable[] transferables = new TransmissionPath_Transferable[list.size()];
+		TransmissionPath_Transferable[] transferables = new TransmissionPath_Transferable[set.size()];
 		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+		for (Iterator it = set.iterator(); it.hasNext(); i++) {
 			transferables[i] = (TransmissionPath_Transferable) ((TransmissionPath) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveTransmissionPaths(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(set, this.server.receiveTransmissionPaths(transferables, force, getAccessIdentifierTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveTransmissionPaths ";
 
@@ -1543,15 +1541,15 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public void saveTransmissionPathTypes(Collection list, boolean force) throws VersionCollisionException,
+	public void saveTransmissionPathTypes(Set set, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		TransmissionPathType_Transferable[] transferables = new TransmissionPathType_Transferable[list.size()];
+		TransmissionPathType_Transferable[] transferables = new TransmissionPathType_Transferable[set.size()];
 		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+		for (Iterator it = set.iterator(); it.hasNext(); i++) {
 			transferables[i] = (TransmissionPathType_Transferable) ((TransmissionPathType) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.server.receiveTransmissionPathTypes(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(set, this.server.receiveTransmissionPathTypes(transferables, force, getAccessIdentifierTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveTransmissionPathTypes ";
 
