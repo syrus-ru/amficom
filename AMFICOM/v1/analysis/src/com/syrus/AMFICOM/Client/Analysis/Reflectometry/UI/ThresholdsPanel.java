@@ -57,7 +57,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		start = events[num].first_point;
 		end = events[num].last_point;
 	}
-
+	
 	protected void this_mousePressed(MouseEvent mev)
 	{
 		if (!edit_thresholds || et_mtm == null)
@@ -76,7 +76,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		boolean allThresholds = this.isToPaintAllThresholds();
 		int currposF = (int) coord2indexF(this.currpos.x);
 		int mouseCouplingF = (int)coord2indexF(MOUSE_COUPLING);
-		if (!allThresholds && !(simpleEvent.getBegin() - mouseCouplingF <= currposF && currposF <= simpleEvent.getEnd() + mouseCouplingF))
+		
+		if (!allThresholds && !(simpleEvent.getBegin() <= currposF - mouseCouplingF  && currposF + mouseCouplingF <= simpleEvent.getEnd() ))
 			return;
 		// если это текущее событие - пытаемся "ухватить" (drag) порог
 		this.c_TH = this.et_mtm.getThresholdHandle(
@@ -262,7 +263,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			     ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
 			     : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
 			// XXX: нет draw_joint_of_two_model_curves
-			drawModelCurve(g, et_mtm.getThresholdMT(key), sre);
+			ModelTrace thresholdMT = et_mtm.getThresholdMT(key);
+			drawModelCurve(g, thresholdMT, sre);
 		}
 	}
 
