@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.26 2004/10/19 07:48:21 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.27 2004/11/10 15:24:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/10/19 07:48:21 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/10 15:24:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -42,9 +42,9 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
 	public static final String COLUMN_CRITERIA_SET_ID = "criteria_set_id";
 	
-	private String updateColumns;
+	private static String columns;
 	
-	private String updateMultiplySQLValues;
+	private static String updateMultiplySQLValues;
 
 	private Analysis fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Analysis)
@@ -58,31 +58,27 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	}	
 	
 	protected String getEnityName() {		
-		return "Analysis";
+		return ObjectEntities.ANALYSIS_ENTITY;
 	}	
 	
-	protected String getTableName() {
-		return ObjectEntities.ANALYSIS_ENTITY;
-	}
-	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
-			+ COLUMN_TYPE_ID + COMMA
-			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-			+ COLUMN_CRITERIA_SET_ID;
+	protected String getColumns() {
+		if (columns == null){
+			columns = super.getColumns() + COMMA
+				+ COLUMN_TYPE_ID + COMMA
+				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ COLUMN_CRITERIA_SET_ID;
 		}
-		return this.updateColumns;
+		return columns;
 	}	
 	
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}
 	
 	
@@ -118,16 +114,6 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 			+ analysis.getCriteriaSet().getId().toSQLString();
 		return values;
 	}
-
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-		+ COLUMN_TYPE_ID + COMMA
-		+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-		+ COLUMN_CRITERIA_SET_ID
-		+ SQL_FROM + ObjectEntities.ANALYSIS_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
-	}	
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {

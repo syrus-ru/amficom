@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.35 2004/11/02 09:03:22 bob Exp $
+ * $Id: ResultDatabase.java,v 1.36 2004/11/10 15:24:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/11/02 09:03:22 $
+ * @version $Revision: 1.36 $, $Date: 2004/11/10 15:24:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -68,20 +68,16 @@ public class ResultDatabase extends StorableObjectDatabase {
 	public static final String	LINK_COLUMN_RESULT_ID	= "result_id";
 	public static final String	LINK_COLUMN_VALUE	= "value";
 
-	private String			updateColumns;
-	private String			updateMultiplySQLValues;
+	private static String			columns;
+	private static String			updateMultiplySQLValues;
 
 	protected String getEnityName() {
-		return "Result";
-	}
-
-	protected String getTableName() {
 		return ObjectEntities.RESULT_ENTITY;
 	}
 
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null) {
-			StringBuffer buffer = new StringBuffer(super.getUpdateColumns());
+	protected String getColumns() {
+		if (columns == null) {
+			StringBuffer buffer = new StringBuffer(super.getColumns());
 			buffer.append(COMMA);
 			buffer.append(COLUMN_MEASUREMENT_ID);
 			buffer.append(COMMA);
@@ -94,13 +90,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 			buffer.append(COLUMN_SORT);
 			buffer.append(COMMA);
 			buffer.append(COLUMN_ALARM_LEVEL);
-			this.updateColumns = buffer.toString();
+			columns = buffer.toString();
 		}
-		return this.updateColumns;
+		return columns;
 	}
 
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null) {
+		if (updateMultiplySQLValues == null) {
 			StringBuffer buffer = new StringBuffer(super.getUpdateMultiplySQLValues());
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
@@ -114,9 +110,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 			buffer.append(QUESTION);
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
-			this.updateMultiplySQLValues = buffer.toString();
+			updateMultiplySQLValues = buffer.toString();
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
@@ -307,14 +303,6 @@ public class ResultDatabase extends StorableObjectDatabase {
 		Result result = this.fromStorableObject(storableObject);
 		this.retrieveEntity(result);
 		this.retrieveResultParametersByOneQuery(Collections.singletonList(result));
-	}
-
-	protected String retrieveQuery(String condition) {
-		return super.retrieveQuery(condition) + COMMA + COLUMN_MEASUREMENT_ID + COMMA + COLUMN_ANALYSIS_ID
-				+ COMMA + COLUMN_EVALUATION_ID + COMMA + COLUMN_MODELING_ID + COMMA + COLUMN_SORT + COMMA 
-				+ COLUMN_ALARM_LEVEL
-				+ SQL_FROM + ObjectEntities.RESULT_ENTITY
-				+ (((condition == null) || (condition.length() == 0)) ? "" : SQL_WHERE + condition);
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

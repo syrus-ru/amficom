@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.35 2004/11/04 13:16:30 bob Exp $
+ * $Id: SetDatabase.java,v 1.36 2004/11/10 15:24:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/11/04 13:16:30 $
+ * @version $Revision: 1.36 $, $Date: 2004/11/10 15:24:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -60,34 +60,29 @@ public class SetDatabase extends StorableObjectDatabase {
 	
     public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
     
-	private String updateColumns;
-	private String updateMultiplySQLValues;   
-    
-	protected String getEnityName() {		
-		return "Set";
-	}
+	private static String columns;
+	private static String updateMultiplySQLValues;    
 	
-	protected String getTableName() {
+	protected String getEnityName() {
 		return ObjectEntities.SET_ENTITY;
 	}
 	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ COLUMN_SORT  + COMMA
 				+ COLUMN_DESCRIPTION;
 		}
-		return this.updateColumns;
-	}
-	
+		return columns;
+	}	
 	
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION  + COMMA
 				+ QUESTION;
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}	
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
@@ -97,8 +92,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ Integer.toString(set.getSort().value()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(set.getDescription()) + APOSTOPHE;
 		return values;
-	}
-	
+	}	
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
@@ -125,15 +119,6 @@ public class SetDatabase extends StorableObjectDatabase {
 		this.retrieveSetParameters(set);
 		this.retrieveSetMELinksByOneQuery(Collections.singletonList(set));
 	}
-	
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-			+ COLUMN_SORT + COMMA
-			+ COLUMN_DESCRIPTION 
-			+ SQL_FROM 
-			+ ObjectEntities.SET_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-	}	
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {

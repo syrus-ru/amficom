@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.24 2004/11/04 13:33:05 max Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.25 2004/11/10 15:23:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/04 13:33:05 $
- * @author $Author: max $
+ * @version $Revision: 1.25 $, $Date: 2004/11/10 15:23:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -56,8 +56,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
     public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
     
-    private String updateColumns;
-	private String updateMultiplySQLValues;
+    private static String columns;
+	private static String updateMultiplySQLValues;
 	
 	private MonitoredElement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MonitoredElement)
@@ -66,35 +66,31 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getEnityName() {
-		return "MonitoredElement";
-	}
-	
-	protected String getTableName() {
 		return ObjectEntities.ME_ENTITY;
 	}
 	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-    		this.updateColumns = super.getUpdateColumns() + COMMA
-			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_MEASUREMENT_PORT_ID + COMMA
-			+ COLUMN_SORT + COMMA
-			+ COLUMN_LOCAL_ADDRESS;
+	protected String getColumns() {
+		if (columns == null){
+    		columns = super.getColumns() + COMMA
+				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+				+ COLUMN_NAME + COMMA
+				+ COLUMN_MEASUREMENT_PORT_ID + COMMA
+				+ COLUMN_SORT + COMMA
+				+ COLUMN_LOCAL_ADDRESS;
 		}
-		return this.updateColumns;
+		return columns;
 	}
 	
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-    		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+		if (updateMultiplySQLValues == null){
+    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION;
     	}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
@@ -133,17 +129,6 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		super.retrieveEntity(monitoredElement);
 		this.retrieveMonitoredDomainMemberIds(monitoredElement);
-	}
-
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_MEASUREMENT_PORT_ID + COMMA
-				+ COLUMN_SORT + COMMA
-				+ COLUMN_LOCAL_ADDRESS
-				+ SQL_FROM + ObjectEntities.ME_ENTITY
-				+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 	}
 	
 	protected StorableObject updateEntityFromResultSet(

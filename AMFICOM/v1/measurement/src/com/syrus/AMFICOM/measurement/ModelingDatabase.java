@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.8 2004/10/27 14:27:50 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.9 2004/11/10 15:24:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/10/27 14:27:50 $
+ * @version $Revision: 1.9 $, $Date: 2004/11/10 15:24:02 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -52,9 +52,9 @@ public class ModelingDatabase extends StorableObjectDatabase {
     
     public static final String COLUMN_SORT = "sort";
     
-    private String updateColumns;
+    private static String columns;
     
-    private String updateMultiplySQLValues;
+    private static String updateMultiplySQLValues;
 
     private Modeling fromStorableObject(StorableObject storableObject) throws IllegalDataException {
         if (storableObject instanceof Modeling)
@@ -65,19 +65,15 @@ public class ModelingDatabase extends StorableObjectDatabase {
     public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
         Modeling modeling = this.fromStorableObject(storableObject);
         this.retrieveEntity(modeling);
-    }   
+    }    
     
-    protected String getEnityName() {       
-        return "Modeling";
-    }   
-    
-    protected String getTableName() {
+    protected String getEnityName() {
         return ObjectEntities.MODELING_ENTITY;
     }
     
-    protected String getUpdateColumns() {
-        if (this.updateColumns == null){
-            this.updateColumns = super.getUpdateColumns() + COMMA
+    protected String getColumns() {
+        if (this.columns == null){
+            this.columns = super.getColumns() + COMMA
             + COLUMN_NAME + COMMA
 			+ COLUMN_ME_ID + COMMA
             + COLUMN_SCHEME_PATH_ID + COMMA
@@ -85,7 +81,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
             + COLUMN_ARGUMENT_SET_ID + COMMA
 			+ COLUMN_SORT;
         }
-        return this.updateColumns;
+        return this.columns;
     }   
     
     protected String getUpdateMultiplySQLValues() {
@@ -150,19 +146,6 @@ public class ModelingDatabase extends StorableObjectDatabase {
         return values;
     }
 
-    protected String retrieveQuery(String condition){
-        return super.retrieveQuery(condition) + COMMA
-        + COLUMN_NAME + COMMA
-		+ COLUMN_ME_ID + COMMA
-        + COLUMN_SCHEME_PATH_ID + COMMA
-        + COLUMN_MEASUREMENT_TYPE_ID + COMMA
-        + COLUMN_ARGUMENT_SET_ID + COMMA
-		+ COLUMN_SORT
-        + SQL_FROM + ObjectEntities.MODELING_ENTITY
-        + ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
-    }   
-    
     protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
     throws IllegalDataException, RetrieveObjectException, SQLException {
         Modeling modeling = (storableObject == null) ? 

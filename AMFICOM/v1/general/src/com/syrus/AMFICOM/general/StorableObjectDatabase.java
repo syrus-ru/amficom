@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.39 2004/11/10 10:33:43 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.40 2004/11/10 15:23:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/11/10 10:33:43 $
+ * @version $Revision: 1.40 $, $Date: 2004/11/10 15:23:46 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -82,9 +82,8 @@ public abstract class StorableObjectDatabase {
 	protected static final int MAXIMUM_EXPRESSION_NUMBER = 1000;
 
 	
-	private String updateColumnsString;
-	private String updateMultiplySQLValuesString;
-	private String retrieveQueryString;
+	private static String columns;
+	private static String updateMultiplySQLValues;
 
 	public StorableObjectDatabase() {
 		//connection = DatabaseConnection.getConnection();
@@ -96,7 +95,7 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {			
 			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM + this.getTableName() + SQL_WHERE + COLUMN_ID + EQUALS
+			statement.executeUpdate(SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE + COLUMN_ID + EQUALS
 					+ storableObjectIdStr);			
 		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
@@ -133,28 +132,26 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getEnityName();
 
-	protected abstract String getTableName();
-
-	protected String getUpdateColumns(){
-		if (this.updateColumnsString == null){
-			this.updateColumnsString = COLUMN_ID + COMMA
+	protected String getColumns(){
+		if (columns == null){
+			columns = COLUMN_ID + COMMA
 				+ COLUMN_CREATED + COMMA
 				+ COLUMN_MODIFIED + COMMA
 				+ COLUMN_CREATOR_ID + COMMA
 				+ COLUMN_MODIFIER_ID;
 		}
-		return this.updateColumnsString;
+		return columns;
 	}
 
 	protected String getUpdateMultiplySQLValues(){
-		if (this.updateMultiplySQLValuesString == null){
-			this.updateMultiplySQLValuesString = QUESTION + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;			
 		}
-		return this.updateMultiplySQLValuesString; 
+		return updateMultiplySQLValues; 
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException{
@@ -168,7 +165,7 @@ public abstract class StorableObjectDatabase {
 	protected void insertEntity(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
 		try{
-			String sql = SQL_INSERT_INTO + this.getTableName() + OPEN_BRACKET + this.getUpdateColumns()
+			String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET + this.getColumns()
 					+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET 
 					+ this.getUpdateSingleSQLValues(storableObject) + CLOSE_BRACKET;
 			Statement statement = null;
@@ -230,8 +227,8 @@ public abstract class StorableObjectDatabase {
 		idsList = null;
 
 
-		String sql = SQL_INSERT_INTO + this.getTableName() + OPEN_BRACKET				
-				+ this.getUpdateColumns()
+		String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET				
+				+ this.getColumns()
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + this.getUpdateMultiplySQLValues()
 				+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
@@ -317,15 +314,15 @@ public abstract class StorableObjectDatabase {
 	}
 
 	protected String retrieveQuery(final String condition){
-		if (this.retrieveQueryString == null){
-			this.retrieveQueryString = SQL_SELECT
-				+ COLUMN_ID + COMMA
-				+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-				+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-				+ COLUMN_CREATOR_ID + COMMA
-				+ COLUMN_MODIFIER_ID; 
+		StringBuffer buffer = new StringBuffer(SQL_SELECT);
+		buffer.append(this.getColumns());
+		buffer.append(SQL_FROM);
+		buffer.append(this.getEnityName());
+		if (condition != null && condition.trim().length() > 0){
+			buffer.append(SQL_WHERE);
+			buffer.append(condition);
 		}
-		return this.retrieveQueryString; 
+		return buffer.toString();
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
@@ -488,13 +485,17 @@ public abstract class StorableObjectDatabase {
 						updateList = new LinkedList();
 					updateList.add(localStorableObject);
 				} else{
-					String msg = getEnityName() + "Database.checkAndUpdateEntity | conflict version for '" 
-							+ storableObject.getId().getCode() +'\'';
-					if (versionCollisions == null)
+					if (versionCollisions == null){
 						versionCollisions = new StringBuffer();
-					else 
-						versionCollisions.append('\n');
-					versionCollisions.append(msg);					
+						versionCollisions.append(getEnityName() + "Database.checkAndUpdateEntity | conflict version for '");
+						versionCollisions.append(storableObject.getId().getCode());
+						versionCollisions.append('\'');
+					}
+					else{ 
+						versionCollisions.append(", '");
+						versionCollisions.append(storableObject.getId().getCode());	
+						versionCollisions.append('\'');
+					}
 				}
 
 			}
@@ -778,14 +779,14 @@ public abstract class StorableObjectDatabase {
 	protected void updateEntity(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
 		
-		String[] columns = this.getUpdateColumns().split(COMMA);
+		String[] columns = this.getColumns().split(COMMA);
 		String[] values = this.parseInsertStringValues(this.getUpdateSingleSQLValues(storableObject), columns.length);
 		if (columns.length != values.length)
 			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+columns.length+"') is not equals count of values ('"+values.length+"')");
 		String sql = null;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_UPDATE);
-			buffer.append(this.getTableName());
+			buffer.append(this.getEnityName());
 			buffer.append(SQL_SET);
 			for(int i=0;i<columns.length;i++){
 				buffer.append(columns[i]);
@@ -837,14 +838,14 @@ public abstract class StorableObjectDatabase {
 			return;
 		}
 
-		String[] columns = this.getUpdateColumns().split(COMMA);
+		String[] columns = this.getColumns().split(COMMA);
 		String[] values = this.parseInsertStringValues(this.getUpdateMultiplySQLValues(), columns.length);
 		if (columns.length != values.length)
 			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+columns.length+"') is not equals count of values ('"+values.length+"')");
 		String sql = null;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_UPDATE);
-			buffer.append(this.getTableName());
+			buffer.append(this.getEnityName());
 			buffer.append(SQL_SET);
 			for(int i=0;i<columns.length;i++){
 				buffer.append(columns[i]);
@@ -900,7 +901,7 @@ public abstract class StorableObjectDatabase {
 	
 	private String[] parseInsertStringValues(String insertValues, int columnCount){
 		int length = insertValues.length();
-		Pattern pattern = Pattern.compile("(('(''|[^'])+')|(\\s*([^',\\s]+)\\s*)),?");
+		Pattern pattern = Pattern.compile("(('(''|[^'])*')|([^',\\s]+))\\s*(,|$)");
 		Matcher matcher = pattern.matcher(insertValues);
 		String[] values = new String[columnCount];
 		int valueCounter = 0;
@@ -909,7 +910,7 @@ public abstract class StorableObjectDatabase {
 				int start = matcher.start(i);
 				int end = matcher.end(i);				
 				if ((0 <= start) && (start < end) && (end <= length)) {					
-					if ((i == 2) || (i == 5)) {
+					if ((i == 2) || (i == 4)) {
 						values[valueCounter++] = insertValues.substring(matcher.start(i), matcher.end(i));
 					}
 

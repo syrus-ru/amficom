@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.22 2004/10/19 07:48:21 bob Exp $
+ * $Id: EvaluationDatabase.java,v 1.23 2004/11/10 15:24:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/19 07:48:21 $
+ * @version $Revision: 1.23 $, $Date: 2004/11/10 15:24:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -42,8 +42,8 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
 	public static final String	COLUMN_THRESHOLD_SET_ID		= "threshold_set_id";
 
-	private String updateColumns;	
-	private String updateMultiplySQLValues;
+	private static String columns;	
+	private static String updateMultiplySQLValues;
 	
 	private Evaluation fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Evaluation)
@@ -54,39 +54,21 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		this.retrieveEntity(evaluation);
-	}
-	
+	}	
 
 	protected String getEnityName() {		
-		return "Evaluation";
-	}
-	
-	
-	protected String getTableName() {		
 		return ObjectEntities.EVALUATION_ENTITY;
 	}
 	
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-		+ COLUMN_TYPE_ID + COMMA
-		+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-		+ COLUMN_THRESHOLD_SET_ID
-		+ SQL_FROM + ObjectEntities.EVALUATION_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
-	}
-	
-	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
-			+ COLUMN_TYPE_ID + COMMA
-			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-			+ COLUMN_THRESHOLD_SET_ID;
+	protected String getColumns() {
+		if (columns == null){
+			columns = super.getColumns() + COMMA
+				+ COLUMN_TYPE_ID + COMMA
+				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ COLUMN_THRESHOLD_SET_ID;
 		}
-		return this.updateColumns;
-	}
-	
+		return columns;
+	}	
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){

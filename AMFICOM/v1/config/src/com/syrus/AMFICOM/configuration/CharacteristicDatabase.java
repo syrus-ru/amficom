@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.36 2004/11/04 13:33:04 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.37 2004/11/10 15:23:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/11/04 13:33:04 $
- * @author $Author: max $
+ * @version $Revision: 1.37 $, $Date: 2004/11/10 15:23:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -61,20 +61,16 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     public static final String COLUMN_CHARACTERIZED_ID	= "characterized_id";
     
     
-    private String updateColumns;
-       private String updateMultiplySQLValues;
+    private static String columns;
+    private static String updateMultiplySQLValues;
     
     protected String getEnityName() {
 		return ObjectEntities.CHARACTERISTIC_ENTITY;
 	}
     
-    protected String getTableName() {
-		return ObjectEntities.CHARACTERISTIC_ENTITY;
-	}
-    
-    protected String getUpdateColumns() {
-    	if (this.updateColumns == null){
-    		this.updateColumns = super.getUpdateColumns() + COMMA
+    protected String getColumns() {
+    	if (columns == null){
+    		columns = super.getColumns() + COMMA
     			+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
@@ -84,12 +80,12 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				+ COLUMN_SORT +	COMMA
 				+ COLUMN_CHARACTERIZED_ID;
 		}
-		return this.updateColumns;
+		return columns;
 	}
     
     protected String getUpdateMultiplySQLValues() {
-    	if (this.updateMultiplySQLValues == null){
-    		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+    	if (updateMultiplySQLValues == null){
+    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -99,7 +95,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION;
     	}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
@@ -154,21 +150,6 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	
 	
 
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-		+ COLUMN_TYPE_ID + COMMA
-		+ COLUMN_NAME + COMMA
-		+ COLUMN_DESCRIPTION + COMMA			
-		+ COLUMN_VALUE + COMMA
-		+ COLUMN_IS_EDITABLE + COMMA
-		+ COLUMN_IS_VISIBLE + COMMA
-		+ COLUMN_SORT + COMMA
-		+ COLUMN_CHARACTERIZED_ID
-		+ SQL_FROM + ObjectEntities.CHARACTERISTIC_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
-	}
-	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException, IllegalDataException {
 		Characteristic characteristic = storableObject == null ? null : fromStorableObject(storableObject); 
 		if (characteristic == null){

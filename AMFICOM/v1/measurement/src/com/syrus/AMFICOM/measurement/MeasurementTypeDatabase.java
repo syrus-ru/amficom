@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.38 2004/11/03 12:04:52 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.39 2004/11/10 15:24:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/11/03 12:04:52 $
+ * @version $Revision: 1.39 $, $Date: 2004/11/10 15:24:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -60,8 +60,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
-	private String updateColumns;
-	private String updateMultiplySQLValues;
+	private static String columns;
+	private static String updateMultiplySQLValues;
 
 	private MeasurementType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementType)
@@ -70,33 +70,26 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}	
 	
 	protected String getEnityName() {
-		return "MeasurementType";
-	}
-	
-	
-	protected String getTableName() {
 		return ObjectEntities.MEASUREMENTTYPE_ENTITY;
-	}
+	}	
 	
-	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA 
 				+ COLUMN_DESCRIPTION;
 		}
-		return this.updateColumns;
+		return columns;
 	}	
 
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA 
 				+ QUESTION;
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}	
-	
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
@@ -114,16 +107,6 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		this.retrieveMeasurementPortTypes(measurementType);
 	}
 
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION
-			+ SQL_FROM + ObjectEntities.MEASUREMENTTYPE_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
-	}
-	
-	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementType measurementType = (storableObject == null) ? 

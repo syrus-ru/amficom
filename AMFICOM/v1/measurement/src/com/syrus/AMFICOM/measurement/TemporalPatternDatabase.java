@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.24 2004/11/02 15:27:46 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.25 2004/11/10 15:24:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/02 15:27:46 $
+ * @version $Revision: 1.25 $, $Date: 2004/11/10 15:24:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -52,55 +52,42 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException("TemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 	
-	private String updateColumns;
-	private String updateMultiplySQLValues;
+	private static String columns;
+	private static String updateMultiplySQLValues;	
 	
-	protected String getEnityName() {
-		return "TemporalPattern";
-	}
-	
-	protected String getTableName() {		
+	protected String getEnityName() {		
 		return ObjectEntities.TEMPORALPATTERN_ENTITY;
 	}
 	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_VALUE;
 		}
-		return this.updateColumns;
+		return columns;
 	}	
 
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){	
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){	
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}
 	
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		throw new UnsupportedOperationException("Entity contain complex field");		
-	}
-	
+	}	
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		this.retrieveEntity(temporalPattern);
 	}
 
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_VALUE
-			+ SQL_FROM + ObjectEntities.TEMPORALPATTERN_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-	}
-	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TemporalPattern temporalPattern = (storableObject == null) ?
@@ -141,7 +128,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		try{
 			String sql = SQL_INSERT_INTO + ObjectEntities.TEMPORALPATTERN_ENTITY 
 			+ OPEN_BRACKET
-			+ this.getUpdateColumns()
+			+ this.getColumns()
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ getUpdateMultiplySQLValues()
 			+ CLOSE_BRACKET;

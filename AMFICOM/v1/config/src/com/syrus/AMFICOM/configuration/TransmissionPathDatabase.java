@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.24 2004/11/04 13:33:05 max Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.25 2004/11/10 15:23:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/04 13:33:05 $
- * @author $Author: max $
+ * @version $Revision: 1.25 $, $Date: 2004/11/10 15:23:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -64,26 +64,22 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
     
     public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
     
-    private String updateColumns;
-    private String updateMultiplySQLValues;
+    private static String columns;
+    private static String updateMultiplySQLValues;
 
 	private TransmissionPath fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TransmissionPath)
 			return (TransmissionPath)storableObject;
 		throw new IllegalDataException("TransmissionPathDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}	
-	
+
 	protected String getEnityName() {		
-		return "TransmissionPath";
-	}	
-	
-	protected String getTableName() {		
 		return ObjectEntities.TRANSPATH_ENTITY;
 	}	
 	
-	protected String getUpdateColumns() {		
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {		
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
                 + COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
@@ -91,12 +87,12 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 				+ COLUMN_START_PORT_ID + COMMA
 				+ COLUMN_FINISH_PORT_ID;		
 		}
-		return this.updateColumns;
+		return columns;
 	}	
 	
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
                 + QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -104,7 +100,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION;		
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}	
 	
 	
@@ -147,20 +143,6 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		this.retrieveTransmissionPathMELink(transmissionPath);
 		transmissionPath.setCharacteristics(characteristicDatabase.retrieveCharacteristics(transmissionPath.getId(), CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH));
 	}
-	
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-            + COLUMN_TYPE_ID + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_START_PORT_ID + COMMA
-			+ COLUMN_FINISH_PORT_ID
-			+ SQL_FROM + ObjectEntities.TRANSPATH_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-	}
-	
-	
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {

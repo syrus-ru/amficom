@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.44 2004/11/03 11:59:57 max Exp $
+ * $Id: TestDatabase.java,v 1.45 2004/11/10 15:24:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/11/03 11:59:57 $
- * @author $Author: max $
+ * @version $Revision: 1.45 $, $Date: 2004/11/10 15:24:02 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -74,20 +74,16 @@ public class TestDatabase extends StorableObjectDatabase {
 	
     public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
     
-	private String updateColumns;
-	private String updateMultiplySQLValues;	
+	private static String columns;
+	private static String updateMultiplySQLValues;	
 	
 	protected String getEnityName() {
 		return ObjectEntities.TEST_ENTITY;
 	}	
 	
-	protected String getTableName() {		
-		return ObjectEntities.TEST_ENTITY;
-	}	
-	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ COLUMN_TEMPORAL_TYPE + COMMA
 				+ COLUMN_START_TIME + COMMA
 				+ COLUMN_END_TIME + COMMA
@@ -100,12 +96,12 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ COLUMN_RETURN_TYPE + COMMA
 				+ COLUMN_DESCRIPTION;
 		}
-		return this.updateColumns;
+		return columns;
 	}	
 
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -118,7 +114,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}	
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
@@ -200,24 +196,6 @@ public class TestDatabase extends StorableObjectDatabase {
 		this.retrieveMeasurementSetupTestLinks(test);
 	}
 	
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-		+ COLUMN_TEMPORAL_TYPE + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_START_TIME) + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_END_TIME) + COMMA
-		+ COLUMN_TEMPORAL_PATTERN_ID + COMMA
-		+ COLUMN_MEASUREMENT_TYPE_ID + COMMA			
-		+ COLUMN_ANALYSIS_TYPE_ID + COMMA
-		+ COLUMN_EVALUATION_TYPE_ID + COMMA
-		+ COLUMN_STATUS + COMMA
-		+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-		+ COLUMN_RETURN_TYPE + COMMA
-		+ COLUMN_DESCRIPTION
-		+ SQL_FROM + ObjectEntities.TEST_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
-	}	
-
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Test test = (storableObject == null)?

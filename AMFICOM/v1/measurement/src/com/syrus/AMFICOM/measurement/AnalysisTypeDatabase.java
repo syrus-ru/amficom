@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.36 2004/11/03 11:59:57 max Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.37 2004/11/10 15:24:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/11/03 11:59:57 $
- * @author $Author: max $
+ * @version $Revision: 1.37 $, $Date: 2004/11/10 15:24:02 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -59,8 +59,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
-	private String updateColumns;
-	private String updateMultiplySQLValues;
+	private static String columns;
+	private static String updateMultiplySQLValues;
 
 	private AnalysisType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof AnalysisType)
@@ -71,29 +71,24 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getEnityName() {
 		return ObjectEntities.ANALYSISTYPE_ENTITY;
-	}
-	
-	
-	protected String getTableName() {
-		return ObjectEntities.ANALYSISTYPE_ENTITY;
 	}	
 	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA 
 				+ COLUMN_DESCRIPTION;
 		}
-		return this.updateColumns;
+		return columns;
 	}	
 
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA 
 				+ QUESTION;
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}	
 	
 	
@@ -111,15 +106,6 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		super.retrieveEntity(analysisType);
 		this.retrieveParameterTypes(analysisType);
-	}
-	
-	protected String retrieveQuery(final String condition){
-		return super.retrieveQuery(condition) + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION
-			+ SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws IllegalDataException, RetrieveObjectException, SQLException{

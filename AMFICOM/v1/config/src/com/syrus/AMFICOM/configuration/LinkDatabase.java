@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.4 2004/11/04 13:33:04 max Exp $
+ * $Id: LinkDatabase.java,v 1.5 2004/11/10 15:23:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/04 13:33:04 $
- * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2004/11/10 15:23:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -61,8 +61,8 @@ public class LinkDatabase extends StorableObjectDatabase {
 
 
 	
-	private String updateColumns;
-	private String updateMultiplySQLValues;
+	private static String columns;
+	private static String updateMultiplySQLValues;
 	
 	private Link fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Link)
@@ -74,13 +74,9 @@ public class LinkDatabase extends StorableObjectDatabase {
 		return ObjectEntities.LINK_ENTITY;
 	}
 	
-	protected String getTableName() {
-		return ObjectEntities.LINK_ENTITY;
-	}
-	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_SORT + COMMA
@@ -93,12 +89,12 @@ public class LinkDatabase extends StorableObjectDatabase {
 				+ COLUMN_COLOR + COMMA
 				+ COLUMN_MARK;
 		}
-		return this.updateColumns;
+		return columns;
 	}
 	
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateColumns == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -111,7 +107,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
@@ -136,24 +132,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + (color != null ? color : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (mark != null ? mark : "") + APOSTOPHE;
 		return sql;
-	}
-	
-	protected String retrieveQuery(String condition){
-		return super.getUpdateColumns() + COMMA
-			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_TYPE_ID + COMMA
-			+ COLUMN_SORT + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_INVENTORY_NO + COMMA
-			+ COLUMN_SUPPLIER + COMMA
-			+ COLUMN_SUPPLIER_CODE + COMMA
-			+ COLUMN_LINK_ID + COMMA
-			+ COLUMN_COLOR + COMMA
-			+ COLUMN_MARK
-			+ SQL_FROM + ObjectEntities.LINK_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.25 2004/11/04 13:33:05 max Exp $
+ * $Id: MCMDatabase.java,v 1.26 2004/11/10 15:23:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/04 13:33:05 $
- * @author $Author: max $
+ * @version $Revision: 1.26 $, $Date: 2004/11/10 15:23:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -52,8 +52,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_SERVER_ID = "server_id";
 	//public static final String COLUMN_LOCATION = "location";
 	//public static final String COLUMN_HOSTNAME = "hostname";
-	private String updateColumns;
-	private String updateMultiplySQLValues;
+	private static String columns;
+	private static String updateMultiplySQLValues;
 	
 	private MCM fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MCM)
@@ -62,35 +62,31 @@ public class MCMDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getEnityName() {
-		return "MCM";
-	}
-	
-	protected String getTableName() {
 		return ObjectEntities.MCM_ENTITY;
 	}
-	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-    		this.updateColumns = super.getUpdateColumns() + COMMA
+
+	protected String getColumns() {
+		if (columns == null){
+    		columns = super.getColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_USER_ID + COMMA
 				+ COLUMN_SERVER_ID;
 		}
-		return this.updateColumns;
+		return columns;
 	}
 	
 	protected String getUpdateMultiplySQLValues() {
-    	if (this.updateMultiplySQLValues == null){
-    		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+    	if (updateMultiplySQLValues == null){
+    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
     	}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
@@ -130,19 +126,6 @@ public class MCMDatabase extends StorableObjectDatabase {
 		this.retrieveEntity(mcm);
 		this.retrieveKISIds(mcm);
 		mcm.setCharacteristics(characteristicDatabase.retrieveCharacteristics(mcm.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
-	}
-	
-	
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_TYPE_ID + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_USER_ID + COMMA
-			+ COLUMN_SERVER_ID
-			+ SQL_FROM + ObjectEntities.MCM_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 	}
 	
 	protected StorableObject updateEntityFromResultSet(

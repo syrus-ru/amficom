@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.25 2004/11/04 13:33:05 max Exp $
+ * $Id: ServerDatabase.java,v 1.26 2004/11/10 15:23:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/04 13:33:05 $
- * @author $Author: max $
+ * @version $Revision: 1.26 $, $Date: 2004/11/10 15:23:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -52,32 +52,28 @@ public class ServerDatabase extends StorableObjectDatabase {
     // user_id VARCHAR2(32) NOT NULL,
     public static final String COLUMN_USER_ID       = "user_id";    
 
-    private String updateColumns;
-    private String updateMultiplySQLValues;
+    private static String columns;
+    private static String updateMultiplySQLValues;
     
 	private Server fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Server)
 			return (Server) storableObject;
 		throw new IllegalDataException("ServerDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
-
-	protected String getEnityName() {		
-		return "Server";
-	}	
 	
-	protected String getTableName() {		
+	protected String getEnityName() {		
 		return ObjectEntities.SERVER_ENTITY;
 	}
 	
-	protected String getUpdateColumns() {		
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {		
+		if (this.columns == null){
+			this.columns = super.getColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_USER_ID;		
 		}
-		return this.updateColumns;
+		return this.columns;
 	}	
 	
 	protected String getUpdateMultiplySQLValues() {
@@ -109,16 +105,6 @@ public class ServerDatabase extends StorableObjectDatabase {
 		this.retrieveEntity(server);
 		server.setCharacteristics(characteristicDatabase.retrieveCharacteristics(server.getId(), CharacteristicSort.CHARACTERISTIC_SORT_SERVER));
 	}
-	
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_USER_ID
-			+ SQL_FROM + ObjectEntities.SERVER_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-	}	
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {

@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.20 2004/10/29 15:03:39 max Exp $
+ * $Id: UserDatabase.java,v 1.21 2004/11/10 15:23:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/29 15:03:39 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2004/11/10 15:23:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -46,8 +46,8 @@ public class UserDatabase extends StorableObjectDatabase {
     // sort NUMBER(2, 0) NOT NULL,
     public static final String COLUMN_SORT  = "sort";
     
-    private String updateColumns;
-    private String updateMultiplySQLValues;
+    private static String columns;
+    private static String updateMultiplySQLValues;
     
 	private User fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof User)
@@ -56,35 +56,30 @@ public class UserDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String getEnityName() {		
-		return "User";
-	}	
-	
-	protected String getTableName() {		
 		return ObjectEntities.USER_ENTITY;
-	}
-	
-	protected String getUpdateColumns() {		
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	}	
+
+	protected String getColumns() {		
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ COLUMN_LOGIN + COMMA
 				+ COLUMN_SORT + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION;		
 		}
-		return this.updateColumns;
+		return columns;
 	}	
 	
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;		
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}	
-	
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
@@ -99,16 +94,6 @@ public class UserDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		User user = this.fromStorableObject(storableObject);
 		this.retrieveEntity(user);	
-	}
-	
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-			+ COLUMN_LOGIN + COMMA
-			+ COLUMN_SORT + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION
-			+ SQL_FROM + ObjectEntities.USER_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

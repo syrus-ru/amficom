@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.16 2004/10/29 15:03:39 max Exp $
+ * $Id: PortTypeDatabase.java,v 1.17 2004/11/10 15:23:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/29 15:03:39 $
- * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2004/11/10 15:23:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -41,8 +41,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
-    private String updateColumns;
-    private String updateMultiplySQLValues;
+    private static String columns;
+    private static String updateMultiplySQLValues;
 
 	
 	private PortType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -55,28 +55,24 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		return ObjectEntities.PORTTYPE_ENTITY;
 	}	
 	
-	protected String getTableName() {		
-		return ObjectEntities.PORTTYPE_ENTITY;
-	}
-	
-	protected String getUpdateColumns() {		
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {		
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_NAME;		
 		}
-		return this.updateColumns;
+		return columns;
 	}	
 	
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;		
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}	
 	
 	
@@ -93,15 +89,6 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		PortType portType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(portType);
-	}
-
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_NAME
-			+ SQL_FROM + ObjectEntities.PORTTYPE_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

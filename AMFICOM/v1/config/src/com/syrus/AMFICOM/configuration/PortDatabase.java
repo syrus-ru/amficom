@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.25 2004/11/04 13:33:05 max Exp $
+ * $Id: PortDatabase.java,v 1.26 2004/11/10 15:23:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/04 13:33:05 $
- * @author $Author: max $
+ * @version $Revision: 1.26 $, $Date: 2004/11/10 15:23:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
@@ -49,8 +49,8 @@ public class PortDatabase extends StorableObjectDatabase {
     // sort NUMBER(2) NOT NULL,
     public static final String COLUMN_SORT  = "sort";    
   
-    private String updateColumns;
-    private String updateMultiplySQLValues;
+    private static String columns;
+    private static String updateMultiplySQLValues;
 
     
 	private Port fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -58,36 +58,32 @@ public class PortDatabase extends StorableObjectDatabase {
 			return (Port)storableObject;
 		throw new IllegalDataException("PortDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
-
-	protected String getEnityName() {		
-		return "Port";
-	}	
 	
-	protected String getTableName() {		
+	protected String getEnityName() {		
 		return ObjectEntities.PORT_ENTITY;
 	}
 	
-	protected String getUpdateColumns() {		
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {		
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_EQUIPMENT_ID + COMMA
 				+ COLUMN_SORT;		
 		}
-		return this.updateColumns;
+		return columns;
 	}	
 	
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;		
 		
 		}
-		return this.updateMultiplySQLValues;
+		return updateMultiplySQLValues;
 	}	
 	
 	
@@ -109,27 +105,6 @@ public class PortDatabase extends StorableObjectDatabase {
 		Port port = this.fromStorableObject(storableObject);
 		this.retrieveEntity(port);
 		port.setCharacteristics(characteristicDatabase.retrieveCharacteristics(port.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
-	}
-	
-	protected String retrieveQuery(String condition){
-		StringBuffer buffer = new StringBuffer(super.retrieveQuery(condition));
-		buffer.append(COMMA);
-		buffer.append(COLUMN_TYPE_ID);
-		buffer.append(COMMA);
-		buffer.append(COLUMN_DESCRIPTION);
-		buffer.append(COMMA);
-		buffer.append(COLUMN_EQUIPMENT_ID);
-		buffer.append(COMMA);
-		buffer.append(COLUMN_SORT);
-		buffer.append(SQL_FROM);
-		buffer.append(ObjectEntities.PORT_ENTITY);
-		if ((condition != null) && (condition.length()>0)){
-			buffer.append(SQL_WHERE);
-			buffer.append(condition);
-		}
-
-		return buffer.toString();
-
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.3 2004/10/29 15:03:39 max Exp $
+ * $Id: LinkTypeDatabase.java,v 1.4 2004/11/10 15:23:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/29 15:03:39 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2004/11/10 15:23:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -52,20 +52,16 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
     // image_id VARCHAR2(32),
     public static final String COLUMN_IMAGE_ID      = "image_id";
 	
-	private String updateColumns;
-	private String updateMultiplySQLValues;
+	private static String columns;
+	private static String updateMultiplySQLValues;
 	
 	protected String getEnityName() {
 		return ObjectEntities.LINKTYPE_ENTITY;
 	}
 	
-	protected String getTableName() {
-		return ObjectEntities.LINKTYPE_ENTITY;
-	}
-	
 	protected String getUpdateMultiplySQLValues() {
-		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+		if (updateMultiplySQLValues == null){
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -74,12 +70,12 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}
-	return this.updateMultiplySQLValues;
+	return updateMultiplySQLValues;
 	}
 	
-	protected String getUpdateColumns() {
-		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns() + COMMA
+	protected String getColumns() {
+		if (columns == null){
+			columns = super.getColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_NAME + COMMA
@@ -88,7 +84,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 				+ COLUMN_MANUFACTURER_CODE + COMMA
 				+ COLUMN_IMAGE_ID;
 		}
-		return this.updateColumns;
+		return columns;
 	}
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
@@ -117,20 +113,6 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 		super.retrieveEntity(linkType);
 	}
 	
-	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition) + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_SORT + COMMA
-			+ COLUMN_MANUFACTURER + COMMA
-			+ COLUMN_MANUFACTURER_CODE + COMMA
-			+ COLUMN_IMAGE_ID
-			+ SQL_FROM + ObjectEntities.LINKTYPE_ENTITY
-			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
-	}
-	 
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement) throws IllegalDataException,
 			UpdateObjectException {
