@@ -8,6 +8,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 
@@ -73,7 +74,7 @@ public final class MapNodeLinkPropertiesController
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
 		{
-			result = String.valueOf(nodeLink.getLengthLt());
+			result = String.valueOf(MiscUtil.fourdigits(nodeLink.getLengthLt()));
 		}
 		else
 		if (key.equals(PROPERTY_START_NODE_ID))

@@ -41,7 +41,6 @@ src\com\syrus\AMFICOM\Client\General\Command\CommandList.java
 src\com\syrus\AMFICOM\Client\General\Command\ExitCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\HelpAboutCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\OpenTypedTemplateCommand.java
-src\com\syrus\AMFICOM\Client\General\Command\ViewCatalogCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\ViewNavigatorCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\VoidCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Session\CheckConnectionCommand.java
@@ -235,7 +234,6 @@ src\com\syrus\AMFICOM\Client\Resource\Trash.java
 src\com\syrus\AMFICOM\Client\Resource\Alarm\Message.java
 src\com\syrus\AMFICOM\Client\Resource\Alarm\MessageModel.java
 src\com\syrus\AMFICOM\Client\Resource\Alarm\MessageSorter.java
-src\com\syrus\AMFICOM\Client\Resource\Alarm\MessageType.java
 src\com\syrus\AMFICOM\Client\Resource\Object\AdminObjectResource.java
 src\com\syrus\AMFICOM\Client\Resource\Object\AdminObjectRWXresource.java
 src\com\syrus\AMFICOM\Client\Resource\Object\Categories.java

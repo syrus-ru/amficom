@@ -6,7 +6,7 @@ SRC=$(HOME)\src
 CLASSES=$(HOME)\classes
 LIBSRC=$(HOME)\..\AMFICOMCommon\src
 
-JAVAC=javac
+JAVAC=D:\java\j2sdk_nb\j2sdk1.4.2\bin\javac -source 1.4 -target 1.4 -nowarn
 JAR=jar
 
 TARGET=$(LIB)\administrate.jar
@@ -16,15 +16,11 @@ TARGET_CLASS_LIST=src_admin.txt
 TARGET_SRC=$(LIBSRC)\administratesource.jar
 
 SERVERCP=$(LIB)\corba.jar
-CLIENTCP=$(LIB)\utilclient.jar;$(LIB)\generalclient.jar;$(LIB)\corbaportable-common.jar;$(LIB)\filter.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar
 
-ORBCP=$(EXTLIB)\aurora.zip;$(EXTLIB)\aurora_client_orbindep.jar;$(EXTLIB)\aurora_client_orbdep.jar
-VBJCP=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
-SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
-REPORTCP=$(EXTLIB)\jfreechartK.jar
-JGRAPHCP=$(EXTLIB)\jgraphpad.jar
 
+CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP)
 
 .PHONY:	$(TARGET)
 
@@ -37,7 +33,7 @@ jar:
 
 impl:
 	$(JAVAC) -d $(CLASSES) \
-		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP):$(ORBCP) \
+		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
 		@$(TARGET_CLASS_LIST)
 

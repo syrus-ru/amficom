@@ -7,6 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.Object.User;
@@ -22,7 +23,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public final class MapViewController implements ObjectResourceController 
+public final class MapController implements ObjectResourceController 
 {
 	public static final String KEY_NAME = "Name";
 	public static final String KEY_DOMAIN = "Domain";
@@ -30,14 +31,14 @@ public final class MapViewController implements ObjectResourceController
 	public static final String KEY_CREATED = "Created";
 	public static final String KEY_MODIFIED = "Modified";
 
-	private static MapViewController instance;
+	private static MapController instance;
 
 	private List keys;
 
 	  static SimpleDateFormat sdf =
 		new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-	private MapViewController() 
+	private MapController() 
 	{
 		// empty private constructor
 		String[] keysArray = new String[] { 
@@ -50,10 +51,10 @@ public final class MapViewController implements ObjectResourceController
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MapViewController getInstance() 
+	public static MapController getInstance() 
 	{
 		if (instance == null)
-			instance = new MapViewController();
+			instance = new MapController();
 		return instance;
 	}
 	
@@ -71,30 +72,30 @@ public final class MapViewController implements ObjectResourceController
 	public Object getValue(final ObjectResource objectResource, final String key)
 	{
 		Object result = null;
-		MapView view = (MapView )objectResource;
+		Map map = (Map )objectResource;
 		if (key.equals(KEY_NAME))
 		{
-			result = view.getName();
+			result = map.getName();
 		}
 		else
 		if (key.equals(KEY_DOMAIN))
 		{
-			result = Pool.get(Domain.typ, view.getDomainId());
+			result = Pool.get(Domain.typ, map.getDomainId());
 		}
 		else
 		if (key.equals(KEY_USER))
 		{
-			result = Pool.get(User.typ, view.getCreatedBy());
+			result = Pool.get(User.typ, map.getUserId());
 		}
 		else
 		if (key.equals(KEY_CREATED))
 		{
-			result = sdf.format(new Date(view.getCreated()));
+			result = sdf.format(new Date(map.getCreated()));
 		}
 		else
 		if (key.equals(KEY_MODIFIED))
 		{
-			result = sdf.format(new Date(view.getModified()));
+			result = sdf.format(new Date(map.getModified()));
 		}
 		return result;
 	}

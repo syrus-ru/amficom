@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.8 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.9 2004/10/05 12:55:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -65,7 +65,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/05 12:55:58 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -1816,8 +1816,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				MapLinkProtoElement.COLLECTIOR,
 				LangModelMap.getString("CollectorFragment"),
 				"desc",
-				new Dimension(3, 4));
-			mlpe.setLineSize(2);
+				new Dimension(2, 6));
+			mlpe.setLineSize(4);
 			mlpe.setColor(Color.DARK_GRAY);
 			Pool.put(MapLinkProtoElement.typ, mlpe.getId(), mlpe);
 		}

@@ -8,6 +8,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 
@@ -75,12 +76,12 @@ public final class MapPhysicalNodePropertiesController
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = String.valueOf(node.getAnchor().x);
+			result = String.valueOf(MiscUtil.fourdigits(node.getAnchor().x));
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = String.valueOf(node.getAnchor().y);
+			result = String.valueOf(MiscUtil.fourdigits(node.getAnchor().y));
 		}
 		else
 		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))

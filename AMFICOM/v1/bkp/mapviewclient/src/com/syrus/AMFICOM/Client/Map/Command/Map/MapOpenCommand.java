@@ -71,7 +71,7 @@ public class MapOpenCommand extends VoidCommand
 
 		new MapDataSourceImage(dataSource).loadMaps();
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(dataSource, com.syrus.AMFICOM.Client.Resource.Map.Map.typ);
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(dataSource, Map.typ);
 
 		mcd.setCanDelete(canDelete);
 /*

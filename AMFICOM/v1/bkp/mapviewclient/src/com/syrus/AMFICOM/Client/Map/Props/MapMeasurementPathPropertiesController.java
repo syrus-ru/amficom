@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
@@ -89,17 +90,17 @@ public final class MapMeasurementPathPropertiesController
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
 		{
-			result = String.valueOf(path.getLengthLt());
+			result = String.valueOf(MiscUtil.fourdigits(path.getLengthLt()));
 		}
 		else
 		if (key.equals(PROPERTY_OPTICAL_LENGTH))
 		{
-			result = String.valueOf(path.getLengthLo());
+			result = String.valueOf(MiscUtil.fourdigits(path.getLengthLo()));
 		}
 		else
 		if (key.equals(PROPERTY_PHYSICAL_LENGTH))
 		{
-			result = String.valueOf(path.getLengthLf());
+			result = String.valueOf(MiscUtil.fourdigits(path.getLengthLf()));
 		}
 		else
 		if (key.equals(PROPERTY_START_NODE_ID))

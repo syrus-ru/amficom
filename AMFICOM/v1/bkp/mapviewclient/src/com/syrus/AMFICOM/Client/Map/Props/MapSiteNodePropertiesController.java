@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
@@ -82,12 +83,12 @@ public final class MapSiteNodePropertiesController
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = String.valueOf(site.getAnchor().x);
+			result = String.valueOf(MiscUtil.fourdigits(site.getAnchor().x));
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = String.valueOf(site.getAnchor().y);
+			result = String.valueOf(MiscUtil.fourdigits(site.getAnchor().y));
 		}
 
 		return result;

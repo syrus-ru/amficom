@@ -6,22 +6,16 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.Object.User;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,7 +26,7 @@ public final class MapViewController implements ObjectResourceController
 {
 	public static final String KEY_NAME = "Name";
 	public static final String KEY_DOMAIN = "Domain";
-	public static final String KEY_USER = "User";
+	public static final String KEY_USER = "User_id";
 	public static final String KEY_CREATED = "Created";
 	public static final String KEY_MODIFIED = "Modified";
 

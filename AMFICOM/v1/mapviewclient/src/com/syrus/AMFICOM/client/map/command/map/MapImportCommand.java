@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.3 2004/10/05 12:55:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,20 +11,20 @@
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Map.Command.Map.ExportCommand;
+import com.syrus.AMFICOM.Client.Map.Command.ImportCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+
 import java.io.File;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.List;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/05 12:55:58 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

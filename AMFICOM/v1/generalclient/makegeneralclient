@@ -8,7 +8,7 @@ SRCTEST=$(HOME)\test
 CLASSES=$(HOME)\classes
 CLASSES_TEST=$(HOME)\classes_test
 
-JAVAC=javac
+JAVAC=D:\java\j2sdk_nb\j2sdk1.4.2\bin\javac -source 1.4 -target 1.4 -nowarn
 JAR=jar
 
 TARGET=$(LIB)\generalclient.jar
@@ -18,16 +18,15 @@ TARGET_SRC=$(LIBSRC)\generalclientsource.jar
 TEST_CLASS_LIST=src_generalclienttest.txt
 
 SERVERCP=$(LIB)\corba.jar
-CLIENTCP=$(LIB)\utilclient.jar;$(LIB)\corbaportable-common.jar;$(LIB)\filter.jar
+CLIENTCP=$(LIB)\utilclient.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar
 
-ORBCP=$(EXTLIB)\aurora_client_orbindep.jar;$(EXTLIB)\aurora_client_orbdep.jar
-VBJCP=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
 REPORTCP=$(EXTLIB)\jfreechartK.jar
 JGRAPHCP=$(EXTLIB)\jgraphpad.jar
 JUNITCP=$(EXTLIB)\junit.jar
 
+CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP)
 
 .PHONY:	$(TARGET)
 
@@ -41,7 +40,7 @@ impl:
 	$(JAVAC) \
 		-deprecation \
 		-d $(CLASSES) \
-		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP);$(ORBCP);$(JUNITCP) \
+		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
 		@$(TARGET_CLASS_LIST)
 
@@ -49,7 +48,7 @@ tst:
 	$(JAVAC) \
 		-deprecation \
 		-d $(CLASSES_TEST) \
-		-classpath $(CLASSES);$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP);$(ORBCP);$(JUNITCP) \
+		-classpath $(CLASSPATH);$(CLASSES) \
 		-sourcepath $(SRCTEST) \
 		@$(TEST_CLASS_LIST)
 

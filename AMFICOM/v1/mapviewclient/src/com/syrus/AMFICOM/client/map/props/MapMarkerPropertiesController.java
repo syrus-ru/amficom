@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
@@ -86,17 +87,17 @@ public final class MapMarkerPropertiesController
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = String.valueOf(marker.getAnchor().x);
+			result = String.valueOf(MiscUtil.fourdigits(marker.getAnchor().x));
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = String.valueOf(marker.getAnchor().y);
+			result = String.valueOf(MiscUtil.fourdigits(marker.getAnchor().y));
 		}
 		else
 		if (key.equals(PROPERTY_DISTANCE))
 		{
-			result = String.valueOf(marker.getFromStartLengthLf());
+			result = String.valueOf(MiscUtil.fourdigits(marker.getFromStartLengthLf()));
 		}
 		else
 		if (key.equals(PROPERTY_PATH_ID))
