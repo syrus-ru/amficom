@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.25 2005/04/01 16:00:37 max Exp $
+ * $Id: CableThreadType.java,v 1.26 2005/04/01 17:32:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -36,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.25 $, $Date: 2005/04/01 16:00:37 $
- * @author $Author: max $
+ * @version $Revision: 1.26 $, $Date: 2005/04/01 17:32:28 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
