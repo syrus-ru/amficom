@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.64 2005/02/19 20:33:58 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.65 2005/02/22 14:11:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/02/19 20:33:58 $
+ * @version $Revision: 1.65 $, $Date: 2005/02/22 14:11:23 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -180,7 +180,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
-		set.setParameters((SetParameter[])parameters.toArray(new SetParameter[parameters.size()]));
+		set.setParameters0((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
 	}
 
 	private void retrieveSetParametersByOneQuery(Collection sets) throws RetrieveObjectException {
@@ -240,7 +240,9 @@ public class SetDatabase extends StorableObjectDatabase {
 				setParameters = (List) setParametersMap.get(setId);
 
 				if (setParameters != null)
-					set.setParameters((SetParameter[]) setParameters.toArray(new SetParameter[setParameters.size()]));
+					set.setParameters0((SetParameter[]) setParameters.toArray(new SetParameter[setParameters.size()]));
+				else
+					set.setParameters0(new SetParameter[0]);
 			}
 		}
 		catch (SQLException sqle) {
@@ -648,7 +650,7 @@ public class SetDatabase extends StorableObjectDatabase {
 									+ SetWrapper.LINK_COLUMN_SET_ID + EQUALS
 									+ setIdStr);									
 			statement.executeUpdate(SQL_DELETE_FROM 
-									+ ObjectEntities.SET_ENTITY
+									+ this.getEnityName()
 									+ SQL_WHERE
 									+ StorableObjectWrapper.COLUMN_ID + EQUALS
 									+ setIdStr);

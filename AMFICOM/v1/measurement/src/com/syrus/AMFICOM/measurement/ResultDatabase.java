@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.68 2005/02/19 20:33:58 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.69 2005/02/22 14:10:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/02/19 20:33:58 $
+ * @version $Revision: 1.69 $, $Date: 2005/02/22 14:10:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -365,13 +365,15 @@ public class ResultDatabase extends StorableObjectDatabase {
 			}
 
 			Result result;
-			for (Iterator it = results.iterator(); it.hasNext(); ) {
-				result = (Result)it.next();
+			for (Iterator it = results.iterator(); it.hasNext();) {
+				result = (Result) it.next();
 				resultId = result.getId();
 				resultParameters = (List) resultParametersMap.get(resultId);
 
 				if (resultParameters != null)
-					result.setParameters0((SetParameter[])resultParameters.toArray(new SetParameter[resultParameters.size()]));
+					result.setParameters0((SetParameter[]) resultParameters.toArray(new SetParameter[resultParameters.size()]));
+				else
+					result.setParameters0(new SetParameter[0]);
 			}
 			
 		}

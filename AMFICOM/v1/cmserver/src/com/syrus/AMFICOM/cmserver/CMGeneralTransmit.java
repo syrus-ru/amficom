@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.6 2005/02/15 09:56:09 arseniy Exp $
+ * $Id: CMGeneralTransmit.java,v 1.7 2005/02/22 14:15:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,11 +46,10 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/15 09:56:09 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/22 14:15:00 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -602,10 +601,10 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+				collection = GeneralStorableObjectPool.getStorableObjects(idsList, true);
 
 			} else
-				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = GeneralStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE), true);
 
 			ParameterType_Transferable[] transferables = new ParameterType_Transferable[collection.size()];
@@ -649,11 +648,11 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				collection = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
 					new EquivalentCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE), true);
 
 			} else
-				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				collection = GeneralStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE), true);
 
 			ParameterType_Transferable[] transferables = new ParameterType_Transferable[collection.size()];
@@ -698,10 +697,10 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
-				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 
 			} else
-				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = GeneralStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			ParameterType_Transferable[] transferables = new ParameterType_Transferable[collection.size()];
 			int i = 0;
