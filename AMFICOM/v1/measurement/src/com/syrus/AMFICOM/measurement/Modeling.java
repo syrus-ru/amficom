@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.7 2004/10/13 09:49:50 bob Exp $
+ * $Id: Modeling.java,v 1.8 2004/10/18 09:44:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -20,12 +22,13 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.corba.ModelingSort;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/10/13 09:49:50 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/18 09:44:28 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -36,6 +39,8 @@ public class Modeling extends Action {
 	private String schemePathId;
 	private MeasurementType measurementType;
 	private Set argumentSet;
+	
+	private int sort;
 
 	private StorableObjectDatabase	modelingDatabase;
 
@@ -54,8 +59,10 @@ public class Modeling extends Action {
 	protected Modeling(Identifier id,
 							 Identifier creatorId,
 							 String schemePathId,
+							 Identifier monitoredElementId,
 							 String name,
-							 Set argumentSet){
+							 Set argumentSet,
+							 int sort){
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -63,8 +70,10 @@ public class Modeling extends Action {
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
 		this.schemePathId = schemePathId;
+		this.monitoredElementId = monitoredElementId;
 		this.name = name;
 		this.argumentSet = argumentSet;
+		this.sort = sort;		
 		
 		this.modelingDatabase = MeasurementDatabaseContext.testDatabase;
 
@@ -78,13 +87,17 @@ public class Modeling extends Action {
 	public static Modeling createInstance(Identifier id,
 																		Identifier creatorId,
 																		String schemePathId,
+																		Identifier monitoredElementId,
 																		String name,
-																		Set argumentSet){
+																		Set argumentSet,
+																		ModelingSort sort){
 		return new Modeling(id,
 										creatorId,
 										schemePathId,
+										monitoredElementId,
 										name,
-										argumentSet);
+										argumentSet,
+										sort.value());
 		
 	}
 	
@@ -97,13 +110,24 @@ public class Modeling extends Action {
 					null,
 					null
 					);
-		this.schemePathId = mt.scheme_path_id;
 		this.name = mt.name;
+		this.sort = mt.sort.value();
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
 		try {
+			switch(this.sort){
+				case ModelingSort._MODELINGSORT_MODELING:
+					this.schemePathId = mt.scheme_path_id;
+					break;
+				case ModelingSort._MODELINGSORT_PREDICTION:
+					this.monitoredElementId = new Identifier(mt.monitored_element_id);
+					break;
+				default:
+					throw new CreateObjectException("unsupported ModelingSort = " + this.sort);
+			}
+			
 			this.measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.measurement_type_id), true);
 			/**
 			 * @todo when change DB Identifier model ,change identifier_string to
@@ -163,9 +187,11 @@ public class Modeling extends Action {
 																 (Identifier_Transferable)super.creatorId.getTransferable(),
 																 (Identifier_Transferable)super.modifierId.getTransferable(),
 																 new String(this.name),																 
-																 this.schemePathId,
+																 (this.schemePathId != null) ? this.schemePathId : "" ,
+																 (this.monitoredElementId != null) ? (Identifier_Transferable)this.monitoredElementId.getTransferable() : (new Identifier_Transferable("")),		
 																 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
-																 (Identifier_Transferable)this.argumentSet.getId().getTransferable()
+																 (Identifier_Transferable)this.argumentSet.getId().getTransferable(),
+																 ModelingSort.from_int(this.sort)
 																 );
 	}
 
@@ -174,17 +200,21 @@ public class Modeling extends Action {
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						String name,
+																						Identifier monitoredElementId,
 																						String schemePathId,
 																						MeasurementType measurementType,
-																						Set argumentSet) {
+																						Set argumentSet,
+																						int sort) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId);
 		this.name = name;
+		this.monitoredElementId = monitoredElementId;
 		this.schemePathId = schemePathId;
 		this.measurementType = measurementType;
 		this.argumentSet = argumentSet;
+		this.sort = sort;
 	}
 
 
@@ -196,9 +226,11 @@ public class Modeling extends Action {
 		hashCodeGenerator.addObject(this.modified);
 		hashCodeGenerator.addObject(this.modifierId);
 		hashCodeGenerator.addObject(this.name);
+		hashCodeGenerator.addObject(this.monitoredElementId);
 		hashCodeGenerator.addObject(this.schemePathId);
 		hashCodeGenerator.addObject(this.measurementType);
 		hashCodeGenerator.addObject(this.argumentSet);
+		hashCodeGenerator.addInt(this.sort);
 		int result = hashCodeGenerator.getResult();
 		hashCodeGenerator = null;
 		return result;
@@ -214,10 +246,13 @@ public class Modeling extends Action {
 					HashCodeGenerator.equalsDate(this.modified,modeling.modified) &&
 					(this.modifierId.equals(modeling.modifierId))&&					
 					( ((modeling.name == null) && (this.name == null) ) 
-							|| (modeling.name.equals(this.name)) ) &&					
+							|| (modeling.name.equals(this.name)) ) &&							
 					(modeling.getMeasurementType().equals(getMeasurementType())) &&
+					( ((modeling.monitoredElementId == null) && (this.monitoredElementId == null) ) 
+							|| (modeling.monitoredElementId.equals(this.monitoredElementId)) ) &&
 					(modeling.schemePathId.equals(this.schemePathId)) &&					 
-					(modeling.argumentSet.equals(modeling.argumentSet)
+					(modeling.argumentSet.equals(this.argumentSet) &&
+					(modeling.sort == this.sort)
 					))
 					equals = true;
 		}
@@ -231,13 +266,20 @@ public class Modeling extends Action {
     public Set getArgumentSet() {
 		return this.argumentSet;
 	}
+    
 	public String getSchemePathId() {
 		return this.schemePathId;
 	}
+	
 	public String getName() {
 		return this.name;
 	}
+	
 	public void setMeasurementType(MeasurementType measurementType) {
 		this.measurementType = measurementType;
+	}
+	
+	public ModelingSort getSort() {
+		return ModelingSort.from_int(this.sort);
 	}
 }

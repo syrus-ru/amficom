@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.4 2004/10/13 09:49:50 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.5 2004/10/18 09:44:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/13 09:49:50 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/18 09:44:28 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -40,11 +40,15 @@ public class ModelingDatabase extends StorableObjectDatabase {
 	// name VARCHAR(256),
     public static final String COLUMN_NAME  = "name";  
     // monitored_element_id VARCHAR2(32),
+    public static final String COLUMN_ME_ID  = "monitored_element_id";
+    
     public static final String COLUMN_SCHEME_PATH_ID  = "scheme_path_id";
     // measurement_type_id VARCHAR2(32) NOT NULL,
     public static final String COLUMN_MEASUREMENT_TYPE_ID   = "measurement_type_id";
     //  argument_set_id VARCHAR2(32) NOT NULL,
     public static final String COLUMN_ARGUMENT_SET_ID       = "argument_set_id";
+    
+    public static final String COLUMN_SORT = "sort";
     
     private String updateColumns;
     
@@ -73,9 +77,11 @@ public class ModelingDatabase extends StorableObjectDatabase {
         if (this.updateColumns == null){
             this.updateColumns = super.getUpdateColumns() + COMMA
             + COLUMN_NAME + COMMA
+			+ COLUMN_ME_ID + COMMA
             + COLUMN_SCHEME_PATH_ID + COMMA
             + COLUMN_MEASUREMENT_TYPE_ID + COMMA
-            + COLUMN_ARGUMENT_SET_ID;
+            + COLUMN_ARGUMENT_SET_ID + COMMA
+			+ COLUMN_SORT;
         }
         return this.updateColumns;
     }   
@@ -83,6 +89,8 @@ public class ModelingDatabase extends StorableObjectDatabase {
     protected String getUpdateMultiplySQLValues() {
         if (this.updateMultiplySQLValues == null){
             this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+                + QUESTION + COMMA
+                + QUESTION + COMMA
                 + QUESTION + COMMA
                 + QUESTION + COMMA
                 + QUESTION + COMMA
@@ -94,22 +102,30 @@ public class ModelingDatabase extends StorableObjectDatabase {
     
     protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
             throws IllegalDataException, UpdateObjectException {
-        Modeling Modeling = fromStorableObject(storableObject);
+        Modeling modeling = fromStorableObject(storableObject);
         int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
         try {
+        	Identifier monitoredElementId = modeling.getMonitoredElementId();
+        	String schemePathId = modeling.getSchemePathId();
             /**
              * @todo when change DB Identifier model ,change setString() to setLong()
              */
-            preparedStatement.setString(++i, Modeling.getName()); 
+            preparedStatement.setString(++i, modeling.getName()); 
             /**
              * @todo when change DB Identifier model ,change setString() to setLong()
              */
-            preparedStatement.setString(++i, Modeling.getMonitoredElementId().getCode()); 
+            preparedStatement.setString(++i, (monitoredElementId != null) ? monitoredElementId.getCode() : "");
+            
+            preparedStatement.setString(++i, (schemePathId != null) ? schemePathId : "");
+            /**
+             * TODO other fields!!!
+             */
             /**
              * @todo when change DB Identifier model ,change setString() to setLong()
              */
-            preparedStatement.setString(++i, Modeling.getMeasurementType().getId().getCode());
-            preparedStatement.setString(++i, Modeling.getArgumentSet().getId().getCode());
+            preparedStatement.setString(++i, modeling.getMeasurementType().getId().getCode());
+            preparedStatement.setString(++i, modeling.getArgumentSet().getId().getCode());
+            preparedStatement.setInt(++i, modeling.getSort().value());
         } catch (SQLException sqle) {
             throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
         }
@@ -118,21 +134,28 @@ public class ModelingDatabase extends StorableObjectDatabase {
     
     protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
             UpdateObjectException {
-        Modeling Modeling = fromStorableObject(storableObject);
+        Modeling modeling = fromStorableObject(storableObject);
+        Identifier monitoredElementId = modeling.getMonitoredElementId();
+    	String schemePathId = modeling.getSchemePathId();
+    	
         String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-            + APOSTOPHE + Modeling.getName() + APOSTOPHE + COMMA
-            + Modeling.getMonitoredElementId().toSQLString() + COMMA
-            + Modeling.getMeasurementType().getId().toSQLString() + COMMA
-            + Modeling.getArgumentSet().getId().toSQLString();
+            + APOSTOPHE + modeling.getName() + APOSTOPHE + COMMA
+            + ((monitoredElementId != null) ? monitoredElementId.toSQLString() : Identifier.getNullSQLString()) + COMMA
+			+ APOSTOPHE + ((schemePathId != null) ? schemePathId : "") + APOSTOPHE + COMMA
+            + modeling.getMeasurementType().getId().toSQLString() + COMMA
+            + modeling.getArgumentSet().getId().toSQLString() + COMMA
+			+ modeling.getSort().value();
         return values;
     }
 
     protected String retrieveQuery(String condition){
         return super.retrieveQuery(condition) + COMMA
         + COLUMN_NAME + COMMA
+		+ COLUMN_ME_ID + COMMA
         + COLUMN_SCHEME_PATH_ID + COMMA
         + COLUMN_MEASUREMENT_TYPE_ID + COMMA
-        + COLUMN_ARGUMENT_SET_ID
+        + COLUMN_ARGUMENT_SET_ID + COMMA
+		+ COLUMN_SORT
         + SQL_FROM + ObjectEntities.MODELING_ENTITY
         + ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
@@ -141,7 +164,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
     protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
     throws IllegalDataException, RetrieveObjectException, SQLException {
         Modeling modeling = (storableObject == null) ? 
-                new Modeling(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null) : 
+                new Modeling(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, 0) : 
                     fromStorableObject(storableObject);
         MeasurementType measurementType;
         Set argumentSet;
@@ -158,6 +181,8 @@ public class ModelingDatabase extends StorableObjectDatabase {
         catch (ApplicationException ae) {
             throw new RetrieveObjectException(ae);
         }
+        
+        String meId = resultSet.getString(COLUMN_ME_ID);
         modeling.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
                                                      DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
                                                     /**
@@ -169,13 +194,15 @@ public class ModelingDatabase extends StorableObjectDatabase {
                                                      */
                                                      new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
                                                      resultSet.getString(COLUMN_NAME),
+                                                     (meId != null) ? new Identifier(meId) : null,
                                                      /**
                                                       * @todo when change DB Identifier model ,change getString() to getLong()
                                                       */
                                                      resultSet.getString(COLUMN_SCHEME_PATH_ID),												 
                                                      
                                                      measurementType,													 
-                                                     argumentSet);      
+                                                     argumentSet,
+													 resultSet.getInt(COLUMN_SORT));      
         return modeling;
     }
 
