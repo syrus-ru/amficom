@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 import oracle.jdeveloper.layout.*;
@@ -532,7 +533,7 @@ class ParamTableModel extends AbstractTableModel
 	 }
 }
 
-class ModelParamsTableRenderer extends DefaultTableCellRenderer
+class ModelParamsTableRenderer extends ADefaultTableCellRenderer
 {
 	ParamTableModel model;
 	public ModelParamsTableRenderer(ParamTableModel model)

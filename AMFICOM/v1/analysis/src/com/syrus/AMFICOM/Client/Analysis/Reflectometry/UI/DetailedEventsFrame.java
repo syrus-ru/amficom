@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class DetailedEventsFrame extends JInternalFrame
@@ -665,7 +666,7 @@ class CompareTableModel extends AbstractTableModel
 }
 
 
-class CompareTableRenderer extends DefaultTableCellRenderer
+class CompareTableRenderer extends ADefaultTableCellRenderer
 {
 
 	private boolean sameType = true;

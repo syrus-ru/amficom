@@ -19,7 +19,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -33,12 +32,13 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
+import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsSelectionFrame extends ATableFrame
 	implements OperationListener
 {
-	public static final Dimension btn_size = new Dimension(24, 24);
+	public static final Dimension BUTTON_SIZE = new Dimension(24, 24);
 	protected Dispatcher dispatcher;
 	private JTable jTable;
 
@@ -108,9 +108,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			JButton[] buttons = new JButton[] { jButton1, jButton3, jButtonInc, jButtonDec };
 			for (int i = 0; i < buttons.length; i++)
 			{
-				buttons[i].setMaximumSize(btn_size);
-				buttons[i].setMinimumSize(btn_size);
-				buttons[i].setPreferredSize(btn_size);
+				buttons[i].setMaximumSize(BUTTON_SIZE);
+				buttons[i].setMinimumSize(BUTTON_SIZE);
+				buttons[i].setPreferredSize(BUTTON_SIZE);
 			}
 		}
 
@@ -188,24 +188,26 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		jTable.setColumnSelectionAllowed(true);
-		jTable.setRowSelectionAllowed(false);
+		jTable.setRowSelectionAllowed(false);		
 		
-		//jTable.getColumnModel().setColumnMargin(2); // XXX
-		jTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
-			{
-			// (1) hides 'focus' - just because its color overrides selection colot
+		jTable.setDefaultRenderer(Object.class, new ADefaultTableCellRenderer() {
+
+			// (1) hides 'focus' - just because its color overrides selection
+			// colot
 			// (2) suppress visualization of selection of 1st column
-			public Component getTableCellRendererComponent(JTable table,
-                    Object value, boolean isSelected, boolean hasFocus,
-                    int row, int column)
-			{
-				//noFocusBorder = new EmptyBorder(1,2,1,2); // FIXME!
+			public Component getTableCellRendererComponent(	JTable table,
+															Object value,
+															boolean isSelected,
+															boolean hasFocus,
+															int row,
+															int column) {
+
 				if (column == 0)
 					isSelected = false;
 				hasFocus = false;
 				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			}
-			});
+		});
 
 		scrollPane.setViewport(viewport);
 		scrollPane.getViewport().add(jTable);
