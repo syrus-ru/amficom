@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.31 2004/12/15 14:09:13 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.32 2005/03/10 21:17:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,19 +9,22 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Iterator;
 import java.util.LinkedList;
-import com.syrus.AMFICOM.general.Identifier;
+import java.util.List;
+
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/15 14:09:13 $
+ * @version $Revision: 1.32 $, $Date: 2005/03/10 21:17:33 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -43,9 +46,11 @@ public class PeriodicalTestProcessor extends TestProcessor {
 		super(test);
 
 		this.endTime = test.getEndTime().getTime();
-		this.temporalPattern = test.getTemporalPattern();
-		if (this.temporalPattern == null) {
-			Log.errorMessage("Temporal pattern is NULL");
+		try {
+			this.temporalPattern = (TemporalPattern) MeasurementStorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
 			this.abort();
 		}
 

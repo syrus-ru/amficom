@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.18 2005/02/15 15:06:09 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.19 2005/03/10 21:17:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/02/15 15:06:09 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/10 21:17:33 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -60,8 +60,20 @@ public class AnalysisEvaluationProcessor {
 		Identifier monitoredElementId = test.getMonitoredElement().getId();
 		MeasurementSetup measurementSetup = measurement.getSetup();
 
-		AnalysisType analysisType = test.getAnalysisType();
-		EvaluationType evaluationType = test.getEvaluationType();
+		AnalysisType analysisType;
+		try {
+			analysisType = (AnalysisType) MeasurementStorableObjectPool.getStorableObject(test.getAnalysisTypeId(), true);
+		}
+		catch (ApplicationException ae) {
+			throw new AnalysisException("Cannot load analysis type '" + test.getAnalysisTypeId() + "' for test '" + test.getId() + "' -- " + ae.getMessage(), ae);
+		}
+		EvaluationType evaluationType;
+		try {
+			evaluationType = (EvaluationType) MeasurementStorableObjectPool.getStorableObject(test.getEvaluationTypeId(), true);
+		}
+		catch (ApplicationException ae) {
+			throw new AnalysisException("Cannot load evaluation type '" + test.getEvaluationTypeId() + "' for test '" + test.getId() + "' -- " + ae.getMessage(), ae);
+		}
 		if (analysisType != null) {
 			Analysis analysis = createAnalysis(analysisType, monitoredElementId, measurement, measurementSetup.getCriteriaSet());
 			if (evaluationType != null) {
