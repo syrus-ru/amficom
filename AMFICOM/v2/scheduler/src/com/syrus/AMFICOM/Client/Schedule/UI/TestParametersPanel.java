@@ -239,34 +239,13 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	public void setTest(Test test) {
 		this.test = test;
 
-		this.meList.clear();
+		if (this.meList == null)
+			this.meList = new ArrayList();
+		else
+			this.meList.clear();
 		this.meList.add(Pool.get(MonitoredElement.typ, test.getMonitoredElementId()));
 		updateTestSetupList();
-
-		if (this.test != null) {
-
-			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ, this.test.getTestSetupId());
-			if (testsetup != null) {
-				this.testSetups.setSelected(testsetup);
-				this.patternRadioButton.doClick();
-
-				if ((this.test.getEvalution() != null) || (this.test.getAnalysis() != null)) {
-					if (!this.useAnalysisBox.isSelected())
-						this.useAnalysisBox.doClick();
-				}
-				if (test.getEvalution() != null) {
-					//System.out.println("test.evalution isn't null");
-					selectComboBox(this.evaluationComboBox, test.getEvalution().getTypeId());
-				}
-				if (test.getAnalysis() != null) {
-					//System.out.println("test.analysis isn't null");
-					selectComboBox(this.analysisComboBox, test.getAnalysis().getTypeId());
-				}
-
-			} else {
-				this.paramsRadioButton.doClick();
-			}
-		}
+		
 	}
 
 	private void getParameters() {
@@ -359,8 +338,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			if (this.meList == null)
 				this.meList = new ArrayList();
 			this.meList.clear();
-			this.meList.add(Pool.get(MonitoredElement.typ, meId));
-			System.out.println("get me:" + meId);
+			this.meList.add(Pool.get(MonitoredElement.typ, meId));			
 			updateTestSetupList();
 		}
 
@@ -377,7 +355,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					TestSetup ts = (TestSetup) tsTable.get(it.next());
 					String[] meIds = ts.getMonitoredElementIds();
 					if (meIds.length == 0) {
-						System.out.println("meIds.length == 0\t" + ts.getId());
+//						System.out.println("meIds.length == 0\t" + ts.getId());
 						this.testMap.put(ts.getId(), ts);
 					} else
 						for (Iterator iter = this.meList.iterator(); iter.hasNext();) {
@@ -385,7 +363,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 							String meId = me.getId();
 							for (int i = 0; i < meIds.length; i++) {
 								if (meIds[i].equals(meId)) {
-									System.out.println("meId:" + meId + "\t" + ts.getId());
+//									System.out.println("meId:" + meId + "\t" + ts.getId());
 									this.testMap.put(ts.getId(), ts);
 								}
 							}
@@ -397,6 +375,34 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		for (Iterator it = this.testMap.values().iterator(); it.hasNext();) {
 			TestSetup ts = (TestSetup) it.next();
 			this.testSetups.add(ts);
+		}
+		
+		if (this.test != null) {
+
+			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ, this.test.getTestSetupId());
+			
+			if (testsetup != null) {
+				System.out.println("testsetup:"+testsetup.getId());
+				this.testSetups.setSelected(testsetup);
+				this.patternRadioButton.doClick();
+
+				if ((this.test.getEvalution() != null) || (this.test.getAnalysis() != null)) {
+					if (!this.useAnalysisBox.isSelected())
+						this.useAnalysisBox.doClick();
+				}
+				if (test.getEvalution() != null) {
+					//System.out.println("test.evalution isn't null");
+					selectComboBox(this.evaluationComboBox, test.getEvalution().getTypeId());
+				}
+				if (test.getAnalysis() != null) {
+					//System.out.println("test.analysis isn't null");
+					selectComboBox(this.analysisComboBox, test.getAnalysis().getTypeId());
+				}
+
+			} else {
+				System.out.println("testsetup is null");
+				this.paramsRadioButton.doClick();
+			}
 		}
 		//testSetups.setSelected(selectedTs);
 	}

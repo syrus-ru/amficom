@@ -46,7 +46,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	public static final String		COMMAND_NAME_ALL_TESTS	= "AllTests";							//$NON-NLS-1$
 
-	private static final String[]	SCALES					= new String[] {
+	public static final String[]	SCALES					= new String[] {
 			"10 min", "1 hour", "6 hours", "1 day", "1 week", "1 month"};							//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 	protected static final Step[]	STEPS					= new Step[] { new Step(Calendar.MINUTE, 1, 10, 6, 1),
@@ -189,10 +189,6 @@ public class PlanPanel extends JPanel implements OperationListener {
 		setScale(scale);
 		setStartDate(start);
 		updateRealScale();
-	}
-
-	public static String[] getSupportedScales() {
-		return SCALES;
 	}
 
 	/**

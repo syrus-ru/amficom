@@ -55,7 +55,7 @@ class PlanToolBar extends JPanel {
 		}
 	}
 
-	private static final boolean	CREATE_ALLOW	= false;
+	private static final boolean	CREATE_ALLOW	= true;
 	static final int				H				= 22;
 	private JButton					applyButton		= new JButton();
 	
@@ -87,16 +87,15 @@ class PlanToolBar extends JPanel {
 		gbc.weighty = 1.0;
 		Box box = new Box(BoxLayout.X_AXIS);
 
-		String[] suportedScales = PlanPanel.getSupportedScales();
-		String[] scales = new String[suportedScales.length];
+		String[] scales = new String[PlanPanel.SCALES.length];
 		for (int i = 0; i < scales.length; i++)
-			scales[i] = new String(LangModelSchedule.getString(suportedScales[i]));
-		scaleComboBox = new AComboBox(scales);
-		scaleComboBox.setSelectedIndex(3);
-		dateButton.setMargin(UIStorage.INSET_NULL);
-		dateButton.setFocusable(false);
-		dateButton.setToolTipText(LangModelSchedule.getString("Calendar")); //$NON-NLS-1$
-		dateButton.addActionListener(new ActionListener() {
+			scales[i] = new String(LangModelSchedule.getString(PlanPanel.SCALES[i]));
+		this.scaleComboBox = new AComboBox(scales);
+		this.scaleComboBox.setSelectedItem(LangModelSchedule.getString("1 week"));
+		this.dateButton.setMargin(UIStorage.INSET_NULL);
+		this.dateButton.setFocusable(false);
+		this.dateButton.setToolTipText(LangModelSchedule.getString("Calendar")); //$NON-NLS-1$
+		this.dateButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				//showCalendar();
