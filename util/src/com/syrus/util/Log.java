@@ -12,6 +12,55 @@ public class Log {
 	public static final int DEBUGLEVEL09 = 9;
 	public static final int DEBUGLEVEL10 = 10;
 
+	/**
+	 * Value: {@value}
+	 *
+	 * @see java.util.logging.Level#SEVERE
+	 */
+	public static final int SEVERE = DEBUGLEVEL01;
+
+	/**
+	 * Value: {@value}
+	 *
+	 * @see java.util.logging.Level#WARNING
+	 */
+	public static final int WARNING = DEBUGLEVEL02;
+
+	/**
+	 * Value: {@value}
+	 *
+	 * @see java.util.logging.Level#INFO
+	 */
+	public static final int INFO = DEBUGLEVEL03;
+
+	/**
+	 * Value: {@value}
+	 *
+	 * @see java.util.logging.Level#CONFIG
+	 */
+	public static final int CONFIG = DEBUGLEVEL04;
+
+	/**
+	 * Value: {@value}
+	 *
+	 * @see java.util.logging.Level#FINE
+	 */
+	public static final int FINE = DEBUGLEVEL05;
+
+	/**
+	 * Value: {@value}
+	 *
+	 * @see java.util.logging.Level#FINER
+	 */
+	public static final int FINER = DEBUGLEVEL06;
+
+	/**
+	 * Value: {@value}
+	 *
+	 * @see java.util.logging.Level#FINEST
+	 */
+	public static final int FINEST = DEBUGLEVEL07;
+
 	private static Logger logger;
 
 	private Log() {
