@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.12 2005/02/07 11:07:15 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.13 2005/02/07 11:27:39 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.12 $, $Date: 2005/02/07 11:07:15 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/07 11:27:39 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -68,7 +68,11 @@ public class StorableObjectXMLDriver {
 				this.fileName = path.getParent();
 			}
 		} else {
-			path.mkdirs();
+			if (path.isDirectory()) {
+				path.mkdirs();
+			} else {
+				path.getParentFile().mkdirs();
+			}
 			this.fileName = path.getAbsolutePath();
 		}
 		this.packageName = packageName;
