@@ -16,7 +16,7 @@ import java.util.List;
  * using a static method <code>getInstance()</code>. 
  *
  * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2004/10/06 13:16:46 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/03 10:50:31 $
  * @see <a href = "http://bass.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module generalclient_v1
  */
@@ -131,4 +131,5 @@ public interface ObjectResourceController {
 	 * @param value value, which will be assigned to Model
 	 */
 	void setValue(Object object, final String key, final Object value);
+	
 }

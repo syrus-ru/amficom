@@ -1,8 +1,9 @@
+
 package com.syrus.AMFICOM.client_.general.ui_;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,19 +11,20 @@ import javax.swing.AbstractListModel;
 import javax.swing.MutableComboBoxModel;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/03 08:48:21 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/03 10:50:31 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ObjListModel extends AbstractListModel implements MutableComboBoxModel, Serializable {
 
-	private static final long	serialVersionUID	= -1607982236171940302L;
+	private static final long			serialVersionUID	= -1607982236171940302L;
 
-	private Object				selectedObject;
+	private Object						selectedObject;
 
-	private List				objects;
+	private List						objects;
 
 	/**
 	 * ObjectResourceController of Model (ObjectResource) will be used for
@@ -30,14 +32,14 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	 */
 	protected ObjectResourceController	controller;
 
-	private String				key;
+	private String						key;
 
 	/**
 	 * @param controller
-	 *                see {@link #controller}
+	 *            see {@link #controller}
 	 */
 	public ObjListModel(ObjectResourceController controller, String key) {
-		this(controller, new ArrayList(), key);
+		this(controller, new LinkedList(), key);
 
 	}
 
@@ -53,11 +55,11 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	 * <p>
 	 * 
 	 * @param anObject
-	 *                The combo box value or null for no selection.
+	 *            The combo box value or null for no selection.
 	 */
 	public void setSelectedItem(Object anObject) {
-		if ((this.selectedObject != null && !this.selectedObject.equals(anObject))
-				|| this.selectedObject == null && anObject != null) {
+		if ((this.selectedObject != null && !this.selectedObject.equals(anObject)) || this.selectedObject == null
+				&& anObject != null) {
 			this.selectedObject = anObject;
 			fireContentsChanged(this, -1, -1);
 		}
@@ -84,7 +86,7 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	}
 
 	public Object getFieldByObject(Object object) {
-		
+
 		Object obj = this.controller.getValue(object, this.key);
 
 		if (this.controller.getPropertyValue(this.key) instanceof Map) {
@@ -100,17 +102,19 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 			obj = keyObject;
 
 		}
-		
+
 		return obj;
 	}
-	
-	public Object getObjectByField(Object field){
+
+	public Object getObjectByField(Object field) {
 		Object object = null;
-		for (Iterator it = this.objects.iterator(); it.hasNext();) {
-			Object element = it.next();
-			if (field.equals(getFieldByObject(element))){
-				object = element;
-				break;
+		if (field != null) {
+			for (Iterator it = this.objects.iterator(); it.hasNext();) {
+				Object element = it.next();
+				if (field.equals(getFieldByObject(element))) {
+					object = element;
+					break;
+				}
 			}
 		}
 		return object;
@@ -124,7 +128,18 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	 *         position
 	 */
 	public int getIndexOf(Object anObject) {
-		return this.objects.indexOf(anObject);
+		int index = -1;
+		if (this.objects != null) {
+			for (int i = 0; i < this.objects.size(); i++) {
+				Object element = this.objects.get(i);
+				if ((element instanceof StorableObject) && (anObject instanceof StorableObject)
+						&& (((StorableObject) element).getId().equals(((StorableObject) anObject).getId()))) {
+					index = i;
+					break;
+				}
+			}
+		}
+		return index;
 	}
 
 	// implements javax.swing.MutableComboBoxModel
@@ -169,7 +184,7 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	 * Empties the list.
 	 */
 	public void removeAllElements() {
-		if (this.objects.size() > 0) {
+		if (this.objects != null && this.objects.size() > 0) {
 			int firstIndex = 0;
 			int lastIndex = this.objects.size() - 1;
 			this.objects.clear();
