@@ -1,7 +1,14 @@
 classes
+docs
+lib
 *.deploy
+*.jar
 *.jpr
 *.jpx
 *.swp
 *.tar
 *.gz
+.all
+.sqlj
+SQLChecker.cache
+sqlj.properties

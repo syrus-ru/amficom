@@ -1,5 +1,5 @@
 /*
- * $Id: ResourcedbInterface.sqlj,v 1.2 2004/05/27 16:28:15 krupenn Exp $
+ * $Id: ResourcedbInterface.sqlj,v 1.3 2004/06/07 15:36:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,12 +20,13 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/05/27 16:28:15 $
- * @module serveradd
+ * @version $Revision: 1.3 $, $Date: 2004/06/07 15:36:09 $
+ * @module servermisc
  */
 public class ResourcedbInterface
 {
-	static String[] descids = new String[] {
+	static final String descids[] =
+	{
 		"accessport", "ACCESSPORTS", "",
 		"accessporttype", "ACCESSPORTTYPES", "",
 		"agent", "AGENTS", "",
@@ -78,7 +79,8 @@ public class ResourcedbInterface
 		"testtype", "TESTTYPES", ""
 	};
 
-	static String[] seqids = new String[] {
+	static final String seqids[] =
+	{
 		"accessport", "accprt", "ACCPRT_SEQ",
 		"actionargument", "acarg", "AARG_SEQ",
 		"actionparameter", "acpar", "APAR_SEQ",
@@ -195,33 +197,30 @@ public class ResourcedbInterface
 		"user", "user", "USER_SEQ"
 	};
 
-	public ResourcedbInterface()
+	private ResourcedbInterface()
 	{
 	}
 
-	static public String getUId(String type)
+	public static String getUId(String type)
 	{
 		String id_s = "";
 		String id_v = "";
 		int id_i = 0;
 
-		String id_pre = null;
 		String seq_name = null;
 
-		for(int i = 0; i < seqids.length; i+=3)
-		{
-			if(seqids[i].equals(type))
+		for (int i = 0; i < seqids.length; i += 3)
+			if (seqids[i].equals(type))
 			{
 				id_s = seqids[i + 1];
 				seq_name = seqids[i + 2];
 				break;
 			}
-		}
 
-		if(seq_name == null)
+		if (seq_name == null)
 		{
 			System.out.println("unknown type: " + type);
-			return new String(type + String.valueOf(System.currentTimeMillis()));
+			return type + System.currentTimeMillis();
 //			throw new AMFICOMError("cannot generate UId");
 		}
 
@@ -237,53 +236,53 @@ public class ResourcedbInterface
 			{
 				statement = connCtx.getConnection().createStatement();
 			}
-			catch(SQLException sqlexception)
+			catch (SQLException sqle)
 			{
-				System.out.println("Лажа" + ": " + sqlexception.getMessage());
+				System.out.println("Лажа: " + sqle.getMessage());
 			}
 
 			OracleResultSet resultset = null;
 			try
 			{
 				resultset = (OracleResultSet )statement.executeQuery(query);
-				if(resultset.next())
-				{
+				if (resultset.next())
 					id_i = resultset.getInt("NEXTVAL");
-				}
 				else
 				{
 					System.out.println("did not succeed! :( nextval for " + seq_name);
-					return new String(type + String.valueOf(System.currentTimeMillis()));
+					return type + System.currentTimeMillis();
 //					throw new Exception("cannot generate UId");
 				}
 			}
-			catch(SQLException e)
+			catch (SQLException sqle)
 			{
-				System.out.println("error generating unique ID for type: " + type + " - " + e.getMessage());
-				e.printStackTrace();
-				return new String(type + String.valueOf(System.currentTimeMillis()));
+				System.out.println("error generating unique ID for type: " + type + " - " + sqle.getMessage());
+				sqle.printStackTrace();
+				return type + System.currentTimeMillis();
 //				throw new Exception("error generating UId");
 			}
 			finally
 			{
 				try
 				{
-					if(resultset != null)
+					if (resultset != null)
 						resultset.close();
 					resultset = null;
-					if(statement != null)
+					if (statement != null)
 						statement.close();
 					statement = null;
 				}
-				catch(SQLException _ex) { }
+				catch (SQLException sqle)
+				{
+					;
+				}
 			}
-
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			System.out.println("tryndez! " + e.getMessage());
 			e.printStackTrace();
-			return new String(type + String.valueOf(System.currentTimeMillis()));
+			return type + System.currentTimeMillis();
 //			throw new AMFICOMError("error generating UId");
 		}
 
@@ -292,7 +291,7 @@ public class ResourcedbInterface
 		return id_v;
 	}
 
-	static public Vector getDomainResourceDescriptors(String type, String domain_id)
+	public static Vector getDomainResourceDescriptors(String type, String domain_id)
 	{
 		Vector vec = new Vector();
 
@@ -303,17 +302,15 @@ public class ResourcedbInterface
 		long It_modified = 0;
 		ResourceDescriptorIterator rdIt = null;
 
-		for(int i = 0; i < descids.length; i += 3)
-		{
-			if(descids[i].equals(type))
+		for (int i = 0; i < descids.length; i += 3)
+			if (descids[i].equals(type))
 			{
 				id_s = descids[i + 1];
 				where_s = descids[i + 2];
 				break;
 			}
-		}
 
-		if(id_s == null)
+		if (id_s == null)
 		{
 			System.out.println("DESC: unknown type - " + type);
 			return vec;
@@ -321,7 +318,7 @@ public class ResourcedbInterface
 
 		String query = "select ID, MODIFIED from AMFICOM." + id_s + where_s;
 
-		if(where_s.indexOf("where") == -1)
+		if (where_s.indexOf("where") == -1)
 			query += " where DOMAIN_ID = '" + domain_id + "'";
 		else
 			query += " and DOMAIN_ID = '" + domain_id + "'";
@@ -336,12 +333,14 @@ public class ResourcedbInterface
 					open :OUT rdIt for :query;
 				END;
 			};
-			while(rdIt.next())
+			while (rdIt.next())
 			{
 				It_id = rdIt.id();
-				try{
-				It_modified = rdIt.modified().getTime();
-				}catch(Exception ex)
+				try
+				{
+					It_modified = rdIt.modified().getTime();
+				}
+				catch (Exception e)
 				{
 					System.out.println("CHECK! error fetchig MODIFIED for " + It_id + " from " + id_s);
 					It_modified = System.currentTimeMillis();
@@ -351,21 +350,26 @@ public class ResourcedbInterface
 			}
 			rdIt.close();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(rdIt != null) try {
-			rdIt.close();
-			}catch(Exception exe) {}
-			System.out.println("getDomainResourceDescriptors: " + e.getMessage());
-			System.out.println("                          at: " + query);
-			return new Vector();
+			if (rdIt != null)
+				try
+				{
+					rdIt.close();
+				}
+				catch (SQLException sqle)
+				{
+					;
+				}
+				System.out.println("getDomainResourceDescriptors: " + e.getMessage());
+				System.out.println("                          at: " + query);
+				return new Vector();
 		}
 //		System.out.println("found " + vec.size() + " resource descriptors");
-
 		return vec;
 	}
 
-	static public Vector getResourceDescriptors(String type)
+	public static Vector getResourceDescriptors(String type)
 	{
 		Vector vec = new Vector();
 
@@ -376,17 +380,15 @@ public class ResourcedbInterface
 		long It_modified = 0;
 		ResourceDescriptorIterator rdIt = null;
 
-		for(int i = 0; i < descids.length; i += 3)
-		{
-			if(descids[i].equals(type))
+		for (int i = 0; i < descids.length; i += 3)
+			if (descids[i].equals(type))
 			{
 				id_s = descids[i + 1];
 				where_s = descids[i + 2];
 				break;
 			}
-		}
 
-		if(id_s == null)
+		if (id_s == null)
 		{
 			System.out.println("DESC: unknown type - " + type);
 			return vec;
@@ -404,12 +406,14 @@ public class ResourcedbInterface
 					open :OUT rdIt for :query;
 				END;
 			};
-			while(rdIt.next())
+			while (rdIt.next())
 			{
 				It_id = rdIt.id();
-				try{
-				It_modified = rdIt.modified().getTime();
-				}catch(Exception ex)
+				try
+				{
+					It_modified = rdIt.modified().getTime();
+				}
+				catch (Exception e)
 				{
 					System.out.println("CHECK! error fetchig MODIFIED for " + It_id + " from " + id_s);
 					It_modified = System.currentTimeMillis();
@@ -419,21 +423,26 @@ public class ResourcedbInterface
 			}
 			rdIt.close();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(rdIt != null) try {
-			rdIt.close();
-			}catch(Exception exe) {}
+			if (rdIt != null)
+				try
+				{
+					rdIt.close();
+				}
+				catch (SQLException sqle)
+				{
+					;
+				}
 			System.out.println("getResourceDescriptors: " + e.getMessage());
 			System.out.println("                    at: " + query);
 //			e.printStackTrace();
 			return new Vector();
 		}
-
 		return vec;
 	}
 
-	static public ResourceDescriptor_Transferable getResourceDescriptor(String type, String id)
+	public static ResourceDescriptor_Transferable getResourceDescriptor(String type, String id)
 	{
 		String id_s = null;
 		String where_s = null;
@@ -442,20 +451,18 @@ public class ResourcedbInterface
 		long It_modified = 0;
 		ResourceDescriptorIterator rdIt = null;
 
-		for(int i = 0; i < descids.length; i += 3)
-		{
-			if(descids[i].equals(type))
+		for (int i = 0; i < descids.length; i += 3)
+			if (descids[i].equals(type))
 			{
 				id_s = descids[i + 1];
 				where_s = descids[i + 2];
 				break;
 			}
-		}
 
-		if(id_s == null)
+		if (id_s == null)
 		{
 			System.out.println("DESC: unknown type - " + type);
-			if(type.equals("result"))
+			if (type.equals("result"))
 			{
 				ResultDescriptorIterator rIt = null;
 				String query = "select ID, ELEMENTARY_START_TIME from AMFICOM.RESULTS where ID = '" + id + "'";
@@ -467,12 +474,14 @@ public class ResourcedbInterface
 							open :OUT rIt for :query;
 						END;
 					};
-					if(rIt.next())
+					if (rIt.next())
 					{
 						It_id = rIt.id();
-						try{
-						It_modified = rIt.elementary_start_time().getTime();
-						}catch(Exception ex)
+						try
+						{
+							It_modified = rIt.elementary_start_time().getTime();
+						}
+						catch (Exception e)
 						{
 							System.out.println("CHECK! error fetchig elementary_start_time for " + It_id + " from " + id_s);
 							It_modified = System.currentTimeMillis();
@@ -483,11 +492,17 @@ public class ResourcedbInterface
 					else
 						rIt.close();
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
-					if(rIt != null) try {
-					rIt.close();
-					}catch(Exception exe) {}
+					if (rIt != null)
+						try
+						{
+							rIt.close();
+						}
+						catch (SQLException sqle)
+						{
+							;
+						}
 					System.out.println("getResourceDescriptor: " + e.getMessage());
 					System.out.println("                    at: " + query);
 					return null;
@@ -497,7 +512,7 @@ public class ResourcedbInterface
 		}
 
 		String query = "select ID, MODIFIED from AMFICOM." + id_s + where_s;
-		if(query.indexOf("where") != -1)
+		if (query.indexOf("where") != -1)
 			query += " and ID = '" + id + "'";
 		else
 			query += " where ID = '" + id + "'";
@@ -512,12 +527,14 @@ public class ResourcedbInterface
 					open :OUT rdIt for :query;
 				END;
 			};
-			if(rdIt.next())
+			if (rdIt.next())
 			{
 				It_id = rdIt.id();
-				try{
-				It_modified = rdIt.modified().getTime();
-				}catch(Exception ex)
+				try
+				{
+					It_modified = rdIt.modified().getTime();
+				}
+				catch (Exception e)
 				{
 					System.out.println("CHECK! error fetchig MODIFIED for " + It_id + " from " + id_s);
 					It_modified = System.currentTimeMillis();
@@ -529,61 +546,55 @@ public class ResourcedbInterface
 			else
 				rdIt.close();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(rdIt != null) try {
-			rdIt.close();
-			}catch(Exception exe) {}
+			if (rdIt != null)
+				try
+				{
+					rdIt.close();
+				}
+				catch (SQLException sqle)
+				{
+					;
+				}
 			System.out.println("getResourceDescriptor: " + e.getMessage());
 			System.out.println("                    at: " + query);
 //			e.printStackTrace();
 			return null;
 		}
-
 		return null;
 	}
 
-	static public int updateImage(String im_id, byte[] bytes)
+	public static int updateImage(String im_id, byte bytes[])
 	{
-		int i;
-		int j;
-
-		BLOB blob;
-
 		System.out.println("update image: " + im_id);
 		try
 		{
-				ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-				ByteArrayDatabase bArr = new ByteArrayDatabase(bytes);
-				bArr.saveAsBlob(
-						connCtx2.getConnection(),
-						"AMFICOM.IMAGERESOURCES",
-						"IMG",
-						"id = '" + im_id + "'");
+			ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+			(new ByteArrayDatabase(bytes)).saveAsBlob(
+				connCtx2.getConnection(),
+				"AMFICOM.IMAGERESOURCES",
+				"IMG",
+				"id = '" + im_id + "'");
 /*
 			#sql { select IMG into :blob from AMFICOM.IMAGERESOURCES
 			where ID = :im_id for update };
-			PutBlob(blob, bytes);
+			putBlob(blob, bytes);
 			#sql { update AMFICOM.IMAGERESOURCES set IMG = :blob where ID = :im_id };
 */
 			#sql { commit };
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			System.out.println("error saVing image: " + e.getMessage());
+			System.out.println("error saving image: " + e.getMessage());
 			e.printStackTrace();
 			return Constants.ERROR_SAVING;
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public String saveImage(byte[] bytes)
+	public static String saveImage(byte bytes[])
 	{
-		int i;
-		int j;
-
-		BLOB blob;
-
 		String im_id = getUId("imageresource");
 		System.out.println("new image: " + im_id);
 		try
@@ -599,32 +610,31 @@ public class ResourcedbInterface
 						'bytes',
 						empty_blob() ) };
 		}
-		catch(SQLException ex)
+		catch (SQLException sqle)
 		{
-			System.out.println("could not insert image: " + ex.getMessage());
-			ex.printStackTrace();
+			System.out.println("could not insert image: " + sqle.getMessage());
+			sqle.printStackTrace();
 			return null;
 		}
 		try
 		{
 			System.out.println("blob save for " + im_id + " size " + bytes.length);
 
-				ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-				ByteArrayDatabase bArr = new ByteArrayDatabase(bytes);
-				bArr.saveAsBlob(
-						connCtx2.getConnection(),
-						"AMFICOM.IMAGERESOURCES",
-						"IMG",
-						"id = '" + im_id + "'");
+			ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+			(new ByteArrayDatabase(bytes)).saveAsBlob(
+				connCtx2.getConnection(),
+				"AMFICOM.IMAGERESOURCES",
+				"IMG",
+				"id = '" + im_id + "'");
 /*
 			#sql { select IMG into :blob from AMFICOM.IMAGERESOURCES
 			where ID = :im_id for update };
-			PutBlob(blob, bytes);
+			putBlob(blob, bytes);
 			#sql { update AMFICOM.IMAGERESOURCES set IMG = :blob where ID = :im_id };
 */
 			#sql { commit };
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			System.out.println("error saVing image: " + e.getMessage());
 			e.printStackTrace();
@@ -633,12 +643,8 @@ public class ResourcedbInterface
 		return im_id;
 	}
 
-	static public int saveImage(ImageResource_Transferable img)
+	public static int saveImage(ImageResource_Transferable img)
 	{
-		int i;
-		int j;
-
-		BLOB blob;
 		try
 		{
 			#sql {
@@ -647,7 +653,7 @@ public class ResourcedbInterface
 			};
 			System.out.println("update image: " + img.id);
 		}
-		catch(SQLException e)
+		catch (SQLException sqle1)
 		{
 			System.out.println("new image: " + img.id);
 			try
@@ -663,101 +669,76 @@ public class ResourcedbInterface
 							:(img.source_string),
 							empty_blob() ) };
 			}
-			catch(SQLException ex)
+			catch (SQLException sqle2)
 			{
-				System.out.println("could not insert image: " + ex.getMessage());
-				ex.printStackTrace();
+				System.out.println("could not insert image: " + sqle2.getMessage());
+				sqle2.printStackTrace();
 			}
 		}
-		if(img.source_string.equals("bytes"))
+		if (img.source_string.equals("bytes"))
 		{
 			try
 			{
 				System.out.println("blob save for " + img.id);
 
 				ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-				ByteArrayDatabase bArr = new ByteArrayDatabase(img.image);
-				bArr.saveAsBlob(
-						connCtx2.getConnection(),
-						"AMFICOM.IMAGERESOURCES",
-						"IMG",
-						"id = '" + img.id + "'");
+				(new ByteArrayDatabase(img.image)).saveAsBlob(
+					connCtx2.getConnection(),
+					"AMFICOM.IMAGERESOURCES",
+					"IMG",
+					"id = '" + img.id + "'");
 /*
 				#sql { select IMG into :blob from AMFICOM.IMAGERESOURCES
 					where ID = :(img.id) for update };
-				PutBlob(blob, img.image);
+				putBlob(blob, img.image);
 				#sql { update AMFICOM.IMAGERESOURCES set IMG = :blob where ID = :(img.id) };
 */
 				#sql { commit };
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
-				System.out.println("error saVing images: " + e.getMessage());
+				System.out.println("error saving images: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveImages(ImageResource_Transferable[] imageseq)
+	public static int saveImages(ImageResource_Transferable imageSeq[])
 	{
-		int i;
-		int j;
-		int len;
-
-		BLOB blob;
-		len = imageseq.length;
-		for (i = 0; i < len; i++)
-		{
-			saveImage(imageseq[i]);
-		}
+		for (int i = 0; i < imageSeq.length; i++)
+			saveImage(imageSeq[i]);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public ImageResource_Transferable loadImage(String image_id)
+	public static ImageResource_Transferable loadImage(String image_id)
 	{
-		ImageResource_Transferable im_r = null;
-
-		String id;
-		String name;
-		String codename;
-		String filename;
-		String source_string;
-		BLOB blob;
-		octetSeqHolder osh;
-
-		osh = new octetSeqHolder();
 		try
 		{
+			String id;
+			String name;
+			String codename;
+			String filename;
+			String source_string;
+			BLOB blob;
+			octetSeqHolder osh = new octetSeqHolder();
 			#sql {
 				select ID, NAME, CODENAME, FILENAME, SOURCE_STRING, IMG
 					into :id, :name, :codename, :filename, :source_string, :blob
 					from AMFICOM.IMAGERESOURCES
 					where ID = :image_id
 			};
-			im_r = new ImageResource_Transferable(id, codename, source_string, filename, new byte[0]);
-			if(source_string.equals("file"))
+			ImageResource_Transferable im_r = new ImageResource_Transferable(id, codename, source_string, filename, new byte[0]);
+			if (source_string.equals("file"))
 				return im_r;
-			else
-			if(source_string.equals("bytes"))
+			else if ((source_string.equals("bytes") || (source_string.equals("scheme")))
+				&& (getBlob(blob, osh) == 0))
 			{
-				if(GetBlob(blob, osh) == 0)
-				{
-					im_r.image = osh.value;
-					return im_r;
-				}
-			}
-			else
-			if(source_string.equals("scheme"))
-			{
-				if(GetBlob(blob, osh) == 0)
-				{
-					im_r.image = osh.value;
-					return im_r;
-				}
+				im_r.image = osh.value;
+				return im_r;
 			}
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			System.out.println("error loading image ID: " + image_id + " - " + e.getMessage());
 //			e.printStackTrace();
@@ -765,7 +746,7 @@ public class ResourcedbInterface
 		return null;
 	}
 
-	static public int loadImages(
+	public static int loadImages(
 			ImageResourceSeq_TransferableHolder imageseq,
 			Vector image_ids)
 	{
@@ -776,22 +757,15 @@ public class ResourcedbInterface
 		Vector loaded_vector = new Vector();
 		ImageResource_Transferable ir_t[];
 
-		String id;
-		String name;
-		String codename;
-		String filename;
-		String source_string;
-		BLOB blob;
-		octetSeqHolder osh;
 		len = image_ids.size();
-		for(i = 0; i < len; i++)
+		for (i = 0; i < len; i++)
 		{
 			String im_id = (String )image_ids.get(i);
-			if(!loaded_vector.contains(im_id))
+			if (!loaded_vector.contains(im_id))
 			{
 				im_r = loadImage(im_id);
 
-				if(im_r != null)
+				if (im_r != null)
 					vector.add(im_r);
 				loaded_vector.add(im_id);
 			}
@@ -802,107 +776,125 @@ public class ResourcedbInterface
 		return Constants.ERROR_NO_ERROR;
 	}
 
-// *
-// * Прочитать битовый поток изображения из переменной типа blob в буфер
-// *
-// * Ограничения:
-// *
-// * Возвращаемое значение - результат работы функции:
-// *	0 - изображение прочитано
-// *	1 - была ошибка - изображение не прочитано
-// *
-// * Сделать: все
-// *	приоритеты
-// *
-	static public int GetBlob(BLOB blob, octetSeqHolder octseqh)
+	/**
+	 * @deprecated Use {@link getBlob(BLOB, octetSeqHolder)} instead.
+	 */
+	public static int GetBlob(BLOB blob, octetSeqHolder octetSeqHolder)
 	{
-	try
+		return getBlob(blob, octetSeqHolder);
+	}
+
+	/**
+	 * Прочитать битовый поток изображения из переменной типа blob в буфер
+	 *
+	 * Ограничения:
+	 *
+	 * Возвращаемое значение - результат работы функции:
+	 *	0 - изображение прочитано
+	 *	1 - была ошибка - изображение не прочитано
+	 *
+	 * Сделать: все
+	 *	приоритеты
+	 */
+	public static int getBlob(BLOB blob, octetSeqHolder octetSeq)
 	{
-		int length;
-		long nread;
-		int bufsize = 10*1024;
-		byte[] mybytes;
-		byte[] buf;
-		int offs = 1;
-		int i;
-
-//		length = blob.length();
-
-		#sql length = { VALUES(dbms_lob.getlength(:blob)) };
-
-		mybytes = new byte[length];
-		buf = new byte[bufsize];
-
-		while ( offs <= length)
+		try
 		{
-			nread = ((length - (offs - 1) > bufsize)?
-				bufsize : (length - (offs - 1)));
-//			blob.getBytes()
-			#sql { call dbms_lob.read(:blob, :inout nread, :offs, :out buf) };
-			for(i = 0; i < nread; i++)
-				mybytes[offs - 1 + i] = buf[i];
-			offs += nread;
-		}
-		octseqh.value = mybytes;
-		return 0;
-	}
-	catch(SQLException e)
-	{
-		return 1;
-	}
-	}
-
-// *
-// * Прочитать битовый поток изображения из переменной типа blob в буфер
-// *
-// * Ограничения:
-// *
-// * Возвращаемое значение - результат работы функции:
-// *	0 - изображение прочитано
-// *	1 - была ошибка - изображение не прочитано
-// *
-// * Сделать: все
-// *	приоритеты
-// *
-	static public int PutBlob(BLOB blob, byte [] octseq) 
-	{
-	try
-	{
-		if (blob != null)
-		{
-			int len = octseq.length;
-			int nread;
+			int length;
+			long nread;
+			int bufsize = 10 * 1024;
+			byte mybytes[];
+			byte buf[];
 			int offs = 1;
-			int bufsize = 10*1024;
 			int i;
 
-			byte buf[] = new byte[bufsize];
+//			length = blob.length();
 
-//			OutputStream out = blob.getBinaryOutputStream();
+			#sql length = { VALUES(dbms_lob.getlength(:blob)) };
 
-			while ( offs <= len)
+			mybytes = new byte[length];
+			buf = new byte[bufsize];
+
+			while (offs <= length)
 			{
-				nread = ((len - (offs - 1) > bufsize)?
-					bufsize : (len - (offs - 1)));
-				for(i = 0; i < nread; i++)
-					buf[i] = octseq[offs - 1 + i];
-				#sql { call dbms_lob.write(:INOUT blob, :nread, :offs, :buf) };
-//				out.write(buf,offs,nread);
+				nread = ((length - (offs - 1) > bufsize)
+					? bufsize
+					: (length - (offs - 1)));
+//				blob.getBytes()
+				#sql { call dbms_lob.read(:blob, :inout nread, :offs, :out buf) };
+				for (i = 0; i < nread; i++)
+					mybytes[offs - 1 + i] = buf[i];
 				offs += nread;
 			}
-
+			octetSeq.value = mybytes;
+			return 0;
 		}
-		return 0;
+		catch (SQLException sqle)
+		{
+			return 1;
+		}
 	}
-	catch(SQLException e)
+
+	/**
+	 * @deprecated Use {@link putBlob(BLOB, byte[])} instead.
+	 */
+	public static int PutBlob(BLOB blob, byte octetSeq[])
 	{
-		System.out.println("IO error" + ": " + e.getMessage());
-		return 1;
-//		throw new AMFICOMError(e.getMessage());
+		return putBlob(blob, octetSeq);
 	}
+
+	/**
+	 * Прочитать битовый поток изображения из переменной типа blob в буфер
+	 *
+	 * Ограничения:
+	 *
+	 * Возвращаемое значение - результат работы функции:
+	 *	0 - изображение прочитано
+	 *	1 - была ошибка - изображение не прочитано
+	 *
+	 * Сделать: все
+	 *	приоритеты
+	 */
+	public static int putBlob(BLOB blob, byte octetSeq[]) 
+	{
+		try
+		{
+			if (blob != null)
+			{
+				int len = octetSeq.length;
+				int nread;
+				int offs = 1;
+				int bufsize = 10 * 1024;
+				int i;
+
+				byte buf[] = new byte[bufsize];
+
+//				OutputStream out = blob.getBinaryOutputStream();
+
+				while (offs <= len)
+				{
+					nread = ((len - (offs - 1) > bufsize)
+						? bufsize
+						: (len - (offs - 1)));
+					for (i = 0; i < nread; i++)
+						buf[i] = octetSeq[offs - 1 + i];
+					#sql { call dbms_lob.write(:INOUT blob, :nread, :offs, :buf) };
+//					out.write(buf, offs, nread);
+					offs += nread;
+				}
+			}
+			return 0;
+		}
+		catch (SQLException sqle)
+		{
+			System.out.println("I/O error: " + sqle.getMessage());
+			return 1;
+//			throw new AMFICOMError(e.getMessage());
+		}
 	}
+
 /*
-	static public void checkResultSet(String domain_id)
+	public static void checkResultSet(String domain_id)
 	{
 		try
 		{
@@ -915,11 +907,11 @@ public class ResourcedbInterface
 				from RESULTSETS
 				where ACTIVE = 1 and DOMAIN_ID = :domain_id
 			};
-			if(active_end_time.getTime() < System.currentTimeMillis())
+			if (active_end_time.getTime() < System.currentTimeMillis())
 			{
 				String id = getUId("resultset");
 				long l1 = active_end_time.getTime() + active_period;
-				if(l1 < System.currentTimeMillis())
+				if (l1 < System.currentTimeMillis())
 					l1 = System.currentTimeMillis() + active_period;
 				Timestamp new_end_time = new Timestamp(l1);
 				String name = id;
@@ -950,7 +942,7 @@ public class ResourcedbInterface
 				#sql { commit };
 			}
 		}
-		catch(Exception ex)
+		catch (Exception ex)
 		{
 			System.out.println("error creating new active result set for domain " + domain_id + " : " + ex.getMessage());
 			ex.printStackTrace();
@@ -959,20 +951,19 @@ public class ResourcedbInterface
 	}
 */
 
-	#sql public static iterator ImageResourceIterator (
+	#sql public static iterator ImageResourceIterator(
 		String id,
 		String name,
 		String codename,
 		String filename,
 		String source_string,
-		BLOB img
-		);
+		BLOB img);
 
-	#sql public static iterator ResourceDescriptorIterator (
+	#sql public static iterator ResourceDescriptorIterator(
 		String id,
 		Timestamp modified);
 
-	#sql public static iterator ResultDescriptorIterator (
+	#sql public static iterator ResultDescriptorIterator(
 		String id,
 		Timestamp elementary_start_time);
 }

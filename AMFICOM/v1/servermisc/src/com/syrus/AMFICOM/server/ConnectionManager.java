@@ -1,5 +1,5 @@
 /*
- * $Id: ConnectionManager.java,v 1.1 2004/05/27 11:17:16 bass Exp $
+ * $Id: ConnectionManager.java,v 1.2 2004/06/07 15:36:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,43 +9,79 @@
 package com.syrus.AMFICOM.server;
 
 import com.syrus.io.IniFile;
+import java.io.IOException;
 import java.sql.*;
+import oracle.jdbc.driver.OracleDriver;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:17:16 $
- * @module serveradd
+ * @version $Revision: 1.2 $, $Date: 2004/06/07 15:36:09 $
+ * @module servermisc
  */
-public class ConnectionManager extends Object
+public class ConnectionManager
 {
-	static IniFile iniFile;
-	static String iniFileName = "ServerConnection.properties";
+	private static IniFile iniFile;
 
-	LogWriter logWriter;
+	private static final String INI_FILE_NAME = "ServerConnection.properties";
 
+	/**
+	 * @deprecated Use {@link #getConnCtx()} instead.
+	 */
 	public DefaultContext m_ctx;
 
+	/**
+	 * @deprecated Use {@link #getUrl()} instead.
+	 */
 	public String connectString;
+
+	/**
+	 * @deprecated Use {@link #getUser()} instead.
+	 */
 	public String login;
+
+	/**
+	 * @deprecated Use {@link #getPassword()} instead.
+	 */
 	public String password;
 
-	protected ConnectionManager()
+	private LogWriter logWriter;
+
+	static
 	{
+		try
+		{
+			Class.forName(OracleDriver.class.getName());
+		}
+		catch (ClassNotFoundException cnfe)
+		{
+			cnfe.printStackTrace();
+		}
 	}
 
 	public ConnectionManager(LogWriter logWriter)
 	{
 		this.logWriter = logWriter;
-		init_module();
+		initModule();
 	}
 
-	public void init_module()
+	private ConnectionManager()
+	{
+	}
+
+	/**
+	 * @deprecated Use {@link #initModule()} instead.
+	 */
+	public void init_module() {
+		initModule();
+	}
+
+	public void initModule()
 	{
 		try
 		{
-			iniFile = new IniFile(iniFileName);
+			iniFile = new IniFile(INI_FILE_NAME);
 		}
-		catch(java.io.IOException e)
+		catch (IOException ioe)
 		{
 			setDefaults();
 			return;
@@ -57,9 +93,9 @@ public class ConnectionManager extends Object
 			login = iniFile.getValue("login");
 			password = iniFile.getValue("password");
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(logWriter == null)
+			if (logWriter == null)
 				System.out.println("could not read ini-file. Setting connection defaults...");
 			else
 				logWriter.log("could not read ini-file. Setting connection defaults...");
@@ -69,7 +105,7 @@ public class ConnectionManager extends Object
 
 	public void setDefaults()
 	{
-		if(logWriter == null)
+		if (logWriter == null)
 			System.out.println("Setting connection defaults...");
 		else
 			logWriter.log("Setting connection defaults...");
@@ -78,15 +114,14 @@ public class ConnectionManager extends Object
 		password = "amficom";
 	}
 
-	public boolean connect( )// throws SQLException
+	public boolean connect()
 	{
-		if(logWriter == null)
+		if (logWriter == null)
 			System.out.println("connecting " + connectString + " as " + login + "... ");
 		else
 			logWriter.log("connecting " + connectString + " as " + login + "... ");
 		try
 		{
-			DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver( ));
 			m_ctx = new DefaultContext(
 					  connectString,
 					  login,
@@ -94,25 +129,25 @@ public class ConnectionManager extends Object
 					  false);
 			DefaultContext.setDefaultContext(m_ctx);
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(logWriter == null)
+			if (logWriter == null)
 				System.out.println("Error connecting " + connectString + ": " + e.getMessage());
 			else
 				logWriter.log("Error connecting " + connectString + ": " + e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
-		if(logWriter == null)
+		if (logWriter == null)
 			System.out.println("connected!");
 		else
 			logWriter.log("connected!");
 		return true;
 	}
 
-	public void disconnect( )
+	public void disconnect()
 	{
-		if(logWriter == null)
+		if (logWriter == null)
 			System.out.println("disconnect " + connectString);
 		else
 			logWriter.log("disconnect " + connectString);
@@ -121,13 +156,33 @@ public class ConnectionManager extends Object
 			if (m_ctx != null)
 				m_ctx.close();
 		}
-		catch (SQLException ex)
+		catch (SQLException sqle)
 		{
-			if(logWriter == null)
+			if (logWriter == null)
 				System.out.println("Error closing connection");
 			else
 				logWriter.log("Error closing connection");
 		}
+	}
+
+	public String getUrl()
+	{
+		return connectString;
+	}
+
+	public String getUser()
+	{
+		return login;
+	}
+
+	public String getPassword()
+	{
+		return password;
+	}
+
+	public DefaultContext getConnCtx()
+	{
+		return m_ctx;
 	}
 
 	public String toString()

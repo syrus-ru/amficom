@@ -1,5 +1,5 @@
 /*
- * $Id: JDBCConnectionManager.java,v 1.2 2004/06/02 06:37:32 bass Exp $
+ * $Id: JDBCConnectionManager.java,v 1.3 2004/06/07 15:36:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,9 @@ import sqlj.runtime.ExecutionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/02 06:37:32 $
+ * @version $Revision: 1.3 $, $Date: 2004/06/07 15:36:09 $
  * @author $Author: bass $
- * @module serveradd
+ * @module servermisc
  */
 public final class JDBCConnectionManager {
 	private JDBCConnectionManager() {
@@ -35,9 +35,8 @@ public final class JDBCConnectionManager {
 			/*
 			 * Migrate preferences.
 			 */
-			Class clazz1 = PreferencesManager.class;
-			Class clazz2 = OracleDriver.class;
-			Class.forName(clazz2.getName());
+			Class.forName(PreferencesManager.class.getName());
+			Class.forName(OracleDriver.class.getName());
 			Preferences preferences = Preferences.userRoot().
 				node(PreferencesManager.PREFERENCES_ROOT).node("util").
 				node("connections").node("jdbc");
@@ -48,6 +47,25 @@ public final class JDBCConnectionManager {
 			connCtx = new DefaultContext(conn);
 			execCtx = connCtx.getExecutionContext();
 			DefaultContext.setDefaultContext(connCtx);
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				public void run() {
+					try {
+						execCtx.close();
+					} catch (SQLException sqle) {
+						sqle.printStackTrace();
+					}
+					try {
+						connCtx.close();
+					} catch (SQLException sqle) {
+						sqle.printStackTrace();
+					}
+					try {
+						conn.close();
+					} catch (SQLException sqle) {
+						sqle.printStackTrace();
+					}
+				}
+			});
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 		} catch (ClassNotFoundException cnfe) {
