@@ -2,6 +2,7 @@
 #define _JNI_THRESHARRAY_H
 
 #include <jni.h>
+#include "../thresh/thresh.h"
 
 class ThreshArray
 {
@@ -55,5 +56,8 @@ public:
 	int getDX(int id, int key);
 	int getIsRise(int id);
 };
+
+void ThreshDXArrayToTHXArray(ThreshDXArray &thXi, int key, THX** thxOut, int *thxOutSize);
+void ThreshDYArrayToTHYArray(ThreshDYArray &thYi, int key, THY** thyOut, int *thyOutSize);
 
 #endif

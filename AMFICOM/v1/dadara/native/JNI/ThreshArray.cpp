@@ -3,6 +3,8 @@
 #include "Thresharray.h"
 #include "names.h"
 
+// Java object accessors
+
 ThreshArray::ThreshArray(JNIEnv *env, jobjectArray array)
 {
 	this->env = env;
@@ -172,4 +174,61 @@ int ThreshArray::isUpper(int key)
 int ThreshArray::getConjKey(int key)
 {
 	return CONJ[key];
+}
+
+// converters
+
+void ThreshDXArrayToTHXArray(ThreshDXArray &taX, int key, THX** thxOut, int *thxOutSize)
+{
+	const int thNpX = taX.getLength();
+	*thxOutSize = thNpX;
+
+	int conjKey = taX.getConjKey(key);
+	int isUpper = taX.isUpper(key);
+
+	THX *thX = 0;
+	if (thNpX > 0)
+	{
+		thX = new THX[thNpX];
+		assert(thX);
+	}
+	int j;
+	for (j = 0; j < thNpX; j++)
+	{
+		int isRising = taX.getIsRise(j);
+		int leftMode = !!isRising ^ !!isUpper ^ 1;
+		thX[j].leftMode = leftMode;
+		thX[j].x0 = taX.getX0(j);
+		thX[j].x1 = taX.getX1(j);
+		thX[j].dxL = leftMode ? -taX.getDX(j, key) : taX.getDX(j, conjKey);
+		thX[j].dxR = leftMode ? -taX.getDX(j, conjKey) : taX.getDX(j, key);
+	}
+	*thxOut = thX;
+	// the user will then have to free the array:
+	// if (*thxOut != 0) delete[] *thxOut;
+}
+
+void ThreshDYArrayToTHYArray(ThreshDYArray &taY, int key, THY** thyOut, int *thyOutSize)
+{
+
+	const int thNpY = taY.getLength();
+	*thyOutSize = thNpY;
+
+	THY *thY = 0;
+	if (thNpY > 0)
+	{
+		thY = new THY[thNpY];
+		assert(thY);
+	}
+	int j;
+	for (j = 0; j < thNpY; j++)
+	{
+		thY[j].x0 = taY.getX0(j);
+		thY[j].x1 = taY.getX1(j);
+		thY[j].dy = taY.getValue(j, key);
+		thY[j].typeL = taY.getTypeL(j);
+	}
+	*thyOut = thY;
+	// the user will then have to free the array:
+	// if (*thyOut != 0) delete[] *thyOut;
 }

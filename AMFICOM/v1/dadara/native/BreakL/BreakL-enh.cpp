@@ -5,55 +5,43 @@
 #include "../common/prf.h"
 #include "../common/ModelF.h"
 #include "../common/ArrList.h"
+#include "../thresh/thresh.h"
 
 inline int imax(int a, int b) { return a > b ? a : b; }
 inline int imin(int a, int b) { return a < b ? a : b; }
 
-// 1: умеем отслеживать перемещение DX&DY-порогов
-// 0: не умеем (при этом ничего не работает)
-// этот define нужен лишь для того, чтобы пометить те части кода, которые
-// отслеживают ttdx/ttdy.
-#define CANTTDXDY 1
 
-#if CANTTDXDY
-
-struct TTDX
+void TTDX::set(int thId)
 {
-	int thId; // номер порога либо -1 если порог не повлиял
-	void set(int thId)
-	{
-		this->thId = thId;
-	}
-	int get()
-	{
-		return thId;
-	}
-/*	void operator= (TTDX &that)
-	{
-		this->thId = that.thId;
-	}*/
-};
-
-struct TTDY
+	this->thId = thId;
+}
+int TTDX::get()
 {
-	int thId; // номер левого порога (-1: отчего-то не определено)
-	double nextWei; // вес соседа справа (должен быть строго 0 для самого правого порога)
-	void set(int thId, double nextWei)
-	{
-		this->thId = thId;
-		this->nextWei = nextWei;
-	}
-	int getNearest()
-	{
-		return nextWei > 0.5 ? thId + 1 : thId;
-	}
-/*	void operator= (TTDY &that)
-	{
-		this->thId = that.thId;
-		this->nextWei = that.nextWei;
-	}*/
-};
-#endif
+	return thId;
+}
+/*
+void TTDX::operator= (TTDX &that)
+{
+	this->thId = that.thId;
+}
+*/
+
+void TTDY::set(int thId, double nextWei)
+{
+	this->thId = thId;
+	this->nextWei = nextWei;
+}
+int TTDY::getNearest()
+{
+	return nextWei > 0.5 ? thId + 1 : thId;
+}
+/*
+void operator= (TTDY &that)
+{
+	this->thId = that.thId;
+	this->nextWei = that.nextWei;
+}
+*/
 
 /////////////////////////////////////////////////
 // алгоритм enhance  в двух вариантах - без отслеживания TTDY и с отслеживанием TTDY
@@ -241,23 +229,6 @@ int isMonotonous(int N, XY *P) // XXX: debug code, not required is runtime
 	return 1;
 }
 
-struct THX
-{
-	int x0;
-	int x1;
-	int dxL;
-	int dxR;
-	int leftMode;
-};
-
-struct THY
-{
-	int x0;
-	int x1;
-	double dy;
-	int typeL;
-};
-
 struct UPDATE_REGION
 {
 	int x0;
@@ -297,8 +268,7 @@ static int isat(int x, int xMin, int xMax)
 //autoThresh - режим при автоматической генерации порогов (0,1)
 // ttdyOut - null если не нужен,
 // ttdxOut - null если не нужен
-// NB: упадёт при autoThresh != 0 && ttdyOut == 0
-static void ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
+void ChangeByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
 						   int xMin, int xMax, int autoThresh,
 						   TTDY *ttdyOut, TTDX *ttdxOut)
 {
@@ -308,15 +278,7 @@ static void ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 	int j;
 
 #if CANTTDXDY
-	// режим отслеживания TTDY.
-	// 0: не требуется. Обычная генерация порогов (со сглаживанием)
-	// 1: требуется выбора порога при захвате мышью в GUI. Обычная генерация порогов (со сглаживанием)
-	// 2: требуется таблица весов при автоматической генерации порогов. генерация порогов без сглаживания.
-	// Сглаживание может делать пороги чуть шире, но делает невозможным представление весов в виде TTDY.
-	// Отключение сглаживания (режим 2) упрощает веса до TTDY, тем самым позволяя простой алгоритм расставления порогов
-
 	// результирующие TTDY полностью заполнятся при наложении AL-порогов, сейчас инициализировать не надо
-	
 	// результирующие TTDX надо сначала инициализировать
 	if (ttdxOut)
 	{
@@ -326,42 +288,15 @@ static void ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 
 #endif
 
-	const int thNpX = taX.getLength();
-	const int thNpY = taY.getLength();
-
-	int conjKey = taX.getConjKey(key);
-	int isUpper = taX.isUpper(key);
-
 	// convert thresholds
-	THX *thX = 0;
-	if (thNpX > 0)
-	{
-		thX = new THX[thNpX];
-		assert(thX);
-	}
-	THY *thY = 0;
-	if (thNpY > 0)
-	{
-		thY = new THY[thNpY];
-		assert(thY);
-	}
-	for (j = 0; j < thNpX; j++)
-	{
-		int isRising = taX.getIsRise(j);
-		int leftMode = !!isRising ^ !!isUpper ^ 1;
-		thX[j].leftMode = leftMode;
-		thX[j].x0 = taX.getX0(j);
-		thX[j].x1 = taX.getX1(j);
-		thX[j].dxL = leftMode ? -taX.getDX(j, key) : taX.getDX(j, conjKey);
-		thX[j].dxR = leftMode ? -taX.getDX(j, conjKey) : taX.getDX(j, key);
-	}
-	for (j = 0; j < thNpY; j++)
-	{
-		thY[j].x0 = taY.getX0(j);
-		thY[j].x1 = taY.getX1(j);
-		thY[j].dy = taY.getValue(j, key);
-		thY[j].typeL = taY.getTypeL(j);
-	}
+	int thNpX;
+	int thNpY;
+	THX *thX;
+	THY *thY;
+	ThreshDXArrayToTHXArray(taX, key, &thX, &thNpX);
+	ThreshDYArrayToTHYArray(taY, key, &thY, &thNpY);
+
+	int isUpper = taX.isUpper(key);
 
 	prf_b("BreakL_ChangeByThresh: unpacking BreakL");
 	double *unpk = BreakLToArray(mf.getP(), mf.getNPars(), xMin, Nx);
@@ -760,7 +695,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 	}
 
 	prf_b("Outer BreakL_ChangeByThresh: go inside");
-	ChangeByThresh (mf, taX, taY, key, xMin, xMax, 0, ttdyOut, ttdxOut);
+	ChangeByThreshEx (mf, taX, taY, key, xMin, xMax, 0, ttdyOut, ttdxOut);
 	prf_b("Outer BreakL_ChangeByThresh: back from inside");
 
 	int ret = -1;
