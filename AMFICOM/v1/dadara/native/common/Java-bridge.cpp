@@ -420,7 +420,7 @@ int EventP_J2C(JNIEnv *env, jobject obj, EventP &out)
 	out.gentype	= env->GetIntField(obj, env->GetFieldID(clazz, "type", "I"));
 	out.begin	= env->GetIntField(obj, env->GetFieldID(clazz, "begin", "I"));
 	out.end		= env->GetIntField(obj, env->GetFieldID(clazz, "end", "I"));
-	out.delta_x	= env->GetDoubleField(obj, env->GetFieldID(clazz, "delta_x", "D"));
+	out.delta_x	= env->GetDoubleField(obj, env->GetFieldID(clazz, "deltaX", "D"));
 
 	// copy ModelFunction fields
 	obj = env->GetObjectField(obj, env->GetFieldID(clazz, N_mf, S_mf));
@@ -447,7 +447,7 @@ jobject EventP_C2J(JNIEnv *env, EventP &ep)
 	env->SetIntField(ep_obj, env->GetFieldID(ep_clazz, "thresholdType", "I"), ep.gentype);
 	env->SetIntField(ep_obj, env->GetFieldID(ep_clazz, "begin", "I"), ep.begin);
 	env->SetIntField(ep_obj, env->GetFieldID(ep_clazz, "end", "I"), ep.end);
-	env->SetDoubleField(ep_obj, env->GetFieldID(ep_clazz, "delta_x", "D"), ep.delta_x);
+	env->SetDoubleField(ep_obj, env->GetFieldID(ep_clazz, "deltaX", "D"), ep.delta_x);
 
 	// create and fill ModelFunction object
 	jobject mf_obj = ModelF_C2J(env, ep.mf);
