@@ -45,28 +45,44 @@ package com.syrus.AMFICOM.Client.Resource;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.*;
 
 public class DataSet extends Object
 {
-	private Vector objects = new Vector();
+	private ArrayList objects = new ArrayList();
 
 	public DataSet()
 	{
 	}
 
-	public DataSet(Enumeration enum)
+	public DataSet(Enumeration en)
 	{
-		while(enum.hasMoreElements())
-			objects.add(enum.nextElement());
+		while(en.hasMoreElements())
+			objects.add(en.nextElement());
+	}
+
+	public DataSet(Iterator it)
+	{
+		while(it.hasNext())
+			objects.add(it.next());
 	}
 
 	public DataSet(Vector vec)
 	{
 		if(vec != null)
 		{
-			Enumeration enum = vec.elements();
-			while(enum.hasMoreElements())
-				objects.add(enum.nextElement());
+			Enumeration en = vec.elements();
+			while(en.hasMoreElements())
+				objects.add(en.nextElement());
+		}
+	}
+
+	public DataSet(List list)
+	{
+		if(list != null)
+		{
+			for(Iterator it = list.iterator(); it.hasNext();)
+				objects.add(it.next());
 		}
 	}
 
@@ -74,9 +90,9 @@ public class DataSet extends Object
 	{
 		if(hash != null)
 		{
-			Enumeration enum = hash.elements();
-			while(enum.hasMoreElements())
-				objects.add(enum.nextElement());
+			Enumeration en = hash.elements();
+			while(en.hasMoreElements())
+				objects.add(en.nextElement());
 		}
 	}
 
@@ -88,9 +104,9 @@ public class DataSet extends Object
 
 	public ObjectResource get(String obj_id)
 	{
-		for(int i = 0; i < objects.size(); i++)
+		for(Iterator it = objects.iterator(); it.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )objects.get(i);
+			ObjectResource or = (ObjectResource )it.next();
 			if(or.getId().equals(obj_id))
 				return or;
 		}
@@ -110,9 +126,9 @@ public class DataSet extends Object
 
 	public void add(DataSet ds)
 	{
-		for(int i = 0; i < ds.size(); i++)
+		for(Iterator it = ds.iterator(); it.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )ds.get(i);
+			ObjectResource or = (ObjectResource )it.next();
 			add(or);
 		}
 	}
@@ -120,7 +136,7 @@ public class DataSet extends Object
 	public void insertAt(ObjectResource obj, int obj_i)
 	{
 		if(!objects.contains(obj))
-			objects.insertElementAt(obj, obj_i);
+			objects.add(obj_i, obj);
 	}
 
 	public void remove(ObjectResource obj)
@@ -130,9 +146,9 @@ public class DataSet extends Object
 
 	public void remove(String obj_id)
 	{
-		for(int i = 0; i < objects.size(); i++)
+		for(Iterator it = objects.iterator(); it.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )objects.get(i);
+			ObjectResource or = (ObjectResource )it.next();
 			if(or.getId().equals(obj_id))
 			{
 				objects.remove(or);
@@ -143,7 +159,7 @@ public class DataSet extends Object
 
 	public void removeAt(int obj_i)
 	{
-			objects.removeElementAt(obj_i);
+			objects.remove(obj_i);
 	}
 
 	public int size()
@@ -158,7 +174,12 @@ public class DataSet extends Object
 
 	public Enumeration elements()
 	{
-		return objects.elements();
+		return Collections.enumeration(objects);
+	}
+
+	public Iterator iterator()
+	{
+		return objects.iterator();
 	}
 
 	public void clear()
@@ -166,7 +187,4 @@ public class DataSet extends Object
 		objects.clear();
 	}
 
-//	public void setFilter(ObjectResourceFilter filter)
-//	{
-//	}
 }

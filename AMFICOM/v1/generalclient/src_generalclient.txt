@@ -228,12 +228,3 @@ src/com/syrus/AMFICOM/Client/General/Report/ReportTemplateImplementationPanel.ja
 src/com/syrus/AMFICOM/Client/General/Report/SelectTypeTemplateWindow.java
 src/com/syrus/AMFICOM/Client/General/Report/Statistics.java
 src/com/syrus/AMFICOM/Client/General/Report/TitledPanel.java
-src/com/syrus/AMFICOM/general/CreateObjectException.java
-src/com/syrus/AMFICOM/general/Identifier.java
-src/com/syrus/AMFICOM/general/ObjectEntities.java
-src/com/syrus/AMFICOM/general/RetrieveObjectException.java
-src/com/syrus/AMFICOM/general/StorableObject.java
-src/com/syrus/AMFICOM/general/StorableObjectType.java
-src/com/syrus/AMFICOM/general/StorableObject_Database.java
-src/com/syrus/AMFICOM/general/TransferableObject.java
-src/com/syrus/AMFICOM/general/UpdateObjectException.java
