@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.25 2005/03/24 13:25:32 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.26 2005/03/24 14:41:17 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.25 $, $Date: 2005/03/24 13:25:32 $
+ * @version $Revision: 1.26 $, $Date: 2005/03/24 14:41:17 $
  * @module
  */
 
@@ -308,11 +308,14 @@ public class CoreAnalysisManager
 	}
 
 	/**
+	 * Расширяет пороги данного ModelTraceManager так, чтобы они охватили все р/г
+	 * из заданного набора.
 	 * @param mtm
-	 * @param bellcoreTraces
+	 * @param bellcoreTraces набор р/г
 	 */
 	private static void updateMTMThresholdsByBSMap(ModelTraceManager mtm, Map bellcoreTraces)
 	{
+		// определяем верхнюю и нижнюю границы
 		double[] yBase = mtm.getModelTrace().getYArray();
 		double[] yMax = new double[yBase.length];
 		double[] yMin = new double[yBase.length];
@@ -325,6 +328,7 @@ public class CoreAnalysisManager
 			ReflectogramMath.updateMaxArray(yMax, y);
 			ReflectogramMath.updateMinArray(yMin, y);
 		}
+		// корректируем пороги по этим границам
 		mtm.updateUpperThreshToContain(yMax);
 		mtm.updateLowerThreshToContain(yMin);
 	}
