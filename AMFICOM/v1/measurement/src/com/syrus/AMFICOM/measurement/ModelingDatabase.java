@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.5 2004/10/18 09:44:28 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.6 2004/10/19 07:48:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/18 09:44:28 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/19 07:48:21 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -278,5 +279,18 @@ public class ModelingDatabase extends StorableObjectDatabase {
         return list;
     }
 
+    
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list = null;
+		if (condition instanceof DomainCondition){
+			DomainCondition domainCondition = (DomainCondition)condition;
+			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+		} else {
+			Log.errorMessage("ModelingDatabase.retrieveByCondition | Unknown condition class: " + condition);
+			list = this.retrieveButIds(ids);
+		}
+		return list;
+	}
 }
 

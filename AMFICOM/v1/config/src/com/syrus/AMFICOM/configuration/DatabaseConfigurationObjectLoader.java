@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.11 2004/10/03 12:43:06 bob Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.12 2004/10/19 07:48:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/10/03 12:43:06 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/19 07:48:58 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -283,7 +283,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
         List list = null;
         try {
-            list = database.retrieveButIds(ids);
+            list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristicTypesButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristicTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -295,7 +295,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase(); 
         List list = null;
         try {
-            list = database.retrieveButIds(ids);
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipmentTypesButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadEquipmentTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -307,7 +307,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         PortTypeDatabase database = (PortTypeDatabase)ConfigurationDatabaseContext.getPortTypeDatabase();
         List list = null;
         try {
-            list = database.retrieveButIds(ids);
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadPortTypesButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadPortTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -319,7 +319,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase)ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
         List list = null;
         try {
-            list = database.retrieveButIds(ids);
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortTypesButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMeasurementPortTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -331,7 +331,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
         List list = null;
         try {
-            list = database.retrieveButIds(ids);
+            list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: " + e.getMessage());
@@ -347,7 +347,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
         List list = null;
         try {
-            list = database.retrieveButIds(ids);
+            list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadUsersButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadUsersButIds | Illegal Storable Object: " + e.getMessage());
@@ -359,14 +359,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
         List list = null;
         try {
-        	if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Unknown condition class: " + condition.getClass().getName());
-				list = database.retrieveButIds(ids);
-			}
-            list = database.retrieveButIds(ids);
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage());
@@ -378,13 +371,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
         List list = null;
         try {
-        	if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Unknown condition class: " + condition.getClass().getName());
-				list = database.retrieveButIds(ids);
-			}
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage());
@@ -396,13 +383,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
         List list = null;
         try {
-        	if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Unknown condition class: " + condition.getClass().getName());
-				list = database.retrieveButIds(ids);
-			}
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadMCMsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMCMsButIds | Illegal Storable Object: " + e.getMessage());
@@ -414,13 +395,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         EquipmentDatabase database = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
         List list = null;
         try {
-        	if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Unknown condition class: " + condition.getClass().getName());
-				list = database.retrieveButIds(ids);
-			}
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipmentsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadEquipmentsButIds | Illegal Storable Object: " + e.getMessage());
@@ -432,13 +407,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         PortDatabase database = (PortDatabase)ConfigurationDatabaseContext.getPortDatabase();
         List list = null;
         try {
-        	if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Unknown condition class: " + condition.getClass().getName());
-				list = database.retrieveButIds(ids);
-			}
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadPortsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadPortsButIds | Illegal Storable Object: " + e.getMessage());
@@ -450,13 +419,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         TransmissionPathDatabase database = (TransmissionPathDatabase)ConfigurationDatabaseContext.getPortDatabase();
         List list = null;
         try {
-        	if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Unknown condition class: " + condition.getClass().getName());
-				list = database.retrieveButIds(ids);
-			}
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Illegal Storable Object: " + e.getMessage());
@@ -468,13 +431,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
         List list = null;
         try {
-        	if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISsButIds | Unknown condition class: " + condition.getClass().getName());
-				list = database.retrieveButIds(ids);
-			}
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadKISsButIds | Illegal Storable Object: " + e.getMessage());
@@ -486,13 +443,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
         List list = null;
         try {
-        	if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortsButIds | Unknown condition class: " + condition.getClass().getName());
-				list = database.retrieveButIds(ids);
-			}
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMeasurementPortsButIds | Illegal Storable Object: " + e.getMessage());
@@ -504,13 +455,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         MonitoredElementDatabase database = (MonitoredElementDatabase)ConfigurationDatabaseContext.getMonitoredElementDatabase();
         List list = null;
         try {
-        	if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseConfigurationObjectLoader.loadMonitoredElementsButIds | Unknown condition class: " + condition.getClass().getName());
-				list = database.retrieveButIds(ids);
-			}
+        	list = database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.loadMonitoredElementsButIds | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMonitoredElementsButIds | Illegal Storable Object: " + e.getMessage());

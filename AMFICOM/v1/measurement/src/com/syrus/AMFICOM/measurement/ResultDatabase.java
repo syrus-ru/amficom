@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.27 2004/10/12 08:00:54 bob Exp $
+ * $Id: ResultDatabase.java,v 1.28 2004/10/19 07:48:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/10/12 08:00:54 $
+ * @version $Revision: 1.28 $, $Date: 2004/10/19 07:48:21 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -632,7 +633,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 
 		String condition = COLUMN_MEASUREMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT + COLUMN_ID + SQL_FROM
@@ -652,7 +653,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveButIdsByMeasurement(List ids, List measurementIds) throws RetrieveObjectException {
+	private List retrieveButIdsByMeasurement(List ids, List measurementIds) throws RetrieveObjectException {
 		List list = null;
 
 		StringBuffer buffer = new StringBuffer();
@@ -696,7 +697,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveButIdsByMeasurementAndSort(List ids, Identifier measurementId, ResultSort resultSort) throws RetrieveObjectException {
+	private List retrieveButIdsByMeasurementAndSort(List ids, Identifier measurementId, ResultSort resultSort) throws RetrieveObjectException {
 		List list = null;
 
 		String sql = COLUMN_MEASUREMENT_ID + EQUALS + measurementId.toSQLString()
@@ -709,6 +710,25 @@ public class ResultDatabase extends StorableObjectDatabase {
 						Log.DEBUGLEVEL09);
 		}
 		
+		return list;
+	}	
+
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list;
+		if (condition instanceof LinkedIdsCondition){
+			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+			list = this.retrieveButIdsByMeasurement(ids, linkedIdsCondition.getMeasurementIds());
+		} else if (condition instanceof DomainCondition){
+			DomainCondition domainCondition = (DomainCondition)condition;
+			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+		} else if (condition instanceof ResultSortCondition){
+			ResultSortCondition resultSortCondition = (ResultSortCondition) condition;
+			list = this.retrieveButIdsByMeasurementAndSort(ids, resultSortCondition.getMeasurementId(), resultSortCondition.getResultSort());
+		} else {
+			Log.errorMessage("ResultDatabase.retrieveByCondition | Unknown condition class: " + condition);
+			list = this.retrieveButIds(ids);
+		}
 		return list;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.10 2004/10/15 09:58:58 max Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.11 2004/10/19 07:49:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,8 +62,8 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/10/15 09:58:58 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2004/10/19 07:49:12 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
@@ -665,10 +665,7 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
             Measurement_Transferable[] measurement_Transferables;
                                     
             try {
-                if( condition instanceof LinkedIdsCondition)
-                    list = database.retrieveButIdsByTest(ids2, ( (LinkedIdsCondition)condition ).getTestIds());
-                else
-                    list = database.retrieveButIds(ids2);
+            	list = database.retrieveByCondition(ids2, condition);
                 for (Iterator it = list.iterator(); it.hasNext();) {
                     ids2.add( ((Analysis)it.next()).getId() );
                 }
@@ -704,10 +701,7 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
             
                                     
             try {
-                if( condition instanceof LinkedIdsCondition)
-                    list = database.retrieveButIdsByDomain(ids2, ( (LinkedIdsCondition)condition ).getDomain());
-                else
-                    list = database.retrieveButIds(ids2);
+            	list = database.retrieveByCondition(ids2, condition);
                 for (Iterator it = list.iterator(); it.hasNext();) {
                     ids2.add( ((Analysis)it.next()).getId() );
                 }
@@ -718,7 +712,7 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
                 }
                 com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
                                
-                analyses_Transferables = mcmRef.transmitAnalysesButIds((LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable(), identifier_Transferables);
+                analyses_Transferables = mcmRef.transmitAnalysesButIds((LinkedIdsCondition_Transferable)condition.getTransferable(), identifier_Transferables);
                 list.add(analyses_Transferables);
                 return list;
                 
@@ -743,10 +737,7 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
             Evaluation_Transferable[] evaluation_Transferables;
             
             try {
-                if( condition instanceof LinkedIdsCondition)
-                    list = database.retrieveButIdsByDomain(ids2, ( (LinkedIdsCondition)condition ).getDomain());
-                else
-                    list = database.retrieveButIds(ids2);
+            	list = database.retrieveByCondition(ids2, condition);
                 for (Iterator it = list.iterator(); it.hasNext();) {
                     ids2.add( ((Analysis)it.next()).getId() );
                 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.19 2004/09/20 14:15:19 max Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.20 2004/10/19 07:48:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -27,8 +28,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/20 14:15:19 $
- * @author $Author: max $
+ * @version $Revision: 1.20 $, $Date: 2004/10/19 07:48:58 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -232,4 +233,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids, condition);
 	}	
 
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		return this.retrieveButIds(ids);
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.29 2004/10/13 10:35:52 max Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.30 2004/10/19 07:48:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -35,8 +36,8 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/10/13 10:35:52 $
- * @author $Author: max $
+ * @version $Revision: 1.30 $, $Date: 2004/10/19 07:48:21 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -544,7 +545,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return list;	
 	}
 	
-	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 		
 		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
@@ -563,7 +564,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveButIdsByMeasurementType(List ids, MeasurementType measurementType) throws RetrieveObjectException {
+	private List retrieveButIdsByMeasurementType(List ids, MeasurementType measurementType) throws RetrieveObjectException {
 		List list = null;
 		
 		String condition = COLUMN_PARAMETER_SET_ID + SQL_IN + OPEN_BRACKET		
@@ -585,7 +586,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return list;
 	}
 	
-	public List retrieveButIdsByMonitoredElement(List ids, MonitoredElement monitoredElement) throws RetrieveObjectException {
+	private List retrieveButIdsByMonitoredElement(List ids, MonitoredElement monitoredElement) throws RetrieveObjectException {
 		List list = null;
 		
 		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
@@ -602,7 +603,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return list;
 	}
     
-    public List retrieveButIdMeasurementIds(List ids, List measurementIds) throws RetrieveObjectException, IllegalDataException {
+    private List retrieveButIdMeasurementIds(List ids, List measurementIds) throws RetrieveObjectException, IllegalDataException {
         String condition = new String();
         StringBuffer measurementIdsStr = new StringBuffer();
         
@@ -619,4 +620,26 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
                     + CLOSE_BRACKET;        
         return retrieveButIds(ids , condition);
     }
+    
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list = null;
+		if (condition instanceof MeasurementSetupCondition){
+			MeasurementSetupCondition measurementSetupCondition = (MeasurementSetupCondition)condition;
+			MeasurementType measurementType = measurementSetupCondition.getMeasurementType();				
+			MonitoredElement monitoredElement = measurementSetupCondition.getMonitoredElement();
+			if (measurementType!=null)
+				list = this.retrieveButIdsByMeasurementType(ids, measurementType);
+			else if (monitoredElement != null)
+				list = this.retrieveButIdsByMonitoredElement(ids, monitoredElement);			
+        } else if ( condition instanceof LinkedIdsCondition ) {
+            LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+            list = this.retrieveButIdMeasurementIds(ids, linkedIdsCondition.getMeasurementIds());
+        } else {
+			Log.errorMessage("MeasurementSetupDatabase.retrieveByCondition | Unknown condition class: " + condition);
+			list = this.retrieveButIds(ids);
+		}
+		return list;
+	}
+    
 }

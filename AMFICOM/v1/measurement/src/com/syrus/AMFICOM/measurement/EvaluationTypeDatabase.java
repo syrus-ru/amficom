@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.28 2004/10/13 10:35:52 max Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.29 2004/10/19 07:48:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -33,8 +34,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/10/13 10:35:52 $
- * @author $Author: max $
+ * @version $Revision: 1.29 $, $Date: 2004/10/19 07:48:21 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -458,7 +459,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		return list;	
 	}
 
-    public List retrieveButIdByThresholdSet(List ids, List thresholdSetIds) throws RetrieveObjectException, IllegalDataException {
+    private List retrieveButIdByThresholdSet(List ids, List thresholdSetIds) throws RetrieveObjectException, IllegalDataException {
         
         String condition = new String();        
         StringBuffer tresholds = new StringBuffer();
@@ -476,6 +477,18 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
             + CLOSE_BRACKET 
             + SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + MODE_THRESHOLD + APOSTOPHE;
         return retrieveButIds(ids , condition);
-    }
-	
+    }    
+    
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list;
+		if (condition instanceof LinkedIdsCondition){
+            LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+            list = this.retrieveButIdByThresholdSet(ids, linkedIdsCondition.getThresholdSetIds());
+        } else {
+            Log.errorMessage("EvaluationTypeDatabase.retrieveByCondition | Unknown condition class: " + condition);
+            list = this.retrieveButIds(ids);
+        }
+		return list;
+	}
 }

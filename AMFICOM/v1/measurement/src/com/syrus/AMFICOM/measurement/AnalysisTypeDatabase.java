@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.31 2004/10/13 10:35:52 max Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.32 2004/10/19 07:48:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -32,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/10/13 10:35:52 $
- * @author $Author: max $
+ * @version $Revision: 1.32 $, $Date: 2004/10/19 07:48:21 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -454,7 +455,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		return i;
 	}
 
-    public List retrieveButIdsByCriteriaSet(List ids, List criteriaSetIds) throws RetrieveObjectException, IllegalDataException {
+    private List retrieveButIdsByCriteriaSet(List ids, List criteriaSetIds) throws RetrieveObjectException, IllegalDataException {
         
         String condition = new String();
         StringBuffer criteriaSetIdNames = new StringBuffer();
@@ -473,4 +474,18 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
         
         return retrieveByIds( ids, condition);
     }
+    
+    
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
+		List list = null;
+        if (condition instanceof LinkedIdsCondition){
+            LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+            list = this.retrieveButIdsByCriteriaSet(ids, linkedIdsCondition.getCriteriaSetIds());
+        } else {
+            Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
+            list = this.retrieveButIds(ids);
+        }
+        
+        return list;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.22 2004/10/03 12:43:06 bob Exp $
+ * $Id: MCMDatabase.java,v 1.23 2004/10/19 07:48:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -33,7 +34,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/03 12:43:06 $
+ * @version $Revision: 1.23 $, $Date: 2004/10/19 07:48:58 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -287,7 +288,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids);
 	}
 
-	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
         String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString();
@@ -301,4 +302,16 @@ public class MCMDatabase extends StorableObjectDatabase {
         return list;
     }
 
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list = null;
+		if (condition instanceof DomainCondition){
+			DomainCondition domainCondition = (DomainCondition)condition;
+			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+		} else {
+			Log.errorMessage(this.getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
+			list = this.retrieveButIds(ids);
+		}
+		return list;
+	}
 }

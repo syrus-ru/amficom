@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.29 2004/10/17 14:34:11 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.30 2004/10/19 07:48:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +17,7 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -24,10 +26,11 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ParameterTypeSort;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/10/17 14:34:11 $
+ * @version $Revision: 1.30 $, $Date: 2004/10/19 07:48:21 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -225,5 +228,25 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
 		return i;
+	}	
+
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list = null;
+		if (condition instanceof StringFieldCondition){
+			StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
+			try{
+				ParameterType type = this.retrieveForCodename(stringFieldCondition.getString());
+				list = new ArrayList(1);
+				list.add(type);
+			}catch(ObjectNotFoundException e){
+				String msg = getEnityName() + "Database.retrieveByCondition | Cannot found object with codename '" + stringFieldCondition.getString() + "'";
+				throw new RetrieveObjectException(msg, e);
+			}
+		} else {
+			Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
+			list = this.retrieveButIds(ids);
+		}
+		return list;
 	}
 }

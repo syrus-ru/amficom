@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.16 2004/10/13 07:52:39 bass Exp $
+ * $Id: UserDatabase.java,v 1.17 2004/10/19 07:48:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/13 07:52:39 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2004/10/19 07:48:58 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -196,6 +197,11 @@ public class UserDatabase extends StorableObjectDatabase {
 		if ((ids == null) || (ids.isEmpty()))
 			return retrieveByIdsOneQuery(null, condition);
 		return retrieveByIdsOneQuery(ids, condition);
+	}	
+	
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		 return this.retrieveButIds(ids);
 	}
 
 }

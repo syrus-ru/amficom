@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.19 2004/10/18 14:19:01 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.20 2004/10/19 07:48:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/10/18 14:19:01 $
+ * @version $Revision: 1.20 $, $Date: 2004/10/19 07:48:21 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -259,13 +259,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
 		List list = null;
 		try {
-			if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalysesButIds | Unknown condition class: " + condition);
-				list = database.retrieveButIds(ids);
-			}
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + e.getMessage());
@@ -276,15 +270,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	public List loadAnalysisTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 		CommunicationException {
 		AnalysisTypeDatabase database = (AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase();
-		List list = null;
+		List list;
 		try {
-            if (condition instanceof LinkedIdsCondition){
-                LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-                list = database.retrieveButIdsByCriteriaSet(ids, linkedIdsCondition.getCriteriaSetIds());
-            } else {
-                Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationsButIds | Unknown condition class: " + condition);
-                list = database.retrieveButIds(ids);
-            }
+            list =  database.retrieveByCondition(ids, condition);
         } catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalysisTypesButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadAnalysisTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -297,13 +285,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		EvaluationDatabase database = (EvaluationDatabase)MeasurementDatabaseContext.getEvaluationDatabase();
 		List list = null;
 		try {
-			if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationsButIds | Unknown condition class: " + condition);
-				list = database.retrieveButIds(ids);
-			}
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + e.getMessage());
@@ -316,13 +298,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		EvaluationTypeDatabase database = (EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		List list = null;
 		try {
-		    if (condition instanceof LinkedIdsCondition){
-                LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-                list = database.retrieveButIdByThresholdSet(ids, linkedIdsCondition.getThresholdSetIds());
-            } else {
-                Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationTypesButIds | Unknown condition class: " + condition);
-                list = database.retrieveButIds(ids);
-            }
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationTypesButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadEvaluationTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -334,13 +310,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		ModelingDatabase database = (ModelingDatabase)MeasurementDatabaseContext.getModelingDatabase();
 		List list = null;
 		try {
-			if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadModelingsButIds | Unknown condition class: " + condition);
-				list = database.retrieveButIds(ids);
-			}
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadModelingsButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadModelingsButIds | Illegal Storable Object: " + e.getMessage());
@@ -353,16 +323,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
 		List list = null;
 		try {
-			if (condition instanceof LinkedIdsCondition){
-				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-				list = database.retrieveButIdsByTest(ids, linkedIdsCondition.getTestIds());
-			} else if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain()); 
-			} else{
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementsButIds | Unknown condition class: " + condition);
-				list = database.retrieveButIds(ids);
-			}
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + e.getMessage());
@@ -375,21 +336,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		MeasurementSetupDatabase database = (MeasurementSetupDatabase)MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		List list = null;
 		try {
-			if (condition instanceof MeasurementSetupCondition){
-				MeasurementSetupCondition measurementSetupCondition = (MeasurementSetupCondition)condition;
-				MeasurementType measurementType = measurementSetupCondition.getMeasurementType();				
-				MonitoredElement monitoredElement = measurementSetupCondition.getMonitoredElement();
-				if (measurementType!=null)
-					list = database.retrieveButIdsByMeasurementType(ids, measurementType);
-				else if (monitoredElement != null)
-					list = database.retrieveButIdsByMonitoredElement(ids, monitoredElement);			
-            } else if ( condition instanceof MeasurementSetupCondition ) {
-                LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-                list = database.retrieveButIdMeasurementIds(ids, linkedIdsCondition.getMeasurementIds());
-            } else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetupsButIds | Unknown condition class: " + condition);
-				list = database.retrieveButIds(ids);
-			}
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetupsButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementSetupsButIds | Illegal Storable Object: " + e.getMessage());
@@ -402,19 +349,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		List list = null;
 		try {
-			if (condition instanceof LinkedIdsCondition){
-				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-				List measurementPortTypeIds = linkedIdsCondition.getMeasurementPortTypeIds();
-				list = new LinkedList();
-				for (Iterator it = measurementPortTypeIds.iterator(); it.hasNext();) {
-					Identifier id = (Identifier) it.next();
-					MeasurementPortType measurementPortType = (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(id, true);  
-					list.addAll(database.retrieveButIdsByMeasurementPortType(ids, measurementPortType));
-				}
-			} else{
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementTypesButIds | Unknown condition class: " + condition);
-				list = database.retrieveButIds(ids);
-			}
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementTypesButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -427,15 +362,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
 		List list = null;
 		try {
-			if (condition instanceof StringFieldCondition){
-				StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
-				ParameterType type = database.retrieveForCodename(stringFieldCondition.getString());
-				list = new ArrayList(1);
-				list.add(type);
-			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadParameterTypesButIds | Unknown condition class: " + condition);
-				list = database.retrieveButIds(ids);
-			}
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadParameterTypesButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadParameterTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -448,19 +375,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		ResultDatabase database = (ResultDatabase)MeasurementDatabaseContext.getResultDatabase();
 		List list = null;
 		try {
-			if (condition instanceof LinkedIdsCondition){
-				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-				list = database.retrieveButIdsByMeasurement(ids, linkedIdsCondition.getMeasurementIds());
-			} else if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else if (condition instanceof ResultSortCondition){
-				ResultSortCondition resultSortCondition = (ResultSortCondition) condition;
-				list = database.retrieveButIdsByMeasurementAndSort(ids, resultSortCondition.getMeasurementId(), resultSortCondition.getResultSort());
-			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadResultsButIds | Unknown condition class: " + condition);
-				list = database.retrieveButIds(ids);
-			}
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadResultsButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadResultsButIds | Illegal Storable Object: " + e.getMessage());
@@ -473,13 +388,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		SetDatabase database = (SetDatabase)MeasurementDatabaseContext.getSetDatabase();
 		List list = null;
 		try {
-			if (condition instanceof DomainCondition){
-				DomainCondition domainCondition = (DomainCondition)condition;
-				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadSetsButIds | Unknown condition class: " + condition);
-				list = database.retrieveButIds(ids);
-			}
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadSetsButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadSetsButIds | Illegal Storable Object: " + e.getMessage());
@@ -492,7 +401,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		TemporalPatternDatabase database = (TemporalPatternDatabase)MeasurementDatabaseContext.getTemporalPatternDatabase();
 		List list = null;
 		try {
-		    list = database.retrieveButIds(ids);
+			list = database.retrieveByCondition(ids, condition);
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadTemporalPatternsButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTemporalPatternsButIds | Illegal Storable Object: " + e.getMessage());
@@ -504,14 +413,12 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		CommunicationException {
 		TestDatabase database = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
 		List list = null;
-		{
-			if (condition instanceof TemporalCondition){
-				TemporalCondition testCondition = (TemporalCondition) condition;
-				list = database.retrieveButIdsByTimeRange(ids, testCondition.getDomain(), testCondition.getStart(), testCondition.getEnd());
-			} else				
-				throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTestsButIds | Condition class doesn't support : " + condition );
-				
-		} 
+		try {
+			list = database.retrieveByCondition(ids, condition);
+		} catch (IllegalDataException e) {
+		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadTestsButIds | Illegal Storable Object: " + e.getMessage());
+		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTestsButIds | Illegal Storable Object: " + e.getMessage());
+		}
 		return list;
 	}
 

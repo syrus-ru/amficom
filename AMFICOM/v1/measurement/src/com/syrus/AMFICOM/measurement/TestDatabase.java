@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.40 2004/10/18 09:43:56 bob Exp $
+ * $Id: TestDatabase.java,v 1.41 2004/10/19 07:48:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,9 +22,11 @@ import java.util.List;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -46,7 +48,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/10/18 09:43:56 $
+ * @version $Revision: 1.41 $, $Date: 2004/10/19 07:48:21 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -782,7 +784,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		return list;
 	}
 	
-	public List retrieveButIdsByTimeRange(List ids, Domain domain, Date start, Date end) throws RetrieveObjectException {
+	private List retrieveButIdsByTimeRange(List ids, Domain domain, Date start, Date end) throws RetrieveObjectException {
 		List list = null;
 		
 		/**
@@ -816,6 +818,17 @@ public class TestDatabase extends StorableObjectDatabase {
 			retrieveMeasurementSetupTestLinks(test);
 		}
 		
+		return list;
+	}	
+
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list;
+		if (condition instanceof TemporalCondition){
+			TemporalCondition testCondition = (TemporalCondition) condition;
+			list = this.retrieveButIdsByTimeRange(ids, testCondition.getDomain(), testCondition.getStart(), testCondition.getEnd());
+		} else				
+			throw new RetrieveObjectException("TestDatabase.retrieveByCondition | Condition class doesn't support : " + condition );
 		return list;
 	}
 	

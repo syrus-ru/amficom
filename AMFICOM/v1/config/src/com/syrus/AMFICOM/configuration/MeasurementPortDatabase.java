@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.17 2004/10/03 12:43:06 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.18 2004/10/19 07:48:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -32,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/03 12:43:06 $
+ * @version $Revision: 1.18 $, $Date: 2004/10/19 07:48:58 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -299,7 +300,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
         String condition = COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
@@ -315,4 +316,17 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
         
         return list;
     }
+	
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list;
+		if (condition instanceof DomainCondition){
+			DomainCondition domainCondition = (DomainCondition)condition;
+			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+		} else {
+			Log.errorMessage("MeasurementPortDatabase.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
+			list = this.retrieveButIds(ids);
+		}
+		return list;
+	}
 }

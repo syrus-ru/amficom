@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.29 2004/10/13 10:35:52 max Exp $
+ * $Id: MeasurementDatabase.java,v 1.30 2004/10/19 07:48:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/10/13 10:35:52 $
- * @author $Author: max $
+ * @version $Revision: 1.30 $, $Date: 2004/10/19 07:48:21 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -380,7 +381,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids, condition);
 	}
     
-	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
         String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
@@ -397,7 +398,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
         return list;
     }
 	
-	public List retrieveButIdsByTest(List ids, List testIds) throws RetrieveObjectException {
+	private List retrieveButIdsByTest(List ids, List testIds) throws RetrieveObjectException {
         List list = null;
         
         StringBuffer buffer = new StringBuffer();
@@ -434,5 +435,20 @@ public class MeasurementDatabase extends StorableObjectDatabase {
         
         return list;
     }
-
+	
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list = null;
+		if (condition instanceof LinkedIdsCondition){
+			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+			list = this.retrieveButIdsByTest(ids, linkedIdsCondition.getTestIds());
+		} else if (condition instanceof DomainCondition){
+			DomainCondition domainCondition = (DomainCondition)condition;
+			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain()); 
+		} else{
+			Log.errorMessage("MeasurementDatabase.retrieveByCondition | Unknown condition class: " + condition);
+			list = this.retrieveButIds(ids);
+		}
+		return list;
+	}
 }

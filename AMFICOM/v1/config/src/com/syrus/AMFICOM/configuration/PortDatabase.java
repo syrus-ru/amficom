@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.22 2004/10/03 12:43:06 bob Exp $
+ * $Id: PortDatabase.java,v 1.23 2004/10/19 07:48:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -31,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/03 12:43:06 $
+ * @version $Revision: 1.23 $, $Date: 2004/10/19 07:48:58 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -265,7 +266,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		return i;
 	}
 	
-	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
         String condition = COLUMN_EQUIPMENT_ID + SQL_IN + OPEN_BRACKET 
@@ -282,4 +283,16 @@ public class PortDatabase extends StorableObjectDatabase {
         return list;
     }
 
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list;
+		if (condition instanceof DomainCondition){
+			DomainCondition domainCondition = (DomainCondition)condition;
+			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+		} else {
+			Log.errorMessage("PortDatabase.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
+			list = this.retrieveButIds(ids);
+		}
+		return list;
+	}
 }

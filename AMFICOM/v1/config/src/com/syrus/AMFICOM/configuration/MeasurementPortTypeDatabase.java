@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.8 2004/09/20 14:15:19 max Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.9 2004/10/19 07:48:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -29,8 +30,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/20 14:15:19 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2004/10/19 07:48:58 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -233,4 +234,8 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids);
 	}
 
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		return this.retrieveButIds(ids);
+	}
 }

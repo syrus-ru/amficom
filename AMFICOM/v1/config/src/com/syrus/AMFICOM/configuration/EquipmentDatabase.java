@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.36 2004/10/03 12:43:06 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.37 2004/10/19 07:48:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -34,7 +35,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/10/03 12:43:06 $
+ * @version $Revision: 1.37 $, $Date: 2004/10/19 07:48:58 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -468,7 +469,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		return list;
 	}
 	
-	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
         String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString();
@@ -481,4 +482,21 @@ public class EquipmentDatabase extends StorableObjectDatabase {
         
         return list;
     }
+	
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveByCondition(java.util.List, com.syrus.AMFICOM.general.StorableObjectCondition)
+	 */
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+		List list;
+		if (condition instanceof DomainCondition){
+			DomainCondition domainCondition = (DomainCondition)condition;
+			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+		} else {
+			Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Unknown condition class: " + condition.getClass().getName());
+			list = this.retrieveButIds(ids);
+		}
+		return list;
+	}
 }
