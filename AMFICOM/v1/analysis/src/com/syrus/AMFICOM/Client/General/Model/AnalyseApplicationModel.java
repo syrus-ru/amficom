@@ -172,7 +172,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		defaults.put(AnalysisResourceKeys.COLOR_NOISE, new Color(160, 160, 160));
 		
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 0, new Color(0, 128, 128));
-		defaults.put(Heap.PRIMARY_TRACE_KEY, UIManager.get(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 0));
+		defaults.put(Heap.PRIMARY_TRACE_KEY, Color.BLUE);
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 1, new Color(128, 64, 0));
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 2, new Color(128, 0, 128));
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 3, new Color(0, 96, 0));
