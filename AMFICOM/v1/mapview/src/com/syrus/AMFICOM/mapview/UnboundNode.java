@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.6 2005/02/18 14:29:11 bob Exp $
+ * $Id: UnboundNode.java,v 1.7 2005/03/02 12:29:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 
 package com.syrus.AMFICOM.mapview;
 
+import java.util.List;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -19,19 +21,16 @@ import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-
-import java.util.List;
 
 /**
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному 
  * ни к какому элементу топологической схемы.
  * 
- * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/02/18 14:29:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/03/02 12:29:04 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -62,7 +61,6 @@ public class UnboundNode extends SiteNode
 	 * @param schemeElement элемент схемы
 	 * @param id идентификатор непривязанного элемента
 	 * @param location географические координаты непривязанного элемента
-	 * @param map топологическая схема
 	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#UNBOUND})
 	 */
 	protected UnboundNode(
@@ -71,7 +69,6 @@ public class UnboundNode extends SiteNode
 		final long version,
 		SchemeElement schemeElement,
 		DoublePoint location,
-		Map map,
 		SiteNodeType nodeType)
 	{
 		super(
@@ -99,7 +96,6 @@ public class UnboundNode extends SiteNode
 	 * в модуле mapviewclient_v1).
 	 * @param schemeElement элемент схемы
 	 * @param location географические координаты непривязанного элемента
-	 * @param map топологическая схема
 	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#UNBOUND})
 	 * @return новый непривязанный элемент
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
@@ -109,11 +105,10 @@ public class UnboundNode extends SiteNode
 			Identifier creatorId,
 			SchemeElement schemeElement,
 			DoublePoint location,
-			Map map,
 			SiteNodeType nodeType)
 		throws CreateObjectException 
 	{
-		if (schemeElement == null || map == null || location == null || nodeType == null)
+		if (schemeElement == null || location == null || nodeType == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try
@@ -124,7 +119,6 @@ public class UnboundNode extends SiteNode
 				0L,
 				schemeElement,
 				location,
-				map,
 				nodeType);
 			unboundNode.changed = true;
 			return unboundNode;

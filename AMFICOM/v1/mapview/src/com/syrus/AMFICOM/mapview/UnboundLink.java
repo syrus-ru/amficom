@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.5 2005/02/18 14:29:11 bob Exp $
+ * $Id: UnboundLink.java,v 1.6 2005/03/02 12:29:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 
 package com.syrus.AMFICOM.mapview;
 
+import java.util.List;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -19,18 +21,15 @@ import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
-
-import java.util.List;
 
 /**
  * Элемент непривязанной линии. Использыется как составляющая честь 
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/02/18 14:29:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.6 $, $Date: 2005/03/02 12:29:04 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -50,7 +49,6 @@ public class UnboundLink extends PhysicalLink
 	 * @param creatorId пользователь
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
-	 * @param map топологическая схема
 	 * @param proto тип (должен быть {@link PhysicalLinkType#UNBOUND})
 	 */
 	protected UnboundLink(
@@ -59,7 +57,6 @@ public class UnboundLink extends PhysicalLink
 			final long version,
 			AbstractNode stNode, 
 			AbstractNode eNode, 
-			Map map,
 			PhysicalLinkType proto)
 	{
 		super(id, creatorId, version, id.toString(), "", proto, stNode, eNode, "", "", "", 0, 0, true, true);
@@ -70,21 +67,19 @@ public class UnboundLink extends PhysicalLink
 	 * @param creatorId пользователь
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
-	 * @param map топологическая схема
 	 * @param proto тип (должен быть {@link PhysicalLinkType#UNBOUND})
 	 * @return новая линия
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException если
 	 * нельзя создать объект
 	 */
-	public static UnboundLink createInstance(
+	public static PhysicalLink createInstance(
 			Identifier creatorId,
 			AbstractNode stNode, 
 			AbstractNode eNode, 
-			Map map,
 			PhysicalLinkType proto)
 		throws CreateObjectException 
 	{
-		if (stNode == null || map == null || eNode == null || proto == null)
+		if (stNode == null || eNode == null || proto == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try
@@ -95,7 +90,6 @@ public class UnboundLink extends PhysicalLink
 				0L,
 				stNode, 
 				eNode, 
-				map,
 				proto);
 			unboundLink.changed = true;
 			return unboundLink;
