@@ -106,10 +106,12 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 	for (i = 0; i < nEvents; i++)
 	{
 		EPold2SE((EventParams*)ev[i], se[i]);
+		//fprintf(stderr, "event %d type %d begin %d end %d\n", i, se[i].type, se[i].begin, se[i].end);
+		//fflush(stderr);
 		assert(se[i].begin >= 0);
 		assert(se[i].end < sz);
-//		assert(se[i].end >= se[i].begin);
-//		assert(se[i].end > se[i].begin); // >, not just >=
+		assert(se[i].end >= se[i].begin);
+		assert(se[i].end > se[i].begin); // >, not just >=
 		if (i)
 		{
 			assert(se[i].begin == se[i-1].end);

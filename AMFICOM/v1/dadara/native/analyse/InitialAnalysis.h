@@ -94,6 +94,7 @@ private:
     void correctAllSpliceCoords(); // ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
     void correctSpliceCoords(int n);
     void excludeShortLinesBetweenConnectors(double* data, int evSizeC);
+	void verifyResults();
 
 //Wavelet constants;
 private:

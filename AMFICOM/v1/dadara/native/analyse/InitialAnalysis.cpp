@@ -11,33 +11,7 @@
 
 #include "../common/prf.h"
 
-/*
-
-
-  TODO (from saa to Vit, 2005-03-03)
-
-95% времени анализа занимает centerWletImage, выполняемый в цикле по масштабам в correctAllSpliceCoords
-Неплохо бы это как-то исправить. На мой взгляд, есть 2 варианта:
-  а) рассчитать f_wlet_avrg для всех используемых масштабов один раз,
-     а не по разу на каждую сварку;
-  б) Рассчитывать f_wlet_avrg для каждого масштаба на основе начального f_wlet_avrg.
-     (для этого достаточно просто рассчитать соотв. нормы вейвлета)
-
------   -----   -----   ------  ----
-count   ticks   %tick   %rdtsc  name
------   -----   -----   ------  ----
-   12       0    0.0%    0.00%   correctSpliceCoords: enter
-  240       0    0.0%    0.13%   correctSpliceCoords: getWLetNorma
-  240       0    0.0%    0.47%   correctSpliceCoords: performTransformation
-  240      15    3.0%    9.01%   correctSpliceCoords: centerWletImage
-  240       0    0.0%    0.06%   correctSpliceCoords: processing
-   12       0    0.0%    0.00%   correctSpliceCoords: scales done
-   12       0    0.0%    0.00%   correctSpliceCoords: return
-
-*/
-
 // Коэффициент запаса: эта величина умножается на оценку 3 сигма шума, и используется как добавка к порогам обнаружения.
-// Предполагаемое теоретическое значение 1; Практически понадобилось 1 - 4.
 // бОльшие значения коэффициента соответствуют меньшей чувствительности.
 const double THRESHOLD_TO_NOISE_RATIO = 2;
 //------------------------------------------------------------------------------------------------------------
@@ -152,6 +126,7 @@ void InitialAnalysis::performAnalysis()
     excludeShortLinesBetweenConnectors(data, wlet_width);
     addLinearPartsBetweenEvents();
     correctAllSpliceCoords();// поскольку уточнение двигает соседние события, то к этому моменту динейные участки должы уже существовать ( поэтому вызов после addLinearPartsBetweenEvents() )
+	verifyResults(); // проверяем ошибки
 }
 //-------------------------------------------------------------------------------------------------
 void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
@@ -581,3 +556,16 @@ return;
     a /= delta_x;
 }
 //------------------------------------------------------------------------------------------------------------
+void InitialAnalysis::verifyResults()
+{	int prevEnd = 0;
+	for(int i=0; i<events->getLength(); i++)
+    {	EventParams& ev = *(EventParams*)(*events)[i];
+		assert(ev.begin >= 0);
+		assert(ev.end < lastNonZeroPoint);
+		assert(ev.end >= ev.begin);
+		assert(ev.end > ev.begin); // >, not just >=
+		assert(ev.begin == prevEnd || i == 0); // XXX
+		prevEnd = ev.end;
+
+    }
+}

@@ -341,15 +341,20 @@ JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunct
 	if (ModelF_J2C(env, obj, mf))
 		assert(0);
 
+	assert(length >= 0);
+
 	jdoubleArray arr = env->NewDoubleArray((jsize)length);
 	assert(arr);
 
-	double *pp = env->GetDoubleArrayElements(arr, 0);
-	assert (pp);
+	if (length > 0)
+	{
+		double *pp = env->GetDoubleArrayElements(arr, 0);
+		assert (pp);
 
-	mf.calcFunArray(x0, step, length, pp);
+		mf.calcFunArray(x0, step, length, pp);
 
-	env->ReleaseDoubleArrayElements(arr, pp, 0);
+		env->ReleaseDoubleArrayElements(arr, pp, 0);
+	}
 
 	prf_e();
 	return arr;
