@@ -1,30 +1,27 @@
+/*
+ * $Id: ObjectResourceSelectionDialog.java,v 1.2 2004/09/27 05:53:30 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Collection;
+import javax.swing.*;
 
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 05:53:30 $
+ * @module generalclient_v1
+ */
 public class ObjectResourceSelectionDialog extends JDialog
 {
 	private JPanel jPanel1 = new JPanel();

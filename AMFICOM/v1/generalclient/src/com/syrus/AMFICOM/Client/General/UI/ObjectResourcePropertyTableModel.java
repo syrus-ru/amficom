@@ -1,54 +1,24 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\General\GeneralTableModel.java                         * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: ObjectResourcePropertyTableModel.java,v 1.4 2004/09/27 05:55:00 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.StubPropertyDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import java.awt.Component;
-
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
-
+import java.util.*;
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 05:55:00 $
+ * @module generalclient_v1
+ */
 public class ObjectResourcePropertyTableModel extends AbstractTableModel
 {
     private Component parent;
