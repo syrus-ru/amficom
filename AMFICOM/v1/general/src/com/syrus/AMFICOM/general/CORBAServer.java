@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.5 2004/08/18 11:28:07 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.6 2004/11/22 12:41:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/18 11:28:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2004/11/22 12:41:26 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -41,7 +41,7 @@ public class CORBAServer /*extends Thread */{
 	public static final String DEFAULT_ORB_INITIAL_HOST = "127.0.0.1";
 	public static final int DEFAULT_ORB_INITIAL_PORT = 1050;
 
-	private ORB orb;
+	ORB orb;
 	private POA poa;
 	private NamingContextExt namingContext;
 
@@ -162,7 +162,7 @@ public class CORBAServer /*extends Thread */{
 		});
 	}
 
-	private void shutdown() {
+	void shutdown() {
 		try {
 			this.poa.the_POAManager().deactivate(false, false);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.13 2004/11/17 08:22:45 bob Exp $
+ * $Id: Identifier.java,v 1.14 2004/11/22 12:41:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.io.Serializable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/11/17 08:22:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2004/11/22 12:41:26 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -87,9 +87,7 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 						else
 							return 1;
 		}
-		else {
-			return -1;
-		}
+		return -1;
 	}
 
 	public boolean equals(Object obj) {
@@ -125,7 +123,6 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 	
 	/**
 	 * @deprecated use {@link #getMajor()} and {@link ObjectEntities#codeToString(short)}
-	 * @return
 	 */
 	public String getObjectEntity() {
 		return this.majorString;

@@ -1,5 +1,5 @@
 /*
- * $Id: NewIdentifierPool.java,v 1.6 2004/08/22 18:33:52 arseniy Exp $
+ * $Id: NewIdentifierPool.java,v 1.7 2004/11/22 12:41:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/22 18:33:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2004/11/22 12:41:26 $
+ * @author $Author: bass $
  * @module general_v1
  */
  
@@ -63,8 +63,7 @@ public class NewIdentifierPool {
 			Identifier identifier = (Identifier)entityIdPool.remove(0);
 			return identifier;
 		}
-		else
-			throw new IllegalObjectEntityException("Identifier pool for entity '" + ObjectEntities.codeToString(entityCode) + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
+		throw new IllegalObjectEntityException("Identifier pool for entity '" + ObjectEntities.codeToString(entityCode) + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
 	}
 		
 	public static void updateIdentifierPool(short entityCode, int size) throws IllegalObjectEntityException, AMFICOMRemoteException {
@@ -99,8 +98,7 @@ public class NewIdentifierPool {
 		if (entityIdPool != null) {
 			return entityIdPool.size();
 		}
-		else
-			throw new IllegalObjectEntityException("Identifier pool for entity '" + ObjectEntities.codeToString(entityCode) + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
+		throw new IllegalObjectEntityException("Identifier pool for entity '" + ObjectEntities.codeToString(entityCode) + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
 	}
 
 	public static void setIdentifierGeneratorServer(IdentifierGeneratorServer igServer1) {
