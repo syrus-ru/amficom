@@ -10,7 +10,6 @@ APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.
 HOST=mongol
 SERVICE_NAME=mongol
 
-IDL2JAVAFLAGS = -strict
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
 JIKESFLAGS = -target 1.2
@@ -31,6 +30,15 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
+
+
+IDL2JAVA=$(JAVA_HOME)/bin/idlj
+IDL2JAVAFLAGS = \
+	-fall \
+	-i $(IDLDIR) \
+	-td $(SRCDIR) \
+	-v
+
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -82,9 +90,8 @@ $(LIBNAME): .mach
 	
 
 .corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
-		$(IDLDIR)/event.idl \
-		$(IDLDIR)/measurement.idl
+	$(IDL2JAVA) $(IDL2JAVAFLAGS) $(IDLDIR)/event.idl
+	$(IDL2JAVA) $(IDL2JAVAFLAGS) $(IDLDIR)/measurement.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
