@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.5 2005/02/01 15:09:38 max Exp $
+ * $Id: ARServerImpl.java,v 1.6 2005/02/08 11:51:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,31 +11,33 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.arserver.corba.ARServerPOA;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
-import com.syrus.AMFICOM.measurement.DomainCondition;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.StorableObjectConditionSort;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
@@ -48,15 +50,39 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/01 15:09:38 $
- * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2005/02/08 11:51:44 $
+ * @author $Author: bob $
  * @module arserver_v1
  */
 public class ARServerImpl extends ARServerPOA {
 	
 	private static final long	serialVersionUID	= 3257291335395782967L;
 	
-	private DomainCondition domainCondition;
+	protected StorableObjectCondition restoreCondition(StorableObjectCondition_Transferable transferable)
+			throws IllegalDataException {
+		StorableObjectCondition condition = null;
+		switch (transferable.discriminator().value()) {
+			case StorableObjectConditionSort._COMPOUND:
+				condition = new CompoundCondition(transferable.compoundCondition());
+				break;
+			case StorableObjectConditionSort._LINKED_IDS:
+				condition = new LinkedIdsCondition(transferable.linkedIdsCondition());
+				break;
+			case StorableObjectConditionSort._TYPICAL:
+				condition = new TypicalCondition(transferable.typicalCondition());
+				break;
+			case StorableObjectConditionSort._EQUIVALENT:
+				condition = new EquivalentCondition(transferable.equialentCondition());
+				break;
+			default:
+				String msg = "ARServerImpl.restoreCondition | condition class " + transferable.getClass().getName()
+						+ " is not suppoted";
+				Log.errorMessage(msg);
+				throw new IllegalDataException(msg);
+
+		}
+		return condition;
+	}
 	
 	// delete methods
 	public void delete(Identifier_Transferable id_Transferable, 
@@ -96,7 +122,11 @@ public class ARServerImpl extends ARServerPOA {
             Log.errorException(de);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
                     .getMessage());
-        }
+        } catch (IllegalDataException e) {
+        	 Log.errorException(e);
+             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e
+                     .getMessage());
+		}
 	}
 	
 	// receive methods
@@ -256,7 +286,6 @@ public class ARServerImpl extends ARServerPOA {
 			throws AMFICOMRemoteException {
 		try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
-            Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
             Log.debugMessage("ARServerImpl.transmitImageResources | requiere "
                     + (ids_Transferable.length == 0 ? "all" : Integer
                             .toString(ids_Transferable.length))
@@ -268,7 +297,7 @@ public class ARServerImpl extends ARServerPOA {
                     idsList.add(new Identifier(ids_Transferable[i]));
                 list = ResourceStorableObjectPool.getStorableObjects(idsList, true);
             } else
-                list = ResourceStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
+                list = ResourceStorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
 
             ImageResource_Transferable[] transferables = new ImageResource_Transferable[list.size()];
             int i = 0;
@@ -305,7 +334,6 @@ public class ARServerImpl extends ARServerPOA {
             throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
-            Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
             Log.debugMessage("ARServerImpl.transmitImageResourcesButIds | requiere "
                     + (identifier_Transferables.length == 0 ? "all" : Integer
                             .toString(identifier_Transferables.length))
@@ -316,10 +344,10 @@ public class ARServerImpl extends ARServerPOA {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = ResourceStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
+                list = ResourceStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
 
             } else
-                list = ResourceStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
+                list = ResourceStorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
 
             ImageResource_Transferable[] transferables = new ImageResource_Transferable[list.size()];
             int i = 0;
@@ -354,7 +382,7 @@ public class ARServerImpl extends ARServerPOA {
 	public ImageResource_Transferable[] transmitImageResourcesButIdsCondition(
 			Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
-			StringFieldCondition_Transferable stringFieldCondition_Transferable)
+			StorableObjectCondition_Transferable storableObjectCondition_Transferable)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("ARServerImpl.transmitImageResourcesButIdsCondition | requiere "
 				+ (identifier_Transferables.length == 0 ? "all"
@@ -362,16 +390,16 @@ public class ARServerImpl extends ARServerPOA {
 				+ " item(s) ", Log.DEBUGLEVEL07);
 		try {
 			List list;
+			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
 				list = ResourceStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
-								new StringFieldCondition(stringFieldCondition_Transferable), true);
+					condition , true);
 			} else
-				list = ResourceStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(
-								stringFieldCondition_Transferable), true);
+				list = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			ImageResource_Transferable[] transferables = new ImageResource_Transferable[list
 					.size()];
@@ -462,16 +490,5 @@ public class ARServerImpl extends ARServerPOA {
 							+ ObjectEntities.codeToString(entityCode) + "' -- "
 							+ ige.getMessage());
 		}
-	}
-	
-	private com.syrus.AMFICOM.measurement.DomainCondition getDomainCondition(Domain domain, short entityCode){
-		if (this.domainCondition == null){
-			this.domainCondition = new com.syrus.AMFICOM.measurement.DomainCondition(domain, new Short(entityCode));
-		} else{
-			this.domainCondition.setDomain(domain);
-			this.domainCondition.setEntityCode(new Short(entityCode));
-		}
-
-		return this.domainCondition;
-	}
+	}	
 }

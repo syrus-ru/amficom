@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.2 2005/02/02 13:57:45 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.3 2005/02/08 11:55:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,10 +25,9 @@ import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/02 13:57:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 11:55:39 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -47,8 +46,6 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		Object transferable = condition.getTransferable();
 		if (condition instanceof LinkedIdsCondition) {
 			condition_Transferable.linkedIdsCondition((LinkedIdsCondition_Transferable) transferable);
-		} else if (condition instanceof StringFieldCondition) {
-			condition_Transferable.stringFieldCondition((StringFieldCondition_Transferable) transferable);
 		} else if (condition instanceof CompoundCondition) {
 			condition_Transferable.compoundCondition((CompoundCondition_Transferable) transferable);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAdministrationObjectLoader.java,v 1.4 2005/02/02 14:12:00 bob Exp $
+ * $Id: ClientAdministrationObjectLoader.java,v 1.5 2005/02/08 11:55:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -40,11 +39,10 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.TypicalCondition_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/02 14:12:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/08 11:55:39 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -63,8 +61,6 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		Object transferable = condition.getTransferable();
 		if (condition instanceof LinkedIdsCondition) {
 			condition_Transferable.linkedIdsCondition((LinkedIdsCondition_Transferable) transferable);
-		} else if (condition instanceof StringFieldCondition) {
-			condition_Transferable.stringFieldCondition((StringFieldCondition_Transferable) transferable);
 		} else if (condition instanceof CompoundCondition) {
 			condition_Transferable.compoundCondition((CompoundCondition_Transferable) transferable);
 		} else if (condition instanceof TypicalCondition) {

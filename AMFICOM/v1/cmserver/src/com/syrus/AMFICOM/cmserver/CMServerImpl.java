@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.88 2005/02/08 09:51:41 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.89 2005/02/08 11:51:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.util.List;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.UserWrapper;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -30,18 +31,19 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.StringFieldSort;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/02/08 09:51:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.89 $, $Date: 2005/02/08 11:51:56 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -112,21 +114,22 @@ public class CMServerImpl extends CMMeasurementTransmit {
 
 	public Identifier_Transferable reverseLookupDomainName(String domainName) throws AMFICOMRemoteException {
 		try {
-			List list = AdministrationStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(domainName, ObjectEntities.DOMAIN_ENTITY_CODE), true);
+			TypicalCondition condition = new TypicalCondition(domainName, OperationSort.OPERATION_EQUALS,
+																ObjectEntities.DOMAIN_ENTITY_CODE,
+																StorableObjectWrapper.COLUMN_NAME);
+			List list = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (list.isEmpty())
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, "list is empty");
-			Identifier id = ( (Domain)list.get(0) ).getId();
-			return (Identifier_Transferable)id.getTransferable();
-		}
-		catch (RetrieveObjectException roe) {
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO,
+													"list is empty");
+			Identifier id = ((Domain) list.get(0)).getId();
+			return (Identifier_Transferable) id.getTransferable();
+		} catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (Throwable t) {
+		} catch (Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
@@ -135,22 +138,19 @@ public class CMServerImpl extends CMMeasurementTransmit {
 	public Identifier_Transferable reverseLookupUserLogin(String userLogin) throws AMFICOMRemoteException {
 		try {
 			Log.debugMessage("CMServerImpl.reverseLookupUserLogin | userLogin " + userLogin, Log.DEBUGLEVEL07);
-			StringFieldCondition stringFieldCondition = new StringFieldCondition(userLogin,
-					ObjectEntities.USER_ENTITY_CODE,
-					StringFieldSort.STRINGSORT_USERLOGIN);
-			List list = AdministrationStorableObjectPool.getStorableObjectsByCondition(stringFieldCondition, true);
+			TypicalCondition condition = new TypicalCondition(userLogin, OperationSort.OPERATION_EQUALS,
+																ObjectEntities.USER_ENTITY_CODE,
+																UserWrapper.COLUMN_LOGIN);
+			List list = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			Identifier id = ((User) list.get(0)).getId();
-			return (Identifier_Transferable)id.getTransferable();
-		}
-		catch (RetrieveObjectException roe) {
+			return (Identifier_Transferable) id.getTransferable();
+		} catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (Throwable t) {
+		} catch (Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
@@ -160,10 +160,10 @@ public class CMServerImpl extends CMMeasurementTransmit {
 			throws AMFICOMRemoteException {
 		Log.debugMessage("CMServerImpl.reverseLookupUserName | userName = " + userName, Log.DEBUGLEVEL07);
 		try {
-			StringFieldCondition stringFieldCondition = new StringFieldCondition(userName,
-					ObjectEntities.USER_ENTITY_CODE,
-					StringFieldSort.STRINGSORT_USERNAME);
-			List list = AdministrationStorableObjectPool.getStorableObjectsByCondition(stringFieldCondition, true);
+			TypicalCondition condition = new TypicalCondition(userName, OperationSort.OPERATION_EQUALS,
+																ObjectEntities.USER_ENTITY_CODE,
+																StorableObjectWrapper.COLUMN_NAME);
+			List list = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			Identifier id = ((User) list.get(0)).getId();
 			return (Identifier_Transferable) id.getTransferable();
 		} catch (RetrieveObjectException roe) {
