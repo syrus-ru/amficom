@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeTestCase.java,v 1.3 2004/09/09 14:28:26 bob Exp $
+ * $Id: AnalysisTypeTestCase.java,v 1.4 2005/02/04 14:21:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,13 +23,14 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.measurement.AbstractMesurementTestCase;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/09 14:28:26 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/04 14:21:34 $
  * @author $Author: bob $
  * @module tools
  */

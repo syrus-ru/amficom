@@ -1,5 +1,5 @@
 /*
- * $Id: ResultTestCase.java,v 1.1 2004/10/29 07:30:42 bob Exp $
+ * $Id: ResultTestCase.java,v 1.2 2005/02/04 14:21:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,12 +16,13 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.measurement.AbstractMesurementTestCase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/29 07:30:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/04 14:21:34 $
  * @author $Author: bob $
  * @module tools
  */

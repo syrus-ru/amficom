@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigureTestCase.java,v 1.6 2004/12/29 08:56:39 bob Exp $
+ * $Id: ConfigureTestCase.java,v 1.7 2005/02/04 14:21:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package test.com.syrus.AMFICOM.configuration;
 
 import java.util.List;
+
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
@@ -19,6 +20,7 @@ import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainDatabase;
 import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.UserDatabase;
+import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -30,7 +32,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/29 08:56:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/04 14:21:34 $
  * @author $Author: bob $
  * @module tools
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: SetTestCase.java,v 1.7 2004/11/02 12:26:30 bob Exp $
+ * $Id: SetTestCase.java,v 1.8 2005/02/04 14:21:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.measurement.AbstractMesurementTestCase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/11/02 12:26:30 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/04 14:21:34 $
  * @author $Author: bob $
  * @module tools
  */

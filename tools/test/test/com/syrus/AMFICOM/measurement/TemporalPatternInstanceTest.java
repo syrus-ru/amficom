@@ -16,6 +16,7 @@ import java.util.List;
 import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.measurement.AbstractMesurementTestCase;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 /**

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupTestCase.java,v 1.7 2004/11/11 12:15:38 bob Exp $
+ * $Id: MeasurementSetupTestCase.java,v 1.8 2005/02/04 14:21:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.measurement.AbstractMesurementTestCase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/11/11 12:15:38 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/04 14:21:34 $
  * @author $Author: bob $
  * @module tools
  */

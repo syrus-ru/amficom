@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternTestCase.java,v 1.4 2004/08/31 15:29:13 bob Exp $
+ * $Id: TemporalPatternTestCase.java,v 1.5 2005/02/04 14:21:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,13 +19,14 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.measurement.AbstractMesurementTestCase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/31 15:29:13 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/04 14:21:34 $
  * @author $Author: bob $
  * @module tools
  */
