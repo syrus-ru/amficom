@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.40 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.41 2005/01/26 09:57:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.41 $, $Date: 2005/01/26 09:57:30 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -258,9 +258,11 @@ public class EvaluationType extends ActionType {
 	}
 
 	protected void setInParameterTypes0(List inParameterTypes) {
-		this.inParameterTypes.clear();
-		if (inParameterTypes != null)
-	     	this.inParameterTypes.addAll(inParameterTypes);
+		if (this.inParameterTypes == null)
+			this.inParameterTypes = new ArrayList();
+		else
+			this.inParameterTypes.clear();
+		this.inParameterTypes.addAll(inParameterTypes);
 	}
 	
 	/**
@@ -275,9 +277,11 @@ public class EvaluationType extends ActionType {
 	}
 
 	protected void setThresholdParameterTypes0(List thresholdParameterTypes) {
-		this.thresholdParameterTypes.clear();
-		if (thresholdParameterTypes != null)
-	     	this.thresholdParameterTypes.addAll(thresholdParameterTypes);
+		if (this.thresholdParameterTypes == null)
+			this.thresholdParameterTypes = new ArrayList();
+		else
+			this.thresholdParameterTypes.clear();
+		this.thresholdParameterTypes.addAll(thresholdParameterTypes);
 	}
 
 	/**
@@ -292,9 +296,11 @@ public class EvaluationType extends ActionType {
 	}
 
 	protected void setEtalonParameterTypes0(List etalonParameterTypes) {
-		this.etalonParameterTypes.clear();
-		if (etalonParameterTypes != null)
-	     	this.etalonParameterTypes.addAll(etalonParameterTypes);
+		if (this.etalonParameterTypes == null)
+			this.etalonParameterTypes = new ArrayList();
+		else
+			this.etalonParameterTypes.clear();
+		this.etalonParameterTypes.addAll(etalonParameterTypes);
 	}
 
 	/**
@@ -309,9 +315,11 @@ public class EvaluationType extends ActionType {
 	}
 
 	protected void setOutParameterTypes0(List outParameterTypes) {
-		this.outParameterTypes.clear();
-		if (outParameterTypes != null)
-	     	this.outParameterTypes.addAll(outParameterTypes);
+		if (this.outParameterTypes == null)
+			this.outParameterTypes = new ArrayList();
+		else
+			this.outParameterTypes.clear();
+		this.outParameterTypes.addAll(outParameterTypes);
 	}
 
 	/**

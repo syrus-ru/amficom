@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.45 2005/01/20 15:45:28 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.46 2005/01/26 09:57:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/01/20 15:45:28 $
+ * @version $Revision: 1.46 $, $Date: 2005/01/26 09:57:30 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -231,9 +231,11 @@ public class MeasurementType extends ActionType {
 	}
 
 	protected void setInParameterTypes0(List inParameterTypes) {
-		this.inParameterTypes.clear();
-		if (inParameterTypes != null)
-	     	this.inParameterTypes.addAll(inParameterTypes);
+		if (this.inParameterTypes == null)
+			this.inParameterTypes = new ArrayList();
+		else
+			this.inParameterTypes.clear();
+		this.inParameterTypes.addAll(inParameterTypes);
 	}
 
 	/**
@@ -248,9 +250,11 @@ public class MeasurementType extends ActionType {
 	}
 
 	protected void setOutParameterTypes0(List outParameterTypes) {
-		this.outParameterTypes.clear();
-		if (outParameterTypes != null)
-	     	this.outParameterTypes.addAll(outParameterTypes);
+		if (this.outParameterTypes == null)
+			this.outParameterTypes = new ArrayList();
+		else
+			this.outParameterTypes.clear();
+		this.outParameterTypes.addAll(outParameterTypes);
 	}
 
 	/**

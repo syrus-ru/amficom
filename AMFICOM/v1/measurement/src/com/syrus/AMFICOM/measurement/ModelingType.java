@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.3 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: ModelingType.java,v 1.4 2005/01/26 09:57:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/26 09:57:30 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -203,9 +203,11 @@ public class ModelingType extends ActionType {
 	}
 
 	protected void setInParameterTypes0(List inParameterTypes) {
-		this.inParameterTypes.clear();
-		if (inParameterTypes != null)
-	     	this.inParameterTypes.addAll(inParameterTypes);
+		if (this.inParameterTypes == null)
+			this.inParameterTypes = new ArrayList();
+		else
+			this.inParameterTypes.clear();
+		this.inParameterTypes.addAll(inParameterTypes);
 	}
 
 	/**
@@ -220,9 +222,11 @@ public class ModelingType extends ActionType {
 	}
 
 	protected void setOutParameterTypes0(List outParameterTypes) {
-		this.outParameterTypes.clear();
-		if (outParameterTypes != null)
-	     	this.outParameterTypes.addAll(outParameterTypes);
+		if (this.outParameterTypes == null)
+			this.outParameterTypes = new ArrayList();
+		else
+			this.outParameterTypes.clear();
+		this.outParameterTypes.addAll(outParameterTypes);
 	}
 
 	/**

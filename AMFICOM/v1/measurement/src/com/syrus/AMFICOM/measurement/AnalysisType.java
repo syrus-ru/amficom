@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.44 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.45 2005/01/26 09:57:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.45 $, $Date: 2005/01/26 09:57:30 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -256,9 +256,11 @@ public class AnalysisType extends ActionType {
 	}
 
 	protected void setInParameterTypes0(List inParameterTypes) {
-		this.inParameterTypes.clear();
-		if (inParameterTypes != null)
-	     	this.inParameterTypes.addAll(inParameterTypes);
+		if (this.inParameterTypes == null)
+			this.inParameterTypes = new ArrayList();
+		else
+			this.inParameterTypes.clear();
+		this.inParameterTypes.addAll(inParameterTypes);
 	}
 	
 	/**
@@ -273,9 +275,11 @@ public class AnalysisType extends ActionType {
 	}
 
 	protected void setCriteriaParameterTypes0(List criteriaParameterTypes) {
-		this.criteriaParameterTypes.clear();
-		if (criteriaParameterTypes != null)
-	     	this.criteriaParameterTypes.addAll(criteriaParameterTypes);
+		if (this.criteriaParameterTypes == null)
+			this.criteriaParameterTypes = new ArrayList();
+		else
+			this.criteriaParameterTypes.clear();
+		this.criteriaParameterTypes.addAll(criteriaParameterTypes);
 	}
 	/**
 	 * client setter for criteriaParameterTypes
@@ -289,9 +293,11 @@ public class AnalysisType extends ActionType {
 	}
 
 	protected void setEtalonParameterTypes0(List etalonParameterTypes) {
-		this.etalonParameterTypes.clear();
-		if (etalonParameterTypes != null)
-	     	this.etalonParameterTypes.addAll(etalonParameterTypes);
+		if (this.etalonParameterTypes == null)
+			this.etalonParameterTypes = new ArrayList();
+		else
+			this.etalonParameterTypes.clear();
+		this.etalonParameterTypes.addAll(etalonParameterTypes);
 	}
 	/**
 	 * client setter for etalonParameterTypes
@@ -305,9 +311,11 @@ public class AnalysisType extends ActionType {
 	}
 
 	protected void setOutParameterTypes0(List outParameterTypes) {
-		this.outParameterTypes.clear();
-		if (outParameterTypes != null)
-	     	this.outParameterTypes.addAll(outParameterTypes);
+		if (this.outParameterTypes == null)
+			this.outParameterTypes = new ArrayList();
+		else
+			this.outParameterTypes.clear();
+		this.outParameterTypes.addAll(outParameterTypes);
 	}
 	/**
 	 * client setter for outParameterTypes
