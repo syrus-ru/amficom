@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.7 2004/12/27 13:40:28 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.8 2004/12/27 21:02:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/27 13:40:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2004/12/27 21:02:53 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -45,16 +45,6 @@ public abstract class StorableObjectPool {
 
 	public StorableObjectPool(Class cacheMapClass) {
 		this.cacheMapClass = cacheMapClass;
-	}
-
-	protected void deleteImpl(List ids) throws DatabaseException, CommunicationException {
-		for (Iterator it = ids.iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
-			Short entityCode = new Short(id.getMajor());
-			LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
-			lruMap.remove(id);
-		}
-		deleteStorableObjects(ids);
 	}
 
 	protected void addObjectPool(short objectEntityCode, int poolSize) {
@@ -114,9 +104,26 @@ public abstract class StorableObjectPool {
 	protected void deleteImpl(Identifier id) throws DatabaseException, CommunicationException {
 		Short entityCode = new Short(id.getMajor());
 		LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
-		lruMap.remove(id);
-		deleteStorableObject(id);
+		if (lruMap != null)
+			lruMap.remove(id);
+		else
+			Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity '" + ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
 
+		deleteStorableObject(id);
+	}
+
+	protected void deleteImpl(List ids) throws DatabaseException, CommunicationException {
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			Short entityCode = new Short(id.getMajor());
+			LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
+			if (lruMap != null)
+				lruMap.remove(id);
+			else
+				Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity '" + ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
+		}
+
+		deleteStorableObjects(ids);
 	}
 
 	protected abstract void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException;

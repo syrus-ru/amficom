@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.39 2004/12/24 18:25:10 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.40 2004/12/27 21:02:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/12/24 18:25:10 $
+ * @version $Revision: 1.40 $, $Date: 2004/12/27 21:02:53 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -34,6 +34,8 @@ public final class ObjectEntities {
 	public static final String ANATYPPARTYPLINK_ENTITY = "AnaTypParTypLink";
 	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType";
 	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
+	public static final String MODELINGTYPE_ENTITY = "ModelingType";
+	public static final String MODTYPPARTYPLINK_ENTITY = "ModTypParTypLink";
 	//public static final String KISTYPE_ENTITY = "KISType";
 	public static final String TRANSPATHTYPE_ENTITY = "TransmissionPathType";
 
@@ -203,6 +205,7 @@ public final class ObjectEntities {
 	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x01C2;
 	public static final short ANALYSISTYPE_ENTITY_CODE = 0x01C3;
 	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x01C4;
+	public static final short MODELINGTYPE_ENTITY_CODE = 0x01C5;
 
 	public static final short MEASUREMENT_MAX_ENTITY_CODE = 0x0200;
 
@@ -297,6 +300,7 @@ public final class ObjectEntities {
 		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
 		else if (entity.equals(ANALYSISTYPE_ENTITY)) return ANALYSISTYPE_ENTITY_CODE;
 		else if (entity.equals(EVALUATIONTYPE_ENTITY)) return EVALUATIONTYPE_ENTITY_CODE;
+		else if (entity.equals(MODELINGTYPE_ENTITY)) return MODELINGTYPE_ENTITY_CODE;
 
 		else if (entity.equals(SITE_NODE_TYPE_ENTITY)) return SITE_NODE_TYPE_ENTITY_CODE;
 		else if (entity.equals(PHYSICAL_LINK_TYPE_ENTITY)) return PHYSICAL_LINK_TYPE_ENTITY_CODE;
@@ -399,6 +403,8 @@ public final class ObjectEntities {
 				return ANALYSISTYPE_ENTITY;
 			case EVALUATIONTYPE_ENTITY_CODE:
 				return EVALUATIONTYPE_ENTITY;
+			case MODELINGTYPE_ENTITY_CODE:
+				return MODELINGTYPE_ENTITY;
 
 			case SITE_NODE_TYPE_ENTITY_CODE:
 				return SITE_NODE_ENTITY;
