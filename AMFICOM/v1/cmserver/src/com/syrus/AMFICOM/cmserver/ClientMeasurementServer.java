@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.30 2005/01/28 13:48:06 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.31 2005/03/31 16:05:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,19 +8,18 @@
 
 package com.syrus.AMFICOM.cmserver;
 
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
 
 import org.omg.CORBA.SystemException;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Application;
@@ -29,13 +28,14 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/01/28 13:48:06 $
+ * @version $Revision: 1.31 $, $Date: 2005/03/31 16:05:18 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public class ClientMeasurementServer extends SleepButWorkThread {
 
 	public static final String APPLICATION_NAME = "cmserver";
+
 	public static final String KEY_DB_HOST_NAME = "DBHostName";
 	public static final String KEY_DB_SID = "DBSID";
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
@@ -43,21 +43,25 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 	public static final String KEY_TICK_TIME = "TickTime";
 	public static final String KEY_MAX_FALLS = "MaxFalls";
 	public static final String KEY_MSERVER_ID = "MServerID";
-	public static final String MSERVER_ID = "Server_1";
+	public static final String KEY_MCM_CHECK_TIMEOUT = "MCMCheckTimeout";
+
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
-	public static final int TICK_TIME = 5;
+	public static final int TICK_TIME = 5;	//sec
+	public static final String MSERVER_ID = "Server_1";
+	public static final int MCM_CHECK_TIMEOUT = 10;		//min
 
 // protected static MServer mServerRef;
 
 	/* CORBA server */
 	private static CORBAServer corbaServer;
-	
-	/*	References to MCMs*/
-	protected static Map mcmRefs;	/*	Map <Identifier mcmId, com.syrus.AMFICOM.mcm.corba.MCM mcmRef>*/
 
-	private boolean				running;
+	protected static MCMConnectionManager mcmConnectionManager;
+//	/*	References to MCMs*/
+//	protected static Map mcmRefs;	/*	Map <Identifier mcmId, com.syrus.AMFICOM.mcm.corba.MCM mcmRef>*/
+
+	private boolean running;
 
 	public ClientMeasurementServer() {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000,
@@ -93,10 +97,10 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 		DatabaseContextSetup.initDatabaseContext();
 		DatabaseContextSetup.initObjectPools();
-		
-        // activateMServerReference();
-		/* Activate mcms for mserver */
-		activateMCMReferences();
+
+
+		/*	Activation*/
+		activate();
 
 		/* Start main loop */
 		final ClientMeasurementServer clientMeasurementServer = new ClientMeasurementServer();
@@ -126,35 +130,29 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 			System.exit(-1);
 		}
 	}
-	
-	private static void activateMCMReferences() {
-		List mcmIds = null;
+
+	private static void activate() {
+		/*	Retrieve information about server*/
+		Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_MSERVER_ID, MSERVER_ID));
+		Server server = null;
 		try {
-			Server server = (Server)AdministrationStorableObjectPool.getStorableObject(new Identifier(ApplicationProperties.getString(KEY_MSERVER_ID, MSERVER_ID)), true);
-			mcmIds = server.retrieveMCMIds();
+			server = (Server) AdministrationStorableObjectPool.getStorableObject(serverId, true);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
 			System.exit(-1);
 		}
 
-		mcmRefs = new Hashtable(mcmIds.size());
-		for (Iterator iterator = mcmIds.iterator(); iterator.hasNext();) {
-			activateMCMReferenceWithId((Identifier)iterator.next());
-		}
-	}
-	
-	protected static void activateMCMReferenceWithId(Identifier mcmId) {
-		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-		try {
-			mcmRef = com.syrus.AMFICOM.mcm.corba.MCMHelper.narrow(corbaServer.resolveReference(mcmId.toString()));
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			mcmRef = null;
-		}
-		if (mcmRef != null)
-			mcmRefs.put(mcmId, mcmRef);
+		/*	Activate session context*/
+		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()),
+				server.getDomainId(),
+				server.getUserId(),
+				null));
+
+		/*	Activate MCM connection manager*/
+		long mcmCheckTimeout = ApplicationProperties.getInt(KEY_MCM_CHECK_TIMEOUT, MCM_CHECK_TIMEOUT) * 60 * 1000;
+		mcmConnectionManager = new MCMConnectionManager(corbaServer, serverId, mcmCheckTimeout);
+		mcmConnectionManager.start();
 	}
 
 	private static void deactivateCORBAServer() {
