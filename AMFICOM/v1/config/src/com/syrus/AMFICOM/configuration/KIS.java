@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.17 2004/08/30 14:39:41 bob Exp $
+ * $Id: KIS.java,v 1.18 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -51,7 +51,7 @@ public class KIS extends DomainMember {
 		}
 	}
 
-	public KIS(KIS_Transferable kt) throws CreateObjectException {
+	private KIS(KIS_Transferable kt) throws CreateObjectException {
 		super(new Identifier(kt.id),
 					new Date(kt.created),
 					new Date(kt.modified),
@@ -66,14 +66,7 @@ public class KIS extends DomainMember {
 		this.measurementPortIds = new ArrayList(kt.measurement_port_ids.length);
 		for (int i = 0; i < kt.measurement_port_ids.length; i++)
 			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));
-
-		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
-		try {
-			this.kisDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
+		
 	}
 	
 	protected KIS(Identifier id,
@@ -122,6 +115,22 @@ public class KIS extends DomainMember {
 									 description,
 									 equipmentId,
 									 mcmId);
+	}
+	
+	public static KIS getInstance(KIS_Transferable kt) throws CreateObjectException{
+		
+		KIS kis = new KIS(kt);
+		
+		kis.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
+		try {
+			if (kis.kisDatabase != null)
+				kis.kisDatabase.insert(kis);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return kis;
 	}
 
 	public Object getTransferable() {

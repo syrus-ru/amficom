@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.5 2004/08/30 14:39:41 bob Exp $
+ * $Id: MeasurementPortType.java,v 1.6 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -41,22 +41,14 @@ public class MeasurementPortType extends StorableObjectType {
 		}
 	}
 
-	public MeasurementPortType(MeasurementPortType_Transferable ptt) throws CreateObjectException {
+	private MeasurementPortType(MeasurementPortType_Transferable ptt) throws CreateObjectException {
 		super(new Identifier(ptt.id),
 					new Date(ptt.created),
 					new Date(ptt.modified),
 					new Identifier(ptt.creator_id),
 					new Identifier(ptt.modifier_id),
 					new String(ptt.codename),
-					new String(ptt.description));
-
-		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
-		try {
-			this.measurementPortTypeDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
+					new String(ptt.description));		
 	}
 	
 	protected MeasurementPortType(Identifier id,
@@ -90,6 +82,21 @@ public class MeasurementPortType extends StorableObjectType {
 									   creatorId,
 									   codename,
 									   description);
+	}
+	
+	public static MeasurementPortType getInstance(MeasurementPortType_Transferable mptt) throws CreateObjectException {
+		MeasurementPortType measurementPortType = new MeasurementPortType(mptt);
+		
+		measurementPortType.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
+		try {
+			if (measurementPortType.measurementPortTypeDatabase != null)
+				measurementPortType.measurementPortTypeDatabase.insert(measurementPortType);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return measurementPortType;
 	}
 	
 	public Object getTransferable() {

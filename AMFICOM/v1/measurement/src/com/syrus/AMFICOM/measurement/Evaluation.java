@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.22 2004/08/30 15:00:10 bob Exp $
+ * $Id: Evaluation.java,v 1.23 2004/08/31 15:32:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/08/30 15:00:10 $
+ * @version $Revision: 1.23 $, $Date: 2004/08/31 15:32:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -44,7 +44,7 @@ public class Evaluation extends Action {
 		}
 	}
 
-	public Evaluation(Evaluation_Transferable et) throws CreateObjectException {
+	private Evaluation(Evaluation_Transferable et) throws CreateObjectException {
 		super(new Identifier(et.id),
 					new Date(et.created),
 					new Date(et.modified),
@@ -61,14 +61,7 @@ public class Evaluation extends Action {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-
-		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
-		try {
-			this.evaluationDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		
 	}
 
 	protected Evaluation(Identifier id,
@@ -90,6 +83,21 @@ public class Evaluation extends Action {
 		super.currentVersion = super.getNextVersion();
 		
 		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
+	}
+	
+	public static Evaluation getInstance(Evaluation_Transferable et) throws CreateObjectException {
+		Evaluation evaluation = new Evaluation(et);
+		
+		evaluation.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
+		try {
+			if (evaluation.evaluationDatabase != null)
+				evaluation.evaluationDatabase.insert(evaluation);
+		}
+		catch (IllegalDataException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
+		
+		return evaluation;
 	}
 
 	public Object getTransferable() {

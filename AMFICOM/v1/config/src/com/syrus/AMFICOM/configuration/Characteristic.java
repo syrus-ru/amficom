@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.14 2004/08/30 14:39:41 bob Exp $
+ * $Id: Characteristic.java,v 1.15 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -51,7 +51,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 		}
 	}
 
-	public Characteristic(Characteristic_Transferable ct) throws CreateObjectException {
+	private Characteristic(Characteristic_Transferable ct) throws CreateObjectException {
 		super(new Identifier(ct.id),
 					new Date(ct.created),
 					new Date(ct.modified),
@@ -68,15 +68,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.description = new String(ct.description);
 		this.sort = ct.sort.value();
 		this.value = new String(ct.value);
-		this.characterizedId = new Identifier(ct.characterized_id);
-
-		this.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
-		try {
-			this.characteristicDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
+		this.characterizedId = new Identifier(ct.characterized_id);		
 	}
 	
 	protected Characteristic(Identifier id,
@@ -130,6 +122,21 @@ public class Characteristic extends StorableObject implements TypedObject {
 								  sort,
 								  value,
 								  characterizedId);
+	}
+	
+	public static Characteristic getInstance(Characteristic_Transferable ct) throws CreateObjectException {
+		Characteristic characteristic = new Characteristic(ct);
+		
+		characteristic.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
+		try {
+			if (characteristic.characteristicDatabase != null)
+				characteristic.characteristicDatabase.insert(characteristic);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return characteristic;
 	}
 
 	public Object getTransferable() {

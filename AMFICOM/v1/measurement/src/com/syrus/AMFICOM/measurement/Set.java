@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.21 2004/08/30 15:00:10 bob Exp $
+ * $Id: Set.java,v 1.22 2004/08/31 15:32:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/08/30 15:00:10 $
+ * @version $Revision: 1.22 $, $Date: 2004/08/31 15:32:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -61,7 +61,7 @@ public class Set extends StorableObject {
 		}
 	}
 
-	public Set(Set_Transferable st) throws CreateObjectException {
+	private Set(Set_Transferable st) throws CreateObjectException {
 		super(new Identifier(st.id),
 					new Date(st.created),
 					new Date(st.modified),
@@ -82,14 +82,7 @@ public class Set extends StorableObject {
 		this.monitoredElementIds = new ArrayList(st.monitored_element_ids.length);
 		for (int i = 0; i < st.monitored_element_ids.length; i++)
 			this.monitoredElementIds.add(new Identifier(st.monitored_element_ids[i]));
-
-		this.setDatabase = MeasurementDatabaseContext.setDatabase;
-		try {
-			this.setDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		
 	}	
 	
 	protected Set(Identifier id,
@@ -136,6 +129,21 @@ public class Set extends StorableObject {
 									 description,
 									 parameters,
 									 monitoredElementIds);
+	}
+	
+	public static Set getInstance(Set_Transferable st) throws CreateObjectException {
+		Set set = new Set(st);
+		
+		set.setDatabase = MeasurementDatabaseContext.setDatabase;
+		try {
+			if (set.setDatabase != null)
+				set.setDatabase.insert(set);
+		}
+		catch (IllegalDataException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
+		
+		return set;
 	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {

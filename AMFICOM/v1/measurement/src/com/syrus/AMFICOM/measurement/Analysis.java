@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.22 2004/08/30 15:00:05 bob Exp $
+ * $Id: Analysis.java,v 1.23 2004/08/31 15:32:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/08/30 15:00:05 $
+ * @version $Revision: 1.23 $, $Date: 2004/08/31 15:32:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -44,7 +44,7 @@ public class Analysis extends Action {
 		}
 	}
 
-	public Analysis(Analysis_Transferable at) throws CreateObjectException {
+	private Analysis(Analysis_Transferable at) throws CreateObjectException {
 		super(new Identifier(at.id),
 					new Date(at.created),
 					new Date(at.modified),
@@ -59,14 +59,6 @@ public class Analysis extends Action {
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
-		}
-
-		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
-		try {
-			this.analysisDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
 
@@ -148,5 +140,19 @@ public class Analysis extends Action {
 												type,
 												monitoredElementId,
 												criteriaSet);
+	}
+	
+	public static Analysis getInstance(Analysis_Transferable at) throws CreateObjectException {
+		Analysis analysis = new Analysis(at);
+		
+		analysis.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
+		try {
+			if (analysis.analysisDatabase != null)
+				analysis.analysisDatabase.insert(analysis);
+		}
+		catch (IllegalDataException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
+		return analysis;
 	}
 }

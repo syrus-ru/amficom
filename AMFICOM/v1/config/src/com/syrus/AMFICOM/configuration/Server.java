@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.13 2004/08/30 14:39:41 bob Exp $
+ * $Id: Server.java,v 1.14 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -50,7 +50,7 @@ public class Server extends DomainMember implements Characterized {
 		}
 	}
 
-	public Server(Server_Transferable st) throws CreateObjectException {
+	private Server(Server_Transferable st) throws CreateObjectException {
 		super(new Identifier(st.id),
 					new Date(st.created),
 					new Date(st.modified),
@@ -60,15 +60,7 @@ public class Server extends DomainMember implements Characterized {
 		this.name = new String(st.name);
 		this.description = new String(st.description);
 		this.userId = new Identifier(st.user_id);
-
-		this.serverDatabase = ConfigurationDatabaseContext.serverDatabase;
-		try {
-			this.serverDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
-
+		
 		try {
 			this.characteristics = new ArrayList(st.characteristic_ids.length);
 			for (int i = 0; i < st.characteristic_ids.length; i++)
@@ -97,6 +89,21 @@ public class Server extends DomainMember implements Characterized {
 
 		this.characteristics = new ArrayList();
 		this.serverDatabase = ConfigurationDatabaseContext.serverDatabase;
+	}
+	
+	public static Server getInstance(Server_Transferable st) throws CreateObjectException {
+		Server server = new Server(st);
+		
+		server.serverDatabase = ConfigurationDatabaseContext.serverDatabase;
+		try {
+			if (server.serverDatabase != null)
+				server.serverDatabase.insert(server);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+
+		return server;
 	}
 
 	public Object getTransferable() {

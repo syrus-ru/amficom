@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.7 2004/08/29 10:54:24 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.8 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -29,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/29 10:54:24 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */

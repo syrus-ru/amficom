@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.17 2004/08/30 14:39:41 bob Exp $
+ * $Id: MCM.java,v 1.18 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -52,7 +52,7 @@ public class MCM extends DomainMember implements Characterized {
 		}
 	}
 
-	public MCM(MCM_Transferable mt) throws CreateObjectException {
+	private MCM(MCM_Transferable mt) throws CreateObjectException {
 		super(new Identifier(mt.id),
 					new Date(mt.created),
 					new Date(mt.modified),
@@ -67,15 +67,7 @@ public class MCM extends DomainMember implements Characterized {
 		this.kisIds = new ArrayList(mt.kis_ids.length);
 		for (int i = 0; i < mt.kis_ids.length; i++)
 			this.kisIds.add(new Identifier(mt.kis_ids[i]));
-
-		this.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
-		try {
-			this.mcmDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
-
+		
 		try {
 			this.characteristics = new ArrayList(mt.characteristic_ids.length);
 			for (int i = 0; i < mt.characteristic_ids.length; i++)
@@ -109,6 +101,21 @@ public class MCM extends DomainMember implements Characterized {
 		this.kisIds = new ArrayList();
 		
 		this.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
+	}
+	
+	public static MCM getInstance(MCM_Transferable mt) throws CreateObjectException {
+		MCM mcm = new MCM(mt);
+		
+		mcm.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
+		try {
+			if (mcm.mcmDatabase != null)
+				mcm.mcmDatabase.insert(mcm);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+
+		return mcm;
 	}
 
 	public Object getTransferable() {

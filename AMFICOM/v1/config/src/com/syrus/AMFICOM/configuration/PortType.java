@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.5 2004/08/30 14:39:41 bob Exp $
+ * $Id: PortType.java,v 1.6 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -41,7 +41,7 @@ public class PortType extends StorableObjectType {
 		}
 	}
 
-	public PortType(PortType_Transferable ptt) throws CreateObjectException {
+	private PortType(PortType_Transferable ptt) throws CreateObjectException {
 		super(new Identifier(ptt.id),
 					new Date(ptt.created),
 					new Date(ptt.modified),
@@ -49,14 +49,7 @@ public class PortType extends StorableObjectType {
 					new Identifier(ptt.modifier_id),
 					new String(ptt.codename),
 					new String(ptt.description));
-
-		this.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
-		try {
-			this.portTypeDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
+		
 	}
 	
 	protected PortType(Identifier id,
@@ -91,6 +84,21 @@ public class PortType extends StorableObjectType {
 							creatorId,
 							codename,
 							description);
+	}
+	
+	public static PortType getInstance(PortType_Transferable ptt) throws CreateObjectException {
+		PortType portType = new PortType(ptt);
+		
+		portType.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
+		try {
+			if (portType.portTypeDatabase != null)
+				portType.portTypeDatabase.insert(portType);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return portType;
 	}
 	
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.26 2004/08/30 15:00:05 bob Exp $
+ * $Id: AnalysisType.java,v 1.27 2004/08/31 15:32:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/08/30 15:00:05 $
+ * @version $Revision: 1.27 $, $Date: 2004/08/31 15:32:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -65,7 +65,7 @@ public class AnalysisType extends ActionType {
 		}
 	}
 
-	public AnalysisType(AnalysisType_Transferable att) throws CreateObjectException {
+	private AnalysisType(AnalysisType_Transferable att) throws CreateObjectException {
 		super(new Identifier(att.id),
 					new Date(att.created),
 					new Date(att.modified),
@@ -93,14 +93,6 @@ public class AnalysisType extends ActionType {
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
-		}
-
-		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
-		try {
-			this.analysisTypeDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
 
@@ -158,6 +150,21 @@ public class AnalysisType extends ActionType {
 														criteriaParameterTypes,
 														etalonParameterTypes,
 														outParameterTypes);
+	}
+	
+	public static AnalysisType getInstance(AnalysisType_Transferable att) throws CreateObjectException{
+		AnalysisType analysisType = new AnalysisType(att);
+
+		analysisType.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
+		try {
+			if (analysisType.analysisTypeDatabase != null)
+				analysisType.analysisTypeDatabase.insert(analysisType);
+		}
+		catch (IllegalDataException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
+
+		return analysisType;
 	}
 	
 	public Object getTransferable() {

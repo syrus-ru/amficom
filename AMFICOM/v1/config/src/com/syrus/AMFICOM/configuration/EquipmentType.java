@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.8 2004/08/30 14:39:41 bob Exp $
+ * $Id: EquipmentType.java,v 1.9 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -41,22 +41,14 @@ public class EquipmentType extends StorableObjectType {
 		}
 	}
 
-	public EquipmentType(EquipmentType_Transferable ett) throws CreateObjectException {
+	private EquipmentType(EquipmentType_Transferable ett) throws CreateObjectException {
 		super(new Identifier(ett.id),
 					new Date(ett.created),
 					new Date(ett.modified),
 					new Identifier(ett.creator_id),
 					new Identifier(ett.modifier_id),
 					new String(ett.codename),
-					new String(ett.description));
-
-		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
-		try {
-			this.equipmentTypeDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
+					new String(ett.description));	
 	}
 	
 	protected EquipmentType(Identifier id,
@@ -91,6 +83,21 @@ public class EquipmentType extends StorableObjectType {
 							creatorId,
 							codename,
 							description);
+	}
+	
+	public static EquipmentType getInstance(EquipmentType_Transferable ett) throws CreateObjectException {
+		EquipmentType equipmentType = new EquipmentType(ett);
+		
+		equipmentType.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
+		try {
+			if (equipmentType.equipmentTypeDatabase != null)
+				equipmentType.equipmentTypeDatabase.insert(equipmentType);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return equipmentType;
 	}
 	
 	public Object getTransferable() {

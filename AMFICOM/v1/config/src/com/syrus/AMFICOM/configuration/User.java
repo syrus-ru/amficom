@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.7 2004/08/30 14:39:41 bob Exp $
+ * $Id: User.java,v 1.8 2004/08/31 15:33:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/31 15:33:36 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -46,7 +46,7 @@ public class User extends StorableObject {
 		}
 	}
 
-	public User(User_Transferable ut) throws CreateObjectException {
+	private User(User_Transferable ut) throws CreateObjectException {
 		super(new Identifier(ut.id),
 					new Date(ut.created),
 					new Date(ut.modified),
@@ -55,15 +55,7 @@ public class User extends StorableObject {
 		this.login = ut.login;
 		this.sort = ut.sort.value();
 		this.name = new String(ut.name);
-		this.description = new String(ut.description);
-
-		this.userDatabase = ConfigurationDatabaseContext.userDatabase;
-		try {
-			this.userDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
+		this.description = new String(ut.description);		
 	}
 
 	protected User(Identifier id,
@@ -83,6 +75,21 @@ public class User extends StorableObject {
 		this.description = description;
 		
 		this.userDatabase = ConfigurationDatabaseContext.userDatabase;
+	}
+	
+	public static User getInstance(User_Transferable ut) throws CreateObjectException {
+		User user = new User(ut);
+		
+		user.userDatabase = ConfigurationDatabaseContext.userDatabase;
+		try {
+			if (user.userDatabase != null)
+				user.userDatabase.insert(user);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return user;
 	}
 
 	public Object getTransferable() {

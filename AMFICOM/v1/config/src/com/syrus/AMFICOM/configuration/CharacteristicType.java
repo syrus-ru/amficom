@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.11 2004/08/30 14:39:41 bob Exp $
+ * $Id: CharacteristicType.java,v 1.12 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -45,7 +45,7 @@ public class CharacteristicType extends StorableObjectType {
 		}
 	}
 
-	public CharacteristicType(CharacteristicType_Transferable ctt) throws CreateObjectException {
+	private CharacteristicType(CharacteristicType_Transferable ctt) throws CreateObjectException {
 		super(new Identifier(ctt.id),
 					new Date(ctt.created),
 					new Date(ctt.modified),
@@ -55,15 +55,7 @@ public class CharacteristicType extends StorableObjectType {
 					new String(ctt.description));
 		this.dataType = ctt.data_type.value();
 		this.editable = ctt.is_editable;
-		this.visible = ctt.is_visible;
-
-		this.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
-		try {
-			this.characteristicTypeDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
+		this.visible = ctt.is_visible;		
 	}
 	
 	protected CharacteristicType(Identifier id,
@@ -113,6 +105,22 @@ public class CharacteristicType extends StorableObjectType {
 									  editable,
 									  visible);
 	
+	}
+	
+	
+	public static CharacteristicType getInstance(CharacteristicType_Transferable ctt) throws CreateObjectException {
+		CharacteristicType characteristicType = new CharacteristicType(ctt);
+		
+		characteristicType.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
+		try {
+			if (characteristicType.characteristicTypeDatabase != null)
+				characteristicType.characteristicTypeDatabase.insert(characteristicType);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return characteristicType;
 	}
 
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.7 2004/08/30 14:39:41 bob Exp $
+ * $Id: Domain.java,v 1.8 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -47,7 +47,7 @@ public class Domain extends DomainMember implements Characterized {
 		}
 	}
 
-	public Domain(Domain_Transferable dt) throws CreateObjectException {
+	private Domain(Domain_Transferable dt) throws CreateObjectException {
 		super(new Identifier(dt.id),
 					new Date(dt.created),
 					new Date(dt.modified),
@@ -56,15 +56,7 @@ public class Domain extends DomainMember implements Characterized {
 					(dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
 		this.name = new String(dt.name);
 		this.description = new String(dt.description);
-
-		this.domainDatabase = ConfigurationDatabaseContext.domainDatabase;
-		try {
-			this.domainDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
-
+		
 		try {
 			this.characteristics = new ArrayList(dt.characteristic_ids.length);
 			for (int i = 0; i < dt.characteristic_ids.length; i++)
@@ -110,7 +102,8 @@ public class Domain extends DomainMember implements Characterized {
 																	 new String(this.name),
 																	 new String(this.description),
 																	 charIds);
-	}
+	}	
+	
 
 	public String getName() {
 		return this.name;
@@ -147,6 +140,21 @@ public class Domain extends DomainMember implements Characterized {
 											domainId,
 											name,
 											description);
+	}
+	
+	public static Domain getInstance(Domain_Transferable dt) throws CreateObjectException {
+		Domain domain = new Domain(dt);
+		
+		domain.domainDatabase = ConfigurationDatabaseContext.domainDatabase;
+		try {
+			if (domain.domainDatabase != null)
+				domain.domainDatabase.insert(domain);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return domain;
 	}
 
 	protected synchronized void setAttributes(Date created,

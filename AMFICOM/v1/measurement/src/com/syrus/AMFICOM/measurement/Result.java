@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.15 2004/08/30 15:00:10 bob Exp $
+ * $Id: Result.java,v 1.16 2004/08/31 15:32:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/30 15:00:10 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/31 15:32:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -51,7 +51,7 @@ public class Result extends StorableObject {
 		}
 	}
 
-	public Result(Result_Transferable rt) throws CreateObjectException {
+	private Result(Result_Transferable rt) throws CreateObjectException {
 		super(new Identifier(rt.id),
 					new Date(rt.created),
 					new Date(rt.modified),
@@ -99,13 +99,6 @@ public class Result extends StorableObject {
 			throw new CreateObjectException(ae);
 		}
 
-		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
-		try {
-			this.resultDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
 	}
 
 	protected Result(Identifier id,
@@ -130,6 +123,21 @@ public class Result extends StorableObject {
 		super.currentVersion = super.getNextVersion();
 
 		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
+	}
+	
+	public static Result getInstance(Result_Transferable rt) throws CreateObjectException {
+		Result result = new Result(rt);
+		
+		result.resultDatabase = MeasurementDatabaseContext.resultDatabase;
+		try {
+			if (result.resultDatabase != null)
+				result.resultDatabase.insert(result);
+		}
+		catch (IllegalDataException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
+		
+		return result;
 	}
 
 	public Object getTransferable() {

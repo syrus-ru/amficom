@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.9 2004/08/30 14:39:41 bob Exp $
+ * $Id: Port.java,v 1.10 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -55,7 +55,7 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 		}
 	}
 
-	public Port(Port_Transferable pt) throws CreateObjectException {
+	private Port(Port_Transferable pt) throws CreateObjectException {
 		super(new Identifier(pt.id),
 					new Date(pt.created),
 					new Date(pt.modified),
@@ -73,15 +73,7 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 		this.equipmentId = new Identifier(pt.equipment_id);
 
 		this.sort = pt.sort.value();
-
-		this.portDatabase = ConfigurationDatabaseContext.portDatabase;
-		try {
-			this.portDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
-
+		
 		try {
 			this.characteristics = new ArrayList(pt.characteristic_ids.length);
 			for (int i = 0; i < pt.characteristic_ids.length; i++)
@@ -135,6 +127,21 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 										description,
 										equipmentId,
 										sort);
+	}
+	
+	public static Port getInstance(Port_Transferable pt) throws CreateObjectException {
+		Port port = new Port(pt);
+		
+		port.portDatabase = ConfigurationDatabaseContext.portDatabase;
+		try {
+			if (port.portDatabase != null)
+				port.portDatabase.insert(port);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return port;
 	}
 	
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.26 2004/08/30 14:39:41 bob Exp $
+ * $Id: Equipment.java,v 1.27 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.27 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -58,7 +58,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		}
 	}
 
-	public Equipment(Equipment_Transferable et) throws CreateObjectException {
+	private Equipment(Equipment_Transferable et) throws CreateObjectException {
 		super(new Identifier(et.id),
 					new Date(et.created),
 					new Date(et.modified),
@@ -83,15 +83,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 		this.portIds = new ArrayList(et.port_ids.length);
 		for (int i = 0; i < et.port_ids.length; i++)
-			this.portIds.add(new Identifier(et.port_ids[i]));
-		
-		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
-		try {
-			this.equipmentDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
+			this.portIds.add(new Identifier(et.port_ids[i]));		
 
 		try {
 			this.characteristics = new ArrayList(et.characteristic_ids.length);
@@ -158,6 +150,21 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 												 name,
 												 description,
 												 imageId);
+	}
+	
+	public static Equipment getInstance(Equipment_Transferable et) throws CreateObjectException{
+		Equipment equipment = new Equipment(et);	
+		
+		equipment.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
+		try {
+			if (equipment.equipmentDatabase != null)
+				equipment.equipmentDatabase.insert(equipment);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return equipment;
 	}
 
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.17 2004/08/30 14:39:41 bob Exp $
+ * $Id: MonitoredElement.java,v 1.18 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -49,7 +49,7 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
+	private MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
 		super(new Identifier(met.id),
 					new Date(met.created),
 					new Date(met.modified),
@@ -62,15 +62,7 @@ public class MonitoredElement extends DomainMember {
 
 		this.monitoredDomainMemberIds = new ArrayList(met.monitored_domain_member_ids.length);
 		for (int i= 0; i < met.monitored_domain_member_ids.length; i++)
-			this.monitoredDomainMemberIds.add(new Identifier(met.monitored_domain_member_ids[i]));
-
-		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
-		try {
-			this.monitoredElementDatabase.insert(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new CreateObjectException(ide.getMessage(), ide);
-		}
+			this.monitoredDomainMemberIds.add(new Identifier(met.monitored_domain_member_ids[i]));		
 	}
 	
 	protected MonitoredElement(Identifier id,
@@ -120,6 +112,21 @@ public class MonitoredElement extends DomainMember {
 																monitoredDomainMemberIds);
 	}
 
+	public static MonitoredElement getInstance(MonitoredElement_Transferable met) throws CreateObjectException {
+		MonitoredElement me = new MonitoredElement(met);
+		
+		me.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
+		try {
+			if (me.monitoredElementDatabase != null)
+				me.monitoredElementDatabase.insert(me);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+		
+		return me;
+	}
+	
 	public Object getTransferable() {
 		Identifier_Transferable[] mdmIds = new Identifier_Transferable[this.monitoredDomainMemberIds.size()];
 		int i = 0;

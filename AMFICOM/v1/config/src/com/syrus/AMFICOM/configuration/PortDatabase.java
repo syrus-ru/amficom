@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.15 2004/08/30 14:39:41 bob Exp $
+ * $Id: PortDatabase.java,v 1.16 2004/08/31 15:33:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/31 15:33:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */

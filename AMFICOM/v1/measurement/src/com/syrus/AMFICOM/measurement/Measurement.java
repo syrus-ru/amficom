@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.23 2004/08/30 15:00:10 bob Exp $
+ * $Id: Measurement.java,v 1.24 2004/08/31 15:32:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/08/30 15:00:10 $
+ * @version $Revision: 1.24 $, $Date: 2004/08/31 15:32:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -55,7 +55,7 @@ public class Measurement extends Action {
 		}
 	}
 
-	public Measurement(Measurement_Transferable mt) throws CreateObjectException {
+	private Measurement(Measurement_Transferable mt) throws CreateObjectException {
 		super(new Identifier(mt.id),
 					new Date(mt.created),
 					new Date(mt.modified),
@@ -77,13 +77,6 @@ public class Measurement extends Action {
 		this.localAddress = new String(mt.local_address);
 		this.testId = new Identifier(mt.test_id);
 
-		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
-		try {
-			this.measurementDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
 	}
 
 	protected Measurement(Identifier id,
@@ -114,6 +107,21 @@ public class Measurement extends Action {
 		super.currentVersion = super.getNextVersion();
 		
 		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
+	}
+	
+	public static Measurement getInstance(Measurement_Transferable mt) throws CreateObjectException{
+		Measurement measurement = new Measurement(mt);
+
+		measurement.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
+		try {
+			if (measurement.measurementDatabase != null)
+				measurement.measurementDatabase.insert(measurement);
+		}
+		catch (IllegalDataException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
+		
+		return measurement;
 	}
 
 	public Object getTransferable() {

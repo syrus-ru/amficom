@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.17 2004/08/30 15:00:10 bob Exp $
+ * $Id: ParameterType.java,v 1.18 2004/08/31 15:32:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/30 15:00:10 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/31 15:32:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -46,7 +46,7 @@ public class ParameterType extends StorableObjectType {
 		}
 	}
 
-	public ParameterType(ParameterType_Transferable ptt) throws CreateObjectException {
+	private ParameterType(ParameterType_Transferable ptt) throws CreateObjectException {
 		super(new Identifier(ptt.id),
 					new Date(ptt.created),
 					new Date(ptt.modified),
@@ -55,14 +55,6 @@ public class ParameterType extends StorableObjectType {
 					new String(ptt.codename),
 					new String(ptt.description));
 		this.name = new String(ptt.name);
-
-		this.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
-		try {
-			this.parameterTypeDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
 	}
 
 	protected ParameterType(Identifier id,
@@ -103,6 +95,20 @@ public class ParameterType extends StorableObjectType {
 														 codename,
 														 description,
 														 name);
+	}
+	
+	public static ParameterType getInstance(ParameterType_Transferable ptt) throws CreateObjectException {
+		ParameterType parameterType = new ParameterType(ptt);
+		
+		parameterType.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
+		try {
+			parameterType.parameterTypeDatabase.insert(parameterType);
+		}
+		catch (IllegalDataException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
+		
+		return parameterType;
 	}
 
 	public Object getTransferable() {

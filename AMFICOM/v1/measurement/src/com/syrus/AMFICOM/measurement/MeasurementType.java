@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.22 2004/08/30 15:00:10 bob Exp $
+ * $Id: MeasurementType.java,v 1.23 2004/08/31 15:32:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/08/30 15:00:10 $
+ * @version $Revision: 1.23 $, $Date: 2004/08/31 15:32:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -58,7 +58,7 @@ public class MeasurementType extends ActionType {
 		}
 	}
 
-	public MeasurementType(MeasurementType_Transferable mtt) throws CreateObjectException {
+	private MeasurementType(MeasurementType_Transferable mtt) throws CreateObjectException {
 		super(new Identifier(mtt.id),
 					new Date(mtt.created),
 					new Date(mtt.modified),
@@ -79,14 +79,7 @@ public class MeasurementType extends ActionType {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-
-		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
-		try {
-			this.measurementTypeDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		
 	}
 	
 	protected MeasurementType(Identifier id,
@@ -133,6 +126,22 @@ public class MeasurementType extends ActionType {
 															 description,
 															 inParameterTypes,
 															 outParameterTypes);
+	}
+	
+	public static MeasurementType getInstance(MeasurementType_Transferable mtt) throws CreateObjectException {
+		
+		MeasurementType measurementType = new MeasurementType(mtt);
+		
+		measurementType.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
+		try {
+			if (measurementType.measurementTypeDatabase != null)
+				measurementType.measurementTypeDatabase.insert(measurementType);
+		}
+		catch (IllegalDataException e) {
+			throw new CreateObjectException(e.getMessage(), e);
+		}
+		
+		return measurementType;
 	}
 
 	public Object getTransferable() {
