@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.4 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: MapView.java,v 1.5 2004/09/23 10:07:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,13 +10,25 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
+import com.syrus.AMFICOM.CORBA.Map.MapView_Transferable;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DropSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DropSchemeElementCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.DropSchemePathCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCablePathCommandAtomic;
+import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveMeasurementPathCommandAtomic;
+import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveNodeCommandAtomic;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
@@ -26,18 +38,10 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-
 import java.awt.geom.Point2D;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +55,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/23 10:07:15 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -60,6 +64,8 @@ public final class MapView extends StubResource
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "mapview";
+
+	protected MapView_Transferable transferable;
 
 	protected Map map;
 	protected ArrayList schemes = new ArrayList();
@@ -98,7 +104,7 @@ public final class MapView extends StubResource
 		setLogicalNetLayer(logical);
 		created = System.currentTimeMillis();
 
-//		transferable = new MapView_Transferable();
+		transferable = new MapView_Transferable();
 	}
 
 	/**
@@ -110,20 +116,18 @@ public final class MapView extends StubResource
 		setLogicalNetLayer(null);
 		created = System.currentTimeMillis();
 
-//		transferable = new MapView_Transferable();
+		transferable = new MapView_Transferable();
 	}
 
 	/**
 	 * Используется для создания элемента при подгрузке из базы данных
 	 */
-/*
 	public MapView(MapView_Transferable transferable)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "Map(" + transferable + ")");
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
-*/
 
 	public Object clone(DataSourceInterface dataSource)
 	{
@@ -160,7 +164,6 @@ public final class MapView extends StubResource
 	/**
 	 * Восстановление локальных переменных класса при подгрузке из базы данных
 	 */
-/*
 	public void setLocalFromTransferable()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLocalFromTransferable()");
@@ -169,63 +172,54 @@ public final class MapView extends StubResource
 
 		id = transferable.id;
 		name = transferable.name;
-		user_id = transferable.user_id;
-		domain_id = transferable.domain_id;
+		domainId = transferable.domainId;
 		created = transferable.created;
 		modified = transferable.modified;
-		modified_by = transferable.modified_by;
-		created_by = transferable.created_by;
+		modifiedBy = transferable.modifiedBy;
+		createdBy = transferable.createdBy;
 
 		description = transferable.description;
-		showPhysicalNodeElement = transferable.showPhysicalNodeElement;
 
 		scale = transferable.scale;
 		longitude = Double.parseDouble( transferable.longitude);
 		latitude = Double.parseDouble( transferable.latitude);
 
-		count = transferable.scheme_ids.length;
-		scheme_ids = new ArrayList(count);
+		count = transferable.schemeIds.length;
+		schemeIds = new ArrayList(count);
 		for(i = 0; i < count; i++)
-			scheme_ids.add(transferable.scheme_ids[i]);
+			schemeIds.add(transferable.schemeIds[i]);
 	}
-*/
+
 	/**
 	 * Установка полей в transferable по значениям локальных переменных
 	 * для сохранения в базе данных
 	 */
-/*
 	public void setTransferableFromLocal()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setTransferableFromLocal()");
 		
-		int i;
-		int count;
-		ObjectResource os;
-
 		transferable.id = id;
 		transferable.name = name;
-		transferable.user_id = user_id;
-		transferable.domain_id = domain_id;
+		transferable.domainId = domainId;
 		transferable.description = description;
-		transferable.showPhysicalNodeElement = showPhysicalNodeElement;
 		transferable.modified = System.currentTimeMillis();
-		transferable.modified_by = user_id;
-		transferable.created_by = user_id;
+		transferable.modifiedBy = modifiedBy;
+		transferable.createdBy = createdBy;
 
 		transferable.scale = scale;
 		transferable.longitude = String.valueOf(longitude);
 		transferable.latitude = String.valueOf(latitude);
 
-		scheme_ids = new ArrayList();
+		schemeIds = new ArrayList();
 		
-		for(Iterator it = scheme.iterator(); it.hasNext();)
+		for(Iterator it = schemes.iterator(); it.hasNext();)
 		{
-			os = (ObjectResource )it.next();
-			scheme.add(os.getId());
+			Scheme sch = (Scheme )it.next();
+			schemeIds.add(sch.getId());
 		}
-		transferable.scheme = (String [])scheme.toArray(new String[schemes.size()]);
+		transferable.schemeIds = (String [])schemeIds.toArray(new String[schemeIds.size()]);
 	}
-*/
+
 	/**
 	 * 
 	 */
@@ -296,22 +290,6 @@ public final class MapView extends StubResource
 		return this.schemes;
 	}
 	
-	public void addScheme(Scheme sch)
-	{
-		this.schemes.add(sch);
-		scanElements(sch);
-		scanCables(sch);
-		scanPaths(sch);
-	}
-	
-	public void removeScheme(Scheme sch)
-	{
-		this.schemes.remove(sch);
-		removePaths(sch);
-		removeCables(sch);
-		removeElements(sch);
-	}
-	
 	/**
 	 * Используется для обновления содержимого локальных переменных по 
 	 * значениям, полученным из transferable
@@ -323,20 +301,19 @@ public final class MapView extends StubResource
 		schemes = new ArrayList();
 
 		for(Iterator it = schemeIds.iterator(); it.hasNext();)
-			schemes.add(Pool.get(Scheme.typ, (String )it.next()));
+			addScheme((Scheme )Pool.get(Scheme.typ, (String )it.next()));
 
-		map = (Map)Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, mapId);
+		map = (Map )Pool.get(Map.typ, mapId);
 	}
 
 	/**
 	 * получить объект для сохранения в базе данных
 	 */
-/*
 	public Object getTransferable()
 	{
 		return transferable;
 	}
-*/
+
 	/**
 	 * получить модель объекта
 	 */
@@ -466,14 +443,38 @@ public final class MapView extends StubResource
 	 * внутри элемента me, которые содержатся в пути sp и определяются
 	 * последовательностью pathelements, начиная с элемента pe
 	 */
-	public PathElement countPhysicalLength(MapElement me, SchemePath sp, PathElement pe, Iterator pathelements)
+//	public PathElement countPhysicalLength(MapElement me, SchemePath sp, PathElement pe, Iterator pathelements)
+//	{
+//		return pe;
+//	}
+
+	public void addScheme(Scheme sch)
 	{
-		return pe;
+		this.schemes.add(sch);
+		scanElements(sch);
+	}
+
+	public void removeScheme(Scheme sch)
+	{
+		this.schemes.remove(sch);
+		removePaths(sch);
+		removeCables(sch);
+		removeElements(sch);
+	}
+
+	public void removeSchemes()
+	{
+		for(Iterator it = getSchemes().iterator(); it.hasNext();)
+		{
+			Scheme sch = (Scheme )it.next();
+			removeScheme(sch);
+			it.remove();
+		}
 	}
 
 	public void scanElements(Scheme scheme)
 	{
-		for(Iterator it = scheme.getTopLevelElements().iterator(); it.hasNext();)
+		for(Iterator it = scheme.getTopologicalElements().iterator(); it.hasNext();)
 		{
 			SchemeElement element = (SchemeElement )it.next();
 			MapSiteNodeElement node = findElement(element);
@@ -490,50 +491,98 @@ public final class MapView extends StubResource
 				}
 			}
 		}
+		scanCables(scheme);
 	}
 	
 	public void scanCables(Scheme scheme)
 	{
-		for(Iterator it = scheme.getTopLevelCableLinks().iterator(); it.hasNext();)
+		for(Iterator it = scheme.getTopologicalCableLinks().iterator(); it.hasNext();)
 		{
 			SchemeCableLink scl = (SchemeCableLink )it.next();
-			MapCablePathElement cp = logicalNetLayer.getMapView().findCablePath(scl);
+			MapCablePathElement cp = findCablePath(scl);
 			if(cp == null)
 			{
-				MapSiteNodeElement[] mne = logicalNetLayer.getMapView().getSideNodes(scl);
+				MapSiteNodeElement[] mne = getSideNodes(scl);
 		
 				if(mne[0] != null && mne[1] != null)
 				{
-					DropSchemeCableLinkCommand cmd = new DropSchemeCableLinkCommand(scl);
-					cmd.setLogicalNetLayer(logicalNetLayer);
-					logicalNetLayer.getCommandList().add(cmd);
-					logicalNetLayer.getCommandList().execute();
+					placeElement(scl);
+				}
+			}
+		}
+		scanPaths(scheme);
+	}
+
+	public void scanPaths(Scheme scheme)
+	{
+		for(Iterator it = scheme.getTopologicalPaths().iterator(); it.hasNext();)
+		{
+			SchemePath path = (SchemePath )it.next();
+			MapMeasurementPathElement mp = findMeasurementPath(path);
+			if(mp == null)
+			{
+				MapSiteNodeElement[] mne = getSideNodes(path);
+		
+				if(mne[0] != null && mne[1] != null)
+				{
+					placeElement(path);
 				}
 			}
 		}
 	}
 
-	public void scanPaths(Scheme scheme)
-	{
-	}
-
 	public void removePaths(Scheme scheme)
 	{
+		Collection schemePaths = scheme.getTopologicalPaths();
+		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
+		{
+			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			if(schemePaths.contains(mp.getSchemePath()))
+			{
+				RemoveMeasurementPathCommandAtomic cmd = 
+					new RemoveMeasurementPathCommandAtomic(mp);
+				cmd.setLogicalNetLayer(logicalNetLayer);
+				cmd.execute();
+				removeMeasurementPath(mp);
+			}
+		}
 	}
 
 	public void removeCables(Scheme scheme)
 	{
+		Collection schemeCables = scheme.getTopologicalCableLinks();
+		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
+		{
+			MapCablePathElement cp = (MapCablePathElement )it.next();
+			if(schemeCables.contains(cp.getSchemeCableLink()))
+			{
+				RemoveCablePathCommandAtomic cmd = 
+					new RemoveCablePathCommandAtomic(cp);
+				cmd.setLogicalNetLayer(logicalNetLayer);
+				cmd.execute();
+				removeCablePath(cp);
+			}
+		}
 	}
 
 	public void removeElements(Scheme scheme)
 	{
+		Collection schemeElements = scheme.getTopologicalElements();
+		for(Iterator it = schemeElements.iterator(); it.hasNext();)
+		{
+			SchemeElement se = (SchemeElement )it.next();
+			MapSiteNodeElement site = findElement(se);
+			if(site != null && site instanceof MapUnboundNodeElement)
+			{
+				RemoveNodeCommandAtomic cmd = 
+					new RemoveNodeCommandAtomic(site);
+				cmd.setLogicalNetLayer(logicalNetLayer);
+				cmd.execute();
+				getMap().removeNode(site);
+			}
+		}
 	}
 
-/*
-	public void placeElement(SchemeCableLink scl, MapLinkProtoElement mplpe)
-	{
-	}
-*/	
 	/**
 	 * Разместить элемент на карте.
 	 */
@@ -544,82 +593,24 @@ public final class MapView extends StubResource
 		cmd.execute();
 	}
 
+	public void placeElement(SchemeCableLink scl)
+	{
+		DropSchemeCableLinkCommand cmd = new DropSchemeCableLinkCommand(scl);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
+	}
+
 	/**
 	 * Разместить элемент sp типа mtppe на карте. используется при переносе 
 	 * (drag/drop)
 	 */
-/*
 	public void placeElement(SchemePath sp)
 	{
-		if(sp == null)
-			return;
-
-		// fill in plink_ids. assume plink_ids are sorted!
-		Vector plink_ids = new Vector();
-
-		PathElement pes[] = new PathElement[sp.links.size()];
-		for(int i = 0; i < sp.links.size(); i++)
-		{
-			PathElement pe = (PathElement )sp.links.get(i);
-			pes[pe.n] = pe;
-		}
-		for(int i = 0; i < pes.length; i++)
-		{
-			PathElement pe = pes[i];
-			if(pe.is_cable)
-			{
-				MapPhysicalLinkElement mple = findPhysicalLink(pe.link_id);
-				if(mple == null)
-				{
-					System.out.println("Place cables first!!!");
-					return;
-				}
-				plink_ids.add(mple.getId());
-			}
-		}
-
-		MapTransmissionPathElement mtpe = findPath(sp.getId());
-		if(mtpe != null)
-		{
-			mtpe.physicalLink_ids = plink_ids;
-
-			mtpe.select();
-			return;
-		}
-
-		DataSourceInterface dataSource = mapMainFrame.getContext().getDataSourceInterface();
-
-		MapTransmissionPathElement thePath;
-		if ( mapMainFrame.aContext.getApplicationModel()
-				.isEnabled("mapActionCreatePath"))
-		{
-			Scheme scheme = (Scheme )Pool.get(Scheme.typ, getMap().scheme_id);
-
-//			MapSiteNodeElement smne = findElement(scheme.getTopLevelElement(sp.start_device_id).getId());
-			MapSiteNodeElement smne = findElement(scheme.getTopologicalElement(sp.start_device_id).getId());
-//			MapSiteNodeElement emne = findElement(scheme.getTopLevelElement(sp.end_device_id).getId());
-			MapSiteNodeElement emne = findElement(scheme.getTopologicalElement(sp.end_device_id).getId());
-
-			if(smne == null || emne == null)
-				return;
-
-			thePath = new MapTransmissionPathElement(
-					dataSource.GetUId( MapPhysicalLinkElement.typ ),
-					smne, 
-					emne,
-					getMap());
-			Pool.put(MapTransmissionPathElement.typ, thePath.getId(), thePath);
-
-			thePath.type_id = mtppe.getId();
-			thePath.attributes = ResourceUtil.copyAttributes(dataSource, mtppe.attributes);
-			thePath.physicalLink_ids = plink_ids;
-			thePath.PATH_ID = sp.getId();
-			thePath.name = sp.getName();
-
-			getMap().getTransmissionPath().add(thePath);
-		}
+		DropSchemePathCommand cmd = new DropSchemePathCommand(sp);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
 	}
-*/	
+
 	/**
 	 * коррекция начального и конечного узлов топологической прокладки кабеля
 	 * по элементам карты, в которых размещены начальный и конечный элемент
@@ -663,7 +654,7 @@ public final class MapView extends StubResource
 			for(Iterator it = getSchemes().iterator(); it.hasNext();)
 			{
 				Scheme sch = (Scheme )it.next();
-				if(sch.getAllCableLinks().contains(scl))
+				if(sch.getTopologicalCableLinks().contains(scl))
 				{
 					SchemeElement se = sch.getTopologicalElement(
 							sch.getSchemeElementByCablePort(scl.sourcePortId));
@@ -671,6 +662,36 @@ public final class MapView extends StubResource
 
 					SchemeElement se2 = sch.getTopologicalElement(
 							sch.getSchemeElementByCablePort(scl.targetPortId));
+					linkSideNodes[1] = findElement(se2);
+					break;
+				}
+			}
+		}
+		catch(Exception ex)
+		{
+			linkSideNodes[0] = null;
+			linkSideNodes[1] = null;
+		}
+		return linkSideNodes;
+	}
+	
+	public MapSiteNodeElement[] getSideNodes(SchemePath path)
+	{
+		linkSideNodes[0] = null;
+		linkSideNodes[1] = null;
+		try
+		{	
+			for(Iterator it = getSchemes().iterator(); it.hasNext();)
+			{
+				Scheme sch = (Scheme )it.next();
+				if(sch.getTopologicalPaths().contains(path))
+				{
+					SchemeElement se = sch.getTopologicalElement(
+							sch.getSchemeElementByDevice(path.startDeviceId));
+					linkSideNodes[0] = findElement(se);
+
+					SchemeElement se2 = sch.getTopologicalElement(
+							sch.getSchemeElementByDevice(path.endDeviceId));
 					linkSideNodes[1] = findElement(se2);
 					break;
 				}
@@ -721,18 +742,18 @@ public final class MapView extends StubResource
 		}
 		return null;
 	}
-/*
-	public MapTransmissionPathElement findPath(String id)
+
+	public MapMeasurementPathElement findMeasurementPath(SchemePath path)
 	{
-		for(Iterator it = getMap().getTransmissionPath().iterator(); it.hasNext();)
+		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 		{
-			MapTransmissionPathElement path = (MapTransmissionPathElement )it.next();
-			if(path.PATH_ID.equals(id))
-				return path;
+			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			if(mp.getSchemePath().equals(path))
+				return mp;
 		}
 		return null;
 	}
-*/
+
 	/**
 	 * Получить список путей тестирования
 	 */
@@ -840,12 +861,19 @@ public final class MapView extends StubResource
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mple + ")");
 		
 		LinkedList returnVector = new LinkedList();;
-//		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
-//		{
-//			MapPathElement cp = (MapPathElement )it.next();
-//			if(cp.getLinks().contains(mple))
-//				returnVector.add(cp);
-//		}
+		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
+		{
+			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			for(Iterator it2 = mp.getCablePaths().iterator(); it2.hasNext();)
+			{
+				MapCablePathElement cp = (MapCablePathElement)it2.next();
+				if(cp.getLinks().contains(mple))
+				{
+					returnVector.add(mp);
+					break;
+				}
+			}
+		}
 		return returnVector;
 	}
 
@@ -854,13 +882,20 @@ public final class MapView extends StubResource
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mne + ")");
 
 		LinkedList returnVector = new LinkedList();;
-//		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
-//		{
-//			MapPathElement cp = (MapPathElement )it.next();
-//			cp.sortNodes();
-//			if(cp.getSortedNodes().contains(mne))
-//				returnVector.add(cp);
-//		}
+		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
+		{
+			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			for(Iterator it2 = mp.getCablePaths().iterator(); it2.hasNext();)
+			{
+				MapCablePathElement cp = (MapCablePathElement)it2.next();
+				cp.sortNodes();
+				if(cp.getSortedNodes().contains(mne))
+				{
+					returnVector.add(mp);
+					break;
+				}
+			}
+		}
 		return returnVector;
 	}
 
@@ -869,13 +904,20 @@ public final class MapView extends StubResource
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mnle + ")");
 
 		LinkedList returnVector = new LinkedList();;
-//		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
-//		{
-//			MapPathElement cp = (MapPathElement )it.next();
-//			cp.sortNodeLinks();
-//			if(cp.getSortedNodeLinks().contains(mnle))
-//				returnVector.add(cp);
-//		}
+		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
+		{
+			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			for(Iterator it2 = mp.getCablePaths().iterator(); it2.hasNext();)
+			{
+				MapCablePathElement cp = (MapCablePathElement)it2.next();
+				cp.sortNodeLinks();
+				if(cp.getSortedNodeLinks().contains(mnle))
+				{
+					returnVector.add(mp);
+					break;
+				}
+			}
+		}
 		return returnVector;
 	}
 
@@ -989,9 +1031,9 @@ public final class MapView extends StubResource
 	{
 		physical_length = 0.0;
 
-		if(this.element_id == null || this.element_id.equals(""))
+		if(this.elementId == null || this.elementId.equals(""))
 			return pe;
-		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, this.element_id);
+		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, this.elementId);
 
 		Vector vec = new Vector();
 		Enumeration e = se.getAllSchemesLinks();
@@ -1003,7 +1045,7 @@ public final class MapView extends StubResource
 			if(pe.is_cable)
 			{
 				SchemeCableLink schemeCableLink =
-						(SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
+						(SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.linkId);
 				if(schemeCableLink == null)
 				{
 					System.out.println("Something wrong... - schemeCableLink == null");
@@ -1016,7 +1058,7 @@ public final class MapView extends StubResource
 			else
 			{
 				SchemeLink schemeLink =
-						(SchemeLink )Pool.get(SchemeLink.typ, pe.link_id);
+						(SchemeLink )Pool.get(SchemeLink.typ, pe.linkId);
 				if(schemeLink == null)
 				{
 					System.out.println("Something wrong... - schemeLink == null");

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.1 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.2 2004/09/23 10:07:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/23 10:07:15 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -64,6 +64,15 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	protected String mapViewId = "";
 	
 	protected MapView mapView;
+
+	public String[][] getExportColumns()
+	{
+		return null;
+	}
+
+	public void setColumn(String field, String value)
+	{
+	}
 
 	public MapMeasurementPathElement(
 			SchemePath schemePath,

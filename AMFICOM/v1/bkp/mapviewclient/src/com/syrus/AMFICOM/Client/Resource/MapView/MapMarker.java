@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.4 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: MapMarker.java,v 1.5 2004/09/23 10:07:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -62,7 +62,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/23 10:07:15 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -108,16 +108,13 @@ public class MapMarker extends StubResource implements MapElement
 
 	protected PathDecompositor spd = null;
 
-	protected boolean removed = false;
-
-	public boolean isRemoved()
+	public String[][] getExportColumns()
 	{
-		return removed;
+		return null;
 	}
-	
-	public void setRemoved(boolean removed)
+
+	public void setColumn(String field, String value)
 	{
-		this.removed = removed;
 	}
 
 	public MapMarker(
@@ -987,4 +984,14 @@ public class MapMarker extends StubResource implements MapElement
 	public void revert(MapElementState state)
 	{
 	}
+
+	public boolean isRemoved()
+	{
+		return false;
+	}
+	
+	public void setRemoved(boolean removed)
+	{
+	}
+
 }

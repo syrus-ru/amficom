@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.2 2004/09/14 14:48:51 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.3 2004/09/23 10:07:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,13 +24,14 @@ import javax.swing.AbstractButton;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import java.awt.event.ActionListener;
 
 /**
  * Панель меню модуля "Редактор топологических схем" 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:51 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/23 10:07:15 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -54,6 +55,8 @@ public class MapEditorMenuBar extends JMenuBar
 	JMenuItem menuMapClose = new JMenuItem();
 	JMenuItem menuMapSave = new JMenuItem();
 	JMenuItem menuMapSaveAs = new JMenuItem();
+	JMenuItem menuMapExport = new JMenuItem();
+	JMenuItem menuMapImport = new JMenuItem();
 
 	JMenu menuScheme = new JMenu();
 	JMenuItem menuSchemeAddToView = new JMenuItem();
@@ -108,8 +111,14 @@ public class MapEditorMenuBar extends JMenuBar
 
 	private void jbInit()
 	{
-		MapMenuBar_this_actionAdapter actionAdapter =
-				new MapMenuBar_this_actionAdapter(this);
+		ActionListener actionAdapter =
+			new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						MapEditorMenuBar.this.actionPerformed(e);
+					}
+				};
 
 		menuSession.setText(LangModel.getString("menuSession"));
 		menuSession.setName("menuSession");
@@ -179,6 +188,12 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMapSaveAs.setText(LangModelMap.getString("menuMapSaveAs"));
 		menuMapSaveAs.setName("menuMapSaveAs");
 		menuMapSaveAs.addActionListener(actionAdapter);
+		menuMapExport.setText(LangModelMap.getString("menuMapExport"));
+		menuMapExport.setName("menuMapExport");
+		menuMapExport.addActionListener(actionAdapter);
+		menuMapImport.setText(LangModelMap.getString("menuMapImport"));
+		menuMapImport.setName("menuMapImport");
+		menuMapImport.addActionListener(actionAdapter);
 
 		menuScheme.setText(LangModelMap.getString("menuScheme"));
 		menuScheme.setName("menuScheme");
@@ -263,6 +278,9 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMap.add(menuMapSave);
 		menuMap.add(menuMapSaveAs);
 		menuMap.add(menuMapClose);
+		menuMap.addSeparator();
+		menuMap.add(menuMapExport);
+		menuMap.add(menuMapImport);
 
 		menuScheme.add(menuSchemeAddToView);
 		menuScheme.add(menuSchemeRemoveFromView);
@@ -373,6 +391,12 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMapSaveAs.setVisible(aModel.isVisible("menuMapSaveAs"));
 		menuMapSaveAs.setEnabled(aModel.isEnabled("menuMapSaveAs"));
 
+		menuMapExport.setVisible(aModel.isVisible("menuMapExport"));
+		menuMapExport.setEnabled(aModel.isEnabled("menuMapExport"));
+
+		menuMapImport.setVisible(aModel.isVisible("menuMapImport"));
+		menuMapImport.setEnabled(aModel.isEnabled("menuMapImport"));
+
 		menuScheme.setVisible(aModel.isVisible("menuMapView"));
 		menuScheme.setEnabled(aModel.isEnabled("menuMapView"));
 
@@ -431,31 +455,14 @@ public class MapEditorMenuBar extends JMenuBar
 		menuHelpAbout.setEnabled(aModel.isEnabled("menuHelpAbout"));
 	}
 
-	public void this_actionPerformed(ActionEvent e)
+	public void actionPerformed(ActionEvent e)
 	{
 		if(aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
 		Command command = aModel.getCommand(s);
-//		command = (Command )command.clone();
 		command.execute();
-	}
-}
-
-class MapMenuBar_this_actionAdapter
-		implements java.awt.event.ActionListener
-{
-	MapEditorMenuBar adaptee;
-
-	MapMenuBar_this_actionAdapter(MapEditorMenuBar adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		adaptee.this_actionPerformed(e);
 	}
 }
 

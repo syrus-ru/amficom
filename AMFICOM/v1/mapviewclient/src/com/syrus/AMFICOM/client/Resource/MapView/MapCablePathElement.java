@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.5 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.6 2004/09/23 10:07:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/23 10:07:15 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -69,6 +69,15 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	protected String mapViewId = "";
 	
 	protected MapView mapView;
+
+	public String[][] getExportColumns()
+	{
+		return null;
+	}
+
+	public void setColumn(String field, String value)
+	{
+	}
 
 	public MapCablePathElement(
 			SchemeCableLink schemeCableLink,

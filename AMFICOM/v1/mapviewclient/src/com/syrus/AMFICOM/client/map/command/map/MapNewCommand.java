@@ -49,7 +49,7 @@ public class MapNewCommand extends VoidCommand
 						LangModelMap.getString("MapNew")));
 		mc = new Map();
 
-		mc.setId(aContext.getDataSourceInterface().GetUId(com.syrus.AMFICOM.Client.Resource.Map.Map.typ));
+		mc.setId(aContext.getDataSourceInterface().GetUId(Map.typ));
 		mc.setDomainId(aContext.getSessionInterface().getDomainId());
 		mc.setUserId(aContext.getSessionInterface().getUserId());
 /*

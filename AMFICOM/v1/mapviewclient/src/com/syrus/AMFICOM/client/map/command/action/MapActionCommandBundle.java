@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.3 2004/09/23 10:07:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Command.CommandBundle;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
@@ -27,6 +28,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import java.awt.geom.Point2D;
 
 /**
@@ -34,7 +36,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/23 10:07:14 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -142,6 +144,32 @@ public class MapActionCommandBundle extends CommandBundle
 	protected void removeCablePath(MapCablePathElement mcpe)
 	{
 		RemoveCablePathCommandAtomic cmd = new RemoveCablePathCommandAtomic(mcpe);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
+		add(cmd);
+	}
+
+	/**
+	 * Создается линия связи
+	 */
+	protected MapMeasurementPathElement createMeasurementPath(
+			SchemePath path,
+			MapNodeElement startNode,
+			MapNodeElement endNode)
+	{
+		CreateMeasurementPathCommandAtomic cmd = new CreateMeasurementPathCommandAtomic(path, startNode, endNode);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
+		add(cmd);
+		return cmd.getPath();
+	}
+	
+	/**
+	 * Удаляется линия связи
+	 */
+	protected void removeMeasurementPath(MapMeasurementPathElement mpe)
+	{
+		RemoveMeasurementPathCommandAtomic cmd = new RemoveMeasurementPathCommandAtomic(mpe);
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		cmd.execute();
 		add(cmd);

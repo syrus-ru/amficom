@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.2 2004/09/23 10:07:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,6 +33,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.Module;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapExportCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapImportCommand;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -94,7 +96,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/23 10:07:15 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -320,6 +322,8 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setCommand("menuMapClose", new MapEditorCloseMapCommand(this, internalDispatcher));
 		aModel.setCommand("menuMapSave", new MapEditorSaveMapCommand(null, aContext));
 		aModel.setCommand("menuMapSaveAs", new MapEditorSaveMapAsCommand(null, aContext));
+		aModel.setCommand("menuMapExport", new MapExportCommand(null));
+		aModel.setCommand("menuMapImport", new MapImportCommand(null));
 
 		aModel.setCommand("menuSchemeAddToView", new MapEditorAddSchemeToViewCommand(null, aContext));
 		aModel.setCommand("menuSchemeRemoveFromView", new MapEditorRemoveSchemeFromViewCommand(null, aContext));
@@ -787,6 +791,7 @@ public class MapEditorMainFrame extends JFrame
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
+			getMapFrame().saveConfig();
 			Command closeCommand = aContext.getApplicationModel().getCommand("menuExit");
 			this.setContext(null);
 			closeCommand.execute();

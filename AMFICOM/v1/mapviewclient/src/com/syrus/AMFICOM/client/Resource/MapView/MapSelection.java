@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.1 2004/09/17 11:39:25 krupenn Exp $
+ * $Id: MapSelection.java,v 1.2 2004/09/23 10:07:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/17 11:39:25 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/23 10:07:15 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -50,6 +50,15 @@ public final class MapSelection
 	private boolean unboundLinkSelection = true;
 	private boolean unboundSelection = true;
 	private boolean physicalLinkSelection = true;
+
+	public String[][] getExportColumns()
+	{
+		return null;
+	}
+
+	public void setColumn(String field, String value)
+	{
+	}
 
 	public MapSelection(LogicalNetLayer lnl)
 	{
