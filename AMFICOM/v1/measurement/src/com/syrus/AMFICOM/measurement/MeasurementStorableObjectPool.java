@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.23 2004/09/30 10:06:01 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.24 2004/09/30 14:34:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,19 +22,21 @@ import java.util.Hashtable;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/30 10:06:01 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/30 14:34:31 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -287,227 +289,24 @@ public class MeasurementStorableObjectPool {
 		return list;
 	}
 
-	public static List getStorableObjectsByDomain(short entityCode,
-			Domain domain) throws DatabaseException, CommunicationException {
+	public static List getStorableObjectsByCondition(StorableObjectCondition condition) throws ApplicationException {
 		List list = null;
-		LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(entityCode));
+		LRUMap objectPool = (LRUMap) objectPoolMap.get(condition.getEntityCode());
 		if (objectPool != null) {
 			list = new LinkedList();
 			for (Iterator it = objectPool.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
-				if (domain != null) {
-					/**
-					 * TODO check for entites
-					 */
-					switch (entityCode) {
-					case ObjectEntities.SET_ENTITY_CODE:
-						Set set = (Set) storableObject;
-						{
-							List meList = set.getMonitoredElementIds();
-							if (meList != null) {
-								for (Iterator iter = meList.iterator(); iter
-										.hasNext();) {
-									Identifier id = (Identifier) iter.next();
-									MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
-											.getStorableObject(id, true);
-									Domain meDomain = (Domain) ConfigurationStorableObjectPool
-									.getStorableObject(me.getDomainId(), true);
-									if (meDomain.isChild(domain)) {
-//										// here we can simple add set to list,
-//										// but must put element to start of LRU
-//										Object obj = objectPool.get(set.getId());
-										list.add(set);
-										break;
-									}
-								}
-							} else
-								list.add(set);
-						}
-						break;
-					case ObjectEntities.MODELING_ENTITY_CODE:
-						Modeling modeling = (Modeling) storableObject;
-						{								
-									MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
-											.getStorableObject(modeling.getMonitoredElementId(), true);
-									Domain meDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(me.getDomainId(), true);
-									if (meDomain.isChild(domain)) {
-//										// here we can simple add
-//										// measurementSetup to list,
-//										// but must put element to start of LRU
-//										Object obj = objectPool.get(measurementSetup.getId());
-										list.add(modeling);
-										break;
-									}
-						}
-						break;
-					case ObjectEntities.MS_ENTITY_CODE:
-						MeasurementSetup measurementSetup = (MeasurementSetup) storableObject;
-						{
-							List meList = measurementSetup
-									.getMonitoredElementIds();
-							if (meList != null) {
-								for (Iterator iter = meList.iterator(); iter
-										.hasNext();) {
-									Identifier id = (Identifier) iter.next();
-									MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
-											.getStorableObject(id, true);
-									Domain meDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(me.getDomainId(), true);
-									if (meDomain.isChild(domain)) {
-//										// here we can simple add
-//										// measurementSetup to list,
-//										// but must put element to start of LRU
-//										Object obj = objectPool.get(measurementSetup.getId());
-										list.add(measurementSetup);
-										break;
-									}
-								}
-							} else
-								list.add(measurementSetup);
-						}
-						break;
-					case ObjectEntities.ANALYSIS_ENTITY_CODE:
-						Analysis analysis = (Analysis) storableObject;
-						{
-							MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
-									.getStorableObject(analysis
-											.getMonitoredElementId(), true);
-							Domain meDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(me.getDomainId(), true);
-							if (meDomain.isChild(domain)) {
-//								// here we can simple add analysis to list,
-//								// but must put element to start of LRU
-//								Object obj = objectPool.get(analysis.getId());
-								list.add(analysis);
-								break;
-							}
-						}
-                        break;
-					case ObjectEntities.EVALUATION_ENTITY_CODE:
-						Evaluation evaluation = (Evaluation) storableObject;
-						{
-							MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
-									.getStorableObject(evaluation
-											.getMonitoredElementId(), true);
-							Domain meDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(me.getDomainId(), true);
-							if (meDomain.isChild(domain)) {
-								// // here we
-								// can simple
-								// add
-								// evaluation to
-								// list,
-								// // but must
-								// put element
-								// to start of
-								// LRU
-								// Object obj =
-								// objectPool.get(evaluation.getId());
-								list.add(evaluation);
-								break;
-							}
-						}                        
-						break;
-					case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-						Measurement measurement = (Measurement) storableObject;
-						{
-							MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
-									.getStorableObject(measurement
-											.getMonitoredElementId(), true);
-							Domain meDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(me.getDomainId(), true);
-							if (meDomain.isChild(domain)) {
-//								// here we can simple add measurement to list,
-//								// but must put element to start of LRU
-//								Object obj = objectPool.get(measurement.getId());
-								list.add(measurement);
-								break;
-							}
-						}
-						break;
-					case ObjectEntities.TEST_ENTITY_CODE:
-						Test test = (Test) storableObject;
-						{
-							MonitoredElement me = test.getMonitoredElement();
-							Domain meDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(me.getDomainId(), true);
-							if (meDomain.isChild(domain)) {
-//								// here we can simple add test to list,
-//								// but must put element to start of LRU
-//								Object obj = objectPool.get(test.getId());
-								list.add(test);
-								break;
-							}
-						}
-                        break;
-					case ObjectEntities.RESULT_ENTITY_CODE:
-						Result result = (Result) storableObject;
-						Measurement measurement2 = result.getMeasurement();
-						{
-							MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
-									.getStorableObject(measurement2
-											.getMonitoredElementId(), true);
-							Domain meDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(me.getDomainId(), true);
-							if (meDomain.isChild(domain)) {
-//								// here we can simple add result to list,
-//								// but must put element to start of LRU
-//								Object obj = objectPool.get(result.getId());
-								list.add(result);
-								break;
-							}
-						}
-                        break;
-					default:                        
-						list.add(storableObject);
-						break;
-
-					}
-
-				} else {
+				if (condition.isConditionTrue(storableObject))
 					list.add(storableObject);
-				}
-
 			}
 			
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
 				objectPool.get(storableObject);				
 			}
-		}
-		return list;
-	}	
-	
-	public static List getTestsByTimeRange(Domain domain, Date start, Date end) {
-		List list = null;
-		LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(ObjectEntities.TEST_ENTITY_CODE));
-		if (objectPool != null) {
-			list = new LinkedList();
-			for (Iterator it = objectPool.iterator(); it.hasNext();) {
-				Test test = (Test) it.next();
-				Log.debugMessage("MeasurementStorableObjectPool.getTestsByTimeRange | test "
-						+ test.getId().toString(), Log.DEBUGLEVEL07);
-				if ((test.getStartTime().getTime() >= start.getTime())
-						&& (test.getEndTime().getTime() <= end.getTime())
-						&& ((domain == null) || ((domain != null) && test.getMonitoredElement()
-								.getDomainId().equals(domain.getId())))) {
-					list.add(test);
-				}
-			}
+
 		}
 
-		return list;
-	}
-
-	public static List getMeasurement(List testIds) {
-		List list = null;
-		LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE));
-		if (objectPool != null) {
-			list = new LinkedList();
-			for (Iterator iter = objectPool.iterator(); iter.hasNext();) {
-				Measurement measurement = (Measurement) iter.next();
-				for (Iterator it = testIds.iterator(); it.hasNext();) {
-					Identifier testId = (Identifier) it.next();
-					if (measurement.getTestId().equals(testId)) {
-						list.add(measurement);
-					}
-				}
-			}
-		}
 		return list;
 	}
 

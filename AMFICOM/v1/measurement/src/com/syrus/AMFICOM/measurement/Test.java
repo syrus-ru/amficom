@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.53 2004/09/30 10:29:47 bob Exp $
+ * $Id: Test.java,v 1.54 2004/09/30 14:34:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2004/09/30 10:29:47 $
+ * @version $Revision: 1.54 $, $Date: 2004/09/30 14:34:31 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -459,7 +459,7 @@ public class Test extends StorableObject {
 		this.temporalType = temporalType.value();
 	}
 
-	protected synchronized void setAttributes(Date created,
+	public synchronized void setAttributes(Date created,
 																						Date modified,
 																						Identifier creatorId,
 																						Identifier modifierId,
@@ -674,6 +674,30 @@ public class Test extends StorableObject {
 					equals = true;
 			}
 			return equals;
+		}
+		public Date getEndTime() {
+			return this.endTime;
+		}
+		public Date getStartTime() {
+			return this.startTime;
+		}
+		public TemporalPattern getTemporalPattern() {
+			return this.temporalPattern;
+		}
+		public TestTemporalType getTestTemporalType() {
+			return TestTemporalType.from_int(this.discriminator);
+		}
+		public void setEndTime(Date endTime) {
+			this.endTime = endTime;
+		}
+		public void setStartTime(Date startTime) {
+			this.startTime = startTime;
+		}
+		public void setTemporalPattern(TemporalPattern temporalPattern) {
+			this.temporalPattern = temporalPattern;
+		}
+		public void setTestTemporalType(TestTemporalType temporalType) {
+			this.discriminator = temporalType.value();
 		}
 	}
 
