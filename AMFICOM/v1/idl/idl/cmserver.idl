@@ -15,6 +15,24 @@ module corba {
 		::com::syrus::AMFICOM::general::corba::NameResolver,
 		::com::syrus::AMFICOM::general::corba::IdentifierGeneratorServer {
 /////////////////////////////////////////// Characteristic Recieve ////////////////////////////////////////////
+		void delete(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+				in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+				raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+				
+		void deleteList(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable id_Transferables,
+				in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+				raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		void receiveCableThreadType(in com::syrus::AMFICOM::configuration::corba::CableThreadType_Transferable cableThreadType_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveCableThreadTypes(in com::syrus::AMFICOM::configuration::corba::CableThreadTypeSeq cableThreadTypes_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
 		void receiveCharacteristic(in com::syrus::AMFICOM::configuration::corba::Characteristic_Transferable characteristic_Transferable,
 								  in boolean force, 	
 						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
@@ -349,6 +367,11 @@ module corba {
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException); 
 		
+		com::syrus::AMFICOM::configuration::corba::CableThreadType_Transferable transmitCableThreadType(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
 		com::syrus::AMFICOM::configuration::corba::Characteristic_Transferable transmitCharacteristic(
 			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
@@ -447,6 +470,16 @@ module corba {
 
 					// Transmit Sequences		
 
+		com::syrus::AMFICOM::configuration::corba::CableThreadTypeSeq transmitCableThreadTypes(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::CableThreadTypeSeq transmitCableThreadTypesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
 		com::syrus::AMFICOM::configuration::corba::CharacteristicSeq_Transferable transmitCharacteristics(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
