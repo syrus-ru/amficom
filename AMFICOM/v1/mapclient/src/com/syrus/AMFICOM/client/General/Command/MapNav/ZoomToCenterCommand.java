@@ -1,12 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Command.MapNav;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-
-import com.syrus.AMFICOM.Client.General.Command.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import java.awt.Cursor;
 
 public class ZoomToCenterCommand extends VoidCommand
 {
 	LogicalNetLayer logicalNetLayer;
+	private ApplicationModel aModel;
 	
 	public ZoomToCenterCommand(LogicalNetLayer logicalNetLayer)
 	{
@@ -28,7 +30,7 @@ public class ZoomToCenterCommand extends VoidCommand
 	{
 		if(aModel.isSelected("mapActionZoomToCenter"))
 		{
-			logicalNetLayer.mapToolBarState = 0;
+//			logicalNetLayer.mapToolBarState = 0;
 			logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
 			aModel.setSelected("mapActionZoomToPoint", false);
@@ -43,7 +45,7 @@ public class ZoomToCenterCommand extends VoidCommand
 			aModel.setSelected("mapActionHandPan", false);
 			aModel.fireModelChanged("");
 
-			logicalNetLayer.mapToolBarState = logicalNetLayer.zoomToCenter;
+//			logicalNetLayer.mapToolBarState = logicalNetLayer.zoomToCenter;
 			logicalNetLayer.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 		}
 	}
