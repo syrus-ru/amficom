@@ -2,20 +2,20 @@ package com.syrus.io;
 
 import java.util.StringTokenizer;
 
-public class MyStringTokenizer extends StringTokenizer
+public class SimpleStringTokenizer extends StringTokenizer
 {
 
-	public MyStringTokenizer(String str)
+	public SimpleStringTokenizer(String str)
 	{
 		super(str);
 	}
 
-	public MyStringTokenizer(String str, String delim)
+	public SimpleStringTokenizer(String str, String delim)
 	{
 		super(str, delim);
 	}
 
-	public MyStringTokenizer(String str, String delim, boolean returnTokens)
+	public SimpleStringTokenizer(String str, String delim, boolean returnTokens)
 	{
 		super(str, delim, returnTokens);
 	}

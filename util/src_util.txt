@@ -10,7 +10,7 @@ src\com\syrus\io\IntelDataInputStream.java
 src\com\syrus\io\IntelDataOutputStream.java
 src\com\syrus\io\IntelRandomAccessFile.java
 src\com\syrus\io\IntelStreamReader.java
-src\com\syrus\io\MyStringTokenizer.java
+src\com\syrus\io\SimpleStringTokenizer.java
 src\com\syrus\io\Rewriter.java
 src\com\syrus\io\SystemLogWriter.java
 src\com\syrus\io\TextWriter.java
