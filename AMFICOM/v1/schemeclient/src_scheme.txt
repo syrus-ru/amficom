@@ -126,6 +126,7 @@ src\com\syrus\AMFICOM\Client\Resource\Scheme\PathElement.java
 src\com\syrus\AMFICOM\Client\Resource\Scheme\PortThreadMap.java
 src\com\syrus\AMFICOM\Client\Resource\Scheme\Scheme.java
 src\com\syrus\AMFICOM\Client\Resource\Scheme\SchemeCableLink.java
+src\com\syrus\AMFICOM\Client\Resource\Scheme\SchemeCableLinkBinding.java
 src\com\syrus\AMFICOM\Client\Resource\Scheme\SchemeCablePort.java
 src\com\syrus\AMFICOM\Client\Resource\Scheme\SchemeCableThread.java
 src\com\syrus\AMFICOM\Client\Resource\Scheme\SchemeDevice.java

@@ -56,6 +56,25 @@ public class Scheme extends StubResource implements Serializable
 	public byte[] ugo;
 	public Map clones = new HashMap();
 
+	private String mapId = "";
+	private com.syrus.AMFICOM.Client.Resource.Map.Map map = null;
+	
+	public void setMap(com.syrus.AMFICOM.Client.Resource.Map.Map map)
+	{
+		this.map = map;
+		mapId = map.getId();
+		for(Iterator it = cablelinks.iterator(); it.hasNext();)
+		{
+			SchemeCableLink scl = (SchemeCableLink )it.next();
+			scl.channelingItems.setMap(map);
+		}
+	}
+	
+	public com.syrus.AMFICOM.Client.Resource.Map.Map getMap()
+	{
+		return map;
+	}
+
 	public Scheme()
 	{
 		elementsTo_register = new ArrayList();

@@ -34,7 +34,8 @@ public class SchemeCableLink extends StubResource
 	public double physicalLength = 0;
 
 	public List cableThreads;
-	public List channelingItems;
+	public SchemeCableLinkBinding channelingItems = new SchemeCableLinkBinding(
+			(com.syrus.AMFICOM.Client.Resource.Map.Map )null);
 	public Map attributes;
 
 	public boolean alarmed = false;
@@ -53,7 +54,6 @@ public class SchemeCableLink extends StubResource
 		transferable = new SchemeCableLink_Transferable();
 
 		cableThreads = new ArrayList();
-		channelingItems = new ArrayList();
 		attributes = new HashMap();
 	}
 
@@ -154,7 +154,7 @@ public class SchemeCableLink extends StubResource
 		cableThreads = new ArrayList();
 		for (int i = 0; i < transferable.cableThreads.length; i++)
 			cableThreads.add(new SchemeCableThread(transferable.cableThreads[i]));
-		channelingItems = new ArrayList();
+		channelingItems.clear();
 		for (int i = 0; i < transferable.channeling.length; i++)
 			channelingItems.add(new CableChannelingItem(transferable.channeling[i]));
 
@@ -309,7 +309,7 @@ public class SchemeCableLink extends StubResource
 		cableLinkTypeId = (String )in.readObject();
 		schemeId = (String )in.readObject();
 		cableThreads = (List )in.readObject();
-		channelingItems = (List )in.readObject();
+		channelingItems = (SchemeCableLinkBinding )in.readObject();
 		opticalLength = in.readDouble();
 		physicalLength = in.readDouble();
 		attributes = (Map )in.readObject();
