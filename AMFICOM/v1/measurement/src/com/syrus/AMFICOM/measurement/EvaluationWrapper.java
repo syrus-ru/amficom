@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationWrapper.java,v 1.1 2005/01/27 11:54:26 bob Exp $
+ * $Id: EvaluationWrapper.java,v 1.2 2005/01/27 15:14:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/27 11:54:26 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/27 15:14:41 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -74,13 +74,13 @@ public class EvaluationWrapper implements Wrapper {
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
 				return evaluation.getModifierId().getIdentifierString();
 			if (key.equals(COLUMN_TYPE_ID))
-				return evaluation.getType().getId().getIdentifierString();
+				return evaluation.getType();
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
 				return evaluation.getMonitoredElementId().getIdentifierString();
 			if (key.equals(COLUMN_MEASUREMENT_ID))
-				return evaluation.getMeasurement().getId().getIdentifierString();
+				return evaluation.getMeasurement();
 			if (key.equals(COLUMN_THRESHOLD_SET_ID))
-				return evaluation.getThresholdSet().getId().getIdentifierString();
+				return evaluation.getThresholdSet();
 		}
 		return null;
 	}
