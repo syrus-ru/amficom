@@ -1,5 +1,5 @@
 /*
- * $Id: JdbcBlobManager.java,v 1.1 2004/07/30 12:44:34 bass Exp $
+ * $Id: JdbcBlobManager.java,v 1.2 2004/08/03 13:36:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import java.sql.*;
  * as a byte&nbsp;array/input&nbsp;stream.
  *
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/07/30 12:44:34 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/03 13:36:29 $
  * @module util
  */
 public final class JdbcBlobManager {
@@ -333,7 +333,7 @@ public final class JdbcBlobManager {
 		long blobLength = blob.length();
 		if (blobLength > Integer.MAX_VALUE)
 			throw new SQLException("Blob too large to fit into an array");
-		return blob.getBytes(0L, (int) blobLength);
+		return blob.getBytes(1L, (int) blobLength);
 	}
 
 	/**
@@ -357,7 +357,7 @@ public final class JdbcBlobManager {
 	 */
 	public static void setData(final Blob blob, final byte data[])
 			throws SQLException {
-		setDataAsStream(blob, new ByteArrayInputStream(data)); 
+		setDataAsStream(blob, new ByteArrayInputStream(data));
 	}
 
 	/**
@@ -372,15 +372,18 @@ public final class JdbcBlobManager {
 			final InputStream in) throws SQLException {
 		try {
 			int b;
+			long position = 0;
 			OutputStream out = blob.setBinaryStream(0L);
 			while (true) {
 				b = in.read();
 				if (b == -1)
 					break;
 				out.write(b);
+				position++;
 			}
 			out.flush();
 			out.close();
+			blob.truncate(position);
 		} catch (IOException ioe) {
 			SQLException sqle = new SQLException(ioe.toString());
 			sqle.initCause(ioe);
