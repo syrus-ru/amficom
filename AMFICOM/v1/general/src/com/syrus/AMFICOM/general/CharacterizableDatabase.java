@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.3 2005/03/23 14:59:22 bass Exp $
+ * $Id: CharacterizableDatabase.java,v 1.4 2005/03/24 12:38:20 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.Map;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/23 14:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/03/24 12:38:20 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
@@ -140,8 +140,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws VersionCollisionException,
-				UpdateObjectException {
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
