@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.26 2004/11/05 06:52:21 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.27 2004/11/12 07:37:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,12 +29,13 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.io.LRUMapSaver;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/05 06:52:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2004/11/12 07:37:55 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -95,7 +96,7 @@ public class ConfigurationStorableObjectPool {
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
-
+		
 		addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, EQUIPMENTTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.KISTYPE_ENTITY_CODE, KISTYPE_OBJECT_POOL_SIZE);
@@ -135,18 +136,33 @@ public class ConfigurationStorableObjectPool {
 		}
 		init(cObjectLoader1, size);
 	}
+    
+    public static void serializePools() {
+        java.util.Set entityCodeSet = objectPoolMap.keySet();
+        for (Iterator it = entityCodeSet.iterator(); it.hasNext();) {
+            Short entityCode = (Short) it.next();
+            LRUMapSaver.save((LRUMap) objectPoolMap.get(entityCode), entityCode.shortValue());  
+        }
+    }
 
 	private static void addObjectPool(short objectEntityCode, int poolSize) {
 		try {
-			// LRUMap objectPool = new LRUMap(poolSize);
-			Constructor constructor = cacheMapClass.getConstructor(new Class[] { int.class});
-			Object obj = constructor.newInstance(new Object[] { new Integer(poolSize)});
-			if (obj instanceof LRUMap) {
-				LRUMap objectPool = (LRUMap) obj;
-				objectPoolMap.put(new Short(objectEntityCode), objectPool);
-			} else
-				throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
-						+ " must extends LRUMap");
+			LRUMap objectPool = null;
+            objectPool = LRUMapSaver.load(objectEntityCode);
+            
+            if (objectPool != null) {
+                objectPoolMap.put(new Short(objectEntityCode), objectPool);
+            } else {
+//              LRUMap objectPool = new LRUMap(poolSize);
+                Constructor constructor = cacheMapClass.getConstructor(new Class[] { int.class});
+                Object obj = constructor.newInstance(new Object[] { new Integer(poolSize)});
+                if (obj instanceof LRUMap) {
+                    objectPool = (LRUMap) obj;
+                    objectPoolMap.put(new Short(objectEntityCode), objectPool);
+                } else
+                    throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
+                            + " must extends LRUMap");
+            }
 		} catch (SecurityException e) {
 			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
 					+ " SecurityException " + e.getMessage());
