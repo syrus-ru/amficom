@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.4 2004/08/14 19:37:27 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.5 2004/08/17 18:20:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
@@ -44,7 +43,7 @@ import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/14 19:37:27 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/17 18:20:39 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -86,6 +85,6 @@ public abstract class DatabaseContextSetup {
 	
 	public static void initObjectPools() {
 		MeasurementStorableObjectPool.init(new MCMMeasurementObjectLoader());
-		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader());
+		ConfigurationStorableObjectPool.init(new MCMConfigurationObjectLoader());
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.21 2004/08/15 14:40:13 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.22 2004/08/17 18:20:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,13 +36,14 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+//import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+//import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+//import com.syrus.AMFICOM.measurement.AnalysisType;
+//import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/08/15 14:40:13 $
+ * @version $Revision: 1.22 $, $Date: 2004/08/17 18:20:39 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -51,6 +52,7 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	public static final String ID = "mcm_1";
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
+	public static final String DB_LOGIN_NAME = "amficom";
 	public static final int TICK_TIME = 5;
 	public static final int FORWARD_PROCESSING = 2;
 
@@ -103,8 +105,10 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		/*	Load object types*/
 		DatabaseContextSetup.initObjectPools();
 
-		/*	Create map of test processors*/
-		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
+		/*	If flag -setup is specified run in setup mode (exit after all)*/
+		if (args.length > 0 && args[0].equals("-setup")) {
+			setup();
+		}
 
 		/*	Retrieve information abot myself*/
 		try {
@@ -122,6 +126,9 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		prepareTestList();
 		prepareResultList();
 
+		/*	Create map of test processors*/
+		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
+
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
 
@@ -130,25 +137,26 @@ public class MeasurementControlModule extends SleepButWorkThread {
 
 		/*	Initialize pool of Identifiers*/
 		NewIdentifierPool.init(mServerRef);
-
-		/*	Start main loop	*/
-		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
-		measurementControlModule.start();
-
-		/*	Add shutdown hook	*/
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				measurementControlModule.shutdown();
-			}
-		});
+//
+//		/*	Start main loop	*/
+//		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
+//		measurementControlModule.start();
+//
+//		/*	Add shutdown hook	*/
+//		Runtime.getRuntime().addShutdownHook(new Thread() {
+//			public void run() {
+//				measurementControlModule.shutdown();
+//			}
+//		});
 	}
 
 	private static void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString("DBHostName", Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString("DBSID", DB_SID);
 		long dbConnTimeout = ApplicationProperties.getInt("DBConnectionTimeout", DB_CONNECTION_TIMEOUT)*1000;
+		String dbLoginName = ApplicationProperties.getString("DBLoginName", DB_LOGIN_NAME);
 		try {
-			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout);
+			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -232,11 +240,15 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	public void run() {
+		Test test;
 		Result_Transferable[] resultsT;
 		while (this.running) {
 			if (! testList.isEmpty()) {
-				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing)
-					startTestProcessor((Test)testList.remove(0));
+				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
+						test = (Test)testList.remove(0);
+						Log.debugMessage("Starting test processor for test '" + test.getId() + "'", Log.DEBUGLEVEL08);
+//					startTestProcessor(test);
+				}
 			}
 			
 			if (mServerRef != null) {
@@ -246,7 +258,7 @@ public class MeasurementControlModule extends SleepButWorkThread {
 						mServerRef.receiveResults(resultsT);
 						super.clearFalls();
 					}
-					catch (org.omg.CORBA.SystemException se) {
+					catch (org.omg.CORBA.COMM_FAILURE se) {
 						Log.errorException(se);
 						activateMServerReference();
 					}
@@ -262,20 +274,20 @@ public class MeasurementControlModule extends SleepButWorkThread {
 				activateMServerReference();
 
 //--------------
-			System.out.println(System.currentTimeMillis());
-			AnalysisType at = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier("AnalysisType_3"), true);
-			System.out.println("Received from Pool: " + at.getCodename() + ", criteria: " + at.getCriteriaParameterTypeIds().size());
-			try {
-				AnalysisType_Transferable att = mServerRef.transmitAnalysisType(new Identifier_Transferable("AnalysisType_3"));
-				System.out.println("Received: " + att.codename);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				activateMServerReference();
-			}
-			catch (AMFICOMRemoteException are) {
-				Log.errorMessage("Cannot receive analysis type -- " + are.message);
-			}
+//			System.out.println(System.currentTimeMillis());
+//			AnalysisType at = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier("AnalysisType_3"), true);
+//			System.out.println("Received from Pool: " + at.getCodename() + ", criteria: " + at.getCriteriaParameterTypeIds().size());
+//			try {
+//				AnalysisType_Transferable att = mServerRef.transmitAnalysisType(new Identifier_Transferable("AnalysisType_3"));
+//				System.out.println("Received: " + att.codename);
+//			}
+//			catch (org.omg.CORBA.SystemException se) {
+//				Log.errorException(se);
+//				activateMServerReference();
+//			}
+//			catch (AMFICOMRemoteException are) {
+//				Log.errorMessage("Cannot receive analysis type -- " + are.message);
+//			}
 //--------------
 			try {
 				sleep(super.initialTimeToSleep);
@@ -375,5 +387,9 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	protected void shutdown() {/*!!	Need synchronization	*/
 		this.running = false;
 		DatabaseConnection.closeConnection();
+	}
+	
+	private static void setup() {
+		
 	}
 }

@@ -71,6 +71,7 @@ $(LIBNAME_INTERFACE):	.corba
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseContextSetup.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMConfigurationObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMMeasurementObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessor.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/OnetimeTestProcessor.java \
@@ -87,7 +88,8 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java \
+		$(SRCDIR)/com/syrus/AMFICOM/setup/MCMSetup.java
 	touch $@
 
 .corba:	$(CLASSDIR)
