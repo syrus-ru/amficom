@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.4 2005/02/01 09:24:57 stas Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.5 2005/02/08 16:22:43 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.general.CharacteristicTypeController;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import oracle.jdeveloper.layout.XYConstraints;
@@ -29,7 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/02/01 09:24:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/08 16:22:43 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
@@ -40,7 +39,6 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 	 * @deprecated Use {@link #getContext()} instead.
 	 */
 	private ApplicationContext aContext;
-
 	private Dispatcher dispatcher = new Dispatcher();
 
 	private JButton filterokButton = new JButton();
@@ -55,11 +53,13 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 	private JPanel jPanel = new JPanel();
 	private JScrollPane propScrollPane;
 	private JTabbedPane jTabbedPane = new JTabbedPane();
-	private ObjectResourceTableModel model = new ObjectResourceTableModel(
-			 CharacteristicTypeController.getInstance());
-	private ObjectResourceTable table = new ObjectResourceTable(model);
+	private ObjectResourceTable table;
 	private ObjectResourcePropertiesPane propPane = new GeneralPanel();
 	private ObjectResourceFilterPane filterPane = new ObjectResourceFilterPane();
+	private TextIcon enabledPropsIcon = new TextIcon(LangModel.getString("Properties"), jTabbedPane, true);
+	private TextIcon disabledPropsIcon = new TextIcon(LangModel.getString("Properties"), jTabbedPane, false);
+
+	ObjectResourceController controller;
 
 	/**
 	 * This button has no functionality.
@@ -109,7 +109,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		Environment.getDispatcher().register(this, ContextChangeEvent.type);
 	}
 
-	public void setContents(List dataSet)
+	protected void setContents(List dataSet)
 	{
 		if (dataSet == null)
 			dataSet = new LinkedList();
@@ -118,14 +118,16 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		List ds = dataSet;
 //		if (this.filterPane.getFilter() != null)
 //			ds = this.filterPane.getFilter().filter(ds);
+		ObjectResourceTableModel model = (ObjectResourceTableModel)table.getModel();
 		model.setContents(ds);
 		model.fireTableDataChanged();
 	}
 
-	public void setController(ObjectResourceController controller)
+	private void setController(ObjectResourceController controller)
 	{
-		model.controller = controller;
-		model.fireTableDataChanged();
+//		model.controller = controller;
+//		model.fireTableDataChanged();
+		this.table.setModel(new ObjectResourceTableModel(controller));
 	}
 
 	public void setButtonPanelVisible(boolean bool)
@@ -162,6 +164,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 	{
 		if (controller == null)
 			return;
+		this.controller = controller;
 		ObjectResourcePropertiesPane pane = getPropertiesPane(controller);
 		setProp(pane);
 		setController(controller);
@@ -232,6 +235,10 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 
 	private void jbInit()
 	{
+		ObjectResourceTableModel model = new ObjectResourceTableModel(
+			 CharacteristicTypeController.getInstance());
+		table = new ObjectResourceTable(model);
+
 		buttonAdd.setText("Новый");
 		buttonAdd.setBorder(BorderFactory.createEmptyBorder(4, 5, 4, 5));
 		buttonAdd.setBorderPainted(false);
@@ -243,12 +250,12 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 					return;
 				Object res = propPane.getObject();
 				dataSet.add(res);
-				model.fireTableDataChanged();
+				((ObjectResourceTableModel)table.getModel()).fireTableDataChanged();
 				sendEvent = true;
 				dispatcher.notify(new TreeListSelectionEvent("", TreeListSelectionEvent.REFRESH_EVENT));
 				dispatcher.notify(new TreeListSelectionEvent(res, TreeListSelectionEvent.SELECT_EVENT));
 				sendEvent = false;
-				int selected = model.getIndexOfObject(res);
+				int selected = ((ObjectResourceTableModel)table.getModel()).getIndexOfObject(res);
 				table.getSelectionModel().setSelectionInterval(selected, selected);
 				jTabbedPane.setSelectedComponent(propScrollPane);
 				buttonCancel.setEnabled(true);
@@ -268,6 +275,8 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 				int sel = table.getSelectedRow();
 				if (sel == -1)
 					return;
+
+				ObjectResourceTableModel model = (ObjectResourceTableModel)table.getModel();
 				Object or = model.getObject(sel);
 				if (!propPane.delete())
 					return;
@@ -281,16 +290,11 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 				jTabbedPane.setSelectedComponent(table);
 				if (dataSet.size() == 0)
 				{
-					jTabbedPane.setDisabledIconAt(1, new TextIcon(((JComponent)propPane).getName(), jTabbedPane, false));
-					jTabbedPane.setEnabledAt(1, false);
-					buttonProperties.setEnabled(false);
-					buttonCancel.setEnabled(false);
-					buttonSave.setEnabled(false);
-					buttonDelete.setEnabled(false);
+					enablePropsPane(false);
 				}
 				else
 				{
-					ObjectResource obj = (ObjectResource )dataSet.iterator().next();
+					Object obj = dataSet.iterator().next();
 					int selected = model.getIndexOfObject(obj);
 					table.getSelectionModel().setSelectionInterval(selected, selected);
 					sendEvent = true;
@@ -312,6 +316,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 				int sel = table.getSelectedRow();
 				if (sel == -1)
 					return;
+				ObjectResourceTableModel model = (ObjectResourceTableModel)table.getModel();
 				Object or = model.getObject(sel);
 
 				try {
@@ -333,6 +338,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 			{
 				if (!propPane.save())
 					return;
+				ObjectResourceTableModel model = (ObjectResourceTableModel)table.getModel();
 				model.fireTableDataChanged();
 				Object or = propPane.getObject();
 				sendEvent = true;
@@ -417,23 +423,23 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 				if (e.getValueIsAdjusting())
 					return;
 
-				int selected = table.getSelectedRow();
-				if (selected != -1)
-				{
-					Object obj = model.getObject(selected);
-					propPane.setObject(obj);
-					jTabbedPane.setIconAt(1, new TextIcon(LangModel.getString("Properties"), jTabbedPane, true));
-					jTabbedPane.setEnabledAt(1, true);
-					buttonProperties.setEnabled(true);
-					buttonCancel.setEnabled(true);
-					buttonSave.setEnabled(true);
-					buttonDelete.setEnabled(true);
-					sendEvent = true;
-					dispatcher.notify(new TreeListSelectionEvent(obj, TreeListSelectionEvent.SELECT_EVENT));
-					sendEvent = false;
-				}
+				updateSelection();
 			}
 		});
+	}
+
+	private void updateSelection()
+	{
+		int selected = table.getSelectedRow();
+		if (selected != -1) {
+			ObjectResourceTableModel model = (ObjectResourceTableModel)table.getModel();
+			Object obj = model.getObject(selected);
+			propPane.setObject(obj);
+			enablePropsPane(true);
+			sendEvent = true;
+			dispatcher.notify(new TreeListSelectionEvent(obj, TreeListSelectionEvent.SELECT_EVENT));
+			sendEvent = false;
+		}
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -457,7 +463,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 			jTabbedPane.setEnabledAt(2, true);
 	}
 
-	public void setProp(ObjectResourcePropertiesPane propPane)
+	private void setProp(ObjectResourcePropertiesPane propPane)
 	{
 		propScrollPane.getViewport().remove((JComponent)this.propPane);
 		this.propPane = propPane;
@@ -465,23 +471,31 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		propPane.setContext(aContext);
 	}
 
-	public void loadListValues(ObjectResourceController controller, List dataSet)
-	{
-		setContents(dataSet);
-		setController(controller);
-	}
+//	public void loadListValues(ObjectResourceController controller, List dataSet)
+//	{
+//		setContents(dataSet);
+//		setController(controller);
+//	}
 
 	public void setListState()
 	{
 		jTabbedPane.setSelectedComponent(table);
 		table.getSelectionModel().clearSelection();
+		enablePropsPane(false);
+	}
 
-		jTabbedPane.setDisabledIconAt(1, new TextIcon(((JComponent)propPane).getName(), jTabbedPane, false));
-		jTabbedPane.setEnabledAt(1, false);
-		buttonCancel.setEnabled(false);
-		buttonProperties.setEnabled(false);
-		buttonSave.setEnabled(false);
-		buttonDelete.setEnabled(false);
+	private void enablePropsPane(boolean b)
+	{
+		if (b)
+			jTabbedPane.setIconAt(1, enabledPropsIcon);
+		else
+			jTabbedPane.setDisabledIconAt(1, disabledPropsIcon);
+		jTabbedPane.setEnabledAt(1, b);
+		jTabbedPane.setSelectedComponent(table);
+		buttonProperties.setEnabled(b);
+		buttonCancel.setEnabled(b);
+		buttonSave.setEnabled(b);
+		buttonDelete.setEnabled(b);
 	}
 
 	public void operationPerformed(OperationEvent oe)
@@ -498,33 +512,28 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 			ObjectResourceController controller = (ObjectResourceController)tdse.orcc;
 			ObjectResourceCatalogActionModel orcam = (ObjectResourceCatalogActionModel )tdse.getParam();
 
+			table.getSelectionModel().clearSelection();
+			if (this.controller == null || !this.controller.equals(controller))
+				setObjectResourceController(controller);
+			if (this.dataSet == null || !this.dataSet.equals(data))
+				setContents(data);
+			setActionModel(orcam);
+
 			if (n != -1)
 			{
+				ObjectResourceTableModel model = (ObjectResourceTableModel)table.getModel();
 				Object res = data.get(n);
-
-				if (dataSet.indexOf(res) == -1)
-				{
-					setContents(data);
-//					setObjectResourceClass(cl);
-					setActionModel(orcam);
-					setObjectResourceController(controller);
-				}
 				int selected = model.getIndexOfObject(res);
-				table.getSelectionModel().setSelectionInterval(selected, selected);
+				if (selected != -1)
+				{
+					table.getSelectionModel().setSelectionInterval(selected, selected);
+					updateSelection();
+				}
 			}
 			else
 			{
-				setContents(data);
-//				setObjectResourceClass(cl);
-				setActionModel(orcam);
-				setObjectResourceController(controller);
-				jTabbedPane.setDisabledIconAt(1, new TextIcon(LangModel.getString("Properties"), jTabbedPane, false));
-				jTabbedPane.setEnabledAt(1, false);
+				enablePropsPane(false);
 				jTabbedPane.setSelectedComponent(table);
-				buttonProperties.setEnabled(false);
-				buttonCancel.setEnabled(false);
-				buttonSave.setEnabled(false);
-				buttonDelete.setEnabled(false);
 			}
 		}
 		else if (oe.getActionCommand().equals(ContextChangeEvent.type))
