@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.1 2004/08/11 10:46:20 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.2 2004/08/11 12:49:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/11 10:46:20 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/11 12:49:06 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -49,7 +49,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrievePortType(PortType portType) throws ObjectNotFoundException, RetrieveObjectException {
-		String etIdStr = portType.getId().toSQLString();
+		String ptIdStr = portType.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
 			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
@@ -57,8 +57,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ COLUMN_CODENAME + COMMA
 			+ COLUMN_DESCRIPTION
-			+ SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY
-			+ SQL_WHERE	+ COLUMN_ID + EQUALS + etIdStr;
+			+ SQL_FROM + ObjectEntities.PORTTYPE_ENTITY
+			+ SQL_WHERE	+ COLUMN_ID + EQUALS + ptIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -79,10 +79,10 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 																		resultSet.getString(COLUMN_CODENAME),
 																		resultSet.getString(COLUMN_DESCRIPTION));
 			else
-				throw new ObjectNotFoundException("No such port type: " + etIdStr);
+				throw new ObjectNotFoundException("No such port type: " + ptIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "PortTypeDatabase.retrieve | Cannot retrieve Equipment type " + etIdStr;
+			String mesg = "PortTypeDatabase.retrieve | Cannot retrieve Equipment type " + ptIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -133,9 +133,9 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertPortType(PortType portType) throws CreateObjectException {
-		String etIdStr = portType.getId().toSQLString();
+		String ptIdStr = portType.getId().toSQLString();
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.EQUIPMENTTYPE_ENTITY
+			+ ObjectEntities.PORTTYPE_ENTITY
 			+ OPEN_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
@@ -146,7 +146,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 			+ COLUMN_DESCRIPTION
 			+ CLOSE_BRACKET
 			+ SQL_VALUES
-			+ etIdStr + COMMA
+			+ ptIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(portType.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(portType.getModified()) + COMMA
 			+ portType.getCreatorId().toSQLString() + COMMA
@@ -161,7 +161,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "PortTypeDatabase.insert | Cannot insert port type " + etIdStr;
+			String mesg = "PortTypeDatabase.insert | Cannot insert port type " + ptIdStr;
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -188,7 +188,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		List portTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
 		String sql = SQL_SELECT
 				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY;
+				+ SQL_FROM + ObjectEntities.PORTTYPE_ENTITY;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {

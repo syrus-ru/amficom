@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.2 2004/08/11 12:24:13 bob Exp $
+ * $Id: PortDatabase.java,v 1.3 2004/08/11 12:49:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/11 12:24:13 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/11 12:49:06 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -56,7 +56,7 @@ public class PortDatabase extends StorableObjectDatabase {
 
 	private void retrievePort(Port port) throws ObjectNotFoundException, RetrieveObjectException{
 		String sql;
-		String eqIdStr = port.getId().toSQLString();
+		String portIdStr = port.getId().toSQLString();
 		{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(StorableObjectDatabase.SQL_SELECT);
@@ -80,7 +80,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		buffer.append(StorableObjectDatabase.SQL_WHERE);
 		buffer.append(StorableObjectDatabase.COLUMN_ID);
 		buffer.append(StorableObjectDatabase.EQUALS);
-		buffer.append(eqIdStr);
+		buffer.append(portIdStr);
 		sql = buffer.toString();
 		}
 		
@@ -118,10 +118,10 @@ public class PortDatabase extends StorableObjectDatabase {
 								  resultSet.getInt(COLUMN_SORT));
 			}
 			else
-				throw new ObjectNotFoundException("No such port: " + eqIdStr);
+				throw new ObjectNotFoundException("No such port: " + portIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "PortDatabase.retrieveEquipment | Cannot retrieve port " + eqIdStr;
+			String mesg = "PortDatabase.retrieveEquipment | Cannot retrieve port " + portIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
