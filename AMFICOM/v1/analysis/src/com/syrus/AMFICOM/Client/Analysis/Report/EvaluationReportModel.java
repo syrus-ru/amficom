@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Report;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -34,9 +36,9 @@ public class EvaluationReportModel extends ESAPEReportModel
 		return LangModelAnalyse.getString(field);
 	}
 
-	public Vector getAvailableReports()
+	public List getAvailableReports()
 	{
-		Vector result = new Vector();
+		List result = new ArrayList();
 
 		result.add(ESAPEReportModel.testParams);
 		result.add(ESAPEReportModel.commonInfo);
