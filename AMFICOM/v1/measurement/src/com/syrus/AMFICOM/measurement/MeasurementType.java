@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.PoolId;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -56,6 +58,18 @@ public class MeasurementType extends ActionType {
 		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
+	}
+	
+	/**
+	 * client constructor
+	 * @param inParameterTypes
+	 * @param outParameterTypes
+	 */
+	public MeasurementType(List inParameterTypes,
+						   List	outParameterTypes){
+		super(PoolId.getId(ObjectEntities.MEASUREMENTTYPE_ENTITY));
+		setInParameterTypes(inParameterTypes);
+		setOutParameterTypes(outParameterTypes);
 	}
 
 	public Object getTransferable() {

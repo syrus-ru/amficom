@@ -71,10 +71,10 @@ public class EvaluationType extends ActionType {
 	 * @param etalonParameterTypes
 	 * @param outParameterTypes
 	 */
-	public EvaluationType(List inParameterTypes,
-			List thresholdParameterTypes,
-			List etalonParameterTypes,
-			List outParameterTypes) {
+	public EvaluationType(List etalonParameterTypes,
+						  List inParameterTypes,
+						  List outParameterTypes,
+						  List thresholdParameterTypes) {
 		super(PoolId.getId(ObjectEntities.EVALUATIONTYPE_ENTITY));
 		setInParameterTypes(inParameterTypes);
 		setThresholdParameterTypes(thresholdParameterTypes);

@@ -94,14 +94,14 @@ public class MeasurementSetup extends StorableObject {
 	 * @param measurementDuration
 	 * @param monitoredElementIds
 	 */
-	public MeasurementSetup(Set parameterSet,
-			Set criteriaSet,
-			Set thresholdSet,
-			Set etalon,
-			String description,
-			long measurementDuration,
-			List monitoredElementIds) {
-		super(PoolId.getId(ObjectEntities.MEASUREMENTTYPE_ENTITY));
+	public MeasurementSetup(long measurementDuration,
+							String description,
+							Set criteriaSet,
+							Set etalon,
+							Set parameterSet,			
+							Set thresholdSet,	
+							List monitoredElementIds) {
+		super(PoolId.getId(ObjectEntities.MS_ENTITY));
 		setParameterSet(parameterSet);
 		setCriteriaSet(criteriaSet);
 		setThresholdSet(thresholdSet);

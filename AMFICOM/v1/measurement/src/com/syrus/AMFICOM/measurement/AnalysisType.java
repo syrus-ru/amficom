@@ -64,7 +64,9 @@ public class AnalysisType extends ActionType {
 	 * @param criteriaParameterTypes
 	 * @param outParameterTypes
 	 */
-	public AnalysisType(List inParameterTypes, List criteriaParameterTypes, List outParameterTypes) {		
+	public AnalysisType(List criteriaParameterTypes,
+						List inParameterTypes,						
+						List outParameterTypes) {		
 		super(PoolId.getId(ObjectEntities.ANALYSISTYPE_ENTITY));
 		setInParameterTypes(inParameterTypes);
 		setCriteriaParameterTypes(criteriaParameterTypes);

@@ -2,6 +2,8 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.PoolId;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -59,6 +61,15 @@ public class ParameterType extends StorableObjectType {
 		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
+	}
+	
+	/**
+	 * cleint constructor
+	 * @param name
+	 */
+	public ParameterType(String name){
+		super(PoolId.getId(ObjectEntities.PARAMETERTYPE_ENTITY));
+		setName(name);
 	}
 
 	public Object getTransferable() {
