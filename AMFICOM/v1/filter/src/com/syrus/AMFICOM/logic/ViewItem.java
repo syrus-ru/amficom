@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.12 2005/03/28 07:43:14 bob Exp $
+ * $Id: ViewItem.java,v 1.13 2005/04/06 12:31:02 max Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/28 07:43:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/04/06 12:31:02 $
+ * @author $Author: max $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -108,9 +108,9 @@ public class ViewItem extends AbstractItem implements Item {
 			if (addToSource) this.sourceItem.addChild(viewItem.getSourceItem());
 			super.addChild(viewItem);
 
-		} else
-			throw new UnsupportedOperationException("There cannot be more than "
-					+ this.sourceItem.getMaxChildrenCount() + " linked input items");
+		} //else
+//			throw new UnsupportedOperationException("There cannot be more than "
+//					+ this.sourceItem.getMaxChildrenCount() + " linked input items");
 	}
 
 	public void addChild(Item childItem) {
