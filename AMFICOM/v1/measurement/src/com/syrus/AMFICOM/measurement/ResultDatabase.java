@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.16 2004/08/27 12:14:57 bob Exp $
+ * $Id: ResultDatabase.java,v 1.17 2004/08/29 11:47:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/27 12:14:57 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/29 11:47:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -67,7 +67,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		this.retrieveResultParameters(result);
 	}
 
-	private String retrieveSetQuery(String condition){
+	private String retrieveResultQuery(String condition){
 		return SQL_SELECT
 		+ COLUMN_ID + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
@@ -84,7 +84,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	}
 	
-	private Result updateSetFromResultSet(Result result, ResultSet resultSet) throws RetrieveObjectException, SQLException{
+	private Result updateResultFromResultSet(Result result, ResultSet resultSet) throws RetrieveObjectException, SQLException{
 		Result result1 = result;
 		if (result == null){
 			/**
@@ -155,7 +155,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	
 	private void retrieveResult(Result result) throws ObjectNotFoundException, RetrieveObjectException {
 		String resultIdStr = result.getId().toSQLString();
-		String sql = retrieveSetQuery(COLUMN_ID + EQUALS + resultIdStr);
+		String sql = retrieveResultQuery(COLUMN_ID + EQUALS + resultIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -474,7 +474,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return new LinkedList();
+			return retriveByIdsOneQuery(null);
 		return retriveByIdsOneQuery(ids);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
@@ -483,26 +483,30 @@ public class ResultDatabase extends StorableObjectDatabase {
 		List result = new LinkedList();
 		String sql;
 		{
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				buffer.append(EQUALS);
-				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-			} else{
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
-				
-				int i = 1;
-				for(Iterator it=ids.iterator();it.hasNext();i++){
-					Identifier id = (Identifier)it.next();
-					buffer.append(id.toSQLString());
-					if (i < idsLength)
-						buffer.append(COMMA);
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
 				}
-				
-				buffer.append(CLOSE_BRACKET);
 			}
-			sql = retrieveSetQuery(buffer.toString());
+			sql = retrieveResultQuery(condition);
 		}
 		
 		Statement statement = null;
@@ -512,7 +516,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			Log.debugMessage("ResultDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
-				result.add(updateSetFromResultSet(null, resultSet));
+				result.add(updateResultFromResultSet(null, resultSet));
 			}
 		}
 		catch (SQLException sqle) {
@@ -548,7 +552,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			buffer.append(EQUALS);							
 			buffer.append(QUESTION);
 			
-			sql =retrieveSetQuery(buffer.toString());
+			sql =retrieveResultQuery(buffer.toString());
 		}
 			
 		PreparedStatement stmt = null;
@@ -564,7 +568,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				stmt.setString(1, idStr);
 				resultSet = stmt.executeQuery();
 				if (resultSet.next()){
-					result.add(updateSetFromResultSet(null, resultSet));
+					result.add(updateResultFromResultSet(null, resultSet));
 				} else{
 					Log.errorMessage("ResultDatabase.retriveByIdsPreparedStatement | No such result: " + idStr);									
 				}

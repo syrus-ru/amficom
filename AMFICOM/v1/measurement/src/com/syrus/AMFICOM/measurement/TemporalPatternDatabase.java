@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.12 2004/08/27 12:14:57 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.13 2004/08/29 11:47:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/27 12:14:57 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/29 11:47:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -213,40 +213,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {
-		List temporalPatterns = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.TEMPORALPATTERN_ENTITY;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TemporalPatternDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				temporalPatterns.add(new TemporalPattern(new Identifier(resultSet.getString(COLUMN_ID))));			
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-		catch (SQLException sqle) {
-			String mesg = "TemporalPatternDatabase.retrieveAll | Cannot retrieve temporal pattern -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return temporalPatterns;
+		return retriveByIdsOneQuery(null);
 	}
 
 	public void delete(TemporalPattern temporalPattern) {
@@ -280,7 +247,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 
 	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return new LinkedList();
+			return retriveByIdsOneQuery(null);
 		return retriveByIdsOneQuery(ids);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
@@ -289,26 +256,30 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		List result = new LinkedList();
 		String sql;
 		{
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				buffer.append(EQUALS);
-				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-			} else{
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
-				
-				int i = 1;
-				for(Iterator it=ids.iterator();it.hasNext();i++){
-					Identifier id = (Identifier)it.next();
-					buffer.append(id.toSQLString());
-					if (i < idsLength)
-						buffer.append(COMMA);
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
 				}
-				
-				buffer.append(CLOSE_BRACKET);
 			}
-			sql = retrieveTemporalPatternQuery(buffer.toString());
+			sql = retrieveTemporalPatternQuery(condition);
 		}
 		
 		Statement statement = null;

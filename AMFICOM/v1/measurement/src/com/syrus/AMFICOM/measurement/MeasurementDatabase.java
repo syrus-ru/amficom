@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.17 2004/08/27 12:14:57 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.18 2004/08/29 11:47:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/27 12:14:57 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/29 11:47:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -362,7 +362,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	
 	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return new LinkedList();
+			return retriveByIdsOneQuery(null);
 		return retriveByIdsOneQuery(ids);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
@@ -371,26 +371,30 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		List result = new LinkedList();
 		String sql;
 		{
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				buffer.append(EQUALS);
-				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-			} else{
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
-				
-				int i = 1;
-				for(Iterator it=ids.iterator();it.hasNext();i++){
-					Identifier id = (Identifier)it.next();
-					buffer.append(id.toSQLString());
-					if (i < idsLength)
-						buffer.append(COMMA);
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
 				}
-				
-				buffer.append(CLOSE_BRACKET);
 			}
-			sql = retrieveMeasurementQuery(buffer.toString());
+			sql = retrieveMeasurementQuery(condition);
 		}
 		
 		Statement statement = null;

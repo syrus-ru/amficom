@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.27 2004/08/27 12:14:57 bob Exp $
+ * $Id: TestDatabase.java,v 1.28 2004/08/29 11:47:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/08/27 12:14:57 $
+ * @version $Revision: 1.28 $, $Date: 2004/08/29 11:47:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -173,7 +173,7 @@ public class TestDatabase extends StorableObjectDatabase {
 
 	private void retrieveTest(Test test) throws ObjectNotFoundException, RetrieveObjectException {
 		String testIdStr = test.getId().toSQLString();
-		String sql = retrieveTestQuery(SQL_WHERE + COLUMN_ID + EQUALS + testIdStr);
+		String sql = retrieveTestQuery(COLUMN_ID + EQUALS + testIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -808,53 +808,11 @@ public class TestDatabase extends StorableObjectDatabase {
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {
-		return retrieveAll(null);
+		return retriveByIdsOneQuery(null, null);
 	}
 	
 	public List retrieveAll(String condition) throws RetrieveObjectException {
-		List tests = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql;
-		{
-			StringBuffer buffer = new StringBuffer(SQL_SELECT);
-			buffer.append(COLUMN_ID);
-			buffer.append(SQL_FROM);
-			buffer.append(ObjectEntities.TEST_ENTITY);
-			if ((condition!=null)&&(condition.length()>0)){
-				buffer.append(SQL_WHERE);
-				buffer.append(condition);
-			}
-			sql = buffer.toString();
-		}
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				tests.add(new Test(new Identifier(resultSet.getString(COLUMN_ID))));			
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveAll | Cannot retrieve test -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return tests;
+		return retriveByIdsOneQuery(null, condition);
 	}
 
 	public void delete(Test test) {
@@ -888,34 +846,44 @@ public class TestDatabase extends StorableObjectDatabase {
 
 	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return new LinkedList();
-		return retriveByIdsOneQuery(ids);	
+			return retriveByIdsOneQuery(null, null);
+		return retriveByIdsOneQuery(ids, null);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
 	
-	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+	private List retriveByIdsOneQuery(List ids, String condition) throws RetrieveObjectException {
 		List result = new LinkedList();
 		String sql;
 		{
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				buffer.append(EQUALS);
-				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-			} else{
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
-				
-				int i = 1;
-				for(Iterator it=ids.iterator();it.hasNext();i++){
-					Identifier id = (Identifier)it.next();
-					buffer.append(id.toSQLString());
-					if (i < idsLength)
-						buffer.append(COMMA);
+			StringBuffer buffer = new StringBuffer("1=1");
+			if (ids!=null){
+				buffer.append(SQL_AND);
+				buffer.append(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(SQL_AND);
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);					
 				}
-				
-				buffer.append(CLOSE_BRACKET);
 			}
+			if ((condition != null) && (condition.length() > 0)){
+				buffer.append(SQL_AND);
+				buffer.append(condition);
+			}
+			
 			sql = retrieveTestQuery(buffer.toString());
 		}
 		
@@ -956,7 +924,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			
 			int idsLength = ids.size();
 			if (idsLength == 1){
-				return retriveByIdsOneQuery(ids);
+				return retriveByIdsOneQuery(ids, null);
 			}
 			StringBuffer buffer = new StringBuffer(COLUMN_ID);
 			buffer.append(EQUALS);							

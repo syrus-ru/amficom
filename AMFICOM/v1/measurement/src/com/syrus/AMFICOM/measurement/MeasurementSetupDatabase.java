@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.17 2004/08/27 07:44:24 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.18 2004/08/29 11:47:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/27 07:44:24 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/29 11:47:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -501,40 +501,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {
-		List ports = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.MS_ENTITY;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				ports.add(new MeasurementSetup(new Identifier(resultSet.getString(COLUMN_ID))));			
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.retrieveAll | Cannot retrieve measurement setup -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return ports;
+		return retriveByIdsOneQuery(null);
 	}
 
 	public void delete(MeasurementSetup measurementSetup) {
@@ -568,7 +535,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return new LinkedList();
+			return retriveByIdsOneQuery(null);
 		return retriveByIdsOneQuery(ids);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
@@ -577,26 +544,30 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		List result = new LinkedList();
 		String sql;
 		{
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				buffer.append(EQUALS);
-				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-			} else{
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
-				
-				int i = 1;
-				for(Iterator it=ids.iterator();it.hasNext();i++){
-					Identifier id = (Identifier)it.next();
-					buffer.append(id.toSQLString());
-					if (i < idsLength)
-						buffer.append(COMMA);
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
 				}
-				
-				buffer.append(CLOSE_BRACKET);
 			}
-			sql = retrieveMeasurementSetupQuery(buffer.toString());
+			sql = retrieveMeasurementSetupQuery(condition);
 		}
 		
 		Statement statement = null;

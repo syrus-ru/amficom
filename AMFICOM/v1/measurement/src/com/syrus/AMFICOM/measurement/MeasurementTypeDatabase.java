@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.20 2004/08/27 12:14:57 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.21 2004/08/29 11:47:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/27 12:14:57 $
+ * @version $Revision: 1.21 $, $Date: 2004/08/29 11:47:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -423,45 +423,12 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {
-		List measurementTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.MEASUREMENTTYPE_ENTITY;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MeasurementTypeDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				measurementTypes.add(new MeasurementType(new Identifier(resultSet.getString(COLUMN_ID))));			
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retrieveAll | Cannot retrieve measurement type -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return measurementTypes;
+		return retriveByIdsOneQuery(null);
 	}
 	
 	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return new LinkedList();
+			return retriveByIdsOneQuery(null);
 		return retriveByIdsOneQuery(ids);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
@@ -470,26 +437,30 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		List result = new LinkedList();
 		String sql;
 		{
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				buffer.append(EQUALS);
-				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-			} else{
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
-				
-				int i = 1;
-				for(Iterator it=ids.iterator();it.hasNext();i++){
-					Identifier id = (Identifier)it.next();
-					buffer.append(id.toSQLString());
-					if (i < idsLength)
-						buffer.append(COMMA);
+			String condition = null;
+			if (ids!=null){
+				StringBuffer buffer = new StringBuffer(COLUMN_ID);
+				int idsLength = ids.size();
+				if (idsLength == 1){
+					buffer.append(EQUALS);
+					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+				} else{
+					buffer.append(SQL_IN);
+					buffer.append(OPEN_BRACKET);
+					
+					int i = 1;
+					for(Iterator it=ids.iterator();it.hasNext();i++){
+						Identifier id = (Identifier)it.next();
+						buffer.append(id.toSQLString());
+						if (i < idsLength)
+							buffer.append(COMMA);
+					}
+					
+					buffer.append(CLOSE_BRACKET);
+					condition = buffer.toString();
 				}
-				
-				buffer.append(CLOSE_BRACKET);
 			}
-			sql = retrieveMeasurementTypeQuery(buffer.toString());
+			sql = retrieveMeasurementTypeQuery(condition);
 		}
 		
 		Statement statement = null;
