@@ -140,6 +140,45 @@ public class PathDecompositor
 		return null;
 	}
 
+	public double getOpticalDistance(double physicalDistance)
+	{
+		double d = 0.0;
+		double d2 = 0.0;
+		for (int i = 0; i < sp.links().length; i++) {
+			double pl = SchemeUtils.getPhysicalLength(sp.links()[i]);
+			if (d2 + pl < physicalDistance) {
+				d2 += pl;
+				d += SchemeUtils.getOpticalLength(sp.links()[i]);
+			}
+			else {
+				double diff = physicalDistance - d2;
+				d += diff * SchemeUtils.getKu(sp.links()[i]);
+				break;
+			}
+		}
+		return d;
+	}
+
+	public double getPhysicalDistance(double opticalDistance)
+	{
+		double d = 0.0;
+		double d2 = 0.0;
+		for (int i = 0; i < sp.links().length; i++) {
+			double ol = SchemeUtils.getOpticalLength(sp.links()[i]);
+			if (d + ol < opticalDistance) {
+				d += ol;
+				d2 += SchemeUtils.getPhysicalLength(sp.links()[i]);
+			}
+			else {
+				double diff = opticalDistance - d;
+				d2 += diff / SchemeUtils.getKu(sp.links()[i]);
+				break;
+			}
+		}
+		return d2;
+	}
+
+
 /*
 	public double[] getOpticalDistancesFromStart(PathElement startPE, PathElement endPE)
 	{
