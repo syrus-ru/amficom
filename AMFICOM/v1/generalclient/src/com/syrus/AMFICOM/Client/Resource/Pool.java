@@ -77,6 +77,24 @@ public final class Pool {
 		}
 		return result;
 	}
+	/**
+	 * @deprecated
+	 * @param objTypeId
+	 * @param objId
+	 * @return
+	 */
+	public static String getName(String objTypeId, String objId) {
+		String result = null;
+		Object res = get(objTypeId, objId);
+		if (res != null)
+		{
+			if (res instanceof ObjectResource)
+				result = ((ObjectResource)res).getName();
+			else
+				result = res.toString();
+		}
+		return result;
+	}
 
 	/**
 	 * внести в хранилище объект obj типа objTypeId с идентификатором objId
