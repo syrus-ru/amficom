@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.54 2005/04/04 16:06:27 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.55 2005/04/05 15:57:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,14 +26,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/04/04 16:06:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.55 $, $Date: 2005/04/05 15:57:17 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -43,14 +41,6 @@ public class MeasurementSetup extends StorableObject {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3256442525404443446L;
-	/**
-	 * @deprecated
-	 */
-	protected static final int		UPDATE_ATTACH_ME	= 1;
-	/**
-	 * @deprecated
-	 */
-	protected static final int		UPDATE_DETACH_ME	= 2;
 
 	private Set parameterSet;
 	private Set criteriaSet;
@@ -149,42 +139,6 @@ public class MeasurementSetup extends StorableObject {
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MeasurementSetup.createInstance | cannot generate identifier ", e);
 		}
-	}
-
-	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
-		return this.monitoredElementIds.contains(monitoredElementId);
-	}
-
-	public void attachToMonitoredElement(Identifier monitoredElementId, Identifier modifierId1) throws UpdateObjectException {
-		if (this.isAttachedToMonitoredElement(monitoredElementId))
-			return;
-		super.modifierId = modifierId1;
-		this.monitoredElementIds.add(monitoredElementId);
-		try {
-			this.measurementSetupDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (VersionCollisionException vce){
-			throw new UpdateObjectException(vce.getMessage(), vce);
-		}
-		this.monitoredElementIds.add(monitoredElementId);
-	}
-
-	public void detachFromMonitoredElement(Identifier monitoredElementId, Identifier modifierId1) throws UpdateObjectException {
-		if (!this.isAttachedToMonitoredElement(monitoredElementId))
-			return;
-		super.modifierId = modifierId1;
-		this.monitoredElementIds.remove(monitoredElementId);
-		try {
-			this.measurementSetupDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (VersionCollisionException vce) {
-			throw new UpdateObjectException(
-											"MeasurementSetup.detachFromMonitoredElement | Cannot dettach measurement setup '"
-													+ this.id + "' from monitored element '" + monitoredElementId
-													+ "' -- " + vce.getMessage(), vce);
-		}
-		this.monitoredElementIds.remove(monitoredElementId);
-		//this.monitoredElementIds.trimToSize();
 	}
 
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
@@ -306,6 +260,24 @@ public class MeasurementSetup extends StorableObject {
 		this.etalon = etalon;
 		this.description = description;
 		this.measurementDuration = measurementDuration;
+	}
+
+	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
+		return this.monitoredElementIds.contains(monitoredElementId);
+	}
+
+	public void attachToMonitoredElement(Identifier monitoredElementId) {
+		if (monitoredElementId == null || this.isAttachedToMonitoredElement(monitoredElementId))
+			return;
+		this.monitoredElementIds.add(monitoredElementId);
+		super.changed = true;
+	}
+
+	public void detachFromMonitoredElement(Identifier monitoredElementId) {
+		if (monitoredElementId == null || !this.isAttachedToMonitoredElement(monitoredElementId))
+			return;
+		this.monitoredElementIds.remove(monitoredElementId);
+		super.changed = true;
 	}
 
 	protected synchronized void setMonitoredElementIds0(java.util.Set monitoredElementIds) {
