@@ -1,21 +1,17 @@
 package com.syrus.AMFICOM.Client.General.Command.Schedule;
 
-import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 
+import com.syrus.AMFICOM.Client.Configure.Map.UI.MapChooserDialog;
 import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Schedule.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Map.UI.*;
 
 public class MySchemeCommand extends VoidCommand
 {
