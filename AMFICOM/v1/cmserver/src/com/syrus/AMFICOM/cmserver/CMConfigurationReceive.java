@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.6 2004/12/16 10:20:28 bob Exp $
+ * $Id: CMConfigurationReceive.java,v 1.7 2004/12/17 16:31:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.configuration.UserDatabase;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
@@ -88,7 +89,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/16 10:20:28 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/17 16:31:59 $
  * @author $Author: bob $
  * @module module
  */
@@ -103,7 +104,8 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
 			throws AMFICOMRemoteException {
 		Log.debugMessage("CMServerImpl.receiveCableThreadType | Received " + " cableThreadType", Log.DEBUGLEVEL07);
         try {
-
+        	
+        	cableThreadType_Transferable.header.modifier_id = accessIdentifier.user_id;
             CableThreadType cableThreadType = new CableThreadType(cableThreadType_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(cableThreadType);
             CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext
@@ -142,6 +144,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < cableThreadType_Transferables.length; i++) {
+            	cableThreadType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 CableThreadType cableThreadType = new CableThreadType(cableThreadType_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(cableThreadType);
                 cableThreadTypeList.add(cableThreadType);
@@ -176,7 +179,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveCharacteristic(Characteristic_Transferable characteristic_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveCharacteristic | Received " + " characteristic", Log.DEBUGLEVEL07);
         try {
-
+        	characteristic_Transferable.header.modifier_id = accessIdentifier.user_id;
             Characteristic characteristic = new Characteristic(characteristic_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(characteristic);
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) ConfigurationDatabaseContext
@@ -216,6 +219,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < characteristic_Transferables.length; i++) {
+            	characteristic_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 Characteristic characteristic = new Characteristic(characteristic_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(characteristic);
                 characteristicList.add(characteristic);
@@ -254,7 +258,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveCharacteristicType(CharacteristicType_Transferable characteristicType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveCharacteristicType | Received " + " characteristicTypes", Log.DEBUGLEVEL07);
         try {
-
+        	characteristicType_Transferable.header.modifier_id = accessIdentifier.user_id;
             CharacteristicType characteristicType = new CharacteristicType(characteristicType_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(characteristicType);
             CharacteristicTypeDatabase characteristicTypeDatabase = (CharacteristicTypeDatabase) ConfigurationDatabaseContext
@@ -293,6 +297,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < characteristicType_Transferables.length; i++) {
+            	characteristicType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 CharacteristicType characteristicType = new CharacteristicType(characteristicType_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(characteristicType);
                 characteristicTypeList.add(characteristicType);
@@ -328,7 +333,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveDomain(Domain_Transferable domain_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveDomain | Received " + " domain", Log.DEBUGLEVEL07);
         try {
-
+        	domain_Transferable.header.modifier_id = accessIdentifier.user_id;
             Domain domain = new Domain(domain_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(domain);
             DomainDatabase domainDatabase = (DomainDatabase) ConfigurationDatabaseContext
@@ -369,6 +374,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < domain_Transferables.length; i++) {
+            	domain_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 Domain domain = new Domain(domain_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(domain);
                 domainList.add(domain);
@@ -408,7 +414,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveEquipment(Equipment_Transferable equipment_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveEquipment | Received " + " equipment", Log.DEBUGLEVEL07);
         try {
-
+        	equipment_Transferable.header.modifier_id = accessIdentifier.user_id;
             Equipment equipment = new Equipment(equipment_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(equipment);
             EquipmentDatabase equipmentDatabase = (EquipmentDatabase) ConfigurationDatabaseContext
@@ -449,6 +455,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < equipment_Transferables.length; i++) {
+            	equipment_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 Equipment equipment = new Equipment(equipment_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(equipment);
                 equipmentList.add(equipment);
@@ -488,7 +495,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveEquipmentType(EquipmentType_Transferable equipmentType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveEquipmentType | Received " + " equipmentType", Log.DEBUGLEVEL07);
         try {
-
+        	equipmentType_Transferable.header.modifier_id = accessIdentifier.user_id;
             EquipmentType equipmentType = new EquipmentType(equipmentType_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(equipmentType);
             EquipmentTypeDatabase equipmentTypeDatabase = (EquipmentTypeDatabase) ConfigurationDatabaseContext
@@ -528,6 +535,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < equipmentType_Transferables.length; i++) {
+            	equipmentType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 EquipmentType equipmentType = new EquipmentType(equipmentType_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(equipmentType);
                 equipmentTypeList.add(equipmentType);
@@ -567,7 +575,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveKIS(KIS_Transferable kis_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveKIS | Received " + " kis", Log.DEBUGLEVEL07);
         try {
-
+        	kis_Transferable.header.modifier_id = accessIdentifier.user_id;
             KIS kis = new KIS(kis_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(kis);
             KISDatabase kisDatabase = (KISDatabase) ConfigurationDatabaseContext
@@ -607,6 +615,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < kis_Transferables.length; i++) {
+            	kis_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 KIS kis = new KIS(kis_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(kis);
                 kisList.add(kis);
@@ -648,7 +657,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
 			throws AMFICOMRemoteException {
 		Log.debugMessage("CMServerImpl.receiveLink | Received " + " link", Log.DEBUGLEVEL07);
         try {
-
+        	link_Transferable.header.modifier_id = accessIdentifier.user_id;
             Link link = new Link(link_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(link);
             LinkDatabase linkDatabase = (LinkDatabase) ConfigurationDatabaseContext
@@ -690,6 +699,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < link_Transferables.length; i++) {
+            	link_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 Link list = new Link(link_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(list);
                 linkList.add(list);
@@ -730,7 +740,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
 			throws AMFICOMRemoteException {
 		Log.debugMessage("CMServerImpl.receiveLinkType | Received " + " linkType", Log.DEBUGLEVEL07);
         try {
-
+        	linkType_Transferable.header.modifier_id = accessIdentifier.user_id;
             LinkType linkType = new LinkType(linkType_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(linkType);
             LinkTypeDatabase linkTypeDatabase = (LinkTypeDatabase) ConfigurationDatabaseContext
@@ -768,14 +778,18 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         List linkTypeList = new ArrayList(linkType_Transferables.length);
         try {
 
-            for (int i = 0; i < linkType_Transferables.length; i++) {
-            	AbstractLinkType abstractLinkType;
+            for (int i = 0; i < linkType_Transferables.length; i++) {            	
+            	AbstractLinkType abstractLinkType;            	
                 int sort = linkType_Transferables[i].discriminator().value();
             	switch(sort){
             		case AbstractLinkTypeSort._CABLE_LINK_TYPE:
-            			abstractLinkType = new CableLinkType(linkType_Transferables[i].cableLinkType());
+            			CableLinkType_Transferable cableLinkTypeTransferable = linkType_Transferables[i].cableLinkType();
+            			cableLinkTypeTransferable.header.modifier_id = accessIdentifier.user_id;
+            			abstractLinkType = new CableLinkType(cableLinkTypeTransferable);
             			break;
             		case AbstractLinkTypeSort._LINK_TYPE:
+            			LinkType_Transferable linkTypeTransferable = linkType_Transferables[i].linkType();
+            			linkTypeTransferable.header.modifier_id = accessIdentifier.user_id;
             			abstractLinkType = new LinkType(linkType_Transferables[i].linkType());
             			break;
             		default:
@@ -815,7 +829,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveMCM(MCM_Transferable mcm_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveMCM | Received " + " mcm", Log.DEBUGLEVEL07);
         try {
-
+        	mcm_Transferable.header.modifier_id = accessIdentifier.user_id;
             MCM mcm = new MCM(mcm_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(mcm);
             MCMDatabase mcmDatabase = (MCMDatabase) ConfigurationDatabaseContext
@@ -855,6 +869,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < mcm_Transferables.length; i++) {
+            	mcm_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 MCM mcm = new MCM(mcm_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(mcm);
                 mcmList.add(mcm);
@@ -894,7 +909,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveMeasurementPort(MeasurementPort_Transferable measurementPort_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveMeasurementPort | Received " + " measurementPort", Log.DEBUGLEVEL07);
         try {
-
+        	measurementPort_Transferable.header.modifier_id = accessIdentifier.user_id;
             MeasurementPort measurementPort = new MeasurementPort(measurementPort_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(measurementPort);
             MeasurementPortDatabase measurementPortDatabase = (MeasurementPortDatabase) ConfigurationDatabaseContext
@@ -935,6 +950,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < measurementPort_Transferables.length; i++) {
+            	measurementPort_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 MeasurementPort measurementPort = new MeasurementPort(measurementPort_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(measurementPort);
                 measurementPortList.add(measurementPort);
@@ -973,7 +989,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveMeasurementPortType(MeasurementPortType_Transferable measurementPortType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveMeasurementPortType | Received " + " measurementPortType", Log.DEBUGLEVEL07);
         try {
-
+        	measurementPortType_Transferable.header.modifier_id = accessIdentifier.user_id;
             MeasurementPortType measurementPortType = new MeasurementPortType(measurementPortType_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(measurementPortType);
             MeasurementPortTypeDatabase measurementPortTypeDatabase = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext
@@ -1013,6 +1029,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < measurementPortType_Transferables.length; i++) {
+            	measurementPortType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 MeasurementPortType measurementPortType = new MeasurementPortType(measurementPortType_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(measurementPortType);
                 measurementPortTypeList.add(measurementPortType);
@@ -1052,7 +1069,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveMonitoredElement(MonitoredElement_Transferable monitoredElement_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveMonitoredElement | Received " + " monitoredElement", Log.DEBUGLEVEL07);
         try {
-
+        	monitoredElement_Transferable.header.modifier_id = accessIdentifier.user_id;
             MonitoredElement monitoredElement = new MonitoredElement(monitoredElement_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(monitoredElement);
             MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext
@@ -1088,6 +1105,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < monitoredElement_Transferables.length; i++) {
+            	monitoredElement_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 MonitoredElement monitoredElement = new MonitoredElement(monitoredElement_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(monitoredElement);
                 monitoredElementList.add(monitoredElement);
@@ -1122,7 +1140,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receivePort(Port_Transferable port_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receivePort | Received " + " port", Log.DEBUGLEVEL07);
         try {
-
+        	port_Transferable.header.modifier_id = accessIdentifier.user_id;
             Port port = new Port(port_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(port);
             PortDatabase portDatabase = (PortDatabase) ConfigurationDatabaseContext
@@ -1162,6 +1180,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < port_Transferables.length; i++) {
+            	port_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 Port port = new Port(port_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(port);
                 portList.add(port);
@@ -1200,7 +1219,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receivePortType(PortType_Transferable portType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receivePortType | Received " + " domain", Log.DEBUGLEVEL07);
         try {
-
+        	portType_Transferable.header.modifier_id = accessIdentifier.user_id;
             PortType portType = new PortType(portType_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(portType);
             PortTypeDatabase portTypeDatabase = (PortTypeDatabase) ConfigurationDatabaseContext
@@ -1240,6 +1259,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < portType_Transferables.length; i++) {
+            	portType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 PortType portType = new PortType(portType_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(portType);
                 portTypeList.add(portType);
@@ -1279,7 +1299,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveServer(Server_Transferable server_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveServer | Received " + " server", Log.DEBUGLEVEL07);
         try {
-
+        	server_Transferable.header.modifier_id = accessIdentifier.user_id;
             Server server = new Server(server_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(server);
             ServerDatabase serverDatabase = (ServerDatabase) ConfigurationDatabaseContext
@@ -1319,6 +1339,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < server_Transferables.length; i++) {
+            	server_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 Server server = new Server(server_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(server);
                 serverList.add(server);
@@ -1357,7 +1378,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveTransmissionPath(TransmissionPath_Transferable transmissionPath_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveTransmissionPath | Received " + " transmissionPath", Log.DEBUGLEVEL07);
         try {
-
+        	transmissionPath_Transferable.header.modifier_id = accessIdentifier.user_id;
             TransmissionPath transmissionPath = new TransmissionPath(transmissionPath_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(transmissionPath);
             TransmissionPathDatabase transmissionPathDatabase = (TransmissionPathDatabase) ConfigurationDatabaseContext
@@ -1396,7 +1417,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
 			throws AMFICOMRemoteException {
 		Log.debugMessage("CMServerImpl.receiveTransmissionPathType | Received " + " transmissionPathType", Log.DEBUGLEVEL07);
         try {
-
+        	transmissionPathType_Transferable.header.modifier_id = accessIdentifier.user_id;
             TransmissionPathType transmissionPathType = new TransmissionPathType(transmissionPathType_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(transmissionPathType);
             TransmissionPathTypeDatabase transmissionPathTypeDatabase = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext
@@ -1436,6 +1457,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < transmissionPath_Transferables.length; i++) {
+            	transmissionPath_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 TransmissionPath transmissionPath = new TransmissionPath(transmissionPath_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(transmissionPath);
                 transmissionPathList.add(transmissionPath);
@@ -1481,6 +1503,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < transmissionPathType_Transferables.length; i++) {
+            	transmissionPathType_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 TransmissionPathType transmissionPathType = new TransmissionPathType(transmissionPathType_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(transmissionPathType);
                 transmissionPathTypeList.add(transmissionPathType);
@@ -1519,7 +1542,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
     public void receiveUser(User_Transferable user_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveUser | Received " + " user", Log.DEBUGLEVEL07);
         try {
-
+        	user_Transferable.header.modifier_id = accessIdentifier.user_id;
             User user = new User(user_Transferable);
             ConfigurationStorableObjectPool.putStorableObject(user);
             UserDatabase userDatabase = (UserDatabase) ConfigurationDatabaseContext
@@ -1557,6 +1580,7 @@ public abstract class CMConfigurationReceive implements CMServerOperations {
         try {
 
             for (int i = 0; i < user_Transferables.length; i++) {
+            	user_Transferables[i].header.modifier_id = accessIdentifier.user_id;
                 User user = new User(user_Transferables[i]);
                 ConfigurationStorableObjectPool.putStorableObject(user);
                 userList.add(user);
