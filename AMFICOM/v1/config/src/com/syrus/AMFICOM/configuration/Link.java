@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.16 2004/12/09 12:23:59 bob Exp $
+ * $Id: Link.java,v 1.17 2004/12/09 14:24:01 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/12/09 12:23:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2004/12/09 14:24:01 $
+ * @author $Author: max $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
@@ -46,7 +46,6 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	private String supplierCode;
 	private int sort;
 	
-	private Identifier linkId;
 	private String mark;
 	private String color;
 	
@@ -77,18 +76,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		this.supplier = lt.supplier;
 		this.supplierCode = lt.supplierCode;
 		this.sort = lt.sort.value();
-		
-		switch(this.sort){
-			case LinkSort._LINKSORT_CABLELINK_THREAD:
-				this.linkId = new Identifier(lt.link_id);
-				this.color = new String(lt.color);
-				this.mark = new String(lt.mark);
-				break;
-			default:
-				break;
-        
-		}
-        
+				        
         try {
             this.characteristics = new ArrayList(lt.characteristic_ids.length);
             for (int i = 0; i < lt.characteristic_ids.length; i++)
@@ -117,7 +105,6 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 				  String supplier,
 				  String supplierCode,
 				  int sort,
-				  Identifier linkId,
 				  String color,
 				  String mark) {
 		super(id,
@@ -134,7 +121,6 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		this.supplierCode = supplierCode;
 	
 		this.sort = sort;
-		this.linkId = linkId;
 		this.color = color;
 		this.mark = mark;
 		this.characteristics = new LinkedList();
@@ -155,14 +141,13 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 									  String supplier,
 									  String supplierCode,
 									  LinkSort sort,
-									  Identifier linkId,
 									  String color,
 									  String mark) throws CreateObjectException{
 		if (creatorId == null || domainId == null || name == null || description == null || 
 				type == null || inventoryNo == null || supplier == null || supplierCode == null ||
-				sort == null || linkId == null || color == null || mark == null)
+				sort == null || color == null || mark == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
 			return new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_ENTITY_CODE),
 					creatorId,
@@ -174,7 +159,6 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 					supplier,
 					supplierCode,
 					sort.value(),
-					linkId,
 					color,
 					mark);
 		} catch (IllegalObjectEntityException e) {
@@ -213,7 +197,6 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 									 this.inventoryNo,
 									 this.supplier,
 									 this.supplierCode,				
-									 (this.linkId != null) ? (Identifier_Transferable)this.linkId.getTransferable() : (new Identifier_Transferable("")),
 									 (this.color != null) ? this.color : "",
 									 (this.mark != null) ? this.mark : "",
                                      charIds);
@@ -231,7 +214,6 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 												String supplier,
 												String supplierCode,
 												int sort,
-												Identifier linkId,
 												String color,
 												String mark) {
 			super.setAttributes(created,
@@ -246,7 +228,6 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 			this.supplier = supplier;
 			this.supplierCode = supplierCode;
 			this.sort = sort;
-			this.linkId = linkId;
 			this.color = color;
 			this.mark = mark;
 		}
@@ -287,17 +268,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	public LinkSort getSort(){
 		return LinkSort.from_int(this.sort);
 	}
-	
-	/**
-	 * 
-	 * @return paretn link identifier if sort is _LINKSORT_CABLELINK_THREAD, throws {@link UnsupportedOperationException} otherwise 
-	 */
-	public Identifier getLinkId(){
-		if (this.sort == LinkSort._LINKSORT_CABLELINK_THREAD)
-			return this.linkId;
-		throw new UnsupportedOperationException("LinkSort isn't LINKSORT_CABLELINK_THREAD");
-	}
-	
+				
 	public String getColor(){
 		return this.color;		
 	}
@@ -316,8 +287,6 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.add(this.type);
-		if (this.linkId != null)
-			dependencies.add(this.linkId);
 		dependencies.addAll(this.characteristics);
 		return dependencies;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.14 2004/12/07 15:32:33 max Exp $
+ * $Id: LinkDatabase.java,v 1.15 2004/12/09 14:24:01 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -34,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/12/07 15:32:33 $
+ * @version $Revision: 1.15 $, $Date: 2004/12/09 14:24:01 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -54,8 +53,6 @@ public class LinkDatabase extends StorableObjectDatabase {
     public static final String COLUMN_SUPPLIER      = "supplier";
     // supplier_code VARCHAR2(64),
     public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
-    // link_id VARCHAR2(32),
-    public static final String COLUMN_LINK_ID       = "link_id";
     // color VARCHAR(32),
     public static final String COLUMN_COLOR = "color";
     // mark VARCHAR(32),
@@ -87,7 +84,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 				+ COLUMN_INVENTORY_NO + COMMA
 				+ COLUMN_SUPPLIER + COMMA
 				+ COLUMN_SUPPLIER_CODE + COMMA
-				+ COLUMN_LINK_ID + COMMA
 				+ COLUMN_COLOR + COMMA
 				+ COLUMN_MARK;
 		}
@@ -97,7 +93,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA 
-				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -118,7 +113,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 		String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo());
 		String supplier = DatabaseString.toQuerySubString(link.getSupplier());
 		String supplierCode = DatabaseString.toQuerySubString(link.getSupplierCode());
-		Identifier linkId = link.getLinkId();
 		String color = DatabaseString.toQuerySubString(link.getColor());
 		String mark = DatabaseString.toQuerySubString(link.getMark());
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
@@ -130,7 +124,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + (inventoryNo != null ? inventoryNo : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (supplier != null ? supplier : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (supplierCode != null ? supplierCode : "") + APOSTOPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(linkId) + COMMA
 			+ APOSTOPHE + (color != null ? color : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (mark != null ? mark : "") + APOSTOPHE;
 		return sql;
@@ -143,7 +136,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			Identifier linkId = link.getLinkId();
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getDomainId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getType().getId());
 			preparedStatement.setInt( ++i, link.getSort().value());
@@ -152,7 +144,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 			preparedStatement.setString( ++i, link.getInventoryNo());
 			preparedStatement.setString( ++i, link.getSupplier());
 			preparedStatement.setString( ++i, link.getSupplierCode());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, linkId);
 			preparedStatement.setString( ++i, link.getColor());
 			preparedStatement.setString( ++i, link.getMark());
 		} catch (SQLException sqle) {
@@ -168,7 +159,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 		Link link = storableObject == null ? null : fromStorableObject(storableObject);
 		if (link == null){			
 			link = new Link(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null,
-									   null, null, null, null, null, 0, null, null, null);			
+									   null, null, null, null, null, 0, null, null);			
 		}
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
@@ -194,7 +185,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 														(supplier != null) ? supplier : "",
 														(supplierCode != null) ? supplierCode : "",
 														resultSet.getInt(COLUMN_SORT),
-														DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_ID),
 														DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_COLOR)),
 														DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MARK)));
 
