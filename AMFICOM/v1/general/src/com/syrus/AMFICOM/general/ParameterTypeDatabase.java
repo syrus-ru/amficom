@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.4 2005/02/03 08:37:25 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.5 2005/02/03 14:27:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/03 08:37:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 14:27:00 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -109,7 +109,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		ParameterType parameterType = this.fromStorableObject(storableObject);
+		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -127,7 +127,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}	
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-//		ParameterType parameterType = this.fromStorableObject(storableObject);
+		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);
