@@ -8,6 +8,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,6 +54,11 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 * ѕолучить центральную точку вида карты
 	 */
 	public Point2D.Double getCenter()
+	{
+		return null;
+	}
+
+	public Rectangle2D.Double getVisibleBounds()
 	{
 		return null;
 	}

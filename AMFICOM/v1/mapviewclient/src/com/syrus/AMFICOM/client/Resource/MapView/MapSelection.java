@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.2 2004/09/23 10:07:15 krupenn Exp $
+ * $Id: MapSelection.java,v 1.3 2004/09/27 07:41:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/23 10:07:15 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 07:41:34 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -181,8 +182,14 @@ public final class MapSelection
 	{
 	}
 
-	public void paint (Graphics g)
+	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
+	{
+		throw new UnsupportedOperationException();
 	}
 
 	public Map getMap()

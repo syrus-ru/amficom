@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.2 2004/09/27 07:41:34 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,6 +11,7 @@
 package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
 import com.ofx.geometry.SxDoublePoint;
+import com.ofx.geometry.SxRectangle;
 import com.ofx.mapViewer.SxMapLayer;
 import com.ofx.mapViewer.SxMapViewer;
 import com.ofx.query.SxQueryResultInterface;
@@ -25,9 +26,11 @@ import com.syrus.AMFICOM.Client.Map.SpatialObject;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,7 +44,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 07:41:34 $
  * @module №фз_м2
  * @author $Author: krupenn $
  * @see
@@ -120,10 +123,6 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCenter(" + center.x + ", " + center.y + ")");
 
 		spatialViewer.setCenter(center.x, center.y);
-/*		
-		spatialViewer.getMapCanvas().setCenter(
-			new SxDoublePoint(center.x, center.y));
-*/
 	}
 
 	/**
@@ -134,14 +133,19 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		Point2D.Double center = new Point2D.Double(
 			spatialViewer.getCenter()[0],
 			spatialViewer.getCenter()[1]);
-/*
-		Point2D.Double center = new Point2D.Double(
-			spatialViewer.getMapCanvas().getCenter().x,
-			spatialViewer.getMapCanvas().getCenter().y);
-*/
 		return center;
 	}
 
+	public Rectangle2D.Double getVisibleBounds()
+	{
+		SxRectangle sxRect = spatialViewer.getMapCanvas().getGroundRect();
+		Rectangle2D.Double rect = new Rectangle2D.Double(
+			sxRect.getBottomLeft().x,
+			sxRect.getBottomLeft().y,
+			sxRect.getWidth(),
+			sxRect.getHeight());
+		return rect;
+	}
 
 	/**
 	 * ќсвободить ресурсы компонента с картой и завершить отображение карты

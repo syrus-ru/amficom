@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.5 2004/09/23 10:07:15 krupenn Exp $
+ * $Id: MapMarker.java,v 1.6 2004/09/27 07:41:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,6 +37,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.util.Hashtable;
 
 import javax.swing.ImageIcon;
@@ -62,7 +63,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/23 10:07:15 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 07:41:34 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -378,9 +379,17 @@ public class MapMarker extends StubResource implements MapElement
 		this.name = name;
 	}
 
-	//рисуем маркер
-	public void paint (Graphics g)
+	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
+		return visibleBounds.contains(getAnchor());
+	}
+
+	//рисуем маркер
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
+	{
+		if(!isVisible(visibleBounds))
+			return;
+
 		MapCoordinatesConverter converter = getMap().getConverter();
 
 		int width = (int )getBounds().getWidth();

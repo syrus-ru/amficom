@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.2 2004/09/23 10:07:15 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.3 2004/09/27 07:41:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -42,7 +43,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/23 10:07:15 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 07:41:34 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -249,17 +250,38 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		return isSelected();
 	}
 
-	public void paint(Graphics g, Stroke stroke, Color color, boolean selectionVisible)
+	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
+		boolean vis = false;
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
 			MapCablePathElement cpath = (MapCablePathElement )it.next();
-			cpath.paint(g, stroke, color, selectionVisible);
+			if(cpath.isVisible(visibleBounds))
+			{
+				vis = true;
+				break;
+			}
+		}
+		return vis;
+	}
+
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
+	{
+		if(!isVisible(visibleBounds))
+			return;
+
+		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
+		{
+			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			cpath.paint(g, visibleBounds, stroke, color, selectionVisible);
 		}
 	}
 
-	public void paint(Graphics g)
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
+		if(!isVisible(visibleBounds))
+			return;
+
 		BasicStroke stroke = (BasicStroke )this.getStroke();
 		Stroke str = new BasicStroke(
 				this.getLineSize(), 
@@ -270,7 +292,7 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 				stroke.getDashPhase());
 		Color color = this.getColor();
 
-		paint(g, str, color, isSelectionVisible());
+		paint(g, visibleBounds, str, color, isSelectionVisible());
 	}
 
 

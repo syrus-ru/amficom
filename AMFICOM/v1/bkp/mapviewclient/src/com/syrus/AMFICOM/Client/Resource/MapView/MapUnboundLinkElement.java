@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundLinkElement.java,v 1.4 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: MapUnboundLinkElement.java,v 1.5 2004/09/27 07:41:34 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,6 +30,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -39,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 07:41:34 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -84,8 +85,11 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 	 * –исуем NodeLink взависимости от того выбрана она или нет
 	 * а так же если она выбрана выводим еЄ рамер
 	 */
-	public void paint(Graphics g)
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
+		if(!isVisible(visibleBounds))
+			return;
+
 		BasicStroke stroke = (BasicStroke )this.getStroke();
 		Stroke str = new BasicStroke(
 				MapPropertiesManager.getUnboundThickness(), 
@@ -95,7 +99,7 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 				stroke.getDashArray(), 
 				stroke.getDashPhase());
 
-		paint(g, str, MapPropertiesManager.getUnboundLinkColor(), false);
+		paint(g, visibleBounds, str, MapPropertiesManager.getUnboundLinkColor(), false);
 	}
 
 

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.3 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.4 2004/09/27 07:41:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,10 +50,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,7 +65,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 07:41:34 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -190,6 +192,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Получить центральную точку вида карты
 	 */
 	public abstract Point2D.Double getCenter();
+
+	public abstract Rectangle2D.Double getVisibleBounds();
 
 	public abstract List findSpatialObjects(String searchText);
 	
@@ -560,6 +564,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		
 		Iterator e;
 		
+		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
+		
 		elementsToDisplay.clear();
 
 		//Если режим показа nodeLink не разрешён, то включам режим показа physicalLink
@@ -578,14 +584,14 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				MapCablePathElement cpath = 
 					(MapCablePathElement )it.next();
-				cpath.paint(g);
+				cpath.paint(g, visibleBounds);
 				elementsToDisplay.removeAll(cpath.getLinks());
 			}
 			for(Iterator it = elementsToDisplay.iterator(); it.hasNext();)
 			{
 				MapPhysicalLinkElement mple = 
 					(MapPhysicalLinkElement )it.next();
-				mple.paint(g);
+				mple.paint(g, visibleBounds);
 			}
 		}
 		else
@@ -596,7 +602,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				MapPhysicalLinkElement mple = 
 					(MapPhysicalLinkElement )e.next();
-				mple.paint(g);
+				mple.paint(g, visibleBounds);
 			}
 		}
 		else
@@ -606,81 +612,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			while (e.hasNext())
 			{
 				MapNodeLinkElement curNodeLink = (MapNodeLinkElement )e.next();
-				curNodeLink.paint(p);
-			}
-		}
-	}
-
-	public void drawLines1(Graphics g)
-	{
-		Graphics2D p = (Graphics2D )g;
-		Iterator e;
-
-		//Если режим показа nodeLink не разрешён, то включам режим показа physicalLink
-		if (! aContext.getApplicationModel().isEnabled("mapModeNodeLink"))
-		{
-			Command com = getContext().getApplicationModel().getCommand("mapModeLink");
-			com.setParameter("applicationModel", aContext.getApplicationModel());
-			com.setParameter("logicalNetLayer", this);
-			com.execute();
-		}
-/*
-		if (getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
-		{
-			//Последовательность отображения
-			//1 transmissionPath
-			//2 physicalLink которвые не вошли в transmissionPath
-			//Выбираем какие physicalLink надо показать
-			LinkedList physicalLinkToShow = new LinkedList();
-			e = map.getPhysicalLinks().iterator();
-			while (e.hasNext())
-			{
-				MapPhysicalLinkElement mple = 
-					(MapPhysicalLinkElement )e.next();
-				physicalLinkToShow.add(mple.getId());
-			}
-
-			//Удаляем из них какие не надо
-			e = map.getTransmissionPath().iterator();
-			while (e.hasNext())
-			{
-				MapTransmissionPathElement mtpe = 
-					(MapTransmissionPathElement )e.next();
-				mtpe.paint( g);
-				physicalLinkToShow.removeAll(mtpe.physicalLink_ids);
-			}
-
-			e = physicalLinkToShow.iterator();
-			while (e.hasNext())
-			{
-				map.getPhysicalLink((String )e.next()).paint(g);
-			}
-			return;
-		}
-*/
-
-		if (getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK
-			|| getMapState().getShowMode() == MapState.SHOW_CABLE_PATH)
-		{
-			e = getMapView().getMap().getPhysicalLinks().iterator();
-			while (e.hasNext())
-			{
-				MapPhysicalLinkElement mple = 
-					(MapPhysicalLinkElement )e.next();
-				mple.paint(g);
-			}
-		}
-		else
-		if (getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
-		{
-			e = getMapView().getMap().getNodeLinks().iterator();
-			while (e.hasNext())
-			{
-				MapNodeLinkElement curNodeLink = (MapNodeLinkElement )e.next();
-//				if ( !getMapView().getMap().getPhysicalLink(curNodeLink.getPhysicalLinkId()).isSelected())
-				{
-					curNodeLink.paint(p);
-				}
+				curNodeLink.paint(p, visibleBounds);
 			}
 		}
 	}
@@ -692,6 +624,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		Graphics2D pg = (Graphics2D )g;
 
+		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
+
 		Iterator e = getMapView().getMap().getNodes().iterator();
 		while (e.hasNext())
 		{
@@ -700,14 +634,14 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				if ( aContext.getApplicationModel().isEnabled("mapActionShowEquipment"))
 				{
-					curNode.paint(pg);
+					curNode.paint(pg, visibleBounds);
 				}
 			}
 			if ( curNode instanceof MapPhysicalNodeElement)
 			{
 				if ( MapPropertiesManager.isShowPhysicalNodes())
 				{
-					curNode.paint(pg);
+					curNode.paint(pg, visibleBounds);
 				}
 			}
 			if ( curNode instanceof MapMarkElement)
@@ -716,7 +650,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				{
 					MapMarkElement mme = (MapMarkElement )curNode;
 //					mme.moveToFromStartLt(mme.getDistance());
-					curNode.paint(pg);
+					curNode.paint(pg, visibleBounds);
 				}
 			}
 		}
@@ -725,7 +659,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		while (e.hasNext())
 		{
 			MapMarker marker = (MapMarker)e.next();
-			marker.paint(pg);
+			marker.paint(pg, visibleBounds);
 		}
 	}
 
@@ -1584,12 +1518,15 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		int showMode = getMapState().getShowMode();
 		MapElement curME = VoidMapElement.getInstance(this.getMapView().getMap());
 
+		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
+
 		//Здесь пробегаемся по всем элементам и если на каком-нибудь из них курсор
 		//то устанавливаем его текущим элементом
 		Iterator e = getMapView().getAllElements().iterator();
 		while (e.hasNext())
 		{
 			MapElement mapElement = (MapElement )e.next();
+			if(mapElement.isVisible(visibleBounds))
 			if ( mapElement.isMouseOnThisObject(point))
 			{
 				curME = mapElement;

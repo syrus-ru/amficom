@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElement.java,v 1.1 2004/09/13 12:33:43 krupenn Exp $
+ * $Id: MapUnboundNodeElement.java,v 1.2 2004/09/27 07:41:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,6 +28,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 /**
@@ -35,7 +36,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 07:41:34 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -69,9 +70,12 @@ public class MapUnboundNodeElement extends MapSiteNodeElement implements Seriali
 		return this.canBind;
 	}
 
-	public void paint(Graphics g)
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		super.paint(g);
+		if(!isVisible(visibleBounds))
+			return;
+
+		super.paint(g, visibleBounds);
 
 		MapCoordinatesConverter converter = getMap().getConverter();
 		

@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.6 2004/09/23 10:07:15 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.7 2004/09/27 07:41:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,6 +33,7 @@ import java.awt.Point;
 import java.awt.Stroke;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -47,7 +48,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/23 10:07:15 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 07:41:34 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -374,17 +375,38 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return isSelected();
 	}
 
-	public void paint(Graphics g, Stroke stroke, Color color, boolean selectionVisible)
+	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
+		boolean vis = false;
 		for(Iterator it = getLinks().iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			link.paint(g, stroke, color, selectionVisible);
+			if(link.isVisible(visibleBounds))
+			{
+				vis = true;
+				break;
+			}
+		}
+		return vis;
+	}
+
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
+	{
+		if(!isVisible(visibleBounds))
+			return;
+
+		for(Iterator it = getLinks().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			link.paint(g, visibleBounds, stroke, color, selectionVisible);
 		}
 	}
 
-	public void paint(Graphics g)
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
+		if(!isVisible(visibleBounds))
+			return;
+
 		BasicStroke stroke = (BasicStroke )this.getStroke();
 		Stroke str = new BasicStroke(
 				this.getLineSize(), 
@@ -395,7 +417,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 				stroke.getDashPhase());
 		Color color = this.getColor();
 
-		paint(g, str, color, isSelectionVisible());
+		paint(g, visibleBounds, str, color, isSelectionVisible());
 	}
 
 	public boolean isMouseOnThisObject(Point currentMousePoint)
