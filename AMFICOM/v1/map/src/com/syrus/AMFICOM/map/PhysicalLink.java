@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.4 2004/12/03 13:26:34 bob Exp $
+ * $Id: PhysicalLink.java,v 1.5 2004/12/03 15:06:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/03 13:26:34 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/03 15:06:46 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -341,7 +341,9 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 											  long dimensionX,
 											  long dimensionY,
 											  boolean leftToRight,
-											  boolean topToBottom) {
+											  boolean topToBottom,
+											  AbstractNode startNode,
+											  AbstractNode endNode) {
 			super.setAttributes(created,
 					modified,
 					creatorId,
@@ -356,5 +358,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			this.dimensionY = dimensionY;
 			this.leftToRight = leftToRight;
 			this.topToBottom = topToBottom;
+			this.startNode = startNode;
+			this.endNode = endNode;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.1 2004/12/01 15:29:41 bob Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.2 2004/12/03 15:06:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/01 15:29:41 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/03 15:06:46 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -54,7 +54,10 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
     public static final String COLUMN_DIMENSION_Y   = "dimension_y";
     // topLeft NUMBER(1),
     public static final String COLUMN_TOPLEFT       = "topLeft";
-
+    //  start_node_id VARCHAR2(32),
+    public static final String COLUMN_START_NODE_ID = "start_node_id";
+    // end_node_id VARCHAR2(32),
+    public static final String COLUMN_END_NODE_ID   = "end_node_id";
 
     private static final int LEFT_RIGHT = 0x01;
     private static final int TOP_BOTTOM = 0x02;
@@ -73,9 +76,6 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		PhysicalLink physicalLink = this.fromStorableObject(storableObject);
 		this.retrieveEntity(physicalLink);
-		/**
-		 * TODO retrieve startNode, endNode
-		 */
 	}	
 	
 	protected String getEnityName() {		
@@ -93,7 +93,9 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 				+ COLUMN_BUILDING + COMMA
 				+ COLUMN_DIMENSION_X + COMMA
 				+ COLUMN_DIMENSION_Y + COMMA
-				+ COLUMN_TOPLEFT;
+				+ COLUMN_TOPLEFT + COMMA
+				+ COLUMN_START_NODE_ID + COMMA
+				+ COLUMN_END_NODE_ID;
 		}
 		return columns;
 	}	
@@ -103,6 +105,8 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA 
 				+ QUESTION + COMMA
@@ -129,6 +133,8 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 			preparedStatement.setDouble(++i, physicalLink.getDimensionX());
 			preparedStatement.setDouble(++i, physicalLink.getDimensionY());			
 			preparedStatement.setInt(++i, (physicalLink.isTopToBottom() ? TOP_BOTTOM : 0) | (physicalLink.isLeftToRight() ? LEFT_RIGHT : 0) );
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getStartNode().getId());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getEndNode().getId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -147,7 +153,9 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 			+ DatabaseString.toQuerySubString(physicalLink.getBuilding()) + COMMA
 			+ physicalLink.getDimensionX() + COMMA
 			+ physicalLink.getDimensionY() + COMMA
-			+ ((physicalLink.isTopToBottom() ? TOP_BOTTOM : 0) | (physicalLink.isLeftToRight() ? LEFT_RIGHT : 0));
+			+ ((physicalLink.isTopToBottom() ? TOP_BOTTOM : 0) | (physicalLink.isLeftToRight() ? LEFT_RIGHT : 0)) + COMMA
+			+ DatabaseIdentifier.toSQLString(physicalLink.getStartNode().getId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(physicalLink.getEndNode().getId());
 		return values;
 	}
 	
@@ -159,8 +167,12 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 					fromStorableObject(storableObject);
 				
 		PhysicalLinkType type;
+		AbstractNode startNode;
+		AbstractNode endNode;
 		try {
 			type = (PhysicalLinkType) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PHYSICAL_LINK_TYPE_ID), true);
+			startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_START_NODE_ID), true);
+			endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_END_NODE_ID), true);
 		} catch (ApplicationException ae) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
@@ -182,7 +194,9 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 							   resultSet.getLong(COLUMN_DIMENSION_X),
 							   resultSet.getLong(COLUMN_DIMENSION_Y),
 							   (topLeft & LEFT_RIGHT) == 1,
-							   (topLeft & TOP_BOTTOM) == 1);		
+							   (topLeft & TOP_BOTTOM) == 1,
+							   startNode,
+							   endNode);		
 		return physicalLink;
 	}
 
@@ -253,9 +267,6 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 	
 
 	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
-		/**
-		 * TODO retrieve startNode, endNode
-		 */
 		if ((ids == null) || (ids.isEmpty()))
 			return retrieveByIdsOneQuery(null, conditions);
 		return retrieveByIdsOneQuery(ids, conditions);	
