@@ -3,16 +3,11 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
@@ -247,59 +242,3 @@ public class ResizableLayeredPanel extends JPanel
 	}
 
 }
-class ToolBarPanel extends JToolBar
-{
-	protected ResizableLayeredPanel panel;
-	protected int position = 0;
-
-	protected static final String SEPARATOR = "separator";
-
-	protected Map actions = new HashMap();
-
-	protected static String[] buttons = new String[]
-	{
-	};
-
-	public ToolBarPanel(ResizableLayeredPanel panel)
-	{
-		this.panel = panel;
-		setBorder(BorderFactory.createEtchedBorder());
-		setLayout (new BoxLayout(this, BoxLayout.X_AXIS));
-	}
-	
-
-	protected String[] getButtons()
-	{
-		return buttons;
-	}
-
-	protected Map createGraphButtons()
-	{
-		return actions;
-	}
-
-	AbstractButton createToolButton(
-			AbstractButton b,
-			Dimension preferred_size,
-			String text,
-			String tooltip,
-			Icon icon,
-			ActionListener actionListener,
-			boolean isEnabled)
-	{
-		if (preferred_size != null)
-			b.setPreferredSize(preferred_size);
-		if (text != null)
-			b.setText (text);
-		if (tooltip != null)
-			b.setToolTipText (tooltip);
-		if (icon != null)
-			b.setIcon(icon);
-		if (actionListener != null)
-			b.addActionListener(actionListener);
-		b.setEnabled(isEnabled);
-		b.setFocusable(false);
-		return b;
-	}
-}
-

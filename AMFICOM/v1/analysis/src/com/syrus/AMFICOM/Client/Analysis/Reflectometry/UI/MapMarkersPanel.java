@@ -126,7 +126,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 			upd_currpos(e);
 
 			moveMarker (active_marker, coord2index(currpos.x));
-			move_notify();
+//			move_notify();
 			parent.repaint();
 			//long t1 = System.currentTimeMillis();
 			//System.out.println("MapMarkersPanel: tmD: mm dt " + (t1-t0));
@@ -159,6 +159,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 		if(move_marker)
 		{
 			move_marker = false;
+			move_notify();
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			parent.repaint();
 			return;

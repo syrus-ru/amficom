@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementsLayeredPanel.java,v 1.4 2005/03/24 12:19:39 bob Exp $
+ * $Id: PathElementsLayeredPanel.java,v 1.5 2005/03/28 14:08:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,6 @@
  */
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-/**
- * @version $Revision: 1.4 $, $Date: 2005/03/24 12:19:39 $
- * @author $Author: bob $
- * @module analysis_v1
- */
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +19,12 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+
+/**
+ * @version $Revision: 1.5 $, $Date: 2005/03/28 14:08:26 $
+ * @author $Author: bob $
+ * @module analysis_v1
+ */
 
 public class PathElementsLayeredPanel extends AnalysisLayeredPanel
 {
