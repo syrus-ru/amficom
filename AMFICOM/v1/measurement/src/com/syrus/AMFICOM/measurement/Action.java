@@ -10,6 +10,8 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 public abstract class Action extends StorableObject implements TypedObject {
 	Identifier typeId;
 	Identifier monitoredElementId;
+	
+	String codename;
 
 	public Action(Identifier id) {
 		super(id);
@@ -21,7 +23,8 @@ public abstract class Action extends StorableObject implements TypedObject {
 								Identifier creatorId,
 								Identifier modifierId,
 								Identifier typeId,
-								Identifier monitoredElementId) {
+								Identifier monitoredElementId,
+								String codename) {
 		super(id,
 					created,
 					modified,
@@ -29,6 +32,8 @@ public abstract class Action extends StorableObject implements TypedObject {
 					modifierId);
 		this.typeId = typeId;
 		this.monitoredElementId = monitoredElementId;
+		
+		this.codename = codename;
 	}
 
 	public Identifier getTypeId() {
@@ -38,19 +43,25 @@ public abstract class Action extends StorableObject implements TypedObject {
 	public Identifier getMonitoredElementId() {
 		return this.monitoredElementId;
 	}
+	
+	public String getCodename() {
+		return this.codename;
+	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						Identifier typeId,
-																						Identifier monitoredElementId) {
+																						Identifier monitoredElementId,
+																						String codename) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId);
 		this.typeId = typeId;
 		this.monitoredElementId = monitoredElementId;
+		this.codename = codename;
 	}
 
 	public abstract Result createResult(Identifier id,

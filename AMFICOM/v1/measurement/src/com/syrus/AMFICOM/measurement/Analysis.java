@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
+import com.syrus.util.Log;
 
 public class Analysis extends Action {
 	private Set criteriaSet;
@@ -36,7 +37,8 @@ public class Analysis extends Action {
 					new Identifier(at.creator_id),
 					new Identifier(at.modifier_id),
 					new Identifier(at.type_id),
-					new Identifier(at.monitored_element_id));
+					new Identifier(at.monitored_element_id),
+					new String(at.codename));
 		try {
 			this.criteriaSet = new Set(new Identifier(at.criteria_set_id));
 		}
@@ -69,6 +71,15 @@ public class Analysis extends Action {
 		super.modifierId = creatorId;
 		super.typeId = typeId;
 		super.monitoredElementId = monitoredElementId;
+		try {
+			AnalysisType analysisType = new AnalysisType(this.typeId);
+			super.codename = analysisType.getCodename();
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			super.codename = "";
+		}
+
 		this.criteriaSet = criteriaSet;
 
 		super.currentVersion = super.getNextVersion();
@@ -90,6 +101,7 @@ public class Analysis extends Action {
 																			(Identifier_Transferable)super.modifierId.getTransferable(),
 																			(Identifier_Transferable)super.typeId.getTransferable(),
 																			(Identifier_Transferable)super.monitoredElementId.getTransferable(),
+																			new String(super.codename),
 																			(Identifier_Transferable)this.criteriaSet.getId().getTransferable());
 	}
 
@@ -104,12 +116,23 @@ public class Analysis extends Action {
 																						Identifier typeId,
 																						Identifier monitoredElementId,
 																						Set criteriaSet) {
+		String codename1;
+		try {
+			AnalysisType analysisType = new AnalysisType(typeId);
+			codename1 = analysisType.getCodename();
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			codename1 = "";
+		}
+
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
 												typeId,
-												monitoredElementId);
+												monitoredElementId,
+												codename1);
 		this.criteriaSet = criteriaSet;
 	}
 

@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
+import com.syrus.util.Log;
 
 public class Measurement extends Action {
 	public static final long DEFAULT_MEASUREMENT_DURATION = 3*60*1000;//milliseconds
@@ -47,7 +48,8 @@ public class Measurement extends Action {
 					new Identifier(mt.creator_id),
 					new Identifier(mt.modifier_id),
 					new Identifier(mt.type_id),
-					new Identifier(mt.monitored_element_id));
+					new Identifier(mt.monitored_element_id),
+					new String(mt.codename));
 		try {
 			this.setup = new MeasurementSetup(new Identifier(mt.setup_id));
 		}
@@ -88,6 +90,15 @@ public class Measurement extends Action {
 		super.modifierId = creatorId;
 		super.typeId = typeId;
 		super.monitoredElementId = monitoredElementId;
+		try {
+			MeasurementType measurementType = new MeasurementType(this.typeId);
+			super.codename = measurementType.getCodename();
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			super.codename = "";
+		}
+
 		this.setup = setup;
 		this.startTime = startTime;
 		this.duration = this.setup.getMeasurementDuration();
@@ -114,6 +125,7 @@ public class Measurement extends Action {
 																				(Identifier_Transferable)super.modifierId.getTransferable(),
 																				(Identifier_Transferable)super.typeId.getTransferable(),
 																				(Identifier_Transferable)super.monitoredElementId.getTransferable(),
+																				new String(super.codename),
 																				(Identifier_Transferable)this.setup.getId().getTransferable(),
 																				this.startTime.getTime(),
 																				this.duration,
@@ -170,12 +182,22 @@ public class Measurement extends Action {
 																						int status,
 																						String localAddress,
 																						Identifier testId) {
+		String codename1;
+		try {
+			MeasurementType measurementType = new MeasurementType(typeId);
+			codename1 = measurementType.getCodename();
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			codename1 = "";
+		}
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
 												typeId,
-												monitoredElementId);
+												monitoredElementId,
+												codename1);
 		this.setup = setup;
 		this.startTime = startTime;
 		this.duration = duration;

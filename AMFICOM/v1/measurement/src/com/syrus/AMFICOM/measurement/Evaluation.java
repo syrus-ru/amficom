@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
+import com.syrus.util.Log;
 
 public class Evaluation extends Action {
 	private Set thresholdSet;
@@ -36,7 +37,8 @@ public class Evaluation extends Action {
 					new Identifier(et.creator_id),
 					new Identifier(et.modifier_id),
 					new Identifier(et.type_id),
-					new Identifier(et.monitored_element_id));
+					new Identifier(et.monitored_element_id),
+					new String(et.codename));
 		try {
 			this.thresholdSet = new Set(new Identifier(et.threshold_set_id));
 		}
@@ -69,6 +71,15 @@ public class Evaluation extends Action {
 		super.modifierId = creatorId;
 		super.typeId = typeId;
 		super.monitoredElementId = monitoredElementId;
+		try {
+			EvaluationType evaluationType = new EvaluationType(this.typeId);
+			super.codename = evaluationType.getCodename();
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			super.codename = "";
+		}		
+
 		this.thresholdSet = thresholdSet;
 
 		super.currentVersion = super.getNextVersion();
@@ -90,6 +101,7 @@ public class Evaluation extends Action {
 																			 (Identifier_Transferable)super.modifierId.getTransferable(),
 																			 (Identifier_Transferable)super.typeId.getTransferable(),
 																			 (Identifier_Transferable)super.monitoredElementId.getTransferable(),
+																			 new String(super.codename),
 																			 (Identifier_Transferable)this.thresholdSet.getId().getTransferable());
 	}
 
@@ -104,12 +116,23 @@ public class Evaluation extends Action {
 																						Identifier typeId,
 																						Identifier monitoredElementId,
 																						Set thresholdSet) {
+		String codename1;
+		try {
+			EvaluationType evaluationType = new EvaluationType(typeId);
+			codename1 = evaluationType.getCodename();
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			codename1 = "";
+		}
+
 		super.setAttributes(created,
 												modified,
 												creatorId,
 												modifierId,
 												typeId,
-												monitoredElementId);
+												monitoredElementId,
+												codename1);
 		this.thresholdSet = thresholdSet;
 	}
 

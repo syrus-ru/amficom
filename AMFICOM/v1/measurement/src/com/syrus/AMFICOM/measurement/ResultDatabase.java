@@ -153,16 +153,25 @@ public class ResultDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-							/**
-							 * @todo when change DB Identifier model ,change getString() to getLong()
-							 */
-				arraylist.add(new SetParameter(	new Identifier(resultSet.getString(COLUMN_ID)),
-							/**
-							 * @todo when change DB Identifier model ,change getString() to getLong()
-							 */
-												new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)),
-												ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE))));
+			SetParameter parameter;
+			while (resultSet.next()) {
+				try {
+					parameter = new SetParameter(/**
+																				* @todo when change DB Identifier model ,change getString() to getLong()
+																				*/
+																				new Identifier(resultSet.getString(COLUMN_ID)),
+																				/**
+																					* @todo when change DB Identifier model ,change getString() to getLong()
+																					*/
+																				new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)),
+																				ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
+					arraylist.add(parameter);
+				}
+				catch (Exception e) {
+					Log.errorException(e);
+					continue;
+				}
+			}
 		}
 		catch (SQLException sqle) {
 			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result " + resultIdStr;

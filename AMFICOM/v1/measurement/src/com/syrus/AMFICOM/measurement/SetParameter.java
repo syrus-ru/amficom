@@ -3,6 +3,8 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 
@@ -10,6 +12,8 @@ public class SetParameter implements TransferableObject, TypedObject {
 	private Identifier id;
 	private Identifier typeId;
 	private byte[] value;
+	
+	private String codename;
 
 	public SetParameter(Parameter_Transferable pt) {
 		this.id = new Identifier(pt.id);
@@ -17,14 +21,30 @@ public class SetParameter implements TransferableObject, TypedObject {
 		this.value = new byte[pt.value.length];
 		for (int i = 0; i < this.value.length; i++)
 			this.value[i] = pt.value[i];
+			
+		this.codename = new String(pt.codename);
 	}
 
 	public SetParameter(Identifier id,
 											Identifier typeId,
-											byte[] value) {
+											byte[] value) throws RetrieveObjectException, ObjectNotFoundException {
 		this.id = id;
 		this.typeId = typeId;
 		this.value = value;
+		
+		ParameterType parameterType = new ParameterType(this.typeId);
+		this.codename = parameterType.getCodename();
+	}
+	
+	public SetParameter(Identifier id,
+											String codename,
+											byte[] value) throws RetrieveObjectException, ObjectNotFoundException {
+		this.id = id;
+		ParameterType parameterType = ParameterTypeDatabase.retrieveForCodename(codename);
+		this.typeId = parameterType.getId();
+		this.value = value;
+		
+		this.codename = codename;
 	}
 
 	public Object getTransferable() {
@@ -33,7 +53,8 @@ public class SetParameter implements TransferableObject, TypedObject {
 			ptValue[i] = this.value[i];
 		return new Parameter_Transferable((Identifier_Transferable)this.id.getTransferable(),
 																			(Identifier_Transferable)this.typeId.getTransferable(),
-																			ptValue);
+																			ptValue,
+																			codename);
 	}
 
 	public Identifier getId() {
@@ -46,5 +67,9 @@ public class SetParameter implements TransferableObject, TypedObject {
 
 	public byte[] getValue() {
 		return this.value;
+	}
+	
+	public String getCodename() {
+		return this.codename;
 	}
 }
