@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.70 2004/11/24 08:47:56 max Exp $
+ * $Id: CMServerImpl.java,v 1.71 2004/11/24 10:16:02 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -87,6 +87,7 @@ import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MeasurementSetupCondition;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Modeling;
@@ -122,7 +123,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2004/11/24 08:47:56 $
+ * @version $Revision: 1.71 $, $Date: 2004/11/24 10:16:02 $
  * @author $Author: max $
  * @module cmserver_v1
  */
