@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.22 2005/03/10 15:39:16 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.23 2005/03/11 10:48:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/10 15:39:16 $
+ * @version $Revision: 1.23 $, $Date: 2005/03/11 10:48:11 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -81,38 +81,34 @@ public class CollectorDatabase extends CharacterizableDatabase {
 		return ObjectEntities.COLLECTOR_ENTITY;
 	}	
 	
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null){
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		Collector collector = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseString.setString(preparedStatement, ++i, collector.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, collector.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		return i;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, collector.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, collector.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		return startParameterNumber;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Collector collector = fromStorableObject(storableObject);
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(collector.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+		String values = APOSTOPHE + DatabaseString.toQuerySubString(collector.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(collector.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return values;
 	}

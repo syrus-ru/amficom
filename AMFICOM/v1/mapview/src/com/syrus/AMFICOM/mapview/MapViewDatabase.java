@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.14 2005/03/10 15:40:54 bob Exp $
+* $Id: MapViewDatabase.java,v 1.15 2005/03/11 10:50:06 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/03/10 15:40:54 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/11 10:50:06 $
  * @author $Author: bob $
  * @module mapview_v1
  */
@@ -111,10 +111,9 @@ public class MapViewDatabase extends CharacterizableDatabase {
 		return ObjectEntities.MAPVIEW_ENTITY;
 	}	
 	
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null){
-			columns = COMMA
-				+ COLUMN_DOMAIN_ID + COMMA
+			columns = COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_LONGITUDE + COMMA
@@ -123,13 +122,12 @@ public class MapViewDatabase extends CharacterizableDatabase {
 				+ COLUMN_DEFAULTSCALE + COMMA
 				+ COLUMN_MAP_ID;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -142,25 +140,23 @@ public class MapViewDatabase extends CharacterizableDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		MapView mapView = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mapView.getDomainId());
-		DatabaseString.setString(preparedStatement, ++i, mapView.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, mapView.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++i, mapView.getLongitude());
-		preparedStatement.setDouble(++i, mapView.getLatitude());
-		preparedStatement.setDouble(++i, mapView.getScale());
-		preparedStatement.setDouble(++i, mapView.getDefaultScale());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mapView.getMap().getId());					
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mapView.getDomainId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, mapView.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, mapView.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, mapView.getLongitude());
+		preparedStatement.setDouble(++startParameterNumber, mapView.getLatitude());
+		preparedStatement.setDouble(++startParameterNumber, mapView.getScale());
+		preparedStatement.setDouble(++startParameterNumber, mapView.getDefaultScale());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mapView.getMap().getId());					
+		return startParameterNumber;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		MapView mapView = fromStorableObject(storableObject);
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(mapView.getDomainId()) + COMMA
+		String values = DatabaseIdentifier.toSQLString(mapView.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mapView.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mapView.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ mapView.getLongitude() + COMMA

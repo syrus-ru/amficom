@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.20 2005/03/10 15:39:16 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.21 2005/03/11 10:48:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/10 15:39:16 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/11 10:48:11 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -55,10 +55,9 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 		return ObjectEntities.SITE_NODE_ENTITY;
 	}	
 	
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null){
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ SiteNodeWrapper.COLUMN_LONGITUDE + COMMA
 				+ SiteNodeWrapper.COLUMN_LATIUDE + COMMA 
@@ -68,13 +67,12 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 				+ SiteNodeWrapper.COLUMN_STREET + COMMA
 				+ SiteNodeWrapper.COLUMN_BUILDING;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA 
@@ -88,26 +86,24 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		SiteNode siteNode = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseString.setString(preparedStatement, ++i, siteNode.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++i, siteNode.getLocation().getX());
-		preparedStatement.setDouble(++i, siteNode.getLocation().getY());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNode.getImageId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNode.getType().getId());
-		DatabaseString.setString(preparedStatement, ++i, siteNode.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, siteNode.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, siteNode.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
-		return i;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, siteNode.getLocation().getX());
+		preparedStatement.setDouble(++startParameterNumber, siteNode.getLocation().getY());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, siteNode.getImageId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, siteNode.getType().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
+		return startParameterNumber;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		SiteNode siteNode = fromStorableObject(storableObject);
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+		String values = APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ siteNode.getLocation().getX() + COMMA
 			+ siteNode.getLocation().getY() + COMMA

@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.20 2005/03/10 15:39:16 bob Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.21 2005/03/11 10:48:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/10 15:39:16 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/11 10:48:11 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -236,22 +236,20 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		return ObjectEntities.TOPOLOGICAL_NODE_ENTITY;
 	}	
 	
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null){
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ TopologicalNodeWrapper.COLUMN_LONGITUDE + COMMA
 				+ TopologicalNodeWrapper.COLUMN_LATIUDE + COMMA 
 				+ TopologicalNodeWrapper.COLUMN_ACTIVE;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA 
@@ -261,22 +259,20 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		TopologicalNode topologicalNode = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseString.setString(preparedStatement, ++i, topologicalNode.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++i, topologicalNode.getLocation().getX());
-		preparedStatement.setDouble(++i, topologicalNode.getLocation().getY());
-		preparedStatement.setInt(++i, topologicalNode.isActive() ? 1 : 0);
-		return i;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, topologicalNode.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, topologicalNode.getLocation().getX());
+		preparedStatement.setDouble(++startParameterNumber, topologicalNode.getLocation().getY());
+		preparedStatement.setInt(++startParameterNumber, topologicalNode.isActive() ? 1 : 0);
+		return startParameterNumber;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		TopologicalNode topologicalNode = fromStorableObject(storableObject);
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+		String values = APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ topologicalNode.getLocation().getX() + COMMA
 			+ topologicalNode.getLocation().getY() + COMMA

@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.18 2005/03/10 15:39:16 bob Exp $
+ * $Id: MarkDatabase.java,v 1.19 2005/03/11 10:48:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/10 15:39:16 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/11 10:48:11 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -59,10 +59,9 @@ public class MarkDatabase extends CharacterizableDatabase {
 		return ObjectEntities.MARK_ENTITY;
 	}	
 	
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null){
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ MarkWrapper.COLUMN_LONGITUDE + COMMA
 				+ MarkWrapper.COLUMN_LATIUDE + COMMA
@@ -72,13 +71,12 @@ public class MarkDatabase extends CharacterizableDatabase {
 				+ MarkWrapper.COLUMN_STREET + COMMA
 				+ MarkWrapper.COLUMN_BUILDING;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -92,26 +90,24 @@ public class MarkDatabase extends CharacterizableDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		Mark mark = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseString.setString(preparedStatement, ++i, mark.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, mark.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++i, mark.getLocation().getX());
-		preparedStatement.setDouble(++i, mark.getLocation().getY());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mark.getPhysicalLink().getId());
-		preparedStatement.setDouble(++i, mark.getDistance());
-		DatabaseString.setString(preparedStatement, ++i, mark.getCity(), SIZE_CITY_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, mark.getStreet(), SIZE_STREET_COLUMN);
-		DatabaseString.setString(preparedStatement, ++i, mark.getBuilding(), SIZE_BUILDING_COLUMN);
-		return i;
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, mark.getLocation().getX());
+		preparedStatement.setDouble(++startParameterNumber, mark.getLocation().getY());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mark.getPhysicalLink().getId());
+		preparedStatement.setDouble(++startParameterNumber, mark.getDistance());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getCity(), SIZE_CITY_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getStreet(), SIZE_STREET_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getBuilding(), SIZE_BUILDING_COLUMN);
+		return startParameterNumber;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Mark mark = fromStorableObject(storableObject);
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(mark.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+		String values = APOSTOPHE + DatabaseString.toQuerySubString(mark.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mark.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ mark.getLocation().getX() + COMMA
 			+ mark.getLocation().getY() + COMMA
