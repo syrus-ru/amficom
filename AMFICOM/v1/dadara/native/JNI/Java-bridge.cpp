@@ -272,12 +272,13 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFin
 	return rcID;
 }
 
+
 /*
  * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
- * Method:    nFindResponsibleThreshDXDYArray
- * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/ThreshDX;[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDY;III)[Ljava/lang/Object;
+ * Method:    nFindResponsibleThreshDXArray
+ * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/ThreshDX;[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDY;III)[I
  */
-JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFindResponsibleThreshDXDYArray
+JNIEXPORT jintArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFindResponsibleThreshDXArray
   (JNIEnv *env, jobject obj, jobjectArray threshArrDX, jobjectArray threshArrDY, jint keyj, jint xMinj, jint xMaxj)
 {
 	prf_b("nFindResponsibleThreshDXDYArray");
@@ -294,56 +295,35 @@ JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunct
 	assert(xMax >= xMin);
 	int N = xMax - xMin + 1;
 
-	// XXX: в Java нужны только TTDX
-
 	// создаем выходные массивы
 	jintArray jaX  = env->NewIntArray((jsize)N);
-	jintArray jaYL = env->NewIntArray((jsize)N);
-	jintArray jaYR = env->NewIntArray((jsize)N); // этот вообще не используется...
-	assert(jaX && jaYL && jaYR);
-	jclass jintclass = env->GetObjectClass(jaX);
-	jobjectArray jaOut = env->NewObjectArray((jsize)3, jintclass, (jobject)0);
-	assert(jaOut);
-	env->SetObjectArrayElement(jaOut, 0, jaX);
-	env->SetObjectArrayElement(jaOut, 1, jaYL);
-	env->SetObjectArrayElement(jaOut, 2, jaYR);
+	assert(jaX);
 
 	// формируем временные массивы
 	TTDX *ttdx = new TTDX[N];
-	TTDY *ttdy = new TTDY[N];
 	assert(ttdx);
-	assert(ttdy);
 
 	// выполняем преобразование
-	void *args[8] = { &taDX, &taDY, &key, &autoThresh, &xMin, &xMax, ttdx, ttdy };
+	void *args[8] = { &taDX, &taDY, &key, &autoThresh, &xMin, &xMax, ttdx, 0 };
 	int rcID = (int )mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_TTDXDY, args);
 	assert(rcID); // 0 - команда не поддерживается. FIXME: - в принципе, тут надо просто вернуть null в Java
 
 	// определяем leftmost и rightmost пороги каждого участка
 	jint *dX  = env->GetIntArrayElements(jaX,  0);
-	jint *dYL = env->GetIntArrayElements(jaYL, 0);
-	jint *dYR = env->GetIntArrayElements(jaYR, 0);
 
 	int i;
 	for (i = 0; i < N; i++)
 	{
 		dX[i] = ttdx[i].thId;
-		if (ttdy[i].nextWei)
-			dYL[i] = dYR[i] = -1;
-		else
-			dYL[i] = dYR[i] = ttdy[i].thId;
 	}
 
 	// освобождаем временные массивы и Java-объекты
 	delete[] ttdx;
-	delete[] ttdy;
 	env->ReleaseIntArrayElements(jaX,  dX,  0);
-	env->ReleaseIntArrayElements(jaYL, dYL, 0);
-	env->ReleaseIntArrayElements(jaYR, dYR, 0);
 
 	// NB: do NOT update mf back to Java because mf is now changed but Java mf should not be modified
 	prf_e();
-	return jaOut;
+	return jaX;
 }
 
 /*

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.36 2005/03/30 12:54:37 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.37 2005/03/30 14:37:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.36 $, $Date: 2005/03/30 12:54:37 $
+ * @version $Revision: 1.37 $, $Date: 2005/03/30 14:37:39 $
  * @module
  */
 public class ModelTraceManager
@@ -768,10 +768,7 @@ public class ModelTraceManager
 	{
 		int begin = -1;
 		int end = -1;
-		Object[] t = mf.findResponsibleThreshDXDYArray(tDX, tDY, key, 0, traceLength - 1);
-		int[] aX = (int[])t[0];
-		int[] aYL = (int[])t[1];
-		//int[] aYR = (int[])t[2];
+		int[] aX = mf.findResponsibleThreshDXArray(tDX, tDY, key, 0, traceLength - 1);
 		for (int i = 0; i < traceLength; i++)
 		{
 			boolean belongs = i >= se[nEvent].getBegin() && i <= se[nEvent].getEnd();
