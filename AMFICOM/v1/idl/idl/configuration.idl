@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.76 2004/12/28 13:55:15 arseniy Exp $
+ * $Id: configuration.idl,v 1.77 2005/01/11 16:19:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -240,6 +240,7 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::WString128 name;
 		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString64 hostname;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
@@ -255,9 +256,9 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::WString128 name;
 		com::syrus::AMFICOM::general::corba::WString256 description;
+		com::syrus::AMFICOM::general::corba::WString64 hostname;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable server_id;
-		short tcp_port;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable kis_ids;
 	};
