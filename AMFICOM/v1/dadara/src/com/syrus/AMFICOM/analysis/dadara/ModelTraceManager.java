@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.8 2005/02/21 15:19:57 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.9 2005/02/21 15:51:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/02/21 15:19:57 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/21 15:51:50 $
  * @module
  */
 public class ModelTraceManager
@@ -91,7 +91,7 @@ public class ModelTraceManager
 				thresholds.add(new ThreshDY(i, true, evCenter, evCenter));
 				thresholds.add(new ThreshDX(i, evCenter, evEnd, false, 1));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
-				System.err.println("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd);
+				//System.err.println("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd);
 				break;
 			}
 		}
