@@ -1,17 +1,30 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.*;
-
 import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.Resource.ImageResourceSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.SchemeMonitoringSolution_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.SchemeOptimizeInfo_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.SchemeProtoElementSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Scheme.SchemeProtoElement_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.SchemeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Scheme.Scheme_Transferable;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.Optimize.SolutionCompact;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+
+import com.syrus1.AMFICOM.Client.Resource.RISDMapDataSource;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 public class RISDSchemeDataSource
-		extends RISDConfigDataSource
+		extends RISDMapDataSource
 		implements DataSourceInterface
 {
 	protected RISDSchemeDataSource()
@@ -25,9 +38,9 @@ public class RISDSchemeDataSource
 
 	public void LoadSchemeProto()
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		System.out.println("LoadSchemeProto:");
@@ -48,7 +61,7 @@ public class RISDSchemeDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetSchemeProtoElements(si.accessIdentity, ih, peh);
+//			ecode = ((RISDSessionInfo)getSession()).ci.server.GetStatedSchemeProtoElements(((RISDSessionInfo)getSession()).accessIdentity, ih, peh);
 		}
 		catch (Exception ex)
 		{
@@ -65,7 +78,7 @@ public class RISDSchemeDataSource
 
 		List imvec = new ArrayList(peh.value.length);
 		for (i = 0; i < peh.value.length; i++)
-			imvec.add(peh.value[i].symbol_id);
+			imvec.add(peh.value[i].symbolId);
 		String[] imids = (String[])imvec.toArray(new String[imvec.size()]);
 		new DataSourceImage(this).LoadImages(imids);
 /*
@@ -99,9 +112,9 @@ public class RISDSchemeDataSource
 
 	public void LoadSchemeProto(Vector ids)
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		System.out.println("LoadSchemeProto:");
@@ -124,7 +137,7 @@ public class RISDSchemeDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetStatedSchemeProtoElements(si.accessIdentity, id_s, ih, peh);
+			ecode = ((RISDSessionInfo)getSession()).ci.server.GetStatedSchemeProtoElements(((RISDSessionInfo)getSession()).accessIdentity, id_s, ih, peh);
 		}
 		catch (Exception ex)
 		{
@@ -141,7 +154,7 @@ public class RISDSchemeDataSource
 
 		List imvec = new ArrayList(peh.value.length);
 		for (i = 0; i < peh.value.length; i++)
-			imvec.add(peh.value[i].symbol_id);
+			imvec.add(peh.value[i].symbolId);
 		String[] imids = (String[])imvec.toArray(new String[imvec.size()]);
 		new DataSourceImage(this).LoadImages(imids);
 /*
@@ -175,9 +188,9 @@ public class RISDSchemeDataSource
 
 	public void SaveSchemeProtos(String[] ids)
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		int ecode;
@@ -188,8 +201,8 @@ public class RISDSchemeDataSource
 		for(int i = 0; i < ids.length; i++)
 		{
 			ProtoElement proto = (ProtoElement )Pool.get(ProtoElement.typ, ids[i]);
-			if(proto.symbol_id != null && !(proto.symbol_id.equals("")))
-				image_vec.add(ImageCatalogue.get(proto.symbol_id));
+			if(proto.symbolId != null && !(proto.symbolId.equals("")))
+				image_vec.add(ImageCatalogue.get(proto.symbolId));
 			proto.setTransferableFromLocal();
 			pes[i] = (SchemeProtoElement_Transferable )proto.getTransferable();
 		}
@@ -206,7 +219,7 @@ public class RISDSchemeDataSource
 
 		try
 		{
-			ecode = si.ci.server.SaveSchemeProtoElements(si.accessIdentity, images, pes);
+			ecode = ((RISDSessionInfo)getSession()).ci.server.SaveSchemeProtoElements(((RISDSessionInfo)getSession()).accessIdentity, images, pes);
 		}
 		catch (Exception ex)
 		{
@@ -224,15 +237,15 @@ public class RISDSchemeDataSource
 
 	public void RemoveSchemeProtos(String[] ids)
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		int ecode;
 		try
 		{
-			ecode = si.ci.server.RemoveSchemeProtoElements(si.accessIdentity, ids);
+			ecode = ((RISDSessionInfo)getSession()).ci.server.RemoveSchemeProtoElements(((RISDSessionInfo)getSession()).accessIdentity, ids);
 		}
 		catch (Exception ex)
 		{
@@ -250,9 +263,9 @@ public class RISDSchemeDataSource
 
 	public void LoadSchemes()
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		System.out.println("LoadSchemes:");
@@ -273,7 +286,7 @@ public class RISDSchemeDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetSchemes(si.accessIdentity, ih, sh);
+//			ecode = ((RISDSessionInfo)getSession()).ci.server.GetSchemes(((RISDSessionInfo)getSession()).accessIdentity, ih, sh);
 		}
 		catch (Exception ex)
 		{
@@ -292,7 +305,7 @@ public class RISDSchemeDataSource
 		for (i = 0; i < ih.value.length; i++)
 			imvec.add(ih.value[i].id);
 		for (i = 0; i < sh.value.length; i++)
-			imvec.add(sh.value[i].symbol_id);
+			imvec.add(sh.value[i].symbolId);
 		String[] imids = (String[])imvec.toArray(new String[imvec.size()]);
 		new DataSourceImage(this).LoadImages(imids);
 
@@ -327,9 +340,9 @@ public class RISDSchemeDataSource
 
 	public void LoadSchemes(Vector ids)
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		System.out.println("LoadSchemes:");
@@ -351,7 +364,7 @@ public class RISDSchemeDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetStatedSchemes(si.accessIdentity, id_s, ih, sh);
+			ecode = ((RISDSessionInfo)getSession()).ci.server.GetStatedSchemes(((RISDSessionInfo)getSession()).accessIdentity, id_s, ih, sh);
 		}
 		catch (Exception ex)
 		{
@@ -370,7 +383,7 @@ public class RISDSchemeDataSource
 		for (i = 0; i < ih.value.length; i++)
 			imvec.add(ih.value[i].id);
 		for (i = 0; i < sh.value.length; i++)
-			imvec.add(sh.value[i].symbol_id);
+			imvec.add(sh.value[i].symbolId);
 		String[] imids = (String[])imvec.toArray(new String[imvec.size()]);
 		new DataSourceImage(this).LoadImages(imids);
 /*
@@ -402,34 +415,34 @@ public class RISDSchemeDataSource
 		}
 	}
 
-	public void SaveScheme(String mc_id)
+	public void SaveScheme(String mcId)
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		int ecode;
 		ImageResource_Transferable []images = new ImageResource_Transferable[0];
 
-		Scheme scheme = (Scheme )Pool.get(Scheme.typ, mc_id);
+		Scheme scheme = (Scheme )Pool.get(Scheme.typ, mcId);
 		scheme.setTransferableFromLocal();
 		Scheme_Transferable scheme_t = (Scheme_Transferable )scheme.getTransferable();
 
 		Scheme_Transferable[] s_t = new Scheme_Transferable[1];
 		s_t[0] = scheme_t;
 
-		if(scheme.symbol_id != null && !(scheme.symbol_id.equals("")))
+		if(scheme.symbolId != null && !(scheme.symbolId.equals("")))
 		{
 			images = new ImageResource_Transferable[1];
-			ImageResource os = ImageCatalogue.get(scheme.symbol_id);
+			ImageResource os = ImageCatalogue.get(scheme.symbolId);
 			os.setTransferableFromLocal();
 			images[0] = (ImageResource_Transferable )os.getTransferable();
 		}
 
 		try
 		{
-			ecode = si.ci.server.SaveSchemes(si.accessIdentity, images, s_t);
+			ecode = ((RISDSessionInfo)getSession()).ci.server.SaveSchemes(((RISDSessionInfo)getSession()).accessIdentity, images, s_t);
 		}
 		catch (Exception ex)
 		{
@@ -445,13 +458,13 @@ public class RISDSchemeDataSource
 		}
 	}
 
-	public void RemoveScheme(String mc_id)
+	public void RemoveScheme(String mcId)
 	{
-		Scheme sch = (Scheme )Pool.get("scheme", mc_id);
+		Scheme sch = (Scheme )Pool.get("scheme", mcId);
 
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		System.out.println("RemoveScheme:");
@@ -464,8 +477,8 @@ public class RISDSchemeDataSource
 
 		try
 		{
-			ecode = si.ci.server.RemoveSchemes(
-					si.accessIdentity,
+			ecode = ((RISDSessionInfo)getSession()).ci.server.RemoveSchemes(
+					((RISDSessionInfo)getSession()).accessIdentity,
 					ss,
 					leer,
 					leer,
@@ -485,19 +498,19 @@ public class RISDSchemeDataSource
 		}
 	}
 
-	public void RemoveFromScheme(String mc_id)
+	public void RemoveFromScheme(String mcId)
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 	}
-
+/*
 	public void LoadAttributeTypes()
 	{
 		if(si == null)
 			return;
-		if(!si.isOpened())
+		if(!((RISDSessionInfo)getSession()).isOpened())
 			return;
 
 		int i;
@@ -510,7 +523,7 @@ public class RISDSchemeDataSource
 
 		try
 		{
-			ecode = si.ci.server.LoadAttributeTypes(si.accessIdentity, ath);
+			ecode = ((RISDSessionInfo)getSession()).ci.server.LoadAttributeTypes(((RISDSessionInfo)getSession()).accessIdentity, ath);
 		}
 		catch (Exception ex)
 		{
@@ -530,16 +543,17 @@ public class RISDSchemeDataSource
 		System.out.println("...Done! " + count + " attribute type(s) fetched");
 			for (i = 0; i < count; i++)
 		{
-			atype = new ElementAttributeType(atypes[i]);
+			atype = new com.syrus1.AMFICOM.Client.Resource.General.ElementAttributeType(atypes[i]);
 			Pool.put(ElementAttributeType.typ, atype.getId(), atype);
 			}
 	}
-
+*/
+/*
 	public void LoadAttributeTypes(String[] ids)
 	{
 		if(si == null)
 			return;
-		if(!si.isOpened())
+		if(!((RISDSessionInfo)getSession()).isOpened())
 			return;
 
 		int i;
@@ -552,7 +566,7 @@ public class RISDSchemeDataSource
 
 		try
 		{
-			ecode = si.ci.server.LoadStatedAttributeTypes(si.accessIdentity, ids, ath);
+			ecode = ((RISDSessionInfo)getSession()).ci.server.LoadStatedAttributeTypes(((RISDSessionInfo)getSession()).accessIdentity, ids, ath);
 		}
 		catch (Exception ex)
 		{
@@ -572,23 +586,23 @@ public class RISDSchemeDataSource
 		System.out.println("...Done! " + count + " attribute type(s) fetched");
 			for (i = 0; i < count; i++)
 		{
-			atype = new ElementAttributeType(atypes[i]);
+			atype = new com.syrus1.AMFICOM.Client.Resource.General.ElementAttributeType(atypes[i]);
 			Pool.put(ElementAttributeType.typ, atype.getId(), atype);
 			}
 	}
-
-	public void SaveSchemeOptimizeInfo(String soi_id)
+*/
+	public void SaveSchemeOptimizeInfo(String soiId)
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		SchemeOptimizeInfo_Transferable soi = (SchemeOptimizeInfo_Transferable )
-			Pool.get("optimized_scheme_info", soi_id);
+			Pool.get("optimized_schemeInfo", soiId);
 		try
 		{
-			si.ci.server.saveSchemeOptimizeInfo(si.accessIdentity, soi);
+			((RISDSessionInfo)getSession()).ci.server.saveSchemeOptimizeInfo(((RISDSessionInfo)getSession()).accessIdentity, soi);
 		}
 		catch (Exception ex)
 		{
@@ -600,9 +614,9 @@ public class RISDSchemeDataSource
 
 	public void LoadSchemeOptimizeInfo()
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		int i;
@@ -613,7 +627,7 @@ public class RISDSchemeDataSource
 
 		try
 		{
-			sois = si.ci.server.getSchemeOptimizeInfo(si.accessIdentity);
+			sois = ((RISDSessionInfo)getSession()).ci.server.getSchemeOptimizeInfo(((RISDSessionInfo)getSession()).accessIdentity);
 		}
 		catch (Exception ex)
 		{
@@ -626,20 +640,20 @@ public class RISDSchemeDataSource
 		System.out.println("...Done! " + count + " SOI(s) fetched");
 			for (i = 0; i < count; i++)
 		{
-			Pool.put("optimized_scheme_info", sois[i].id, sois[i]);
+			Pool.put("optimized_schemeInfo", sois[i].id, sois[i]);
 			}
 	}
 
-	public void RemoveSchemeOptimizeInfo(String soi_id)
+	public void RemoveSchemeOptimizeInfo(String soiId)
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		try
 		{
-			si.ci.server.removeSchemeOptimizeInfo(si.accessIdentity, new String[] { soi_id });
+			((RISDSessionInfo)getSession()).ci.server.removeSchemeOptimizeInfo(((RISDSessionInfo)getSession()).accessIdentity, new String[] { soiId });
 		}
 		catch (Exception ex)
 		{
@@ -649,20 +663,20 @@ public class RISDSchemeDataSource
 		}
 	}
 
-	public void SaveSchemeMonitoringSolutions(String sol_id)
+	public void SaveSchemeMonitoringSolutions(String solId)
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
-		SolutionCompact sc = (SolutionCompact )Pool.get("sm_solution", sol_id);
+		SolutionCompact sc = (SolutionCompact )Pool.get("sm_solution", solId);
 		sc.setTransferableFromLocal();
 		SchemeMonitoringSolution_Transferable sol =
 				(SchemeMonitoringSolution_Transferable )sc.getTransferable();
 		try
 		{
-			si.ci.server.saveSchemeMonitoringSolutions(si.accessIdentity, sol);
+			((RISDSessionInfo)getSession()).ci.server.saveSchemeMonitoringSolutions(((RISDSessionInfo)getSession()).accessIdentity, sol);
 		}
 		catch (Exception ex)
 		{
@@ -674,9 +688,9 @@ public class RISDSchemeDataSource
 
 	public void LoadSchemeMonitoringSolutions()
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!getSession().isOpened())
 			return;
 
 		int i;
@@ -687,7 +701,7 @@ public class RISDSchemeDataSource
 
 		try
 		{
-			sols = si.ci.server.getSchemeMonitoringSolutions(si.accessIdentity);
+			sols = ((RISDSessionInfo)getSession()).ci.server.getSchemeMonitoringSolutions(((RISDSessionInfo)getSession()).accessIdentity);
 		}
 		catch (Exception ex)
 		{
@@ -705,16 +719,16 @@ public class RISDSchemeDataSource
 			}
 	}
 
-	public void RemoveSchemeMonitoringSolution(String sol_id)
+	public void RemoveSchemeMonitoringSolution(String solId)
 	{
-		if(si == null)
+		if(getSession() == null)
 			return;
-		if(!si.isOpened())
+		if(!((RISDSessionInfo)getSession()).isOpened())
 			return;
 
 		try
 		{
-			si.ci.server.removeSchemeMonitoringSolutions(si.accessIdentity, new String[] { sol_id });
+			((RISDSessionInfo)getSession()).ci.server.removeSchemeMonitoringSolutions(((RISDSessionInfo)getSession()).accessIdentity, new String[] { solId });
 		}
 		catch (Exception ex)
 		{

@@ -43,10 +43,12 @@ package com.syrus.AMFICOM.Client.Resource;
 import java.util.Vector;
 
 import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
+import com.syrus.AMFICOM.Client.Resource.General.*;
+import com.syrus.AMFICOM.Client.Resource.General.CharacteristicType;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class SchemeDataSourceImage extends DataSourceImage
 {
@@ -65,14 +67,14 @@ public class SchemeDataSourceImage extends DataSourceImage
 
 //		Pool.removeMap(ProtoElement.typ);
 
-		load("imageresource", ImageCatalogue.hash);
+		load("imageresource", ImageCatalogue.getHash());
 		load(ProtoElement.typ);
 		Vector ids = filter(ProtoElement.typ, desc, true);
 		if(ids.size() > 0)
 		{
 			di.LoadSchemeProto(ids);
 			save(ProtoElement.typ);
-			save("imageresource", ImageCatalogue.hash);
+			save("imageresource", ImageCatalogue.getHash());
 		}
 	}
 
@@ -126,7 +128,7 @@ public class SchemeDataSourceImage extends DataSourceImage
 	public void LoadISMDirectory()
 	{
 		ResourceDescriptor_Transferable[] desc = GetDescriptors(KISType.typ);
-		ResourceDescriptor_Transferable[] desc2 = GetDescriptors(AccessPortType.typ);
+		ResourceDescriptor_Transferable[] desc2 = GetDescriptors(MeasurementPortType.typ);
 		ResourceDescriptor_Transferable[] desc3 = GetDescriptors(TransmissionPathType.typ);
 
 //		Pool.removeMap(KISType.typ);
@@ -134,11 +136,11 @@ public class SchemeDataSourceImage extends DataSourceImage
 //		Pool.removeMap(TransmissionPathType.typ);
 
 		load(KISType.typ);
-		load(AccessPortType.typ);
+		load(MeasurementPortType.typ);
 		load(TransmissionPathType.typ);
 //		Vector ids = filter(KISType.typ, desc, true);
 		Vector ids = new Vector();
-		Vector ids2 = filter(AccessPortType.typ, desc2, true);
+		Vector ids2 = filter(MeasurementPortType.typ, desc2, true);
 		Vector ids3 = filter(TransmissionPathType.typ, desc3, true);
 		if(	ids.size() > 0 ||
 			ids2.size() > 0 ||
@@ -146,7 +148,7 @@ public class SchemeDataSourceImage extends DataSourceImage
 		{
 			di.LoadISMDirectory(ids, ids2, ids3);
 			save(KISType.typ);
-			save(AccessPortType.typ);
+			save(MeasurementPortType.typ);
 			save(TransmissionPathType.typ);
 		}
 	}
@@ -159,14 +161,14 @@ public class SchemeDataSourceImage extends DataSourceImage
 //		Pool.removeMap("schemeelement");
 //		Pool.removeMap("schemecablelink");
 
-		load("imageresource", ImageCatalogue.hash);
+		load("imageresource", ImageCatalogue.getHash());
 		load("scheme");
 		Vector ids = filter("scheme", desc, true);
 		if(ids.size() > 0)
 		{
 			di.LoadSchemes(ids);
 			save("scheme");
-			save("imageresource", ImageCatalogue.hash);
+			save("imageresource", ImageCatalogue.getHash());
 		}
 	}
 
