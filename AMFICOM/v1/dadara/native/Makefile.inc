@@ -15,7 +15,7 @@ ifeq (${ComSpec}${COMSPEC},)
 
 OBJ_EXT = o
 SO_EXT = so
-SO_PREFIX = 
+SO_PREFIX = lib
 
 LD = ld
 LDFLAGS = -shared
