@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.6 2005/02/10 13:55:47 bob Exp $
+ * $Id: Server.java,v 1.7 2005/02/11 07:50:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/10 13:55:47 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/11 07:50:02 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -110,7 +110,7 @@ public class Server extends DomainMember implements Characterized {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.serverDatabase != null)
-				this.serverDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.serverDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);

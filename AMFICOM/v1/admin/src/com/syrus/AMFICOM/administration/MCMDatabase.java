@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.9 2005/02/10 13:55:47 bob Exp $
+ * $Id: MCMDatabase.java,v 1.10 2005/02/11 07:50:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/10 13:55:47 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/11 07:50:02 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -307,31 +307,31 @@ public class MCMDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj)
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		MCM mcm = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(mcm, true);
+				super.checkAndUpdateEntity(mcm, modifierId, true);
 				break;
 			case UPDATE_CHECK: 					
 			default:
-				super.checkAndUpdateEntity(mcm, false);
+				super.checkAndUpdateEntity(mcm, modifierId, false);
 				break;
 		}
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		characteristicDatabase.updateCharacteristics(mcm);
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(List storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
-			super.checkAndUpdateEntities(storableObjects, true);
+			super.checkAndUpdateEntities(storableObjects, modifierId, true);
 			break;
 		case UPDATE_CHECK: 					
 		default:
-			super.checkAndUpdateEntities(storableObjects, false);
+			super.checkAndUpdateEntities(storableObjects, modifierId, false);
 			break;
 		}
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());

@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.6 2005/02/10 13:55:47 bob Exp $
+ * $Id: Domain.java,v 1.7 2005/02/11 07:50:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/10 13:55:47 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/11 07:50:02 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -191,7 +191,7 @@ public class Domain extends DomainMember implements Characterized {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.domainDatabase != null)
-				this.domainDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.domainDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
