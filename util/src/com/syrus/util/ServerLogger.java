@@ -1,10 +1,18 @@
+/*
+ * $Id: ServerLogger.java,v 1.5 2005/03/04 08:05:49 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.util;
 
 import com.syrus.util.database.ServerProperties;
 
 public class ServerLogger extends StolenLogger {
-	private static final String DEFAULT_HOME = (System.getProperty("os.name").length() >= 7 && System.getProperty("os.name").toLowerCase().substring(0, 7).equals("windows"))?"D:\\amficom":"//home//amficom";
-	private static final String DEFAULT_LOG_PATH = DEFAULT_HOME + "/logs";
+	private static final String DEFAULT_HOME = (System.getProperty("os.name").length() >= 7 && System.getProperty("os.name").toLowerCase().substring(0, 7).equals("windows"))?"D:\\amficom":"//home//amficom"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+	private static final String DEFAULT_LOG_PATH = DEFAULT_HOME + "/logs"; //$NON-NLS-1$
 
 	public ServerLogger(String appName, String hostName) {
 		super(appName, hostName);

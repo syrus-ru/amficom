@@ -1,9 +1,9 @@
 /*
- * $Id: TextWriter.java,v 1.4 2004/12/08 13:30:01 bass Exp $
+ * $Id: TextWriter.java,v 1.5 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.io;
@@ -11,7 +11,7 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/08 13:30:01 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/04 08:05:49 $
  * @author $Author: bass $
  * @module util
  */
@@ -22,71 +22,71 @@ public class TextWriter
 	PrintWriter pw;
 	BellcoreStructure bs;
 
-	public byte[] write (BellcoreStructure bs)
+	public byte[] write (BellcoreStructure bs1)
 	{
-		this.bs = bs;
-		baos = new ByteArrayOutputStream();
-		pw = new PrintWriter(baos, true);
+		this.bs = bs1;
+		this.baos = new ByteArrayOutputStream();
+		this.pw = new PrintWriter(this.baos, true);
 
 		write_data_2();
 
-		data = new byte[baos.size()];
-		data = baos.toByteArray();
-		return data;
+		this.data = new byte[this.baos.size()];
+		this.data = this.baos.toByteArray();
+		return this.data;
 	}
 
 	int write_data()
 	{
-		String str="";
+		String str=""; //$NON-NLS-1$
 		int temp;
-		for (int i = 0; i < bs.dataPts.TSF; i++)
+		for (int i = 0; i < this.bs.dataPts.TSF; i++)
 			{
-				for (int j = 0; j < bs.dataPts.TPS[i]; j++)
+				for (int j = 0; j < this.bs.dataPts.TPS[i]; j++)
 				{
-					temp = (65535 - bs.dataPts.DSF[i][j])/1000;
+					temp = (65535 - this.bs.dataPts.DSF[i][j])/1000;
 					str = Integer.toString(temp);
-					str += ".";
-					str += ((65535 - bs.dataPts.DSF[i][j]) - temp*1000);
-					pw.println(str);
+					str += "."; //$NON-NLS-1$
+					str += ((65535 - this.bs.dataPts.DSF[i][j]) - temp*1000);
+					this.pw.println(str);
 				}
-				pw.println();
+				this.pw.println();
 			}
 		return 1;
 	}
 
 	int write_data_2()
 	{
-		String str="";
+		String str=""; //$NON-NLS-1$
 		int temp;
 		double step;
 		double gi;
 
-		gi = bs.fxdParams.GI / 100000d; // коэфф преломления
-		pw.println("Optical module name: " + bs.supParams.OMID);
-		pw.println("Wavelength: " + String.valueOf(bs.fxdParams.AW / 10) + " nm");
-		pw.println("Index of refraction: " + String.valueOf(gi));
-		pw.println("Pulse width: " + String.valueOf(bs.fxdParams.PWU[0]) + " ns");
-		pw.println("Number of points: " + String.valueOf(bs.fxdParams.NPPW[0]));
-		pw.println("Number of averages: " + String.valueOf(bs.fxdParams.NAV));
-		pw.println("Range: " + String.valueOf((int)((bs.fxdParams.AR - bs.fxdParams.AO) * 0.03d / gi))
-			+ " " + bs.fxdParams.UD);
+		gi = this.bs.fxdParams.GI / 100000d; // коэфф преломления
+		this.pw.println("Optical module name: " + this.bs.supParams.OMID); //$NON-NLS-1$
+		this.pw.println("Wavelength: " + String.valueOf(this.bs.fxdParams.AW / 10) + " nm"); //$NON-NLS-1$ //$NON-NLS-2$
+		this.pw.println("Index of refraction: " + String.valueOf(gi)); //$NON-NLS-1$
+		this.pw.println("Pulse width: " + String.valueOf(this.bs.fxdParams.PWU[0]) + " ns"); //$NON-NLS-1$ //$NON-NLS-2$
+		this.pw.println("Number of points: " + String.valueOf(this.bs.fxdParams.NPPW[0])); //$NON-NLS-1$
+		this.pw.println("Number of averages: " + String.valueOf(this.bs.fxdParams.NAV)); //$NON-NLS-1$
+		this.pw.println("Range: " + String.valueOf((int)((this.bs.fxdParams.AR - this.bs.fxdParams.AO) * 0.03d / gi)) //$NON-NLS-1$
+			+ " " + this.bs.fxdParams.UD); //$NON-NLS-1$
 //    pw.println("Data spacing: " + String.valueOf(2 * ((double)(bs.fxdParams.DS[0]) / 1000000f)));
 
-		for (int i = 0; i < bs.dataPts.TSF; i++)
+		for (int i = 0; i < this.bs.dataPts.TSF; i++)
 			{
-				step = bs.fxdParams.DS[0] * 0.03d / gi / 10000d;
-				for (int j = 0; j < bs.dataPts.TPS[i]; j++)
+				step = this.bs.fxdParams.DS[0] * 0.03d / gi / 10000d;
+				for (int j = 0; j < this.bs.dataPts.TPS[i]; j++)
 				{
-					if (bs.fxdParams.UD.equalsIgnoreCase("km"))
+					if (this.bs.fxdParams.UD.equalsIgnoreCase("km")) //$NON-NLS-1$
 						temp = (int)((step * j) * 10000);
 					else
 						temp = (int)((step * j) * 10);
 					str = String.valueOf (temp / 10f);
-					str += "\t";
-					str += String.valueOf ((65535 - bs.dataPts.DSF[i][j])/1000f);
-					pw.println(str);
+					str += "\t"; //$NON-NLS-1$
+					str += String.valueOf ((65535 - this.bs.dataPts.DSF[i][j])/1000f);
+					this.pw.println(str);
 				}
-				pw.println();
+				this.pw.println();
 			}
 		return 1;
 	}

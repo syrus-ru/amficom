@@ -1,9 +1,9 @@
 /*
- * $Id: Fifo.java,v 1.4 2004/09/24 08:20:25 bob Exp $
+ * $Id: Fifo.java,v 1.5 2005/03/04 08:05:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.util;
@@ -11,8 +11,8 @@ package com.syrus.util;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/24 08:20:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/03/04 08:05:49 $
+ * @author $Author: bass $
  * @module util
  */
 
@@ -31,7 +31,7 @@ public class Fifo implements Serializable {
 		if (size > 0)
 			this.fifo = new Object[size];
 		else
-			throw new IllegalArgumentException("Illegal size: " + size);
+			throw new IllegalArgumentException("Illegal size: " + size); //$NON-NLS-1$
 		this.number = 0;
 	}
 	

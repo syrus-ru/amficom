@@ -1,9 +1,9 @@
 /*
- * $Id: JPreferencesManagerFrame.java,v 1.6 2004/12/08 12:37:14 bass Exp $
+ * $Id: JPreferencesManagerFrame.java,v 1.7 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.util.prefs.ui;
@@ -15,7 +15,7 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/08 12:37:14 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/04 08:05:49 $
  * @author $Author: bass $
  * @module util
  */
@@ -36,53 +36,53 @@ public class JPreferencesManagerFrame extends JFrame {
 	private void initComponents() {//GEN-BEGIN:initComponents
 		java.awt.GridBagConstraints gridBagConstraints;
 		
-		jSplitPane1 = new JSplitPane();
-		jScrollPane1 = new JScrollPane();
-		jTree1 = new JTree();
-		jPanel1 = new JPanel();
-		jTextField1 = new JTextField();
-		jSeparator1 = new JSeparator();
-		jPanel2 = new javax.swing.JPanel();
-		jButton1 = new javax.swing.JButton();
-		jButton2 = new javax.swing.JButton();
-		jPanel3 = new JPanel();
-		jButton3 = new JButton();
-		jButton4 = new JButton();
-		jButton5 = new JButton();
+		this.jSplitPane1 = new JSplitPane();
+		this.jScrollPane1 = new JScrollPane();
+		this.jTree1 = new JTree();
+		this.jPanel1 = new JPanel();
+		this.jTextField1 = new JTextField();
+		this.jSeparator1 = new JSeparator();
+		this.jPanel2 = new javax.swing.JPanel();
+		this.jButton1 = new javax.swing.JButton();
+		this.jButton2 = new javax.swing.JButton();
+		this.jPanel3 = new JPanel();
+		this.jButton3 = new JButton();
+		this.jButton4 = new JButton();
+		this.jButton5 = new JButton();
 		
 		getContentPane().setLayout(new java.awt.GridBagLayout());
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("Preferences Manager");
+		setTitle("Preferences Manager"); //$NON-NLS-1$
 		setResizable(false);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent e) {
-				exitForm(e);
+				exitForm();
 			}
 		});
 		
-		jTree1.setModel(new DefaultTreeModel(PreferencesManager.getTreeNode(), true));
-		jTree1.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		jTree1.addTreeSelectionListener(new TreeSelectionListener() {
+		this.jTree1.setModel(new DefaultTreeModel(PreferencesManager.getTreeNode(), true));
+		this.jTree1.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		this.jTree1.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) (e.getPath().getLastPathComponent());
 				Object key = defaultMutableTreeNode.getUserObject();
 				if ((e.isAddedPath()) && (key instanceof String)) {
-					jButton3.setEnabled(true);
-					jTextField1.setEnabled(true);
-					jTextField1.setText(((PreferencesManager.PreferencesHolder) (((DefaultMutableTreeNode) (defaultMutableTreeNode.getParent())).getUserObject())).getPreferences().get((String) key, ""));
+					JPreferencesManagerFrame.this.jButton3.setEnabled(true);
+					JPreferencesManagerFrame.this.jTextField1.setEnabled(true);
+					JPreferencesManagerFrame.this.jTextField1.setText(((PreferencesManager.PreferencesHolder) (((DefaultMutableTreeNode) (defaultMutableTreeNode.getParent())).getUserObject())).getPreferences().get((String) key, "")); //$NON-NLS-1$
 				} else {
-					jButton3.setEnabled(false);
-					jTextField1.setEnabled(false);
-					jTextField1.setText("");
+					JPreferencesManagerFrame.this.jButton3.setEnabled(false);
+					JPreferencesManagerFrame.this.jTextField1.setEnabled(false);
+					JPreferencesManagerFrame.this.jTextField1.setText(""); //$NON-NLS-1$
 				}
 			}
 		});
-		jScrollPane1.setViewportView(jTree1);
+		this.jScrollPane1.setViewportView(this.jTree1);
 		
-		jSplitPane1.setLeftComponent(jScrollPane1);
+		this.jSplitPane1.setLeftComponent(this.jScrollPane1);
 		
-		jPanel1.setLayout(new java.awt.GridBagLayout());
+		this.jPanel1.setLayout(new java.awt.GridBagLayout());
 		
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -90,9 +90,9 @@ public class JPreferencesManagerFrame extends JFrame {
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.weighty = 1.0;
 		gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-		jPanel1.add(jTextField1, gridBagConstraints);
+		this.jPanel1.add(this.jTextField1, gridBagConstraints);
 		
-		jSplitPane1.setRightComponent(jPanel1);
+		this.jSplitPane1.setRightComponent(this.jPanel1);
 		
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -100,7 +100,7 @@ public class JPreferencesManagerFrame extends JFrame {
 		gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
 		gridBagConstraints.weightx = 1.0;
 		gridBagConstraints.weighty = 1.0;
-		getContentPane().add(jSplitPane1, gridBagConstraints);
+		getContentPane().add(this.jSplitPane1, gridBagConstraints);
 		
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -108,73 +108,73 @@ public class JPreferencesManagerFrame extends JFrame {
 		gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
 		gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 5);
 		gridBagConstraints.weightx = 1.0;
-		getContentPane().add(jSeparator1, gridBagConstraints);
+		getContentPane().add(this.jSeparator1, gridBagConstraints);
 		
-		jPanel2.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
+		this.jPanel2.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
 		
-		jButton1.setMnemonic('N');
-		jButton1.setText("New...");
-		jButton1.setDefaultCapable(false);
-		jButton1.setEnabled(false);
-		jButton1.addActionListener(new java.awt.event.ActionListener() {
+		this.jButton1.setMnemonic('N');
+		this.jButton1.setText("New..."); //$NON-NLS-1$
+		this.jButton1.setDefaultCapable(false);
+		this.jButton1.setEnabled(false);
+		this.jButton1.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				jButton1ActionPerformed(e);
+				jButton1ActionPerformed();
 			}
 		});
 		
-		jPanel2.add(jButton1);
+		this.jPanel2.add(this.jButton1);
 		
-		jButton2.setMnemonic('L');
-		jButton2.setText("Delete");
-		jButton2.setDefaultCapable(false);
-		jButton2.setEnabled(false);
-		jButton2.addActionListener(new java.awt.event.ActionListener() {
+		this.jButton2.setMnemonic('L');
+		this.jButton2.setText("Delete"); //$NON-NLS-1$
+		this.jButton2.setDefaultCapable(false);
+		this.jButton2.setEnabled(false);
+		this.jButton2.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				jButton2ActionPerformed(e);
+				jButton2ActionPerformed();
 			}
 		});
 		
-		jPanel2.add(jButton2);
+		this.jPanel2.add(this.jButton2);
 		
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
 		gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
 		gridBagConstraints.insets = new java.awt.Insets(0, 5, 5, 5);
-		getContentPane().add(jPanel2, gridBagConstraints);
+		getContentPane().add(this.jPanel2, gridBagConstraints);
 		
-		jPanel3.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
+		this.jPanel3.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
 		
-		jButton3.setMnemonic('A');
-		jButton3.setText("Apply");
-		jButton3.setEnabled(false);
-		jButton3.addActionListener(new java.awt.event.ActionListener() {
+		this.jButton3.setMnemonic('A');
+		this.jButton3.setText("Apply"); //$NON-NLS-1$
+		this.jButton3.setEnabled(false);
+		this.jButton3.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				jButton3ActionPerformed(e);
+				jButton3ActionPerformed();
 			}
 		});
 		
-		jPanel3.add(jButton3);
+		this.jPanel3.add(this.jButton3);
 		
-		jButton4.setMnemonic('D');
-		jButton4.setText("Dismiss");
-		jButton4.addActionListener(new java.awt.event.ActionListener() {
+		this.jButton4.setMnemonic('D');
+		this.jButton4.setText("Dismiss"); //$NON-NLS-1$
+		this.jButton4.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				jButton4ActionPerformed(e);
+				jButton4ActionPerformed();
 			}
 		});
 		
-		jPanel3.add(jButton4);
+		this.jPanel3.add(this.jButton4);
 		
-		jButton5.setMnemonic('H');
-		jButton5.setText("Help");
-		jButton5.setEnabled(false);
-		jButton5.addActionListener(new java.awt.event.ActionListener() {
+		this.jButton5.setMnemonic('H');
+		this.jButton5.setText("Help"); //$NON-NLS-1$
+		this.jButton5.setEnabled(false);
+		this.jButton5.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				jButton5ActionPerformed(e);
+				jButton5ActionPerformed();
 			}
 		});
 		
-		jPanel3.add(jButton5);
+		this.jPanel3.add(this.jButton5);
 		
 		gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -182,32 +182,32 @@ public class JPreferencesManagerFrame extends JFrame {
 		gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 5);
 		gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
 		gridBagConstraints.weightx = 1.0;
-		getContentPane().add(jPanel3, gridBagConstraints);
+		getContentPane().add(this.jPanel3, gridBagConstraints);
 		
 		java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		setBounds((screenSize.width-512)/2, (screenSize.height-384)/2, 512, 384);
 	}//GEN-END:initComponents
 
-	void jButton2ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton2ActionPerformed
+	void jButton2ActionPerformed() {//GEN-FIRST:event_jButton2ActionPerformed
 		// Add your handling code here:
 	}//GEN-LAST:event_jButton2ActionPerformed
 
-	void jButton1ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton1ActionPerformed
+	void jButton1ActionPerformed() {//GEN-FIRST:event_jButton1ActionPerformed
 		// Add your handling code here:
 	}//GEN-LAST:event_jButton1ActionPerformed
 
-	void jButton5ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton5ActionPerformed
+	void jButton5ActionPerformed() {//GEN-FIRST:event_jButton5ActionPerformed
 		// Add your handling code here:
 	}//GEN-LAST:event_jButton5ActionPerformed
 
-	void jButton4ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton4ActionPerformed
-		exitForm(null);
+	void jButton4ActionPerformed() {//GEN-FIRST:event_jButton4ActionPerformed
+		exitForm();
 	}//GEN-LAST:event_jButton4ActionPerformed
 
-	void jButton3ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton3ActionPerformed
-		DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) (jTree1.getSelectionPath().getLastPathComponent());
+	void jButton3ActionPerformed() {//GEN-FIRST:event_jButton3ActionPerformed
+		DefaultMutableTreeNode defaultMutableTreeNode = (DefaultMutableTreeNode) (this.jTree1.getSelectionPath().getLastPathComponent());
 		Preferences preferences = ((PreferencesManager.PreferencesHolder) (((DefaultMutableTreeNode) (defaultMutableTreeNode.getParent())).getUserObject())).getPreferences();
-		preferences.put((String) (defaultMutableTreeNode.getUserObject()), jTextField1.getText());
+		preferences.put((String) (defaultMutableTreeNode.getUserObject()), this.jTextField1.getText());
 		try {
 			preferences.flush();
 		} catch (BackingStoreException bse) {
@@ -215,7 +215,7 @@ public class JPreferencesManagerFrame extends JFrame {
 		}
 	}//GEN-LAST:event_jButton3ActionPerformed
 
-	void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
+	void exitForm() {//GEN-FIRST:event_exitForm
 		System.exit(0);
 	}//GEN-LAST:event_exitForm
 

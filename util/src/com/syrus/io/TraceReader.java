@@ -1,9 +1,9 @@
 /*
- * $Id: TraceReader.java,v 1.5 2004/12/08 12:50:23 bass Exp $
+ * $Id: TraceReader.java,v 1.6 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.io;
@@ -13,7 +13,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/08 12:50:23 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/04 08:05:49 $
  * @author $Author: bass $
  * @module util
  */
@@ -33,13 +33,12 @@ public class TraceReader extends DataReader
 	{
 		try
 		{
-			System.loadLibrary("Treader");
+			System.loadLibrary("Treader"); //$NON-NLS-1$
 			treader_loaded = true;
 		}
 		catch (UnsatisfiedLinkError ex)
 		{
 			// do nothing
-			;
 		}
 
 	}
@@ -53,22 +52,22 @@ public class TraceReader extends DataReader
 	{
 		BellcoreStructure bs = null;
 
-		if (f.getName().toLowerCase().endsWith(".sor")) // then Bellcore
+		if (f.getName().toLowerCase().endsWith(".sor")) // then Bellcore //$NON-NLS-1$
 		{
 			filetype = BELLCORE;
 			BellcoreReader br = new BellcoreReader();
 			bs = br.getData(f);
 		}
-		else if (f.getName().toLowerCase().endsWith(".tfw")) // then Wavetek
+		else if (f.getName().toLowerCase().endsWith(".tfw")) // then Wavetek //$NON-NLS-1$
 		{
 			filetype = WAVETEK;
 			WavetekReader wr = new WavetekReader();
 			bs = wr.getData(f);
 		}
-		else if ((raw = new TraceDataReader().getBellcoreData(f.getAbsolutePath())) != null)
+		else if ((this.raw = new TraceDataReader().getBellcoreData(f.getAbsolutePath())) != null)
 		{
-			bs = new BellcoreReader().getData(raw);
-			raw = null;
+			bs = new BellcoreReader().getData(this.raw);
+			this.raw = null;
 		}
 		else if (treader_loaded && new TraceReader().getTrace(f.getAbsolutePath()) != 0)
 		{
@@ -77,7 +76,7 @@ public class TraceReader extends DataReader
 		}
 		else
 		{
-			System.out.println("Error reading " + f.getAbsolutePath() + " Unknown format");
+			System.out.println("Error reading " + f.getAbsolutePath() + " Unknown format"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return bs;
 	}
@@ -106,11 +105,11 @@ public class TraceReader extends DataReader
 		bs.addField(3);
 		bs.supParams.OMID = id;
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy hh:mm:ss"); //$NON-NLS-1$
 		long dt = 0;
 		try
 		{
-			dt = sdf.parse(date + " " + time).getTime() / 1000;
+			dt = sdf.parse(date + " " + time).getTime() / 1000; //$NON-NLS-1$
 		}
 		catch (java.text.ParseException ex)
 		{
@@ -119,7 +118,7 @@ public class TraceReader extends DataReader
 
 		bs.addField(4);
 		bs.fxdParams.DTS = dt;
-		bs.fxdParams.UD = "mt";
+		bs.fxdParams.UD = "mt"; //$NON-NLS-1$
 		bs.fxdParams.AW = (short)(actualwavelength);
 		bs.fxdParams.TPW = 1;
 		bs.fxdParams.PWU = new short[1];
@@ -142,12 +141,8 @@ public class TraceReader extends DataReader
 		bs.dataPts.SF[0] = 1000;
 		bs.dataPts.DSF = new int[1][size];
 
-		try
-		{
-			for (int i = 0; i < size; i++)
-				bs.dataPts.DSF[0][i] = bac.readIUnsignedShort(i*2);
-		}
-		catch (java.io.IOException e) { e.printStackTrace(); }
+		for (int i = 0; i < size; i++)
+			bs.dataPts.DSF[0][i] = bac.readIUnsignedShort(i*2);
 
 		bs.dataPts.DSF[0] = sort (bs.dataPts.DSF[0], filetype);
 
@@ -162,12 +157,12 @@ public class TraceReader extends DataReader
 		bs.map.B_rev = new int[6];
 		bs.map.B_size = new int[6];
 
-		bs.map.B_id[0] = "Map";
-		bs.map.B_id[1] = "GenParams";
-		bs.map.B_id[2] = "SupParams";
-		bs.map.B_id[3] = "FxdParams";
-		bs.map.B_id[4] = "DataPts";
-		bs.map.B_id[5] = "Cksum";
+		bs.map.B_id[0] = "Map"; //$NON-NLS-1$
+		bs.map.B_id[1] = "GenParams"; //$NON-NLS-1$
+		bs.map.B_id[2] = "SupParams"; //$NON-NLS-1$
+		bs.map.B_id[3] = "FxdParams"; //$NON-NLS-1$
+		bs.map.B_id[4] = "DataPts"; //$NON-NLS-1$
+		bs.map.B_id[5] = "Cksum"; //$NON-NLS-1$
 		for (int i = 1; i < 6; i++)
 			bs.map.B_rev[i] = 100;
 		bs.map.B_size[1] = bs.genParams.getSize();
@@ -180,7 +175,7 @@ public class TraceReader extends DataReader
 		return bs;
 	}
 
-	int[] sort (int[] arr, int filetype)
+	int[] sort (int[] arr, int filetype1)
 	{
 		int min = arr[0];
 		int max = arr[0];
@@ -194,7 +189,7 @@ public class TraceReader extends DataReader
 
 		int delta = max - min;
 		double d2 = 40000d / delta;
-		if ((filetype == LP) && (delta < 40000))
+		if ((filetype1 == LP) && (delta < 40000))
 		{
 			for (int i=0; i<arr.length; i++)
 				arr[i] = (int)(arr[i] * d2);

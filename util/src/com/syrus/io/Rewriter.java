@@ -1,3 +1,11 @@
+/*
+ * $Id: Rewriter.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.io;
 
 public class Rewriter 
@@ -6,6 +14,7 @@ public class Rewriter
 
 	private Rewriter()
 	{
+		assert false;
 	}
 
 	public static byte write(byte b)

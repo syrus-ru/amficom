@@ -1,3 +1,11 @@
+/*
+ * $Id: NIOCacheLock.java,v 1.4 2005/03/04 08:05:49 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.util;
 
 import java.io.*;
@@ -36,7 +44,7 @@ public class NIOCacheLock implements CacheLock {
 				}
 				catch (Exception ex2)
 				{
-					;
+					// empty
 				}
 //				ex.printStackTrace();
 			} 
@@ -66,7 +74,7 @@ public class NIOCacheLock implements CacheLock {
 				}
 				catch (Exception ex2)
 				{
-					;
+					// empty
 				}
 //				ex.printStackTrace();
 			} 
@@ -92,7 +100,6 @@ public class NIOCacheLock implements CacheLock {
 			} 
 			catch (Exception ex) {
 //				ex.printStackTrace();
-				;
 			} 
 			return true;
 		}
@@ -114,7 +121,6 @@ public class NIOCacheLock implements CacheLock {
 			} 
 			catch (Exception ex) {
 //				ex.printStackTrace();
-				;
 			} 
 			return true;
 		}

@@ -1,3 +1,11 @@
+/*
+ * $Id: ByteArrayCollector.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.io;
 
 import java.io.ByteArrayInputStream;
@@ -16,16 +24,16 @@ public class ByteArrayCollector
 
 	public ByteArrayCollector()
 	{
-		baos = new ByteArrayOutputStream();
-		dos = new DataOutputStream(baos);
+		this.baos = new ByteArrayOutputStream();
+		this.dos = new DataOutputStream(this.baos);
 	}
 
 	public void add (byte[] b)
 	{
 		try
 		{
-			dos.writeInt(b.length);
-			dos.write(b);
+			this.dos.writeInt(b.length);
+			this.dos.write(b);
 		}
 		catch (IOException io)
 		{
@@ -37,34 +45,34 @@ public class ByteArrayCollector
 	{
 		try
 		{
-			dos.flush();
+			this.dos.flush();
 		}
 		catch (IOException io)
 		{
 			io.printStackTrace();
 		}
-		return baos.toByteArray();
+		return this.baos.toByteArray();
 	}
 
 	public byte[][] decode(byte[] b)
 	{
-		bais = new ByteArrayInputStream(b);
-		dis = new DataInputStream(bais);
+		this.bais = new ByteArrayInputStream(b);
+		this.dis = new DataInputStream(this.bais);
 
 		int size = 0;
 
 		try
 		{
-			while(dis.available() != 0)
+			while(this.dis.available() != 0)
 			{
-				int s = dis.readInt();
-				dis.skipBytes(s);
+				int s = this.dis.readInt();
+				this.dis.skipBytes(s);
 				size++;
 			}
 		}
 		catch (EOFException eof)
 		{
-			;
+			// empty
 		}
 		catch (IOException io)
 		{
@@ -74,12 +82,12 @@ public class ByteArrayCollector
 		byte[][] data = new byte[size][];
 		try
 		{
-			dis.reset();
+			this.dis.reset();
 			for (int i = 0; i < size; i++)
 			{
-				int s = dis.readInt();
+				int s = this.dis.readInt();
 				data[i] = new byte[s];
-				dis.read(data[i]);
+				this.dis.read(data[i]);
 			}
 		}
 		catch (Exception ex)

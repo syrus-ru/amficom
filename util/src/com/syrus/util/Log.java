@@ -1,3 +1,11 @@
+/*
+ * $Id: Log.java,v 1.5 2005/03/04 08:05:49 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.util;
 
 public class Log {
@@ -64,6 +72,7 @@ public class Log {
 	private static Logger logger;
 
 	private Log() {
+		assert false;
 	}
 
 	public static void initialize(Logger logger1) {

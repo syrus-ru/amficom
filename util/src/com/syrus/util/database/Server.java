@@ -1,3 +1,11 @@
+/*
+ * $Id: Server.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.util.database;
 
 import java.net.InetAddress;
@@ -10,10 +18,11 @@ public class Server {
 	private static String internetAddress;
 
 	private Server() {
+		assert false;
 	}
 
 	public static void init() {
-		init("server");
+		init("server"); //$NON-NLS-1$
 	}
 
 	public static void init(String appName) {
@@ -33,9 +42,9 @@ public class Server {
 				internetAddress = InetAddress.getLocalHost().getHostName();
 			}
 			catch (UnknownHostException e) {
-				internetAddress = "INETADDR_UNKNOWN";
+				internetAddress = "INETADDR_UNKNOWN"; //$NON-NLS-1$
 			}
 		Log.initialize(new ServerLogger(applicationName, internetAddress));
-		Log.debugMessage(applicationName + " -- started", Log.DEBUGLEVEL01);
+		Log.debugMessage(applicationName + " -- started", Log.DEBUGLEVEL01); //$NON-NLS-1$
 	}
 }

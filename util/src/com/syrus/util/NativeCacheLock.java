@@ -1,7 +1,15 @@
+/*
+ * $Id: NativeCacheLock.java,v 1.4 2005/03/04 08:05:49 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.util;
 
 public class NativeCacheLock implements CacheLock {
-	private static final String LOCK_POSTFIX = ".sm.USER";
+	private static final String LOCK_POSTFIX = ".sm.USER"; //$NON-NLS-1$
 	private static boolean fileLockLoaded = false;
 
 	public native int lockWrite0(String filename);
@@ -11,7 +19,7 @@ public class NativeCacheLock implements CacheLock {
 
 	static {
 		try {
-			System.loadLibrary("sema");
+			System.loadLibrary("sema"); //$NON-NLS-1$
 			fileLockLoaded = true;
 		}
 		catch (UnsatisfiedLinkError ex) {
@@ -49,7 +57,7 @@ public class NativeCacheLock implements CacheLock {
 	}
 	
 	public boolean releaseWrite(CacheLockObject filelock) {
-		String filename = "";//(String )filelock;
+		String filename = "";//(String )filelock; //$NON-NLS-1$
 		if(!fileLockLoaded)
 			return false;
 		int ret = releaseWrite0(filename + LOCK_POSTFIX);
@@ -60,7 +68,7 @@ public class NativeCacheLock implements CacheLock {
 	}
 
 	public boolean releaseRead(CacheLockObject filelock) {
-		String filename = "";//(String )filelock;
+		String filename = "";//(String )filelock; //$NON-NLS-1$
 		if(!fileLockLoaded)
 			return false;
 

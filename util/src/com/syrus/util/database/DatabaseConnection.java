@@ -1,3 +1,11 @@
+/*
+ * $Id: DatabaseConnection.java,v 1.11 2005/03/04 08:05:49 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.util.database;
 
 import java.sql.Connection;
@@ -6,74 +14,75 @@ import java.sql.SQLException;
 import com.syrus.util.Log;
 
 public class DatabaseConnection {
-	private static final String JDBCDRIVER = "oracle.jdbc.driver.OracleDriver";
-	private static final String URLPREFIX = "jdbc:oracle:thin:@";
+	private static final String JDBCDRIVER = "oracle.jdbc.driver.OracleDriver"; //$NON-NLS-1$
+	private static final String URLPREFIX = "jdbc:oracle:thin:@"; //$NON-NLS-1$
 	private static final int DBPORT = 1521;
-	private static final String USERNAME = "amficom";
-	private static final String PASSWORD = "amficom";
+	private static final String USERNAME = "amficom"; //$NON-NLS-1$
+	private static final String PASSWORD = "amficom"; //$NON-NLS-1$
 
 	private static Connection connection = null;
 
 	private DatabaseConnection() {
+		assert false;
 	}
 
 	public static void establishConnection(String db_hostname,
-																				 String db_sid,
-																				 long db_conn_timeout) throws SQLException {
+			 String db_sid,
+			 long db_conn_timeout) throws SQLException {
 		establishConnection(db_hostname,
-												db_sid,
-												db_conn_timeout,
-												USERNAME,
-												false);
+				db_sid,
+				db_conn_timeout,
+				USERNAME,
+				false);
 	}
 
 	public static void establishConnection(String db_hostname,
-																				 String db_sid,
-																				 long db_conn_timeout,
-																				 String db_login_name) throws SQLException {
+			 String db_sid,
+			 long db_conn_timeout,
+			 String db_login_name) throws SQLException {
 		establishConnection(db_hostname,
-												db_sid,
-												db_conn_timeout,
-												db_login_name,
-												false);
+				db_sid,
+				db_conn_timeout,
+				db_login_name,
+				false);
 	}
 
 	public static void establishConnection(String db_hostname,
-																				 String db_sid,
-																				 long db_conn_timeout,
-																				 boolean autocommit) throws SQLException {
+			 String db_sid,
+			 long db_conn_timeout,
+			 boolean autocommit) throws SQLException {
 		establishConnection(db_hostname,
-												db_sid,
-												db_conn_timeout,
-												USERNAME,
-												autocommit);
+				db_sid,
+				db_conn_timeout,
+				USERNAME,
+				autocommit);
 	}
 
 	public static void establishConnection(String db_hostname,
-																				 String db_sid,
-																				 long db_conn_timeout,
-																				 String db_login_name,
-																				 boolean autocommit) throws SQLException {
+			 String db_sid,
+			 long db_conn_timeout,
+			 String db_login_name,
+			 boolean autocommit) throws SQLException {
 		if (connection == null) {
 			try {
 				Class.forName(JDBCDRIVER);
 			}
 			catch (ClassNotFoundException e) {
-				throw new SQLException("Cannot locate driver: " + JDBCDRIVER + ", " + e.getMessage());
+				throw new SQLException("Cannot locate driver: " + JDBCDRIVER + ", " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
-			String url = URLPREFIX + db_hostname + ":" + Integer.toString(DBPORT) + ":" + db_sid;
+			String url = URLPREFIX + db_hostname + ":" + Integer.toString(DBPORT) + ":" + db_sid; //$NON-NLS-1$ //$NON-NLS-2$
 			long deadtime = System.currentTimeMillis() + db_conn_timeout;
 			boolean connected;
 			for (connected = false; System.currentTimeMillis() < deadtime && !connected;) {
-				Log.debugMessage("Attemting to connect to database: " + url + " as " + db_login_name, Log.DEBUGLEVEL07);
+				Log.debugMessage("Attemting to connect to database: " + url + " as " + db_login_name, Log.DEBUGLEVEL07); //$NON-NLS-1$ //$NON-NLS-2$
 				try {
 					connection = DriverManager.getConnection(url, db_login_name, PASSWORD);
 					connection.setAutoCommit(autocommit);
 					connected = true;
 				}
 				catch (SQLException e) {
-					Log.debugMessage("Cannot connect to database: " + url + ", " + e.getMessage(), Log.DEBUGLEVEL07);
+					Log.debugMessage("Cannot connect to database: " + url + ", " + e.getMessage(), Log.DEBUGLEVEL07); //$NON-NLS-1$ //$NON-NLS-2$
 					Object obj = new Object();
 					try {
 						synchronized (obj) {
@@ -86,8 +95,8 @@ public class DatabaseConnection {
 				}
 			}
 			if (!connected)
-				throw new SQLException("Unable to connect to database: " + url);
-			Log.debugMessage("Connected!", Log.DEBUGLEVEL03);
+				throw new SQLException("Unable to connect to database: " + url); //$NON-NLS-1$
+			Log.debugMessage("Connected!", Log.DEBUGLEVEL03); //$NON-NLS-1$
 		}
 	}
 
@@ -98,10 +107,10 @@ public class DatabaseConnection {
 
 	public static void closeConnection() {
 		if (connection != null) {
-			Log.debugMessage("Disconnecting from database...", Log.DEBUGLEVEL07);
+			Log.debugMessage("Disconnecting from database...", Log.DEBUGLEVEL07); //$NON-NLS-1$
 			try {
 				connection.close();
-				Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL07);
+				Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL07); //$NON-NLS-1$
 			}
 			catch (Exception e) {
 				Log.errorException(e);
@@ -109,8 +118,8 @@ public class DatabaseConnection {
 		}
 	}
 	
-	public static void releaseConnection(Connection connection) {
-		if (connection != null) {
+	public static void releaseConnection(final Connection connection1) {
+		if (connection1 != null) {
 			try {
 				// пока не организовано взаимодействие с ConnectionPool
 				// connection не закрывать
@@ -118,7 +127,7 @@ public class DatabaseConnection {
 				 * FIXME release connection when Oracle Connection Pool'll have made
 				 */
 				// connection.close();
-				Log.debugMessage("DatabaseConnection | releaseConnection(Connection)", Log.DEBUGLEVEL10);
+				Log.debugMessage("DatabaseConnection | releaseConnection(Connection)", Log.DEBUGLEVEL10); //$NON-NLS-1$
 			}
 			catch (Exception e) {
 				Log.errorException(e);

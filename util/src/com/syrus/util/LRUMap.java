@@ -1,9 +1,9 @@
 /*
- * $Id: LRUMap.java,v 1.18 2004/12/08 12:35:28 bass Exp $
+ * $Id: LRUMap.java,v 1.19 2005/03/04 08:05:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.util;
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/08 12:35:28 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/04 08:05:49 $
  * @author $Author: bass $
  * @module util
  */
@@ -39,7 +39,7 @@ public class LRUMap implements Serializable {
 			this.array = new Entry[capacity];
 		}
 		else
-			throw new IllegalArgumentException("Illegal capacity: " + capacity);
+			throw new IllegalArgumentException("Illegal capacity: " + capacity); //$NON-NLS-1$
 	}
 
 	public synchronized void clear(){
@@ -100,7 +100,7 @@ public class LRUMap implements Serializable {
 					ret = this.array[i].value;
 			return ret;
 		}
-		throw new IllegalArgumentException("Key is NULL");
+		throw new IllegalArgumentException("Key is NULL"); //$NON-NLS-1$
 	}
 
 	public synchronized Object remove(Object key) {
@@ -119,7 +119,7 @@ public class LRUMap implements Serializable {
 			}				
 			return ret;
 		}
-		throw new IllegalArgumentException("Key is NULL");
+		throw new IllegalArgumentException("Key is NULL"); //$NON-NLS-1$
 	}
 
 	protected class Entry /*implements Serializable */{
@@ -133,10 +133,10 @@ public class LRUMap implements Serializable {
 					this.value = value;
 				}
 				else
-					throw new IllegalArgumentException("Value is NULL");
+					throw new IllegalArgumentException("Value is NULL"); //$NON-NLS-1$
 			}
 			else
-				throw new IllegalArgumentException("Key is NULL");
+				throw new IllegalArgumentException("Key is NULL"); //$NON-NLS-1$
 		}
 	}
 	

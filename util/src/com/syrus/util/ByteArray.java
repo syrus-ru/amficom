@@ -1,3 +1,11 @@
+/*
+ * $Id: ByteArray.java,v 1.5 2005/03/04 08:05:49 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.util;
 
 import java.io.*;
@@ -66,7 +74,7 @@ public class ByteArray {
 				linkedlist.add(new Integer(dis.readInt()));
 		}
 		catch (Exception e) {
-			System.out.println("Exception while converting byte array to int array: " + e.getMessage() + ", length of byte array == " + this.bar.length);
+			System.out.println("Exception while converting byte array to int array: " + e.getMessage() + ", length of byte array == " + this.bar.length); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		Integer[] ii = new Integer[linkedlist.size()];
 		ii = (Integer[])linkedlist.toArray(ii);
@@ -97,7 +105,7 @@ public class ByteArray {
 	  		linkedlist.add(new Double(dis.readDouble()));
  		}
   	catch (Exception e) {
-	  	System.out.println("Exception while converting byte array to double array: " + e.getMessage() + ", length of byte array == " + this.bar.length);
+	  	System.out.println("Exception while converting byte array to double array: " + e.getMessage() + ", length of byte array == " + this.bar.length); //$NON-NLS-1$ //$NON-NLS-2$
       e.printStackTrace();
  		}
   	Double[] d = new Double[linkedlist.size()];
@@ -122,7 +130,7 @@ public class ByteArray {
 			while (bais.available() > 0)
 				c.add(dis.readUTF());
 		} catch (Exception e) {
-			System.out.println("Exception while converting byte array to string array: " + e.getMessage() + ", length of byte array == " + this.bar.length);
+			System.out.println("Exception while converting byte array to string array: " + e.getMessage() + ", length of byte array == " + this.bar.length); //$NON-NLS-1$ //$NON-NLS-2$
 			e.printStackTrace();
 		}
 		return (String[]) c.toArray(new String[c.size()]);

@@ -1,9 +1,9 @@
 /*
- * $Id: FileToDirectory.java,v 1.3 2004/12/08 13:47:03 bass Exp $
+ * $Id: FileToDirectory.java,v 1.4 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.io;
@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/08 13:47:03 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/04 08:05:49 $
  * @author $Author: bass $
  * @module util
  */
@@ -28,58 +28,58 @@ public class FileToDirectory
 
 	static String[] hashArguments = new String[]
 	{
-		"@characteristics",
-		"@threads",
-		"@test_type_ids",
-		"@devices",
-		"@links",
-		"@protoelements",
-		"@attributes",
-		"@cabletypes",
-		"@pathtypes",
-		"@arguments",
-		"@parameters",
-		"@criterias",
-		"@thresholds",
-		"@eventtypes",
-		"@values",
-		"@analysis_types",
-		"@evaluation_types",
-		"@pathelements",
-		"@paths",
-		"@elements",
-		"@mapprotos",
-		"@groups",
-		"@cablelinks"
+		"@characteristics", //$NON-NLS-1$
+		"@threads", //$NON-NLS-1$
+		"@test_type_ids", //$NON-NLS-1$
+		"@devices", //$NON-NLS-1$
+		"@links", //$NON-NLS-1$
+		"@protoelements", //$NON-NLS-1$
+		"@attributes", //$NON-NLS-1$
+		"@cabletypes", //$NON-NLS-1$
+		"@pathtypes", //$NON-NLS-1$
+		"@arguments", //$NON-NLS-1$
+		"@parameters", //$NON-NLS-1$
+		"@criterias", //$NON-NLS-1$
+		"@thresholds", //$NON-NLS-1$
+		"@eventtypes", //$NON-NLS-1$
+		"@values", //$NON-NLS-1$
+		"@analysis_types", //$NON-NLS-1$
+		"@evaluation_types", //$NON-NLS-1$
+		"@pathelements", //$NON-NLS-1$
+		"@paths", //$NON-NLS-1$
+		"@elements", //$NON-NLS-1$
+		"@mapprotos", //$NON-NLS-1$
+		"@groups", //$NON-NLS-1$
+		"@cablelinks" //$NON-NLS-1$
 	};
 
 	public FileToDirectory (File file) throws IOException
 	{
-		fis = new FileInputStream(file);
-		isr = new IntelStreamReader(fis, "UTF-16");
-		type = getType();
-		elements = readFromFile();
+		this.fis = new FileInputStream(file);
+		this.isr = new IntelStreamReader(this.fis, "UTF-16"); //$NON-NLS-1$
+		this.type = getType();
+		this.elements = readFromFile();
 	}
 
-	public Object read(String key) throws IOException
+	public Object read(String key)
 	{
-		return currentHash.get(key);
+		return this.currentHash.get(key);
 	}
 
 	public boolean hasMoreElements()
 	{
-		return counter < elements.size();
+		return this.counter < this.elements.size();
 	}
 
 	public void nextElement()
 	{
-		currentHash = (Hashtable)elements.get(counter);
-		counter++;
+		this.currentHash = (Hashtable)this.elements.get(this.counter);
+		this.counter++;
 	}
 
 	public String getTyp()
 	{
-		return type;
+		return this.type;
 	}
 
 	protected Vector readFromFile() throws IOException
@@ -87,20 +87,20 @@ public class FileToDirectory
 		boolean continueAnalyse = true;
 		Vector vec = new Vector();
 		Hashtable h = new Hashtable();
-		while (isr.ready())
+		while (this.isr.ready())
 		{
 			continueAnalyse = true;
-			String[] s = analyseString(isr.readASCIIString());
+			String[] s = analyseString(this.isr.readASCIIString());
 			for(int i = 0; i < hashArguments.length; i++)
 			{
 				if (s[0].startsWith(hashArguments[i]))
 				{
-					s = analyseString(isr.readASCIIString());
+					s = analyseString(this.isr.readASCIIString());
 					Hashtable ch = new Hashtable();
-					while (!s[0].startsWith("@end"))
+					while (!s[0].startsWith("@end")) //$NON-NLS-1$
 					{
 						ch.put(s[0], s[1]);
-						s = analyseString(isr.readASCIIString());
+						s = analyseString(this.isr.readASCIIString());
 					}
 					h.put(hashArguments[i], ch);
 					continueAnalyse = false;
@@ -109,10 +109,10 @@ public class FileToDirectory
 			}
 			if(continueAnalyse)
 			{
-				if (s[0].startsWith("@"))
+				if (s[0].startsWith("@")) //$NON-NLS-1$
 					h.put(s[0], s[1]);
 				else
-				if (s[0].equals(""))
+				if (s[0].equals("")) //$NON-NLS-1$
 				{
 					if (!h.isEmpty())
 					{
@@ -127,19 +127,19 @@ public class FileToDirectory
 
 	protected String getType() throws IOException
 	{
-		if (!isr.readASCIIString().equals("AMFICOM component description file"))
-			return "";
-		String[] s = analyseString (isr.readASCIIString());
-		if (s[0].equals("@type"))
+		if (!this.isr.readASCIIString().equals("AMFICOM component description file")) //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
+		String[] s = analyseString (this.isr.readASCIIString());
+		if (s[0].equals("@type")) //$NON-NLS-1$
 			return s[1];
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	protected String[] analyseString (String s)
 	{
-		int n = s.indexOf(" ");
+		int n = s.indexOf(" "); //$NON-NLS-1$
 		if (n == -1)
-			return new String[] {s, ""};
+			return new String[] {s, ""}; //$NON-NLS-1$
 		String s1 = s.substring(0, n);
 		String s2 = s.substring(n + 1, s.length());
 		return new String[] {s1, s2};

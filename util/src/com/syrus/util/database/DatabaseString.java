@@ -1,24 +1,25 @@
 /*
- * $Id: DatabaseString.java,v 1.8 2005/02/22 08:21:18 bass Exp $
+ * $Id: DatabaseString.java,v 1.9 2005/03/04 08:05:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.util.database;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/22 08:21:18 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/04 08:05:49 $
  * @author $Author: bass $
  * @module util
  */
 public class DatabaseString {
 
-	private DatabaseString(){
-		// empty
+	private DatabaseString() {
+		assert false;
 	}
 
 	/**
@@ -34,7 +35,7 @@ public class DatabaseString {
 		 * then do the same below to avoid stack overflowing.
 		 */
 //*/
-		return (string != null) ? string.replaceAll("(')", "$1$1") : "";
+		return (string != null) ? string.replaceAll("(')", "$1$1") : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 /*/
 		return (string != null)
 				? toQuerySubString(string, string.length())
@@ -68,7 +69,7 @@ public class DatabaseString {
 				? toQuerySubString((string.length() > length)
 						? string.substring(0, length)
 						: string)
-				: "";
+				: ""; //$NON-NLS-1$
 //*/
 	}
 
@@ -83,7 +84,7 @@ public class DatabaseString {
 	public static void setString(PreparedStatement preparedStatement, int parameterIndex, String string, int length)
 		throws SQLException {
 		preparedStatement.setString(parameterIndex, 
-			(string != null) ? ((string.length() > length) ? string.substring(0, length) : string) : ""	);
+			(string != null) ? ((string.length() > length) ? string.substring(0, length) : string) : ""); //$NON-NLS-1$
 	}
 
 	/**

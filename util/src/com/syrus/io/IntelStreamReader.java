@@ -1,3 +1,11 @@
+/*
+ * $Id: IntelStreamReader.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.io;
 
 import java.io.IOException;
@@ -24,7 +32,7 @@ public String readASCIIString() throws IOException
 		int nRead = 0;
 		char ch[] = new char[1];
 
-		String s = "";
+		String s = ""; //$NON-NLS-1$
 
 		while (true)
 		{

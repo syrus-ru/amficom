@@ -1,9 +1,9 @@
 /*
- * $Id: PreferencesManager.java,v 1.5 2004/07/30 11:03:38 bass Exp $
+ * $Id: PreferencesManager.java,v 1.6 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.util.prefs;
@@ -16,39 +16,40 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * @todo PREFS LOCATION: local or db
  *
- * @version $Revision: 1.5 $, $Date: 2004/07/30 11:03:38 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/04 08:05:49 $
  * @author $Author: bass $
  * @module util
  */
 public final class PreferencesManager {
-	public static final String PREFERENCES_ROOT = "amficom";
+	public static final String PREFERENCES_ROOT = "amficom"; //$NON-NLS-1$
 	
 	private PreferencesManager() {
+		assert false;
 	}
 
 	static {
 		try {
 			Class.forName(IIOPConnectionManager.class.getName());
-		} catch (ClassNotFoundException cnfe) {
-			;
+		} catch (final ClassNotFoundException cnfe) {
+			// empty
 		}
 	}
 
 	static {
-		migratePreferences(PREFERENCES_ROOT + "/util/connections/jndi", "Connection.properties");
-		migratePreferences(PREFERENCES_ROOT + "/util/connections/jdbc", "ServerConnection.properties");
+		migratePreferences(PREFERENCES_ROOT + "/util/connections/jndi", "Connection.properties");  //$NON-NLS-1$//$NON-NLS-2$
+		migratePreferences(PREFERENCES_ROOT + "/util/connections/jdbc", "ServerConnection.properties");  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	private static void migratePreferences(String pathName, String fileName) {
 		/*
 		 * Look for ini file in the current directory.
 		 */
-		File file = new File(System.getProperty("user.dir"), fileName);
+		File file = new File(System.getProperty("user.dir"), fileName); //$NON-NLS-1$
 		if (! file.exists()) {
 			/*
 			 * If failed, look for ini file in user's home directory.
 			 */
-			file = new File(System.getProperty("user.home"), fileName);
+			file = new File(System.getProperty("user.home"), fileName); //$NON-NLS-1$
 			if (! file.exists())
 				file = null;
 		}
@@ -66,14 +67,12 @@ public final class PreferencesManager {
 			/*
 			 * Stay silent if no property file found.
 			 */
-			;
 		} catch (IOException ioe) {
 			/*
 			 * Ditto.
 			 */
-			;
 		} catch (BackingStoreException bse) {
-			System.err.println("Preferences migration failed!");
+			System.err.println("Preferences migration failed!"); //$NON-NLS-1$
 		}			
 	}
 
@@ -108,6 +107,7 @@ public final class PreferencesManager {
 		private Preferences preferences;
 
 		private PreferencesHolder() {
+			assert false;
 		}
 
 		public PreferencesHolder(Preferences preferences) {

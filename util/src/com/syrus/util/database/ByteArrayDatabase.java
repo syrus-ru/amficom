@@ -1,9 +1,9 @@
 /*
- * $Id: ByteArrayDatabase.java,v 1.13 2005/01/28 13:06:12 arseniy Exp $
+ * $Id: ByteArrayDatabase.java,v 1.14 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.util.database;
@@ -13,57 +13,32 @@ import java.sql.*;
 import com.syrus.util.*;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/01/28 13:06:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/03/04 08:05:49 $
  * @module util
  */
-public class ByteArrayDatabase {
-	/**
-	 * @deprecated
-	 */
-	private byte[] bar;
-
+public final class ByteArrayDatabase {
 	private ByteArrayDatabase() {
+		assert false;
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public ByteArrayDatabase(byte[] bar) {
-		this.bar = bar;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public ByteArrayDatabase(ByteArray bArr) {
-		this.bar = bArr.getBytes();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void saveAsBlob(Connection conn, String table, String column, String where) throws SQLException {
-		saveAsBlob(bar, conn, table, column, where);
-	}
-
-	public static void saveAsBlob(byte bar[], Connection conn, String table, String column, String where) throws SQLException {
+	public static void saveAsBlob(final byte bar[], final Connection conn, final String table, final String column, final String where) throws SQLException {
 		boolean oldAutoCommit = conn.getAutoCommit();
 		if (oldAutoCommit)
 			conn.setAutoCommit(false);
 
 		Statement statement = null;
 		ResultSet ors = null;
-		String s = "SELECT " + column + " FROM " + table + " WHERE " + where + " FOR UPDATE";
+		String s = "SELECT " + column + " FROM " + table + " WHERE " + where + " FOR UPDATE"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			statement = conn.createStatement();
-			Log.debugMessage("Trying: " + s, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + s, Log.DEBUGLEVEL09); //$NON-NLS-1$
 			ors = statement.executeQuery(s);
 			Blob blob = null;
 			if (ors.next())
 				blob = ors.getBlob(column);
 			else
-				throw new SQLException("No record in " + table + " for '" + where + "'");
+				throw new SQLException("No record in " + table + " for '" + where + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			OutputStream os = null;
 			os = blob.setBinaryStream(0L);
 			os.write(bar);
@@ -91,7 +66,7 @@ public class ByteArrayDatabase {
 		}
 	}
 
-	public static byte[] toByteArray(Blob blob) throws SQLException {
+	public static byte[] toByteArray(final Blob blob) throws SQLException {
 		return blob.getBytes(1, (int) blob.length());
 	}
 }

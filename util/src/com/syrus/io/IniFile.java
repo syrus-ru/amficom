@@ -1,9 +1,9 @@
 /*
- * $Id: IniFile.java,v 1.7 2004/12/08 13:45:18 bass Exp $
+ * $Id: IniFile.java,v 1.8 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.io;
@@ -13,7 +13,7 @@ import java.util.Vector;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/12/08 13:45:18 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/04 08:05:49 $
  * @deprecated java.util.prefs will be used instead.
  * @module util
  */
@@ -30,7 +30,7 @@ public class IniFile
 	Vector keys;
 	Vector values;
 
-	private String tmp = " ";
+	private String tmp = " "; //$NON-NLS-1$
 	private int counter = 0;
 
 	/**
@@ -93,7 +93,7 @@ public class IniFile
 		int n = this.keys.indexOf(key);
 		if (n == -1)
 		{
-			System.out.println("No such key: '" + key + "' defined in ini-file '" + this.f.getName() + "'; setting default value: " + defaultValue);
+			System.out.println("No such key: '" + key + "' defined in ini-file '" + this.f.getName() + "'; setting default value: " + defaultValue); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			return defaultValue;
 		}
 		return (String)this.values.get(n);
@@ -123,10 +123,10 @@ public class IniFile
 			this.pw = new PrintWriter(this.fos, true);
 			for (int i = 0; i < this.keys.size(); i++)
 			{
-				if (this.values.get(i) == "")
+				if (this.values.get(i) == "") //$NON-NLS-1$
 					this.pw.println((String)this.keys.get(i));
 				else
-					this.pw.println (String.valueOf(this.keys.get(i) + " = " + this.values.get(i)));
+					this.pw.println (String.valueOf(this.keys.get(i) + " = " + this.values.get(i))); //$NON-NLS-1$
 			}
 			this.pw.close();
 			this.fos.close();
@@ -158,27 +158,27 @@ public class IniFile
 				if (this.tmp.length() < 3 || this.tmp.charAt(0) == ';')
 				{
 					this.keys.add(this.tmp);
-					this.values.add("");
+					this.values.add(""); //$NON-NLS-1$
 				}
 				else
 				{
 					this.counter++;
-					int spos = this.tmp.indexOf(" =");
+					int spos = this.tmp.indexOf(" ="); //$NON-NLS-1$
 					if (spos != -1)
 					{
 						this.keys.add(this.tmp.substring(0, spos));
-						if (this.tmp.substring(spos, spos + 1).equals(" "))
+						if (this.tmp.substring(spos, spos + 1).equals(" ")) //$NON-NLS-1$
 							this.values.add(this.tmp.substring(spos + 3, this.tmp.length()));
 						else
 							this.values.add(this.tmp.substring(spos + 2, this.tmp.length()));
 					}
 					else
 					{
-						spos = this.tmp.indexOf("=");
+						spos = this.tmp.indexOf("="); //$NON-NLS-1$
 						if (spos != -1)
 						{
 							this.keys.add(this.tmp.substring(0, spos));
-							if (this.tmp.substring(spos, spos + 1).equals(" "))
+							if (this.tmp.substring(spos, spos + 1).equals(" ")) //$NON-NLS-1$
 								this.values.add(this.tmp.substring(spos + 2, this.tmp.length()));
 							else
 								this.values.add(this.tmp.substring(spos + 1, this.tmp.length()));
@@ -186,7 +186,7 @@ public class IniFile
 						else
 						{
 							this.keys.add(this.tmp);
-							this.values.add("");
+							this.values.add(""); //$NON-NLS-1$
 						}
 					}
 				}

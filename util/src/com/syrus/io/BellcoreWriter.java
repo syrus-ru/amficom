@@ -1,9 +1,9 @@
 /*
- * $Id: BellcoreWriter.java,v 1.4 2004/11/22 14:03:38 stas Exp $
+ * $Id: BellcoreWriter.java,v 1.5 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.io;
@@ -12,9 +12,9 @@ import java.io.*;
 import java.nio.*;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/22 14:03:38 $
- * @author $Author: stas $
- * @module general_v1
+ * @version $Revision: 1.5 $, $Date: 2005/03/04 08:05:49 $
+ * @author $Author: bass $
+ * @module util
  */
 public class BellcoreWriter
 {
@@ -23,240 +23,243 @@ public class BellcoreWriter
 	IntelDataOutputStream idos;
 	BellcoreStructure bs;
 
-	public byte[] write (BellcoreStructure bs)
+	public byte[] write (BellcoreStructure bs1)
 	{
-		this.bs = bs;
-		baos = new ByteArrayOutputStream();
-		idos = new IntelDataOutputStream(baos);
+		this.bs = bs1;
+		this.baos = new ByteArrayOutputStream();
+		this.idos = new IntelDataOutputStream(this.baos);
 //		int specials = bs.specials;
 		write_map();
 
 		int i = 1;
 		int j = 0;
-		while (i < bs.map.NB)
+		while (i < bs1.map.NB)
 			{
-				if (bs.map.B_id[i].equals("GenParams"))
+				if (bs1.map.B_id[i].equals("GenParams")) //$NON-NLS-1$
 					{ write_genParams(i++);}
-				else if (bs.map.B_id[i].equals("SupParams"))
+				else if (bs1.map.B_id[i].equals("SupParams")) //$NON-NLS-1$
 					{ write_supParams(i++);}
-				else if (bs.map.B_id[i].equals("FxdParams"))
+				else if (bs1.map.B_id[i].equals("FxdParams")) //$NON-NLS-1$
 					{ write_fxdParams(i++);}
-				else if (bs.map.B_id[i].equals("KeyEvents"))
+				else if (bs1.map.B_id[i].equals("KeyEvents")) //$NON-NLS-1$
 					{ write_keyEvents(i++);}
-				else if (bs.map.B_id[i].equals("LnkParams"))
+				else if (bs1.map.B_id[i].equals("LnkParams")) //$NON-NLS-1$
 					{ write_lnkParams(i++);}
-				else if (bs.map.B_id[i].equals("DataPts") )
+				else if (bs1.map.B_id[i].equals("DataPts") ) //$NON-NLS-1$
 					{ write_dataPts(i++);}
-				else if (bs.map.B_id[i].equals("Cksum"))
+				else if (bs1.map.B_id[i].equals("Cksum")) //$NON-NLS-1$
 					{ write_cksum(i++);}
-				else if (bs.specials > 0)
+				else if (bs1.specials > 0)
 					{ write_special(j++, i++);}
 				else
-					System.out.println("Unknown block!");
+					System.out.println("Unknown block!"); //$NON-NLS-1$
 			}
 
-		data = new byte[baos.size()];
-		data = baos.toByteArray();
-		return data;
+		this.data = new byte[this.baos.size()];
+		this.data = this.baos.toByteArray();
+		return this.data;
 	}
 
 	int write_map()
 	{
 		try
 		{
-			idos.writeIUnsignedShort(bs.map.MRN);
-			idos.writeIInt(bs.map.MBS);
-			idos.writeIShort(bs.map.NB);
+			this.idos.writeIUnsignedShort(this.bs.map.MRN);
+			this.idos.writeIInt(this.bs.map.MBS);
+			this.idos.writeIShort(this.bs.map.NB);
 
-			for (int i = 1; i < bs.map.NB; i++)
+			for (int i = 1; i < this.bs.map.NB; i++)
 			{
-				idos.writeIString(bs.map.B_id[i]);
-				idos.writeIUnsignedShort(bs.map.B_rev[i]);
-				idos.writeIInt(bs.map.B_size[i]);
+				this.idos.writeIString(this.bs.map.B_id[i]);
+				this.idos.writeIUnsignedShort(this.bs.map.B_rev[i]);
+				this.idos.writeIInt(this.bs.map.B_size[i]);
 			}
 		}
 		catch (IOException e)
-			{System.out.println("IO Error writing Map"); return 0;}
+			{System.out.println("IO Error writing Map"); return 0;} //$NON-NLS-1$
 		return 1;
 	}
 
 	int write_genParams(int n)
 	{
-		if (bs.map.B_size[n] == 0)
+		if (this.bs.map.B_size[n] == 0)
 			return 0;
 		try
 		{
-			idos.writeIChar(bs.genParams.LC.charAt(0));
-			idos.writeIChar(bs.genParams.LC.charAt(1));
-			idos.writeIString(bs.genParams.CID);
-			idos.writeIString(bs.genParams.FID);
-			idos.writeIShort(bs.genParams.NW);
-			idos.writeIString(bs.genParams.OL);
-			idos.writeIString(bs.genParams.TL);
-			idos.writeIString(bs.genParams.CCD);
-			idos.writeIChar(bs.genParams.CDF.charAt(0));
-			idos.writeIChar(bs.genParams.CDF.charAt(1));
-			idos.writeIInt(bs.genParams.UO);
-			idos.writeIString(bs.genParams.OP);
-			idos.writeIString(bs.genParams.CMT);
+			this.idos.writeIChar(this.bs.genParams.LC.charAt(0));
+			this.idos.writeIChar(this.bs.genParams.LC.charAt(1));
+			this.idos.writeIString(this.bs.genParams.CID);
+			this.idos.writeIString(this.bs.genParams.FID);
+			this.idos.writeIShort(this.bs.genParams.NW);
+			this.idos.writeIString(this.bs.genParams.OL);
+			this.idos.writeIString(this.bs.genParams.TL);
+			this.idos.writeIString(this.bs.genParams.CCD);
+			this.idos.writeIChar(this.bs.genParams.CDF.charAt(0));
+			this.idos.writeIChar(this.bs.genParams.CDF.charAt(1));
+			this.idos.writeIInt(this.bs.genParams.UO);
+			this.idos.writeIString(this.bs.genParams.OP);
+			this.idos.writeIString(this.bs.genParams.CMT);
 		}
 		catch (IOException e)
-			{System.out.println("IO Error writing GenParams"); return 0;}
+			{System.out.println("IO Error writing GenParams"); return 0;} //$NON-NLS-1$
 		return 1;
 	}
 
 	int write_supParams(int n)
 	{
-		if (bs.map.B_size[n] == 0)
+		if (this.bs.map.B_size[n] == 0)
 			return 0;
 		try
 		{
-			idos.writeIString(bs.supParams.SN);
-			idos.writeIString(bs.supParams.MFID);
-			idos.writeIString(bs.supParams.OTDR);
-			idos.writeIString(bs.supParams.OMID);
-			idos.writeIString(bs.supParams.OMSN);
-			idos.writeIString(bs.supParams.SR);
-			idos.writeIString(bs.supParams.OT);
+			this.idos.writeIString(this.bs.supParams.SN);
+			this.idos.writeIString(this.bs.supParams.MFID);
+			this.idos.writeIString(this.bs.supParams.OTDR);
+			this.idos.writeIString(this.bs.supParams.OMID);
+			this.idos.writeIString(this.bs.supParams.OMSN);
+			this.idos.writeIString(this.bs.supParams.SR);
+			this.idos.writeIString(this.bs.supParams.OT);
 		}
 		catch (IOException e)
-			{System.out.println("IO Error writing SupParams"); return 0;}
+			{System.out.println("IO Error writing SupParams"); return 0;} //$NON-NLS-1$
 		return 1;
 	}
 
 	int write_fxdParams(int n)
 	{
-		if (bs.map.B_size[n] == 0)
+		if (this.bs.map.B_size[n] == 0)
 			return 0;
 		try
 		{
-			idos.writeIUnsignedInt(bs.fxdParams.DTS);
-			idos.writeIChar(bs.fxdParams.UD.charAt(0));
-			idos.writeIChar(bs.fxdParams.UD.charAt(1));
-			idos.writeIShort(bs.fxdParams.AW);
-			idos.writeIInt(bs.fxdParams.AO);
-			idos.writeIShort(bs.fxdParams.TPW);
-			for (int i = 0; i < bs.fxdParams.TPW; i++ )
-				idos.writeIShort(bs.fxdParams.PWU[i]);
-			for (int i = 0; i < bs.fxdParams.TPW; i++ )
-				idos.writeIInt(bs.fxdParams.DS[i]);
-			for (int i = 0; i < bs.fxdParams.TPW; i++ )
-				idos.writeIInt(bs.fxdParams.NPPW[i]);
-			idos.writeIInt(bs.fxdParams.GI);
-			idos.writeIShort(bs.fxdParams.BC);
-			idos.writeIInt(bs.fxdParams.NAV);
-			idos.writeIInt(bs.fxdParams.AR);
-			idos.writeIInt(bs.fxdParams.FPO);
-			idos.writeIUnsignedShort(bs.fxdParams.NF);
-			idos.writeIUnsignedShort(bs.fxdParams.NFSF);
-			idos.writeIUnsignedShort(bs.fxdParams.PO);
-			idos.writeIUnsignedShort(bs.fxdParams.LT);
-			idos.writeIUnsignedShort(bs.fxdParams.RT);
-			idos.writeIUnsignedShort(bs.fxdParams.ET);
+			this.idos.writeIUnsignedInt(this.bs.fxdParams.DTS);
+			this.idos.writeIChar(this.bs.fxdParams.UD.charAt(0));
+			this.idos.writeIChar(this.bs.fxdParams.UD.charAt(1));
+			this.idos.writeIShort(this.bs.fxdParams.AW);
+			this.idos.writeIInt(this.bs.fxdParams.AO);
+			this.idos.writeIShort(this.bs.fxdParams.TPW);
+			for (int i = 0; i < this.bs.fxdParams.TPW; i++ )
+				this.idos.writeIShort(this.bs.fxdParams.PWU[i]);
+			for (int i = 0; i < this.bs.fxdParams.TPW; i++ )
+				this.idos.writeIInt(this.bs.fxdParams.DS[i]);
+			for (int i = 0; i < this.bs.fxdParams.TPW; i++ )
+				this.idos.writeIInt(this.bs.fxdParams.NPPW[i]);
+			this.idos.writeIInt(this.bs.fxdParams.GI);
+			this.idos.writeIShort(this.bs.fxdParams.BC);
+			this.idos.writeIInt(this.bs.fxdParams.NAV);
+			this.idos.writeIInt(this.bs.fxdParams.AR);
+			this.idos.writeIInt(this.bs.fxdParams.FPO);
+			this.idos.writeIUnsignedShort(this.bs.fxdParams.NF);
+			this.idos.writeIUnsignedShort(this.bs.fxdParams.NFSF);
+			this.idos.writeIUnsignedShort(this.bs.fxdParams.PO);
+			this.idos.writeIUnsignedShort(this.bs.fxdParams.LT);
+			this.idos.writeIUnsignedShort(this.bs.fxdParams.RT);
+			this.idos.writeIUnsignedShort(this.bs.fxdParams.ET);
 		}
 		catch (IOException e)
-			{System.out.println("IO Error writing FxdParams");return 0;}
+			{System.out.println("IO Error writing FxdParams");return 0;} //$NON-NLS-1$
 		return 1;
 	}
 
 	int write_keyEvents (int n)
 	{
-		if (bs.map.B_size[n] == 0)
+		if (this.bs.map.B_size[n] == 0)
 			return 0;
 		try
 		{
-			idos.writeIShort(bs.keyEvents.TNKE);
-			for (int i = 0; i < bs.keyEvents.TNKE; i++)
+			this.idos.writeIShort(this.bs.keyEvents.TNKE);
+			for (int i = 0; i < this.bs.keyEvents.TNKE; i++)
 			{
-				idos.writeIShort(bs.keyEvents.EN[i]);
-				idos.writeIInt(bs.keyEvents.EPT[i]);
-				idos.writeIShort(bs.keyEvents.ACI[i]);
-				idos.writeIShort(bs.keyEvents.EL[i]);
-				idos.writeIInt(bs.keyEvents.ER[i]);
+				this.idos.writeIShort(this.bs.keyEvents.EN[i]);
+				this.idos.writeIInt(this.bs.keyEvents.EPT[i]);
+				this.idos.writeIShort(this.bs.keyEvents.ACI[i]);
+				this.idos.writeIShort(this.bs.keyEvents.EL[i]);
+				this.idos.writeIInt(this.bs.keyEvents.ER[i]);
 				for (int j = 0; j < 6; j++)
-					idos.writeIChar(bs.keyEvents.EC[i].charAt(j));
-				idos.writeIChar(bs.keyEvents.LMT[i].charAt(0));
-				idos.writeIChar(bs.keyEvents.LMT[i].charAt(1));
-				idos.writeIString(bs.keyEvents.CMT[i]);
+					this.idos.writeIChar(this.bs.keyEvents.EC[i].charAt(j));
+				this.idos.writeIChar(this.bs.keyEvents.LMT[i].charAt(0));
+				this.idos.writeIChar(this.bs.keyEvents.LMT[i].charAt(1));
+				this.idos.writeIString(this.bs.keyEvents.CMT[i]);
 			}
 
-			idos.writeIInt(bs.keyEvents.EEL);
-			idos.writeIInt(bs.keyEvents.ELMP[0]);
-			idos.writeIInt(bs.keyEvents.ELMP[1]);
-			idos.writeIUnsignedShort(bs.keyEvents.ORL);
-			idos.writeIInt(bs.keyEvents.RLMP[0]);
-			idos.writeIInt(bs.keyEvents.RLMP[1]);
+			this.idos.writeIInt(this.bs.keyEvents.EEL);
+			this.idos.writeIInt(this.bs.keyEvents.ELMP[0]);
+			this.idos.writeIInt(this.bs.keyEvents.ELMP[1]);
+			this.idos.writeIUnsignedShort(this.bs.keyEvents.ORL);
+			this.idos.writeIInt(this.bs.keyEvents.RLMP[0]);
+			this.idos.writeIInt(this.bs.keyEvents.RLMP[1]);
 		}
 		catch (IOException e)
-			{System.out.println("IO Error writing KeyEvents");return 0;}
+			{System.out.println("IO Error writing KeyEvents");return 0;} //$NON-NLS-1$
 		return 1;
 	}
 
 	int write_lnkParams(int n)
 	{
-		if (bs.map.B_size[n] == 0)
+		if (this.bs.map.B_size[n] == 0)
 			return 0;
 		try
 		{
-			idos.writeIShort(bs.lnkParams.TNL);
-			for (int i = 0; i < bs.lnkParams.TNL; i++)
+			this.idos.writeIShort(this.bs.lnkParams.TNL);
+			for (int i = 0; i < this.bs.lnkParams.TNL; i++)
 			{
-				idos.writeIShort(bs.lnkParams.LMN[i]);
-				idos.writeIChar(bs.lnkParams.LMC[i].charAt(0));
-				idos.writeIChar(bs.lnkParams.LMC[i].charAt(1));
-				idos.writeIInt(bs.lnkParams.LML[i]);
-				idos.writeShort(bs.lnkParams.REN[i]);
-				idos.writeIInt(bs.lnkParams.GPA[i][0]);
-				idos.writeIInt(bs.lnkParams.GPA[i][1]);
-				idos.writeIShort(bs.lnkParams.FCI[i]);
-				idos.writeIInt(bs.lnkParams.SMI[i]);
-				idos.writeIInt(bs.lnkParams.SML[i]);
-				idos.writeIChar(bs.lnkParams.USML[i].charAt(0));
-				idos.writeIChar(bs.lnkParams.USML[i].charAt(1));
-				idos.writeIShort(bs.lnkParams.MFDL[i]);
-				idos.writeIString(bs.lnkParams.CMT[i]);
+				this.idos.writeIShort(this.bs.lnkParams.LMN[i]);
+				this.idos.writeIChar(this.bs.lnkParams.LMC[i].charAt(0));
+				this.idos.writeIChar(this.bs.lnkParams.LMC[i].charAt(1));
+				this.idos.writeIInt(this.bs.lnkParams.LML[i]);
+				this.idos.writeShort(this.bs.lnkParams.REN[i]);
+				this.idos.writeIInt(this.bs.lnkParams.GPA[i][0]);
+				this.idos.writeIInt(this.bs.lnkParams.GPA[i][1]);
+				this.idos.writeIShort(this.bs.lnkParams.FCI[i]);
+				this.idos.writeIInt(this.bs.lnkParams.SMI[i]);
+				this.idos.writeIInt(this.bs.lnkParams.SML[i]);
+				this.idos.writeIChar(this.bs.lnkParams.USML[i].charAt(0));
+				this.idos.writeIChar(this.bs.lnkParams.USML[i].charAt(1));
+				this.idos.writeIShort(this.bs.lnkParams.MFDL[i]);
+				this.idos.writeIString(this.bs.lnkParams.CMT[i]);
 			}
 		}
 		catch (IOException e)
-			{System.out.println("IO Error writing LnkParams");return 0;}
+			{System.out.println("IO Error writing LnkParams");return 0;} //$NON-NLS-1$
 		return 1;
 	}
 
 	int write_dataPts(int n)
 	{
-		if (bs.map.B_size[n] == 0)
+		if (this.bs.map.B_size[n] == 0)
 			return 0;
 		try
 		{
-			idos.writeIInt(bs.dataPts.TNDP);
-			idos.writeIShort(bs.dataPts.TSF);
-			for (int i = 0; i < bs.dataPts.TSF; i++)
+			this.idos.writeIInt(this.bs.dataPts.TNDP);
+			this.idos.writeIShort(this.bs.dataPts.TSF);
+			for (int i = 0; i < this.bs.dataPts.TSF; i++)
 			{
-				idos.writeIInt(bs.dataPts.TPS[i]);
-				idos.writeIShort(bs.dataPts.SF[i]);
-				for (int j = 0; j < bs.dataPts.TPS[i]; j++)
-					idos.writeIUnsignedShort(bs.dataPts.DSF[i][j]);
+				this.idos.writeIInt(this.bs.dataPts.TPS[i]);
+				this.idos.writeIShort(this.bs.dataPts.SF[i]);
+				for (int j = 0; j < this.bs.dataPts.TPS[i]; j++)
+					this.idos.writeIUnsignedShort(this.bs.dataPts.DSF[i][j]);
 			}
 		}
 		catch (IOException e)
-			{System.out.println("IO Error writing DataPts");return 0;}
+			{System.out.println("IO Error writing DataPts");return 0;} //$NON-NLS-1$
 		return 1;
 	}
 
 	int write_special (int j, int n)
 	{
-		if (bs.map.B_size[n] == 0)
+		if (this.bs.map.B_size[n] == 0)
 			return 0;
 		try
 		{
-			for (int i = 0; i < bs.special[j].getSize(); i++ )
-				idos.writeByte(bs.special[j].spec_data[i]);
+			for (int i = 0; i < this.bs.special[j].getSize(); i++ )
+				this.idos.writeByte(this.bs.special[j].spec_data[i]);
 		}
 		catch (IOException e)
-			{System.out.println("IO Error writing Special Data");return 0;}
+			{System.out.println("IO Error writing Special Data");return 0;} //$NON-NLS-1$
 		return 1;
 	}
 
+	/**
+	 * @todo Parameter never read.
+	 */
 	int write_cksum (int n)
 	{
 	/*	ByteBuffer bb = ByteBuffer.wrap(baos.toByteArray());
@@ -270,6 +273,9 @@ public class BellcoreWriter
 		return 1;
 	}
 
+	/**
+	 * @todo Method never read locally.
+	 */
 	private static int crc16(ByteBuffer bb)
 	{
 		int sum = 0;

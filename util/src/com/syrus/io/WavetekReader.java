@@ -1,9 +1,9 @@
 /*
- * $Id: WavetekReader.java,v 1.5 2004/12/08 12:49:51 bass Exp $
+ * $Id: WavetekReader.java,v 1.6 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.io;
@@ -11,7 +11,7 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/08 12:49:51 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/04 08:05:49 $
  * @author $Author: bass $
  * @module util
  */
@@ -47,10 +47,10 @@ public class WavetekReader extends DataReader
 	{
 		if (raw_data.length < 50)
 			 return null;
-		bs = new BellcoreStructure();
-		bais = new ByteArrayInputStream(raw_data);
-		idis = new IntelDataInputStream(bais);
-		bac = new ByteArrayConverter(raw_data);
+		this.bs = new BellcoreStructure();
+		this.bais = new ByteArrayInputStream(raw_data);
+		this.idis = new IntelDataInputStream(this.bais);
+		this.bac = new ByteArrayConverter(raw_data);
 		//filesize = raw_data.length;
 
 		search(); //1st
@@ -61,61 +61,43 @@ public class WavetekReader extends DataReader
 		search(); //4th
 			read_trace();
 		fill_bellcore();
-		return bs;
+		return this.bs;
 	}
 
 	int read_params()
 	{
-		// pos + 0x29 - (DOUBLE) длина трассы в км
-		// pos + 0x33 - (short) длина волны
-		// pos + 0x31 - (short) длительность импульса
-		// pos + 0x35 - (dword) число усреднений
-		// pos + 0x3d - (double) групповой индекс
-		// pos + 0x4d - (long) время и дата
-		// pos + 0x61 - (double) разрешение
-		// pos + 0x71 - (double) ?
-		// pos + 0x51 - (double) ?
-		// pos + 0x79 - (string) имя оптического модуля
-		try
-		{
-			averages = bac.readIInt(pos + 0x35);
-			wavelength = bac.readIShort(pos + 0x33);
-			actualwavelength = wavelength * 10;
-			groupindex = bac.readIDouble(pos + 0x3D);
-			datetime = bac.readIUnsignedInt(pos + 0x4d);
-			pulsewidth = bac.readIShort(pos + 0x31);
-			range = bac.readIDouble(pos + 0x29);
-			id = bac.readIString(pos + 0x79);
-		}
-		catch (IOException e) { e.printStackTrace(); }
+		averages = this.bac.readIInt(this.pos + 0x35);
+		wavelength = this.bac.readIShort(this.pos + 0x33);
+		actualwavelength = wavelength * 10;
+		groupindex = this.bac.readIDouble(this.pos + 0x3D);
+		datetime = this.bac.readIUnsignedInt(this.pos + 0x4d);
+		pulsewidth = this.bac.readIShort(this.pos + 0x31);
+		range = this.bac.readIDouble(this.pos + 0x29);
+		id = this.bac.readIString(this.pos + 0x79);
 		return 1;
 		}
 
 	int read_traceinfo()
 	{
-		try
-		{
-			size = bac.readIUnsignedShort(pos + 0x6);
-			resolution = range / size;
-		}
-		catch (IOException e) { e.printStackTrace(); }
+		size = this.bac.readIUnsignedShort(this.pos + 0x6);
+		resolution = range / size;
 		return 1;
 	}
 
 	int read_trace()
 	{
-		bs.addField(7);
+		this.bs.addField(7);
 		try
 		{
-			bs.dataPts.TNDP = size;
-			bs.dataPts.TSF = 1;
-			bs.dataPts.TPS = new int [1];
-			bs.dataPts.SF = new short [1];
-			bs.dataPts.TPS[0] = size;
-			bs.dataPts.SF[0] = 1000;
-			bs.dataPts.DSF = new int[1][size];
-			for (i = 0; i < size; i++)
-				bs.dataPts.DSF[0][i] = 65535 - idis.readIUnsignedShort();
+			this.bs.dataPts.TNDP = size;
+			this.bs.dataPts.TSF = 1;
+			this.bs.dataPts.TPS = new int [1];
+			this.bs.dataPts.SF = new short [1];
+			this.bs.dataPts.TPS[0] = size;
+			this.bs.dataPts.SF[0] = 1000;
+			this.bs.dataPts.DSF = new int[1][size];
+			for (this.i = 0; this.i < size; this.i++)
+				this.bs.dataPts.DSF[0][this.i] = 65535 - this.idis.readIUnsignedShort();
 		}
 		catch (IOException e) { e.printStackTrace(); }
 		return 1;
@@ -123,54 +105,54 @@ public class WavetekReader extends DataReader
 
 	int fill_bellcore()
 	{
-		bs.addField(BellcoreStructure.GENPARAMS);
-		bs.genParams.NW = wavelength;
+		this.bs.addField(BellcoreStructure.GENPARAMS);
+		this.bs.genParams.NW = wavelength;
 
-		bs.addField(3);
-		bs.supParams.OMID = id;
+		this.bs.addField(3);
+		this.bs.supParams.OMID = id;
 
-		bs.addField(4);
-		bs.fxdParams.DTS = datetime;
-		bs.fxdParams.UD = "mt";
-		bs.fxdParams.AW = (short)(actualwavelength);
-		bs.fxdParams.TPW = 1;
-		bs.fxdParams.PWU = new short[1];
-		bs.fxdParams.DS = new int [1];
-		bs.fxdParams.NPPW = new int [1];
-		bs.fxdParams.PWU[0] = (short)pulsewidth;
-		bs.fxdParams.DS[0] = (int)(resolution * groupindex / 3d * 100d * 10000d/*points*/ * 1000d/*meters*/);
-		bs.fxdParams.NPPW[0] = size;
-		bs.fxdParams.GI = (int)(groupindex * 100000);
-		bs.fxdParams.NAV = averages;
-		bs.fxdParams.AR = (int)(resolution * size * groupindex / 3d * 100d * 1000d/*meters*/);
+		this.bs.addField(4);
+		this.bs.fxdParams.DTS = datetime;
+		this.bs.fxdParams.UD = "mt"; //$NON-NLS-1$
+		this.bs.fxdParams.AW = (short)(actualwavelength);
+		this.bs.fxdParams.TPW = 1;
+		this.bs.fxdParams.PWU = new short[1];
+		this.bs.fxdParams.DS = new int [1];
+		this.bs.fxdParams.NPPW = new int [1];
+		this.bs.fxdParams.PWU[0] = (short)pulsewidth;
+		this.bs.fxdParams.DS[0] = (int)(resolution * groupindex / 3d * 100d * 10000d/*points*/ * 1000d/*meters*/);
+		this.bs.fxdParams.NPPW[0] = size;
+		this.bs.fxdParams.GI = (int)(groupindex * 100000);
+		this.bs.fxdParams.NAV = averages;
+		this.bs.fxdParams.AR = (int)(resolution * size * groupindex / 3d * 100d * 1000d/*meters*/);
 
-		bs.addField(9);
-		bs.cksum.CSM = 0;
+		this.bs.addField(9);
+		this.bs.cksum.CSM = 0;
 
-		bs.addField(1);
-		bs.map.MRN = 100;
-		bs.map.NB = 6;
+		this.bs.addField(1);
+		this.bs.map.MRN = 100;
+		this.bs.map.NB = 6;
 
-		bs.map.B_id = new String[6];
-		bs.map.B_rev = new int[6];
-		bs.map.B_size = new int[6];
+		this.bs.map.B_id = new String[6];
+		this.bs.map.B_rev = new int[6];
+		this.bs.map.B_size = new int[6];
 
-		bs.map.B_id[0] = "Map";
-		bs.map.B_id[1] = "GenParams";
-		bs.map.B_id[2] = "SupParams";
-		bs.map.B_id[3] = "FxdParams";
-		bs.map.B_id[4] = "DataPts";
-		bs.map.B_id[5] = "Cksum";
+		this.bs.map.B_id[0] = "Map"; //$NON-NLS-1$
+		this.bs.map.B_id[1] = "GenParams"; //$NON-NLS-1$
+		this.bs.map.B_id[2] = "SupParams"; //$NON-NLS-1$
+		this.bs.map.B_id[3] = "FxdParams"; //$NON-NLS-1$
+		this.bs.map.B_id[4] = "DataPts"; //$NON-NLS-1$
+		this.bs.map.B_id[5] = "Cksum"; //$NON-NLS-1$
 
-		for (int i = 1; i < 6; i++)
-			bs.map.B_rev[i] = 100;
+		for (int i1 = 1; i1 < 6; i1++)
+			this.bs.map.B_rev[i1] = 100;
 
-		bs.map.B_size[1] = bs.genParams.getSize();
-		bs.map.B_size[2] = bs.supParams.getSize();
-		bs.map.B_size[3] = bs.fxdParams.getSize();
-		bs.map.B_size[4] = bs.dataPts.getSize();
-		bs.map.B_size[5] = bs.cksum.getSize();
-		bs.map.MBS = bs.map.getSize();
+		this.bs.map.B_size[1] = this.bs.genParams.getSize();
+		this.bs.map.B_size[2] = this.bs.supParams.getSize();
+		this.bs.map.B_size[3] = this.bs.fxdParams.getSize();
+		this.bs.map.B_size[4] = this.bs.dataPts.getSize();
+		this.bs.map.B_size[5] = this.bs.cksum.getSize();
+		this.bs.map.MBS = this.bs.map.getSize();
 
 		return 1;
 	}
@@ -179,17 +161,17 @@ public class WavetekReader extends DataReader
 	{
 		try
 		{
-			flag = false;
-			while (!flag)
+			this.flag = false;
+			while (!this.flag)
 			{
-				if (idis.readIChar() == 167)
-					if (idis.readIChar() == 40)
-						if (idis.readIChar() == 2)
-							if (idis.readIChar() == 21)
-								flag = true;
-				pos++;
+				if (this.idis.readIChar() == 167)
+					if (this.idis.readIChar() == 40)
+						if (this.idis.readIChar() == 2)
+							if (this.idis.readIChar() == 21)
+								this.flag = true;
+				this.pos++;
 			}
-			pos += 3;
+			this.pos += 3;
 		}
 		catch (IOException e) { e.printStackTrace(); }
 	}

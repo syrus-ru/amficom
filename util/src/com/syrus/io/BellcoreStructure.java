@@ -1,9 +1,9 @@
 /*
- * $Id: BellcoreStructure.java,v 1.9 2004/12/08 13:55:21 bass Exp $
+ * $Id: BellcoreStructure.java,v 1.10 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.io;
@@ -11,7 +11,7 @@ package com.syrus.io;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/08 13:55:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/04 08:05:49 $
  * @author $Author: bass $
  * @module util
  */
@@ -35,6 +35,9 @@ public class BellcoreStructure // extends ObjectResource
 	private boolean hasKey = false;
 	private boolean hasLnk = false;
 	private boolean hasData = false;
+	/**
+	 * @todo Field is never read locally. 
+	 */
 	private boolean hasSpecial = false;
 	private int blocks = 0;          // общее число полей
 	int specials = 0; // число полей specials (может быть произвольным)
@@ -51,7 +54,7 @@ public class BellcoreStructure // extends ObjectResource
 	Cksum cksum;
 	Special[] special;
 
-	public String title = "";
+	public String title = ""; //$NON-NLS-1$
 	public String schemePathId;
 	public String measurementId;
 	public String monitoredElementId;
@@ -112,19 +115,19 @@ public class BellcoreStructure // extends ObjectResource
 	//----------- General Parameters ------------//
 	class GenParams
 	{
-		public String LC = "EN";       // Language Code (2 bytes)
-		public String CID = " ";       // Cable ID
-		public String FID = " ";       // Fiber ID
+		public String LC = "EN";       // Language Code (2 bytes) //$NON-NLS-1$
+		public String CID = " ";       // Cable ID //$NON-NLS-1$
+		public String FID = " ";       // Fiber ID //$NON-NLS-1$
 		public short FT = 652;         // Fiber Type
 		public short NW = 1310;        // Nominal Wavelength
-		public String OL = " ";        // Originating Location
-		public String TL = " ";        // Terminating Location
-		public String CCD = " ";       // Cable Code
-		public String CDF = "BC";      // Current Data Flag (2 bytes)
+		public String OL = " ";        // Originating Location //$NON-NLS-1$
+		public String TL = " ";        // Terminating Location //$NON-NLS-1$
+		public String CCD = " ";       // Cable Code //$NON-NLS-1$
+		public String CDF = "BC";      // Current Data Flag (2 bytes) //$NON-NLS-1$
 		public int UO = 0;             // User Offset
 		public int UOD = 0;            // User Offset Distance
-		public String OP = " ";        // Operator
-		public String CMT = " ";       // Comment
+		public String OP = " ";        // Operator //$NON-NLS-1$
+		public String CMT = " ";       // Comment //$NON-NLS-1$
 
 		public int getSize()
 		{
@@ -136,13 +139,13 @@ public class BellcoreStructure // extends ObjectResource
 	//----------- Supplier Parameters ------------//
 	class SupParams
 	{
-		public String SN = " ";          // Supplier Name
-		public String MFID = " ";        // OTDR Mainframe ID
-		public String OTDR = " ";        // OTDR Mainframe SerNum
-		public String OMID = " ";        // Optical Module ID
-		public String OMSN = " ";        // Optical Module SerNum
-		public String SR = " ";          // Software Revision
-		public String OT = " ";          // Other
+		public String SN = " ";          // Supplier Name //$NON-NLS-1$
+		public String MFID = " ";        // OTDR Mainframe ID //$NON-NLS-1$
+		public String OTDR = " ";        // OTDR Mainframe SerNum //$NON-NLS-1$
+		public String OMID = " ";        // Optical Module ID //$NON-NLS-1$
+		public String OMSN = " ";        // Optical Module SerNum //$NON-NLS-1$
+		public String SR = " ";          // Software Revision //$NON-NLS-1$
+		public String OT = " ";          // Other //$NON-NLS-1$
 
 		public int getSize()
 		{
@@ -155,7 +158,7 @@ public class BellcoreStructure // extends ObjectResource
 	class FxdParams
 	{
 		public long DTS = 0;           // Date/Time Stamp (in ms)
-		public String UD = "km";          // Units of Distanse (2 bytes)
+		public String UD = "km";          // Units of Distanse (2 bytes) //$NON-NLS-1$
 		public short AW = 13100;           // Actual Wavelength
 		public int AO = 0;             // Acquision Offset
 		public int AOD = 0;            // Acquision Offset Distance
@@ -176,7 +179,7 @@ public class BellcoreStructure // extends ObjectResource
 		public int LT = 200;             // Loss Threshold
 		public int RT = 40000;             // Reflectance Threshold
 		public int ET = 3000;             // End-of-Fiber Threshold
-		public String TT = "ST";          // Trace Type -- ??
+		public String TT = "ST";          // Trace Type -- ?? //$NON-NLS-1$
 		public int WC[] = new int[4]; // Window Coordinates
 
 		public int getSize()
@@ -279,57 +282,57 @@ public class BellcoreStructure // extends ObjectResource
 
 	public String getOpticalModuleId()
 	{
-		return supParams.OMID;
+		return this.supParams.OMID;
 	}
 
 	public int getPulsewidth()
 	{
-		return fxdParams.PWU[0];
+		return this.fxdParams.PWU[0];
 	}
 
 	public int getAverages()
 	{
-		return fxdParams.NAV;
+		return this.fxdParams.NAV;
 	}
 
 	public double getBackscatter()
 	{
-		return -(double)fxdParams.BC / 10d;
+		return -(double)this.fxdParams.BC / 10d;
 	}
 
 	public Date getDate()
 	{
-		return new Date(fxdParams.DTS * 1000);
+		return new Date(this.fxdParams.DTS * 1000);
 	}
 
 	public String getUnits()
 	{
-		return fxdParams.UD;
+		return this.fxdParams.UD;
 	}
 
 	public int getWavelength()
 	{
-		return fxdParams.AW / 10;
+		return this.fxdParams.AW / 10;
 	}
 
 	public double getIOR()
 	{
-		return fxdParams.GI / 100000d;
+		return this.fxdParams.GI / 100000d;
 	}
 
 	public double getResolution()
 	{
 		int n = this.dataPts.TNDP;
 		double res = (this.fxdParams.AR - this.fxdParams.AO) * 3d / ((double)n * (double)this.fxdParams.GI/1000d);
-		if (getUnits().equals("km"))
+		if (getUnits().equals("km")) //$NON-NLS-1$
 			res *= 1000d;
 		return res;
 	}
 
 	public double getRange()
 	{
-		double range = (fxdParams.AR - fxdParams.AO) * 3d / fxdParams.GI * 1000;
-		if (getUnits().equals("mt"))
+		double range = (this.fxdParams.AR - this.fxdParams.AO) * 3d / this.fxdParams.GI * 1000;
+		if (getUnits().equals("mt")) //$NON-NLS-1$
 			range /= 1000d;
 		return range;
 	}

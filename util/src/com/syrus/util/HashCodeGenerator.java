@@ -1,9 +1,9 @@
 /*
- * $Id: HashCodeGenerator.java,v 1.6 2004/10/27 12:20:17 bob Exp $
+ * $Id: HashCodeGenerator.java,v 1.7 2005/03/04 08:05:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.util;
@@ -14,8 +14,8 @@ import java.util.Date;
  * HashCodeGenerator methods have got from Effective Java: Programming Language
  * Guide by Joshua Bloch
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/27 12:20:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/03/04 08:05:49 $
+ * @author $Author: bass $
  * @module util
  */
 public class HashCodeGenerator {
@@ -218,6 +218,6 @@ public class HashCodeGenerator {
 	}
 
 	public String toString() {
-		return "HashCodeGenerator result:" + this.result;
+		return "HashCodeGenerator result:" + this.result; //$NON-NLS-1$
 	}
 }

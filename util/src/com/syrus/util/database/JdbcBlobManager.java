@@ -1,9 +1,9 @@
 /*
- * $Id: JdbcBlobManager.java,v 1.4 2004/09/09 12:10:11 bass Exp $
+ * $Id: JdbcBlobManager.java,v 1.5 2005/03/04 08:05:49 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.util.database;
@@ -18,7 +18,7 @@ import java.sql.*;
  * as a byte&nbsp;array/input&nbsp;stream.
  *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/09 12:10:11 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/04 08:05:49 $
  * @module util
  */
 public final class JdbcBlobManager {
@@ -26,6 +26,7 @@ public final class JdbcBlobManager {
 	 * Singleton.
 	 */
 	private JdbcBlobManager() {
+		assert false;
 	}
 
 	/**
@@ -41,8 +42,8 @@ public final class JdbcBlobManager {
 	public static byte[] getData(final Connection conn,
 			final String colName, final String table,
 			final String where) throws SQLException {
-		return getData(conn, "SELECT "  + colName + " FROM " + table
-			+ " WHERE " + where);
+		return getData(conn, "SELECT "  + colName + " FROM " + table //$NON-NLS-1$ //$NON-NLS-2$
+			+ " WHERE " + where); //$NON-NLS-1$
 	}
 
 	/**
@@ -58,8 +59,8 @@ public final class JdbcBlobManager {
 	public static InputStream getDataAsStream(final Connection conn,
 			final String colName, final String table,
 			final String where) throws SQLException {
-		return getDataAsStream(conn, "SELECT "  + colName + " FROM "
-			+ table + " WHERE " + where);
+		return getDataAsStream(conn, "SELECT "  + colName + " FROM " //$NON-NLS-1$ //$NON-NLS-2$
+			+ table + " WHERE " + where); //$NON-NLS-1$
 	}
 
 	/**
@@ -99,8 +100,8 @@ public final class JdbcBlobManager {
 			final String table, final String where,
 			final boolean executeCommit, final byte data[])
 			throws SQLException {
-		setData(conn, "SELECT " + colName + " FROM " + table + " WHERE "
-			+ where + " FOR UPDATE", executeCommit, data);
+		setData(conn, "SELECT " + colName + " FROM " + table + " WHERE " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			+ where + " FOR UPDATE", executeCommit, data); //$NON-NLS-1$
 	}
 
 	/**
@@ -144,8 +145,8 @@ public final class JdbcBlobManager {
 			final String colName, final String table,
 			final String where, final boolean executeCommit,
 			final InputStream in) throws SQLException {
-		setDataAsStream(conn, "SELECT " + colName + " FROM " + table +
-			" WHERE " + where + " FOR UPDATE", executeCommit, in);
+		setDataAsStream(conn, "SELECT " + colName + " FROM " + table + //$NON-NLS-1$ //$NON-NLS-2$
+			" WHERE " + where + " FOR UPDATE", executeCommit, in); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -332,7 +333,7 @@ public final class JdbcBlobManager {
 	public static byte[] getData(final Blob blob) throws SQLException {
 		long blobLength = blob.length();
 		if (blobLength > Integer.MAX_VALUE)
-			throw new SQLException("Blob too large to fit into an array");
+			throw new SQLException("Blob too large to fit into an array"); //$NON-NLS-1$
 		return blob.getBytes(1L, (int) blobLength);
 	}
 
@@ -402,7 +403,7 @@ public final class JdbcBlobManager {
 		Statement stmt = null;
 		try {
 			stmt = conn.createStatement();
-			stmt.execute("COMMIT");
+			stmt.execute("COMMIT"); //$NON-NLS-1$
 		} finally {
 			if (stmt != null)
 				stmt.close();
