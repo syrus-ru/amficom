@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Optimize.Report;
 
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.table.TableColumn;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -55,8 +56,8 @@ class OptResultsTableColumnModel extends DividableTableColumnModel
 class OptResultsTableModel extends DividableTableModel
 {
 	int length = 0;
-	Vector pathChainNames = new Vector();
-	Vector pathFalls = new Vector();
+	List pathChainNames = new LinkedList();
+	List pathFalls = new LinkedList();
 
 	public OptResultsTableModel (int divisionsNumber,ObjectsReport report)
 			throws CreateReportException
@@ -79,7 +80,7 @@ class OptResultsTableModel extends DividableTableModel
 		if (sc == null)
 			throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
 
-		Vector paths = sc.paths;
+		List paths = sc.paths;
 		if (paths == null)
 			throw new CreateReportException(report.getName(),CreateReportException.cantImplement);
 
@@ -87,7 +88,7 @@ class OptResultsTableModel extends DividableTableModel
 		{
 //			SchemePath curPath = new SchemePath((SchemePath_Transferable)paths.get(i));
 			SchemePath curPath = (SchemePath)paths.get(i);
-			Vector links = curPath.links;
+			List links = curPath.links;
 
 			String pathChainName = "";
 			double full_fall = 0;

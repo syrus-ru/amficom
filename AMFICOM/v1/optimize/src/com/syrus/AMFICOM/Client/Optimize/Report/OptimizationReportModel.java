@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
 import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
 
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JComponent;
-
-import java.util.Vector;
 
 public class OptimizationReportModel extends APOReportModel
 {
@@ -103,9 +103,9 @@ public class OptimizationReportModel extends APOReportModel
 	{
 	}
 
-	public Vector getAvailableReports()
+	public List getAvailableReports()
 	{
-		Vector result = new Vector();
+		List result = new LinkedList();
 
 		result.add(OptimizationReportModel.sourceData);
 		result.add(SchemeReportModel.scheme);
@@ -307,7 +307,7 @@ public class OptimizationReportModel extends APOReportModel
 		else if (rp.field.equals(OptimizationReportModel.optimizationParams)
            ||rp.field.equals(OptimizationReportModel.solution))
 		{
-      TableModelDivider tmd = new TableModelDivider(rp,divisionsNumber);
+      TableModelDividerReport tmd = new TableModelDividerReport(rp,divisionsNumber);
 			returnValue = new ReportResultsTablePanel(
 					tmd.columnModel,
 					tmd.tableModel,

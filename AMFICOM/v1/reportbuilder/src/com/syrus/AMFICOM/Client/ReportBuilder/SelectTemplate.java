@@ -11,7 +11,6 @@ import javax.swing.BorderFactory;
 
 import java.util.Hashtable;
 import java.util.Enumeration;
-import java.util.Vector;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ReportDataSourceImage;
@@ -348,7 +347,7 @@ public class SelectTemplate extends JDialog
 	private void removeButton_actionPerformed(ActionEvent e)
 	{
 		int[] selIndices = this.templatesList.getSelectedIndices();
-		Vector selTemplates = new Vector();
+		List selTemplates = new LinkedList();
 
 		for (int i = 0; i < selIndices.length; i++)
 			selTemplates.add((ReportTemplate)this.templatesList.

@@ -4,8 +4,8 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/05/27 12:49:24 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/08/18 11:22:53 $
+ * @author $Author: peskovsky $
  *
  * @deprecated
  */
@@ -153,7 +153,7 @@ public class MessageType extends StubResource
 		for (int i = 0; i < number; i++)
 		{
 			result[i] = new MessageType(ids[i], names[i]);
-			Pool.put(MessageType.typ, result[i].getId(), result[i]);
+			Pool.put(MessageType.type, result[i].getId(), result[i]);
 		}
 		return result;
 	}

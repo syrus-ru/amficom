@@ -18,7 +18,8 @@ import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
 
 import javax.swing.JComponent;
 
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 
 
 public class SchemeReportModel extends APOReportModel
@@ -61,7 +62,7 @@ public class SchemeReportModel extends APOReportModel
 
 	public Vector getAvailableReports()
 	{
-		Vector result = new Vector();
+		List result = new LinkedList();
 
 		result.add(SchemeReportModel.scheme);
 		result.add(SchemeReportModel.ugo);

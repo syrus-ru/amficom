@@ -4,7 +4,9 @@ import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Image;
 
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
 
@@ -105,9 +107,9 @@ public class OptimizeReportsTreeModel extends ObjectResourceTreeModel
 		return null;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new LinkedList();
 
 		//для строки - общая часть для дерева отчётов + деревья топологоии и схемы
 		if (node.getObject() instanceof String)
@@ -130,7 +132,7 @@ public class OptimizeReportsTreeModel extends ObjectResourceTreeModel
 			APOReportModel rm =
 				(APOReportModel) node.getObject();
 
-			Vector fields = rm.getAvailableReports();
+			List fields = rm.getAvailableReports();
 
 			for (int i = 0; i < fields.size(); i++)
 			{

@@ -15,7 +15,8 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
 
 import javax.swing.JComponent;
 
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * <p>Title: </p>
@@ -65,9 +66,9 @@ public class MapReportModel extends APOReportModel
 	{
 	}
 
-	public Vector getAvailableReports()
+	public List getAvailableReports()
 	{
-		Vector result = new Vector();
+		List result = new LinkedList();
 
 		result.add(MapReportModel.rep_topology);
 

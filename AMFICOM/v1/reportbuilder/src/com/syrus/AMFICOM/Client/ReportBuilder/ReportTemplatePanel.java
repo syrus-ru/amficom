@@ -11,9 +11,10 @@ import javax.swing.JMenuItem;
 
 import java.awt.*;
 
-import java.util.Vector;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.LinkedList;
 
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
@@ -433,7 +434,7 @@ public class ReportTemplatePanel extends JPanel
 			{
 				public void actionPerformed(ActionEvent el)
 				{
-					Vector selectItems = new Vector();
+					List selectItems = new LinkedList();
 					selectItems.add(LangModelReport.getString(FirmedTextPane.
 						toFieldsTop));
 					selectItems.add(LangModelReport.getString(FirmedTextPane.toTop));
@@ -492,7 +493,7 @@ public class ReportTemplatePanel extends JPanel
 			{
 				public void actionPerformed(ActionEvent el)
 				{
-					Vector selectItems = new Vector();
+					List selectItems = new LinkedList();
 					selectItems.add(LangModelReport.getString(FirmedTextPane.
 						toFieldsLeft));
 					selectItems.add(LangModelReport.getString(FirmedTextPane.toLeft));
@@ -1039,7 +1040,7 @@ public class ReportTemplatePanel extends JPanel
 			{
 				this.reportTemplate.objectRenderers.remove(selectedObject);
 
-				Vector labels = this.reportTemplate.labels;
+				List labels = this.reportTemplate.labels;
 				for (int i = 0; i < labels.size(); i++)
 				{
 					FirmedTextPane curLabel = (FirmedTextPane) labels.get(i);
@@ -1076,10 +1077,10 @@ public class ReportTemplatePanel extends JPanel
 */
 	public void setSchemeObjectsNewParameters()
 	{
-		Vector theLabels = this.rtbWindow.layoutWCPanel.labels;
-		Vector theImages = this.rtbWindow.layoutWCPanel.images;
+		List theLabels = this.rtbWindow.layoutWCPanel.labels;
+		List theImages = this.rtbWindow.layoutWCPanel.images;
 
-		this.reportTemplate.setLabels((Vector) theLabels.clone());
+		this.reportTemplate.setLabels(((LinkedList) theLabels).clone());
 
 		boolean[] labelsTransformed = new boolean[this.reportTemplate.labels.
 			size()];
@@ -1096,8 +1097,8 @@ public class ReportTemplatePanel extends JPanel
 		for (int i = 0; i < objectsTransformed.length; i++)
 			objectsTransformed[i] = false;
 
-		Vector xs = new Vector(); //строим карту отображённых элементов
-		Vector ys = new Vector();
+		List xs = new LinkedList(); //строим карту отображённых элементов
+		List ys = new LinkedList();
 		getAxisValuesMatrices(xs, ys);
 
 		boolean toBreak = false;
@@ -1244,14 +1245,14 @@ getHeight();
 */
 	private int checkToTopForElements(
 		Object elem,
-		Vector xs,
-		Vector ys)
+		List xs,
+		List ys)
 	{
 		// Находим границы диапазона на котором мы проверяем наличие
 		//объектов сверху
-		Vector theLabels = this.rtbWindow.layoutWCPanel.labels;
-		Vector theImages = this.rtbWindow.layoutWCPanel.images;
-		Vector theObjects = this.rtbWindow.layoutWCPanel.objects;
+		List theLabels = this.rtbWindow.layoutWCPanel.labels;
+		List theImages = this.rtbWindow.layoutWCPanel.images;
+		List theObjects = this.rtbWindow.layoutWCPanel.objects;
 
 		int elemX = 0;
 		int elemY = 0;
@@ -1438,12 +1439,12 @@ getHeight();
 	 * @param ys возвращаемые величины для вертикали
 */
 	private void getAxisValuesMatrices(
-		Vector xs,
-		Vector ys)
+		List xs,
+		List ys)
 	{
-		Vector theLabels = this.rtbWindow.layoutWCPanel.labels;
-		Vector theImages = this.rtbWindow.layoutWCPanel.images;
-		Vector theObjects = this.rtbWindow.layoutWCPanel.objects;
+		List theLabels = this.rtbWindow.layoutWCPanel.labels;
+		List theImages = this.rtbWindow.layoutWCPanel.images;
+		List theObjects = this.rtbWindow.layoutWCPanel.objects;
 		int elemCount = 0;
 
 		for (int i = 0; i < theLabels.size(); i++)
@@ -1531,7 +1532,7 @@ getHeight();
 */
 	private int getLabelAt(int x, int y)
 	{
-		Vector theLabels = this.rtbWindow.layoutWCPanel.labels;
+		List theLabels = this.rtbWindow.layoutWCPanel.labels;
 
 		for (int i = 0; i < theLabels.size(); i++)
 		{
@@ -1546,7 +1547,7 @@ getHeight();
 
 	private int getImageAt(int x, int y)
 	{
-		Vector theImages = this.rtbWindow.layoutWCPanel.images;
+		List theImages = this.rtbWindow.layoutWCPanel.images;
 
 		for (int i = 0; i < theImages.size(); i++)
 		{
@@ -1571,7 +1572,7 @@ getHeight();
 */
 	private int getRenderingObjectAt(int x, int y)
 	{
-		Vector theObjects = this.rtbWindow.layoutWCPanel.objects;
+		List theObjects = this.rtbWindow.layoutWCPanel.objects;
 		for (int i = 0; i < theObjects.size(); i++)
 		{
 			RenderingObject curRO = (RenderingObject) theObjects.get(i);
@@ -1734,7 +1735,7 @@ getHeight();
 														  rt_objectsReport))
 				{
 					//Выбор полей
-					if (((Vector) transf_rep.getReserve()).size() == 0)
+					if (((List) transf_rep.getReserve()).size() == 0)
 					{
 						JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),

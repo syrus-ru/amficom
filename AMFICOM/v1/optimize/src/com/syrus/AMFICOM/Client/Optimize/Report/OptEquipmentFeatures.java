@@ -181,7 +181,7 @@ class OptEquipmentFeaturesTableModel extends DividableTableModel
 			secondColumn.add("");
 			length++;
 
-			Enumeration reflProp = curReflect.characteristics.elements();
+			Enumeration reflProp = curReflect.characteristics.values();
 			while (reflProp.hasMoreElements())
 			{
 				Characteristic curChar = (Characteristic) reflProp.nextElement();
@@ -218,7 +218,7 @@ class OptEquipmentFeaturesTableModel extends DividableTableModel
 			secondColumn.add("");
 			length++;
 
-			Enumeration switchProp = curSwitch.characteristics.elements();
+			Enumeration switchProp = curSwitch.characteristics.values();
 			while (switchProp.hasMoreElements())
 			{
 				Characteristic curChar = (Characteristic) switchProp.nextElement();

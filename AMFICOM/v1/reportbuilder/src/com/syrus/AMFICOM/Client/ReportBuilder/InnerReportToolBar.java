@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 
 import java.awt.event.ActionEvent;
 
+import java.util.List;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
@@ -15,8 +16,6 @@ import javax.swing.ImageIcon;
 import javax.swing.AbstractButton;
 import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
-
-import java.util.Vector;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
@@ -293,9 +292,9 @@ else
 
 	public void changeViewButton_actionPerformed()
 	{
-		Vector objectRenderers = mainWindow.layoutWOCPanel.reportTemplate.
+		List objectRenderers = mainWindow.layoutWOCPanel.reportTemplate.
 										 objectRenderers;
-		Vector labels = mainWindow.layoutWOCPanel.reportTemplate.labels;
+		List labels = mainWindow.layoutWOCPanel.reportTemplate.labels;
 
 		if (mainWindow.isTemplateSchemeMode)
 		{

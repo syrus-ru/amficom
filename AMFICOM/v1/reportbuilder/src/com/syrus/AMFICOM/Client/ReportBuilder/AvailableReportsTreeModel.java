@@ -4,9 +4,10 @@ import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Image;
 
-import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
 
@@ -144,9 +145,9 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 		return null;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new LinkedList();
 
 		//для строки - общая часть для дерева отчётов + деревья топологоии и схемы
 		if (node.getObject()instanceof String)
@@ -474,7 +475,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 			{
 				Hashtable equipTypeHash = Pool.getHash(EquipmentType.typ);
 				if (equipTypeHash == null)
-					return new Vector();
+					return new LinkedList();
 
 				Enumeration equipTypeEnum = equipTypeHash.elements();
 				while (equipTypeEnum.hasMoreElements())
@@ -506,22 +507,6 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 						vec.add(ortn);
 					}
 				}
-
-				/*        ObjectsReport or = new ObjectsReport (orm.getTyp(),"",ObjectResourceReportModel.rt_objectsReport);
-				 try
-				 {
-				 or.setReserve(new Vector());
-				 }
-				 catch (CreateReportException cre){}
-				 ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
-				 or,
-					 LangModelReport.getString(ObjectResourceReportModel.rt_objectsReport),
-				 true,
-				 new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-				 ortn.setDragDropEnabled(true);
-				 vec.add(ortn);
-				 registerSearchableNode("", ortn);*/
-
 			}
 
 			else if (   s.equals("label_repPhysicalScheme")
@@ -836,10 +821,9 @@ getObject();
 					String curName =
 						(String) ((ObjectResourceTreeNode) node).getObject();
 
-					Vector views = (Vector) curModel.getAvailableViewTypesforField(
-						curName);
+					List views = curModel.getAvailableViewTypesforField(curName);
 					if (views == null)
-						return new Vector();
+						return new LinkedList();
 
 					for (int i = 0; i < views.size(); i++)
 					{
@@ -1161,8 +1145,8 @@ getObject();
 			ObjectResourceReportModel orm =
 				(ObjectResourceReportModel) node.getObject();
 
-			Vector fields = orm.getAllColumnIDs();
-			Vector fieldNames = orm.getColumnNamesbyIDs(orm.getAllColumnIDs());
+			List fields = orm.getAllColumnIDs();
+			List fieldNames = orm.getColumnNamesbyIDs(orm.getAllColumnIDs());
 
 			for (int i = 0; i < fields.size(); i++)
 			{
@@ -1170,7 +1154,7 @@ getObject();
 				String curName = (String) fieldNames.get(i);
 
 				//Поля для которых нет стат.отчётов не отображаем
-				Vector views = (Vector) orm.getAvailableViewTypesforField(curField);
+				List views = orm.getAvailableViewTypesforField(curField);
 				if (views.size() == 0)
 					continue;
 
@@ -1189,7 +1173,7 @@ getObject();
 				rt_objectsReport, toAskObjects(node));
 			try
 			{
-				or.setReserve(new Vector());
+				or.setReserve(new LinkedList());
 			}
 			catch (CreateReportException cre)
 			{}
@@ -1216,11 +1200,11 @@ getObject();
 				ObjectResourceReportModel orrm = (ObjectResourceReportModel)
 					curReport.model;
 
-				Vector fields = orrm.getAllColumnIDs();
-				Vector fieldNames = orrm.getColumnNamesbyIDs(orrm.getAllColumnIDs());
+				List fields = orrm.getAllColumnIDs();
+				List fieldNames = orrm.getColumnNamesbyIDs(orrm.getAllColumnIDs());
 
 				if (fields == null)
-					return new Vector();
+					return new LinkedList();
 
 				for (int i = 0; i < fields.size(); i++)
 				{
@@ -1252,7 +1236,7 @@ getObject();
 				registerSearchableNode("", ortn);
       }
 
-			Vector fields = rm.getAvailableReports();
+			List fields = rm.getAvailableReports();
 
 			for (int i = 0; i < fields.size(); i++)
 			{
