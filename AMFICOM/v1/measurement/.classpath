@@ -8,5 +8,6 @@
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/ojdbc14_g.jar"/>
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/orai18n.jar"/>
 	<classpathentry kind="src" path="/event_v1"/>
+	<classpathentry kind="src" path="/admin_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
