@@ -1,19 +1,15 @@
 CREATE TABLE Server (
- id VARCHAR2(32),
+ id Identifier,
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id Identifier NOT NULL,
+ modifier_id Identifier NOT NULL,
 --
- domain_id VARCHAR2(32),
+ domain_id Identifier,
 --
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
- user_id VARCHAR2(32) NOT NULL,
- location VARCHAR2(256),
- contact VARCHAR2(64),
- hostname VARCHAR2(32) NOT NULL,
- sessions NUMBER(10, 0),
+ user_id Identifier NOT NULL,
 --
  CONSTRAINT server_pk PRIMARY KEY (id),
  CONSTRAINT server_creator_fk FOREIGN KEY (creator_id)

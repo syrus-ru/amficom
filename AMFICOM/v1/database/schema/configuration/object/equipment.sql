@@ -1,31 +1,20 @@
 CREATE TABLE Equipment (
- id VARCHAR2(32),
+ id Identifier,
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id Identifier NOT NULL,
+ modifier_id Identifier NOT NULL,
 --
- domain_id VARCHAR2(32),
+ domain_id Identifier,
 --
- type_id VARCHAR2(32) NOT NULL,
+ type_id Identifier NOT NULL,
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
+ image_id Identifier,
+--
  sort NUMBER(2) NOT NULL,
- latitude VARCHAR2(10),
- longitude VARCHAR2(10),
- hw_serial VARCHAR2(256),
- sw_serial VARCHAR2(256),
- hw_version VARCHAR2(32),
- sw_version VARCHAR2(32),
- inventory_number VARCHAR2(64),
- manufacturer VARCHAR2(64),
- manufacturer_code VARCHAR2(64),
- supplier VARCHAR2(64),
- supplier_code VARCHAR2(64),
- image_id VARCHAR2(32),
---
- mcm_id VARCHAR2(32) NOT NULL,
---
+ kis_id Identifier,
+ --
  CONSTRAINT eqp_pk PRIMARY KEY (id),
  CONSTRAINT eqp_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,
@@ -38,8 +27,8 @@ CREATE TABLE Equipment (
  CONSTRAINT eqp_epqtype_fk FOREIGN KEY (type_id)
   REFERENCES EquipmentType (id) ON DELETE CASCADE,
 --
- CONSTRAINT eqp_mcm_fk FOREIGN KEY (mcm_id)
-  REFERENCES Mcm (id) ON DELETE CASCADE
+ CONSTRAINT eqp_kis_fk FOREIGN KEY (kis_id)
+  REFERENCES KIS (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE equipment_seq ORDER;
