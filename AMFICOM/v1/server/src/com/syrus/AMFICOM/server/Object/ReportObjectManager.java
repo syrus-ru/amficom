@@ -1,8 +1,9 @@
 package com.syrus.AMFICOM.server.Object;
 
 import java.util.Hashtable;
-import java.sql.SQLException;
-import com.syrus.AMFICOM.CORBA.Report.*;
+import com.syrus.AMFICOM.CORBA.Report.ReportTemplate_Transferable;
+import com.syrus.AMFICOM.CORBA.Report.FirmedTextPane_Transferable;
+import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
 
 public class ReportObjectManager
 {

@@ -5,6 +5,7 @@ AMFICOMdbGeneral.java
 AMFICOMdbInterface.java
 CatalogSchemeMapUpdater.java
 FirmedTextPane.java
+ImagePane.java
 ISMdbInterfaceLoad.java
 ISMdbInterfaceLoad2.java
 ISMdbInterfaceRemove.java

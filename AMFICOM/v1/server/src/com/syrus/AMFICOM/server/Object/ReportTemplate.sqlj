@@ -18,6 +18,7 @@ public class ReportTemplate
 
 	private RenderingObject[] ros;
 	private FirmedTextPane[] boxes;
+	private ImagePane[] images;  
 
 	public ReportTemplate(ReportTemplate_Transferable rt)
 			throws Exception
@@ -62,6 +63,11 @@ public class ReportTemplate
 		this.boxes = new FirmedTextPane[len2];
 		for(int i = 0; i < len2; i++)
 			boxes[i] = new FirmedTextPane(rt.firmedTextPanes[i], this.id);
+      
+		int len3 = rt.imagePanes.length;
+		this.images = new ImagePane[len3];
+		for(int i = 0; i < len3; i++)
+			images[i] = new ImagePane(rt.imagePanes[i], this.id);
 	}
 
 	public ReportTemplate(String id)
@@ -103,6 +109,7 @@ public class ReportTemplate
 
 			ros = RenderingObject.retrieveRenderingObjects(this.id);
 			boxes = FirmedTextPane.retrieveBoxes(this.id);
+			images = ImagePane.retrieveImages(this.id);      
 		}
 		catch(Exception e)
 		{
@@ -124,6 +131,10 @@ public class ReportTemplate
 		for (int i = 0; i < boxes.length; i++)
 			boxes_t[i] = this.boxes[i].getTransferable();
 
+		ImagePane_Transferable[] images_t = new ImagePane_Transferable[this.images.length];
+		for (int i = 0; i < images.length; i++)
+			images_t[i] = this.images[i].getTransferable();
+
 		return new ReportTemplate_Transferable(
 			this.id,
 			this.name,
@@ -131,7 +142,8 @@ public class ReportTemplate
 			this.description,
 			this.template_type,
 			ros_t,
-			boxes_t);
+			boxes_t,
+      images_t);
 	}
 
 	public long getModified()
@@ -157,6 +169,9 @@ public class ReportTemplate
 				where REPORT_TEMPLATE_ID = :(this.id)
 			};
 			#sql { delete from AMFICOM.REPORTTEMPLATEBOXES
+				where REPORT_TEMPLATE_ID = :(this.id)
+			};
+			#sql { delete from AMFICOM.REPORTIMAGEPANES
 				where REPORT_TEMPLATE_ID = :(this.id)
 			};
 			#sql { delete from AMFICOM.REPORTTEMPLATES
@@ -250,6 +265,20 @@ public class ReportTemplate
 
 		for(int i = 0; i < len; i++)
 			boxes[i] = new FirmedTextPane(firmedTextPanes[i], this.id);
+	}
+
+	public void setReportTemplateImages(ImagePane_Transferable[] imagePanes) throws Exception
+	{
+		int len = imagePanes.length;
+		this.images = new ImagePane[len];
+
+		#sql{ delete from AMFICOM.REPORTIMAGEPANES
+			where REPORT_TEMPLATE_ID =:(this.id)
+		};
+		#sql { commit };
+
+		for(int i = 0; i < len; i++)
+			images[i] = new ImagePane(imagePanes[i], this.id);
 	}
 
 	#sql public static iterator ReportTemplateIterator(

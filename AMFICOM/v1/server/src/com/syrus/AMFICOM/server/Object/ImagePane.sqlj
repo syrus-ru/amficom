@@ -1,0 +1,272 @@
+package com.syrus.AMFICOM.server.Object;
+
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+import java.sql.*;
+import oracle.sql.*;
+
+import java.util.*;
+import java.io.*;
+
+import com.syrus.AMFICOM.CORBA.Report.*;
+
+import com.syrus.AMFICOM.server.*;
+
+//import com.syrus.io.*;
+//import com.syrus.util.*;
+import com.syrus.util.database.*;
+
+public class ImagePane extends Object
+{
+	private String id;
+  
+	private int x;
+	private int y;
+
+	private int width;
+	private int height;
+  
+	private byte[] bytes;
+  
+	private String report_template_id;
+
+	public ImagePane(ImagePane_Transferable ip, String r_t_id)
+			throws Exception  
+	{
+		this.id = ResourcedbInterface.getUId("reportimagepane");
+		this.x = ip.x;
+    this.y = ip.y;
+		this.width = ip.width;
+    this.height = ip.height;
+    
+    this.bytes = ip.bytes;
+
+		this.report_template_id = r_t_id;
+
+		#sql{ insert into AMFICOM.REPORTIMAGEPANES(
+				ID,
+				REPORT_TEMPLATE_ID,
+				X,
+				Y,
+        WIDTH,
+				HEIGHT,
+				IMG)
+			values(
+				:(this.id),
+				:(this.report_template_id),
+				:(this.x),
+				:(this.y),
+				:(this.width),
+        :(this.height),
+        empty_blob())
+		};
+    
+ 		try
+		{
+			System.out.println("Saving " + bytes.length + " bytes as blob:");
+
+			ByteArrayDatabase bArr = new ByteArrayDatabase(this.bytes);
+      
+      ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+      boolean autoc = connCtx2.getConnection().getAutoCommit();
+      
+			bArr.saveAsBlob(
+				connCtx2.getConnection(),
+				"AMFICOM.REPORTIMAGEPANES",
+				"IMG",
+				"id = '" + this.id + "'");
+        
+		}
+		catch(Exception ioe)
+		{
+			System.out.println("error saving REPORTIMAGEPANES: " + ioe.getMessage());
+			ioe.printStackTrace();
+		}
+
+		#sql { commit };
+	}
+
+	public ImagePane(String id)
+			throws Exception
+	{
+		ImagePaneIterator ipIt = null;
+
+		try
+		{
+			#sql ipIt = { select
+				ID,
+				REPORT_TEMPLATE_ID,
+				X,
+				Y,
+        WIDTH
+				HEIGHT,
+				IMG
+				from AMFICOM.REPORTIMAGEPANES
+				where ID = :id
+			};
+
+			if(!ipIt.next())
+			{
+				throw new Exception("NO imagepane for id " + id);
+			}
+
+			try { this.id = ipIt.id(); }
+        catch(SQLException e) { }
+			if(this.id == null) this.id = "";
+      
+			try { this.x = ipIt.x(); }
+        catch(SQLException e) { this.x = 0; }
+			try { this.y = ipIt.y(); }
+        catch(SQLException e) { this.y = 0; }
+			try { this.width = ipIt.width(); }
+        catch(SQLException e) { this.width = 0; }
+			try { this.height = ipIt.height(); }
+        catch(SQLException e) { this.height = 0; }
+        
+      byte[] image_bytes = new byte[0];        
+			try { image_bytes = ByteArrayDatabase.toByteArray(ipIt.img()); }
+        catch(SQLException e) { e.printStackTrace(); }
+      
+			try { this.report_template_id = ipIt.report_template_id(); }
+        catch(SQLException e) { }
+			if(this.report_template_id == null) this.report_template_id = "";
+
+			ipIt.close();
+      
+			try
+			{
+				this.bytes = image_bytes;
+			}
+			catch(Exception ioe)
+			{
+				System.out.println("error loading image: " + ioe.getMessage());
+				ioe.printStackTrace();
+			}
+      
+		}
+		catch(Exception e)
+		{
+			if(ipIt != null) try {
+			ipIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading report template: " + e.getMessage());
+			throw e;
+//			e.printStackTrace();
+		}
+	}
+
+	public ImagePane_Transferable getTransferable()
+			throws Exception
+	{
+		return new ImagePane_Transferable(
+			this.x,
+			this.y,
+			this.width,
+      this.height,
+			this.bytes);
+	}
+
+	public String getReportTemplateId()
+	{
+		return this.report_template_id;
+	}
+
+	public String getId()
+	{
+		return this.id;
+	}
+
+	public void delete() throws Exception
+	{
+		#sql { delete from AMFICOM.REPORTIMAGEPANES
+			where ID = :(this.id)
+		};
+		#sql { commit };
+	}
+
+	public void update(ImagePane_Transferable ip) throws Exception
+	{
+		this.x = ip.x;
+    this.y = ip.y;
+		this.width = ip.width;
+    this.height = ip.height;
+    
+    this.bytes = ip.bytes;
+
+		#sql{ update AMFICOM.REPORTIMAGEPANES set
+				ID = :(this.id),
+				REPORT_TEMPLATE_ID = :(this.report_template_id),
+				X = :(this.x),
+				Y = :(this.y),
+				WIDTH = :(this.width),
+        HEIGHT = :(this.height),
+				IMG = empty_blob()
+			where ID = :(this.id)
+		};
+
+ 		try
+		{
+			System.out.println("Saving " + bytes.length + " bytes as blob:");
+
+			ByteArrayDatabase bArr = new ByteArrayDatabase(this.bytes);
+      
+      ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+      boolean autoc = connCtx2.getConnection().getAutoCommit();
+      
+			bArr.saveAsBlob(
+				connCtx2.getConnection(),
+				"AMFICOM.REPORTIMAGEPANES",
+				"IMG",
+				"id = '" + this.id + "'");
+        
+		}
+		catch(Exception ioe)
+		{
+			System.out.println("error saving REPORTIMAGEPANES: " + ioe.getMessage());
+			ioe.printStackTrace();
+		}
+
+
+		#sql { commit };
+	}
+
+	public static ImagePane[] retrieveImages(String rt_id) throws Exception
+	{
+		IdIterator idIt = null;
+		Vector linkedlist = new Vector();
+
+		try
+		{
+			#sql idIt = { select ID
+					from AMFICOM.REPORTIMAGEPANES
+					where report_template_id = :rt_id  };
+	
+			while (idIt.next())
+				linkedlist.add(new ImagePane(idIt.id()));
+			idIt.close();
+		}
+		catch(Exception ex)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+			throw ex;
+		}
+		ImagePane[] ips = new ImagePane[linkedlist.size()];
+		linkedlist.copyInto(ips);
+		return ips;
+	}
+
+	#sql public static iterator IdIterator(
+		String id);
+
+	#sql public static iterator ImagePaneIterator(
+		String id,
+		String report_template_id,
+		int x,
+		int y,
+		int width,
+		int height,
+    BLOB img);
+}
+
