@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.32 2004/10/20 06:29:38 bob Exp $
+ * $Id: configuration.idl,v 1.33 2004/10/21 12:28:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,6 +34,15 @@ module corba {
 
 //////////////////// CharacteristicType ///////////////////
 
+	enum CharacteristicTypeSort {
+		CHARACTERISTICTYPESORT_OPTICAL,
+		CHARACTERISTICTYPESORT_ELECTRICAL,
+		CHARACTERISTICTYPESORT_OPERATIONAL,
+		CHARACTERISTICTYPESORT_INTERFACE,
+		CHARACTERISTICTYPESORT_VISUAL
+	};
+	
+
 	struct CharacteristicType_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 	  long long created;
@@ -46,6 +55,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::DataType data_type;
 		boolean is_editable;
 		boolean is_visible;
+		CharacteristicTypeSort sort;
 	};
 
 	typedef sequence <CharacteristicType_Transferable> CharacteristicTypeSeq_Transferable;

@@ -11,6 +11,7 @@ CREATE TABLE CharacteristicType (
  is_editable NUMBER(1) NOT NULL,
  is_visible NUMBER(1) NOT NULL,
  data_type NUMBER(2) NOT NULL,
+ sort NUMBER(2) NOT NULL,
 --
  CONSTRAINT chctype_pk PRIMARY KEY (id),
  CONSTRAINT chctype_creator_fk FOREIGN KEY (creator_id)
