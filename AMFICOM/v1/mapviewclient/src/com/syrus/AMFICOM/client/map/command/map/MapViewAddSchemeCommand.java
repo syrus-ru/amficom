@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.5 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.6 2005/02/10 12:59:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,13 +25,12 @@ import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.SchemeController;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
@@ -39,7 +38,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/10 12:59:54 $
  * @module mapviewclient_v1
  */
 public class MapViewAddSchemeCommand extends VoidCommand
@@ -88,12 +87,10 @@ public class MapViewAddSchemeCommand extends VoidCommand
 		{
 			Identifier domainId = new Identifier(
 				this.aContext.getSessionInterface().getAccessIdentifier().domain_id);
-			Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
-					domainId,
-					false);
-			DomainCondition condition = new DomainCondition(
-				domain,
-				ObjectEntities.SCHEME_ENTITY_CODE);
+//			Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
+//					domainId,
+//					false);
+			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.SCHEME_ENTITY_CODE);
 			List ss = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			mcd.setContents(ss);
 		}

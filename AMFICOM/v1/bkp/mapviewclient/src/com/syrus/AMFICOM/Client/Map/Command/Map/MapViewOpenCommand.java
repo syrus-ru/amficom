@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.15 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.16 2005/02/10 12:59:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -22,22 +22,21 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.UI.MapViewTableController;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * открыть вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/10 12:59:54 $
  * @module mapviewclient_v1
  */
 public class MapViewOpenCommand extends VoidCommand
@@ -74,14 +73,13 @@ public class MapViewOpenCommand extends VoidCommand
 		List mvs;
 		try
 		{
-			Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
-				new Identifier(
-					this.aContext.getSessionInterface().getAccessIdentifier().domain_id), 
-				false);
+			Identifier domainId = new Identifier(
+					this.aContext.getSessionInterface().getAccessIdentifier().domain_id);
+//				Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
+//						domainId,
+//						false);
 
-			DomainCondition condition = new DomainCondition(
-					domain,
-					ObjectEntities.MAP_ENTITY_CODE);// ObjectEntities.MAP_VIEW_ENTITY_CODE
+			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAPVIEW_ENTITY_CODE);
 			mvs = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 		catch (CommunicationException e)
