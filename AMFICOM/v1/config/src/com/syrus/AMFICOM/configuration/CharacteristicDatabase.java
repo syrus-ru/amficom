@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.20 2004/09/03 14:20:37 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.21 2004/09/06 07:45:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.sql.PreparedStatement;
@@ -32,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/03 14:20:37 $
+ * @version $Revision: 1.21 $, $Date: 2004/09/06 07:45:39 $
  * @author $Author: max $
  * @module configuration_v1
  */

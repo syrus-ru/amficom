@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.11 2004/09/03 14:20:37 max Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.12 2004/09/06 07:45:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -29,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/09/03 14:20:37 $
+ * @version $Revision: 1.12 $, $Date: 2004/09/06 07:45:39 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -101,8 +99,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + characteristicType.getDescription() + APOSTOPHE + COMMA
 			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
 			+ (characteristicType.isEditable()?"1":"0") + COMMA
-			+ (characteristicType.isVisible()?"1":"0")
-			+ CLOSE_BRACKET;
+			+ (characteristicType.isVisible()?"1":"0");
 		return sql;
 	}
 	
@@ -113,8 +110,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		String ctIdStr = characteristicType.getId().getCode();
 		try {
 			preparedStatement.setString( 1, ctIdStr);
-			preparedStatement.setString( 2, DatabaseDate.toUpdateSubString(characteristicType.getCreated()));
-			preparedStatement.setString( 3, DatabaseDate.toUpdateSubString(characteristicType.getModified()));
+			preparedStatement.setTimestamp( 2, new Timestamp(characteristicType.getCreated().getTime()));
+			preparedStatement.setTimestamp( 3, new Timestamp(characteristicType.getModified().getTime()));
 			preparedStatement.setString( 4, characteristicType.getCreatorId().getCode());
 			preparedStatement.setString( 5, characteristicType.getModifierId().getCode());
 			preparedStatement.setString( 6, characteristicType.getCodename());
