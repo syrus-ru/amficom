@@ -2,12 +2,12 @@ package com.syrus.AMFICOM.general;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /*
- * $Id: AbstractObjectLoader.java,v 1.1 2005/04/05 09:00:59 arseniy Exp $
+ * $Id: AbstractObjectLoader.java,v 1.2 2005/04/05 10:29:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,29 +15,55 @@ import com.syrus.util.Log;
  */
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/05 09:00:59 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/05 10:29:54 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class AbstractObjectLoader {
 
-	protected Identifier_Transferable[] createLoadIdsTransferable(java.util.Set ids, java.util.Set objects) {
+	protected Set retrieveFromDatabase(final StorableObjectDatabase database, final Set ids) throws RetrieveObjectException {
+		try {
+			return database.retrieveByIdsByCondition(ids, null);
+		}
+		catch (IllegalDataException idse) {
+			throw new RetrieveObjectException("Cannot retrieve objects from database; database: "
+					+ database.getClass().getName() + ", ids: " + ids);
+		}
+	}
+
+	protected Set retrieveFromDatabaseButIdsByCondition(final StorableObjectDatabase database,
+			final Set ids,
+			final StorableObjectCondition condition)
+			throws RetrieveObjectException {
+		try {
+			return database.retrieveButIdsByCondition(ids, condition);
+		}
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException("Cannot retrieve objects from database; database: "
+					+ database.getClass().getName() + ", ids: " + ids + ", condition: " + condition);
+		}
+	}
+
+	protected Identifier_Transferable[] createLoadIdsTransferable(final Set ids, final Set butObjects) throws IllegalDataException {
 		Identifier id;
-		java.util.Set loadIds = new HashSet(ids);
-		for (Iterator it = objects.iterator(); it.hasNext();) {
+		Set loadIds = new HashSet(ids);
+		for (Iterator it = butObjects.iterator(); it.hasNext();) {
 			id = ((StorableObject) it.next()).getId();
 			loadIds.remove(id);
 		}
 
-		Identifier_Transferable[] loadIdsT = null;
-		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
-		}
-		catch (IllegalDataException ide) {
-			// Never
-			Log.errorException(ide);
-		}
-		return loadIdsT;
+		return Identifier.createTransferables(loadIds);
 	}
 
+	protected Identifier_Transferable[] createLoadButIdsTransferable(final Set ids, final Set alsoButObjects)
+			throws IllegalDataException {
+		Identifier id;
+		Set loadButIds = new HashSet(ids);
+		for (Iterator it = alsoButObjects.iterator(); it.hasNext();) {
+			id = ((StorableObject) it.next()).getId();
+			loadButIds.add(id);
+		}
+		
+		return Identifier.createTransferables(loadButIds);
+	}
 }
