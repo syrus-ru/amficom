@@ -12,10 +12,9 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.PopulateChildrenFactory;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.logic.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import oracle.jdeveloper.layout.*;
@@ -27,12 +26,12 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 	JButton refreshButton;
 	ApplicationContext aContext;
 	Dispatcher dispatcher;
-	PopulateChildrenFactory factory;
-	PopulatableTreeUI utp;
+	ChildrenFactory factory;
+	RenderableTreeUI utp;
 
 	Object selectedObject;
 
-	public ElementsNavigatorPanel(ApplicationContext aContext, Dispatcher dispatcher, PopulateChildrenFactory factory)
+	public ElementsNavigatorPanel(ApplicationContext aContext, Dispatcher dispatcher, ChildrenFactory factory)
 	{
 		this.aContext = aContext;
 		this.dispatcher = dispatcher;
@@ -106,7 +105,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 		add(toolBar, BorderLayout.NORTH);
 
 		// TREE
-		utp = new PopulatableTreeUI(new IconedNode(factory, "root", "root"));
+		utp = new RenderableTreeUI(new IconedNode(factory, "root", "Сеть"));
 
 //		JScrollPane scroll_pane = new JScrollPane();
 //		scroll_pane.getViewport().add(utp.getPanel());
