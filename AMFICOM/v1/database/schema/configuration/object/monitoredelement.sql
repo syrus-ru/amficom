@@ -7,7 +7,7 @@ CREATE TABLE MonitoredElement (
 --
  domain_id VARCHAR2(32),
 --
- kis_id VARCHAR2(32) NOT NULL,
+ meport_id VARCHAR2(32) NOT NULL,
 --
  sort NUMBER(2) NOT NULL,
  local_address VARCHAR2(64) NOT NULL,
@@ -15,6 +15,9 @@ CREATE TABLE MonitoredElement (
  CONSTRAINT me_pk PRIMARY KEY (id),
  CONSTRAINT me_kis_fk FOREIGN KEY (kis_id)
   REFERENCES KIS (id) ON DELETE CASCADE
+ CONSTRAINT me_meport_fk FOREIGN KEY (meport_id)
+  REFERENCES MeasurementPort (id) ON DELETE CASCADE
+  
 );
 
 CREATE SEQUENCE monitoredelement_seq ORDER;
