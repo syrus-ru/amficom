@@ -70,11 +70,21 @@ public class EvaluationType extends ActionType {
 	}	
 	
 	private EvaluationType(Identifier id,
+												 Identifier creatorId,
+												 String codename,
+												 String description,
 												 List inParameterTypes,
 												 List thresholdParameterTypes,
 												 List etalonParameterTypes,
 												 List outParameterTypes) {
 		super(id);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		super.codename = codename;
+		super.description = description;
 		this.inParameterTypes = inParameterTypes;
 		this.thresholdParameterTypes = thresholdParameterTypes;
 		this.etalonParameterTypes = etalonParameterTypes;
@@ -85,6 +95,9 @@ public class EvaluationType extends ActionType {
 	/**
 	 * create new instance for client
 	 * @param id
+	 * @param creatorId
+	 * @param codename
+	 * @param description
 	 * @param inParameterTypes
 	 * @param thresholdParameterTypes
 	 * @param etalonParameterTypes
@@ -92,15 +105,21 @@ public class EvaluationType extends ActionType {
 	 * @return
 	 */
 	public static EvaluationType createInstance(Identifier id,
-																							List etalonParameterTypes,
+																							Identifier creatorId,
+																							String codename,
+																							String description,
 																							List inParameterTypes,
-																							List outParameterTypes,
-																							List thresholdParameterTypes) {
+																							List thresholdParameterTypes,
+																							List etalonParameterTypes,
+																							List outParameterTypes) {
 		return new EvaluationType(id,
-															etalonParameterTypes,
+															creatorId,
+															codename,
+															description,
 															inParameterTypes,
-															outParameterTypes,
-															thresholdParameterTypes);
+															thresholdParameterTypes,
+															etalonParameterTypes,
+															outParameterTypes);
 	}
 
 	public Object getTransferable() {

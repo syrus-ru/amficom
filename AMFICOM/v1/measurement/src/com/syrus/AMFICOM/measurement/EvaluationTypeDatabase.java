@@ -51,7 +51,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_DESCRIPTION
 			+ SQL_FROM + ObjectEntities.EVALUATIONTYPE_ENTITY
 			+ SQL_WHERE + COLUMN_ID + EQUALS + evaluationTypeIdStr;
 		Statement statement = null;
@@ -106,7 +106,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		String evaluationTypeIdStr = evaluationType.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_MODE + COMMA
+			+ LINK_COLUMN_PARAMETER_MODE
 			+ SQL_FROM + ObjectEntities.EVATYPPARTYPLINK_ENTITY
 			+ SQL_WHERE + LINK_COLUMN_EVALUATION_TYPE_ID + EQUALS + evaluationTypeIdStr;
 		Statement statement = null;
@@ -214,7 +214,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_DESCRIPTION
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ evaluationTypeIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(evaluationType.getCreated()) + COMMA

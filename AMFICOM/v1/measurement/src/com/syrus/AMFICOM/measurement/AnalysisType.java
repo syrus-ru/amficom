@@ -69,11 +69,21 @@ public class AnalysisType extends ActionType {
 	}
 
 	private AnalysisType(Identifier id,
+											 Identifier creatorId,
+											 String codename,
+											 String description,
 											 List inParameterTypes,
 											 List criteriaParameterTypes,
 											 List etalonParameterTypes,
 											 List outParameterTypes) {
 		super(id);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		super.codename = codename;
+		super.description = description;
 		this.inParameterTypes = inParameterTypes;
 		this.criteriaParameterTypes = criteriaParameterTypes;
 		this.etalonParameterTypes = etalonParameterTypes;
@@ -84,6 +94,9 @@ public class AnalysisType extends ActionType {
 	/**
 	 * create new instance for client 
 	 * @param id
+	 * @param creatorId
+	 * @param codename
+	 * @param description
 	 * @param inParameterTypes
 	 * @param criteriaParameterTypes
 	 * @param etalonParameterTypes
@@ -91,11 +104,17 @@ public class AnalysisType extends ActionType {
 	 * @return
 	 */
 	public static AnalysisType createInstance(Identifier id,
+																						Identifier creatorId,
+																						String codename,
+																						String description,
 																						List inParameterTypes,
 																						List criteriaParameterTypes,
 																						List etalonParameterTypes,
 																						List outParameterTypes){
 		return new AnalysisType(id,
+														creatorId,
+														codename,
+														description,
 														inParameterTypes,
 														criteriaParameterTypes,
 														etalonParameterTypes,

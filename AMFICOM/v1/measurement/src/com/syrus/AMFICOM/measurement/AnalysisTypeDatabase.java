@@ -51,7 +51,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_DESCRIPTION
 			+ SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY
 			+ SQL_WHERE + COLUMN_ID + EQUALS + analysisTypeIdStr;
 		Statement statement = null;
@@ -66,15 +66,15 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				 */
 				analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 																	 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
+																	 /**
+																		* @todo when change DB Identifier model ,change getString() to
+																		*       getLong()
+																		*/
 																	 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
+																	 /**
+																		* @todo when change DB Identifier model ,change getString() to
+																		*       getLong()
+																		*/
 																	 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 																	 resultSet.getString(COLUMN_CODENAME),
 																	 resultSet.getString(COLUMN_DESCRIPTION));
@@ -108,7 +108,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		String analysisTypeIdStr = analysisType.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_MODE + COMMA
+			+ LINK_COLUMN_PARAMETER_MODE
 			+ SQL_FROM + ObjectEntities.ANATYPPARTYPLINK_ENTITY
 			+ SQL_WHERE + LINK_COLUMN_ANALYSIS_TYPE_ID + EQUALS + analysisTypeIdStr;
 		Statement statement = null;
@@ -216,9 +216,9 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			+ DatabaseDate.toUpdateSubString(analysisType.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(analysisType.getModified()) + COMMA
 			+ analysisType.getCreatorId().toString() + COMMA 
-			+ analysisType.getModifierId().toString() + COMMA + APOSTOPHE
-			+ analysisType.getCodename() + APOSTOPHE + COMMA + APOSTOPHE 
-			+ analysisType.getDescription() + APOSTOPHE
+			+ analysisType.getModifierId().toString() + COMMA
+			+ APOSTOPHE + analysisType.getCodename() + APOSTOPHE + COMMA 
+			+ APOSTOPHE + analysisType.getDescription() + APOSTOPHE
 			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {

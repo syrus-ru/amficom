@@ -1,7 +1,13 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 
@@ -23,10 +29,14 @@ public class ParameterType extends StorableObjectType {
 	}
 
 	public ParameterType(ParameterType_Transferable ptt) throws CreateObjectException {
-		super(new Identifier(ptt.id));
-		this.codename = new String(ptt.codename);
+		super(new Identifier(ptt.id),
+					new Date(ptt.created),
+					new Date(ptt.modified),
+					new Identifier(ptt.creator_id),
+					new Identifier(ptt.modifier_id),
+					new String(ptt.codename),
+					new String(ptt.description));
 		this.name = new String(ptt.name);
-		this.description = new String(ptt.description);
 
 		this.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
 		try {
@@ -38,46 +48,52 @@ public class ParameterType extends StorableObjectType {
 	}
 
 	private ParameterType(Identifier id,
+												Identifier creatorId,
 												String codename,
-												String name,
-												String description) throws CreateObjectException {
+												String description,
+												String name) {
 		super(id);
-		this.codename = codename;
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		super.codename = codename;
+		super.description = description;
 		this.name = name;
-		this.description = description;
-
-		this.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
-		try {
-			this.parameterTypeDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		super.currentVersion = super.getNextVersion();
 	}
-	
-	private ParameterType(Identifier id,
-						 String name){
-		//super(PoolId.getId(ObjectEntities.PARAMETERTYPE_ENTITY));
-		super(id);
-		setName(name);
-	}
-	
+		
 	/**
 	 * create new instance for client
 	 * @param id
+	 * @param creatorId
+	 * @param codename
+	 * @param description
 	 * @param name
 	 * @return
 	 */
 	public static ParameterType createInstance(Identifier id,
-						 String name){
-		return new ParameterType(id,name);
+																						 Identifier creatorId,
+																						 String codename,
+																						 String description,
+																						 String name) {
+		return new ParameterType(id,
+														 creatorId,
+														 codename,
+														 description,
+														 name);
 	}
 
 	public Object getTransferable() {
-		return new ParameterType_Transferable((Identifier_Transferable)this.id.getTransferable(),
-																					new String(this.codename),
-																					new String(this.name),
-																					new String(this.description));
+		return new ParameterType_Transferable((Identifier_Transferable)super.id.getTransferable(),
+																					super.created.getTime(),
+																					super.modified.getTime(),
+																					(Identifier_Transferable)super.creatorId.getTransferable(),
+																					(Identifier_Transferable)super.modifierId.getTransferable(),
+																					new String(super.codename),
+																					new String(super.description),
+																					new String(this.name));
 	}
 	
 

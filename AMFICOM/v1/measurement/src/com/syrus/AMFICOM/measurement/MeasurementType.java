@@ -4,14 +4,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 public class MeasurementType extends ActionType {
-
-	private List					inParameterTypes;
-	private List					outParameterTypes;
+	private List inParameterTypes;
+	private List outParameterTypes;
 
 	private StorableObjectDatabase	measurementTypeDatabase;
 
@@ -54,27 +58,46 @@ public class MeasurementType extends ActionType {
 	}
 	
 	private MeasurementType(Identifier id,
-						   List inParameterTypes,
-						   List	outParameterTypes){
-		//super(PoolId.getId(ObjectEntities.MEASUREMENTTYPE_ENTITY));
+													Identifier creatorId,
+													String codename,
+													String description,
+													List inParameterTypes,
+													List	outParameterTypes){
 		super(id);
-		setInParameterTypes(inParameterTypes);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		super.codename = codename;
+		super.description = description;
+		this.inParameterTypes = inParameterTypes;
 		this.outParameterTypes = outParameterTypes;
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	/**
 	 * create new instance for client
 	 * @param id
+	 * @param creatorId
+	 * @param codename
+	 * @param description
 	 * @param inParameterTypes
 	 * @param outParameterTypes
 	 * @return
 	 */
 	public static MeasurementType createInstance(Identifier id,
-						   List inParameterTypes,
-						   List	outParameterTypes){
+																							 Identifier creatorId,
+																							 String codename,
+																							 String description,
+																							 List inParameterTypes,
+																							 List	outParameterTypes){
 		return new MeasurementType(id,
-								   inParameterTypes,
-								   outParameterTypes);
+															 creatorId,
+															 codename,
+															 description,
+															 inParameterTypes,
+															 outParameterTypes);
 	}
 
 	public Object getTransferable() {

@@ -23,10 +23,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public static final String MODE_IN = "IN";
 	public static final String MODE_OUT = "OUT";
 	
-	public static final String	COLUMN_CODENAME					= "codename";
-	public static final String	COLUMN_DESCRIPTION				= "description";
+	public static final String	COLUMN_CODENAME = "codename";
+	public static final String	COLUMN_DESCRIPTION = "description";
 	
-	public static final String	LINK_COLUMN_MEASUREMENT_TYPE_ID	= "measurement_type_id";
+	public static final String	LINK_COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
 
 	private MeasurementType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementType)
@@ -43,23 +43,14 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	private void retrieveMeasurementType(MeasurementType measurementType) throws ObjectNotFoundException, RetrieveObjectException {
 		String measurementTypeIdStr = measurementType.getId().toSQLString();
 		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) 
-			+ COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) 
-			+ COMMA
-			+ COLUMN_CREATOR_ID
-			+ COMMA
-			+ COLUMN_MODIFIER_ID
-			+ COMMA
-			+ COLUMN_CODENAME
-			+ COMMA
+			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_CODENAME + COMMA
 			+ COLUMN_DESCRIPTION
-			+ SQL_FROM
-			+ ObjectEntities.MEASUREMENTTYPE_ENTITY
-			+ SQL_WHERE
-			+ COLUMN_ID 
-			+ EQUALS
-			+ measurementTypeIdStr;
+			+ SQL_FROM + ObjectEntities.MEASUREMENTTYPE_ENTITY
+			+ SQL_WHERE + COLUMN_ID + EQUALS + measurementTypeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -109,14 +100,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 
 		String measurementTypeIdStr = measurementType.getId().toSQLString();
 		String sql = SQL_SELECT
-			+ LINK_COLUMN_PARAMETER_TYPE_ID
+			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
 			+ LINK_COLUMN_PARAMETER_MODE
-			+ SQL_FROM 
-			+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY
-			+ SQL_WHERE
-			+ LINK_COLUMN_MEASUREMENT_TYPE_ID
-			+ EQUALS
-			+ measurementTypeIdStr;
+			+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY
+			+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -163,7 +150,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 		inParTyps.trimToSize();
 		outParTyps.trimToSize();
-		measurementType.setParameterTypes(inParTyps, outParTyps);
+		measurementType.setParameterTypes(inParTyps,
+																			outParTyps);
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -202,41 +190,22 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	private void insertMeasurementType(MeasurementType measurementType) throws CreateObjectException {
 		String measurementTypeIdStr = measurementType.getId().toSQLString();
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.MEASUREMENTTYPE_ENTITY
-			+ OPEN_BRACKET
-			+ COLUMN_ID
-			+ COMMA
-			+ COLUMN_CREATED
-			+ COMMA
-			+ COLUMN_MODIFIED
-			+ COMMA
-			+ COLUMN_CREATOR_ID
-			+ COMMA
-			+ COLUMN_MODIFIER_ID
-			+ COMMA
-			+ COLUMN_CODENAME
-			+ COMMA
+			+ ObjectEntities.MEASUREMENTTYPE_ENTITY + OPEN_BRACKET
+			+ COLUMN_ID + COMMA
+			+ COLUMN_CREATED + COMMA
+			+ COLUMN_MODIFIED + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_CODENAME + COMMA
 			+ COLUMN_DESCRIPTION
-			+ CLOSE_BRACKET
-			+ SQL_VALUES
-			+ OPEN_BRACKET
-			+ measurementTypeIdStr 
-			+ COMMA
-			+ DatabaseDate.toUpdateSubString(measurementType.getCreated()) 
-			+ COMMA
-			+ DatabaseDate.toUpdateSubString(measurementType.getModified()) 
-			+ COMMA
-			+ measurementType.getCreatorId().toString() 
-			+ COMMA
-			+ measurementType.getModifierId().toString()
-			+ COMMA
-			+ APOSTOPHE
-			+ measurementType.getCodename() 
-			+ APOSTOPHE
-			+ COMMA
-			+ APOSTOPHE
-			+ measurementType.getDescription()
-			+ APOSTOPHE
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ measurementTypeIdStr + COMMA
+			+ DatabaseDate.toUpdateSubString(measurementType.getCreated()) + COMMA
+			+ DatabaseDate.toUpdateSubString(measurementType.getModified()) + COMMA
+			+ measurementType.getCreatorId().toString() + COMMA
+			+ measurementType.getModifierId().toString() + COMMA
+			+ APOSTOPHE + measurementType.getCodename() + APOSTOPHE + COMMA
+			+ APOSTOPHE + measurementType.getDescription() + APOSTOPHE
 			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {
@@ -256,7 +225,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			}
 			catch (SQLException sqle1) {
 //				 nothing yet.
-				}
+			}
 		}
 	}
 
@@ -268,20 +237,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		 */
 		String measurementTypeIdCode = measurementType.getId().getCode();
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY
-			+ OPEN_BRACKET
-			+ LINK_COLUMN_MEASUREMENT_TYPE_ID
-			+ COMMA
-			+ LINK_COLUMN_PARAMETER_TYPE_ID
-			+ COMMA
+			+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
+			+ LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
+			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
 			+ LINK_COLUMN_PARAMETER_MODE
-			+ CLOSE_BRACKET
-			+ SQL_VALUES
-			+ OPEN_BRACKET
-			+ QUESTION
-			+ COMMA
-			+ QUESTION
-			+ COMMA
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
 			+ QUESTION
 			+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
@@ -358,16 +320,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY
-					+ SQL_WHERE
-					+ LINK_COLUMN_MEASUREMENT_TYPE_ID
-					+ EQUALS
-					+ measurementTypeIdStr);
+					+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.MEASUREMENTTYPE_ENTITY 
-					+ SQL_WHERE
-					+ COLUMN_ID
-					+ EQUALS 
-					+ measurementTypeIdStr);
+					+ SQL_WHERE + COLUMN_ID + EQUALS + measurementTypeIdStr);
 			connection.commit();
 		}
 		catch (SQLException sqle1) {
@@ -388,14 +344,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public static MeasurementType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
 		String sql = SQL_SELECT
 			+ COLUMN_ID
-			+ SQL_FROM 
-			+ ObjectEntities.MEASUREMENTTYPE_ENTITY
-			+ SQL_WHERE
-			+ COLUMN_CODENAME
-			+ EQUALS
-			+ APOSTOPHE
-			+ codename 
-			+ APOSTOPHE;
+			+ SQL_FROM + ObjectEntities.MEASUREMENTTYPE_ENTITY
+			+ SQL_WHERE + COLUMN_CODENAME + EQUALS + APOSTOPHE + codename + APOSTOPHE;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
