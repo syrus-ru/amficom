@@ -463,7 +463,7 @@ public class ThresholdsMainFrame extends JFrame
 			if(rce.CLOSE)
 			{
 				String id = (String)(rce.getSource());
-				if (Pool.getHash("bellcorestructure") == null)
+				if (Pool.getMap("bellcorestructure") == null)
 				{
 					aModel.setEnabled("menuFileSave", false);
 					aModel.setEnabled("menuFileSaveAll", false);
@@ -519,7 +519,7 @@ public class ThresholdsMainFrame extends JFrame
 						aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
 						aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
 					}
-					Iterator it = Pool.getHash("bellcorestructure").keySet().iterator();
+					Iterator it = Pool.getMap("bellcorestructure").keySet().iterator();
 					String nextId = (String)it.next();
 					if (nextId.equals("primarytrace"))
 					{
@@ -636,7 +636,7 @@ public class ThresholdsMainFrame extends JFrame
 		aModel.fireModelChanged("");
 
 		String domain_id = aContext.getSessionInterface().getDomainId();
-		statusBar.setText("domain", Pool.getName("domain", domain_id));
+		statusBar.setText("domain", ((ObjectResource)Pool.get("domain", domain_id)).getName());
 	}
 
 	public void setSessionClosed()

@@ -33,15 +33,15 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 		{
 			new SurveyDataSourceImage(dataSource).GetResult(event.descriptor);// подгрузили резулт
 
-			Result res = (Result)Pool.get(Result.typ, event.descriptor); // получили резулт
+			Result res = (Result)Pool.get(Result.TYPE, event.descriptor); // получили резулт
 
 			String id = new SurveyDataSourceImage(dataSource).GetTestForEvaluation(res.getEvaluationId());
 			if(id == null)
 				return;
 			Test test = (Test )Pool.get("test", id);
 			dataSource.LoadTestArgumentSets(new String[] {test.getTestArgumentSetId()});
-			TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
-			Evaluation eval = (Evaluation)Pool.get(Evaluation.typ, res.getEvaluationId());
+			TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.TYPE, test.getTestArgumentSetId());
+			Evaluation eval = (Evaluation)Pool.get(Evaluation.TYPE, res.getEvaluationId());
 			MonitoredElement me = (MonitoredElement )Pool.get(MonitoredElement.typ, eval.getMonitoredElementId());
 			if(!me.element_type.equals("path"))
 			{
@@ -60,7 +60,7 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 				if(r_ids[i].equals(event.descriptor))
 				{
 					new SurveyDataSourceImage(dataSource).GetResult(test.getResultIds()[i]);
-					tres = (Result )Pool.get(Result.typ, test.getResultIds()[i]);
+					tres = (Result )Pool.get(Result.TYPE, test.getResultIds()[i]);
 					break;
 				}
 

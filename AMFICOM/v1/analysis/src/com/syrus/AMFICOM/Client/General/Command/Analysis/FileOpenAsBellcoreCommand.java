@@ -90,7 +90,7 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 																			 JOptionPane.OK_OPTION);
 				return;
 			}
-			if (Pool.getHash("bellcorestructure") != null )
+			if (Pool.getMap("bellcorestructure") != null )
 			{
 				if ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace") != null)
 					new FileCloseCommand(dispatcher, aContext).execute();

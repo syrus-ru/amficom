@@ -67,7 +67,7 @@ abstract public class ESAPEReportModel extends APOReportModel
 		CreateReportException
 	{
 		String result_id = (String) rp.getReserve();
-		Result result = (Result) Pool.get(Result.typ, result_id);
+		Result result = (Result) Pool.get(Result.TYPE, result_id);
 		if (result != null)
 			return ":" + result.getName();
 

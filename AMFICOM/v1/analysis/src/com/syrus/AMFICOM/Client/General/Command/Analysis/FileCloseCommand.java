@@ -50,7 +50,7 @@ public class FileCloseCommand extends VoidCommand
 			return;
 		}
 
-		Pool.removeHash("bellcorestructure");
+		Pool.removeMap("bellcorestructure");
 		dispatcher.notify(new RefChangeEvent("all", RefChangeEvent.CLOSE_EVENT));
 	}
 }

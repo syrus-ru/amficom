@@ -91,7 +91,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 			int n = 0;
 			double delta_x = 0;
 
-			TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.typ, id);
+			TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.TYPE, id);
 			double len = 0;
 			try
 			{

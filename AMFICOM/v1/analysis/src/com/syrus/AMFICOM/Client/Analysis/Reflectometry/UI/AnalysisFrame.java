@@ -8,7 +8,7 @@ import java.awt.event.*;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
@@ -119,7 +119,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		if (id.equals("primarytrace") || id.equals("modeledtrace"))
 		{
 			if (!bs.monitored_element_id.equals(""))
-				setTitle(Pool.getName(MonitoredElement.typ, bs.monitored_element_id));
+				setTitle(((ObjectResource)Pool.get(MonitoredElement.typ, bs.monitored_element_id)).getName());
 			else
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
 
@@ -171,7 +171,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 			int n = 0;
 			double delta_x = 0;
 
-			TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.typ, id);
+			TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.TYPE, id);
 			double len = 0;
 			try
 			{

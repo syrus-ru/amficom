@@ -185,9 +185,9 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 		return TestSetup.class;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		ObjectResourceTreeNode ortn;
 
 		if(node.getObject() instanceof String)
@@ -205,7 +205,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 						dsi.loadTestSetup(ids[i]);
 
 					Map testsHt = new HashMap();
-					Map ht = Pool.getHash(TestSetup.TYPE);
+					Map ht = Pool.getMap(TestSetup.TYPE);
 					if(ht != null)
 					{
 						for(Iterator it = ht.values().iterator(); it.hasNext(); )

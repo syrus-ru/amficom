@@ -77,9 +77,9 @@ public class FileAddCommand extends VoidCommand
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
 			String id = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
-			if (Pool.getHash("bellcorestructure") != null )
+			if (Pool.getMap("bellcorestructure") != null )
 			{
-				Iterator it = Pool.getHash("bellcorestructure").keySet().iterator();
+				Iterator it = Pool.getMap("bellcorestructure").keySet().iterator();
 				while (it.hasNext())
 				{
 					if (((String)it.next()).equals(id))

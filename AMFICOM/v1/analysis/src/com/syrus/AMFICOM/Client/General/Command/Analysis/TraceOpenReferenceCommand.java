@@ -83,7 +83,7 @@ public class TraceOpenReferenceCommand extends VoidCommand
 				 System.out.println("Error reading file: " + id);
 				 return;
 			}
-			if (Pool.getHash("bellcorestructure") != null )
+			if (Pool.getMap("bellcorestructure") != null )
 			{
 				if (Pool.get("bellcorestructure", "referencetrace") != null)
 					 new FileRemoveCommand (dispatcher, "referencetrace", aContext).execute();
