@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.87 2005/01/28 12:19:02 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.88 2005/02/08 09:51:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/01/28 12:19:02 $
+ * @version $Revision: 1.88 $, $Date: 2005/02/08 09:51:41 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -246,6 +247,10 @@ public class CMServerImpl extends CMMeasurementTransmit {
 		catch (DatabaseException de) {
 			Log.errorException(de);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
 		}
 	}
 
