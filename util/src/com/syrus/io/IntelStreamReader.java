@@ -21,7 +21,7 @@ public class IntelStreamReader extends InputStreamReader
 public String readASCIIString() throws IOException
 	{
 		int res;
-		int n_read = 0;
+		int nRead = 0;
 		char ch[] = new char[1];
 
 		String s = "";
@@ -31,13 +31,13 @@ public String readASCIIString() throws IOException
 			res = read(ch);
 			if (res == -1)
 				break;
-			n_read++;
+			nRead++;
 			if (ch[0] == '\n')
 				break;
 			else if (ch[0] != '\r')
 				s += new String(ch);
 		}
-		if (n_read == 0)
+		if (nRead == 0)
 			return null;
 		return s;
 	}

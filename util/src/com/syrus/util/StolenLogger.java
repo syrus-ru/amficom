@@ -10,11 +10,11 @@ public abstract class StolenLogger implements Logger {
 	static final String DELIMITER = ".";
 	static final String ERROR = "error";
 	static final String DEBUG = "debug";
-	static final String logDebugLevelKey = "LogDebugLevel";
-	static final String echoDebugKey = "EchoDebug";
-	static final String echoErrorKey = "EchoError";
-	static final String thisLevelOnlyKey = "LogOnlyThisLevel";
-	static final String logPathKey = "LogPath";
+	static final String LOG_DEBUG_LEVEL_KEY = "LogDebugLevel";
+	static final String ECHO_DEBUG_KEY = "EchoDebug";
+	static final String ECHO_ERROR_KEY = "EchoError";
+	static final String THIS_LEVEL_ONLY_KEY = "LogOnlyThisLevel";
+	static final String LOG_PATH_KEY = "LogPath";
 	static final String DEFAULT_APPNAME = "defaultApp";
 	static final String DEFAULT_HOSTNAME = "defaultHost";
 	static final String DEFAULTLOGECHODEBUG = "false";
@@ -42,13 +42,13 @@ public abstract class StolenLogger implements Logger {
 	}
 
 	private void init() {
-		this.init_spec();
+		this.initSpec();
 		this.logDate = new Date();
 		this.debugLogFileName = this.createLogFileName(DEBUG);
 		this.errorLogFileName = this.createLogFileName(ERROR);
 	}
 
-	abstract void init_spec();
+	abstract void initSpec();
 
 	public synchronized void debugMessage(String mesg, int debugLevel) {
 		this.checkLogRollover();

@@ -9,11 +9,11 @@ public class ApplicationLogger extends StolenLogger {
 		super(appName, hostName);
 	}
 
-	void init_spec() {
-		super.echoDebug = Boolean.valueOf(ApplicationProperties.getString(StolenLogger.echoDebugKey, StolenLogger.DEFAULTLOGECHODEBUG)).booleanValue();
-		super.echoError = Boolean.valueOf(ApplicationProperties.getString(StolenLogger.echoErrorKey, StolenLogger.DEFAULTLOGECHOERROR)).booleanValue();
-		super.thisLevelOnly = Boolean.valueOf(ApplicationProperties.getString(StolenLogger.thisLevelOnlyKey, StolenLogger.DEFAULTLOGONLYTHISLEVEL)).booleanValue();
-		super.logDebugLevel = ApplicationProperties.getInt(StolenLogger.logDebugLevelKey, StolenLogger.DEFAULTLOGDEBUGLEVEL);
-		super.baseLogPath = ApplicationProperties.getString(StolenLogger.logPathKey, DEFAULTLOGPATH);
+	void initSpec() {
+		super.echoDebug = Boolean.valueOf(ApplicationProperties.getString(StolenLogger.ECHO_DEBUG_KEY, StolenLogger.DEFAULTLOGECHODEBUG)).booleanValue();
+		super.echoError = Boolean.valueOf(ApplicationProperties.getString(StolenLogger.ECHO_ERROR_KEY, StolenLogger.DEFAULTLOGECHOERROR)).booleanValue();
+		super.thisLevelOnly = Boolean.valueOf(ApplicationProperties.getString(StolenLogger.THIS_LEVEL_ONLY_KEY, StolenLogger.DEFAULTLOGONLYTHISLEVEL)).booleanValue();
+		super.logDebugLevel = ApplicationProperties.getInt(StolenLogger.LOG_DEBUG_LEVEL_KEY, StolenLogger.DEFAULTLOGDEBUGLEVEL);
+		super.baseLogPath = ApplicationProperties.getString(StolenLogger.LOG_PATH_KEY, DEFAULTLOGPATH);
 	}
 }

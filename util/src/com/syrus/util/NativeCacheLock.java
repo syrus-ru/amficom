@@ -2,7 +2,7 @@ package com.syrus.util;
 
 public class NativeCacheLock implements CacheLock {
 	private static final String LOCK_POSTFIX = ".sm.USER";
-	private static boolean file_lock_loaded = false;
+	private static boolean fileLockLoaded = false;
 
 	public native int lockWrite0(String filename);
 	public native int lockRead0(String filename);
@@ -12,7 +12,7 @@ public class NativeCacheLock implements CacheLock {
 	static {
 		try {
 			System.loadLibrary("sema");
-			file_lock_loaded = true;
+			fileLockLoaded = true;
 		}
 		catch (UnsatisfiedLinkError ex) {
 			ex.printStackTrace();
@@ -25,7 +25,7 @@ public class NativeCacheLock implements CacheLock {
 	}
 
 	public CacheLockObject lockWrite(String filename) {
-		if(!file_lock_loaded)
+		if(!fileLockLoaded)
 			return null;
 
 		int ret = lockWrite0(filename + LOCK_POSTFIX);
@@ -37,7 +37,7 @@ public class NativeCacheLock implements CacheLock {
 	}
 
 	public CacheLockObject lockRead(String filename) {
-		if(!file_lock_loaded)
+		if(!fileLockLoaded)
 			return null;
 
 		int ret = lockRead0(filename + LOCK_POSTFIX);
@@ -50,7 +50,7 @@ public class NativeCacheLock implements CacheLock {
 	
 	public boolean releaseWrite(CacheLockObject filelock) {
 		String filename = "";//(String )filelock;
-		if(!file_lock_loaded)
+		if(!fileLockLoaded)
 			return false;
 		int ret = releaseWrite0(filename + LOCK_POSTFIX);
 		System.out.println(ret);
@@ -61,7 +61,7 @@ public class NativeCacheLock implements CacheLock {
 
 	public boolean releaseRead(CacheLockObject filelock) {
 		String filename = "";//(String )filelock;
-		if(!file_lock_loaded)
+		if(!fileLockLoaded)
 			return false;
 
 		int ret = releaseRead0(filename + LOCK_POSTFIX);

@@ -13,7 +13,7 @@ public class FileToDirectory
 	private int counter = 0;
 	Hashtable currentHash;
 
-	static String[] hash_arguments = new String[]
+	static String[] hashArguments = new String[]
 	{
 		"@characteristics",
 		"@threads",
@@ -71,16 +71,16 @@ public class FileToDirectory
 
 	protected Vector readFromFile() throws IOException
 	{
-		boolean continue_analyse = true;
+		boolean continueAnalyse = true;
 		Vector vec = new Vector();
 		Hashtable h = new Hashtable();
 		while (isr.ready())
 		{
-			continue_analyse = true;
+			continueAnalyse = true;
 			String[] s = analyseString(isr.readASCIIString());
-			for(int i = 0; i < hash_arguments.length; i++)
+			for(int i = 0; i < hashArguments.length; i++)
 			{
-				if (s[0].startsWith(hash_arguments[i]))
+				if (s[0].startsWith(hashArguments[i]))
 				{
 					s = analyseString(isr.readASCIIString());
 					Hashtable ch = new Hashtable();
@@ -89,12 +89,12 @@ public class FileToDirectory
 						ch.put(s[0], s[1]);
 						s = analyseString(isr.readASCIIString());
 					}
-					h.put(hash_arguments[i], ch);
-					continue_analyse = false;
+					h.put(hashArguments[i], ch);
+					continueAnalyse = false;
 					break;
 				}
 			}
-			if(continue_analyse)
+			if(continueAnalyse)
 			{
 				if (s[0].startsWith("@"))
 					h.put(s[0], s[1]);

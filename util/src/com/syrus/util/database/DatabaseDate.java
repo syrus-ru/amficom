@@ -14,9 +14,9 @@ public class DatabaseDate {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HHmmss");
 		ParsePosition pp = new ParsePosition(0);
 		Date date = null;
-		String date_str = resultset.getString(column);
-		if(date_str != null)
-			date = sdf.parse(date_str, pp);
+		String dateStr = resultset.getString(column);
+		if(dateStr != null)
+			date = sdf.parse(dateStr, pp);
 		return date;
 	}
 

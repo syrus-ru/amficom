@@ -43,13 +43,13 @@ public class ByteArrayConverter
 
   public final char readIChar(int i) throws IOException
   {
-    byte NUL = 0x00;
-    return (char)((NUL << 8) | (b[i] & 0xff));
+    byte nul = 0x00;
+    return (char)((nul << 8) | (b[i] & 0xff));
   }
 
   public final String readIString(int i) throws IOException
   {
-    byte NUL = 0x00;
+    byte nul = 0x00;
     String s = "";
 
     while (true)
@@ -57,7 +57,7 @@ public class ByteArrayConverter
       if (b[i] == 0x00)
         break;
       else
-        s += (char)((NUL << 8) | (b[i] & 0xff));
+        s += (char)((nul << 8) | (b[i] & 0xff));
       i++;
     }
     return  s;
