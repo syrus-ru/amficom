@@ -4,6 +4,9 @@ import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class ReflectogramMath
 {
+	private ReflectogramMath {
+	}
+
 	public static double[] getReflectogrammFromEvents(ReflectogramEvent[] re, int arrayLength)
 	{
 		correctEvents(re);
@@ -461,3 +464,4 @@ public class ReflectogramMath
 		return (Math.sin(arg * Math.PI / freq / 2.) - ((double)arg) / freq / 2.) / norma;
 	}
 }
+

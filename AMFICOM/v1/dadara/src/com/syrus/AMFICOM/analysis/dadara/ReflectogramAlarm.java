@@ -90,7 +90,7 @@ public class ReflectogramAlarm {
 		catch (IOException ioe) {
 			System.out.println("Exception while getting byte array from alarm: " + ioe.getMessage());
 			ioe.printStackTrace();
-			return null;
+			return new byte[0]; //null
 		}
 		return baos.toByteArray();
 	}
@@ -120,8 +120,9 @@ public class ReflectogramAlarm {
 		catch (IOException ioe) {
 			System.out.println("Exception while converting byte array to array of alarms: " + ioe.getMessage());
 			ioe.printStackTrace();
-			return null;
+			return new ReflectogramAlarm[0]; //null
 		}
 		return (ReflectogramAlarm[])ll.toArray(new ReflectogramAlarm[ll.size()]);
 	}
 }
+

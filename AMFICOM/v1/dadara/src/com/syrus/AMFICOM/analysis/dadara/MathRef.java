@@ -2,6 +2,9 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 public class MathRef
 {
+	private MathRef() {
+	}
+
 	public static double[] correctReflectogramm(double []data)
 	{
 		int begin = 300;
@@ -291,3 +294,4 @@ public class MathRef
 		return 1;
 	}
 }
+

@@ -20,8 +20,8 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.1 $, $Date: 2004/12/17 15:26:14 $
- * @author $Author: saa $
+ * @version $Revision: 1.2 $, $Date: 2004/12/17 18:16:20 $
+ * @author $Author: arseniy $
  * @module analysis_v1
  */
 
@@ -348,3 +348,4 @@ public class ModelFunction {
 			pars[i] = dis.readDouble();
 	}
 }
+

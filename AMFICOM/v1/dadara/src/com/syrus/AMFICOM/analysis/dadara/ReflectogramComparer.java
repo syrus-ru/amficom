@@ -18,8 +18,8 @@ package com.syrus.AMFICOM.analysis.dadara;
  * (2) статическая часть - сравнивает модельные кривые, построенные
  * по ReflectogramEvent[] - MaxDeviation и пр.
  * 
- * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2004/12/17 15:26:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2004/12/17 18:16:20 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -1210,3 +1210,4 @@ public class ReflectogramComparer
  // <threshold>  --> <threshold>+meanShift;
 
  */
+

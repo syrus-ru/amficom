@@ -1,5 +1,5 @@
 /*
- * $Id: SignatureMismatchException.java,v 1.1 2004/12/17 15:26:14 saa Exp $
+ * $Id: SignatureMismatchException.java,v 1.2 2004/12/17 18:16:20 arseniy Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,14 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2004/12/17 15:26:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2004/12/17 18:16:20 $
  * @module
  */
 public class SignatureMismatchException extends Exception
 {
+	static final long serialVersionUID = 5660401178631587063L;
+
 	public SignatureMismatchException()
 	{
 		super();
@@ -24,3 +26,4 @@ public class SignatureMismatchException extends Exception
 		super(text);
 	}
 }
+

@@ -1,8 +1,8 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/17 15:26:14 $
- * @author $Author: saa $
+ * @version $Revision: 1.2 $, $Date: 2004/12/17 18:16:20 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -625,7 +625,7 @@ public class ReflectogramEvent
 		{
 			System.out.println("IOException caught: " + e);
 			e.printStackTrace();
-			return null; // XXX
+			return new byte[0]; //null // XXX
 		}
 	}
 
@@ -650,13 +650,13 @@ public class ReflectogramEvent
 		{
 			System.out.println("IOException caught: " + e);
 			e.printStackTrace();
-			return null; // XXX
+			return new ReflectogramEvent[0]; //null // XXX
 		}
 		catch (SignatureMismatchException e)
 		{
 			System.out.println("SignatureMismatchException caught: " + e);
 			e.printStackTrace();
-			return null; // XXX
+			return new ReflectogramEvent[0]; //null // XXX
 		}
 	}
 
@@ -979,3 +979,4 @@ public class ReflectogramEvent
 	} // FIXIT
 
 }
+
