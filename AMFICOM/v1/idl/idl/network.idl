@@ -67,6 +67,8 @@ module Network
 		wstring manufacturerCode;
 		wstring supplier;
 		wstring supplierCode;
+		wstring constructor;
+		wstring constructorCode;
 
 		wstring eqClass;
 
@@ -123,6 +125,8 @@ module Network
 		wstring manufacturerCode;
 		wstring supplier;
 		wstring supplierCode;
+		wstring constructor;
+		wstring constructorCode;
 
 		wstring imageId;
 

@@ -1,5 +1,5 @@
 /**
- * $Id: map.idl,v 1.5 2004/09/12 14:33:39 krupenn Exp $
+ * $Id: map.idl,v 1.6 2004/09/15 10:58:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -92,6 +92,10 @@ module Map
 		wstring mapProtoId;
 
 		long long modified;
+		
+		wstring city;
+		wstring street;
+		wstring building;
 
 		General::ElementAttributeSeq_Transferable attributes;
 	};
@@ -145,6 +149,13 @@ module Map
 		wstring startNodeId;
 		wstring endNodeId;
 
+		wstring city;
+		wstring street;
+		wstring building;
+		
+		boolean leftToRight;
+		boolean topToBottom;
+
 		::CORBA::WStringSeq nodeLinkIds;
 
 		General::ElementAttributeSeq_Transferable attributes;
@@ -164,6 +175,10 @@ module Map
 		wstring physicalLinkId;
 		
 		double distance;
+
+		wstring city;
+		wstring street;
+		wstring building;
 
 		General::ElementAttributeSeq_Transferable attributes;
 	};
