@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.44 2004/12/10 12:13:50 bob Exp $
+ * $Id: Equipment.java,v 1.45 2004/12/14 16:48:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/12/10 12:13:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2004/12/14 16:48:20 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -42,16 +42,21 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	protected static final int		UPDATE_ATTACH_ME	= 1;
 	protected static final int		UPDATE_DETACH_ME	= 2;
 	
-	private EquipmentType type;
-	private String name;
-	private String description;
-	private Identifier imageId;
-    private double longitude;
-    private double latitude;
-    private String supplier;
+	private EquipmentType          type;
+	private String                 name;
+	private String                 description;
+	private Identifier             imageId;
+	private double                 longitude;
+	private double                 latitude;
+	private String                 supplier;
+	private String                 supplierCode;
+    private String                 hwSerial;
+    private String                 hwVersion;
+    private String                 swSerial;
+    private String                 swVersion;
+    private String                 inventoryNumber;
 
 	private List portIds;
-
 	private List characteristics;
 
 	private StorableObjectDatabase equipmentDatabase;
@@ -84,13 +89,19 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-
+		
 		this.name = new String(et.name);
 		this.description = new String(et.description);
 		this.imageId = new Identifier(et.image_id);
         this.supplier = new String(et.supplier);
+        this.supplier = new String(et.supplierCode);
         this.longitude = et.longitude;
         this.latitude = et.latitude;
+        this.hwSerial = et.hwSerial;
+        this.hwVersion = et.hwVersion;
+        this.swSerial = et.swSerial;
+        this.swVersion = et.swVersion;
+        this.inventoryNumber = et.inventoryNumber;
 
 		this.portIds = new ArrayList(et.port_ids.length);
 		for (int i = 0; i < et.port_ids.length; i++)
@@ -114,8 +125,14 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										String description,
 										Identifier imageId,
                                         String supplier,
+                                        String supplierCode,
                                         double longitude,
-                                        double latitude) {
+                                        double latitude,
+										String hwSerial,
+                                        String hwVersion,
+                                        String swSerial,
+                                        String swVersion,
+                                        String inventoryNumber) {
 				super(id,
 							new Date(System.currentTimeMillis()),
 							new Date(System.currentTimeMillis()),
@@ -130,9 +147,15 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 				this.description = description;
 				this.imageId = imageId;
                 this.supplier = supplier;
+                this.supplierCode = supplierCode;
                 this.longitude = longitude;
                 this.latitude = latitude;
-
+                this.hwSerial = hwSerial;
+                this.hwVersion = hwVersion;
+                this.swSerial = swSerial;
+                this.swVersion = swVersion;
+                this.inventoryNumber = inventoryNumber;
+                
 				this.portIds = new LinkedList();
 
 				this.characteristics = new LinkedList();
@@ -157,10 +180,18 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										   String description,
 										   Identifier imageId,
                                            String supplier,
+                                           String supplierCode,
                                            double longitude,
-                                           double latitude) throws CreateObjectException {
-		if (creatorId == null || domainId == null || type == null || name == null || 
-				description == null || imageId == null || supplier == null)
+                                           double latitude,
+                                           String hwSerial,
+                                           String hwVersion,
+                                           String swSerial,
+                                           String swVersion,
+                                           String inventoryNumber) throws CreateObjectException {
+		if (creatorId == null || domainId == null || type == null || name == null
+                || description == null || imageId == null || supplier == null || supplierCode == null
+                || hwSerial == null || hwVersion == null || swSerial == null || swVersion == null 
+                || inventoryNumber == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
 			return new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE),
@@ -171,8 +202,14 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 								description,
 								imageId,
 			                    supplier,
+                                supplierCode,
 			                    longitude,
-			                    latitude);
+			                    latitude,
+                                hwSerial,
+                                hwVersion,
+                                swSerial,
+                                swVersion,
+                                inventoryNumber);
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Equipment.createInstance | cannot generate identifier ", e);
 		}
@@ -227,8 +264,14 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										  new String(this.name),
 										  new String(this.description),
                                           new String(this.supplier),
+                                          new String(this.supplierCode),
                                           this.longitude,
                                           this.latitude,
+                                          new String(this.hwSerial),
+                                          new String(this.hwVersion),
+                                          new String(this.swSerial),
+                                          new String(this.swVersion),
+                                          new String(this.inventoryNumber),
 										  (Identifier_Transferable)this.imageId.getTransferable(),
 										  pIds,
 										  charIds);
@@ -282,7 +325,16 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 											  EquipmentType type,
 											  String name,
 											  String description,
-											  Identifier imageId) {
+											  Identifier imageId,
+                                              String supplier,
+                                              String supplierCode,
+                                              double longitude,
+                                              double latitude,
+                                              String hwSerial,
+                                              String hwVersion,
+                                              String swSerial,
+                                              String swVersion,
+                                              String inventoryNumber) {
 		super.setAttributes(created,												
 							modified,
 							creatorId,
@@ -292,6 +344,15 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		this.name = name;
 		this.description = description;
 		this.imageId = imageId;
+        this.supplier = supplier;
+        this.supplierCode = supplierCode;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.hwSerial = hwSerial;
+        this.hwVersion = hwVersion;
+        this.swSerial = swSerial;
+        this.swVersion = swVersion;
+        this.inventoryNumber = inventoryNumber;
 	}
 
 	protected synchronized void setPortIds0(final List portIds) {
