@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.1 2004/10/19 15:08:08 max Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.2 2004/10/20 08:30:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,40 +27,20 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
-import com.syrus.AMFICOM.measurement.Modeling;
-import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
-import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.ResultDatabase;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
-import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
-import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
-
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/19 15:08:08 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/20 08:30:09 $
  * @author $Author: max $
  * @module module_name
  */
@@ -71,11 +51,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
     static {
         lock = new Object();
     }
-
-    public CMServerMeasurementObjectLoader() {
-    }
-
-
+  
     public Measurement loadMeasurement(Identifier id) throws RetrieveObjectException, CommunicationException {
         Measurement measurement = null;
         try {
@@ -90,7 +66,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                 }
                 catch (org.omg.CORBA.SystemException se) {
                     Log.errorException(se);
-                    ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                    ClientMeasurementServer.resetMServerConnection();
                     throw new CommunicationException("System exception -- " + se.getMessage(), se);
                 }
                 catch (AMFICOMRemoteException are) {
@@ -105,7 +81,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
             }
             else {
                 Log.errorMessage("Remote reference for MCM '" + mServerId + "' is null; will try to reactivate it");
-                ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                ClientMeasurementServer.resetMServerConnection();
             }
         }
         return measurement;
@@ -125,7 +101,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                 }
                 catch (org.omg.CORBA.SystemException se) {
                     Log.errorException(se);
-                    ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                    ClientMeasurementServer.resetMServerConnection();
                     throw new CommunicationException("System exception -- " + se.getMessage(), se);
                 }
                 catch (AMFICOMRemoteException are) {
@@ -140,7 +116,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
             }
             else {
                 Log.errorMessage("Remote reference for MServer '" + mServerId + "' is null; will try to reactivate it");
-                ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                ClientMeasurementServer.resetMServerConnection();
             }
         }
         return analysis;
@@ -160,7 +136,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                 }
                 catch (org.omg.CORBA.SystemException se) {
                     Log.errorException(se);
-                    ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                    ClientMeasurementServer.resetMServerConnection();
                     throw new CommunicationException("System exception -- " + se.getMessage(), se);
                 }
                 catch (AMFICOMRemoteException are) {
@@ -175,7 +151,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
             }
             else {
                 Log.errorMessage("Remote reference for MServer '" + mServerId + "' is null; will try to reactivate it");
-                ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                ClientMeasurementServer.resetMServerConnection();
             }
         }
         return evaluation;
@@ -205,7 +181,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                     }
                     catch (org.omg.CORBA.SystemException se) {
                         Log.errorException(se);
-                        ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                        ClientMeasurementServer.resetMServerConnection();
                         throw new CommunicationException("System exception -- " + se.getMessage(), se);
                     }
                     catch (AMFICOMRemoteException are) {
@@ -220,7 +196,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                 }
                 else {
                     Log.errorMessage("Remote reference for MServer '" + mServerId + "' is null; will try to reactivate it");
-                    ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                    ClientMeasurementServer.resetMServerConnection();
                 }
             }
         } catch (IllegalDataException e) {
@@ -254,7 +230,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                     }
                     catch (org.omg.CORBA.SystemException se) {
                         Log.errorException(se);
-                        ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                        ClientMeasurementServer.resetMServerConnection();
                         throw new CommunicationException("System exception -- " + se.getMessage(), se);
                     }
                     catch (AMFICOMRemoteException are) {
@@ -269,7 +245,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                 }
                 else {
                     Log.errorMessage("Remote reference for MServer '" + mServerId + "' is null; will try to reactivate it");
-                    ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                    ClientMeasurementServer.resetMServerConnection();
                 }
             }
         } catch (IllegalDataException e) {
@@ -303,7 +279,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                     }
                     catch (org.omg.CORBA.SystemException se) {
                         Log.errorException(se);
-                        ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                        ClientMeasurementServer.resetMServerConnection();
                         throw new CommunicationException("System exception -- " + se.getMessage(), se);
                     }
                     catch (AMFICOMRemoteException are) {
@@ -318,7 +294,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                 }
                 else {
                     Log.errorMessage("Remote reference for MServer '" + mServerId + "' is null; will try to reactivate it");
-                    ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                    ClientMeasurementServer.resetMServerConnection();
                 }
                 
             }
@@ -354,7 +330,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                 
             } catch (org.omg.CORBA.SystemException se) {
                 Log.errorException(se);
-                ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                ClientMeasurementServer.resetMServerConnection();
                 throw new CommunicationException("System exception -- " + se.getMessage(), se);
             } catch (IllegalDataException e) {
                 Log.errorMessage("MServerMeasumentObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + e.getMessage());
@@ -391,7 +367,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                 
             } catch (org.omg.CORBA.SystemException se) {
                 Log.errorException(se);
-                ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                ClientMeasurementServer.resetMServerConnection();
                 throw new CommunicationException("System exception -- " + se.getMessage(), se);
             } catch (IllegalDataException e) {
                 Log.errorMessage("MServerMeasumentObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + e.getMessage());
@@ -426,7 +402,7 @@ public class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLo
                 return list;               
             } catch (org.omg.CORBA.SystemException se) {
                 Log.errorException(se);
-                ClientMeasurementServer.activateMServerReferenceWithId(mServerId);
+                ClientMeasurementServer.resetMServerConnection();
                 throw new CommunicationException("System exception -- " + se.getMessage(), se);
             } catch (IllegalDataException e) {
                 Log.errorMessage("MServerMeasumentObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + e.getMessage());
