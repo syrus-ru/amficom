@@ -5,7 +5,7 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 HOST=mongol
 SERVICE_NAME=mongol
@@ -70,7 +70,7 @@ SOURCES := com/syrus/AMFICOM/resource/LangModelMeasurement.java \
 		com/syrus/AMFICOM/measurement/Test.java \
 		com/syrus/AMFICOM/measurement/TestDatabase.java \
 		com/syrus/AMFICOM/measurement/TemporalCondition.java \
-		com/syrus/AMFICOM/measurement/LinkedIdsCondition.java \
+		com/syrus/AMFICOM/measurement/LinkedIdsConditionImpl.java \
 		com/syrus/AMFICOM/measurement/DomainCondition.java \
 		com/syrus/AMFICOM/measurement/StringFieldCondition.java \
 		com/syrus/AMFICOM/measurement/ResultCondition.java \

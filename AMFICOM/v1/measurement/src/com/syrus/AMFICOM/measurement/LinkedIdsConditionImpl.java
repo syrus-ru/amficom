@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.24 2004/12/28 10:31:43 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.1 2005/01/14 18:09:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/12/28 10:31:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.1 $, $Date: 2005/01/14 18:09:56 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
-class LinkedIdsCondition extends com.syrus.AMFICOM.general.LinkedIdsCondition {
+class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
 	protected static final Short		ANALYSISTYPE_SHORT		= new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 	protected static final Short		EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
@@ -31,12 +31,12 @@ class LinkedIdsCondition extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 	protected static final Short		MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 	protected static final Short		MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
 	
-	private LinkedIdsCondition(List linkedIds, Short entityCode) {
+	private LinkedIdsConditionImpl(List linkedIds, Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.entityCode = entityCode;
 	}
 
-	private LinkedIdsCondition(Identifier identifier, Short entityCode) {
+	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
 		this.identifier = identifier;
 		this.entityCode = entityCode;
 	}

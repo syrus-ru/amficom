@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.11 2004/12/07 10:59:48 bass Exp $
+ * $Id: StringFieldCondition.java,v 1.12 2005/01/14 18:09:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/12/07 10:59:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/01/14 18:09:56 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class StringFieldCondition extends com.syrus.AMFICOM.configuration.StringFieldCondition {
@@ -62,25 +62,25 @@ public class StringFieldCondition extends com.syrus.AMFICOM.configuration.String
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;		
-		if (object instanceof ParameterType){
+		if (object instanceof ParameterType) {
 			ParameterType parameterType = (ParameterType)object;
 			switch(this.sort){
 				case StringFieldSort._STRINGSORT_BASE:
-					if (parameterType.getCodename().equals(this.string)){
+					if (parameterType.getCodename().equals(this.string)) {
 						condition = true;
 					}
 					break;
 			}
-		} else if (object instanceof MeasurementType){
+		} else if (object instanceof MeasurementType) {
 			MeasurementType measurementType = (MeasurementType)object;
 			switch(this.sort){
 				case StringFieldSort._STRINGSORT_BASE:
-					if (measurementType.getCodename().equals(this.string)){
+					if (measurementType.getCodename().equals(this.string)) {
 						condition = true;
 					}
 				break;
 			}
-		} else{
+		} else {
 			condition = super.isConditionTrue(object);
 		}
 		return condition;

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalCondition.java,v 1.3 2004/10/21 08:01:35 bob Exp $
+ * $Id: TemporalCondition.java,v 1.4 2005/01/14 18:09:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalCondition_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/21 08:01:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/01/14 18:09:56 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class TemporalCondition implements StorableObjectCondition {

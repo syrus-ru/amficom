@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.55 2004/12/29 15:19:02 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.56 2005/01/14 18:09:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.DomainMember;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2004/12/29 15:19:02 $
+ * @version $Revision: 1.56 $, $Date: 2005/01/14 18:09:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */

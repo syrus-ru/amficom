@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.56 2004/12/29 15:19:02 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.57 2005/01/14 18:09:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,15 +44,15 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.DomainMember;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2004/12/29 15:19:02 $
+ * @version $Revision: 1.57 $, $Date: 2005/01/14 18:09:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */

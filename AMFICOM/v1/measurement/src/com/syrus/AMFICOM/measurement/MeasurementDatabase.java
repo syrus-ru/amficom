@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.50 2004/12/29 15:19:02 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.51 2005/01/14 18:09:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,9 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.DomainMember;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/12/29 15:19:02 $
+ * @version $Revision: 1.51 $, $Date: 2005/01/14 18:09:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */

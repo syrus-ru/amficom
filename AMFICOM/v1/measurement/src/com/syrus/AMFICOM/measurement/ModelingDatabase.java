@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.17 2004/12/29 15:19:02 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.18 2005/01/14 18:09:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,9 @@ import java.util.List;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.DomainMember;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/12/29 15:19:02 $
+ * @version $Revision: 1.18 $, $Date: 2005/01/14 18:09:56 $
  * @author $Author: arseniy $
  * @module module_name
  */

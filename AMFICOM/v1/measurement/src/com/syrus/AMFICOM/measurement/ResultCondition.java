@@ -1,5 +1,5 @@
 /*
- * $Id: ResultCondition.java,v 1.6 2005/01/12 13:34:13 arseniy Exp $
+ * $Id: ResultCondition.java,v 1.7 2005/01/14 18:09:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,9 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Date;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
+
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultCondition_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/12 13:34:13 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/14 18:09:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -36,7 +37,7 @@ public class ResultCondition implements StorableObjectCondition {
 
 
 	public ResultCondition(ResultCondition_Transferable transferable) throws DatabaseException, CommunicationException {
-		this.domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(new Identifier(transferable.domain_id), true);
+		this.domain = (Domain) AdministrationStorableObjectPool.getStorableObject(new Identifier(transferable.domain_id), true);
 		this.start = new Date(transferable.start);
 		this.end = new Date(transferable.end);
 		setEntityCode(new Short(transferable.entity_code));
