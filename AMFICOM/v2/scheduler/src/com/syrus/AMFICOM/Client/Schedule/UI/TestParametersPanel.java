@@ -14,21 +14,19 @@ import com.syrus.util.*;
 import java.io.*;
 public class TestParametersPanel extends JPanel implements OperationListener {
 
-	public static final String COMMAND_STOP_ANALYSIS = "StopAnalysis";
-	public static final String COMMAND_ME_TYPE = "METype";
-	public static final String COMMAND_KIS_TYPE = "KISType";
-	public static final String COMMAND_PORT_TYPE = "PortType";
-	public static final String COMMAND_VISUAL_TEST_SETUP = "VisualTestSetup";
-	public static final String COMMAND_TEST_TYPE = "TestType";
-	public static final String COMMAND_TEST_SETUP = "TestSetup";
-	public static final String COMMAND_VISUAL_TEST_PARAMS = "VisualTestParams";
-	public static final String COMMAND_EXT_AFTER_USUAL_ROOT_FRAME =
-		"ExtendedAfterUsual_RootFrame";
-	public static final String COMMAND_REMOVE_PARAM_FRAME = "RemoveParamFrame";
-	public static final String COMMAND_REMOVE_3A_FRAME = "Remove3aFrame";
+//	public static final String COMMAND_STOP_ANALYSIS = "StopAnalysis";
+//	public static final String COMMAND_ME_TYPE = "METype";
+//	public static final String COMMAND_KIS_TYPE = "KISType";
+//	public static final String COMMAND_PORT_TYPE = "PortType";
+//	public static final String COMMAND_VISUAL_TEST_SETUP = "VisualTestSetup";
+//	public static final String COMMAND_TEST_TYPE = "TestType";
+//	public static final String COMMAND_TEST_SETUP = "TestSetup";
+//	public static final String COMMAND_VISUAL_TEST_PARAMS = "VisualTestParams";
+//	public static final String COMMAND_EXT_AFTER_USUAL_ROOT_FRAME = "ExtendedAfterUsual_RootFrame";
+//	public static final String COMMAND_REMOVE_PARAM_FRAME = "RemoveParamFrame";
+//	public static final String COMMAND_REMOVE_3A_FRAME = "Remove3aFrame";
 
-	public static final String TEST_TYPE_TRACE_AND_ANALYSE =
-		"trace_and_analyse";
+	public static final String TEST_TYPE_TRACE_AND_ANALYSE = "trace_and_analyse";
 	public static final String TEST_TYPE_VOICE_ANALYSE = "voice_analyse";
 
 	public static final String PARAMETER_REFLECTION = "ref_ior";
@@ -37,6 +35,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	public static final String PARAMETER_PULSE_WIDTH = "ref_trclen";
 	public static final String PARAMETER_RESOLUTION = "ref_res";
 	public static final String PARAMETER_MAX_DISTANCE = "ref_pulswd";
+	public static final String PARAMETER_CHAR_IDENTITY =
+		"ref_characterizationidentity";
+
 	public static final String PARAMETER_PARAMETER = "Parameter";
 
 	private Dispatcher dispatcher;
@@ -45,7 +46,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	//	private JPanel testSetupPanel;
 	private JRadioButton patternRadioButton;
 	private JRadioButton paramsRadioButton;
-	private ArrayList objList = new ArrayList();
+	private HashMap objMap = new HashMap();
 	private String testTypeId;
 	private String meId;
 	private ObjectResourceListBox testSetups;
@@ -53,7 +54,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	private static final String PATTERN_PANEL_NAME = "PATTERN_PANEL";
 	private static final String PARAMETERS_PANEL_NAME = "PARAMETERS_PANEL";
 
-	private String[] countOfAverageOut =
+	private String[] averageOutCount =
 		{ "4000", "8000", "16000", "32000", "64000", "128000", "256000" };
 	private String[] waveLength = { "1310", "1550", "1625" };
 
@@ -86,8 +87,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	private JTextField reflectTextField = new JTextField();
 	private AComboBox waveLengthComboBox = new AComboBox(waveLength);
 	// was jComboBox1
-	private AComboBox countOfAverageOutComboBox =
-		new AComboBox(countOfAverageOut);
+	private AComboBox averageOutCountComboBox = new AComboBox(averageOutCount);
 	// was jComboBox2
 	private AComboBox resolutionComboBox = new AComboBox(resolution[0]);
 	// was jComboBox4
@@ -118,21 +118,29 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 	public TestParametersPanel(ApplicationContext aContext) {
 		this.aContext = aContext;
-		this.dispatcher = aContext.getDispatcher();
-		dispatcher.register(this, COMMAND_KIS_TYPE);
-		dispatcher.register(this, COMMAND_PORT_TYPE);
-		dispatcher.register(this, COMMAND_STOP_ANALYSIS);
-		dispatcher.register(this, COMMAND_REMOVE_PARAM_FRAME);
-		dispatcher.register(this, COMMAND_REMOVE_3A_FRAME);
-		dispatcher.register(this, COMMAND_TEST_TYPE);
-		dispatcher.register(this, COMMAND_ME_TYPE);
-		dispatcher.register(this, COMMAND_VISUAL_TEST_PARAMS);
-		dispatcher.register(this, COMMAND_EXT_AFTER_USUAL_ROOT_FRAME);
+		initModule(aContext.getDispatcher());
 		try {
 			jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void initModule(Dispatcher dispatcher) {
+		this.dispatcher = dispatcher;
+//		this.dispatcher.register(this, COMMAND_KIS_TYPE);
+//		this.dispatcher.register(this, COMMAND_PORT_TYPE);
+//		this.dispatcher.register(this, COMMAND_STOP_ANALYSIS);
+//		this.dispatcher.register(this, COMMAND_REMOVE_PARAM_FRAME);
+//		this.dispatcher.register(this, COMMAND_REMOVE_3A_FRAME);
+//		this.dispatcher.register(this, COMMAND_TEST_TYPE);
+//		this.dispatcher.register(this, COMMAND_ME_TYPE);
+//		this.dispatcher.register(this, COMMAND_VISUAL_TEST_PARAMS);
+//		this.dispatcher.register(this, COMMAND_EXT_AFTER_USUAL_ROOT_FRAME);
+		////
+		this.dispatcher.register(
+			this,
+			TimeParametersFrame.COMMAND_DATA_REQUEST);
 	}
 
 	private void jbInit() throws Exception {
@@ -192,7 +200,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			Dimension d = new Dimension(75, 20);
 			UIUtil.setRigidSize(reflectTextField, d);
 			UIUtil.setRigidSize(waveLengthComboBox, d);
-			UIUtil.setRigidSize(countOfAverageOutComboBox, d);
+			UIUtil.setRigidSize(averageOutCountComboBox, d);
 			UIUtil.setRigidSize(pulseWidthComboBox, d);
 			UIUtil.setRigidSize(resolutionComboBox, d);
 			UIUtil.setRigidSize(maxDistanceComboBox, d);
@@ -204,22 +212,26 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 		reflectTextField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				objList.set(0, reflectTextField.getText());
+				objMap.put(PARAMETER_REFLECTION, reflectTextField.getText());
 				sendParameters();
 			}
 		});
 		waveLengthComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					objList.set(1, waveLengthComboBox.getSelectedItem());
+					objMap.put(
+						PARAMETER_WAVELENGHT,
+						waveLengthComboBox.getSelectedItem());
 					sendParameters();
 				}
 			}
 		});
-		countOfAverageOutComboBox.addItemListener(new ItemListener() {
+		averageOutCountComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					objList.set(2, countOfAverageOutComboBox.getSelectedItem());
+					objMap.put(
+						PARAMETER_AVERAGEOUT_COUNT,
+						averageOutCountComboBox.getSelectedItem());
 					sendParameters();
 				}
 			}
@@ -227,7 +239,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		resolutionComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					objList.set(4, resolutionComboBox.getSelectedItem());
+					objMap.put(
+						PARAMETER_RESOLUTION,
+						resolutionComboBox.getSelectedItem());
 					sendParameters();
 				}
 			}
@@ -235,7 +249,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		pulseWidthComboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					objList.set(5, pulseWidthComboBox.getSelectedItem());
+					objMap.put(
+						PARAMETER_PULSE_WIDTH,
+						pulseWidthComboBox.getSelectedItem());
 					sendParameters();
 				}
 			}
@@ -246,7 +262,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					//System.out.println(Par_Objects.size());
 					//Par_Objects.setElementAt(pulseWidthComboBox.getSelectedItem(), 3);
-					objList.set(3, maxDistanceComboBox.getSelectedItem());
+					objMap.put(
+						PARAMETER_MAX_DISTANCE,
+						maxDistanceComboBox.getSelectedItem());
 					int index = maxDistanceComboBox.getSelectedIndex();
 
 					pulseWidthComboBox.removeAllItems();
@@ -278,7 +296,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		parametersPanel.add(countOfAverageOutLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		parametersPanel.add(countOfAverageOutComboBox, gbc);
+		parametersPanel.add(averageOutCountComboBox, gbc);
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		parametersPanel.add(pulseWidthLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -309,8 +327,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	}
 
 	private void sendParameters() {
-		dispatcher.notify(new OperationEvent(objList, 0, PARAMETER_PARAMETER));
-		dispatcher.notify(new OperationEvent("", 0, COMMAND_STOP_ANALYSIS));
+		dispatcher.notify(new OperationEvent(objMap, 0, PARAMETER_PARAMETER));
+		//dispatcher.notify(new OperationEvent("", 0, COMMAND_STOP_ANALYSIS));
 
 	}
 	public void setTest(Test test) {
@@ -331,202 +349,224 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	public void operationPerformed(OperationEvent ae) {
 		ApplicationModel aModel = aContext.getApplicationModel();
 		String commandName = ae.getActionCommand();
-		System.out.println("commandName:" + commandName);
+		System.out.println(
+			getClass().getName() + " commandName:" + commandName);
 
-		if (commandName.equals(COMMAND_STOP_ANALYSIS)) {
-			//ListModel lm = orList.getModel();
-			//orList.setModel(lm);
-		} else if (commandName.equals(COMMAND_ME_TYPE)) {
-			testSetups.removeAll();
-			//orList.setContents("");			
-			//meid = ae.getSource().toString();
-		} else if (commandName.equals(COMMAND_EXT_AFTER_USUAL_ROOT_FRAME)) {
-			testSetups.removeAll();
-			//orList.setContents("");
-		} else if (
-			commandName.equals(COMMAND_KIS_TYPE)
-				|| commandName.equals(COMMAND_PORT_TYPE)) {
-			testSetups.removeAll();
-			//orList.setContents("");
-			dispatcher.notify(new OperationEvent("", 0, COMMAND_STOP_ANALYSIS));
-		} else if (commandName.equals(COMMAND_VISUAL_TEST_PARAMS)) {
-			testSetups.removeAll();
-			//orList.setContents("");
-			Test parTest = (Test) ae.getSource();
-			DataSourceInterface dsi = aContext.getDataSourceInterface();
-			meId = parTest.monitored_element_id;
-			testTypeId = parTest.test_type_id;
-			String[] ts_me =
-				new SurveyDataSourceImage(dsi).getTestSetupByME(meId);
-			//			//			String[] ts_me = dsi.getTestSetupsByME(meid);
-			String[] ts_tt =
-				new SurveyDataSourceImage(dsi).getTestSetupByTestType(
-					testTypeId);
-			//			//			String[] ts_tt = dsi.getTestSetupsByTestType(testtypeid);
-			String[] ts = new String[ts_me.length + ts_tt.length];
-			for (int i = 0; i < ts_me.length; i++) {
-				ts[i] = ts_me[i];
-				//orList.add((TestSetup) Pool.get(TestSetup.typ, ts[i]));
-				testSetups.add((TestSetup) Pool.get(TestSetup.typ, ts[i]));
-			}
-			for (int i = 0; i < ts_tt.length; i++) {
-				ts[i + ts_me.length] = ts_tt[i];
-				//				orList.add((TestSetup) Pool.get(TestSetup.typ, ts[i + ts_me.length]));
-				testSetups.add(
-					(TestSetup) Pool.get(TestSetup.typ, ts[i + ts_me.length]));
-			}
-
-			dsi.LoadTestArgumentSets(
-				new String[] { parTest.test_argument_set_id });
-			TestArgumentSet as =
-				(TestArgumentSet) Pool.get(
-					TestArgumentSet.typ,
-					parTest.test_argument_set_id);
-			Vector arg = as.arguments;
-			if (arg.size() == 1) {
-				try {
-					Parameter param1 = (Parameter) arg.elementAt(0);
-					String par1 = (new ByteArray(param1.value)).toUTFString();
-					waveLengthComboBox.setSelectedItem(String.valueOf(par1));
-				} catch (java.io.IOException ex) {
-				}
-			} else if (arg.size() == 6) {
-				try {
-					for (int i = 0; i < arg.size(); i++) {
-						Parameter par = (Parameter) arg.elementAt(i);
-
-						if (par.codename.equals(PARAMETER_REFLECTION)) {
-							reflectTextField.setText(
-								String.valueOf(
-									(new ByteArray(par.value)).toDouble()));
-
-						} else if (par.codename.equals(PARAMETER_WAVELENGHT)) {
-							waveLengthComboBox.setSelectedItem(
-								String.valueOf(
-									(new ByteArray(par.value)).toInt()));
-						} else if (
-							par.codename.equals(PARAMETER_AVERAGEOUT_COUNT)) {
-							countOfAverageOutComboBox.setSelectedItem(
-								String.valueOf(
-									(new ByteArray(par.value)).toDouble()));
-						} else if (
-							par.codename.equals(PARAMETER_PULSE_WIDTH)) {
-							pulseWidthComboBox.setSelectedItem(
-								String.valueOf(
-									(new ByteArray(par.value)).toDouble()));
-						} else if (par.codename.equals(PARAMETER_RESOLUTION)) {
-							pulseWidthComboBox.setSelectedItem(
-								String.valueOf(
-									(new ByteArray(par.value)).toDouble()));
-						} else if (
-							par.codename.equals(PARAMETER_MAX_DISTANCE)) {
-							maxDistanceComboBox.setSelectedItem(
-								String.valueOf(
-									(new ByteArray(par.value)).toLong()));
-						}
-					}
-				} catch (java.io.IOException ex) {
-				}
-			}
-			TestSetup testsetup =
-				(TestSetup) Pool.get(TestSetup.typ, parTest.test_setup_id);
-			if (testsetup != null) {
-				/**
-				 * @todo testSetups select testsetup
-				 */
-
-				testSetups.setSelectedIndex(0);
-				//orList.setSelected(testsetup);
-				dispatcher.notify(
-					new OperationEvent(testsetup, 0, COMMAND_TEST_SETUP));
-			}
-
+//		if (commandName.equals(COMMAND_STOP_ANALYSIS)) {
+//			//ListModel lm = orList.getModel();
+//			//orList.setModel(lm);
+//		} else if (commandName.equals(COMMAND_ME_TYPE)) {
+//			testSetups.removeAll();
+//			//orList.setContents("");			
+//			//meid = ae.getSource().toString();
+//		} else if (commandName.equals(COMMAND_EXT_AFTER_USUAL_ROOT_FRAME)) {
+//			testSetups.removeAll();
+//			//orList.setContents("");
+//		} else if (
+//			commandName.equals(COMMAND_KIS_TYPE)
+//				|| commandName.equals(COMMAND_PORT_TYPE)) {
+//			testSetups.removeAll();
+//			//orList.setContents("");
+//			dispatcher.notify(new OperationEvent("", 0, COMMAND_STOP_ANALYSIS));
+//		} else if (commandName.equals(COMMAND_VISUAL_TEST_PARAMS)) {
+//			testSetups.removeAll();
+//			//orList.setContents("");
+//			Test parTest = (Test) ae.getSource();
+//			DataSourceInterface dsi = aContext.getDataSourceInterface();
+//			meId = parTest.monitored_element_id;
+//			testTypeId = parTest.test_type_id;
+//			String[] ts_me =
+//				new SurveyDataSourceImage(dsi).getTestSetupByME(meId);
+//			//			//			String[] ts_me = dsi.getTestSetupsByME(meid);
+//			String[] ts_tt =
+//				new SurveyDataSourceImage(dsi).getTestSetupByTestType(
+//					testTypeId);
+//			//			//			String[] ts_tt = dsi.getTestSetupsByTestType(testtypeid);
+//			String[] ts = new String[ts_me.length + ts_tt.length];
+//			for (int i = 0; i < ts_me.length; i++) {
+//				ts[i] = ts_me[i];
+//				//orList.add((TestSetup) Pool.get(TestSetup.typ, ts[i]));
+//				testSetups.add((TestSetup) Pool.get(TestSetup.typ, ts[i]));
+//			}
+//			for (int i = 0; i < ts_tt.length; i++) {
+//				ts[i + ts_me.length] = ts_tt[i];
+//				//				orList.add((TestSetup) Pool.get(TestSetup.typ, ts[i + ts_me.length]));
+//				testSetups.add(
+//					(TestSetup) Pool.get(TestSetup.typ, ts[i + ts_me.length]));
+//			}
+//
+//			dsi.LoadTestArgumentSets(
+//				new String[] { parTest.test_argument_set_id });
+//			TestArgumentSet as =
+//				(TestArgumentSet) Pool.get(
+//					TestArgumentSet.typ,
+//					parTest.test_argument_set_id);
+//			Vector arg = as.arguments;
+//			if (arg.size() == 1) {
+//				try {
+//					Parameter param1 = (Parameter) arg.elementAt(0);
+//					String par1 = (new ByteArray(param1.value)).toUTFString();
+//					waveLengthComboBox.setSelectedItem(String.valueOf(par1));
+//				} catch (java.io.IOException ex) {}
+//			} else if (arg.size() == 6) {
+//				try {
+//					for (int i = 0; i < arg.size(); i++) {
+//						Parameter par = (Parameter) arg.elementAt(i);
+//
+//						if (par.codename.equals(PARAMETER_REFLECTION)) {
+//							reflectTextField.setText(
+//								String.valueOf(
+//									(new ByteArray(par.value)).toDouble()));
+//
+//						} else if (par.codename.equals(PARAMETER_WAVELENGHT)) {
+//							waveLengthComboBox.setSelectedItem(
+//								String.valueOf(
+//									(new ByteArray(par.value)).toInt()));
+//						} else if (
+//							par.codename.equals(PARAMETER_AVERAGEOUT_COUNT)) {
+//							averageOutCountComboBox.setSelectedItem(
+//								String.valueOf(
+//									(new ByteArray(par.value)).toDouble()));
+//						} else if (
+//							par.codename.equals(PARAMETER_PULSE_WIDTH)) {
+//							pulseWidthComboBox.setSelectedItem(
+//								String.valueOf(
+//									(new ByteArray(par.value)).toDouble()));
+//						} else if (par.codename.equals(PARAMETER_RESOLUTION)) {
+//							pulseWidthComboBox.setSelectedItem(
+//								String.valueOf(
+//									(new ByteArray(par.value)).toDouble()));
+//						} else if (
+//							par.codename.equals(PARAMETER_MAX_DISTANCE)) {
+//							maxDistanceComboBox.setSelectedItem(
+//								String.valueOf(
+//									(new ByteArray(par.value)).toLong()));
+//						}
+//					}
+//				} catch (java.io.IOException ex) {}
+//			}
+//			TestSetup testsetup =
+//				(TestSetup) Pool.get(TestSetup.typ, parTest.test_setup_id);
+//			if (testsetup != null) {
+//				/**
+//				 * @todo testSetups select testsetup
+//				 */
+//
+//				testSetups.setSelectedIndex(0);
+//				//orList.setSelected(testsetup);
+//				dispatcher.notify(
+//					new OperationEvent(testsetup, 0, COMMAND_TEST_SETUP));
+//			}
+//
+//			dispatcher.notify(
+//				new OperationEvent(parTest, 0, COMMAND_VISUAL_TEST_SETUP));
+//		} else if (commandName.equals(COMMAND_REMOVE_PARAM_FRAME)) {
+//			//this.dispose();
+//		} else if (commandName.equals(COMMAND_REMOVE_3A_FRAME)) {
+//			//this.dispose();
+//		} else if (commandName.equals(COMMAND_TEST_TYPE)) {
+//
+//			testTypeId = ae.getSource().toString();
+//			testSetups.removeAll();
+//			DataSourceInterface dsi = aContext.getDataSourceInterface();
+//			String[] ts_me =
+//				new SurveyDataSourceImage(dsi).getTestSetupByME(meId);
+//			String[] ts_tt =
+//				new SurveyDataSourceImage(dsi).getTestSetupByTestType(
+//					testTypeId);
+//			//			String[] ts_me = dsi.getTestSetupsByME(meid);
+//			//			String[] ts_tt = dsi.getTestSetupsByTestType(testTypeId);
+//			String[] ts = new String[ts_me.length + ts_tt.length];
+//			for (int i = 0; i < ts_me.length; i++) {
+//				ts[i] = ts_me[i];
+//				testSetups.add((TestSetup) Pool.get(TestSetup.typ, ts[i]));
+//			}
+//			for (int i = 0; i < ts_tt.length; i++) {
+//				ts[i + ts_me.length] = ts_tt[i];
+//				TestSetup tst =
+//					(TestSetup) Pool.get(TestSetup.typ, ts[i + ts_me.length]);
+//				if (tst.monitored_element_ids.length == 0)
+//					testSetups.add(tst);
+//			}
+//
+//			if (ae
+//				.getSource()
+//				.toString()
+//				.equals(TEST_TYPE_TRACE_AND_ANALYSE)) {
+//				objMap.clear();
+//
+//				//				jLabel1.setText(LangModelSchedule.String("labelReflect"));
+//				//				jLabel2.setText(LangModelSchedule.String("labelWaveLength"));
+//				//				jLabel3.setText(LangModelSchedule.String("labelAverCount"));
+//				//				jLabel4.setText(LangModelSchedule.String("labelImpuls"));
+//				//				jLabel5.setText(LangModelSchedule.String("labelDetalM"));
+//				//				jLabel6.setText(LangModelSchedule.String("labelMaxDistance"));
+//
+//				reflectTextField.setText("1.467");
+//
+//				if (ts.length == 0) {
+//					dispatcher.notify(
+//						new OperationEvent("", 0, COMMAND_STOP_ANALYSIS));
+//				}
+//
+//				objMap.put(PARAMETER_REFLECTION, reflectTextField.getText());
+//				objMap.put(
+//					PARAMETER_WAVELENGHT,
+//					waveLengthComboBox.getSelectedItem());
+//				objMap.put(
+//					PARAMETER_AVERAGEOUT_COUNT,
+//					averageOutCountComboBox.getSelectedItem());
+//				objMap.put(
+//					PARAMETER_PULSE_WIDTH,
+//					pulseWidthComboBox.getSelectedItem());
+//				objMap.put(
+//					PARAMETER_RESOLUTION,
+//					resolutionComboBox.getSelectedItem());
+//				objMap.put(
+//					PARAMETER_MAX_DISTANCE,
+//					maxDistanceComboBox.getSelectedItem());
+//
+//			} else if (
+//				ae.getSource().toString().equals(TEST_TYPE_VOICE_ANALYSE)) {
+//				objMap.clear();
+//				if (ts.length == 0) {
+//					dispatcher.notify(
+//						new OperationEvent("", 0, COMMAND_STOP_ANALYSIS));
+//				}
+//				//jLabel1.setText(LangModelSchedule.String("labelIdIzmer"));
+//				reflectTextField.setText("");
+//				objMap.put(PARAMETER_REFLECTION, reflectTextField.getText());
+//
+//				//
+//				//				jLabel1.setVisible(true);
+//				//				jLabel2.setVisible(false);
+//				//				jLabel3.setVisible(false);
+//				//				jLabel4.setVisible(false);
+//				//				jLabel5.setVisible(false);
+//				//				jLabel6.setVisible(false);
+//				//
+//				//				reflectTextField.setVisible(true);
+//				//				waveLengthComboBox.setVisible(false);
+//				//				countOfAverageOutComboBox.setVisible(false);
+//				//				pulseWidthComboBox.setVisible(false);
+//				//				resolutionComboBox.setVisible(false);
+//				//				maxDistanceComboBox.setVisible(false);
+//
+//			}
+//		} else 
+		if (
+			commandName.equalsIgnoreCase(
+				TimeParametersFrame.COMMAND_DATA_REQUEST)) {
+			/**
+			 * @todo must send data edit in this form 
+			 */
 			dispatcher.notify(
-				new OperationEvent(parTest, 0, COMMAND_VISUAL_TEST_SETUP));
-		} else if (commandName.equals(COMMAND_REMOVE_PARAM_FRAME)) {
-			//this.dispose();
-		} else if (commandName.equals(COMMAND_REMOVE_3A_FRAME)) {
-			//this.dispose();
-		} else if (commandName.equals(COMMAND_TEST_TYPE)) {
-
-			testTypeId = ae.getSource().toString();
-			testSetups.removeAll();
-			DataSourceInterface dsi = aContext.getDataSourceInterface();
-			String[] ts_me =
-				new SurveyDataSourceImage(dsi).getTestSetupByME(meId);
-			String[] ts_tt =
-				new SurveyDataSourceImage(dsi).getTestSetupByTestType(
-					testTypeId);
-			//			String[] ts_me = dsi.getTestSetupsByME(meid);
-			//			String[] ts_tt = dsi.getTestSetupsByTestType(testTypeId);
-			String[] ts = new String[ts_me.length + ts_tt.length];
-			for (int i = 0; i < ts_me.length; i++) {
-				ts[i] = ts_me[i];
-				testSetups.add((TestSetup) Pool.get(TestSetup.typ, ts[i]));
-			}
-			for (int i = 0; i < ts_tt.length; i++) {
-				ts[i + ts_me.length] = ts_tt[i];
-				TestSetup tst =
-					(TestSetup) Pool.get(TestSetup.typ, ts[i + ts_me.length]);
-				if (tst.monitored_element_ids.length == 0)
-					testSetups.add(tst);
-			}
-
-			if (ae
-				.getSource()
-				.toString()
-				.equals(TEST_TYPE_TRACE_AND_ANALYSE)) {
-				objList.clear();
-
-				//				jLabel1.setText(LangModelSchedule.String("labelReflect"));
-				//				jLabel2.setText(LangModelSchedule.String("labelWaveLength"));
-				//				jLabel3.setText(LangModelSchedule.String("labelAverCount"));
-				//				jLabel4.setText(LangModelSchedule.String("labelImpuls"));
-				//				jLabel5.setText(LangModelSchedule.String("labelDetalM"));
-				//				jLabel6.setText(LangModelSchedule.String("labelMaxDistance"));
-
-				reflectTextField.setText("1.467");
-
-				if (ts.length == 0) {
-					dispatcher.notify(
-						new OperationEvent("", 0, COMMAND_STOP_ANALYSIS));
-				}
-
-				objList.add(reflectTextField.getText());
-				objList.add(waveLengthComboBox.getSelectedItem());
-				objList.add(countOfAverageOutComboBox.getSelectedItem());
-				objList.add(pulseWidthComboBox.getSelectedItem());
-				objList.add(resolutionComboBox.getSelectedItem());
-				objList.add(maxDistanceComboBox.getSelectedItem());
-
-			} else if (
-				ae.getSource().toString().equals(TEST_TYPE_VOICE_ANALYSE)) {
-				objList.clear();
-				if (ts.length == 0) {
-					dispatcher.notify(
-						new OperationEvent("", 0, COMMAND_STOP_ANALYSIS));
-				}
-				//jLabel1.setText(LangModelSchedule.String("labelIdIzmer"));
-				reflectTextField.setText("");
-				objList.add(reflectTextField.getText());
-
-				//
-				//				jLabel1.setVisible(true);
-				//				jLabel2.setVisible(false);
-				//				jLabel3.setVisible(false);
-				//				jLabel4.setVisible(false);
-				//				jLabel5.setVisible(false);
-				//				jLabel6.setVisible(false);
-				//
-				//				reflectTextField.setVisible(true);
-				//				waveLengthComboBox.setVisible(false);
-				//				countOfAverageOutComboBox.setVisible(false);
-				//				pulseWidthComboBox.setVisible(false);
-				//				resolutionComboBox.setVisible(false);
-				//				maxDistanceComboBox.setVisible(false);
-
-			}
+				new OperationEvent(
+					"",
+					0,
+					TimeParametersFrame.COMMAND_SEND_DATA));
 		}
+
 		aModel.fireModelChanged("");
 	}
 

@@ -39,7 +39,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		init_module(dispatcher);
+		initModule(dispatcher);
 	}
 
 	private void jbInit() throws Exception {
@@ -95,9 +95,10 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		add(scroll_pane, BorderLayout.CENTER);
 	}
 
-	void init_module(Dispatcher dispatcher) {
+	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		dispatcher.register(this, TreeDataSelectionEvent.type);
+		this.dispatcher.register(this, TreeDataSelectionEvent.type);
+		this.dispatcher.register(this, TimeParametersFrame.COMMAND_DATA_REQUEST);		
 	}
 
 	public JTree getTree() {
@@ -105,7 +106,9 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	}
 
 	public void operationPerformed(OperationEvent oe) {
-		if (oe.getActionCommand().equals(TreeDataSelectionEvent.type)) {
+		String commandName = oe.getActionCommand(); 
+		System.out.println(getClass().getName()+" commandName:"+commandName);
+		if (commandName.equals(TreeDataSelectionEvent.type)) {
 			TreeDataSelectionEvent dse = (TreeDataSelectionEvent) oe;
 			selectedObject = dse.selectedObject;
 			Class selected_class = dse.getDataClass();
@@ -117,7 +120,18 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 			if (dse.getSelectionNumber() != -1) {
 			}
-		}
+		} else if (
+		commandName.equalsIgnoreCase(
+			TimeParametersFrame.COMMAND_DATA_REQUEST)) {
+		/**
+		 * @todo must send data edit in this form 
+		 */
+		dispatcher.notify(
+			new OperationEvent(
+				"",
+				0,
+				TimeParametersFrame.COMMAND_SEND_DATA));
+	}
 	}
 
 	void loadButton_actionPerformed() {

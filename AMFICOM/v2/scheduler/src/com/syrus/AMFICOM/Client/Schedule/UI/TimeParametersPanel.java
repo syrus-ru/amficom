@@ -8,15 +8,19 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
-public class TimeParametersPanel extends JPanel {
+public class TimeParametersPanel extends JPanel implements OperationListener {
 	public TestRequest treq;
 
 	protected static final Dimension btn_size = new Dimension(30, 20);
+
+	private ApplicationContext aContext;
+	private Dispatcher dispatcher;
 
 	private static final String PARAM_PANEL_NAME = "PARAM_PANEL";
 	private static final String PATTERN_PANEL_NAME = "PATTERN_PANEL";
@@ -47,6 +51,23 @@ public class TimeParametersPanel extends JPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public TimeParametersPanel(ApplicationContext aContext) {
+		this.aContext = aContext;
+		initModule(aContext.getDispatcher());
+		try {
+			jbInit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void initModule(Dispatcher dispatcher) {
+		this.dispatcher = dispatcher;
+		this.dispatcher.register(
+			this,
+			TimeParametersFrame.COMMAND_DATA_REQUEST);
 	}
 
 	public void setTestRequest(TestRequest treq) {
@@ -429,14 +450,36 @@ public class TimeParametersPanel extends JPanel {
 		gbc.insets = gbcInsetsDefault;
 
 		{
-			JButton applyButton =
+			final JButton applyButton =
 				new JButton(LangModelSchedule.String("labelApply"));
-			JButton createButton =
+			final JButton createButton =
 				new JButton(LangModelSchedule.String("labelCreate"));
 
 			applyButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					createButton.setEnabled(false);
+					applyButton.setEnabled(false);
 					apply();
+					/**
+					 * @todo does we need enable create button always ?
+					 */
+					createButton.setEnabled(true);
+					applyButton.setEnabled(true);
+
+				}
+			});
+
+			createButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					createButton.setEnabled(false);
+					applyButton.setEnabled(false);
+					dispatcher.notify(
+						new OperationEvent(
+							"",
+							0,
+							TimeParametersFrame.COMMAND_CREATE_TEST));
+					createButton.setEnabled(true);
+					applyButton.setEnabled(true);
 				}
 			});
 
@@ -482,6 +525,22 @@ public class TimeParametersPanel extends JPanel {
 		if (((CalendarUI) calendarDialog.getContentPane()).getStatus()
 			== CalendarUI.STATUS_OK)
 			startDateSpinner.getModel().setValue(cal.getTime());
+	}
+
+	public void operationPerformed(OperationEvent ae) {
+		String commandName = ae.getActionCommand();
+		System.out.println(getClass().getName() +" commandName: " + commandName);
+		if (commandName
+			.equalsIgnoreCase(TimeParametersFrame.COMMAND_DATA_REQUEST)) {
+			/**
+			 * @todo must send data edit in this form 
+			 */
+			dispatcher.notify(
+				new OperationEvent(
+					"",
+					0,
+					TimeParametersFrame.COMMAND_SEND_DATA));
+		}
 	}
 
 	private void showEndCalendar() {
@@ -551,6 +610,9 @@ public class TimeParametersPanel extends JPanel {
 					+ sdf.format(new Date(times[i]))
 					+ " = "
 					+ times[i]);
+
+		dispatcher.notify(
+			new OperationEvent("", 0, TimeParametersFrame.COMMAND_APPLY_TEST));
 	}
 
 	private interface TimeStampFiller {

@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
  * @author ??? , Vladimir Dolzhenko
  */
 
-public class TestRequestPanel extends JPanel {
+public class TestRequestPanel extends JPanel implements OperationListener {
 	TestRequest treq;
 
 	private JTextField nameTextField = new JTextField();
@@ -25,18 +25,41 @@ public class TestRequestPanel extends JPanel {
 	private JTextField typeTextField = new JTextField();
 	private ObjectResourceListBox testList = new ObjectResourceListBox();
 
-	Hashtable tests;
-	int label_width = 70;
-
-	ApplicationContext aContext;
-	boolean skip = false;
+	private Hashtable tests;
+	private ApplicationContext aContext;
+	private Dispatcher dispatcher;
+	private boolean skip = false;
 
 	public TestRequestPanel(ApplicationContext aContext) {
 		this.aContext = aContext;
+		initModule(aContext.getDispatcher());
 		try {
 			jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void initModule(Dispatcher dispatcher) {
+		this.dispatcher = dispatcher;
+		this.dispatcher.register(
+			this,
+			TimeParametersFrame.COMMAND_DATA_REQUEST);
+	}
+
+	public void operationPerformed(OperationEvent ae) {
+		String commandName = ae.getActionCommand();
+		System.out.println(getClass().getName() +" commandName: " + commandName);
+		if (commandName
+			.equalsIgnoreCase(TimeParametersFrame.COMMAND_DATA_REQUEST)) {
+			/**
+			 * @todo must send data edit in this form 
+			 */
+			dispatcher.notify(
+				new OperationEvent(
+					"",
+					0,
+					TimeParametersFrame.COMMAND_SEND_DATA));
 		}
 	}
 
