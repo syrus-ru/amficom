@@ -80,7 +80,8 @@ public class ObjectResourcePropertiesDialog extends JDialog
 		
 		flowLayout1.setAlignment(2);
 
-		getContentPane().add(mainPanel, BorderLayout.CENTER);
+		if(mainPanel != null)
+			getContentPane().add(mainPanel, BorderLayout.CENTER);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		buttonPanel.add(acceptButton, null);
 		buttonPanel.add(cancelButton, null);
