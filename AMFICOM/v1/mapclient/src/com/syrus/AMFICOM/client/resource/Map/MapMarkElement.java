@@ -1,24 +1,32 @@
+/**
+ * $Id: MapMarkElement.java,v 1.15 2004/10/18 12:43:13 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
+
 package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapMarkElement_Transferable;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -29,6 +37,16 @@ import java.util.ListIterator;
 
 import javax.swing.ImageIcon;
 
+/**
+ * Метка имеет координаты и привязана по дистанции к тоннелю (MapLink) 
+ * 
+ * 
+ * 
+ * @version $Revision: 1.15 $, $Date: 2004/10/18 12:43:13 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public final class MapMarkElement extends MapNodeElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
@@ -44,17 +62,11 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	public static final String COLUMN_X = "x";
 	public static final String COLUMN_Y = "y";
 
-	//Размер пиктограммы маркера
+	/** Размер пиктограммы маркера */
 	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(14, 14);
 	
 	public static final String IMAGE_NAME = "mark";
 	public static final String IMAGE_PATH = "images/mark.gif";
-
-	static
-	{
-		MapPropertiesManager.setOriginalImage(IMAGE_NAME, new ImageIcon(IMAGE_PATH).getImage());
-	}
-
 
 	protected String linkId = "";
 	protected double distance = 0.0;
@@ -67,52 +79,9 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 	public static String[][] exportColumns = null;
 
-	public String[][] getExportColumns()
+	static
 	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[7][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
-			exportColumns[4][0] = COLUMN_DISTANCE;
-			exportColumns[5][0] = COLUMN_X;
-			exportColumns[6][0] = COLUMN_Y;
-		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = linkId;
-		exportColumns[4][1] = String.valueOf(getDistance());
-		exportColumns[5][1] = String.valueOf(getAnchor().x);
-		exportColumns[6][1] = String.valueOf(getAnchor().y);
-		
-		return exportColumns;
-	}
-	
-	public void setColumn(String field, String value)
-	{
-		if(field.equals(COLUMN_ID))
-			this.setId(value);
-		else
-		if(field.equals(COLUMN_NAME))
-			this.setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			this.setDescription(value);
-		else
-		if(field.equals(COLUMN_PHYSICAL_LINK_ID))
-			linkId = value;
-		else
-		if(field.equals(COLUMN_DISTANCE))
-			distance = Double.parseDouble(value);
-		else
-		if(field.equals(COLUMN_X))
-			anchor.x = Double.parseDouble(value);
-		else
-		if(field.equals(COLUMN_Y))
-			anchor.y = Double.parseDouble(value);
+		MapPropertiesManager.setOriginalImage(IMAGE_NAME, new ImageIcon(IMAGE_PATH).getImage());
 	}
 
 	public MapMarkElement()
@@ -155,33 +124,10 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		attributes = new HashMap();
 	}
 
-//	public Image getImage()
-//	{
-//		return icon;
-//	}
-	
-	/**
-	 * установить идентификатор изображения, по которому определяется 
-	 * пиктограмма
-	 */
-//	public void setImage(String iconPath)
-//	{
-//		imageId = iconPath;
-//
-//		int width = (int )Math.round(getBounds().getWidth());
-//		int height = (int )Math.round(getBounds().getHeight());
-//		ImageIcon imageIcon = new ImageIcon(iconPath);
-//		icon = imageIcon.getImage().getScaledInstance(
-//			width,
-//			height,
-//			Image.SCALE_SMOOTH);
-//		loadImage(icon);
-//	}
-
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String clonedId = (String)Pool.get("mapclonedids", id);
+		String clonedId = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
 		if (clonedId != null)
 			return Pool.get(MapMarkElement.typ, clonedId);
 
@@ -203,7 +149,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		mme.selected = selected;
 
 		Pool.put(MapMarkElement.typ, mme.getId(), mme);
-		Pool.put("mapclonedids", id, mme.getId());
+		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mme.getId());
 
 		mme.attributes = new HashMap();
 		for(Iterator it = attributes.values().iterator(); it.hasNext();)
@@ -231,7 +177,6 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}
 
-//Передаём переменные в transferable которая используется для передачи их в базу данных
 	public void setTransferableFromLocal()
 	{
 		transferable.id = this.id;
@@ -259,13 +204,12 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		return typ;
 	}
 
-	//Используется для для загрузки класса из базы данных
 	public void updateLocalFromTransferable()
 	{
 		link = (MapPhysicalLinkElement )Pool.get(MapPhysicalLinkElement.typ, linkId);
 		if(link != null)
 		{
-			map = (Map )Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, this.mapId);
+			map = (Map )Pool.get(Map.typ, this.mapId);
 		}
 		this.moveToFromStartLt(distance);
 	}
@@ -282,95 +226,12 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
-/*
-	public Point2D.Double getAnchor1()
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		if ( anchor != bufferAnchor )
-		{
-			//Рисование о пределение координат маркера происходит путм проецирования координат
-			//курсора	на линию на которой маркер находится
-			double startNodeX = converter.convertMapToScreen(startNode.getAnchor()).x;
-			double startNodeY = converter.convertMapToScreen(startNode.getAnchor()).y;
-
-			double endNodeX = converter.convertMapToScreen(endNode.getAnchor()).x;
-			double endNodeY = converter.convertMapToScreen(endNode.getAnchor()).y;
-
-			double nodeLinkLength =  Math.sqrt( 
-					(endNodeX - startNodeX) * (endNodeX - startNodeX) +
-					(endNodeY - startNodeY) * (endNodeY - startNodeY) );
-
-			double thisX = converter.convertMapToScreen(anchor).x;
-			double thisY = converter.convertMapToScreen(anchor).y;
-
-			double lengthFromStartNode = Math.sqrt( 
-					(thisX - startNodeX) * (thisX - startNodeX) +
-					(thisY - startNodeY) * (thisY - startNodeY) );
-
-			double cos_b =  
-					(endNodeY - startNodeY) /
-					(Math.sqrt( 
-						(endNodeX - startNodeX) * (endNodeX - startNodeX) +
-						(endNodeY - startNodeY) * (endNodeY - startNodeY) ) );
-
-			double sin_b =  
-					(endNodeX - startNodeX) /
-					(Math.sqrt( 
-						(endNodeX - startNodeX) * (endNodeX - startNodeX) +
-						(endNodeY - startNodeY) * (endNodeY - startNodeY) ) );
-
-			if ( lengthFromStartNode > nodeLinkLength )
-			{
-				Iterator it = link.getNodeLinksAt(endNode).iterator();
-				while(it.hasNext())
-				{
-					MapNodeLinkElement nl = (MapNodeLinkElement) it.next();
-					if(nl != nodeLink)
-					{
-						startNode = endNode;
-						nodeLink = nl;
-						endNode = nl.getOtherNode(startNode);
-						lengthFromStartNode -= nodeLinkLength;
-					}
-					lengthFromStartNode = nodeLinkLength;
-				}
-			}
-
-			if ( lengthFromStartNode < 0 )
-			{
-				for(Iterator it = link.getNodeLinksAt(startNode).iterator(); it.hasNext();)
-				{
-					MapNodeLinkElement nl = (MapNodeLinkElement )it.next();
-					if(nl != nodeLink)
-					{
-						endNode = startNode;
-						nodeLink = nl;
-						startNode = nl.getOtherNode(endNode);
-						lengthFromStartNode += nl.getScreenLength();
-					}
-					lengthFromStartNode = 0;
-				}
-
-			}
-
-			anchor = converter.convertScreenToMap(
-				new Point(
-					(int)Math.round(startNodeX + sin_b * ( lengthFromStartNode )),
-					(int)Math.round(startNodeY + cos_b * ( lengthFromStartNode )) ) );
-			bufferAnchor = anchor;
-		}
-
-		return anchor;
-	}
-*/
 	public void setAnchor(Point2D.Double aAnchor)
 	{
 		anchor = aAnchor;
 		distance = this.getFromStartLengthLt();
 	}
 
-	//рисуем маркер
 	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))
@@ -434,89 +295,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		}
 		return pathLength;
 	}
-/*
-		MapNodeElement bufferStartNode;
-		MapNodeElement bufferEndNode;
-		MapNodeLinkElement startNodeLink = (MapNodeLinkElement)link.getNodeLinksAt(link.startNode).get(0);
-		bufferStartNode = link.startNode;
 
-		do
-		{
-			if ( startNodeLink.getStartNode() == bufferStartNode)
-				bufferEndNode = startNodeLink.getEndNode();
-			else
-				bufferEndNode = startNodeLink.getStartNode();
-
-			if ( startNodeLink == nodeLink)
-			{
-				if ( bufferStartNode == startNode)
-					return path_length + this.getSizeInDoubleLt();
-				else
-					return path_length + startNodeLink.getSizeInDoubleLt() - this.getSizeInDoubleLt();
-			}
-			else
-			{
-				path_length = path_length + startNodeLink.getSizeInDoubleLt();
-
-				Iterator it = link.getNodeLinksAt(bufferEndNode).iterator();
-				MapNodeLinkElement bufferNodeLink = (MapNodeLinkElement )it.next();
-
-				while( it.hasNext() && ( bufferNodeLink == startNodeLink ) )
-				{
-					bufferNodeLink = (MapNodeLinkElement )it.next();
-				}
-				startNodeLink = bufferNodeLink;
-				bufferStartNode = bufferEndNode;
-			}
-
-		}
-		while ( link.getNodeLinks().contains(nodeLink) );
-		return 0;
-	}
-*/	
-/*
-	public double getFromStartLengthLf()
-	{
-		double path_length = 0;
-		MapNodeElement bufferStartNode;
-		MapNodeElement bufferEndNode;
-		MapNodeLinkElement startNodeLink = (MapNodeLinkElement )getNodeLinksContainingNode(link.startNode).get(0);
-		bufferStartNode = link.startNode;
-
-		do
-		{
-			if ( startNodeLink.startNode == bufferStartNode)
-				bufferEndNode = startNodeLink.endNode;
-			else
-				bufferEndNode = startNodeLink.startNode;
-
-			if ( startNodeLink == nodeLink)
-			{
-				if ( bufferStartNode == startNode)
-					return path_length + this.getSizeInDoubleLf();
-				else
-					return path_length + startNodeLink.getSizeInDoubleLf() - this.getSizeInDoubleLf();
-			}
-			else
-			{
-				path_length = path_length + startNodeLink.getSizeInDoubleLf();
-
-				Iterator it = this.getNodeLinksContainingNode(bufferEndNode).iterator();
-				MapNodeLinkElement bufferNodeLink = (MapNodeLinkElement)it.next();
-
-				while( it.hasNext() && ( bufferNodeLink == startNodeLink ) )
-				{
-					bufferNodeLink = (MapNodeLinkElement)it.next();
-				}
-				startNodeLink = bufferNodeLink;
-				bufferStartNode = bufferEndNode;
-			}
-
-		}
-		while ( link.getNodeLinks().contains(nodeLink) );
-		return 0;
-	}
-*/
 	public double getFromEndLengthLt()
 	{
 		link.sortNodeLinks();
@@ -538,106 +317,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		}
 		return pathLength;
 	}
-/*
-		double path_length = 0;
-		MapNodeElement bufferStartNode;
-		MapNodeElement bufferEndNode;
-		MapNodeLinkElement endNodeLink = (MapNodeLinkElement )getNodeLinksContainingNode(link.endNode).get(0);
-		bufferEndNode = link.endNode;
 
-		do
-		{
-			if ( endNodeLink.endNode == bufferEndNode)
-			{
-				bufferStartNode = endNodeLink.startNode;
-			}
-			else
-			{
-				bufferStartNode = endNodeLink.endNode;
-			}
-
-			if ( endNodeLink == nodeLink)
-			{
-				if ( bufferStartNode == startNode)
-				{
-					return path_length + endNodeLink.getSizeInDoubleLt() - this.getSizeInDoubleLt();
-				}
-				else
-				{
-					return path_length + this.getSizeInDoubleLt();
-				}
-			}
-			else
-			{
-				path_length = path_length + endNodeLink.getSizeInDoubleLt();
-
-				Iterator it = link.getNodeLinksAt(bufferStartNode).iterator();
-				MapNodeLinkElement bufferNodeLink = (MapNodeLinkElement)it.next();
-
-				while( it.hasNext() && ( bufferNodeLink == endNodeLink ) )
-				{
-					bufferNodeLink = (MapNodeLinkElement)it.next();
-				}
-				endNodeLink = bufferNodeLink;
-				bufferEndNode = bufferStartNode;
-			}
-
-		}
-		while ( link.getNodeLinks().contains(nodeLink) );
-		return 0;
-	}
-*/
-/*
-	public double getFromEndLengthLf()
-	{
-		double path_length = 0;
-		MapNodeElement bufferStartNode;
-		MapNodeElement bufferEndNode;
-		MapNodeLinkElement endNodeLink = (MapNodeLinkElement)getNodeLinksContainingNode(link.endNode).get(0);
-		bufferEndNode = link.endNode;
-
-		do
-		{
-			if ( endNodeLink.endNode == bufferEndNode)
-			{
-				bufferStartNode = endNodeLink.startNode;
-			}
-			else
-			{
-				bufferStartNode = endNodeLink.endNode;
-			}
-
-			if ( endNodeLink == nodeLink)
-			{
-				if ( bufferStartNode == startNode)
-				{
-					return path_length + endNodeLink.getSizeInDoubleLf() - this.getSizeInDoubleLf();
-				}
-				else
-				{
-					return path_length + this.getSizeInDoubleLf();
-				}
-			}
-			else
-			{
-				path_length = path_length + endNodeLink.getSizeInDoubleLf();
-
-				Iterator it = this.getNodeLinksContainingNode(bufferStartNode).iterator();
-				MapNodeLinkElement bufferNodeLink = (MapNodeLinkElement)it.next();
-
-				while( it.hasNext() && ( bufferNodeLink == endNodeLink ) )
-				{
-					bufferNodeLink = (MapNodeLinkElement)it.next();
-				}
-				endNodeLink = bufferNodeLink;
-				bufferEndNode = bufferStartNode;
-			}
-
-		}
-		while ( link.getNodeLinks().contains(nodeLink) );
-		return 0;
-	}
-*/
 	public double getSizeInDoubleLt()
 	{
 		MapCoordinatesConverter converter = this.getMap().getConverter();
@@ -657,19 +337,14 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		return converter.distance(from, to);
 	}
 
-/*
-	public double getSizeInDoubleLf()
-	{
-		double Kd = this.getMap().getPhysicalLink(nodeLink.getPhysicalLinkId()).getKd();
-		return this.getSizeInDoubleLt() * Kd;
-	}
-*/
 	public double getDistance()
 	{
 		return distance;
 	}
 
-	//Передвинуть в точку на заданной расстоянии от начала
+	/**
+	 * Передвинуть в точку на заданной расстоянии от начала
+	 */
 	public void moveToFromStartLt(double distance)
 	{
 		MapCoordinatesConverter converter = this.getMap().getConverter();
@@ -698,10 +373,9 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		
 		path = distance - path;
 
-//		double nodeLinkLength =  nodeLink.getScreenLength();
 		nodeLink.calcScreenSlope();
-		double cos_b = nodeLink.getScreenCos();
-		double sin_b = nodeLink.getScreenSin();
+		double cosB = nodeLink.getScreenCos();
+		double sinB = nodeLink.getScreenSin();
 		
 		Point2D.Double dsp = nodeLink.getStartNode().getAnchor();
 		Point sp = converter.convertMapToScreen(dsp);
@@ -709,8 +383,56 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		this.setAnchor(
 			converter.convertScreenToMap(
 				new Point(
-					(int)Math.round(sp.x + sin_b * path),
-					(int)Math.round(sp.y + cos_b * path) ) ) );
+					(int)Math.round(sp.x + sinB * path),
+					(int)Math.round(sp.y + cosB * path) ) ) );
+	}
+
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[7][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
+			exportColumns[4][0] = COLUMN_DISTANCE;
+			exportColumns[5][0] = COLUMN_X;
+			exportColumns[6][0] = COLUMN_Y;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = linkId;
+		exportColumns[4][1] = String.valueOf(getDistance());
+		exportColumns[5][1] = String.valueOf(getAnchor().x);
+		exportColumns[6][1] = String.valueOf(getAnchor().y);
+		
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			this.setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			this.setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			this.setDescription(value);
+		else
+		if(field.equals(COLUMN_PHYSICAL_LINK_ID))
+			linkId = value;
+		else
+		if(field.equals(COLUMN_DISTANCE))
+			distance = Double.parseDouble(value);
+		else
+		if(field.equals(COLUMN_X))
+			anchor.x = Double.parseDouble(value);
+		else
+		if(field.equals(COLUMN_Y))
+			anchor.y = Double.parseDouble(value);
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
@@ -758,12 +480,10 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		this.nodeLink = nodeLink;
 	}
 
-
 	public MapNodeLinkElement getNodeLink()
 	{
 		return nodeLink;
 	}
-
 
 	public MapPhysicalLinkElement getLink()
 	{

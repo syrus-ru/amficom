@@ -1,25 +1,49 @@
+/**
+ * $Id: MapPipePathElement.java,v 1.8 2004/10/18 12:43:13 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
+
 package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.Map.MapPipePathElement_Transferable;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
+
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * коллектор. 
+ * 
+ * 
+ * 
+ * @version $Revision: 1.8 $, $Date: 2004/10/18 12:43:13 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public class MapPipePathElement extends MapLinkElement 
 {
 	private static final long serialVersionUID = 02L;
@@ -34,52 +58,10 @@ public class MapPipePathElement extends MapLinkElement
 
 	protected List physicalLinkIds = new ArrayList();
 
-	protected List links = new ArrayList();
+	protected List links = new LinkedList();
 
 	public static String[][] exportColumns = null;
 
-	public String[][] getExportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[4][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_LINKS;
-		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = "";
-		for(Iterator it = getLinks().iterator(); it.hasNext();)
-		{
-			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )it.next();
-			exportColumns[3][1] += mple.getId() + " ";
-		}
-
-		return exportColumns;
-	}
-	
-	public void setColumn(String field, String value)
-	{
-		if(field.equals(COLUMN_ID))
-			setId(value);
-		else
-		if(field.equals(COLUMN_NAME))
-			setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			setDescription(value);
-		else
-		if(field.equals(COLUMN_LINKS))
-		{
-			physicalLinkIds.clear();
-			for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
-				physicalLinkIds.add(it.next());
-		}
-	}
-	
 	public MapPipePathElement()
 	{
 		transferable = new MapPipePathElement_Transferable();
@@ -117,7 +99,7 @@ public class MapPipePathElement extends MapLinkElement
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String clonedId = (String)Pool.get("mapclonedids", id);
+		String clonedId = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
 		if (clonedId != null)
 			return Pool.get(MapPipePathElement.typ, clonedId);
 
@@ -132,13 +114,13 @@ public class MapPipePathElement extends MapLinkElement
 		mppe.selected = selected;
 
 		Pool.put(MapPipePathElement.typ, mppe.getId(), mppe);
-		Pool.put("mapclonedids", id, mppe.getId());
+		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mppe.getId());
 
 		mppe.physicalLinkIds = new ArrayList(physicalLinkIds.size());
 		for(Iterator it = getLinks().iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )it.next();
-			mppe.physicalLinkIds.add(Pool.get("mapclonedids", mple.getId()));
+			mppe.physicalLinkIds.add(Pool.get(MapPropertiesManager.MAP_CLONED_IDS, mple.getId()));
 		}
 
 		mppe.attributes = new HashMap();
@@ -161,7 +143,7 @@ public class MapPipePathElement extends MapLinkElement
 		for(Iterator it = physicalLinkIds.iterator(); it.hasNext();)
 		{
 			String pli = (String )it.next();
-			links.add(Pool.get(MapPhysicalLinkElement.typ, pli));
+			links.add(getMap().getPhysicalLink(pli));
 		}
 	}
 
@@ -261,6 +243,84 @@ public class MapPipePathElement extends MapLinkElement
 	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
 		return false;
+	}
+
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[4][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_LINKS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = "";
+		for(Iterator it = getLinks().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )it.next();
+			exportColumns[3][1] += mple.getId() + " ";
+		}
+
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
+		else
+		if(field.equals(COLUMN_LINKS))
+		{
+			physicalLinkIds.clear();
+			for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
+				physicalLinkIds.add(it.next());
+		}
+	}
+	
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException
+	{
+		out.writeObject(id);
+		out.writeObject(name);
+		out.writeObject(description);
+		out.writeObject(mapId);
+
+		out.writeObject(attributes);
+
+		this.physicalLinkIds = new ArrayList();
+		for(Iterator it = getLinks().iterator(); it.hasNext();)
+		{
+			MapLinkElement mle = (MapLinkElement )it.next();
+			physicalLinkIds.add(mle.getId());
+		}
+		out.writeObject(physicalLinkIds);
+	}
+
+	private void readObject(java.io.ObjectInputStream in)
+			throws IOException, ClassNotFoundException
+	{
+		id = (String )in.readObject();
+		name = (String )in.readObject();
+		description = (String )in.readObject();
+		mapId = (String )in.readObject();
+		attributes = (HashMap )in.readObject();
+
+		physicalLinkIds = (ArrayList )in.readObject();
+
+		transferable = new MapPipePathElement_Transferable();
+
+		updateLocalFromTransferable();
+		Pool.put(getTyp(), getId(), this);
+		Pool.put("serverimage", getId(), this);
 	}
 
 

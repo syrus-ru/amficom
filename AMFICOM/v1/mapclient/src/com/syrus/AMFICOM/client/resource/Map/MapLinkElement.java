@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkElement.java,v 1.10 2004/10/15 14:09:00 krupenn Exp $
+ * $Id: MapLinkElement.java,v 1.11 2004/10/18 12:43:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/15 14:09:00 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/18 12:43:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -173,12 +173,32 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 		try
 		{
 			MapNodeElement smne = startNode;
-			s2 =  ":\n" + "   " + LangModelMap.getString("From") + " " + smne.getName() + " [" + LangModel.getString("node" + smne.getTyp()) + "]";
+			s2 =  ":\n" 
+				+ "   " 
+				+ LangModelMap.getString("From") 
+				+ " " 
+				+ smne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + smne.getTyp()) 
+				+ "]";
 			MapNodeElement emne = endNode;
-			s3 = "\n" + "   " + LangModelMap.getString("To") + " " + emne.getName() + " [" + LangModel.getString("node" + emne.getTyp()) + "]";
+			s3 = "\n" 
+				+ "   " 
+				+ LangModelMap.getString("To") 
+				+ " " 
+				+ emne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + emne.getTyp()) 
+				+ "]";
 		}
 		catch(Exception e)
 		{
+			Environment.log(
+					Environment.LOG_LEVEL_FINER, 
+					"method call", 
+					getClass().getName(), 
+					"getToolTipText()", e);
+			
 		}
 		return s1 + s2 + s3;
 	}
@@ -186,8 +206,8 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 	public Point2D.Double getAnchor()
 	{
 		return new Point2D.Double(
-				(startNode.getAnchor().getX() + endNode.getAnchor().getX()) / 2,
-				(startNode.getAnchor().getY() + endNode.getAnchor().getY()) / 2);
+			(startNode.getAnchor().getX() + endNode.getAnchor().getX()) / 2,
+			(startNode.getAnchor().getY() + endNode.getAnchor().getY()) / 2);
 	}
 
 	/**
@@ -195,7 +215,11 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 	 */
 	public MapNodeElement getOtherNode(MapNodeElement node)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getOtherNode(" + node + ")");
+		Environment.log(
+			Environment.LOG_LEVEL_FINER, 
+			"method call", 
+			getClass().getName(), 
+			"getOtherNode(" + node + ")");
 		
 
 		if ( this.getEndNode() == node )
@@ -238,40 +262,6 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 //    }
 	
 	/**
-	 * Установить толщину линии при выделении
-	 */
-/*
-	public void setSelectedLineSize (int size)
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("selected_thickness");
-		if(ea == null)
-		{
-			ElementAttributeType eat = (ElementAttributeType )Pool.get(
-					ElementAttributeType.typ, 
-					"selected_thickness");
-			ea = new ElementAttribute(
-					"attr" + System.currentTimeMillis(),
-					eat.getName(),
-					String.valueOf(size),
-					"selected_thickness");
-			attributes.put("selected_thickness", ea);
-		}
-		ea.value = String.valueOf(size);
-	}
-*/
-	/**
-	 * Получить толщину линии при выделении
-	 */
-/*
-	public int getSelectedLineSize ()
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("selected_thickness");
-		if(ea == null)
-			return DEF.selected_thickness;
-		return Integer.parseInt(ea.value);
-	}
-*/
-	/**
 	 * Установить толщину линии
 	 */
 	public void setLineSize (int size)
@@ -303,40 +293,6 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 		return Integer.parseInt(ea.value);
 	}
 
-	/**
-	 * Установить шрифт
-	 */
-/*
-	public void setFont (Font font)
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("font");
-		if(ea == null)
-		{
-			ElementAttributeType eat = (ElementAttributeType )Pool.get(
-					ElementAttributeType.typ, 
-					"font");
-			ea = new ElementAttribute(
-					"attr" + System.currentTimeMillis(),
-					eat.getName(),
-					font.getFontName(),
-					"font");
-			attributes.put("font", ea);
-		}
-		ea.value = font.getFontName();
-	}
-*/
-	/**
-	 * Получить шрифт
-	 */
-/*
-	public Font getFont ()
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("font");
-		if(ea == null)
-			return MapPropertiesManager.getFont();
-		return new Font(ea.value, 1, 12);
-	}
-*/
 	/**
 	 * Установить вид линии
 	 */
@@ -382,40 +338,6 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	}
 
-	/**
-	 * Установить метрику
-	 */
-/*
-	public void setMetric (String metric)
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("metric");
-		if(ea == null)
-		{
-			ElementAttributeType eat = (ElementAttributeType )Pool.get(
-					ElementAttributeType.typ,
-					"metric");
-			ea = new ElementAttribute(
-					"attr" + System.currentTimeMillis(),
-					eat.getName(),
-					metric,
-					"metric");
-			attributes.put("metric", ea);
-		}
-		ea.value = metric;
-	}
-*/
-	/**
-	 * Получить метрику
-	 */
-/*
-	public String getMetric()
-	{
-		ElementAttribute ea = (ElementAttribute )attributes.get("metric");
-		if(ea == null)
-			return MapPropertiesManager.getMetric();
-		return ea.value;
-	}
-*/
 	/**
 	 * Установить цвет
 	 */

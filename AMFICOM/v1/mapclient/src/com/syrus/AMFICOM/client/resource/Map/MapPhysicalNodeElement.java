@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.15 2004/10/06 14:10:05 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.16 2004/10/18 12:43:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,23 +13,20 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalNodeElement_Transferable;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -43,7 +40,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/10/06 14:10:05 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/18 12:43:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -78,12 +75,6 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	 */
 	private boolean canBind = false;
 
-	static
-	{
-		MapPropertiesManager.setOriginalImage(OPEN_NODE, new ImageIcon(OPEN_NODE_IMAGE).getImage());
-		MapPropertiesManager.setOriginalImage(CLOSED_NODE, new ImageIcon(CLOSED_NODE_IMAGE).getImage());
-	}
-
 	protected static String[][] exportColumns = null;
 
 	/**
@@ -93,6 +84,14 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	protected boolean active = false;
 
 	protected String physicalLinkId = "";
+
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	static
+	{
+		MapPropertiesManager.setOriginalImage(OPEN_NODE, new ImageIcon(OPEN_NODE_IMAGE).getImage());
+		MapPropertiesManager.setOriginalImage(CLOSED_NODE, new ImageIcon(CLOSED_NODE_IMAGE).getImage());
+	}
 
 	public MapPhysicalNodeElement()
 	{
@@ -136,13 +135,13 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String clonedId = (String)Pool.get("mapclonedids", id);
+		String clonedId = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
 		if (clonedId != null)
 			return Pool.get(MapPhysicalNodeElement.typ, clonedId);
 
 		MapPhysicalNodeElement mpne = new MapPhysicalNodeElement(
 				dataSource.GetUId(MapPhysicalNodeElement.typ),
-				(String )Pool.get("mapclonedids", physicalLinkId),
+				(String )Pool.get(MapPropertiesManager.MAP_CLONED_IDS, physicalLinkId),
 				new Point2D.Double(anchor.x, anchor.y),
 				(Map)map.clone(dataSource), 
 				bounds);
@@ -157,7 +156,7 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		mpne.selected = selected;
 
 		Pool.put(MapPhysicalNodeElement.typ, mpne.getId(), mpne);
-		Pool.put("mapclonedids", id, mpne.getId());
+		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mpne.getId());
 
 		mpne.attributes = new HashMap();
 		for(Iterator it = attributes.values().iterator(); it.hasNext();)
@@ -225,8 +224,6 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		return transferable;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
@@ -247,6 +244,12 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		return MAX_BOUNDS;
 	}
 
+	/**
+	 * установить активность топологического узла.
+	 * узел активен, если он находится в середине связи, и не активен, если
+	 * он находится на конце связи. активные и неактивные топологические узлы
+	 * отображаются разными иконками
+	 */
 	public void setActive(boolean active)
 	{
 		if(active)

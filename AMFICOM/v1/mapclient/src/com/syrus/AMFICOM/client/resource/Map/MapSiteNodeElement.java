@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.11 2004/10/06 09:27:38 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.12 2004/10/18 12:43:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,17 +13,13 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapSiteElement_Transferable;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -40,7 +36,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/10/06 09:27:38 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/18 12:43:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -71,6 +67,9 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	protected String mapProtoId = "";
 
 	protected static String[][] exportColumns = null;
+
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"com.syrus.AMFICOM.Client.Map.Props.MapSitePane";
 
 	public MapSiteNodeElement()
 	{
@@ -129,7 +128,7 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String clonedid = (String)Pool.get("mapclonedids", id);
+		String clonedid = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
 		if (clonedid != null)
 			return Pool.get(MapSiteNodeElement.typ, clonedid);
 
@@ -152,7 +151,7 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		mene.mapProtoId = mapProtoId;
 
 		Pool.put(MapSiteNodeElement.typ, mene.getId(), mene);
-		Pool.put("mapclonedids", id, mene.getId());
+		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mene.getId());
 
 		mene.attributes = new HashMap();
 		for(Iterator it = attributes.values().iterator(); it.hasNext();)
@@ -188,7 +187,6 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}
 
-	//Передаём переменные в transferable которая используется для передачи их в базу данных
 	public void setTransferableFromLocal()
 	{
 		transferable.id = this.id;
@@ -215,11 +213,10 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	{
 		return typ;
 	}
-	
-	//Используется для для загрузки класса из базы данных
+
 	public void updateLocalFromTransferable()
 	{
-		this.map = (Map)Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, this.mapId);
+		this.map = (Map)Pool.get(Map.typ, this.mapId);
 	}
 
 	public Object getTransferable()
@@ -273,26 +270,11 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		}
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"com.syrus.AMFICOM.Client.Map.Props.MapSitePane";
-
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
-	//Проверка того что объект можно перемещать
-	public boolean isMovable()
-	{
-/*
-		if ( getLogicalNetLayer().mapMainFrame.aContext.getApplicationModel().isEnabled("mapActionMoveEquipment"))
-		{
-			return true;
-		}
-*/
-		return true;
-	}
-
 	public MapElementState getState()
 	{
 		return new MapSiteNodeElementState(this);
@@ -409,7 +391,6 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		Pool.put("serverimage", getId(), this);
 	}
 
-
 	public void setMapProtoId(String mapProtoId)
 	{
 		this.mapProtoId = mapProtoId;
@@ -417,42 +398,35 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		setImageId(proto.getImageId());
 	}
 
-
 	public String getMapProtoId()
 	{
 		return mapProtoId;
 	}
-
 
 	public void setCity(String city)
 	{
 		this.city = city;
 	}
 
-
 	public String getCity()
 	{
 		return city;
 	}
-
 
 	public void setStreet(String street)
 	{
 		this.street = street;
 	}
 
-
 	public String getStreet()
 	{
 		return street;
 	}
 
-
 	public void setBuilding(String building)
 	{
 		this.building = building;
 	}
-
 
 	public String getBuilding()
 	{

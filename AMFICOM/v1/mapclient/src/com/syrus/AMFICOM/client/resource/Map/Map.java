@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.11 2004/10/18 07:34:32 krupenn Exp $
+ * $Id: Map.java,v 1.12 2004/10/18 12:43:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,12 +12,10 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.Map.Map_Transferable;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
@@ -25,9 +23,11 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Класс используется для хранения и информации по канализационной
@@ -35,7 +35,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/10/18 07:34:32 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/18 12:43:09 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -98,7 +98,7 @@ public final class Map extends StubResource implements Serializable
 	protected MapCoordinatesConverter converter;
 
 	/** Список выделенных объектов */
-	protected List selectedElements = new LinkedList();
+	protected Set selectedElements = new HashSet();
 
 	/** 
 	 * массив параметров для экспорта. инициализируется только в случае
@@ -133,47 +133,6 @@ public final class Map extends StubResource implements Serializable
 				"Map(" + transferable + ")");
 		this.transferable = transferable;
 		this.setLocalFromTransferable();
-	}
-
-	/**
-	 * Возвращает массив параметров, описывающих топологическюу схему,
-	 * который используется для экспорта
-	 */
-	public String[][] getExportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[3][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		
-		return exportColumns;
-	}
-
-	/**
-	 * установить параметр топологический схемы по переданному значению.
-	 * используется при импорте
-	 */	
-	public void setColumn(String field, String value)
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"setColumn(" + field + ", "+ value + ")");
-		if(field.equals(COLUMN_ID))
-			this.setId(value);
-		else
-		if(field.equals(COLUMN_NAME))
-			this.setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			this.setDescription(value);
 	}
 
 	/**
@@ -389,51 +348,6 @@ public final class Map extends StubResource implements Serializable
 		}
 		transferable.collectorIds = (String [])collectorIds.toArray(
 				new String[collectorIds.size()]);
-	}
-
-	public String getTyp()
-	{
-		return typ;
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-	
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	public String getId()
-	{
-		return id;
-	}
-	
-	public void setId(String id)
-	{
-		this.id = id;
-	}
-
-	public String getDomainId()
-	{
-		return domainId;
-	}
-	
-	public void setDomainId(String domainId)
-	{
-		this.domainId = domainId;
-	}
-	
-	public void setUserId(String userId)
-	{
-		this.userId = userId;
-	}
-	
-	public long getModified()
-	{
-		return modified;
 	}
 
 	/**
@@ -740,6 +654,8 @@ public final class Map extends StubResource implements Serializable
 		linkIds.remove(ob.getId());
 		ob.setRemoved(true);
 		removedElements.add(ob);
+		
+		getCollector(ob).removeLink(ob);
 	}
 
 	/**
@@ -982,6 +898,39 @@ public final class Map extends StubResource implements Serializable
 		return removedElements;
 	}
 
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[3][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		
+		return exportColumns;
+	}
+
+	public void setColumn(String field, String value)
+	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setColumn(" + field + ", "+ value + ")");
+		if(field.equals(COLUMN_ID))
+			this.setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			this.setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			this.setDescription(value);
+	}
+
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "writeObject(out)");
@@ -1032,6 +981,50 @@ public final class Map extends StubResource implements Serializable
 //		Pool.put("serverimage", getId(), this);
 	}
 
+	public String getTyp()
+	{
+		return typ;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+	
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public String getId()
+	{
+		return id;
+	}
+	
+	public void setId(String id)
+	{
+		this.id = id;
+	}
+
+	public String getDomainId()
+	{
+		return domainId;
+	}
+	
+	public void setDomainId(String domainId)
+	{
+		this.domainId = domainId;
+	}
+	
+	public void setUserId(String userId)
+	{
+		this.userId = userId;
+	}
+	
+	public long getModified()
+	{
+		return modified;
+	}
 
 	public void setDescription(String description)
 	{
@@ -1056,7 +1049,7 @@ public final class Map extends StubResource implements Serializable
 		return created;
 	}
 	
-	public List getSelectedElements()
+	public Set getSelectedElements()
 	{
 		return selectedElements;
 	}

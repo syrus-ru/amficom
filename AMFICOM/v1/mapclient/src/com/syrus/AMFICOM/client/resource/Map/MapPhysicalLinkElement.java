@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.22 2004/10/11 15:24:52 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.23 2004/10/18 12:43:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalLinkElement_Transferable;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
@@ -45,7 +46,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.22 $, $Date: 2004/10/11 15:24:52 $
+ * @version $Revision: 1.23 $, $Date: 2004/10/18 12:43:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -68,11 +69,12 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public static final String COLUMN_STREET = "street";	
 	public static final String COLUMN_BUILDING = "building";	
 
-	//Вектор NodeLink из которых состоит path
 	protected ArrayList nodeLinkIds = new ArrayList();
-	protected ArrayList nodeLinks = new ArrayList();
 
 	protected String mapProtoId = "";
+
+	//Вектор NodeLink из которых состоит path
+	protected ArrayList nodeLinks = new ArrayList();
 	protected MapLinkProtoElement proto;
 
 	protected String city = "";
@@ -95,6 +97,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	protected boolean leftToRight = true;
 
 	public static String[][] exportColumns = null;
+
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"com.syrus.AMFICOM.Client.Map.Props.MapLinkPane";
 
 	public MapPhysicalLinkElement()
 	{
@@ -128,7 +133,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		mapProtoId = proto.getId();
 		this.proto = proto;
 		
-		binding = new MapPhysicalLinkBinding(this, proto.getBindingDimension());
+		binding = new MapPhysicalLinkBinding(proto.getBindingDimension());
 
 		transferable = new MapPhysicalLinkElement_Transferable();
 	}
@@ -136,7 +141,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String clonedId = (String)Pool.get("mapclonedids", id);
+		String clonedId = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
 		if (clonedId != null)
 			return Pool.get(MapPhysicalLinkElement.typ, clonedId);
 
@@ -154,13 +159,13 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		mple.mapProtoId = mapProtoId;
 
 		Pool.put(MapPhysicalLinkElement.typ, mple.getId(), mple);
-		Pool.put("mapclonedids", id, mple.getId());
+		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mple.getId());
 
 		mple.nodeLinkIds = new ArrayList(nodeLinks.size());
 		for(Iterator it = nodeLinks.iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
-			mple.nodeLinkIds.add(Pool.get("mapclonedids", mnle.getId()));
+			mple.nodeLinkIds.add(Pool.get(MapPropertiesManager.MAP_CLONED_IDS, mnle.getId()));
 		}
 
 		mple.attributes = new HashMap();
@@ -201,7 +206,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			this.nodeLinkIds.add( transferable.nodeLinkIds[i]);
 		}
 		
-		binding = new MapPhysicalLinkBinding(this, new Dimension(
+		binding = new MapPhysicalLinkBinding(new Dimension(
 				transferable.dimensionX,
 				transferable.dimensionY));
 	}
@@ -269,11 +274,8 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		
 		proto = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, mapProtoId);
 
-		binding = new MapPhysicalLinkBinding(this, proto.getBindingDimension());
+		binding = new MapPhysicalLinkBinding(proto.getBindingDimension());
 	}
-
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"com.syrus.AMFICOM.Client.Map.Props.MapLinkPane";
 
 	public static String getPropertyPaneClassName()
 	{
@@ -288,24 +290,43 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		try
 		{
 			MapNodeElement smne = getStartNode();
-			s2 =  ":\n" + "   " + LangModelMap.getString("From") + " " + smne.getName() + " [" + LangModel.getString("node" + smne.getTyp()) + "]";
+			s2 =  ":\n" 
+				+ "   " 
+				+ LangModelMap.getString("From") 
+				+ " " 
+				+ smne.getName() 
+				+ " ["
+				+ LangModel.getString("node" + smne.getTyp()) 
+				+ "]";
 			MapNodeElement emne = getEndNode();
-			s3 = "\n" + "   " + LangModelMap.getString("To") + " " + emne.getName() + " [" + LangModel.getString("node" + emne.getTyp()) + "]";
+			s3 = "\n" 
+				+ "   " 
+				+ LangModelMap.getString("To") 
+				+ " " 
+				+ emne.getName() 
+				+ " [" 
+				+ LangModel.getString("node" + emne.getTyp()) 
+				+ "]";
 		}
 		catch(Exception e)
 		{
-//			e.printStackTrace();
+			Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"getToolTipText()", 
+				e);
 		}
 		return s1 + s2 + s3;
 	}
+
+	protected boolean selectionVisible = false;
 
 	public boolean isSelectionVisible()
 	{
 		return isSelected() || selectionVisible;
 	}
 	
-	protected boolean selectionVisible = false;
-
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
 		boolean vis = false;
@@ -437,11 +458,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return false;
 	}
 
-//	protected java.util.List getNodeLinkIds()
-//	{
-//		return this.nodeLinkIds;
-//	}
-	
 	public List getNodeLinks()
 	{	
 		return nodeLinks;
@@ -469,10 +485,11 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	{
 		nodeLinks.add(addNodeLink);
 		nodeLinksSorted = false;
-//		addNodeLink.setPhysicalLinkId(getId());
 	}
 
-	//Получить NodeLinks содержащие данный node в данном transmissionPath
+	/**
+	 * Получить NodeLinks содержащие данный node в данном transmissionPath
+	 */
 	public java.util.List getNodeLinksAt(MapNodeElement node)
 	{
 		LinkedList returnNodeLink = new LinkedList();
@@ -531,7 +548,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			ArrayList nodevec = new ArrayList();
 			int count = getNodeLinks().size();
 			for (int i = 0; i < count; i++) 
-//			while(!smne.equals(this.getEndNode()))
 			{
 				nodevec.add(smne);
 
@@ -709,7 +725,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		this.nodeLinkIds = new ArrayList();
 		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeElement mne = (MapNodeElement )it.next();
+			MapNodeLinkElement mne = (MapNodeLinkElement )it.next();
 			nodeLinkIds.add(mne.getId());
 		}
 		out.writeObject(nodeLinkIds);

@@ -63,4 +63,25 @@ public class MapApplicationModel extends ApplicationModel
 		
 		super.add("mapActionMeasureDistance");
 	}
+
+	private static DataSourceInterface dataSource = null;
+	
+	public DataSourceInterface getDataSource(final SessionInterface session) 
+	{
+		String connection = Environment.getConnectionType();
+        if ((this.session == null) || (!this.session.equals(session)))
+			synchronized (this) 
+			{
+					if ((this.session == null) || (!this.session.equals(session))) 
+					{
+						this.session = session;
+						if(connection.equalsIgnoreCase(Environment.CONNECTION_RISD))
+							this.dataSource = new RISDMapDataSource(this.session);
+						else
+						if(connection.equalsIgnoreCase(Environment.CONNECTION_EMPTY))
+							this.dataSource = new EmptyMapDataSource(this.session);
+					}
+			}
+        return this.dataSource;
+	}
 }

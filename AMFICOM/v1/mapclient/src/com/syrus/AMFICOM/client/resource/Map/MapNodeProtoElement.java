@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeProtoElement.java,v 1.8 2004/10/15 14:09:00 krupenn Exp $
+ * $Id: MapNodeProtoElement.java,v 1.9 2004/10/18 12:43:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,11 +13,9 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapNodeProtoElement_Transferable;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Map.UI.MapDataFlavor;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -33,7 +31,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/15 14:09:00 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/18 12:43:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -58,14 +56,7 @@ public final class MapNodeProtoElement
 	
 	protected boolean isTopological = false;
 
-	public String[][] getExportColumns()
-	{
-		return null;
-	}
-
-	public void setColumn(String field, String value)
-	{
-	}
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	public MapNodeProtoElement(
 		String id,
@@ -91,7 +82,7 @@ public final class MapNodeProtoElement
 
 	public Object clone(DataSourceInterface dataSource)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public void setLocalFromTransferable()
@@ -162,8 +153,6 @@ public final class MapNodeProtoElement
 		return modified;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
@@ -171,26 +160,35 @@ public final class MapNodeProtoElement
 	
 	public Object getTransferData(DataFlavor flavor)
 	{
-		if (flavor.getHumanPresentableName()=="ElementLabel")
+		if (flavor.getHumanPresentableName().equals(MapDataFlavor.MAP_PROTO_LABEL))
 		{
-			return (Object) (this);
+			return this;
 		}
 		return null;
 	}
 
 	public DataFlavor[] getTransferDataFlavors()
 	{
-		DataFlavor dataFlavor = new MapDataFlavor(this.getClass(), "ElementLabel");
+		DataFlavor dataFlavor = new MapDataFlavor(this.getClass(), MapDataFlavor.MAP_PROTO_LABEL);
 		DataFlavor[] dfs = new DataFlavor[2];
 		dfs[0] = dataFlavor;
 		dfs[1] = DataFlavor.getTextPlainUnicodeFlavor();
-//    dfs[1] = DataFlavor.plainTextFlavor;
 		return dfs;
 	}
 
 	public boolean isDataFlavorSupported(DataFlavor flavor)
 	{
-		return (flavor.getHumanPresentableName().equals("ElementLabel"));
+		return (flavor.getHumanPresentableName().equals(MapDataFlavor.MAP_PROTO_LABEL));
+	}
+
+	public String[][] getExportColumns()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void setColumn(String field, String value)
+	{
+		throw new UnsupportedOperationException();
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException

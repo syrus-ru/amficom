@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.10 2004/09/29 15:03:21 krupenn Exp $
+ * $Id: MapElement.java,v 1.11 2004/10/18 12:43:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.geom.Rectangle2D;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/09/29 15:03:21 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/18 12:43:09 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -69,13 +69,13 @@ public interface MapElement
 	 */
 	boolean isMouseOnThisObject(Point currentMousePoint);
 
+	/**
+	 * определить, попадает ли элемент в область visibleBounds.
+	 * Используется при отрисовке (отображаются только элементы, попавшие
+	 * в видимую область)
+	 */
 	boolean isVisible(Rectangle2D.Double visibleBounds);
 
-	/**
-	 * флаг возможности передвижения элемента
-	 */
-	boolean isMovable();
-	
 	/**
 	 * текст всплывающей подсказки
 	 */
@@ -112,8 +112,16 @@ public interface MapElement
 	 */
 	void setRemoved(boolean removed);
 
+	/**
+	 * Возвращает массив параметров, описывающих топологическюу схему,
+	 * который используется для экспорта
+	 */
 	String[][] getExportColumns();
 
+	/**
+	 * установить параметр топологический схемы по переданному значению.
+	 * используется при импорте
+	 */	
 	void setColumn(String field, String value);
 	
 }

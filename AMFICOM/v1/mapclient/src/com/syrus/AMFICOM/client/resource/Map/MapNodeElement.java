@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.13 2004/10/15 14:09:00 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.14 2004/10/18 12:43:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/10/15 14:09:00 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/18 12:43:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -80,7 +80,7 @@ public abstract class MapNodeElement extends StubResource
 	public String optimizerAttribute = "optional";// "mandatory", "restricted"
 
 	/** атрибуты отображения */
-	public java.util.HashMap attributes = new HashMap();
+	public java.util.Map attributes = new HashMap();
 	
 	/** флаг наличия сигнала тревоги */
 	protected boolean alarmState = false;
@@ -258,13 +258,11 @@ public abstract class MapNodeElement extends StubResource
 		Point p = converter.convertMapToScreen(getAnchor());
 
 		Graphics2D pg = (Graphics2D )g;
-//		pg.setStroke(MapPropertiesManager.getSelectionStroke());
 		
 		int width = getBounds().width;
 		int height = getBounds().height;
 
 		pg.drawImage(
-//				icon,
 				getImage(),
                 p.x - width / 2,
                 p.y - height / 2,
@@ -331,11 +329,6 @@ public abstract class MapNodeElement extends StubResource
 		return false;
 	}
 
-	public void move (double deltaX, double deltaY)
-	{
-		setAnchor(new Point2D.Double(getAnchor().x + deltaX, getAnchor().y + deltaY));
-	}
-
 	public Map getMap()
 	{
 		return map;
@@ -348,12 +341,6 @@ public abstract class MapNodeElement extends StubResource
 			this.mapId = map.getId();
 	}
 
-	//Можно ли перемещать
-	public boolean isMovable()
-	{
-		return true;
-	}
-
 	public String getToolTipText()
 	{
 		String s1 = getName();
@@ -361,19 +348,16 @@ public abstract class MapNodeElement extends StubResource
 		return s1 + " [" + LangModel.getString("node" + getTyp()) + "]";
 	}
 
-	//Возвращяет длинну линий внутри данного узла,
-	//пересчитанную на коэффициент топологической привязки
-	public double getPhysicalLength()
-	{
-		return 0.0;
-	}
-
 	/**
 	 * Получить список NodeLinks, содержащих заданный Node
 	 */
 	public List getNodeLinks()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLinks()");
+		Environment.log(
+			Environment.LOG_LEVEL_FINER, 
+			"method call", 
+			getClass().getName(), 
+			"getNodeLinks()");
 		
 		LinkedList returnList = new LinkedList();
 		for(Iterator it = map.getNodeLinks().iterator(); it.hasNext();)
@@ -391,20 +375,27 @@ public abstract class MapNodeElement extends StubResource
 	}
 
 	/**
-	 * Получить список PhysicalLink, содержащих заданный Node
+	 * Получить список PhysicalLink, начинающихся или заканчивающихся
+	 * на данном узле
 	 */
 	public List getPhysicalLinks()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLinks()");
+		Environment.log(
+			Environment.LOG_LEVEL_FINER, 
+			"method call", 
+			getClass().getName(), 
+			"getPhysicalLinks()");
 		
 		LinkedList returnList = new LinkedList();
 
 		for(Iterator it = map.getPhysicalLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement physicalLink = (MapPhysicalLinkElement )it.next();
+			MapPhysicalLinkElement physicalLink = 
+				(MapPhysicalLinkElement )it.next();
 			
 			//Если один из концов является данным node то добавляем его в вектор
-			if ( (physicalLink.endNode == this) || (physicalLink.startNode == this) )
+			if ( (physicalLink.endNode == this) 
+					|| (physicalLink.startNode == this) )
 				returnList.add( physicalLink);
 		}
 
@@ -412,11 +403,16 @@ public abstract class MapNodeElement extends StubResource
 	}
 
 	/**
-	 * Получить вектор Node противоположных у элемета NodeLink по заданному Node
+	 * Получить вектор Node противоположных у всех элеметов NodeLink, данного
+	 * элемента
 	 */
 	public List getOppositeNodes()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getOppositeNodes()");
+		Environment.log(
+			Environment.LOG_LEVEL_FINER, 
+			"method call", 
+			getClass().getName(), 
+			"getOppositeNodes()");
 		
 		Iterator e = getNodeLinks().iterator();
 		LinkedList returnList = new LinkedList();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.17 2004/10/06 14:10:05 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.18 2004/10/18 12:43:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,12 +12,10 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapNodeLinkElement_Transferable;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.BasicStroke;
@@ -42,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/10/06 14:10:05 $
+ * @version $Revision: 1.18 $, $Date: 2004/10/18 12:43:13 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -67,52 +65,12 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	/** границы объекта, отображающего длину фрагмента */
 	protected Rectangle labelBox = new Rectangle();
 	
+	/** топологическая длина */
 	protected double lengthLt = 0.0D;
 
 	public static String[][] exportColumns = null;
 
-	public String[][] getExportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[6][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
-			exportColumns[4][0] = COLUMN_START_NODE_ID;
-			exportColumns[5][0] = COLUMN_END_NODE_ID;
-		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = getPhysicalLinkId();
-		exportColumns[4][1] = getStartNode().getId();
-		exportColumns[5][1] = getEndNode().getId();
-		
-		return exportColumns;
-	}
-	
-	public void setColumn(String field, String value)
-	{
-		if(field.equals(COLUMN_ID))
-			setId(value);
-		else
-		if(field.equals(COLUMN_NAME))
-			setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			setDescription(value);
-		else
-		if(field.equals(COLUMN_PHYSICAL_LINK_ID))
-			setPhysicalLinkId(value);
-		else
-		if(field.equals(COLUMN_START_NODE_ID))
-			startNodeId = value;
-		else
-		if(field.equals(COLUMN_END_NODE_ID))
-			endNodeId = value;
-	}
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	public MapNodeLinkElement()
 	{
@@ -153,7 +111,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String clonedId = (String)Pool.get("mapclonedids", id);
+		String clonedId = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
 		if (clonedId != null)
 			return Pool.get(MapNodeLinkElement.typ, clonedId);
 
@@ -170,7 +128,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		mnle.selected = selected;
 
 		Pool.put(MapNodeLinkElement.typ, mnle.getId(), mnle);
-		Pool.put("mapclonedids", id, mnle.getId());
+		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mnle.getId());
 
 		mnle.attributes = new HashMap();
 		for(Iterator it = attributes.values().iterator(); it.hasNext();)
@@ -246,8 +204,6 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		return transferable;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
@@ -260,7 +216,8 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 	public boolean isSelectionVisible()
 	{
-		return isSelected() || getMap().getPhysicalLink(getPhysicalLinkId()).isSelectionVisible();
+		return isSelected() 
+			|| getMap().getPhysicalLink(getPhysicalLinkId()).isSelectionVisible();
 	}
 
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
@@ -270,14 +227,8 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 			getStartNode().getAnchor().y,
 			getEndNode().getAnchor().x,
 			getEndNode().getAnchor().y);
-//		return visibleBounds.contains(getStartNode().getAnchor()) 
-//			|| visibleBounds.contains(getEndNode().getAnchor());
 	}
 
-	/**
-	 * Рисуем NodeLink взависимости от того выбрана она или нет,
-	 * а так же если она выбрана выводим её рамер
-	 */
 	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))
@@ -309,7 +260,10 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		if ( MapPropertiesManager.isShowLength() )
 		{
 			int fontHeight = g.getFontMetrics().getHeight();
-			String text = getSizeAsString() + " " + MapPropertiesManager.getMetric();
+			String text = 
+					getSizeAsString() 
+					+ " " 
+					+ MapPropertiesManager.getMetric();
 			int textWidth = g.getFontMetrics().stringWidth(text);
 			int centerX = (from.x + to.x) / 2;
 			int centerY = (from.y + to.y) / 2;
@@ -344,7 +298,11 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		}
 	}
 
-	public void paint (Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color)
+	public void paint (
+			Graphics g, 
+			Rectangle2D.Double visibleBounds, 
+			Stroke stroke, 
+			Color color)
 	{
 		if(!isVisible(visibleBounds))
 			return;
@@ -482,8 +440,6 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 	public boolean isMouseOnThisObjectsLabel(Point currentMousePoint)
 	{
-//		if(getMap().linkState == MapContext.SHOW_NODE_LINK 
-//				&& this.getShowSizeContext() )
 		return labelBox.contains(currentMousePoint);
 	}
 	
@@ -527,7 +483,10 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	{
 		return lengthLt;
 	}
-	
+
+	/**
+	 * обновить топологическую длину линии по координатам концевых узлов
+	 */	
 	public void updateLengthLt()
 	{
 		MapCoordinatesConverter converter = getMap().getConverter();
@@ -537,49 +496,23 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	}
 
 	/**
-	 * Получить строительную длинну NodeLink
-	 */
-//	public double getLengthLf()
-//	{
-//		double Kd = getMap().getPhysicalLink(getPhysicalLinkId()).getKd();
-//		return getLengthLt() * Kd;
-//	}
-
-	/**
-	 * получить дистанцию от узла до точки
-	 */
-//	public double getLength(MapNodeElement mne, Point point)
-//	{
-//		MapCoordinatesConverter converter = getMap().getConverter();
-//
-//		Point2D.Double from = converter.convertScreenToMap(point);
-//		Point2D.Double to = new Point2D.Double(mne.getAnchor().x, mne.getAnchor().y);
-//
-//		return converter.distance(from, to);
-//	}
-
-	/**
-	 * получить строительную дистанцию от узла до точки
-	 */
-//	public double getLengthLf(MapNodeElement mne, Point point)
-//	{
-//		double Kd = getMap().getPhysicalLink(getPhysicalLinkId()).getKd();
-//		return getLength(mne, point) * Kd;
-//	}
-
-	/**
 	 * установить дистанцию от противоположного узла
 	 */
 	public void setSizeFrom(MapNodeElement node, double dist)
 	{
-		MapNodeElement oppositeNode = (startNode.equals(node)) ? endNode : startNode;
+		MapNodeElement oppositeNode = 
+			(startNode.equals(node)) 
+					? endNode 
+					: startNode;
 
 		double prevDist = getLengthLt();
 		
 		double coef = dist / prevDist;
 
-		double absc = coef * (node.getAnchor().x - oppositeNode.getAnchor().x) + oppositeNode.getAnchor().x;
-		double ordi = coef * (node.getAnchor().y - oppositeNode.getAnchor().y) + oppositeNode.getAnchor().y;
+		double absc = coef * (node.getAnchor().x - oppositeNode.getAnchor().x) 
+				+ oppositeNode.getAnchor().x;
+		double ordi = coef * (node.getAnchor().y - oppositeNode.getAnchor().y) 
+				+ oppositeNode.getAnchor().y;
 
 		node.setAnchor(new Point2D.Double(absc, ordi));
 		
@@ -660,6 +593,49 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		updateLengthLt();
 	}
 	
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[6][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
+			exportColumns[4][0] = COLUMN_START_NODE_ID;
+			exportColumns[5][0] = COLUMN_END_NODE_ID;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getPhysicalLinkId();
+		exportColumns[4][1] = getStartNode().getId();
+		exportColumns[5][1] = getEndNode().getId();
+		
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
+		else
+		if(field.equals(COLUMN_PHYSICAL_LINK_ID))
+			setPhysicalLinkId(value);
+		else
+		if(field.equals(COLUMN_START_NODE_ID))
+			startNodeId = value;
+		else
+		if(field.equals(COLUMN_END_NODE_ID))
+			endNodeId = value;
+	}
+
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);

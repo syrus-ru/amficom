@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElementState.java,v 1.1 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapNodeElementState.java,v 1.2 2004/10/18 12:43:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/18 12:43:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -37,7 +37,7 @@ public class MapNodeElementState extends MapElementState
 	String imageId;
 	Point2D.Double anchor;
 	String optimizerAttribute;
-	java.util.HashMap attributes = new HashMap();
+	java.util.Map attributes = new HashMap();
 	
 	public MapNodeElementState(MapNodeElement mne)
 	{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.9 2004/10/09 13:34:33 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.10 2004/10/18 12:43:13 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -20,8 +20,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/09 13:34:33 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/18 12:43:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -53,7 +53,15 @@ public final class MapLinkProtoElement
 
 	protected long modified;
 	
+	/**
+	 * –азмерность тоннел€.
+	 * ƒл€ тоннел€ обозначает размерность матрицы труб в разрезе,
+	 * дл€ участка коллектора - число полок и мест на полках
+	 */
 	protected Dimension bindingDimension;
+
+	/** им€ класса панели свойств объекта */
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	public MapLinkProtoElement(
 			String id,
@@ -143,16 +151,6 @@ public final class MapLinkProtoElement
 		throw new UnsupportedOperationException();
 	}
 
-	public boolean isMovable()
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	public void move (double deltaX, double deltaY)
-	{
-		throw new UnsupportedOperationException();
-	}
-
 	public String getToolTipText()
 	{
 		return "proto " + this.getName();
@@ -163,8 +161,6 @@ public final class MapLinkProtoElement
 		throw new UnsupportedOperationException();
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
@@ -172,7 +168,7 @@ public final class MapLinkProtoElement
 	
 	public Object clone(DataSourceInterface dataSource)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
@@ -210,11 +206,12 @@ public final class MapLinkProtoElement
 
 	public String[][] getExportColumns()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public void setColumn(String field, String value)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 }
