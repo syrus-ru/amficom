@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalItem.java,v 1.10 2005/04/01 08:37:09 max Exp $
+ * $Id: LogicalItem.java,v 1.11 2005/04/06 11:54:09 max Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/01 08:37:09 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/06 11:54:09 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -155,13 +155,6 @@ public class LogicalItem extends AbstractItem {
 //		return this.parents;
 //	}
 
-	public void removeChild(Item childItem) {
-		System.out.println("LogicalItem.removeChild | this.name: " + this.name
-				+ "\n\t name: " + childItem.getName());
-		if (this.children != null) {
-			this.children.remove(childItem);
-		}
-
 //		Collection parents1 = childItem.getParents();
 //		if (parents1 != null && parents1.contains(this))
 //			childItem.removeParent(this);
@@ -170,7 +163,7 @@ public class LogicalItem extends AbstractItem {
 //			this.listener[i].removeChildPerformed(this, childItem);
 //		}
 
-	}
+
 
 //	public void removeParent(Item parent) {
 //		System.out.println("LogicalItem.removeParent | this.name: " + this.name
