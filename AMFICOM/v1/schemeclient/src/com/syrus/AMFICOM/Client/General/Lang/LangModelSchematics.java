@@ -8,9 +8,10 @@ import java.util.MissingResourceException;
 
 public class LangModelSchematics
 {
-	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.schematics";
-	private static final ResourceBundle	RESOURCE_BUNDLE		= ResourceBundle
-																	.getBundle(BUNDLE_NAME);
+	private static final String BUNDLE_NAME =
+		"com.syrus.AMFICOM.Client.General.Lang.schematics";
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
+		.getBundle(BUNDLE_NAME);
 
 	static public Locale locale;
 	static public String language;

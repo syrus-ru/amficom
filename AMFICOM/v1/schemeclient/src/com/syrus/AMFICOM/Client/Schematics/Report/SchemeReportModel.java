@@ -3,12 +3,10 @@ package com.syrus.AMFICOM.Client.Schematics.Report;
 import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
-import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
+import com.syrus.AMFICOM.Client.General.Report.*;
 
 import com.syrus.AMFICOM.Client.General.Scheme.SchemePanelNoEdition;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
@@ -27,7 +25,8 @@ public class SchemeReportModel extends APOReportModel
 {
 	public String getName() {return "schemereportmodel";}
 
-	public static String scheme = "label_scheme";
+	public static String scheme = "schemeMainTitle";
+	public static String ugo = "elementsUGOTitle";
 
 	public String getObjectsName()
 	{
@@ -36,7 +35,7 @@ public class SchemeReportModel extends APOReportModel
 
 	public String getReportsName(ObjectsReport rp)
 	{
-		String return_value = this.getObjectsName() + ":" + LangModelReport.getString(rp.field);
+		String return_value = this.getObjectsName() + ":" + LangModelSchematics.getString(rp.field);
 		if (rp.reserveName != null)
 			return_value += rp.reserveName;
 
@@ -45,7 +44,7 @@ public class SchemeReportModel extends APOReportModel
 
 	public String getLangForField(String field)
 	{
-		return LangModelReport.getString(field);
+		return LangModelSchematics.getString(field);
 	}
 
 	public String getReportsReserveName(ObjectsReport rp)
@@ -65,6 +64,7 @@ public class SchemeReportModel extends APOReportModel
 		Vector result = new Vector();
 
 		result.add(SchemeReportModel.scheme);
+		result.add(SchemeReportModel.ugo);
 
 		return result;
 	}
@@ -101,16 +101,26 @@ public class SchemeReportModel extends APOReportModel
 	{
 		JComponent returnValue = null;
 
-		if (rp.field.equals(SchemeReportModel.scheme))
+		if (   rp.field.equals(SchemeReportModel.scheme)
+			 || rp.field.equals(SchemeReportModel.ugo))
 		{
-			SchemePanelNoEdition schemePanel = new SchemePanelNoEdition(aContext);
-			Scheme sc = (Scheme) Pool.get(Scheme.typ,(String) rp.getReserve());
-			if (sc == null)
-				throw new CreateReportException(
-					rp.getName(),
-					CreateReportException.cantImplement);
+			SchemePanelNoEdition schemePanel = null;
 
-			schemePanel.openScheme(sc);
+			if (rp.getReserve() instanceof AMTReportPanel)
+			{
+				schemePanel = (SchemePanelNoEdition)((AMTReportPanel) rp.getReserve()).panel;
+			}
+			else
+			{
+				schemePanel = new SchemePanelNoEdition(aContext);
+				Scheme sc = (Scheme) Pool.get(Scheme.typ, (String) rp.getReserve());
+				if (sc == null)
+					throw new CreateReportException(
+						rp.getName(),
+						CreateReportException.cantImplement);
+
+				schemePanel.openScheme(sc);
+			}
 
 			SchemeGraph schemeGraph = schemePanel.getGraph();
 			RenderingObject reportsRO = rt.findROforReport(rp);
@@ -121,7 +131,32 @@ public class SchemeReportModel extends APOReportModel
 		return returnValue;
 	}
 
-	public void setData(ReportTemplate rt,Object data)
+	public void setData(ReportTemplate rt, Object data)
 	{
-	};
+		if (rt.templateType.equals(ReportTemplate.rtt_Scheme))
+		{
+			AMTReport aReport = (AMTReport) data;
+			for (int i = 0; i < rt.objectRenderers.size(); i++)
+			{
+				RenderingObject curRenderer = (RenderingObject) rt.objectRenderers.
+					get(i);
+				String itsTableTitle = curRenderer.getReportToRender().field;
+
+				for (int j = 0; j < aReport.panels.size(); j++)
+				{
+					AMTReportPanel curPanel = (AMTReportPanel) aReport.panels.get(j);
+					if (curPanel.title.equals(getLangForField(itsTableTitle)))
+					{
+						try
+						{
+							curRenderer.getReportToRender().setReserve(curPanel);
+						}
+						catch (Exception exc)
+						{}
+						break;
+					}
+				}
+			}
+		}
+	}
 }
