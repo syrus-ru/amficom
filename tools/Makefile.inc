@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.3 2004/07/05 08:35:25 bass Exp $
+# $Id: Makefile.inc,v 1.4 2004/07/06 12:27:44 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -61,7 +61,7 @@ IDL2JAVAFLAGS = \
 	-no_toString
 
 # User may override database connection settings
-USER ?= AMFICOM
+USER = AMFICOM
 PASSWORD ?= amficom
 HOST ?= RESEARCH
 SERVICE_NAME ?= SHAITAN
@@ -80,14 +80,14 @@ SQLJFLAGS = \
 	-checksource=true \
 	-codegen=iso \
 	-compile=true \
-	-compiler-encoding-flag=true \
+	-compiler-encoding-flag=false \
 	-explain=true \
 	-linemap=true \
 	-parse=both \
 	-password "$(PASSWORD)" \
 	-profile=true \
 	-ser2class=true \
-	-status=false \
+	-status=true \
 	-url "jdbc:oracle:oci:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$(HOST))(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=$(SERVICE_NAME))))" \
 	-user "$(USER)" \
 	-warn=all \
