@@ -1,5 +1,5 @@
 /*
- * $Id: HashCodeGenerator.java,v 1.3 2004/08/17 10:02:15 bob Exp $
+ * $Id: HashCodeGenerator.java,v 1.4 2004/08/17 15:03:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,13 @@
 
 package com.syrus.util;
 
+import java.util.Date;
+
 /**
  * HashCodeGenerator methods have got from Effective Java: Programming Language
  * Guide by Joshua Bloch
  * 
- * @version $Revision: 1.3 $, $Date: 2004/08/17 10:02:15 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/17 15:03:17 $
  * @author $Author: bob $
  * @module util
  */
@@ -98,6 +100,17 @@ public class HashCodeGenerator {
 		return this.result;
 	}
 
+	
+	public static boolean equalsDate(final Date date1, final Date date2){
+		return equalsDate(date1,date2, 1000);
+	}
+	
+	public static boolean equalsDate(final Date date1, final Date date2, long tolerance){
+		if (date1==date2)
+			return true;
+		return (Math.abs(date1.getTime()-date2.getTime())<tolerance);
+	}
+	
 	public static boolean equalsArray(final Object[] array1, final Object[] array2) {
 		if (array1 == array2)
 			return true;
