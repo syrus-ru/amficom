@@ -1,5 +1,5 @@
 /*
- * $Id: configuration-vt.idl,v 1.1 2004/11/24 08:43:47 bob Exp $
+ * $Id: configuration-vt.idl,v 1.2 2004/12/06 09:55:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,14 +17,13 @@ module com {
 			module configuration {
 				module corba {
 
-				abstract valuetype DomainMember {
-					attribute general::corba::Identifier domaiId;
-				};
-	
+					abstract valuetype DomainMember {
+						attribute general::corba::Identifier domainId;
+					};
+
 				};
 			};
 		};
 	};
 };
 #endif // CONFIGURATION_VT_IDL
-	
