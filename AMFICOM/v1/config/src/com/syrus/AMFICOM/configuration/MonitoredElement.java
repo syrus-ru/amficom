@@ -11,7 +11,9 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 
 public class MonitoredElement extends DomainMember {
-	private Element element;
+/**
+ * @todo MonitoredElement - interface for Path, KIS, Link etc
+ * */
 	private Identifier kis_id;
 	private String local_address;
 

@@ -72,14 +72,16 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 .mach:	.corba $(CLASSDIR)
-	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
+	$(JAVAC) $(JAVAC_FLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainMember.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characteristic.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java
 	touch $@
 
 .corba:	$(CLASSDIR)
