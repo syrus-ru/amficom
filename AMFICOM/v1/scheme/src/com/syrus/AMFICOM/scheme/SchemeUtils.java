@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.14 2005/03/24 16:58:52 bass Exp $
+ * $Id: SchemeUtils.java,v 1.15 2005/03/25 13:24:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
  * Functionality will be partially moved to {@link PathElement}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/03/24 16:58:52 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/25 13:24:52 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -171,7 +171,7 @@ public class SchemeUtils {
 	public static Collection getTopologicalPaths(Scheme scheme)
 	{
 		HashSet ht = new HashSet();
-		ht.addAll(Arrays.asList(scheme.getCurrentSchemeMonitoringSolution().schemePaths()));
+		ht.addAll(Arrays.asList(scheme.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray()));
 
 		for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
 			SchemeElement el = scheme.getSchemeElementsAsArray()[i];

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThread.java,v 1.5 2005/03/25 10:15:12 bass Exp $ Copyright ¿
+ * $Id: SchemeCableThread.java,v 1.6 2005/03/25 13:24:52 bass Exp $ Copyright ¿
  * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
@@ -12,7 +12,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/25 10:15:12 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/25 13:24:52 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -98,12 +98,11 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	/**
 	 * @param schemeDevice
-	 * @see SchemeCableThread#getSchemePort(SchemeDevice)
 	 */
 	public SchemePort getSchemePort(final SchemeDevice schemeDevice) {
 		assert schemeDevice != null;
-		final SchemePort sourceSchemePort = sourceSchemePort();
-		final SchemePort targetSchemePort = targetSchemePort();
+		final SchemePort sourceSchemePort = getSourceSchemePort();
+		final SchemePort targetSchemePort = getTargetSchemePort();
 		final Identifier sourceSchemeDeviceId = sourceSchemePort
 				.getParentSchemeDevice().getId();
 		final Identifier targetSchemeDeviceId = targetSchemePort
@@ -132,7 +131,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	/**
 	 * @param newSchemeCablelink
-	 * @see com.syrus.AMFICOM.scheme.SchemeCableThread#schemeCablelink(com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
+	 * @see com.syrus.AMFICOM.scheme.SchemeCableThread#schemeCablelink(com.syrus.AMFICOM.scheme.SchemeCableLink)
 	 */
 	public void schemeCablelink(SchemeCableLink newSchemeCablelink) {
 		throw new UnsupportedOperationException();
@@ -165,33 +164,19 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see SchemeCableThread#sourceSchemePort()
-	 */
-	public SchemePort sourceSchemePort() {
+	public SchemePort getSourceSchemePort() {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param sourceSchemePort
-	 * @see SchemeCableThread#sourceSchemePort(SchemePort)
-	 */
-	public void sourceSchemePort(final SchemePort sourceSchemePort) {
+	public void setSourceSchemePort(final SchemePort sourceSchemePort) {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see SchemeCableThread#targetSchemePort()
-	 */
-	public SchemePort targetSchemePort() {
+	public SchemePort getTargetSchemePort() {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param targetSchemePort
-	 * @see SchemeCableThread#targetSchemePort(SchemePort)
-	 */
-	public void targetSchemePort(final SchemePort targetSchemePort) {
+	public void setTargetSchemePort(final SchemePort targetSchemePort) {
 		throw new UnsupportedOperationException();
 	}
 

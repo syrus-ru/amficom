@@ -1,7 +1,7 @@
-/*
- * $Id: AbstractSchemeLink.java,v 1.2 2005/03/17 09:40:22 bass Exp $
+/*-
+ * $Id: AbstractSchemeLink.java,v 1.3 2005/03/25 13:24:52 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -18,7 +18,7 @@ import java.util.Date;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/25 13:24:52 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -117,15 +117,13 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	public abstract void physicalLength(double newPhysicalLength);
 
-	public abstract AbstractSchemePort sourceAbstractSchemePort();
+	public abstract AbstractSchemePort getSourceAbstractSchemePort();
 
-	public abstract void sourceAbstractSchemePort(
-			AbstractSchemePort newSourceAbstractSchemePort);
+	public abstract void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort);
 
-	public abstract AbstractSchemePort targetAbstractSchemePort();
+	public abstract AbstractSchemePort getTargetAbstractSchemePort();
 
-	public abstract void targetAbstractSchemePort(
-			AbstractSchemePort newTargetAbstractSchemePort);
+	public abstract void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort);
 
 	public abstract AbstractLinkType getAbstractLinkType();
 	

@@ -1,7 +1,7 @@
-/*
- * $Id: SchemeCableLink.java,v 1.4 2005/03/23 14:55:35 bass Exp $
+/*-
+ * $Id: SchemeCableLink.java,v 1.5 2005/03/25 13:24:52 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -14,8 +14,10 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
+ * #11 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/23 14:55:35 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/25 13:24:52 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -46,12 +48,29 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	public AbstractLinkType getAbstractLinkType() {
+	/**
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 */
+	public static SchemeCableLink createInstance() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
-		throw new UnsupportedOperationException();
+	public static SchemeCableLink createInstance(final Identifier creatorId)
+			throws CreateObjectException {
+		assert creatorId != null;
+		try {
+			final Date created = new Date();
+			final SchemeCableLink schemeCableLink = new SchemeCableLink(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L);
+			schemeCableLink.changed = true;
+			return schemeCableLink;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeCableLink.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
 	}
 
 	public CableChannelingItem[] cableChannelingItems() {
@@ -60,18 +79,27 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 
 	/**
 	 * @param newCableChannelingItems
-	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#cableChannelingItems(com.syrus.AMFICOM.scheme.corba.CableChannelingItem[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#cableChannelingItems(com.syrus.AMFICOM.scheme.CableChannelingItem[])
 	 */
 	public void cableChannelingItems(
 			CableChannelingItem[] newCableChannelingItems) {
 		throw new UnsupportedOperationException();
 	}
 
-	public CableLinkType getCableLinkType() {
+	public Object clone() {
+		final SchemeCableLink schemeCableLink = (SchemeCableLink) super
+				.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeCableLink;
+	}
+
+	public AbstractLinkType getAbstractLinkType() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setCableLinkType(final CableLinkType cableLinkType) {
+	public CableLinkType getCableLinkType() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -94,9 +122,31 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @param newLinkImpl
+	 * @see AbstractSchemeLink#getSourceAbstractSchemePort()
 	 */
-	public void setLink(Link newLinkImpl) {
+	public AbstractSchemePort getSourceAbstractSchemePort() {
+		return getSourceSchemeCablePort();
+	}
+
+	public SchemeCablePort getSourceSchemeCablePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see AbstractSchemeLink#getTargetAbstractSchemePort()
+	 */
+	public AbstractSchemePort getTargetAbstractSchemePort() {
+		return getTargetSchemeCablePort();
+	}
+
+	public SchemeCablePort getTargetSchemeCablePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -122,102 +172,48 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 
 	/**
 	 * @param newSchemeCableThreads
-	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#schemeCableThreads(com.syrus.AMFICOM.scheme.corba.SchemeCableThread[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#schemeCableThreads(com.syrus.AMFICOM.scheme.SchemeCableThread[])
 	 */
 	public void schemeCableThreads(SchemeCableThread[] newSchemeCableThreads) {
 		throw new UnsupportedOperationException();
 	}
 
-	public AbstractSchemePort sourceAbstractSchemePort() {
+	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setCableLinkType(final CableLinkType cableLinkType) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newSourceAbstractSchemePort
-	 * @see com.syrus.AMFICOM.scheme.AbstractSchemeLink#sourceAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
+	 * @param newLinkImpl
 	 */
-	public void sourceAbstractSchemePort(
-			AbstractSchemePort newSourceAbstractSchemePort) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeCablePort sourceSchemeCablePort() {
+	public void setLink(Link newLinkImpl) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newSourceSchemeCablePort
-	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#sourceSchemeCablePort(com.syrus.AMFICOM.scheme.corba.SchemeCablePort)
+	 * @param sourceAbstractSchemePort
+	 * @see AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)
 	 */
-	public void sourceSchemeCablePort(
-			SchemeCablePort newSourceSchemeCablePort) {
-		throw new UnsupportedOperationException();
+	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
+		setSourceSchemeCablePort((SchemeCablePort) sourceAbstractSchemePort);
 	}
 
-	public AbstractSchemePort targetAbstractSchemePort() {
+	public void setSourceSchemeCablePort(final SchemeCablePort sourceSchemeCablePort) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newTargetAbstractSchemePort
-	 * @see com.syrus.AMFICOM.scheme.AbstractSchemeLink#targetAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
+	 * @param targetAbstractSchemePort
+	 * @see AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)
 	 */
-	public void targetAbstractSchemePort(
-			AbstractSchemePort newTargetAbstractSchemePort) {
-		throw new UnsupportedOperationException();
+	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
+		setTargetSchemeCablePort((SchemeCablePort) targetAbstractSchemePort);
 	}
 
-	public SchemeCablePort targetSchemeCablePort() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newTargetSchemeCablePort
-	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#targetSchemeCablePort(com.syrus.AMFICOM.scheme.corba.SchemeCablePort)
-	 */
-	public void targetSchemeCablePort(
-			SchemeCablePort newTargetSchemeCablePort) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Object clone() {
-		final SchemeCableLink schemeCableLink = (SchemeCableLink) super
-				.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeCableLink;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
-	 */
-	public Object getTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public static SchemeCableLink createInstance(final Identifier creatorId)
-			throws CreateObjectException {
-		assert creatorId != null;
-		try {
-			final Date created = new Date();
-			final SchemeCableLink schemeCableLink = new SchemeCableLink(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L);
-			schemeCableLink.changed = true;
-			return schemeCableLink;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeCableLink.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemeCableLink createInstance() {
+	public void setTargetSchemeCablePort(final SchemeCablePort targetSchemeCablePort) {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePath.java,v 1.4 2005/03/17 18:17:27 bass Exp $ Copyright ¿ 2004
+ * $Id: SchemePath.java,v 1.5 2005/03/25 13:24:52 bass Exp $ Copyright ¿ 2004
  * Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
@@ -12,7 +12,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/25 13:24:52 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -80,7 +80,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	/**
 	 * @param newEndDevice
-	 * @see com.syrus.AMFICOM.scheme.SchemePath#endDevice(com.syrus.AMFICOM.scheme.corba.SchemeElement)
+	 * @see com.syrus.AMFICOM.scheme.SchemePath#endDevice(com.syrus.AMFICOM.scheme.SchemeElement)
 	 */
 	public void endDevice(SchemeElement newEndDevice) {
 		throw new UnsupportedOperationException();
@@ -113,7 +113,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	/**
 	 * @param newLinks
-	 * @see com.syrus.AMFICOM.scheme.SchemePath#links(com.syrus.AMFICOM.scheme.corba.PathElement[])
+	 * @see com.syrus.AMFICOM.scheme.SchemePath#links(com.syrus.AMFICOM.scheme.PathElement[])
 	 */
 	public void links(PathElement[] newLinks) {
 		throw new UnsupportedOperationException();
@@ -175,7 +175,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	/**
 	 * @param newStartDevice
-	 * @see com.syrus.AMFICOM.scheme.SchemePath#startDevice(com.syrus.AMFICOM.scheme.corba.SchemeElement)
+	 * @see com.syrus.AMFICOM.scheme.SchemePath#startDevice(com.syrus.AMFICOM.scheme.SchemeElement)
 	 */
 	public void startDevice(SchemeElement newStartDevice) {
 		throw new UnsupportedOperationException();

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.4 2005/03/25 10:15:12 bass Exp $
+ * $Id: SchemePort.java,v 1.5 2005/03/25 13:24:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,14 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
+ * #08 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/25 10:15:12 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/25 13:24:52 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
 	private static final long serialVersionUID = 3256436993469658930L;
-
-	protected Identifier schemeCableThreadId = null;
 
 	/**
 	 * @param id
@@ -106,7 +106,7 @@ public final class SchemePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @see TransferableObject#getTransferable()
 	 */
 	public Object getTransferable() {
 		throw new UnsupportedOperationException();
@@ -115,7 +115,12 @@ public final class SchemePort extends AbstractSchemePort {
 	/**
 	 * @param abstractSchemeLink
 	 * @see AbstractSchemePort#setAbstractSchemeLink(AbstractSchemeLink)
-	 * @deprecated
+	 * @deprecated Use one of:
+	 *             <ul><li>{@link AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)};</li>
+	 *             <li>{@link AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)};</li>
+	 *             <li>{@link SchemeLink#setSourceSchemePort(SchemePort)};</li>
+	 *             <li>{@link SchemeLink#setTargetSchemePort(SchemePort)}</li></ul>
+	 *             -- instead.
 	 */
 	public void setAbstractSchemeLink(final AbstractSchemeLink abstractSchemeLink) {
 		setSchemeLink((SchemeLink) abstractSchemeLink);
@@ -123,7 +128,10 @@ public final class SchemePort extends AbstractSchemePort {
 
 	/**
 	 * @param schemeCableThread
-	 * @deprecated
+	 * @deprecated Use one of:
+	 *             <ul><li>{@link SchemeCableThread#setSourceSchemePort(SchemePort)};</li>
+	 *             <li>{@link SchemeCableThread#setTargetSchemePort(SchemePort)}</li></ul>
+	 *             -- instead.
 	 */
 	public void setSchemeCableThread(final SchemeCableThread schemeCableThread) {
 		throw new UnsupportedOperationException();
@@ -131,7 +139,10 @@ public final class SchemePort extends AbstractSchemePort {
 
 	/**
 	 * @param schemeLink
-	 * @deprecated
+	 * @deprecated Use one of:
+	 *             <ul><li>{@link SchemeLink#setSourceSchemePort(SchemePort)};</li>
+	 *             <li>{@link SchemeLink#setTargetSchemePort(SchemePort)}</li></ul>
+	 *             -- instead.
 	 */
 	public void setSchemeLink(final SchemeLink schemeLink) {
 		throw new UnsupportedOperationException();

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.9 2005/03/18 19:21:26 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.10 2005/03/25 13:24:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,12 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/18 19:21:26 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/25 13:24:52 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -96,7 +95,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 	/**
 	 * @param id
-	 * @see com.syrus.AMFICOM.general.VtStorableObjectPool#deleteStorableObject(com.syrus.AMFICOM.general.Identifier)
 	 */
 	protected void deleteStorableObject(Identifier id) {
 		throw new UnsupportedOperationException();
@@ -115,7 +113,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param ids
 	 * @throws DatabaseException
 	 * @throws CommunicationException
-	 * @see com.syrus.AMFICOM.general.VtStorableObjectPool#deleteStorableObjects(java.util.List)
 	 */
 	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
 		throw new UnsupportedOperationException();
@@ -125,7 +122,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param objectId
 	 * @throws DatabaseException
 	 * @throws CommunicationException
-	 * @see com.syrus.AMFICOM.general.VtStorableObjectPool#loadStorableObject(com.syrus.AMFICOM.general.Identifier)
 	 */
 	protected com.syrus.AMFICOM.general.StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		throw new UnsupportedOperationException();
@@ -146,7 +142,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param ids
 	 * @throws DatabaseException
 	 * @throws CommunicationException
-	 * @see com.syrus.AMFICOM.general.VtStorableObjectPool#loadStorableObjects(java.lang.Short, java.util.List)
 	 */
 	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
 		throw new UnsupportedOperationException();
@@ -167,7 +162,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param ids
 	 * @throws DatabaseException
 	 * @throws CommunicationException
-	 * @see com.syrus.AMFICOM.general.VtStorableObjectPool#loadStorableObjectsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
 	 */
 	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 		throw new UnsupportedOperationException();
@@ -177,7 +171,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param storableObjects
 	 * @throws CommunicationException
 	 * @throws DatabaseException
-	 * @see com.syrus.AMFICOM.general.VtStorableObjectPool#refreshStorableObjects(java.util.Set)
 	 */
 	protected Set refreshStorableObjects(Set storableObjects) throws CommunicationException, DatabaseException {
 		throw new UnsupportedOperationException();

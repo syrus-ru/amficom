@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.6 2005/03/25 10:15:12 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.7 2005/03/25 13:24:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,24 +15,20 @@ import java.util.*;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/25 10:15:12 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/25 13:24:52 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
 		AbstractCloneableStorableObject implements Describable {
 	private static final long serialVersionUID = 3906364939487949361L;
 
-	protected Identifier schemeId = null;
-
-	protected Identifier schemePathIds[] = null;
-
-	protected double thisPrice = 0;
-
 	private String description;
 
 	private String name;
 
 	private Identifier parentSchemeOptimizeInfoId;
+
+	private double price;
 
 	/**
 	 * @param id
@@ -74,6 +70,10 @@ public final class SchemeMonitoringSolution extends
 		}
 	}
 
+	public void addSchemePath(final SchemePath schemePath) {
+		throw new UnsupportedOperationException();
+	}
+
 	public Object clone() {
 		final SchemeMonitoringSolution schemeMonitoringSolution = (SchemeMonitoringSolution) super
 				.clone();
@@ -110,46 +110,29 @@ public final class SchemeMonitoringSolution extends
 		throw new UnsupportedOperationException();
 	}
 
+	public double getPrice() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemePaths() {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @deprecated
+	 */
+	public SchemePath[] getSchemePathsAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see TransferableObject#getTransferable()
 	 */
 	public Object getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
-	public double price() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newPrice
-	 * @see com.syrus.AMFICOM.scheme.SchemeMonitoringSolution#price(double)
-	 */
-	public void price(double newPrice) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Scheme scheme() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newScheme
-	 * @see com.syrus.AMFICOM.scheme.SchemeMonitoringSolution#setParentScheme(com.syrus.AMFICOM.scheme.corba.Scheme)
-	 */
-	public void scheme(Scheme newScheme) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemePath[] schemePaths() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSchemePaths
-	 * @see com.syrus.AMFICOM.scheme.SchemeMonitoringSolution#schemePaths(com.syrus.AMFICOM.scheme.corba.SchemePath[])
-	 */
-	public void schemePaths(SchemePath[] newSchemePaths) {
+	public void removeSchemePath(final SchemePath schemePath) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -178,6 +161,21 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setPrice(double price) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemePaths(final Collection schemePaths) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public void setSchemePathsAsArray(final SchemePath schemePaths[]) {
 		throw new UnsupportedOperationException();
 	}
 }

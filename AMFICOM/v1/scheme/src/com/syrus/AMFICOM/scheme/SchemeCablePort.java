@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.4 2005/03/25 10:15:12 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.5 2005/03/25 13:24:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,10 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
+ * #09 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/25 10:15:12 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/25 13:24:52 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -42,55 +44,9 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @see AbstractSchemePort#getAbstractSchemeLink()
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
 	 */
-	public AbstractSchemeLink getAbstractSchemeLink() {
-		return getSchemeCableLink();
-	}
-
-	/**
-	 * @param abstractSchemeLink
-	 * @see AbstractSchemePort#setAbstractSchemeLink(AbstractSchemeLink)
-	 */
-	public void setAbstractSchemeLink(final AbstractSchemeLink abstractSchemeLink) {
-		setSchemeCableLink((SchemeCableLink) abstractSchemeLink);
-	}
-
-	/**
-	 * @see Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLEPORT;
-	}
-
-	/**
-	 * @see StorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeCableLink getSchemeCableLink() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setSchemeCableLink(final SchemeCableLink schemeCableLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Object clone() {
-		final SchemeCablePort schemeCablePort = (SchemeCablePort) super
-				.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeCablePort;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
-	 */
-	public Object getTransferable() {
+	public static SchemeCablePort createInstance() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -113,10 +69,69 @@ public final class SchemeCablePort extends AbstractSchemePort {
 		}
 	}
 
+	public Object clone() {
+		final SchemeCablePort schemeCablePort = (SchemeCablePort) super
+				.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeCablePort;
+	}
+
 	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 * @see AbstractSchemePort#getAbstractSchemeLink()
 	 */
-	public static SchemeCablePort createInstance() {
+	public AbstractSchemeLink getAbstractSchemeLink() {
+		return getSchemeCableLink();
+	}
+
+	/**
+	 * @see Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLEPORT;
+	}
+
+	/**
+	 * @see StorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	public SchemeCableLink getSchemeCableLink() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param abstractSchemeLink
+	 * @see AbstractSchemePort#setAbstractSchemeLink(AbstractSchemeLink)
+	 * @deprecated Use one of:
+	 *             <ul><li>{@link AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)};</li>
+	 *             <li>{@link AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)};</li>
+	 *             <li>{@link SchemeCableLink#setSourceSchemeCablePort(SchemeCablePort)};</li>
+	 *             <li>{@link SchemeCableLink#setTargetSchemeCablePort(SchemeCablePort)}</li></ul>
+	 *             -- instead.
+	 */
+	public void setAbstractSchemeLink(final AbstractSchemeLink abstractSchemeLink) {
+		setSchemeCableLink((SchemeCableLink) abstractSchemeLink);
+	}
+
+	/**
+	 * @param schemeCableLink
+	 * @deprecated Use one of:
+	 *             <ul><li>{@link SchemeCableLink#setSourceSchemeCablePort(SchemeCablePort)};</li>
+	 *             <li>{@link SchemeCableLink#setTargetSchemeCablePort(SchemeCablePort)}</li></ul>
+	 *             -- instead.
+	 */
+	public void setSchemeCableLink(final SchemeCableLink schemeCableLink) {
 		throw new UnsupportedOperationException();
 	}
 }

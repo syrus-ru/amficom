@@ -1,7 +1,7 @@
-/*
- * $Id: SchemeLink.java,v 1.5 2005/03/23 14:55:35 bass Exp $
+/*-
+ * $Id: SchemeLink.java,v 1.6 2005/03/25 13:24:52 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -15,8 +15,10 @@ import com.syrus.AMFICOM.map.SiteNode;
 import java.util.*;
 
 /**
+ * #10 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/23 14:55:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/25 13:24:52 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -45,140 +47,10 @@ public final class SchemeLink extends AbstractSchemeLink {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	public AbstractLinkType getAbstractLinkType() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @param newAbstractLinkTypeImpl
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
 	 */
-	public void setAbstractLinkType(
-			AbstractLinkType newAbstractLinkTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMELINK;
-	}
-
-	/**
-	 * @see StorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Link getLink() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newLinkImpl
-	 */
-	public void setLink(Link newLinkImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public LinkType getLinkType() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newLinkTypeImpl
-	 */
-	public void setLinkType(LinkType newLinkTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double opticalLength() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void opticalLength(double opticalLength) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double physicalLength() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void physicalLength(double physicalLength) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SiteNode getSiteNode() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setSiteNode(final SiteNode siteNode) {
-		throw new UnsupportedOperationException();
-	}
-
-	public AbstractSchemePort sourceAbstractSchemePort() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSourceAbstractSchemePort
-	 * @see com.syrus.AMFICOM.scheme.AbstractSchemeLink#sourceAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
-	 */
-	public void sourceAbstractSchemePort(
-			AbstractSchemePort newSourceAbstractSchemePort) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemePort sourceSchemePort() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSourceSchemePort
-	 * @see com.syrus.AMFICOM.scheme.SchemeLink#sourceSchemePort(com.syrus.AMFICOM.scheme.corba.SchemePort)
-	 */
-	public void sourceSchemePort(SchemePort newSourceSchemePort) {
-		throw new UnsupportedOperationException();
-	}
-
-	public AbstractSchemePort targetAbstractSchemePort() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newTargetAbstractSchemePort
-	 * @see com.syrus.AMFICOM.scheme.AbstractSchemeLink#targetAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
-	 */
-	public void targetAbstractSchemePort(
-			AbstractSchemePort newTargetAbstractSchemePort) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemePort targetSchemePort() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newTargetSchemePort
-	 * @see com.syrus.AMFICOM.scheme.SchemeLink#targetSchemePort(com.syrus.AMFICOM.scheme.corba.SchemePort)
-	 */
-	public void targetSchemePort(SchemePort newTargetSchemePort) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Object clone() {
-		final SchemeLink schemeLink = (SchemeLink) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeLink;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
-	 */
-	public Object getTransferable() {
+	public static SchemeLink createInstance() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -200,10 +72,136 @@ public final class SchemeLink extends AbstractSchemeLink {
 		}
 	}
 
+	public Object clone() {
+		final SchemeLink schemeLink = (SchemeLink) super.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeLink;
+	}
+
+	public AbstractLinkType getAbstractLinkType() {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 * @see Characterizable#getCharacteristicSort()
 	 */
-	public static SchemeLink createInstance() {
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMELINK;
+	}
+
+	/**
+	 * @see StorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Link getLink() {
+		throw new UnsupportedOperationException();
+	}
+
+	public LinkType getLinkType() {
+		throw new UnsupportedOperationException();
+	}
+
+	public SiteNode getSiteNode() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see AbstractSchemeLink#getSourceAbstractSchemePort()
+	 */
+	public AbstractSchemePort getSourceAbstractSchemePort() {
+		return getSourceSchemePort();
+	}
+
+	public SchemePort getSourceSchemePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see AbstractSchemeLink#getTargetAbstractSchemePort()
+	 */
+	public AbstractSchemePort getTargetAbstractSchemePort() {
+		return getTargetSchemePort();
+	}
+
+	public SchemePort getTargetSchemePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double opticalLength() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void opticalLength(double opticalLength) {
+		throw new UnsupportedOperationException();
+	}
+
+	public double physicalLength() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void physicalLength(double physicalLength) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newAbstractLinkTypeImpl
+	 */
+	public void setAbstractLinkType(
+			AbstractLinkType newAbstractLinkTypeImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newLinkImpl
+	 */
+	public void setLink(Link newLinkImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newLinkTypeImpl
+	 */
+	public void setLinkType(LinkType newLinkTypeImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSiteNode(final SiteNode siteNode) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param sourceAbstractSchemePort
+	 * @see AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)
+	 */
+	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
+		setSourceSchemePort((SchemePort) sourceAbstractSchemePort);
+	}
+
+	public void setSourceSchemePort(final SchemePort sourceSchemePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param targetAbstractSchemePort
+	 * @see AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)
+	 */
+	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
+		setTargetSchemePort((SchemePort) targetAbstractSchemePort);
+	}
+
+	public void setTargetSchemePort(final SchemePort targetSchemePort) {
 		throw new UnsupportedOperationException();
 	}
 }
