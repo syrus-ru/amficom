@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementsLayeredPanel.java,v 1.5 2005/03/28 14:08:26 bob Exp $
+ * $Id: PathElementsLayeredPanel.java,v 1.6 2005/03/29 13:39:07 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,14 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Map;
 
 import javax.swing.JToggleButton;
-import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/28 14:08:26 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/29 13:39:07 $
  * @author $Author: bob $
  * @module analysis_v1
  */
@@ -74,7 +68,8 @@ class PathElementsToolBar extends AnalysisToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		EX, DX, EY, DY, FIX, SEPARATOR, loss, ref, noana, SEPARATOR, cA, cB, SEPARATOR, events, modeled, SEPARATOR, pe
+		EX, DX, EY, DY, FIX, SEPARATOR, loss, ref, noana, SEPARATOR, cA, cB, SEPARATOR, events, modeled, SEPARATOR
+		//, pe
 	};
 
 	public PathElementsToolBar (PathElementsLayeredPanel panel)
@@ -91,29 +86,29 @@ class PathElementsToolBar extends AnalysisToolBar
 	{
 		Map buttons = super.createGraphButtons();
 
-		buttons.put(
-				pe,
-				createToolButton(
-				pathElementsTButton,
-				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
-				null,
-				LangModelAnalyse.getString("lossanalyse"),
-				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_LOSS),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						pathElementsTButton_actionPerformed(e);
-					}
-				},
-				true));
-
+//		buttons.put(
+//				pe,
+//				createToolButton(
+//				pathElementsTButton,
+//				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
+//				null,
+//				LangModelAnalyse.getString("lossanalyse"),
+//				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_LOSS),
+//				new ActionListener()
+//				{
+//					public void actionPerformed(ActionEvent e)
+//					{
+//						pathElementsTButton_actionPerformed(e);
+//					}
+//				},
+//				true));
+//
 		return buttons;
 	}
 
-	void pathElementsTButton_actionPerformed(ActionEvent e)
-	{
-		PathElementsLayeredPanel panel = (PathElementsLayeredPanel)super.panel;
-		panel.showPathElements(pathElementsTButton.isSelected());
-	}
+//	void pathElementsTButton_actionPerformed(ActionEvent e)
+//	{
+//		PathElementsLayeredPanel panel = (PathElementsLayeredPanel)super.panel;
+//		panel.showPathElements(pathElementsTButton.isSelected());
+//	}
 }
