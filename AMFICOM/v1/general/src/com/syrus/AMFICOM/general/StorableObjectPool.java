@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.39 2005/03/04 13:29:36 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.40 2005/03/16 16:49:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/03/04 13:29:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/03/16 16:49:28 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -104,13 +104,7 @@ public abstract class StorableObjectPool {
 
 	}
 
-	/**
-	 * @param entityCode mustn't lie within [SCHEME_MIN_ENTITY_CODE, SCHEME_MAX_ENTITY_CODE]
-	 */
-	protected void cleanChangedStorableObjectImpl(final Short entityCode) {
-		assert (entityCode.shortValue() < ObjectEntities.SCHEME_MIN_ENTITY_CODE)
-			|| (ObjectEntities.SCHEME_MAX_ENTITY_CODE < entityCode.shortValue())
-			: "Invalid storable object pool used...";
+	protected void cleanChangedStorableObjectImpl(final Short entityCode) {		
 
 		short code = entityCode.shortValue();
 		if (this.deletedIds != null) {
