@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.8 2004/12/09 16:47:20 bob Exp $
+ * $Id: Collector.java,v 1.9 2004/12/09 16:51:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/09 16:47:20 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/09 16:51:08 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -144,15 +144,18 @@ public class Collector extends StorableObject implements Characterized {
 
 	public List getCharacteristics() {
 		return Collections.unmodifiableList(this.characteristics);
-	}
-	
-	public void setCharacteristics(final List characteristics) {
+	}	
+
+	protected void setCharacteristics0(final List characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
+	}
+	
+	public void setCharacteristics(final List characteristics) {
+		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
 	}
-
 
 	public String getDescription() {
 		return this.description;
@@ -176,10 +179,14 @@ public class Collector extends StorableObject implements Characterized {
 		return  Collections.unmodifiableList(this.physicalLinks);
 	}
 	
-	public void setPhysicalLinks(List physicalLinks) {
+	protected void setPhysicalLinks0(List physicalLinks) {
 		this.physicalLinks.clear();
 		if (physicalLinks != null)
 			this.physicalLinks.addAll(physicalLinks);
+	}
+	
+	public void setPhysicalLinks(List physicalLinks) {
+		this.setPhysicalLinks0(physicalLinks);
 		super.currentVersion = super.getNextVersion();		
 	}
 	

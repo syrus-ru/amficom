@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.7 2004/12/09 13:52:27 bob Exp $
+ * $Id: PhysicalLink.java,v 1.8 2004/12/09 16:51:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,11 +32,11 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/09 13:52:27 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/09 16:51:08 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class PhysicalLink extends AbstractLink implements TypedObject {
+public class PhysicalLink extends StorableObject implements Characterized, TypedObject {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -207,6 +207,21 @@ public class PhysicalLink extends AbstractLink implements TypedObject {
 		return this.physicalLinkType;
 	}
 	
+	public List getCharacteristics() {
+		return  Collections.unmodifiableList(this.characteristics);
+	}
+	
+	protected void setCharacteristics0(final List characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
+	}
+	
+	public void setCharacteristics(final List characteristics) {
+		this.setCharacteristics0(characteristics);
+		super.currentVersion = super.getNextVersion();
+	}
+
 	public String getBuilding() {
 		return this.building;
 	}
