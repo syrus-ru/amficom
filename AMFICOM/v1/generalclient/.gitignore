@@ -2,7 +2,9 @@ bak
 classes
 *.deploy
 *.jpr
+*.jar
 *.jpx*
 *.swp
 *.tar
 *.gz
+corba
