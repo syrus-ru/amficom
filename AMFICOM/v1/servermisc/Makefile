@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2004/08/20 13:54:21 bass Exp $
+# $Id: Makefile,v 1.9 2004/09/14 08:29:57 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -15,7 +15,6 @@ JIKESFLAGS = -target 1.2
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
 
 .PHONY: export
 export: $(LIBNAME)
@@ -26,7 +25,7 @@ all: .all
 .all: .idl .sqlj
 	$(JAVAC) \
 		$(JAVACFLAGS) \
-		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-classpath $(AMFICOMCLASSPATH)$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ResourcedbInterfaceTestCase.java,v 1.2 2004/09/09 11:32:40 bass Exp $
+ * $Id: ResourcedbInterfaceTestCase.java,v 1.3 2004/09/14 08:29:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,15 @@
 package com.syrus.AMFICOM.server.test;
 
 import com.syrus.AMFICOM.server.*;
-import com.syrus.AMFICOM.server.prefs.JDBCConnectionManager;
+import com.syrus.AMFICOM.server.prefs.JdbcConnectionManager;
 import java.sql.*;
 import java.util.*;
+import javax.sql.DataSource;
 import junit.framework.*;
 
 public class ResourcedbInterfaceTestCase extends TestCase {
+	private static final DataSource DATA_SOURCE = JdbcConnectionManager.getDataSource();
+
 	private static final int FETCH_SIZE = Integer.MAX_VALUE;
 
 	public ResourcedbInterfaceTestCase(String testName) {
@@ -38,13 +41,12 @@ public class ResourcedbInterfaceTestCase extends TestCase {
 //		junit.textui.TestRunner.run(suite);
 	}
 
-	protected void setUp() throws Exception {
-		Class.forName(JDBCConnectionManager.class.getName());
-	}
-
 	public void testGetImage1() throws SQLException {
+		Connection conn = DATA_SOURCE.getConnection();
+		conn.setAutoCommit(false);
 		System.out.println("Fetching an existing image...");
-		assertNotNull(ResourcedbInterface.getImage(JDBCConnectionManager.getConn(), "OTAU_proto"));
+		assertNotNull(ResourcedbInterface.getImage(conn, "OTAU_proto"));
+		conn.close();
 	}
 
 	public void testGetImage2() throws SQLException {
@@ -60,14 +62,18 @@ public class ResourcedbInterfaceTestCase extends TestCase {
 	}
 
 	public void testGetImages1() throws SQLException {
+		Connection conn = DATA_SOURCE.getConnection();
+		conn.setAutoCommit(false);
 		long l = System.currentTimeMillis();
-		Collection imageResources = ResourcedbInterface.getImages(JDBCConnectionManager.getConn(), FETCH_SIZE);
+		Collection imageResources = ResourcedbInterface.getImages(conn, FETCH_SIZE);
 		System.out.println("testGetImages1(): " + ((System.currentTimeMillis() - l) / 1000d) + " second(s)...");
 		System.out.println("testGetImages1(): count: " + imageResources.size());
+		conn.close();
 	}
 
 	public void testGetImages2() throws SQLException {
-		Connection conn = JDBCConnectionManager.getConn();
+		Connection conn = DATA_SOURCE.getConnection();
+		conn.setAutoCommit(false);
 		Statement stmt = conn.createStatement();
 		ResultSet resultSet = stmt.executeQuery("SELECT id FROM amficom.imageresources");
 		Collection imageResourceIds = new LinkedList();
@@ -77,13 +83,15 @@ public class ResourcedbInterfaceTestCase extends TestCase {
 		resultSet.close();
 		stmt.close();
 		long l = System.currentTimeMillis();
-		Collection imageResources = ResourcedbInterface.getImages(JDBCConnectionManager.getConn(), imageResourceIds);
+		Collection imageResources = ResourcedbInterface.getImages(conn, imageResourceIds);
 		System.out.println("testGetImages2(): " + ((System.currentTimeMillis() - l) / 1000d) + " second(s)...");
 		System.out.println("testGetImages2(): count: " + imageResources.size());
+		conn.close();
 	}
 
 	public void testGetImagesStd() throws SQLException {
-		Connection conn = JDBCConnectionManager.getConn();
+		Connection conn = DATA_SOURCE.getConnection();
+		conn.setAutoCommit(false);
 		Statement stmt = conn.createStatement();
 		ResultSet resultSet = stmt.executeQuery("SELECT id FROM amficom.imageresources");
 		Collection imageResourceIds = new LinkedList();
@@ -93,9 +101,10 @@ public class ResourcedbInterfaceTestCase extends TestCase {
 		resultSet.close();
 		stmt.close();
 		long l = System.currentTimeMillis();
-		Collection imageResources = ResourcedbInterface.getImagesStd(JDBCConnectionManager.getConn(), imageResourceIds);
+		Collection imageResources = ResourcedbInterface.getImagesStd(conn, imageResourceIds);
 		System.out.println("testGetImagesStd(): " + ((System.currentTimeMillis() - l) / 1000d) + " second(s)...");
 		System.out.println("testGetImagesStd(): count: " + imageResources.size());
+		conn.close();
 	}
 
 	public void testGetImages() throws SQLException {
