@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.64 2005/03/22 16:13:41 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.65 2005/03/23 13:06:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +55,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/03/22 16:13:41 $
+ * @version $Revision: 1.65 $, $Date: 2005/03/23 13:06:21 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -101,7 +100,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	protected static MCM iAm;
 
 	/*	Identifiers of KISs, attached to me*/
-	protected static Collection kisIds;	//Collection <Identifier kisId>
+	//protected static Collection kisIds;	//Collection <Identifier kisId>
 
 	/*	Scheduled tests transferred from server	*/
 	protected static List testList;	//List <Test>
@@ -157,16 +156,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Retrieve information abot myself*/
 		try {
 			iAm = new MCM(new Identifier(ApplicationProperties.getString(KEY_ID, ID)));
-
-			LinkedIdsCondition lic = new LinkedIdsCondition(iAm.getId(), ObjectEntities.KIS_ENTITY_CODE);
-			Collection kiss = ConfigurationStorableObjectPool.getStorableObjectsByCondition(lic, true);
-			kisIds = new HashSet(kiss.size());
-			Identifier id;
-			for (Iterator it = kiss.iterator(); it.hasNext();) {
-				id = ((KIS) it.next()).getId();
-				Log.debugMessage("Retrieved KIS '" + id + "'", Log.DEBUGLEVEL08);
-				kisIds.add(id);
-			}
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -329,22 +318,25 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	private static void activateKISTransceivers() {
-		transceivers = Collections.synchronizedMap(new HashMap(kisIds.size()));
-		Identifier kisId;
-		Transceiver transceiver;
-		synchronized (kisIds) {
-			for (Iterator it = kisIds.iterator(); it.hasNext();) {
-				kisId = (Identifier) it.next();
-				try {
-					transceiver = new Transceiver((KIS)ConfigurationStorableObjectPool.getStorableObject(kisId, true));
-					transceiver.start();
-					transceivers.put(kisId, transceiver);
-					Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
-				}
-				catch (ApplicationException e) {
-					Log.errorException(e);
-				}
+		try {
+			LinkedIdsCondition lic = new LinkedIdsCondition(iAm.getId(), ObjectEntities.KIS_ENTITY_CODE);
+			Collection kiss = ConfigurationStorableObjectPool.getStorableObjectsByCondition(lic, true);
+
+			transceivers = Collections.synchronizedMap(new HashMap(kiss.size()));
+			KIS kis;
+			Identifier kisId;
+			Transceiver transceiver;
+			for (Iterator it = kiss.iterator(); it.hasNext();) {
+				kis = (KIS) it.next();
+				kisId = kis.getId();
+				transceiver = new Transceiver(kis);
+				transceiver.start();
+				transceivers.put(kisId, transceiver);
+				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
 			}
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
 		}
 	}
 
