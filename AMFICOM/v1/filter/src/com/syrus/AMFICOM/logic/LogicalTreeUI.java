@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.7 2005/03/21 13:04:06 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.8 2005/03/24 08:25:57 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/21 13:04:06 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/24 08:25:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -120,10 +120,13 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		if (this.treeModel == null) {
 			if (this.rootItem == null) {
 				this.rootItem = new ServiceItem("/");
-			}
-			this.treeModel = new ItemTreeModel(this.rootItem);
+				this.treeModel = new ItemTreeModel(this.rootItem);
+				this.rootItem.addChangeListener(this.treeModel.getItemListener());
+			} else 
+				this.treeModel = new ItemTreeModel(this.rootItem);
+			
 		}
-		childItem.addChangeListener(this.treeModel.getItemListener());
+//		childItem.addChangeListener(this.treeModel.getItemListener());
 		this.treeModel.addItem(parentItem == null ? this.rootItem : parentItem, childItem);
 	}
 
@@ -312,6 +315,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		this.rootItem = rootItem;
 		if (this.treeModel == null) {
 			this.treeModel = new ItemTreeModel(this.rootItem);
+			this.rootItem.addChangeListener(this.treeModel.getItemListener());
 		}
 		List children = this.rootItem.getChildren();
 		if (children != null) {
@@ -319,18 +323,6 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 				Item item = (Item) it.next();
 				this.addItem(item);
 			}
-		}
-		this.addChangeListener(Collections.singletonList(this.rootItem));
-	}
-
-	private void addChangeListener(Collection items) {
-		ItemListener itemListener1 = this.treeModel.getItemListener();
-		for (Iterator it = items.iterator(); it.hasNext();) {
-			Item item = (Item) it.next();
-			item.addChangeListener(itemListener1);
-			System.out.println("addChangeListener | " + item.getName());
-			List children = item.getChildren();
-			this.addChangeListener(children);
 		}
 	}
 
