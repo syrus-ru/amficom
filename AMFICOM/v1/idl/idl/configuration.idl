@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.78 2005/01/13 12:08:38 arseniy Exp $
+ * $Id: configuration.idl,v 1.79 2005/01/13 12:16:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -357,12 +357,6 @@ module corba {
 	typedef sequence <CableThread_Transferable> CableThreadSeq_Transferable;
 	typedef CableThread_Transferable CableThread;
 	typedef sequence<Link> CableThreadSeq;
-//////////////// Conditions //////////////
-
-	struct DomainCondition_Transferable {
-		short	entity_code;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
-	};
 	
 };
 };
