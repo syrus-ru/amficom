@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsCondition.java,v 1.4 2005/02/09 11:01:52 max Exp $
+ * $Id: DatabaseLinkedIdsCondition.java,v 1.5 2005/03/09 15:37:22 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
  *	}
  * </pre> 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/02/09 11:01:52 $
- * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2005/03/09 15:37:22 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsCondition {
@@ -40,7 +40,9 @@ public class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsConditi
 
 	public DatabaseLinkedIdsCondition(LinkedIdsCondition condition) {
 		super(condition);
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(condition.getEntityCode().shortValue()).toLowerCase().replaceAll("group$", "") + ".DatabaseLinkedIdsConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		final String className = "com.syrus.AMFICOM."
+				+ ObjectGroupEntities.getGroupName(condition.getEntityCode().shortValue()).toLowerCase().replaceAll("group$", "")
+				+ ".DatabaseLinkedIdsConditionImpl";
 		try {
 			Constructor ctor;
 			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { LinkedIdsCondition.class});
@@ -91,8 +93,7 @@ public class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsConditi
 	}	
 
 	public String getSQLQuery() throws IllegalDataException {
-		//TODO: implement this method
-		return null;
+		return this.delegate.getSQLQuery();
 	}
 
 	public Short getEntityCode() {
