@@ -236,7 +236,7 @@ public class SelectTemplate extends JDialog
 
 	private void setComboBoxData()
 	{
-		comboData = new String[7];
+		comboData = new String[8];
 		comboData[0] = ReportTemplate.rtt_AllTemplates;
 		comboData[1] = ReportTemplate.rtt_Evaluation;
 		comboData[2] = ReportTemplate.rtt_Analysis;
@@ -244,6 +244,7 @@ public class SelectTemplate extends JDialog
 		comboData[4] = ReportTemplate.rtt_Modeling;
 		comboData[5] = ReportTemplate.rtt_Survey;
 		comboData[6] = ReportTemplate.rtt_Optimization;
+		comboData[7] = ReportTemplate.rtt_Scheme;
 
 		for (int i = 0; i < comboData.length; i++)
 			templateTypesComboBox.addItem(LangModelReport.getString(comboData[i]));

@@ -55,5 +55,6 @@ public class OpenTypedTemplateCommand extends VoidCommand
 		}
 
 		frame.setVisible(true);
+		frame.repaint();
 	}
 }

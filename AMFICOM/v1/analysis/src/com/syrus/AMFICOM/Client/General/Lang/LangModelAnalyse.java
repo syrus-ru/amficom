@@ -1,24 +1,36 @@
 package com.syrus.AMFICOM.Client.General.Lang;
 
-import java.text.DateFormatSymbols;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Vector;
+import java.util.*;
 
-public class LangModelAnalyse extends LangModel
-{
+public class LangModelAnalyse {
+
 	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.analysis";
 
-	static public Locale locale;
-	static public String language;
-	static public String country;
-	static public ResourceBundle lang;
-	static public DateFormatSymbols symbols;
-	static public String resourceBundle;
+	private static final ResourceBundle	RESOURCE_BUNDLE		= ResourceBundle
+																	.getBundle(BUNDLE_NAME);
 
-	public LangModelAnalyse()
-	{
-		symbols = new DateFormatSymbols(locale);
+
+	public LangModelAnalyse() {
+		//symbols = new DateFormatSymbols(locale);
 	}
 
+	public static String getString(String keyName) {
+		//System.out.println("keyName:" + keyName);
+		keyName = keyName.replaceAll(" ", "_");
+		String string = null;
+		try {
+			string = RESOURCE_BUNDLE.getString(keyName);
+		} catch (MissingResourceException e) {
+
+			try {
+				throw new Exception("key '"
+									+ keyName
+									+ "' "
+									+  "not found");
+			} catch (Exception exc) {
+				exc.printStackTrace();
+			}
+		}
+		return string;
+	}
 }

@@ -53,21 +53,19 @@ import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 
+import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
+import com.syrus.AMFICOM.Client.Optimize.Report.SelectSolutionFrame;
+
 import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
 import com.syrus.AMFICOM.Client.Survey.Report.AlarmReportModel;
 import com.syrus.AMFICOM.Client.Configure.Report.EquipFeaturesReportModel;
 import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
-
-import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
-
-import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
-import com.syrus.AMFICOM.Client.Optimize.Report.SelectSolutionFrame;
-
 import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
 import com.syrus.AMFICOM.Client.Prediction.Report.PredictionReportModel;
 import com.syrus.AMFICOM.Client.Model.Report.ModelingReportModel;
+import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
 
 import javax.swing.tree.TreePath;
 
@@ -317,6 +315,16 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				vec.add(ortn);
 				registerSearchableNode("", ortn);
 
+				SchemeReportModel schemeModel = new SchemeReportModel();
+				ortn = new ObjectResourceTreeNode(
+					schemeModel,
+					schemeModel.getObjectsName(),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
+
+
 				/*        ortn = new ObjectResourceTreeNode(
 				 new OptimizationReportModel(),
 				 LangModelReport.getString("label_repOptimizationResults"),
@@ -497,7 +505,8 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 
 			}
 
-			else if (s.equals("label_repPhysicalScheme"))
+			else if (   s.equals("label_repPhysicalScheme")
+						&& this.toAskObjects(node))
 			{
 				Hashtable ht = new Hashtable();
 				if (Pool.getHash(Scheme.typ) != null)

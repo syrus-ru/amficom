@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
 import com.syrus.AMFICOM.Client.General.Report.*;
 
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanelNoEdition;
+import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -99,36 +99,40 @@ public class SchemeReportModel extends APOReportModel
 
 			throws CreateReportException
 	{
-		JComponent returnValue = null;
+		SchemeRenderPanel schemePanel = null;
 
 		if (   rp.field.equals(SchemeReportModel.scheme)
 			 || rp.field.equals(SchemeReportModel.ugo))
 		{
-			SchemePanelNoEdition schemePanel = null;
+			Scheme sc = null;
 
 			if (rp.getReserve() instanceof AMTReportPanel)
 			{
-				schemePanel = (SchemePanelNoEdition)((AMTReportPanel) rp.getReserve()).panel;
+				sc = ((UgoPanel)((AMTReportPanel) rp.getReserve()).panel).scheme;
 			}
 			else
 			{
-				schemePanel = new SchemePanelNoEdition(aContext);
-				Scheme sc = (Scheme) Pool.get(Scheme.typ, (String) rp.getReserve());
+				sc = (Scheme) Pool.get(Scheme.typ, (String) rp.getReserve());
 				if (sc == null)
 					throw new CreateReportException(
 						rp.getName(),
 						CreateReportException.cantImplement);
 
-				schemePanel.openScheme(sc);
+/*				SchemeGraph schemeGraph = schemePanel.getGraph();
+
+
+				returnValue = new SchemeRenderPanel(reportsRO, schemeGraph);*/
+
 			}
 
-			SchemeGraph schemeGraph = schemePanel.getGraph();
-			RenderingObject reportsRO = rt.findROforReport(rp);
+			schemePanel = new SchemeRenderPanel(aContext);
+			schemePanel.openScheme(sc);
 
-			returnValue = new SchemeRenderPanel(reportsRO, schemeGraph);
+			RenderingObject reportsRO = rt.findROforReport(rp);
+			schemePanel.initializeSize(reportsRO);
 		}
 
-		return returnValue;
+		return schemePanel;
 	}
 
 	public void setData(ReportTemplate rt, Object data)

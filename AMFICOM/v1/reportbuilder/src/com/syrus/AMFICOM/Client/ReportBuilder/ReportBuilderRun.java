@@ -30,9 +30,6 @@ public class ReportBuilderRun
 			{
 				e.printStackTrace();
 			}
-			LangModelConfig.initialize();
-			LangModelModel.initialize();
-			LangModelPrediction.initialize();
 
 			new ReportMain(new ReportDefaultApplicationModelFactory());
 	}

@@ -674,6 +674,8 @@ public class ReportTemplate extends ObjectResource implements Serializable
 				System.out.println("Error recreating Filter object!!!");
 			}
 		}
+
+		initResources();
 	}
 
 	/**

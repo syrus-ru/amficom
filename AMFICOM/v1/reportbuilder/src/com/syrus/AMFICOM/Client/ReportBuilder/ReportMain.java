@@ -54,9 +54,6 @@ public class ReportMain
 		{
 			e.printStackTrace();
 		}
-		LangModelConfig.initialize();
-		LangModelModel.initialize();
-		LangModelPrediction.initialize();
 
 		new ReportMain(new ReportDefaultApplicationModelFactory());
 	}
