@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.7 2004/12/07 10:47:23 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.8 2004/12/20 14:03:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -24,15 +22,16 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/07 10:47:23 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2004/12/20 14:03:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
 
 	protected Domain				domain;
 
-	protected static final Short		CHARACTERISTIC_SHORT		= new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+	protected static final Short		CHARACTERISTIC_SHORT	= new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+	protected static final Short		MCM_SHORT				= new Short(ObjectEntities.MCM_ENTITY_CODE);
 
 	protected Short				entityCode;
 
@@ -112,6 +111,35 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 					}
 				}
 				break;
+			case ObjectEntities.MCM_ENTITY_CODE:
+				{
+				if (object instanceof MCM) {
+					MCM mcm = (MCM) object;
+					List kiss = mcm.getKISs();
+					if (this.linkedIds == null) {
+						Identifier kisId = this.identifier;
+						for (Iterator it = kiss.iterator(); it.hasNext();) {
+							KIS kis = (KIS) it.next();
+							if (kis.getId().equals(kisId)) {
+								condition = true;
+								break;
+							}
+						}
+					} else {
+						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+							Identifier kisId = (Identifier) it.next();
+							for (Iterator iter = kiss.iterator(); it.hasNext();) {
+								KIS kis = (KIS) iter.next();
+								if (kis.getId().equals(kisId)) {
+									condition = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+				break;
 			default:
 				throw new UnsupportedOperationException("entityCode is unknown for this condition");
 		}
@@ -127,6 +155,9 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		switch (entityCode) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 				this.entityCode = CHARACTERISTIC_SHORT;
+				break;
+			case ObjectEntities.MCM_ENTITY_CODE:
+				this.entityCode = MCM_SHORT;
 				break;
 			default:
 				throw new UnsupportedOperationException("entityCode is unknown for this condition");
@@ -150,6 +181,8 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		short s = this.entityCode.shortValue();
 		switch (s) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+				break;
+			case ObjectEntities.MCM_ENTITY_CODE:
 				break;
 			default:
 				throw new UnsupportedOperationException("entityCode is unknown");
