@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.41 2005/03/23 13:07:06 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.42 2005/03/25 22:21:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/03/23 13:07:06 $
+ * @version $Revision: 1.42 $, $Date: 2005/03/25 22:21:10 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -60,53 +58,55 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 		this.test = test;
 
-		try {
-			MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(this.test.getMonitoredElement().getMeasurementPortId(), true);
-			Identifier kisId = mp.getKISId();
-
-			this.transceiver = (Transceiver) MeasurementControlModule.transceivers.get(kisId);
-			if (this.transceiver == null) {
-				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
-				this.stopInit();
-			}
-
-			if (! MeasurementControlModule.transceivers.containsKey(kisId)) {
-				Log.errorMessage("TestProcessor<init> | Invalid kis: '" + kisId + "'");
-				this.stopInit();
-			}
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			this.stopInit();
-		}
-
 		this.numberOfScheduledMeasurements = this.numberOfReceivedMResults = 0;
 		this.lastMeasurementAcquisition = false;
 		this.forgetFrame = ApplicationProperties.getInt(KEY_FORGET_FRAME, FORGET_FRAME) * 1000;
 		this.measurementResultList = Collections.synchronizedList(new LinkedList());
 		this.running = true;
 
-		switch (this.test.getStatus().value()) {
-			case TestStatus._TEST_STATUS_SCHEDULED:
-				//Normally
-				this.startWithScheduledTest();
-				break;
-			case TestStatus._TEST_STATUS_PROCESSING:
-				this.startWithProcessingTest();
-				break;
-			default:
-				Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
-				this.stopInit();
-		}		
-	}
+		//	Проверить, не устарел ли этот тест
+		long timePassed = System.currentTimeMillis() - this.test.getStartTime().getTime();
+		if (timePassed > this.forgetFrame) {
+			Log.debugMessage("Passed " + timePassed / 1000 + " sec (more than " + this.forgetFrame / 1000
+					+ " sec) from start time. Aborting test '" + this.test.getId() + "'", Log.DEBUGLEVEL03);
+			this.abort();
+		}
 
-	private final void stopInit() {
-		this.updateMyTestStatus(TestStatus.TEST_STATUS_ABORTED);
-		this.running = false;
-		this.measurementResultList.clear();
-		MeasurementControlModule.testProcessors.remove(this.test.getId());
-		this.test = null;
+		if (this.running) {
+			// Проверить правильность КИС.
+			Identifier kisId = test.getKISId();
+			this.transceiver = (Transceiver) MeasurementControlModule.transceivers.get(kisId);
+			if (this.transceiver == null) {
+				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
+				this.abort();// this.stopInit();
+			}
+		}
+
+		if (this.running) {
+			// Различные способы обработки теста в зависимости от его статуса
+			switch (this.test.getStatus().value()) {
+				case TestStatus._TEST_STATUS_SCHEDULED:
+					// Нормальная работа
+					this.startWithScheduledTest();
+					break;
+				case TestStatus._TEST_STATUS_PROCESSING:
+					// Перезапуск после сбоя
+					this.startWithProcessingTest();
+					break;
+				default:
+					Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
+					this.abort();// this.stopInit();
+			}
+		}
 	}
+//
+//	private final void stopInit() {
+//		this.updateMyTestStatus(TestStatus.TEST_STATUS_ABORTED);
+//		this.running = false;
+//		this.measurementResultList.clear();
+//		MeasurementControlModule.testProcessors.remove(this.test.getId());
+//		this.test = null;
+//	}
 
 	private void startWithScheduledTest() {
 		this.updateMyTestStatus(TestStatus.TEST_STATUS_PROCESSING);
@@ -130,7 +130,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 				return;
 			}
 			Log.errorException(de);
-			this.stopInit();
+			this.abort();//this.stopInit();
 		}
 
 		Collection results;
@@ -206,7 +206,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			}
 			catch (DatabaseException de) {
 				Log.errorException(de);
-				this.stopInit();
+				this.abort();//this.stopInit();
 			}
 		}
 	}
@@ -283,6 +283,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 	protected void abort() {
 		this.updateMyTestStatus(TestStatus.TEST_STATUS_ABORTED);
+		if (this.transceiver != null)
+			this.transceiver.abortMeasurementsForTestProcessor(this);
 		this.shutdown();
 	}
 
