@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.4 2004/09/27 07:41:34 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.5 2004/09/29 15:12:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,12 +50,11 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,7 +64,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/27 07:41:34 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/29 15:12:40 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -317,19 +316,21 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		if(animateThread != null)
 			animateThread.stop_running();
 
-		if(getContext() != null)
-			if(getContext().getDispatcher() != null)
-				if(mapView != null)
+		if(	getContext() != null
+			&& getContext().getDispatcher() != null)
+		{
+				if(mapView != null
+					&& mapView.getMap() != null)
 				{
-					if(mapView.getMap() != null)
-						aContext.getDispatcher().notify(
-							new MapEvent(mapView, MapEvent.MAP_SELECTED));
+					aContext.getDispatcher().notify(
+						new MapEvent(mapView, MapEvent.MAP_SELECTED));
 				}
 				else
 				{
 					aContext.getDispatcher().notify(
 							new MapEvent(this, MapEvent.MAP_DESELECTED));
 				}
+		}
 
 		if(this.mapView != null)
 		{
@@ -648,7 +649,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				if (aContext.getApplicationModel().isEnabled("mapActionMarkShow"))
 				{
-					MapMarkElement mme = (MapMarkElement )curNode;
+//					MapMarkElement mme = (MapMarkElement )curNode;
 //					mme.moveToFromStartLt(mme.getDistance());
 					curNode.paint(pg, visibleBounds);
 				}
@@ -722,6 +723,11 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	public void operationPerformed(OperationEvent ae)
 	{
+		if(ae.getActionCommand().equals(MapEvent.MAP_CHANGED))
+		{
+			repaint();
+		}
+		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent )ae;
@@ -1009,14 +1015,14 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						mtpe.deselect();
 				}
 */
-			if(mne.MAP_ELEMENT_SELECTED)
+			if(mne.isMapElementSelected())
 				if(performProcessing)
 				{
 					MapElement me = (MapElement )mne.getSource();
 					if(me != null)
 						me.setSelected(true);
 				}
-			if(mne.MAP_ELEMENT_DESELECTED)
+			if(mne.isMapElementDeselected())
 				if(performProcessing)
 				{
 					MapElement me = (MapElement )mne.getSource();
