@@ -91,6 +91,8 @@ optimize_v1	AMFICOM/v1/optimize
 main_v1		AMFICOM/v1/main
 #M	map_v1		Mapping module
 map_v1		AMFICOM/v1/map
+#M	mapclient_v1		Client mapping module
+mapclient_v1		AMFICOM/v1/mapclient
 #M	survey_v1	Survey module
 survey_v1	AMFICOM/v1/survey
 #M	surveyresource_v1	Survey and cheduler common files
