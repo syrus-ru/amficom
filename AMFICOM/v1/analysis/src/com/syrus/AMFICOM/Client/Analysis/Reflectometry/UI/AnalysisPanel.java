@@ -248,7 +248,9 @@ public class AnalysisPanel extends MapMarkersPanel
 				}
 			}
 
-			updAnalysisMarkerInfo();
+			/* FIXED : do not spamming when moving*/
+//			updAnalysisMarkerInfo();
+			
 /*		if (markers_pair_moving)
 			{
 				if (active_marker == 0)
