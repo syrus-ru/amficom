@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 public class Identifier implements Comparable, Cloneable, TransferableObject {
-	public static final String SEPARATOR = "-";
+	public static final String SEPARATOR = "_";
 
 	private String major;
 	private long minor;
