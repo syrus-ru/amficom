@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.22 2005/02/15 10:32:33 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.23 2005/02/21 11:11:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -52,8 +53,8 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/02/15 10:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.23 $, $Date: 2005/02/21 11:11:15 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 
@@ -84,17 +85,17 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		return condition_Transferable;
 	}
 
-	public void delete(Identifier id) throws CommunicationException {
+	public void delete(Identifier id) throws IllegalDataException {
 		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
 		try {
 			this.server.delete(identifier_Transferable, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.delete | Couldn't delete id =" + id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new IllegalDataException(msg, e);
 		}
 	}
 
-	public void delete(Collection ids) throws CommunicationException {
+	public void delete(Collection ids) throws IllegalDataException {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
@@ -105,7 +106,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			this.server.deleteList(identifier_Transferables, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.delete | AMFICOMRemoteException ";
-			throw new CommunicationException(msg, e);
+			throw new IllegalDataException(msg, e);
 		}
 	}
 

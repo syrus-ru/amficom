@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAdministrationObjectLoader.java,v 1.7 2005/02/15 08:02:24 max Exp $
+ * $Id: ClientAdministrationObjectLoader.java,v 1.8 2005/02/21 11:11:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -43,8 +44,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.TypicalCondition_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/15 08:02:24 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2005/02/21 11:11:15 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ClientAdministrationObjectLoader implements AdministrationObjectLoader {
@@ -74,17 +75,17 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		return condition_Transferable;
 	}
 
-	public void delete(Identifier id) throws CommunicationException {
+	public void delete(Identifier id) throws IllegalDataException {
 		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
 		try {
 			this.cmserver.delete(identifier_Transferable, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientAdministrationObjectLoader.delete | Couldn't delete id =" + id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new IllegalDataException(msg, e);
 		}
 	}
 
-	public void delete(Collection ids) throws CommunicationException {
+	public void delete(Collection ids) throws IllegalDataException {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
@@ -95,7 +96,7 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 			this.cmserver.deleteList(identifier_Transferables, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientAdministrationObjectLoader.delete | AMFICOMRemoteException ";
-			throw new CommunicationException(msg, e);
+			throw new IllegalDataException(msg, e);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.6 2005/02/15 10:05:27 max Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.7 2005/02/21 11:11:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/15 10:05:27 $
- * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/02/21 11:11:15 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ClientGeneralObjectLoader implements GeneralObjectLoader {
@@ -365,17 +365,17 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public void delete(Identifier id) throws CommunicationException {
+	public void delete(Identifier id) throws IllegalDataException {
 		Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
 		try {
 			this.server.delete(identifier_Transferable, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientGeneralObjectLoader.delete | Couldn't delete id =" + id.toString() + ")";
-			throw new CommunicationException(msg, e);
+			throw new IllegalDataException(msg, e);
 		}
 	}
 
-	public void delete(Collection ids) throws CommunicationException {
+	public void delete(Collection ids) throws IllegalDataException {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
@@ -386,7 +386,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			this.server.deleteList(identifier_Transferables, getAccessIdentifierTransferable());
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientGeneralObjectLoader.delete | AMFICOMRemoteException ";
-			throw new CommunicationException(msg, e);
+			throw new IllegalDataException(msg, e);
 		}
 	}
 
