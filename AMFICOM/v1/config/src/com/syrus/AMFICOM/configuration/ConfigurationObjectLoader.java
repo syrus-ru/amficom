@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.18 2004/11/17 09:42:48 max Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.19 2004/11/19 10:16:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,13 +18,15 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/11/17 09:42:48 $
- * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2004/11/19 10:16:09 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
 public interface ConfigurationObjectLoader {
 
+	CableThreadType loadCableThreadType(Identifier id) throws DatabaseException, CommunicationException;
+	
 	CharacteristicType loadCharacteristicType(Identifier id) throws DatabaseException, CommunicationException;
 
 	EquipmentType loadEquipmentType(Identifier id) throws DatabaseException, CommunicationException;
@@ -34,7 +36,7 @@ public interface ConfigurationObjectLoader {
 	MeasurementPortType loadMeasurementPortType(Identifier id) throws DatabaseException, CommunicationException;
 
 	KISType loadKISType(Identifier id) throws DatabaseException, CommunicationException;
-
+	
 	Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException;
 
 	LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException;
@@ -67,6 +69,8 @@ public interface ConfigurationObjectLoader {
 
     // this block for multiple objects
 
+	List loadCableThreadTypes(List ids) throws DatabaseException, CommunicationException;
+	
 	List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException;
@@ -109,9 +113,11 @@ public interface ConfigurationObjectLoader {
 
     /* Load Configuration StorableObject but argument ids */
     
+	List loadCableThreadTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	
 	List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-  List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
@@ -149,6 +155,8 @@ public interface ConfigurationObjectLoader {
 
 	List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
+	void saveCableThreadType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	
 	void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
@@ -183,7 +191,7 @@ public interface ConfigurationObjectLoader {
 
 	void saveKIS(KIS kis, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-  void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
@@ -197,6 +205,8 @@ public interface ConfigurationObjectLoader {
 
 	void saveMeasurementPortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
+	void saveCableThreadTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	
 	void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveKISTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
