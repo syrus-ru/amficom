@@ -177,20 +177,8 @@ class DeleteAction extends AbstractAction
 							{
 								DefaultEdge edge = (DefaultEdge)it.next();
 								new_cells.add(edge);
-								DefaultPort source = (DefaultPort)edge.getSource();
-								DefaultGraphCell cell = (DefaultGraphCell)source.getParent();
-								if (cell != null)
-								{
-									GraphActions.disconnectEdge(graph, edge, source, true);
-									GraphActions.removePort(graph, cell, source, cell.getAttributes());
-								}
-								DefaultPort target = (DefaultPort)edge.getSource();
-								cell = (DefaultGraphCell)target.getParent();
-								if (cell != null)
-								{
-									GraphActions.disconnectEdge(graph, edge, target, false);
-									GraphActions.removePort(graph, cell, source, cell.getAttributes());
-								}
+								deleteConnections(edge, (DefaultPort)edge.getSource());
+								deleteConnections(edge, (DefaultPort)edge.getTarget());
 							}
 						}
 					}
@@ -204,25 +192,17 @@ class DeleteAction extends AbstractAction
 							{
 								DefaultEdge edge = (DefaultEdge)it.next();
 								new_cells.add(edge);
-								DefaultPort source = (DefaultPort)edge.getSource();
-								DefaultGraphCell cell = (DefaultGraphCell)source.getParent();
-								if (cell != null)
-								{
-									GraphActions.disconnectEdge(graph, edge, source, true);
-									GraphActions.removePort(graph, cell, source, cell.getAttributes());
-								}
-								DefaultPort target = (DefaultPort)edge.getSource();
-								cell = (DefaultGraphCell)target.getParent();
-								if (cell != null)
-								{
-									GraphActions.disconnectEdge(graph, edge, target, false);
-									GraphActions.removePort(graph, cell, source, cell.getAttributes());
-								}
+								deleteConnections(edge, (DefaultPort)edge.getSource());
+								deleteConnections(edge, (DefaultPort)edge.getTarget());
 							}
 						}
 					}
 					else if (cells[i] instanceof DefaultEdge)
 					{
+						DefaultEdge edge = (DefaultEdge)cells[i];
+						new_cells.add(edge);
+						deleteConnections(edge, (DefaultPort)edge.getSource());
+						deleteConnections(edge, (DefaultPort)edge.getTarget());
 					}
 				}
 			}
@@ -232,6 +212,20 @@ class DeleteAction extends AbstractAction
 			graph.selectionNotify();
 			graph.setGraphChanged(true);
 		}
+	}
+
+	private void deleteConnections(DefaultEdge edge, DefaultPort port)
+	{
+		if (port != null)
+		{
+			DefaultGraphCell cell = (DefaultGraphCell)port.getParent();
+			if (cell != null)
+			{
+				GraphActions.disconnectEdge(graph, edge, port, false);
+				GraphActions.removePort(graph, cell, port, cell.getAttributes());
+			}
+		}
+
 	}
 }
 
