@@ -101,19 +101,25 @@ public class OptimizeEquipmentsDisplayModel extends StubDisplayModel
       }
       else // если нет в каталоге, то узнавать, муфта это или нет, надо иначе - через EquipmentType
       {	 if(!schel.proto_element_id.equals(""))// пустое поле это НЕ муфта, а схема боле низкого порядка (узел может быть схемой в силу рекурсивности схемы)
-         { ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, schel.proto_element_id );
-           EquipmentType eqtype = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id );
-           if( eqtype!=null && eqtype.eq_class.equals("mufta"))
-           { ElementAttribute att = (ElementAttribute)schel.attributes.get("optimizerNodeAttribute");
-             if(att==null) // если атрибут не существует, то создаём его и прописываем  в хэш елемента
-             { att = new ElementAttribute();
-               att.id = mdiMain.aContext.getDataSourceInterface().GetUId(ElementAttribute.typ); //уникальный идентификатор объекта (генерится на сервере)
-               schel.attributes.put(att.type_id, att);
+         {   ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, schel.proto_element_id );
+              if(proto != null) // кто-то может просто удалить протоэлемент и тогда будет null 
+              {   EquipmentType eqtype = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id );
+	             if( eqtype!=null && eqtype.eq_class.equals("mufta"))
+	             {  ElementAttribute att = (ElementAttribute)schel.attributes.get("optimizerNodeAttribute");
+	                if(att==null) // если атрибут не существует, то создаём его и прописываем  в хэш елемента
+	                { att = new ElementAttribute();
+	                  att.id = mdiMain.aContext.getDataSourceInterface().GetUId(ElementAttribute.typ); //уникальный идентификатор объекта (генерится на сервере)
+	                  schel.attributes.put(att.type_id, att);
+	                }
+	                att.name = "Наличие КИС";
+	                att.type_id = "optimizerNodeAttribute";
+	                att.value = "restricted";
+	             }
              }
-             att.name = "Наличие КИС";
-             att.type_id = "optimizerNodeAttribute";
-             att.value = "restricted";
-           }
+             else 
+             {	System.err.println("(ProtoElement)Pool.get(ProtoElement.typ, schel.proto_element_id ) == null;" +
+								   				" where schel.proto_element_id = " + schel.proto_element_id );
+             } 
          }
       }
       //*************************
