@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.32 2005/02/02 08:16:17 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.33 2005/02/04 12:01:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/02/02 08:16:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.33 $, $Date: 2005/02/04 12:01:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -164,7 +164,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	// for multiple objects
 
 	public List loadAnalyses(List ids) throws DatabaseException, CommunicationException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
+		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -177,7 +177,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadAnalysisTypes(List ids) throws DatabaseException, CommunicationException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -191,7 +191,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadEvaluations(List ids) throws DatabaseException, CommunicationException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
+		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -205,8 +205,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadEvaluationTypes(List ids) throws DatabaseException, CommunicationException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext
-				.getEvaluationTypeDatabase();
+		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -220,7 +219,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadModelings(List ids) throws DatabaseException, CommunicationException {
-		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.getModelingDatabase();
+		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -235,7 +234,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadModelingTypes(List ids) throws DatabaseException, CommunicationException {
-		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.getModelingTypeDatabase();
+		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -249,7 +248,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadMeasurements(List ids) throws DatabaseException, CommunicationException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
+		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -263,8 +262,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadMeasurementSetups(List ids) throws DatabaseException, CommunicationException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext
-				.getMeasurementSetupDatabase();
+		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -279,8 +277,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadMeasurementTypes(List ids) throws DatabaseException, CommunicationException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext
-				.getMeasurementTypeDatabase();
+		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -295,7 +292,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadResults(List ids) throws DatabaseException, CommunicationException {
-		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
+		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -308,7 +305,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadSets(List ids) throws DatabaseException, CommunicationException {
-		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
+		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -321,8 +318,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadTemporalPatterns(List ids) throws DatabaseException, CommunicationException {
-		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext
-				.getTemporalPatternDatabase();
+		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -337,7 +333,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public List loadTests(List ids) throws DatabaseException, CommunicationException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -351,7 +347,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadAnalysesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
+		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -366,7 +362,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadAnalysisTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
 		List list;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -382,7 +378,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadEvaluationsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
+		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -398,8 +394,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadEvaluationTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext
-				.getEvaluationTypeDatabase();
+		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -415,7 +410,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadModelingsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.getModelingDatabase();
+		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -430,7 +425,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadModelingTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.getModelingTypeDatabase();
+		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -446,7 +441,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadMeasurementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
+		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -462,8 +457,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadMeasurementSetupsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext
-				.getMeasurementSetupDatabase();
+		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -479,8 +473,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadMeasurementTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext
-				.getMeasurementTypeDatabase();
+		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -496,7 +489,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadResultsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
+		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -511,7 +504,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadSetsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
+		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -526,8 +519,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadTemporalPatternsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext
-				.getTemporalPatternDatabase();
+		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -543,7 +535,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public List loadTestsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
 		List list = null;
 		try {
 			list = database.retrieveByCondition(ids, condition);
@@ -558,8 +550,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException,
 			CommunicationException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext
-				.getMeasurementTypeDatabase();
+		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
 			database.update(measurementType, force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK, null);
@@ -584,7 +575,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws DatabaseException,
 			CommunicationException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
 			database.update(analysisType, force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK, null);
@@ -608,8 +599,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws DatabaseException,
 			CommunicationException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext
-				.getEvaluationTypeDatabase();
+		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
 			database.update(evaluationType, force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK, null);
@@ -633,7 +623,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveSet(Set set, boolean force) throws DatabaseException, CommunicationException {
-		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
+		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
 		try {
 			database.update(set, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -654,8 +644,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws DatabaseException,
 			CommunicationException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext
-				.getMeasurementSetupDatabase();
+		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
 			database.update(measurementSetup, force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK, null);
@@ -680,7 +669,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveModeling(Modeling modeling, boolean force) throws DatabaseException, CommunicationException {
-		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.getModelingDatabase();
+		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
 		try {
 			database.update(modeling,
 				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
@@ -702,7 +691,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public void saveModelingType(ModelingType modelingType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.getModelingTypeDatabase();
+		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
 		try {
 			database.update(modelingType, force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK, null);
@@ -727,7 +716,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public void saveMeasurement(Measurement measurement, boolean force) throws DatabaseException,
 			CommunicationException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
+		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
 		try {
 			database.update(measurement, force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK, null);
@@ -751,7 +740,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveAnalysis(Analysis analysis, boolean force) throws DatabaseException, CommunicationException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
+		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
 		try {
 			database.update(analysis,
 				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
@@ -772,7 +761,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveEvaluation(Evaluation evaluation, boolean force) throws DatabaseException, CommunicationException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
+		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
 		try {
 			database.update(evaluation, force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK, null);
@@ -794,7 +783,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveTest(Test test, boolean force) throws DatabaseException, CommunicationException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
 		try {
 			database.update(test, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -814,7 +803,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveResult(Result result, boolean force) throws DatabaseException, CommunicationException {
-		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
+		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
 		try {
 			database.update(result, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -835,8 +824,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws DatabaseException,
 			CommunicationException {
-		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext
-				.getTemporalPatternDatabase();
+		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
 		try {
 			database.update(temporalPattern, force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK, null);
@@ -860,8 +848,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveMeasurementTypes(List list, boolean force) throws DatabaseException, CommunicationException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext
-				.getMeasurementTypeDatabase();
+		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -886,7 +873,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveAnalysisTypes(List list, boolean force) throws DatabaseException, CommunicationException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -909,8 +896,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveEvaluationTypes(List list, boolean force) throws DatabaseException, CommunicationException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext
-				.getEvaluationTypeDatabase();
+		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -934,7 +920,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveSets(List list, boolean force) throws DatabaseException, CommunicationException {
-		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
+		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -954,7 +940,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveModelings(List list, boolean force) throws DatabaseException, CommunicationException {
-		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.getModelingDatabase();
+		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -975,7 +961,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 	
 	public void saveModelingTypes(List list, boolean force) throws DatabaseException, CommunicationException {
-		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.getModelingTypeDatabase();
+		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -996,8 +982,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveMeasurementSetups(List list, boolean force) throws DatabaseException, CommunicationException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext
-				.getMeasurementSetupDatabase();
+		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -1022,7 +1007,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveMeasurements(List list, boolean force) throws DatabaseException, CommunicationException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
+		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -1046,7 +1031,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveAnalyses(List list, boolean force) throws DatabaseException, CommunicationException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
+		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -1067,7 +1052,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveEvaluations(List list, boolean force) throws DatabaseException, CommunicationException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
+		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -1089,7 +1074,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveTests(List list, boolean force) throws DatabaseException, CommunicationException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -1109,7 +1094,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveResults(List list, boolean force) throws DatabaseException, CommunicationException {
-		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
+		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -1129,8 +1114,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public void saveTemporalPatterns(List list, boolean force) throws DatabaseException, CommunicationException {
-		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext
-				.getTemporalPatternDatabase();
+		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
 				null);
@@ -1166,10 +1150,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 				return database.refresh(storableObjects);
 
 			return Collections.EMPTY_SET;
-		} catch (DatabaseException e) {
+		}
+		catch (DatabaseException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage(),
-										e);
+			throw new DatabaseException("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage(), e);
 		}
 	}
 
