@@ -169,17 +169,17 @@ public class KISselectionFrame extends JInternalFrame
 		 int width = (int)(0.22*dim.width), height = 190;//height = getMinimumSize().height;
 		 setBounds( dim.width - width, 0, width, height );
 		 setVisible(true);
-     // устанавливаем размер шрифта таким, чтобы он полностью помещался по высоте в комбобоксы
-     jComboBox1.setFont(getFont().deriveFont( (float)(jComboBox1.getHeight()-8) ));
-     jComboBox2.setFont(getFont().deriveFont( (float)(jComboBox2.getHeight()-8) ));
-     jComboBox_wave.setFont(getFont().deriveFont( (float)(jComboBox_wave.getHeight()-8) ));
+     //  устанавливаем размер шрифта таким, чтобы он полностью помещался по высоте в комбобоксы ( !!! глючит, поэтому закомментил )
+     // this.jComboBox1.setFont(getFont().deriveFont( (float)(this.jComboBox1.getHeight()-8) ));
+     // this.jComboBox2.setFont(getFont().deriveFont( (float)(this.jComboBox2.getHeight()-8) ));
+     // this.jComboBox_wave.setFont(getFont().deriveFont( (float)(this.jComboBox_wave.getHeight()-8) ));
 	}
 	//-------------------------------------------------------------------------------------------------------------
 	private void jbInit() throws Exception
-	{ border1 = BorderFactory.createEtchedBorder(Color.white,new Color(148, 145, 140));
-    titledBorder1 = new TitledBorder(border1,"Оптический коммутатор");
-    border2 = BorderFactory.createEtchedBorder(Color.white,new Color(148, 145, 140));
-    titledBorder2 = new TitledBorder(border2,"Оптический рефлектометр");
+	{ this.border1 = BorderFactory.createEtchedBorder(Color.white,new Color(148, 145, 140));
+    titledBorder1 = new TitledBorder(this.border1,"Оптический коммутатор");
+    this.border2 = BorderFactory.createEtchedBorder(Color.white,new Color(148, 145, 140));
+    titledBorder2 = new TitledBorder(this.border2,"Оптический рефлектометр");
     this.setFrameIcon( new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/general.gif")) );
 		setClosable(true);
 		setDefaultCloseOperation(HIDE_ON_CLOSE);// не закрываем, а прячем
@@ -190,28 +190,28 @@ public class KISselectionFrame extends JInternalFrame
 			}
 		});
 		this.getContentPane().setLayout(new BorderLayout());
-		jPanel1.setLayout(borderLayout1);
+		this.jPanel1.setLayout(this.borderLayout1);
 		jPanel2.setLayout(gridBagLayout2);
-		jPanel2.setBorder(titledBorder2);
+		this.jPanel2.setBorder(this.titledBorder2);
 		jPanel2.setMinimumSize(new Dimension(258, 95));
 		jPanel2.setPreferredSize(new Dimension(258, 95));
 		jPanel3.setBorder(titledBorder1);
-		jPanel3.setMinimumSize(new Dimension(293, 80));
-		jPanel3.setPreferredSize(new Dimension(293, 80));
-		jPanel3.setLayout(gridBagLayout1);
-		jLabel5.setRequestFocusEnabled(true);
-    jLabel5.setText("Цена:");
-		jLabel6.setText("Число портов:");
-		jTextField3.setMinimumSize(new Dimension(64, 21)); jTextField3.setPreferredSize(new Dimension(64, 21));
-		jTextField3.setEditable(false);
-		jTextField4.setMinimumSize(new Dimension(64, 21));
-		jTextField4.setPreferredSize(new Dimension(64, 21));
-		jTextField4.addFocusListener(new java.awt.event.FocusAdapter()
+		this.jPanel3.setMinimumSize(new Dimension(293, 80));
+		this.jPanel3.setPreferredSize(new Dimension(293, 80));
+		this.jPanel3.setLayout(gridBagLayout1);
+		this.jLabel5.setRequestFocusEnabled(true);
+		jLabel5.setText("Цена:");
+		this.jLabel6.setText("Число портов:");
+		jTextField3.setMinimumSize(new Dimension(64, 21)); this.jTextField3.setPreferredSize(new Dimension(64, 21));
+		this.jTextField3.setEditable(false);
+		this.jTextField4.setMinimumSize(new Dimension(64, 21));
+		this.jTextField4.setPreferredSize(new Dimension(64, 21));
+		this.jTextField4.addFocusListener(new java.awt.event.FocusAdapter()
 		{ public void focusLost(FocusEvent e)
 			{	jTextField4_focusLost(e);
 			}
 		});
-		jTextField2.setMinimumSize(new Dimension(64, 21));
+		this.jTextField2.setMinimumSize(new Dimension(64, 21));
 		jTextField2.setPreferredSize(new Dimension(64, 21));
 		jTextField2.addFocusListener(new java.awt.event.FocusAdapter()
 		{	public void focusLost(FocusEvent e)
@@ -234,29 +234,31 @@ public class KISselectionFrame extends JInternalFrame
 			{	this_internalFrameClosing(e);
 			}
 		});
-    jComboBox1.setAlignmentX((float) 0.0);
+    this.jComboBox1.setAlignmentX((float) 0.0);
     jComboBox1.setAlignmentY((float) 0.0);
-    jComboBox1.setAutoscrolls(false);
-    jComboBox1.setMaximumSize(new Dimension(213, 20));
-    jComboBox1.setMinimumSize(new Dimension(213, 20));
-    jComboBox1.setNextFocusableComponent(jTextField2);
-    jComboBox1.setOpaque(true);
+    this.jComboBox1.setAutoscrolls(false);
+    this.jComboBox1.setMaximumSize(new Dimension(213, 20));
+    this.jComboBox1.setMinimumSize(new Dimension(213, 20));
+    jComboBox1.setNextFocusableComponent(this.jTextField2);
+    this.jComboBox1.setOpaque(true);
     jComboBox1.setPreferredSize(new Dimension(213, 20));
     jComboBox1.addActionListener(new java.awt.event.ActionListener()
 		{ public void actionPerformed(ActionEvent e)
 			{ jComboBox1_actionPerformed(e);
 			}
 		});
-    jComboBox1.setToolTipText("\"\"");
-    jComboBox1.setMaximumRowCount(8);
+    this.jComboBox1.setToolTipText("\"\"");
+    this.jComboBox1.setMaximumRowCount(8);
     jComboBox1.setPopupVisible(false);
-    jComboBox1.addItemListener(new java.awt.event.ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				jComboBox1_itemStateChanged(e);
-			}
-		});
-    jLabel2.setText("Длина волны:");
-    jComboBox_wave.addItemListener(new java.awt.event.ItemListener() {
+    this.jComboBox1.addItemListener
+	( new java.awt.event.ItemListener()
+	  {	public void itemStateChanged(ItemEvent e) 
+	  	{	jComboBox1_itemStateChanged(e);
+		}
+	 }
+    );
+    this.jLabel2.setText("Длина волны:");
+    this.jComboBox_wave.addItemListener(new java.awt.event.ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				jComboBox_wave_itemStateChanged(e);
 			}
@@ -265,8 +267,8 @@ public class KISselectionFrame extends JInternalFrame
     jLabel3.setText("Диапазон:");
     jTextField1.setMinimumSize(new Dimension(64, 21));
     jTextField1.setPreferredSize(new Dimension(64, 21));
-    jTextField1.setEditable(false);
-    jLabel4.setRequestFocusEnabled(true);
+    this.jTextField1.setEditable(false);
+    this.jLabel4.setRequestFocusEnabled(true);
     jLabel4.setText("Цена:");
     jComboBox2.setNextFocusableComponent(jTextField4);
     jComboBox2.addActionListener(new java.awt.event.ActionListener()
