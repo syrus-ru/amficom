@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.12 2005/03/24 15:47:02 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.13 2005/03/24 15:53:53 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/24 15:47:02 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/24 15:53:53 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -34,14 +34,32 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 		StringBuffer stringBuffer;
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				query = super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
-						StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
-						ObjectEntities.ANATYPPARTYPLINK_ENTITY);
+				switch (super.condition.getLinkedEntityCode()) {
+					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+						query = super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
+								StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
+								ObjectEntities.ANATYPPARTYPLINK_ENTITY);
+						break;
+					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+						query = super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
+								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
+								ObjectEntities.MNTTYPANATYPEVATYP_ENTITY);
+						break;
+				}
 				break;
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				query = getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, 
-						StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
-						ObjectEntities.EVATYPPARTYPLINK_ENTITY);
+				switch (super.condition.getLinkedEntityCode()) {
+					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+						query = getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID, 
+								StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
+								ObjectEntities.EVATYPPARTYPLINK_ENTITY);
+						break;
+					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+						query = super.getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
+								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
+								ObjectEntities.MNTTYPANATYPEVATYP_ENTITY);
+						break;
+				}
 				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
