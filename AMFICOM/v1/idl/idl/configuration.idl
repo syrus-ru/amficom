@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.30 2004/10/08 07:37:15 max Exp $
+ * $Id: configuration.idl,v 1.31 2004/10/13 12:55:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -346,6 +346,17 @@ module corba {
 	struct DomainCondition_Transferable {
 		short	entity_code;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+	};
+
+	struct LinkedIdsCondition_Transferable {
+			short	entity_code;
+			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+			com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable linked_ids;		
+	};
+
+	struct StringFieldCondition_Transferable {	
+			short	entity_code;
+			wstring field_string;
 	};
 
 };

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.28 2004/09/20 14:15:19 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.29 2004/10/13 12:55:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/09/20 14:15:19 $
- * @author $Author: max $
+ * @version $Revision: 1.29 $, $Date: 2004/10/13 12:55:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -443,6 +443,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				case CharacteristicSort._CHARACTERISTIC_SORT_TRANSMISSIONPATH:
 					buffer.append(COLUMN_TRANSMISSION_PATH_ID);
 					break;
+				case CharacteristicSort._CHARACTERISTIC_SORT_MONITORINGPORT:
+				case CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORT:
 				case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
 					buffer.append(COLUMN_PORT_ID);
 					break;
@@ -491,5 +493,5 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			return super.retrieveByIdsOneQuery(null, condition);
 		return super.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids);
-	}	
+	}
 }

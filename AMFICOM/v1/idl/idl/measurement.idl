@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.31 2004/10/13 09:49:57 bob Exp $
+ * $Id: measurement.idl,v 1.32 2004/10/13 12:55:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -333,12 +333,6 @@ module corba {
 	typedef sequence <Result_Transferable> ResultSeq_Transferable;
 //////////////// Conditions //////////////
 	
-	struct LinkedIdsCondition_Transferable {
-			short	entity_code;
-			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
-			com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable linked_ids;		
-	};
-	
 	struct MeasurementSetupCondition_Transferable {
 			short	entity_code;
 			com::syrus::AMFICOM::general::corba::Identifier_Transferable object_id;
@@ -349,11 +343,6 @@ module corba {
 			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 			long long start;
 			long long end;
-	};
-
-	struct StringFieldCondition_Transferable {	
-			short	entity_code;
-			wstring field_string;
 	};
 	
 	struct ResultSortCondition_Transferable {
