@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.13 2005/02/21 15:51:10 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.14 2005/02/24 11:49:59 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,10 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/02/21 15:51:10 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/24 11:49:59 $
  * @module
  */
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Map;
 
 import com.syrus.io.BellcoreStructure;
