@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.18 2004/12/22 12:37:57 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.19 2005/01/17 08:25:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+
+import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.CORBAServer;
@@ -25,7 +27,6 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
@@ -38,8 +39,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/22 12:37:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/01/17 08:25:07 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 

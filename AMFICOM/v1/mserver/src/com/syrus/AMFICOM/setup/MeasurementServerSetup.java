@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.24 2005/01/12 14:24:55 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.25 2005/01/17 08:25:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,11 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -28,8 +33,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/01/12 14:24:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/01/17 08:25:07 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
@@ -88,7 +93,7 @@ public final class MeasurementServerSetup {
 
 		Identifier serverUserId = createUser(sysAdminId,
 																				 "mserver",
-																				 UserSort.USER_SORT_SERVER,
+																				 UserSort.USER_SORT_SERVERPROCESS,
 																				 "User Serverovich",
 																				 "User for measurement server");
 		Identifier serverId = createServer(sysAdminId,
