@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.26 2004/12/22 17:42:47 arseniy Exp $
+# $Id: Makefile,v 1.27 2005/01/19 12:40:24 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -74,6 +74,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/general.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/general/*.java \
-		$(SRCDIR)/com/syrus/AMFICOM/io/*.java
+		$(SRCDIR)/com/syrus/AMFICOM/general/*.java
 

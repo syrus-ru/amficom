@@ -1,5 +1,5 @@
 /*
-al * $Id: Result.java,v 1.31 2005/01/12 13:34:13 arseniy Exp $
+al * $Id: Result.java,v 1.32 2005/01/19 12:36:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/01/12 13:34:13 $
+ * @version $Revision: 1.32 $, $Date: 2005/01/19 12:36:38 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -99,7 +99,7 @@ public class Result extends StorableObject {
 					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
 				}
 				break;
-				
+
 			default:
 				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id.toString() + "'");
 		}
