@@ -148,6 +148,7 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 		total += pdata[i].total_time;
 #endif
 #if USE_rdtsc
+	const double rdtsc_divisor = 1e6;
 	__int64 total64 = 0;
 	for (i = 0; i < MAX_ID && pdata[i].id; i++)
 		total64 += pdata[i].total_time_64;
@@ -160,22 +161,22 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 	char *line = "-----   -----   -----   ----";
 	char *form = "%5d   %5d   %4.1f%%   %s\n";
 #elif USE_clock && USE_rdtsc
-	char *head = "count   ticks   %tick   %rdtsc  name";
-	char *line = "-----   -----   -----   ------  ----";
-	char *form = "%5d   %5d   %4.1f%%   %5.2f%%   %s\n";
+	char *head = "count   ticks   %tick    rdtsc    %rdtsc   name";
+	char *line = "-----   -----   -----   -------   ------   ----";
+	char *form = "%5d   %5d   %4.1f%%   %7.2f   %5.2f%%   %s\n";
 #elif !USE_clock && USE_rdtsc
-	char *head = "count   %rdtsc   name";
-	char *line = "-----   ------   ----";
-	char *form = "%5d   %5d   %5.2f%%   %s\n";
+	char *head = "count    rdtsc    %rdtsc   name";
+	char *line = "-----   -------   ------   ----";
+	char *form = "%5d   %7.2f   %5.2f%%   %s\n";
 #endif
 
 	fprintf (f, "profiler statistics:\n");
-	fprintf (f, "  total records:   %d\n", records);
+	fprintf (f, "  total records: %d\n", records);
 #if USE_clock
-	fprintf (f, "  total ticks:     %d\n", total);
+	fprintf (f, "  total ticks:   %d\n", total);
 #endif
 #if USE_rdtsc
-	fprintf (f, "  total rdtsc/1e6: %.3f\n", (double )total64 / 1e6);
+	fprintf (f, "  total rdtsc/%g: %.3f\n", rdtsc_divisor, (double )total64 / rdtsc_divisor);
 #endif
 
 	//if (1)
@@ -193,6 +194,7 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 				total ? pdata[i].total_time * 99.0 / total : 0,
 #endif
 #if USE_rdtsc
+				pdata[i].total_time_64 / rdtsc_divisor,
 				total64 ? pdata[i].total_time_64 * 99.0 / total64 : 0,
 #endif
 				pdata[i].id);
