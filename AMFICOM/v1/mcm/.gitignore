@@ -1,5 +1,6 @@
 .corba
 .mach
+.head
 *.jar
 *.jpr*
 *.jpx*

@@ -17,7 +17,7 @@ IDL2JAVAFLAGS = -strict -I$(INCIDLDIR)
 
 JAVAH=javah
 JAVAH_FLAGS = \
-	-classpath $(CLASSDIR) \
+	-classpath $(APPCLASSPATH):$(CLASSDIR) \
 	-force
 
 include ../tools/Makefile.inc

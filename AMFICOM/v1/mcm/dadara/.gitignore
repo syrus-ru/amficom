@@ -1,4 +1,4 @@
-com_syrus_AMFICOM_analysis_dadara_DadaraAnalysisManager.h
+com_syrus_AMFICOM_mcm_DadaraAnalysisManager.h
 *.so
 *.o
 *.swp
