@@ -1,15 +1,13 @@
-/**
- * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/04/02 17:37:28 arseniy Exp $
+/*-
+ * $Id: LinkedIdsConditionImpl.java,v 1.5 2005/04/04 13:15:58 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -19,54 +17,48 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $
+ * @author $Author: bass $
  * @module map_v1
  */
-class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
+final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
-	private LinkedIdsConditionImpl(Set linkedIds, Short entityCode) {
-		super(); // First line must invoke superconstructor w/o parameters.
+	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
+		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
 
-	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-		super(); // First line must invoke superconstructor w/o parameters.
-		this.linkedIds = Collections.singleton(identifier);
-		this.entityCode = entityCode;
-	}
-
-	private boolean checkDomain(DomainMember domainMember) {
+	private boolean checkDomain(final DomainMember domainMember) {
 		boolean condition = false;
 		try {
-			Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
-			Identifier id;
-			Domain domain;
-			for (Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
-				id = (Identifier) it.next();
+			final Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
+				final Identifier id = (Identifier) it.next();
 				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
-					domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
+					final Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.isChild(domain))
 						condition = true;
 				}
 			}
 		}
-		catch (ApplicationException ae) {
+		catch (final ApplicationException ae) {
 			Log.errorException(ae);
 		}
 		return condition;
 	}
 
-	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MAP_ENTITY_CODE:
-				Map map = (Map) object;
+				Map map = (Map) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.DOMAIN_ENTITY_CODE:
 						condition = this.checkDomain(map);
@@ -97,7 +89,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		}
 	}
 
-	public boolean isNeedMore(final Set set) {
+	public boolean isNeedMore(final Set storableObjects) {
 		return true;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.99 2005/04/01 15:40:19 bob Exp $
+ * $Id: Test.java,v 1.100 2005/04/04 13:13:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/04/01 15:40:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.100 $, $Date: 2005/04/04 13:13:46 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -342,7 +342,7 @@ public class Test extends StorableObject {
 		return TestTemporalType.from_int(this.temporalType);
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		Identifier_Transferable[] msIdsT = null;
 		try {
 			msIdsT = Identifier.createTransferables(this.measurementSetupIds);

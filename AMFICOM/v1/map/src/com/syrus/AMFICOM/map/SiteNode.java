@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.26 2005/04/01 11:11:05 bob Exp $
+ * $Id: SiteNode.java,v 1.27 2005/04/04 13:15:58 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -54,8 +55,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
- * @author $Author: bob $
- * @version $Revision: 1.26 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/04/04 13:15:58 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -222,7 +223,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		return dependencies;
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)

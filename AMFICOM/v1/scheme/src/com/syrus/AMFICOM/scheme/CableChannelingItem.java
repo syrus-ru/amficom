@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.6 2005/04/01 13:59:07 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.7 2005/04/04 13:17:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,13 @@ package com.syrus.AMFICOM.scheme;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.map.*;
 import java.util.*;
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/04/01 13:59:07 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/04 13:17:21 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject
@@ -174,7 +175,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	/**
 	 * @see TransferableObject#getTransferable()
 	 */
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 

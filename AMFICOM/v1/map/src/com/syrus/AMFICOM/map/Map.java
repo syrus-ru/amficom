@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.25 2005/04/02 15:29:51 arseniy Exp $
+ * $Id: Map.java,v 1.26 2005/04/04 13:15:58 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/04/02 15:29:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/04/04 13:15:58 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -232,7 +232,7 @@ public class Map extends DomainMember {
 		return dependencies;
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] siteNodeIds = new Identifier_Transferable[this.siteNodes.size()];
 		for (Iterator iterator = this.siteNodes.iterator(); iterator.hasNext();)

@@ -1,5 +1,5 @@
 /*
-* $Id: TypicalTestCase.java,v 1.1 2005/02/04 14:18:32 bob Exp $
+* $Id: TypicalTestCase.java,v 1.2 2005/04/04 13:13:46 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/04 14:18:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/04/04 13:13:46 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class TypicalTestCase extends TestCase {
@@ -23,6 +23,6 @@ public class TypicalTestCase extends TestCase {
 	}
 	
 	public void testTestTypicalCondition() {
-		
+		// empty so far
 	}
 }

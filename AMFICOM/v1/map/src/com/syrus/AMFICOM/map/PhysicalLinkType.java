@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkType.java,v 1.24 2005/04/02 15:29:52 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.25 2005/04/04 13:15:58 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,8 +40,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/04/02 15:29:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/04/04 13:15:58 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable {
@@ -169,7 +169,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		return Collections.EMPTY_SET;
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)

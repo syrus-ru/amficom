@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.25 2005/04/01 11:11:05 bob Exp $
+ * $Id: TopologicalNode.java,v 1.26 2005/04/04 13:15:58 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -40,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: bob $
- * @version $Revision: 1.25 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/04/04 13:15:58 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -247,7 +248,7 @@ public class TopologicalNode extends AbstractNode {
 		return Collections.EMPTY_SET;
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)

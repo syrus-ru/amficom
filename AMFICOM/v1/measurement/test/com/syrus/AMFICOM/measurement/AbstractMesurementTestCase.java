@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractMesurementTestCase.java,v 1.3 2005/03/10 21:08:50 arseniy Exp $
+ * $Id: AbstractMesurementTestCase.java,v 1.4 2005/04/04 13:13:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/10 21:08:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/04/04 13:13:46 $
+ * @author $Author: bass $
  * @module tools
  */
 public abstract class AbstractMesurementTestCase extends TestCase {
@@ -68,8 +68,8 @@ public abstract class AbstractMesurementTestCase extends TestCase {
 		establishDatabaseConnection();
 		DatabaseContextSetup.initDatabaseContext();
 		DatabaseContextSetup.initObjectPools();
-		UserDatabase userDatabase = (UserDatabase) AdministrationDatabaseContext.getUserDatabase();
-		DomainDatabase domainDatabase = (DomainDatabase) AdministrationDatabaseContext.getDomainDatabase();
+		UserDatabase userDatabase = AdministrationDatabaseContext.getUserDatabase();
+		DomainDatabase domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
 		Collection userCollection = null;
 		Collection domainCollection = null;
 

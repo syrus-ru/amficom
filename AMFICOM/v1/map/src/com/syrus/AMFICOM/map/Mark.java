@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.23 2005/04/01 11:11:05 bob Exp $
+ * $Id: Mark.java,v 1.24 2005/04/04 13:15:58 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 import java.util.SortedSet;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -45,8 +46,8 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * в св€зи с чем методы класса {@link AbstractNode}, работающие с лини€ми и 
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bob $
- * @version $Revision: 1.23 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/04/04 13:15:58 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -219,7 +220,7 @@ public class Mark extends AbstractNode {
 		return Collections.singleton(this.physicalLink);
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)

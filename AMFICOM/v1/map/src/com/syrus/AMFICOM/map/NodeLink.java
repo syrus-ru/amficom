@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.29 2005/04/02 15:29:52 arseniy Exp $
+ * $Id: NodeLink.java,v 1.30 2005/04/04 13:15:59 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/04/02 15:29:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/04/04 13:15:59 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -187,7 +187,7 @@ public class NodeLink extends StorableObject implements MapElement {
 		}
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)

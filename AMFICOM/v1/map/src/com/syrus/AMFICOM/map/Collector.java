@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.28 2005/04/02 15:29:51 arseniy Exp $
+ * $Id: Collector.java,v 1.29 2005/04/04 13:15:58 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,8 +41,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/04/02 15:29:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/04/04 13:15:58 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -166,7 +166,7 @@ public class Collector extends StorableObject implements MapElement {
 		return dependencies;
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] physicalLinkIds = new Identifier_Transferable[this.physicalLinks.size()];
 		for (Iterator iterator = this.physicalLinks.iterator(); iterator.hasNext();)

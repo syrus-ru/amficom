@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.7 2005/04/01 13:59:07 bass Exp $
+ * $Id: SchemeDevice.java,v 1.8 2005/04/04 13:17:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,13 @@ package com.syrus.AMFICOM.scheme;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/04/01 13:59:07 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/04 13:17:21 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -173,7 +174,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 

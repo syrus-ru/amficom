@@ -1,27 +1,27 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.6 2005/04/04 13:15:58 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.1 2005/04/04 13:17:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.map;
-
-import java.util.Date;
-import java.util.Set;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
-import com.syrus.util.Wrapper;
+import java.util.Date;
+import java.util.Set;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/04 13:15:58 $
+ * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @module map_v1
+ * @version $Revision: 1.1 $, $Date: 2005/04/04 13:17:21 $
+ * @module scheme_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {
 	private TypicalConditionImpl(final int firstInt,
@@ -87,6 +87,10 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	/**
+	 * @param storableObjects
+	 * @see StorableObjectCondition#isNeedMore(Set)
+	 */
 	public boolean isNeedMore(final Set storableObjects) {
 		return this.type != TypicalSort._TYPE_STRING
 				|| this.operation != OperationSort._OPERATION_EQUALS
@@ -94,18 +98,12 @@ final class TypicalConditionImpl extends TypicalCondition {
 				|| storableObjects.isEmpty();
 	}
 
+	/**
+	 * @param storableObject
+	 * @throws IllegalObjectEntityException
+	 * @see StorableObjectCondition#isConditionTrue(StorableObject)
+	 */
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
-		Wrapper wrapper;
-		if (storableObject instanceof PhysicalLinkType)
-			wrapper = PhysicalLinkTypeWrapper.getInstance();
-		else
-			if (storableObject instanceof SiteNodeType)
-				wrapper = SiteNodeTypeWrapper.getInstance();
-			else
-				throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
-						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-
-		return super.parseCondition(wrapper.getValue(storableObject, this.key));
+		throw new UnsupportedOperationException();
 	}
-
 }

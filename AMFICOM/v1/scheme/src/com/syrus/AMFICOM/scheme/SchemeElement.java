@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.9 2005/04/01 13:59:08 bass Exp $
+ * $Id: SchemeElement.java,v 1.10 2005/04/04 13:17:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,13 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.*;
 import java.util.*;
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/04/01 13:59:08 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/04 13:17:21 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -238,7 +239,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 

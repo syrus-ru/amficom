@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.46 2005/04/01 15:40:18 bob Exp $
+ * $Id: Result.java,v 1.47 2005/04/04 13:13:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/04/01 15:40:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.47 $, $Date: 2005/04/04 13:13:45 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -136,7 +136,7 @@ public class Result extends StorableObject {
 		}
 	}
 	
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable)this.parameters[i].getTransferable();

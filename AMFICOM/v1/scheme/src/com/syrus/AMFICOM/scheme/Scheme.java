@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.6 2005/04/01 13:59:08 bass Exp $
+ * $Id: Scheme.java,v 1.7 2005/04/04 13:17:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,13 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 import java.util.*;
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/04/01 13:59:08 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/04 13:17:21 $
  * @module scheme_v1
  */
 public final class Scheme extends AbstractCloneableDomainMember implements Describable, SchemeCellContainer {
@@ -227,7 +228,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	/**
 	 * @see TransferableObject#getTransferable()
 	 */
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 

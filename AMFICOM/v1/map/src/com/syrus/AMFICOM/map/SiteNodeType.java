@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeType.java,v 1.20 2005/04/02 15:29:52 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.21 2005/04/04 13:15:58 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,8 +43,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/04/02 15:29:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/04/04 13:15:58 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable {
@@ -184,7 +184,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		return this.name;
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)

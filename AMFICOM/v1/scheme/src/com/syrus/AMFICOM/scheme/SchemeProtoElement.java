@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.12 2005/04/01 13:59:07 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.13 2005/04/04 13:17:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,13 @@ import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.scheme.logic.*;
 import com.syrus.util.Log;
 import java.util.*;
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/04/01 13:59:07 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/04 13:17:21 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -558,7 +559,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see TransferableObject#getTransferable()
 	 * @todo Implement.
 	 */
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.10 2005/04/01 13:59:07 bass Exp $
+ * $Id: PathElement.java,v 1.11 2005/04/04 13:17:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 import com.syrus.util.Log;
 import java.util.*;
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
  * #15 in hierarchy.
@@ -22,7 +23,7 @@ import java.util.*;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/04/01 13:59:07 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/04 13:17:21 $
  * @module scheme_v1
  */
 public final class PathElement extends AbstractCloneableStorableObject implements Describable, Comparable {
@@ -260,7 +261,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	/**
 	 * @see TransferableObject#getTransferable()
 	 */
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
