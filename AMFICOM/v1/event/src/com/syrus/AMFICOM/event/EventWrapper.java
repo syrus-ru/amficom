@@ -1,5 +1,5 @@
 /*
- * $Id: EventWrapper.java,v 1.2 2005/02/03 14:46:15 arseniy Exp $
+ * $Id: EventWrapper.java,v 1.3 2005/02/03 15:51:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/03 14:46:15 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/03 15:51:00 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -32,7 +32,6 @@ public class EventWrapper implements StorableObjectWrapper {
 	public static final String COLUMN_STATUS = "status";
 
 	public static final String LINK_FIELD_EVENT_PARAMETERS = "event_parameters";
-	public static final String LINK_FIELD_EVENT_PARAMETER_ID	= "event_parameter_id";
 	public static final String LINK_COLUMN_EVENT_PARAMETER_SORT	= "sort";
 	public static final String LINK_COLUMN_EVENT_PARAMETER_VALUE_NUMBER	= "value_number";
 	public static final String LINK_COLUMN_EVENT_PARAMETER_VALUE_STRING	= "value_string";
