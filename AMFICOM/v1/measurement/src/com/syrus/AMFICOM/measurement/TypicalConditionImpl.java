@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.1 2005/02/04 14:19:04 bob Exp $
+ * $Id: TypicalConditionImpl.java,v 1.2 2005/02/07 08:53:37 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/04 14:19:04 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/07 08:53:37 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -102,8 +102,9 @@ public class TypicalConditionImpl extends TypicalCondition {
 		boolean result = false;
 		Wrapper wrapper = null;
 		if (object instanceof Test) {
-			System.out.println(((Test)object).getId());
 			wrapper = TestWrapper.getInstance();
+		} else if (object instanceof MeasurementType) {
+			wrapper = MeasurementTypeWrapper.getInstance();
 		}
 		if (wrapper != null)
 			result = super.parseCondition(wrapper.getValue(object, this.key));
