@@ -93,7 +93,7 @@ public class RefAnalysis
 				events[i].data = new double[3];
 				events[i].data[0] = top - asympB;
 				events[i].data[1] = top - asympE;
-				events[i].data[2] = events[i].data[1] - events[i].data[0];
+				events[i].data[2] = re[i].getMLoss();
 			} else if (type == TraceEvent.TERMINATE) {
 				events[i].data = new double[3];
 				events[i].data[0] = top - asympB;

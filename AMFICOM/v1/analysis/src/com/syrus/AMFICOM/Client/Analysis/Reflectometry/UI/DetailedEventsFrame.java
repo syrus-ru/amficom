@@ -433,7 +433,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		if(etalonEvent != null) // из равенства следует, что эталонное событие найдено
 		{
 			double lossDiff  = dataEvent.getMLoss() - etalonEvent.getMLoss();
-			double widthDiff = dataEvent.getWidth0() - etalonEvent.getWidth0();
+			double widthDiff = dataEvent.getLength() - etalonEvent.getLength();
 			double locationDiff = (dataEvent.getBegin() - etalonEvent.getBegin()) * deltaX; // изменено с середины события на начало
 
 			lossDiff        = ((int)(lossDiff*1000.))/1000.;
