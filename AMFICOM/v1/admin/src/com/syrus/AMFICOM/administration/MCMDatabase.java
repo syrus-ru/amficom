@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.7 2005/02/08 12:26:20 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.8 2005/02/08 15:13:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,14 +41,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/08 12:26:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/02/08 15:13:00 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
 public class MCMDatabase extends StorableObjectDatabase {
-
-	public static final String LINK_COLUMN_MCM_ID = "mcm_id";
 
 	protected static final int SIZE_HOSTNAME_COLUMN = 64;
 
@@ -164,7 +162,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT 
 			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.KIS_ENTITY
-			+ SQL_WHERE + LINK_COLUMN_MCM_ID + EQUALS + mcmIdStr;
+			+ SQL_WHERE + MCMWrapper.LINK_COLUMN_MCM_ID + EQUALS + mcmIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -205,9 +203,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 
     StringBuffer sql = new StringBuffer(SQL_SELECT
                 + StorableObjectWrapper.COLUMN_ID + COMMA
-                + LINK_COLUMN_MCM_ID
+                + MCMWrapper.LINK_COLUMN_MCM_ID
                 + SQL_FROM + ObjectEntities.KIS_ENTITY
-                + SQL_WHERE + LINK_COLUMN_MCM_ID
+                + SQL_WHERE + MCMWrapper.LINK_COLUMN_MCM_ID
                 + SQL_IN + OPEN_BRACKET);
 		int i = 1;
 		for (Iterator it = mcms.iterator(); it.hasNext(); i++) {
@@ -219,7 +217,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(LINK_COLUMN_MCM_ID);
+					sql.append(MCMWrapper.LINK_COLUMN_MCM_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}
@@ -237,7 +235,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			Map kisMap = new HashMap();
 
 			while (resultSet.next()) {
-				Identifier mcmId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MCM_ID);
+				Identifier mcmId = DatabaseIdentifier.getIdentifier(resultSet, MCMWrapper.LINK_COLUMN_MCM_ID);
 				List kisIds = (List)kisMap.get(mcmId);
 				if (kisIds == null) {
 					kisIds = new LinkedList();
