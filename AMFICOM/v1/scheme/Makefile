@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2004/12/15 13:47:41 bass Exp $
+# $Id: Makefile,v 1.4 2004/12/17 15:07:49 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -24,6 +24,7 @@ corba: .corba
 .corba:	$(CLASSDIR)
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-configuration.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-java.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-map.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-resource.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-vt.idl
 	touch $@
