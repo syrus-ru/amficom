@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceListBox.java,v 1.6 2004/09/27 06:01:12 bass Exp $
+ * $Id: ObjectResourceListBox.java,v 1.7 2004/09/27 08:05:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,12 @@ package com.syrus.AMFICOM.Client.General.UI;
 import com.syrus.AMFICOM.Client.Resource.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/09/27 06:01:12 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 08:05:09 $
  * @module generalclient_v1
  */
 public class ObjectResourceListBox extends JList
