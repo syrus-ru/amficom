@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.34 2005/01/27 16:14:31 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.35 2005/01/28 11:32:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.Action;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -39,7 +37,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/01/27 16:14:31 $
+ * @version $Revision: 1.35 $, $Date: 2005/01/28 11:32:24 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
