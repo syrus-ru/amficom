@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.1 2004/09/27 06:44:36 max Exp $
+ * $Id: ModelingDatabase.java,v 1.2 2004/09/27 06:50:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,15 +30,15 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/27 06:44:36 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 06:50:11 $
+ * @author $Author: bob $
  * @module module_name
  */
 
 public class ModelingDatabase extends StorableObjectDatabase {
 
     public static final String COLUMN_NAME =                "name";
-    public static final String COLUMN_DOMAIN_ID =           "domain_id";
+    public static final String COLUMN_ME_ID =           "monitored_element_id";
     public static final String COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
     public static final String COLUMN_ARGUMENT_SET_ID =     "argument_set_id";
     
@@ -69,7 +69,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
         if (this.updateColumns == null){
             this.updateColumns = super.getUpdateColumns() + COMMA
             + COLUMN_NAME + COMMA
-            + COLUMN_DOMAIN_ID + COMMA
+            + COLUMN_ME_ID + COMMA
             + COLUMN_MEASUREMENT_TYPE_ID + COMMA
             + COLUMN_ARGUMENT_SET_ID;
         }
@@ -100,7 +100,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
             /**
              * @todo when change DB Identifier model ,change setString() to setLong()
              */
-            preparedStatement.setString(++i, Modeling.getDomainId().getCode()); 
+            preparedStatement.setString(++i, Modeling.getMonitoredElementId().getCode()); 
             /**
              * @todo when change DB Identifier model ,change setString() to setLong()
              */
@@ -116,8 +116,8 @@ public class ModelingDatabase extends StorableObjectDatabase {
             UpdateObjectException {
         Modeling Modeling = fromStorableObject(storableObject);
         String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-            + Modeling.getName().getId().toSQLString() + COMMA
-            + Modeling.getDomainId().toSQLString() + COMMA
+            + APOSTOPHE + Modeling.getName() + APOSTOPHE + COMMA
+            + Modeling.getMonitoredElementId().toSQLString() + COMMA
             + Modeling.getMeasurementType().getId().toSQLString() + COMMA
             + Modeling.getArgumentSet().getId().toSQLString();
         return values;
@@ -126,7 +126,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
     protected String retrieveQuery(String condition){
         return super.retrieveQuery(condition) + COMMA
         + COLUMN_NAME + COMMA
-        + COLUMN_DOMAIN_ID + COMMA
+        + COLUMN_ME_ID + COMMA
         + COLUMN_MEASUREMENT_TYPE_ID + COMMA
         + COLUMN_ARGUMENT_SET_ID
         + SQL_FROM + ObjectEntities.MODELING_ENTITY
@@ -139,13 +139,13 @@ public class ModelingDatabase extends StorableObjectDatabase {
         Modeling modeling = (storableObject == null) ? 
                 new Modeling(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null) : 
                     fromStorableObject(storableObject);
-        ModelingType ModelingType;
+        MeasurementType measurementType;
         Set criteriaSet;
         try {
             /**
              * @todo when change DB Identifier model ,change getString() to getLong()
              */
-            ModelingType = (ModelingType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+            measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
             /**
              * @todo when change DB Identifier model ,change getString() to getLong()
              */
@@ -164,18 +164,18 @@ public class ModelingDatabase extends StorableObjectDatabase {
                                                      * @todo when change DB Identifier model ,change getString() to getLong()
                                                      */
                                                      new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-                                                     ModelingType,
+                                                     measurementType,
                                                     /**
                                                      * @todo when change DB Identifier model ,change getString() to getLong()
                                                      */
                                                      new Identifier(resultSet.getString(COLUMN_MONITORED_ELEMENT_ID)),
                                                      criteriaSet);      
-        return Modeling;
+        return modeling;
     }
 
     
     public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-        Modeling Modeling = this.fromStorableObject(storableObject);
+        Modeling modeling = this.fromStorableObject(storableObject);
         switch (retrieveKind) {
             default:
                 return null;
@@ -193,7 +193,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
     }
 
     public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-        Modeling Modeling = this.fromStorableObject(storableObject);
+        Modeling modeling = this.fromStorableObject(storableObject);
         switch (updateKind) {
             case UPDATE_CHECK:
                 super.checkAndUpdateEntity(storableObject, false);
@@ -231,7 +231,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
     public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
-        String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+        String condition = COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
                 + SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
                 + DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString()
             + CLOSE_BRACKET;
