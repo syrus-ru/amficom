@@ -89,12 +89,14 @@ private:
     void findEventsBySplashes(ArrList&  splashes);
 	void SetSpliceParamsBySplash( EventParams& ep, Splash& sp1);
     void SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
+	void SetUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
     void deleteAllEventsAfterLastConnector();
     void addLinearPartsBetweenEvents();
     void correctAllConnectorsFronts(double *arr);
     void correctAllSpliceCoords(); // ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
     void correctSpliceCoords(int n);
     void excludeShortLinesBetweenConnectors(double* data, int evSizeC);
+	void trimAllEvents(); // из-за расширения всплесков события могу немного наползать друг на друга, выравниваем их 
 	void verifyResults();
 
 // Wavelet constants;

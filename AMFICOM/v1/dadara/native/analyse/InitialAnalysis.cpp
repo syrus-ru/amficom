@@ -137,6 +137,7 @@ void InitialAnalysis::performAnalysis()
     excludeShortLinesBetweenConnectors(data, wlet_width);
     correctAllSpliceCoords();// поскольку уточнение двигает соседние события, то к этому моменту динейные участки должы уже существовать ( поэтому вызов после addLinearPartsBetweenEvents() )
     addLinearPartsBetweenEvents();
+	trimAllEvents();
 	verifyResults(); // проверяем ошибки
 }
 //-------------------------------------------------------------------------------------------------
@@ -184,13 +185,24 @@ return;
         if( dist<reflectiveSize*2			// если всплески близко (это же значение используется в SetConnectorParamsBySplashes)
         	&& (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
 			&& ( sp1->begin_conn_n !=-1 )
-
           )
         {   EventParams *ep = new EventParams;
             SetConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
 		    events->add(ep);
             i++;// потому что коннектор состоит из двух всплесков
         }
+		// две сварки "+" и "-" очень близко 
+        else if( false && dist<reflectiveSize/2			// если всплески очень близко
+        	&& (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
+			&& ( sp1->begin_weld_n != -1 && sp2->begin_weld_n != -1)// и при этом сварочные
+            && ( sp1->begin_conn_n == -1 )// но это не коннектор
+          )
+        {   EventParams *ep = new EventParams;
+            SetUnrecognizedParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
+		    events->add(ep);
+            i++;// потому что состоит из двух всплесков
+        }
+
         else if( sp1->begin_weld_n != -1) //сварка
         {	EventParams *ep = new EventParams;
 			SetSpliceParamsBySplash( (EventParams&)*ep, (Splash&)*sp1 );
@@ -236,8 +248,16 @@ void InitialAnalysis::SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1
    }
    ep.R2 = max;
    double l = sp2.begin_thr - sp1.end_conn_n, l_max = reflectiveSize*2;
-   assert(l>=-1);// -1 может быть так как мы искуствнно расширяем на одну точку каждый всплеск (начало ДО уровня, а конец ПОСЛЕ ) 
+   assert(l>=-1);// -1 может быть так как мы искуствнно расширяем на одну точку каждый всплеск (начало ДО уровня, а конец ПОСЛЕ )
    ep.R3 = 2*ep.R2*(l_max-l)/(l+wlet_width)*(wlet_width/l_max);
+}
+// -------------------------------------------------------------------------------------------------
+void InitialAnalysis::SetUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
+{  ep.type = EventParams::UNRECOGNIZED;
+   ep.begin = sp1.begin_thr;
+   if(ep.begin<0){ep.begin=0;}
+   ep.end = sp2.end_thr;
+   if(ep.end>=lastNonZeroPoint){ep.end = lastNonZeroPoint;}
 }
 // -------------------------------------------------------------------------------------------------
 // ВАЖНО: Считаем, что minimalThreshold < minimalWeld < minimalConnector
@@ -635,6 +655,31 @@ return;
     b = (e3 - a*e1)/e2;
 
     a /= delta_x;
+}
+//------------------------------------------------------------------------------------------------------------
+// из-за расширения всплесков события могу немного наползать друг на друга, выравниваем их
+void InitialAnalysis::trimAllEvents()
+{	int prevEnd = 0;
+	for(int i=0; i<events->getLength(); i++)
+    {	EventParams& ev = *(EventParams*)(*events)[i];
+		if(ev.begin < 0)
+        { ev.begin = 0;
+        }
+		if(ev.begin != prevEnd && i != 0)
+        {   if( fabs(ev.begin = prevEnd) > 2)
+        	{   bool const GAP_BETWEEN_EVENTS_NOT_TOO_LARGE = false;
+            	assert(GAP_BETWEEN_EVENTS_NOT_TOO_LARGE);
+            }
+        	ev.begin = prevEnd;
+        }
+		if(ev.end <= ev.begin)
+        { ev.end = ev.begin+1;
+        }
+		if(ev.end >= lastNonZeroPoint)
+        { ev.end = lastNonZeroPoint-1;
+        }
+		prevEnd = ev.end;
+    }
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::verifyResults()

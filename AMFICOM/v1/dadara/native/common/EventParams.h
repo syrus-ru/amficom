@@ -17,6 +17,7 @@
 #define EventParams_REFLECTIVE 13
 #define EventParams_DEADZONE 15
 #define EventParams_SINGULARITY 14
+#define EventParams_UNRECOGNIZED 16
 
 class EventParams
 {
@@ -32,6 +33,7 @@ public:
 	static const int REFLECTIVE;
 	static const int DEADZONE;
 	static const int SINGULARITY;
+    static const int UNRECOGNIZED;
 
 public:
 	int type;

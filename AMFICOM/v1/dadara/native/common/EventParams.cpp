@@ -12,11 +12,9 @@ const int EventParams::LOSS = EventParams_LOSS;
 const int EventParams::REFLECTIVE = EventParams_REFLECTIVE;
 const int EventParams::SINGULARITY = EventParams_SINGULARITY;
 const int EventParams::DEADZONE = EventParams_DEADZONE;
+const int EventParams::UNRECOGNIZED = EventParams_UNRECOGNIZED;
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
+//---------------------------------------------------------------------------------------------------------------
 EventParams::EventParams() {
 	this->type = 0;
 	this->begin = 0;
@@ -27,10 +25,10 @@ EventParams::EventParams() {
     this->R2 = -1;
     this->R3 = -1;
 }
-
+//---------------------------------------------------------------------------------------------------------------
 EventParams::~EventParams() {
 }
-
+//---------------------------------------------------------------------------------------------------------------
 void EventParams::operator = (const EventParams& ep) {
 	this->type = ep.type;
 	this->begin = ep.begin;
@@ -41,4 +39,4 @@ void EventParams::operator = (const EventParams& ep) {
     this->R2 = ep.R2;
     this->R3 = ep.R3;
 }
-
+//---------------------------------------------------------------------------------------------------------------
