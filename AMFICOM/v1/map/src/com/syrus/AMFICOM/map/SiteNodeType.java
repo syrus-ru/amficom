@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeType.java,v 1.17 2005/03/09 14:49:53 bass Exp $
+ * $Id: SiteNodeType.java,v 1.18 2005/03/24 14:23:03 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,8 +43,8 @@ import java.util.Collection;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/03/09 14:49:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/03/24 14:23:03 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable {
@@ -68,17 +68,15 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 3690481316080464696L;
+	private static final long serialVersionUID = 3690481316080464696L;
 
-	private List					characteristics;
+	private Collection characteristics;
 
-	private Identifier				imageId;
+	private Identifier imageId;
+	private String name;
+	private boolean topological;
 
-	private String					name;
-
-	private boolean					topological;
-
-	private StorableObjectDatabase	siteNodeTypeDatabase;
+	private StorableObjectDatabase siteNodeTypeDatabase;
 
 	public SiteNodeType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -86,7 +84,8 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
 		try {
 			this.siteNodeTypeDatabase.retrieve(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -104,7 +103,8 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 				characteristicIds.add(new Identifier(sntt.characteristicIds[i]));
 
 			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		} catch (ApplicationException ae) {
+		}
+		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -118,13 +118,13 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 			final Identifier imageId,
 			final boolean topological) {
 		super(id,
-			new Date(System.currentTimeMillis()),
-			new Date(System.currentTimeMillis()),
-			creatorId,
-			creatorId,
-			version,
-			codename,
-			description);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
 		this.name = name;
 		this.imageId = imageId;
 		this.topological = topological;
@@ -134,60 +134,31 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
 	}
 
-	public void insert() throws CreateObjectException {
-		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
-		try {
-			if (this.siteNodeTypeDatabase != null)
-				this.siteNodeTypeDatabase.insert(this);
-		} catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
-	}
-
-	public static SiteNodeType createInstance(
-			final Identifier creatorId,
+	public static SiteNodeType createInstance(final Identifier creatorId,
 			final String codename,
 			final String name,
 			final String description,
 			final Identifier imageId,
-			final boolean isTopological) 
-		throws CreateObjectException {
-		
-		if (creatorId == null || codename == null || name == null 
-				|| description == null || imageId == null)
+			final boolean isTopological) throws CreateObjectException {
+
+		if (creatorId == null || codename == null || name == null || description == null || imageId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
-			SiteNodeType siteNodeType = new SiteNodeType(
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE),
-				creatorId,
-				0L,
-				codename,
-				name,
-				description,
-				imageId,
-				isTopological);
+			SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE),
+					creatorId,
+					0L,
+					codename,
+					name,
+					description,
+					imageId,
+					isTopological);
 			siteNodeType.changed = true;
 			return siteNodeType;
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("SiteNodeType.createInstance | cannot generate identifier ", e);
 		}
-	}
-
-	public Collection getCharacteristics() {
-		return  Collections.unmodifiableList(this.characteristics);
-	}
-
-	public void addCharacteristic(Characteristic characteristic)
-	{
-		this.characteristics.add(characteristic);
-		this.changed = true;
-	}
-
-	public void removeCharacteristic(Characteristic characteristic)
-	{
-		this.characteristics.remove(characteristic);
-		this.changed = true;
 	}
 
 	public List getDependencies() {
@@ -211,26 +182,19 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
-		return new SiteNodeType_Transferable(super.getHeaderTransferable(), this.codename, this.name, this.description,
-												(Identifier_Transferable) this.imageId.getTransferable(),
-												this.topological, charIds);
+		return new SiteNodeType_Transferable(super.getHeaderTransferable(),
+				this.codename,
+				this.name,
+				this.description,
+				(Identifier_Transferable) this.imageId.getTransferable(),
+				this.topological,
+				charIds);
 	}
 
 	public boolean isTopological() {
 		return this.topological;
 	}
-	
-	protected void setCharacteristics0(final List characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-	
-	public void setCharacteristics(final List characteristics) {
-		this.setCharacteristics0(characteristics);
-		this.changed = true;
-	}
-	
+
 	public void setDescription(final String description) {
 		super.description = description;
 		this.changed = true;
@@ -250,49 +214,60 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		this.topological = topological;
 		this.changed = true;
 	}
-	
+
 	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  String codename,
-											  String name,
-											  String description,
-											  Identifier imageId,
-											  boolean topological) {
-			super.setAttributes(created,
-					modified,
-					creatorId,
-					modifierId,
-					version,
-					codename,
-					description);
-			this.name = name;
-			this.imageId = imageId;
-			this.topological = topological;		
+			Date modified,
+			Identifier creatorId,
+			Identifier modifierId,
+			long version,
+			String codename,
+			String name,
+			String description,
+			Identifier imageId,
+			boolean topological) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
+		this.name = name;
+		this.imageId = imageId;
+		this.topological = topological;
+	}
+
+	public Collection getCharacteristics() {
+		return Collections.unmodifiableCollection(this.characteristics);
+	}
+
+	public void addCharacteristic(Characteristic characteristic) {
+		this.characteristics.add(characteristic);
+		this.changed = true;
+	}
+
+	public void removeCharacteristic(Characteristic characteristic) {
+		this.characteristics.remove(characteristic);
+		this.changed = true;
 	}
 
 	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
 	 */
-	public void setCharacteristics(Collection characteristics) {
-		throw new UnsupportedOperationException();
+	public void setCharacteristics(final Collection characteristics) {
+		this.setCharacteristics0(characteristics);
+		this.changed = true;
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_SITE_NODE_TYPE;
 	}
 
 	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
 	 */
-	public void setCharacteristics0(Collection characteristics) {
-		throw new UnsupportedOperationException();
+	public void setCharacteristics0(final Collection characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
 	}
 }
