@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.5 2005/02/03 08:37:25 bob Exp $
+ * $Id: CharacteristicWrapper.java,v 1.6 2005/02/07 13:43:10 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:25 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/07 13:43:10 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -115,9 +115,9 @@ public class CharacteristicWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				characteristic.setDescription0((String) value);
 			else if (key.equals(COLUMN_SORT))
-				characteristic.setSort(CharacteristicSort.from_int(Integer.parseInt((String) value)));
+				characteristic.setSort(CharacteristicSort.from_int(((Integer)value).intValue()));
 			else if (key.equals(COLUMN_CHARACTERIZED_ID))
-				characteristic.setCharacterizedId(new Identifier((String) value));
+				characteristic.setCharacterizedId((Identifier) value);
 			else if (key.equals(COLUMN_EDITABLE))
 				characteristic.setEditable(((Boolean) value).booleanValue());
 			else if (key.equals(COLUMN_VISIBLE))
