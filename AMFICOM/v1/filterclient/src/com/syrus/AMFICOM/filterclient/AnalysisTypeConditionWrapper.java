@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/01 12:51:14 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/01 17:06:06 $
  * @author $Author: max $
  * @module filterclient_v1
  */
@@ -29,8 +29,6 @@ public class AnalysisTypeConditionWrapper implements ConditionWrapper {
 	private Map keyLinkedNames = new HashMap();
 	private Map storableObjectInitialName = new HashMap();
 	
-	private Collection initialCollection;
-	
 	private static final String PARAM = "filter by parameter types";
 	private static final String MT = "filter by measurement types";
 	
@@ -38,32 +36,31 @@ public class AnalysisTypeConditionWrapper implements ConditionWrapper {
 	private static String[] keyNames = {PARAM, MT};
 	private static byte[] keyTypes = {ConditionWrapper.LIST, ConditionWrapper.LIST};
 	
-	public AnalysisTypeConditionWrapper(Collection initialTests,
+	public AnalysisTypeConditionWrapper(Collection initialAnalysisTypes,
 			Collection parameterTypes, Collection measurementTypes) {
-		this.initialCollection = initialTests;
 		this.parameterTypes = new ArrayList(parameterTypes);
 		this.measurementTypes = new ArrayList(measurementTypes);
 		
-		for (Iterator iter = this.initialCollection.iterator(); iter.hasNext();) {
-			AnalysisType test = (AnalysisType) iter.next();
-			this.storableObjectInitialName.put(test, test.getDescription());
+		for (Iterator iter = initialAnalysisTypes.iterator(); iter.hasNext();) {
+			AnalysisType analysisType = (AnalysisType) iter.next();
+			this.storableObjectInitialName.put(analysisType, analysisType.getDescription());
 		}
 		
-		String[] patamNames = new String[this.parameterTypes.size()];
+		String[] paramNames = new String[this.parameterTypes.size()];
 		int i=0;
-		for (Iterator iter = parameterTypes.iterator(); iter.hasNext();i++) {
+		for (Iterator iter = this.parameterTypes.iterator(); iter.hasNext();i++) {
 			ParameterType pt = (ParameterType) iter.next();
-			patamNames[i] = pt.getName();
+			paramNames[i] = pt.getName();
 		}
-		this.keyLinkedNames.put(keys[0], patamNames);
+		this.keyLinkedNames.put(keys[0], paramNames);
 		
 		String[] mtNames = new String[this.measurementTypes.size()];
 		i=0;
-		for (Iterator iter = measurementTypes.iterator(); iter.hasNext();i++) {
+		for (Iterator iter = this.measurementTypes.iterator(); iter.hasNext();i++) {
 			MeasurementType mt = (MeasurementType) iter.next();
 			mtNames[i] = mt.getDescription();			
 		}
-		this.keyLinkedNames.put(keys[1], patamNames);
+		this.keyLinkedNames.put(keys[1], mtNames);
 	}
 	
 	public String[] getLinkedNames(String key) {
@@ -71,7 +68,7 @@ public class AnalysisTypeConditionWrapper implements ConditionWrapper {
 	}
 	
 	public Collection getInitialEntities() {
-		return this.initialCollection;
+		return this.storableObjectInitialName.keySet();
 	}
 	
 	public String getInitialName(StorableObject storableObject) {

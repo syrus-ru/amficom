@@ -1,5 +1,5 @@
 /*
- * $Id: TestConditionWrapper.java,v 1.3 2005/04/01 12:50:37 max Exp $
+ * $Id: TestConditionWrapper.java,v 1.4 2005/04/01 17:06:06 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/01 12:50:37 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/01 17:06:06 $
  * @author $Author: max $
  * @module filterclient_v1
  */
@@ -36,16 +36,13 @@ public class TestConditionWrapper implements ConditionWrapper {
 	private ArrayList measurementPorts;
 	private ArrayList mcms;
 	
-	private Map keyLinkedNames;
-	private Map storableObjectInitialName;
+	private Map keyLinkedNames = new HashMap();
+	private Map storableObjectInitialName = new HashMap();
 	
-	private Collection initialCollection;
-		
-	
-	private static final String STATUS = "search by status";
-	private static final String ME = "search by monitored elements";
-	private static final String MT = "search by measurementTypes";
-	private static final String MCM = "search by MCMs";
+	private static final String STATUS = "filter by status";
+	private static final String ME = "filter by monitored elements";
+	private static final String MT = "filter by measurementTypes";
+	private static final String MCM = "filter by MCMs";
 		
 	private static String[] keys = {TestWrapper.COLUMN_STATUS, ME, MT, MCM};
 	private static String[] keyNames = {STATUS, ME, MT, MCM};
@@ -53,7 +50,6 @@ public class TestConditionWrapper implements ConditionWrapper {
 	
 	public TestConditionWrapper(Collection initialTests,
 			Collection monitoredElements, Collection measurementPorts, Collection mcms) {
-		this.initialCollection = initialTests;
 		this.monitoredElements = new ArrayList(monitoredElements);
 		this.measurementPorts = new ArrayList(measurementPorts);
 		this.mcms = new ArrayList(mcms);
@@ -65,7 +61,7 @@ public class TestConditionWrapper implements ConditionWrapper {
 		
 		String[] meNames = new String[this.monitoredElements.size()];
 		int i=0;
-		for (Iterator iter = monitoredElements.iterator(); iter.hasNext();i++) {
+		for (Iterator iter = this.monitoredElements.iterator(); iter.hasNext();i++) {
 			MonitoredElement me = (MonitoredElement) iter.next();
 			meNames[i] = me.getName();			
 		}
@@ -88,7 +84,7 @@ public class TestConditionWrapper implements ConditionWrapper {
 		this.keyLinkedNames.put(keys[3], mcmNames);
 		
 		this.storableObjectInitialName = new HashMap();
-		for (Iterator iter = this.initialCollection.iterator(); iter.hasNext();) {
+		for (Iterator iter = initialTests.iterator(); iter.hasNext();) {
 			Test test = (Test) iter.next();
 			this.storableObjectInitialName.put(test, test.getDescription());
 		}
@@ -106,12 +102,12 @@ public class TestConditionWrapper implements ConditionWrapper {
 		} else if (key.equals(keys[3])) {
 			return ((MCM)this.mcms.get(indexNumber)).getId();
 		} else {
-			throw new IllegalDataException("MeasurementTypeConditionWrapper.getLinkedObject | Wrong key");
+			throw new IllegalDataException("TestConditionWrapper.getLinkedObject | Wrong key");
 		}
 	}
 	
 	public Collection getInitialEntities() {
-		return this.initialCollection;
+		return this.storableObjectInitialName.keySet();
 	}
 	
 	public String getInitialName(StorableObject storableObject) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeConditionWrapper.java,v 1.5 2005/04/01 12:50:37 max Exp $
+ * $Id: MeasurementTypeConditionWrapper.java,v 1.6 2005/04/01 17:06:06 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,14 +17,12 @@ import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.MeasurementTypeWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/01 12:50:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 17:06:06 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -32,52 +30,36 @@ public class MeasurementTypeConditionWrapper implements ConditionWrapper {
 	
 	private static short entityCode = ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE;
 	
-	private ArrayList parameterTypes;
 	private ArrayList measurementPortTypes;
 	
-	private Map keyLinkedNames;
-	private Map storableObjectInitialName;
+	private Map keyLinkedNames = new HashMap();
+	private Map storableObjectInitialName = new HashMap();
 	
-	private Collection initialCollection;
-		
-	private static final String CODENAME = "search by field \"CODENAME\"";
-	private static final String PORTTYPE = "search by MeasurementPortTypes";
-	private static final String PARAMTYPE = "search by ParameterTypes";
-		
+	private static final String CODENAME = "filter by codename";
+	private static final String PORTTYPE = "filter by MeasurementPortTypes";
+			
 	private static String[] keys = {
-			StorableObjectWrapper.COLUMN_CODENAME, PORTTYPE,PARAMTYPE};
-	private static String[] keyNames = {CODENAME, PORTTYPE, PARAMTYPE};
-	private static byte[] keyTypes = {ConditionWrapper.STRING, ConditionWrapper.LIST, ConditionWrapper.LIST};
+			StorableObjectWrapper.COLUMN_CODENAME, PORTTYPE};
+	private static String[] keyNames = {CODENAME, PORTTYPE};
+	private static byte[] keyTypes = {ConditionWrapper.STRING, ConditionWrapper.LIST};
 	
 	public MeasurementTypeConditionWrapper(Collection initialMeasurementType,
-			Collection measurementPortTypes, Collection parameterTypes) {
-		this.initialCollection = initialMeasurementType;
-		this.parameterTypes = new ArrayList(parameterTypes);
+			Collection measurementPortTypes) {
+		
 		this.measurementPortTypes = new ArrayList(measurementPortTypes);
 		
-		this.keyLinkedNames = new HashMap();
-		String[] ptNames = new String[this.parameterTypes.size()];
-		int i=0;
-		for (Iterator iter = this.parameterTypes.iterator(); iter.hasNext();i++) {
-			ParameterType pt = (ParameterType) iter.next();
-			ptNames[i] = pt.getName();			
+		for (Iterator iter = initialMeasurementType.iterator(); iter.hasNext();) {
+			MeasurementType measurementType = (MeasurementType) iter.next();
+			this.storableObjectInitialName.put(measurementType, measurementType.getDescription());
 		}
-		this.keyLinkedNames.put(keys[2], ptNames);
 		
 		String[] mtNames = new String[this.measurementPortTypes.size()];
-		i=0;
+		int i=0;
 		for (Iterator iter = this.measurementPortTypes.iterator(); iter.hasNext();i++) {
 			MeasurementPortType pt = (MeasurementPortType) iter.next();
 			mtNames[i] = pt.getName();			
 		}
 		this.keyLinkedNames.put(keys[1], mtNames);
-		
-		this.storableObjectInitialName = new HashMap();
-		for (Iterator iter = this.initialCollection.iterator(); iter.hasNext();) {
-			MeasurementType test = (MeasurementType) iter.next();
-			this.storableObjectInitialName.put(test, test.getDescription());
-		}
-		
 	}
 	
 	public String[] getLinkedNames(String key) throws IllegalDataException {
@@ -85,17 +67,13 @@ public class MeasurementTypeConditionWrapper implements ConditionWrapper {
 	}
 	
 	public Object getLinkedObject(String key, int indexNumber) throws IllegalDataException {
-		if (key.equals(keys[1])) {
+		if (key.equals(keys[1]))
 			return ((MeasurementPortType)this.measurementPortTypes.get(indexNumber)).getId();
-		} else if (key.equals(keys[2])) {
-			return ((ParameterType)this.parameterTypes.get(indexNumber)).getId();
-		} else {
-			throw new IllegalDataException("MeasurementTypeConditionWrapper.getLinkedObject | Wrong key");
-		}
+		throw new IllegalDataException("MeasurementTypeConditionWrapper.getLinkedObject | Wrong key");
 	}
 	
 	public Collection getInitialEntities() {
-		return this.initialCollection;
+		return this.storableObjectInitialName.keySet();
 	}
 	
 	public String getInitialName(StorableObject storableObject) {
