@@ -1,5 +1,5 @@
 /*
- * $Id: AgentModel.java,v 1.2 2004/08/17 15:02:51 krupenn Exp $
+ * $Id: AgentModel.java,v 1.3 2004/09/27 13:41:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,21 +8,19 @@
 
 package com.syrus.AMFICOM.Client.Resource.System;
 
-import java.text.*;
-import java.util.*;
-
-
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Administrate.Object.UI.AgentPane;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 13:41:31 $
  * @module generalclient_v1
  */
 public class AgentModel extends ObjectResourceModel
@@ -34,11 +32,11 @@ public class AgentModel extends ObjectResourceModel
     this.agent = agent;
   }
 
-
-  public PropertiesPanel getPropertyPane()
-  {
-    return new AgentPane(agent);
-  }
+	public ObjectResourcePropertiesPane getPropertyPane() {
+		AgentPane agentPane = AgentPane.getInstance();
+		agentPane.setObjectResource(agent);
+		return agentPane;
+	}
 
   public String getColumnValue(String col_id)
   {
