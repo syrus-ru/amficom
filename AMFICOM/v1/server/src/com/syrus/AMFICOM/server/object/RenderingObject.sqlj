@@ -1,5 +1,5 @@
 /*
- * $Id: RenderingObject.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
+ * $Id: RenderingObject.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,12 +19,11 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class RenderingObject
-{
+final class RenderingObject {
 	private String roID;
 	private int objectX;
 	private int objectY;
@@ -36,8 +35,8 @@ public class RenderingObject
 
 	private String report_template_id;
 
-	public RenderingObject(RenderingObject_Transferable ro, String r_t_id)
-			throws Exception
+	RenderingObject(RenderingObject_Transferable ro, String r_t_id)
+			throws SQLException
 	{
     this.report_template_id = r_t_id; 
 		this.roID = ro.roID;
@@ -113,12 +112,11 @@ public class RenderingObject
 		connCtx2.getConnection().setAutoCommit(autoc);
 	}
 
-	public RenderingObject(String id)
-			throws Exception
+	RenderingObject(String id)
+			throws SQLException
 	{
 		RenderingObjectIterator roIt = null;
 
-		BLOB bl;
 		byte[] width_bytes = new byte[0];
     byte[] report_bytes = new byte[0];
 
@@ -169,16 +167,8 @@ public class RenderingObject
 
 			roIt.close();
 
-			try
-			{
-				this.column_widths = new ByteArray(width_bytes).toIntArray();
-				this.incapsulated_report = report_bytes;
-			}
-			catch(Exception ioe)
-			{
-				System.out.println("error loading report template: " + ioe.getMessage());
-				ioe.printStackTrace();
-			}
+			this.column_widths = new ByteArray(width_bytes).toIntArray();
+			this.incapsulated_report = report_bytes;
 		}
 		catch(SQLException e)
 		{
@@ -190,14 +180,12 @@ public class RenderingObject
 		{
 			try {
 				roIt.close();
-			}catch(Exception exe) {}
+			}catch(SQLException exe) {}
 		}
 		
 	}
 
-	public RenderingObject_Transferable getTransferable()
-			throws Exception
-	{
+	RenderingObject_Transferable getTransferable() {
 		return new RenderingObject_Transferable(
 			this.roID,
 			this.objectX,
@@ -209,25 +197,7 @@ public class RenderingObject
 			this.tableDivisionsNumber);
 	}
 
-	public String getReportTemplateId()
-	{
-		return this.report_template_id;
-	}
-
-	public String getId()
-	{
-		return this.roID;
-	}
-
-	public void delete() throws Exception
-	{
-		#sql { delete from AMFICOM.REPORTTEMPLATEFIELDS
-			where ID = :(this.roID)
-		};
-		#sql { commit };
-	}
-
-	public void update(RenderingObject_Transferable ro) throws Exception
+	void update(RenderingObject_Transferable ro) throws SQLException
 	{
 		this.objectX = ro.objectX;
 		this.objectY = ro.objectY;
@@ -270,7 +240,7 @@ public class RenderingObject
 		#sql { commit };
 	}
 
-	public static RenderingObject[] retrieveRenderingObjects(String rt_id) throws Exception
+	static RenderingObject[] retrieveRenderingObjects(String rt_id) throws SQLException
 	{
 		IdIterator idIt = null;
 		Vector linkedlist = new Vector();
@@ -285,11 +255,11 @@ public class RenderingObject
 				linkedlist.add(new RenderingObject(idIt.id()));
 			idIt.close();
 		}
-		catch(Exception ex)
+		catch(SQLException ex)
 		{
 			if(idIt != null) try {
 			idIt.close();
-			}catch(Exception exe) {}
+			}catch(SQLException exe) {}
 			throw ex;
 		}
 		RenderingObject[] ros = new RenderingObject[linkedlist.size()];

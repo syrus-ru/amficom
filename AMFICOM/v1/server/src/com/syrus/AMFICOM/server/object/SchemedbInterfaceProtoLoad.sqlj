@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceProtoLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
+ * $Id: SchemedbInterfaceProtoLoad.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,17 +15,15 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class SchemedbInterfaceProtoLoad
-{
-	protected SchemedbInterfaceProtoLoad()
-	{
+final class SchemedbInterfaceProtoLoad {
+	private SchemedbInterfaceProtoLoad() {
 	}
 
-	public static Vector loadDevicePorts(String device_id)
+	private static Vector loadDevicePorts(String device_id)
 	{
 		PortIdIterator idIt = null;
 		String sp_id;
@@ -107,7 +105,7 @@ public class SchemedbInterfaceProtoLoad
 						link_id = "";
 					}
 
-					vector2 = MapdbInterfaceLoad4.loadAttributes(
+					vector2 = MapdbInterfaceLoad.loadAttributes(
 							"SCHEMEPORTATTRIBUTES",
 							"SCHEME_PORT_ID",
 							id);
@@ -154,7 +152,7 @@ public class SchemedbInterfaceProtoLoad
 		return vector;
 	}
 
-	public static Vector loadDeviceCablePorts(String device_id)
+	private static Vector loadDeviceCablePorts(String device_id)
 	{
 		CablePortIdIterator idIt = null;
 		String sp_id;
@@ -236,7 +234,7 @@ public class SchemedbInterfaceProtoLoad
 						link_id = "";
 					}
 
-					vector2 = MapdbInterfaceLoad4.loadAttributes(
+					vector2 = MapdbInterfaceLoad.loadAttributes(
 							"SCHEMECABLEPORTATTRIBUTES",
 							"SCHEME_CABLE_PORT_ID",
 							id);
@@ -283,234 +281,7 @@ public class SchemedbInterfaceProtoLoad
 		return vector;
 	}
 
-	public static Object loadSchemePort(String port_id)
-	{
-		String It_id = "";
-		String It_name = "";
-		String It_device_id = "";
-		String It_link_id = "";
-
-		String It_port_type_id = "";
-		String It_port_id = "";
-		String It_direction_type = "";
-
-		boolean It_is_access_port = false;
-		String It_access_port_type_id = "";
-		String It_access_port_id = "";
-
-		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
-		SchemePort_Transferable pt_t;
-		SchemePortIterator ptIt = null;
-		Vector vector2;
-
-		try
-		{
-			#sql ptIt = { select
-						ID,
-						NAME,
-						PORT_TYPE_ID,
-						PORT_ID,
-						IS_ACCESS_PORT,
-						ACCESS_PORT_TYPE_ID,
-						ACCESS_PORT_ID,
-						DIRECTION_TYPE
-					from AMFICOM.SCHEMEPORTS
-					where ID = :port_id
-			};
-
-			ptIt.next();
-
-			try { It_id = ptIt.id(); }
-			catch(SQLException e) { }
-			if(It_id == null) It_id = "";
-			try { It_name = ptIt.name(); }
-			catch(SQLException e) { }
-			if(It_name == null) It_name = "";
-			try { It_port_type_id = ptIt.port_type_id(); }
-			catch(SQLException e) { }
-			if(It_port_type_id == null) It_port_type_id = "";
-			try { It_port_id = ptIt.port_id(); }
-			catch(SQLException e) { }
-			if(It_port_id == null) It_port_id = "";
-			try { It_is_access_port = (ptIt.is_access_port() == 0)? false: true; }
-			catch(SQLException e) { }
-			try { It_access_port_type_id = ptIt.access_port_type_id(); }
-			catch(SQLException e) { }
-			if(It_access_port_type_id == null) It_access_port_type_id = "";
-			try { It_access_port_id = ptIt.access_port_id(); }
-			catch(SQLException e) { }
-			if(It_access_port_id == null) It_access_port_id = "";
-			try { It_direction_type = ptIt.direction_type(); }
-			catch(SQLException e) { }
-			if(It_direction_type == null) It_direction_type = "";
-
-			ptIt.close();
-
-			#sql { select ID into :It_link_id
-				from AMFICOM.SCHEMELINKS
-				where SOURCE_PORT_ID = :It_id
-					or TARGET_PORT_ID = :It_id
-			};
-
-			#sql { select SCHEME_DEVICE_ID into :It_device_id
-				from AMFICOM.SCHEMEDEVICEPORTS
-				where SCHEME_PORT_ID = :It_id
-			};
-
-			vector2 = MapdbInterfaceLoad4.loadAttributes(
-					"SCHEMEPORTATTRIBUTES",
-					"SCHEME_PORT_ID",
-					It_id);
-			attributes = new ElementAttribute_Transferable[vector2.size()];
-			vector2.copyInto(attributes);
-
-			pt_t = new SchemePort_Transferable(
-				It_id,
-				It_name,
-				It_device_id,
-				It_link_id,
-				It_port_type_id,
-				It_port_id,
-				It_is_access_port,
-				It_access_port_type_id,
-				It_access_port_id,
-				It_direction_type,
-				attributes);
-			return pt_t;
-		}
-		catch(SQLException e)
-		{
-			if(ptIt != null) try {
-			ptIt.close();
-			}catch(Exception exe) {}
-			System.out.println("error loading scheme port: " + e.getMessage());
-			e.printStackTrace();
-			return null;
-		}
-		finally
-		{
-			try {
-				ptIt.close();
-			}catch(Exception exe) {}
-		}
-		
-	}
-
-	public static Object loadSchemeCablePort(String port_id)
-	{
-		String It_id = "";
-		String It_name = "";
-
-		String It_device_id = "";
-		String It_link_id = "";
-
-		String It_cable_port_type_id = "";
-		String It_cable_port_id = "";
-		String It_direction_type = "";
-
-		boolean It_is_access_port = false;
-		String It_access_port_type_id = "";
-		String It_access_port_id = "";
-
-		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
-		SchemeCablePort_Transferable pt_t;
-		SchemeCablePortIterator ptIt = null;
-		Vector vector2;
-
-		try
-		{
-			#sql ptIt = { select
-						ID,
-						NAME,
-						CABLE_PORT_TYPE_ID,
-						CABLE_PORT_ID,
-						IS_ACCESS_PORT,
-						ACCESS_PORT_TYPE_ID,
-						ACCESS_PORT_ID,
-						DIRECTION_TYPE
-					from AMFICOM.SCHEMECABLEPORTS
-					where ID = :port_id
-			};
-
-			ptIt.next();
-
-			try { It_id = ptIt.id(); }
-			catch(SQLException e) { }
-			if(It_id == null) It_id = "";
-			try { It_name = ptIt.name(); }
-			catch(SQLException e) { }
-			if(It_name == null) It_name = "";
-			try { It_cable_port_type_id = ptIt.cable_port_type_id(); }
-			catch(SQLException e) { }
-			if(It_cable_port_type_id == null) It_cable_port_type_id = "";
-			try { It_cable_port_id = ptIt.cable_port_id(); }
-			catch(SQLException e) { }
-			if(It_cable_port_id == null) It_cable_port_id = "";
-			try { It_is_access_port = (ptIt.is_access_port() == 0)? false: true; }
-			catch(SQLException e) { }
-			try { It_access_port_type_id = ptIt.access_port_type_id(); }
-			catch(SQLException e) { }
-			if(It_access_port_type_id == null) It_access_port_type_id = "";
-			try { It_access_port_id = ptIt.access_port_id(); }
-			catch(SQLException e) { }
-			if(It_access_port_id == null) It_access_port_id = "";
-			try { It_direction_type = ptIt.direction_type(); }
-			catch(SQLException e) { }
-			if(It_direction_type == null) It_direction_type = "";
-
-			ptIt.close();
-
-			#sql { select ID into :It_link_id
-				from AMFICOM.SCHEMECABLELINKS
-				where SOURCE_PORT_ID = :It_id
-					or TARGET_PORT_ID = :It_id
-			};
-
-			#sql { select SCHEME_DEVICE_ID into :It_device_id
-				from AMFICOM.SCHEMEDEVICECABLEPORTS
-				where SCHEME_CABLE_PORT_ID = :It_id
-			};
-
-			vector2 = MapdbInterfaceLoad4.loadAttributes(
-					"SCHEMECABLEPORTATTRIBUTES",
-					"SCHEME_CABLE_PORT_ID",
-					It_id);
-			attributes = new ElementAttribute_Transferable[vector2.size()];
-			vector2.copyInto(attributes);
-
-			pt_t = new SchemeCablePort_Transferable(
-				It_id,
-				It_name,
-				It_device_id,
-				It_link_id,
-				It_cable_port_type_id,
-				It_cable_port_id,
-				It_is_access_port,
-				It_access_port_type_id,
-				It_access_port_id,
-				It_direction_type,
-				attributes);
-			return pt_t;
-		}
-		catch(SQLException e)
-		{
-			if(ptIt != null) try {
-			ptIt.close();
-			}catch(Exception exe) {}
-			System.out.println("error loading scheme cable port: " + e.getMessage());
-			e.printStackTrace();
-			return null;
-		}
-		finally
-		{
-			try {
-				ptIt.close();
-			}catch(Exception exe) {}
-		}
-		
-	}
-
-	public static Object loadSchemeLink(String link_id)
+	static Object loadSchemeLink(String link_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -573,7 +344,7 @@ public class SchemedbInterfaceProtoLoad
 
 			lIt.close();
 
-			vector2 = MapdbInterfaceLoad4.loadAttributes(
+			vector2 = MapdbInterfaceLoad.loadAttributes(
 					"SCHEMELINKATTRIBUTES",
 					"SCHEME_LINK_ID",
 					It_id);
@@ -611,7 +382,7 @@ public class SchemedbInterfaceProtoLoad
 		
 	}
 
-	public static Object loadSchemeDevice(String device_id)
+	static Object loadSchemeDevice(String device_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -652,7 +423,7 @@ public class SchemedbInterfaceProtoLoad
 			cable_ports = new SchemeCablePort_Transferable[vector2.size()];
 			vector2.copyInto(cable_ports);
 
-			vector2 = MapdbInterfaceLoad4.loadAttributes(
+			vector2 = MapdbInterfaceLoad.loadAttributes(
 					"SCHEMEDEVICEATTRIBUTES",
 					"SCHEME_DEVICE_ID",
 					It_id);
@@ -685,7 +456,7 @@ public class SchemedbInterfaceProtoLoad
 		
 	}
 
-	public static void loadProtoElement(String element_id, Vector protoelements)
+	private static void loadProtoElement(String element_id, Vector protoelements)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -862,7 +633,7 @@ public class SchemedbInterfaceProtoLoad
 				It_img2 = new byte[0];
 			}
 
-			vector2 = MapdbInterfaceLoad4.loadAttributes(
+			vector2 = MapdbInterfaceLoad.loadAttributes(
 					"SCHEMEPROTOELEMENTATTRIBUTES",
 					"SCHEME_PROTO_ELEMENT_ID",
 					It_id);
@@ -903,7 +674,7 @@ public class SchemedbInterfaceProtoLoad
 		
 	}
 
-	public static void getProtoElements(
+	static void getProtoElements(
 			String domain_id,
 			SchemeProtoElementSeq_TransferableHolder protos)
 	{
@@ -937,7 +708,7 @@ public class SchemedbInterfaceProtoLoad
 		vector.copyInto(protos.value);
 	}
 
-	public static void getProtoElements(
+	static void getProtoElements(
 			String domain_id,
 			String[] ids,
 			SchemeProtoElementSeq_TransferableHolder protos)
@@ -969,35 +740,14 @@ public class SchemedbInterfaceProtoLoad
 		vector.copyInto(protos.value);
 	}
 
+	#sql private static iterator IdIterator ( String id );
+	#sql private static iterator PortIdIterator ( String scheme_port_id );
+	#sql private static iterator CablePortIdIterator ( String scheme_cable_port_id );
+	#sql private static iterator DeviceIdIterator ( String scheme_device_id );
+	#sql private static iterator LinkIdIterator ( String scheme_link_id );
+	#sql private static iterator PEIdIterator ( String scheme_pe_id );
 
-	#sql public static iterator IdIterator ( String id );
-	#sql public static iterator PortIdIterator ( String scheme_port_id );
-	#sql public static iterator CablePortIdIterator ( String scheme_cable_port_id );
-	#sql public static iterator DeviceIdIterator ( String scheme_device_id );
-	#sql public static iterator LinkIdIterator ( String scheme_link_id );
-	#sql public static iterator PEIdIterator ( String scheme_pe_id );
-
-	#sql public static iterator SchemePortIterator(
-		String id,
-		String name,
-		String port_type_id,
-		String port_id,
-		int is_access_port,
-		String access_port_type_id,
-		String access_port_id,
-		String direction_type);
-
-	#sql public static iterator SchemeCablePortIterator(
-		String id,
-		String name,
-		String cable_port_type_id,
-		String cable_port_id,
-		int is_access_port,
-		String access_port_type_id,
-		String access_port_id,
-		String direction_type);
-
-	#sql public static iterator SchemeLinkIterator(
+	#sql private static iterator SchemeLinkIterator(
 		String id,
 		String name,
 		String link_type_id,
@@ -1007,11 +757,11 @@ public class SchemedbInterfaceProtoLoad
 		String physical_length,
 		String optical_length);
 
-	#sql public static iterator SchemeDeviceIterator(
+	#sql private static iterator SchemeDeviceIterator(
 		String id,
 		String name);
 
-	#sql public static iterator SchemeProtoIterator(
+	#sql private static iterator SchemeProtoIterator(
 		String id,
 		String name,
 		String equipment_type_id,

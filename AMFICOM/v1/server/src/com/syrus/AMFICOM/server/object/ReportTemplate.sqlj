@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
+ * $Id: ReportTemplate.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,11 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class ReportTemplate
-{
+final class ReportTemplate {
 	private String id;
 	private String name;
 	private String description;
@@ -31,9 +30,7 @@ public class ReportTemplate
 	private ImagePane[] images;
 	private FilterTemplate[] filters;  
 
-	public ReportTemplate(ReportTemplate_Transferable rt)
-			throws Exception
-	{
+	ReportTemplate(ReportTemplate_Transferable rt) throws SQLException {
 		this.id = rt.id;
 		this.name = rt.name;
 		this.description = rt.description;
@@ -58,7 +55,7 @@ public class ReportTemplate
 			};
 			#sql { commit };
 		} 
-		catch (Exception ex) 
+		catch (SQLException ex) 
 		{
 			System.out.println("error saving new report template: " + ex.getMessage());
 			ex.printStackTrace();
@@ -96,7 +93,7 @@ public class ReportTemplate
         };
         #sql { commit };
       } 
-      catch (Exception ex) 
+      catch (SQLException ex) 
       {
         System.out.println("error saving new report template: " + ex.getMessage());
         ex.printStackTrace();
@@ -106,9 +103,7 @@ public class ReportTemplate
     }
 	}
 
-	public ReportTemplate(String id)
-			throws Exception
-	{
+	ReportTemplate(String id) throws SQLException {
 		ReportTemplateIterator rtIt = null;
 
 		try
@@ -124,7 +119,7 @@ public class ReportTemplate
 			};
 
 			if(!rtIt.next())
-				throw new Exception("Report template not found in database");
+				throw new SQLException("Report template not found in database");
 
 			try { this.id = rtIt.id(); }
 			catch(SQLException e) { }
@@ -136,7 +131,7 @@ public class ReportTemplate
 			catch(SQLException e) { }
 			if(this.description == null) this.description = "";
 			try { this.modified = rtIt.modified().getTime(); }
-			catch(Exception e) { }
+			catch(SQLException e) { }
 			try { this.template_type = rtIt.template_type(); }
 			catch(SQLException e) { }
 			if(this.template_type == null) this.template_type = "";
@@ -150,7 +145,7 @@ public class ReportTemplate
 			filters = getFilters();
 
 		}
-		catch(Exception e)
+		catch(SQLException e)
 		{
 			rtIt.close();
 			System.out.println("error loading report template: " + e.getMessage());
@@ -159,7 +154,7 @@ public class ReportTemplate
 		}
 	}
 
-	public FilterTemplate[] getFilters()
+	private FilterTemplate[] getFilters()
 	{
 		try
 		{
@@ -180,15 +175,15 @@ public class ReportTemplate
 			}
 			return (FilterTemplate[] )rep_filters.toArray(new FilterTemplate[0]);
 		}
-		catch(Exception e)
+		catch(SQLException e)
 		{
 			System.out.println("Cannot load filter s for reporttemplate " + this.id);
 		}
 		return new FilterTemplate[0];
 	}
 
-	public ReportTemplate_Transferable getTransferable()
-			throws Exception
+	ReportTemplate_Transferable getTransferable()
+			throws SQLException
 	{
 		RenderingObject_Transferable[] ros_t = new RenderingObject_Transferable[this.ros.length];
 		for (int i = 0; i < ros.length; i++)
@@ -218,51 +213,30 @@ public class ReportTemplate
 			filters_t);
 	}
 
-	public long getModified()
-	{
-		return this.modified;
-	}
-
-	public String getId()
-	{
+	String getId() {
 		return this.id;
 	}
-
-	public String getName()
-	{
-		return this.name;
-	}
-
-	public void delete() throws Exception
-	{
-		try
-		{
-			#sql { delete from AMFICOM.REPORTTEMPLATEFIELDS
-				where REPORT_TEMPLATE_ID = :(this.id)
-			};
-			#sql { delete from AMFICOM.REPORTTEMPLATEBOXES
-				where REPORT_TEMPLATE_ID = :(this.id)
-			};
-			#sql { delete from AMFICOM.REPORTIMAGEPANES
-				where REPORT_TEMPLATE_ID = :(this.id)
-			};
-      
-			removeFilters();
-	  
-			#sql { delete from AMFICOM.REPORTTEMPLATES
-				where ID = :(this.id)
-			};
-			#sql { commit };
-		} 
-		catch (Exception ex) 
-		{
-			System.out.println("error deleting report template: " + ex.getMessage());
-			ex.printStackTrace();
-			throw ex;
-		} 
-	}
 	
-	public void removeFilters()
+	void delete() throws SQLException {
+		#sql { delete from AMFICOM.REPORTTEMPLATEFIELDS
+			where REPORT_TEMPLATE_ID = :(this.id)
+		};
+		#sql { delete from AMFICOM.REPORTTEMPLATEBOXES
+			where REPORT_TEMPLATE_ID = :(this.id)
+		};
+		#sql { delete from AMFICOM.REPORTIMAGEPANES
+			where REPORT_TEMPLATE_ID = :(this.id)
+		};
+
+		removeFilters();
+  
+		#sql { delete from AMFICOM.REPORTTEMPLATES
+			where ID = :(this.id)
+		};
+		#sql { commit };
+	}
+
+	private void removeFilters()
 	{
 		try
 		{
@@ -283,12 +257,12 @@ public class ReportTemplate
 				where REPORT_TEMPLATE_ID = :(this.id)
 			};
 		}
-		catch(Exception e)
+		catch(SQLException e)
 		{
 		}
 	}
 
-	public void update(ReportTemplate_Transferable rt) throws Exception
+	void update(ReportTemplate_Transferable rt) throws SQLException
 	{
 		if(!this.id.equals(rt.id))
 			return;
@@ -310,7 +284,7 @@ public class ReportTemplate
 			};
 			#sql { commit };
 		} 
-		catch (Exception ex) 
+		catch (SQLException ex) 
 		{
 			System.out.println("error updating report template: " + ex.getMessage());
 			ex.printStackTrace();
@@ -326,7 +300,7 @@ public class ReportTemplate
 		this.setReportTemplateFilters(rt.filters);    
 	}
 
-	public void setReportTemplateFields(RenderingObject_Transferable[] renderingObjects) throws Exception
+	void setReportTemplateFields(RenderingObject_Transferable[] renderingObjects) throws SQLException
 	{
 		int len = renderingObjects.length;
 		this.ros = new RenderingObject[len];
@@ -337,14 +311,14 @@ public class ReportTemplate
 				ros[i] = new RenderingObject(renderingObjects[i].roID);
 				ros[i].update(renderingObjects[i]);
 			}
-			catch(Exception e)
+			catch(SQLException e)
 			{
 				ros[i] = new RenderingObject(renderingObjects[i], this.id);
 			}
 		}
 	}
 
-	public void setReportTemplateBoxes(FirmedTextPane_Transferable[] firmedTextPanes) throws Exception
+	void setReportTemplateBoxes(FirmedTextPane_Transferable[] firmedTextPanes) throws SQLException
 	{
 		int len = firmedTextPanes.length;
 		this.boxes = new FirmedTextPane[len];
@@ -358,7 +332,7 @@ public class ReportTemplate
 			boxes[i] = new FirmedTextPane(firmedTextPanes[i], this.id);
 	}
 
-	public void setReportTemplateImages(ImagePane_Transferable[] imagePanes) throws Exception
+	private void setReportTemplateImages(ImagePane_Transferable[] imagePanes) throws SQLException
 	{
 		int len = imagePanes.length;
 		this.images = new ImagePane[len];
@@ -372,7 +346,7 @@ public class ReportTemplate
 			images[i] = new ImagePane(imagePanes[i], this.id);
 	}
 
-	public void setReportTemplateFilters(Filter_Transferable[] new_filters) throws Exception
+	private void setReportTemplateFilters(Filter_Transferable[] new_filters) throws SQLException
 	{
 		int len = new_filters.length;
 		this.filters = new FilterTemplate[len];

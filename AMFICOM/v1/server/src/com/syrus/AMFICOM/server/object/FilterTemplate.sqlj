@@ -1,5 +1,5 @@
 /*
- * $Id: FilterTemplate.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: FilterTemplate.sqlj,v 1.1.2.2 2004/08/24 15:43:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/24 15:43:43 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -27,7 +27,7 @@ public class FilterTemplate
 	private byte[] logic_scheme;
 
 	public FilterTemplate(Filter_Transferable filter)
-			throws Exception
+			throws SQLException
 	{
 		this.id = filter.id; 
 		this.resource_typ = filter.resource_typ;
@@ -68,7 +68,7 @@ public class FilterTemplate
 	}
 
 	public FilterTemplate(String id)
-			throws Exception
+			throws SQLException
 	{
 		FilterIterator fIt = null;
 
@@ -85,7 +85,7 @@ public class FilterTemplate
 
 			if(!fIt.next())
 			{
-				throw new Exception("NO filter for id " + id);
+				throw new SQLException("NO filter for id " + id);
 			}
 
 			try { this.id = fIt.id(); }
@@ -102,34 +102,23 @@ public class FilterTemplate
       
 			fIt.close();
       
-			try
-			{
-				this.logic_scheme = logic_scheme_bytes;
-			}
-			catch(Exception ioe)
-			{
-				System.out.println("error loading image: " + ioe.getMessage());
-				ioe.printStackTrace();
-			}
-      
+			this.logic_scheme = logic_scheme_bytes;
 		}
-		catch(Exception e)
+		catch(SQLException e)
 		{
 			if(fIt != null)
 			try
 			{
 				fIt.close();
 			}
-			catch(Exception exe) {}
+			catch(SQLException exe) {}
 		
 			System.out.println("error loading report template: " + e.getMessage());
 			throw e;
 		}
 	}
 
-	public Filter_Transferable getTransferable()
-			throws Exception
-	{
+	Filter_Transferable getTransferable() {
 		return new Filter_Transferable(
 			this.id,
 			this.resource_typ,

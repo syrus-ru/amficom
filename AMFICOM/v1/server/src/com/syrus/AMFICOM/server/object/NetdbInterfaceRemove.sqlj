@@ -1,5 +1,5 @@
 /*
- * $Id: NetdbInterfaceRemove.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
+ * $Id: NetdbInterfaceRemove.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,18 +13,15 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class NetdbInterfaceRemove
-{
-	protected NetdbInterfaceRemove()
-	{
+final class NetdbInterfaceRemove {
+	private NetdbInterfaceRemove() {
 	}
 
-	public static int removePorts(String[] port_ids)
-	{
+	static int removePorts(String[] port_ids) {
 		String ap_id;
 		int len = port_ids.length;
 		for (int i = 0; i < len; i++)
@@ -88,8 +85,7 @@ public class NetdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeCablePorts(String[] cport_ids)
-	{
+	static int removeCablePorts(String[] cport_ids) {
 		String ap_id;
 		int len = cport_ids.length;
 		for (int i = 0; i < len; i++)
@@ -153,35 +149,7 @@ public class NetdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeTestPorts(String[] testport_ids)
-	{
-		int len = testport_ids.length;
-		for (int i = 0; i < len; i++)
-		{
-			try
-			{
-				#sql {
-					delete from AMFICOM.TESTPORTCHARACTERISTICS
-						where TEST_PORT_ID = :(testport_ids[i])
-				};
-				#sql {
-					delete from AMFICOM.TESTPORTS
-						where ID = :(testport_ids[i])
-				};
-				#sql { commit; };
-			}
-			catch(SQLException ex)
-			{
-				System.out.println("error removing testport: " + ex.getMessage());
-				ex.printStackTrace();
-				return Constants.ERROR_SAVING;
-			}
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int removeLinks(String[] link_ids)
-	{
+	static int removeLinks(String[] link_ids) {
 		int len = link_ids.length;
 		for (int i = 0; i < len; i++)
 		{
@@ -207,8 +175,7 @@ public class NetdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeCableLinks(String[] link_ids)
-	{
+	static int removeCableLinks(String[] link_ids) {
 		int len = link_ids.length;
 		for (int i = 0; i < len; i++)
 		{
@@ -238,8 +205,7 @@ public class NetdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeEquipments(String[] equipment_ids)
-	{
+	static int removeEquipments(String[] equipment_ids) {
 		int i;
 		int len;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: NetdbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
+ * $Id: NetdbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,17 +15,15 @@ import java.util.Vector;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class NetdbInterfaceLoad
-{
-	protected NetdbInterfaceLoad()
-	{
+final class NetdbInterfaceLoad {
+	private NetdbInterfaceLoad() {
 	}
 
-	public static Vector loadCharacteristics(
+	static Vector loadCharacteristics(
 			String charTable,
 			String charField,
 			String element_id)
@@ -122,7 +120,7 @@ public class NetdbInterfaceLoad
 		return vector2;
 	}
 
-	public static Vector loadElementPorts(String element_id)
+	static Vector loadElementPorts(String element_id)
 	{
 		IdIterator idIt = null;
 		Vector vector = new Vector();
@@ -157,7 +155,7 @@ public class NetdbInterfaceLoad
 		return vector;
 	}
 
-	public static Vector loadElementCablePorts(String element_id)
+	static Vector loadElementCablePorts(String element_id)
 	{
 		IdIterator idIt = null;
 		Vector vector = new Vector();
@@ -192,7 +190,7 @@ public class NetdbInterfaceLoad
 		return vector;
 	}
 
-	public static Vector loadElementTestPorts(String element_id)
+	private static Vector loadElementTestPorts(String element_id)
 	{
 		IdIterator idIt = null;
 		Vector vector = new Vector();
@@ -227,7 +225,7 @@ public class NetdbInterfaceLoad
 		return vector;
 	}
 
-	public static Vector loadCableThreads(String cable_id)
+	private static Vector loadCableThreads(String cable_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -303,7 +301,7 @@ public class NetdbInterfaceLoad
 		return vector;
 	}
 
-	public static Object loadPort(String port_id)
+	static Object loadPort(String port_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -407,7 +405,7 @@ public class NetdbInterfaceLoad
 		
 	}
 
-	public static Object loadCablePort(String port_id)
+	static Object loadCablePort(String port_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -510,7 +508,7 @@ public class NetdbInterfaceLoad
 		
 	}
 
-	public static Object loadTestPort(String port_id)
+	private static Object loadTestPort(String port_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -579,654 +577,7 @@ public class NetdbInterfaceLoad
 		}
 	}
 
-	public static Object loadLink(String link_id)
-	{
-		int k;
-
-		String It_id = "";
-		String It_name = "";
-		String It_type_id = "";
-		String It_description = "";
-		String It_inventory_nr = "";
-		String It_manufacturer = "";
-		String It_manufacturer_code = "";
-		String It_supplier = "";
-		String It_supplier_code = "";
-		String It_link_class = "";
-		String It_start_equipment_id = "";
-		String It_start_port_id = "";
-		String It_end_equipment_id = "";
-		String It_end_port_id = "";
-		String It_image_id = "";
-		long It_modified = 0;
-		String It_domain_id = "";
-		String It_physical_length = "";
-		String It_optical_length = "";
-
-		String[] link_ids;
-
-		Characteristic_Transferable characteristics[];
-
-		Vector vector = new Vector();
-
-		Link_Transferable lt_t;
-		LinkIterator lIt = null;
-		Vector vector2;
-
-		try
-		{
-			#sql lIt = { select
-						ID,
-						NAME,
-						TYPE_ID,
-						DESCRIPTION,
-						INVENTORY_NR,
-						MANUFACTURER,
-						MANUFACTURER_CODE,
-						SUPPLIER,
-						SUPPLIER_CODE,
-						LINK_CLASS,
-						START_EQUIPMENT_ID,
-						START_PORT_ID,
-						END_EQUIPMENT_ID,
-						END_PORT_ID,
-						IMAGE_ID,
-						MODIFIED,
-						DOMAIN_ID,
-						PHYSICAL_LENGTH,
-						OPTICAL_LENGTH
-					from AMFICOM.LINKS
-					where ID = :link_id
-			};
-
-			lIt.next();
-
-			try { It_id = lIt.id(); }
-			catch(SQLException e) { }
-			if(It_id == null) It_id = "";
-			try { It_name = lIt.name(); }
-			catch(SQLException e) { }
-			if(It_name == null) It_name = "";
-			try { It_type_id = lIt.type_id(); }
-			catch(SQLException e) { }
-			if(It_type_id == null) It_type_id = "";
-			try { It_description = lIt.description(); }
-			catch(SQLException e) { }
-			if(It_description == null) It_description = "";
-			try { It_inventory_nr = lIt.inventory_nr(); }
-			catch(SQLException e) { }
-			if(It_inventory_nr == null) It_inventory_nr = "";
-			try { It_manufacturer = lIt.manufacturer(); }
-			catch(SQLException e) { }
-			if(It_manufacturer == null) It_manufacturer = "";
-			try { It_manufacturer_code = lIt.manufacturer_code(); }
-			catch(SQLException e) { }
-			if(It_manufacturer_code == null) It_manufacturer_code = "";
-			try { It_supplier = lIt.supplier(); }
-			catch(SQLException e) { }
-			if(It_supplier == null) It_supplier = "";
-			try { It_supplier_code = lIt.supplier_code(); }
-			catch(SQLException e) { }
-			if(It_supplier_code == null) It_supplier_code = "";
-			try { It_link_class = lIt.link_class(); }
-			catch(SQLException e) { }
-			if(It_link_class == null) It_link_class = "";
-			try { It_start_equipment_id = lIt.start_equipment_id(); }
-			catch(SQLException e) { }
-			if(It_start_equipment_id == null) It_start_equipment_id = "";
-			try { It_start_port_id = lIt.start_port_id(); }
-			catch(SQLException e) { }
-			if(It_start_port_id == null) It_start_port_id = "";
-			try { It_end_equipment_id = lIt.end_equipment_id(); }
-			catch(SQLException e) { }
-			if(It_end_equipment_id == null) It_end_equipment_id = "";
-			try { It_end_port_id = lIt.end_port_id(); }
-			catch(SQLException e) { }
-			if(It_end_port_id == null) It_end_port_id = "";
-			try { It_image_id = lIt.image_id(); }
-			catch(SQLException e) { }
-			if(It_image_id == null) It_image_id = "";
-			try { It_modified = lIt.modified().getTime(); }
-			catch(SQLException e) { }
-			try { It_domain_id = lIt.domain_id(); }
-			catch(SQLException e) { }
-			if(It_domain_id == null) It_domain_id = "";
-			try { It_physical_length = lIt.physical_length(); }
-			catch(SQLException e) { }
-			if(It_physical_length == null) It_physical_length = "";
-			try { It_optical_length = lIt.optical_length(); }
-			catch(SQLException e) { }
-			if(It_optical_length == null) It_optical_length = "";
-
-			lIt.close();
-
-			vector2 = loadCharacteristics(
-					"LINKCHARACTERISTICS",
-					"LINK_ID",
-					It_id);
-			characteristics = new Characteristic_Transferable[vector2.size()];
-			vector2.copyInto(characteristics);
-
-			lt_t = new Link_Transferable(
-				It_id,
-				It_name,
-				It_type_id,
-				It_description,
-				It_inventory_nr,
-				It_manufacturer,
-				It_manufacturer_code,
-				It_supplier,
-				It_supplier_code,
-				It_link_class,
-				It_image_id,
-				It_start_equipment_id,
-				It_start_port_id,
-				It_end_equipment_id,
-				It_end_port_id,
-				It_domain_id,
-				It_modified,
-				It_physical_length,
-				It_optical_length,
-				characteristics);
-
-			return lt_t;
-		}
-		catch(SQLException e)
-		{
-			if(lIt != null) try {
-			lIt.close();
-			}catch(Exception exe) {}
-			System.out.println("error loading link: " + e.getMessage());
-			e.printStackTrace();
-			return null;
-		}
-		finally
-		{
-			try {
-				lIt.close();
-			}catch(Exception exe) {}
-		}
-		
-	}
-
-	public static Object loadCableLink(String link_id)
-	{
-		int k;
-
-		String It_id = "";
-		String It_name = "";
-		String It_type_id = "";
-		String It_description = "";
-		String It_inventory_nr = "";
-		String It_manufacturer = "";
-		String It_manufacturer_code = "";
-		String It_supplier = "";
-		String It_supplier_code = "";
-		String It_link_class = "";
-		String It_start_equipment_id = "";
-		String It_start_port_id = "";
-		String It_end_equipment_id = "";
-		String It_end_port_id = "";
-		String It_image_id = "";
-		long It_modified = 0;
-		String It_domain_id = "";
-		String It_physical_length = "";
-		String It_optical_length = "";
-
-		CableLinkThread_Transferable[] threads;
-
-		Characteristic_Transferable characteristics[];
-
-		Vector vector = new Vector();
-
-		CableLink_Transferable lt_t;
-		CableLinkIterator lIt = null;
-		Vector vector2;
-
-		try
-		{
-			#sql lIt = { select
-						ID,
-						NAME,
-						TYPE_ID,
-						DESCRIPTION,
-						INVENTORY_NR,
-						MANUFACTURER,
-						MANUFACTURER_CODE,
-						SUPPLIER,
-						SUPPLIER_CODE,
-						LINK_CLASS,
-						START_EQUIPMENT_ID,
-						START_PORT_ID,
-						END_EQUIPMENT_ID,
-						END_PORT_ID,
-						IMAGE_ID,
-						MODIFIED,
-						DOMAIN_ID,
-						PHYSICAL_LENGTH,
-						OPTICAL_LENGTH
-					from AMFICOM.LINKS
-					where ID = :link_id
-			};
-
-			lIt.next();
-
-			try { It_id = lIt.id(); }
-			catch(SQLException e) { }
-			if(It_id == null) It_id = "";
-			try { It_name = lIt.name(); }
-			catch(SQLException e) { }
-			if(It_name == null) It_name = "";
-			try { It_type_id = lIt.type_id(); }
-			catch(SQLException e) { }
-			if(It_type_id == null) It_type_id = "";
-			try { It_description = lIt.description(); }
-			catch(SQLException e) { }
-			if(It_description == null) It_description = "";
-			try { It_inventory_nr = lIt.inventory_nr(); }
-			catch(SQLException e) { }
-			if(It_inventory_nr == null) It_inventory_nr = "";
-			try { It_manufacturer = lIt.manufacturer(); }
-			catch(SQLException e) { }
-			if(It_manufacturer == null) It_manufacturer = "";
-			try { It_manufacturer_code = lIt.manufacturer_code(); }
-			catch(SQLException e) { }
-			if(It_manufacturer_code == null) It_manufacturer_code = "";
-			try { It_supplier = lIt.supplier(); }
-			catch(SQLException e) { }
-			if(It_supplier == null) It_supplier = "";
-			try { It_supplier_code = lIt.supplier_code(); }
-			catch(SQLException e) { }
-			if(It_supplier_code == null) It_supplier_code = "";
-			try { It_link_class = lIt.link_class(); }
-			catch(SQLException e) { }
-			if(It_link_class == null) It_link_class = "";
-			try { It_start_equipment_id = lIt.start_equipment_id(); }
-			catch(SQLException e) { }
-			if(It_start_equipment_id == null) It_start_equipment_id = "";
-			try { It_start_port_id = lIt.start_port_id(); }
-			catch(SQLException e) { }
-			if(It_start_port_id == null) It_start_port_id = "";
-			try { It_end_equipment_id = lIt.end_equipment_id(); }
-			catch(SQLException e) { }
-			if(It_end_equipment_id == null) It_end_equipment_id = "";
-			try { It_end_port_id = lIt.end_port_id(); }
-			catch(SQLException e) { }
-			if(It_end_port_id == null) It_end_port_id = "";
-			try { It_image_id = lIt.image_id(); }
-			catch(SQLException e) { }
-			if(It_image_id == null) It_image_id = "";
-			try { It_modified = lIt.modified().getTime(); }
-			catch(SQLException e) { }
-			try { It_domain_id = lIt.domain_id(); }
-			catch(SQLException e) { }
-			if(It_domain_id == null) It_domain_id = "";
-			try { It_physical_length = lIt.physical_length(); }
-			catch(SQLException e) { }
-			if(It_physical_length == null) It_physical_length = "";
-			try { It_optical_length = lIt.optical_length(); }
-			catch(SQLException e) { }
-			if(It_optical_length == null) It_optical_length = "";
-
-			lIt.close();
-
-			vector2 = loadCharacteristics(
-					"CABLELINKCHARACTERISTICS",
-					"CABLE_LINK_ID",
-					It_id);
-			characteristics = new Characteristic_Transferable[vector2.size()];
-			vector2.copyInto(characteristics);
-
-			vector2 = NetdbInterfaceLoad.loadCableThreads(It_id);
-			threads = new CableLinkThread_Transferable[vector2.size()];
-			vector2.copyInto(threads);
-
-			lt_t = new CableLink_Transferable(
-				It_id,
-				It_name,
-				It_type_id,
-				It_description,
-				It_inventory_nr,
-				It_manufacturer,
-				It_manufacturer_code,
-				It_supplier,
-				It_supplier_code,
-				It_link_class,
-				It_image_id,
-				It_start_equipment_id,
-				It_start_port_id,
-				It_end_equipment_id,
-				It_end_port_id,
-				It_domain_id,
-				It_modified,
-				It_physical_length,
-				It_optical_length,
-				threads,
-				characteristics);
-
-			return lt_t;
-		}
-		catch(SQLException e)
-		{
-			if(lIt != null) try {
-			lIt.close();
-			}catch(Exception exe) {}
-			System.out.println("error loading link: " + e.getMessage());
-			e.printStackTrace();
-			return null;
-		}
-		finally
-		{
-			try {
-				lIt.close();
-			}catch(Exception exe) {}
-		}
-		
-	}
-
-	public static Object loadEquipment(String equipment_id)
-	{
-		String It_id = "";
-		String It_name = "";
-		String It_description = "";
-		String It_type_id = "";
-		String It_longitude = "";
-		String It_latitude = "";
-
-		String It_hw_serial = "";
-		String It_sw_serial = "";
-		String It_hw_version = "";
-		String It_sw_version = "";
-		String It_inventory_nr = "";
-		String It_manufacturer = "";
-		String It_manufacturer_code = "";
-		String It_supplier = "";
-		String It_supplier_code = "";
-
-		String It_eq_class = "";
-		String It_image_id = "";
-
-		String It_agent_id = "";
-		String It_domain_id = "";
-		boolean It_is_kis = false;
-		long It_modified = 0;
-
-		Characteristic_Transferable characteristics[];
-		String[] port_ids;
-		String[] cport_ids;
-		String[] test_port_ids;
-
-		Vector vector = new Vector();
-
-		Equipment_Transferable e_t;
-		EquipmentIterator eIt = null;
-		Vector vector2;
-
-		try
-		{
-			#sql eIt = { select
-					ID,
-					NAME,
-					DESCRIPTION,
-					TYPE_ID,
-					LONGITUDE,
-					LATITUDE,
-					HW_SERIAL,
-					SW_SERIAL,
-					HW_VERSION,
-					SW_VERSION,
-					INVENTORY_NR,
-					MANUFACTURER,
-					MANUFACTURER_CODE,
-					SUPPLIER,
-					SUPPLIER_CODE,
-					EQ_CLASS,
-					IMAGE_ID,
-					AGENT_ID,
-					DOMAIN_ID,
-					IS_KIS,
-					MODIFIED
-				from AMFICOM.EQUIPMENTS
-				where ID = :equipment_id
-			};
-
-			try { It_id = eIt.id(); }
-			catch(SQLException e) { }
-			if(It_id == null) It_id = "";
-			try { It_name = eIt.name(); }
-			catch(SQLException e) { }
-			if(It_name == null) It_name = "";
-			try { It_description = eIt.description(); }
-			catch(SQLException e) { }
-			if(It_description == null) It_description = "";
-			try { It_type_id = eIt.type_id(); }
-			catch(SQLException e) { }
-			if(It_type_id == null) It_type_id = "";
-			try { It_longitude = eIt.longitude(); }
-			catch(SQLException e) { }
-			if(It_longitude == null) It_longitude = "";
-			try { It_latitude = eIt.latitude(); }
-			catch(SQLException e) { }
-			if(It_latitude == null) It_latitude = "";
-			try { It_hw_serial = eIt.hw_serial(); }
-			catch(SQLException e) { }
-			if(It_hw_serial == null) It_hw_serial = "";
-			try { It_sw_serial = eIt.sw_serial(); }
-			catch(SQLException e) { }
-			if(It_sw_serial == null) It_sw_serial = "";
-			try { It_hw_version = eIt.hw_version(); }
-			catch(SQLException e) { }
-			if(It_hw_version == null) It_hw_version = "";
-			try { It_sw_version = eIt.sw_version(); }
-			catch(SQLException e) { }
-			if(It_sw_version == null) It_sw_version = "";
-			try { It_inventory_nr = eIt.inventory_nr(); }
-			catch(SQLException e) { }
-			if(It_inventory_nr == null) It_inventory_nr = "";
-			try { It_manufacturer = eIt.manufacturer(); }
-			catch(SQLException e) { }
-			if(It_manufacturer == null) It_manufacturer = "";
-			try { It_manufacturer_code = eIt.manufacturer_code(); }
-			catch(SQLException e) { }
-			if(It_manufacturer_code == null) It_manufacturer_code = "";
-			try { It_supplier = eIt.supplier(); }
-			catch(SQLException e) { }
-			if(It_supplier == null) It_supplier = "";
-			try { It_supplier_code = eIt.supplier_code(); }
-			catch(SQLException e) { }
-			if(It_supplier_code == null) It_supplier_code = "";
-			try { It_eq_class = eIt.eq_class(); }
-			catch(SQLException e) { }
-			if(It_eq_class == null) It_eq_class = "";
-			try { It_image_id = eIt.image_id(); }
-			catch(SQLException e) { }
-			if(It_image_id == null) It_image_id = "";
-			try { It_agent_id = eIt.agent_id(); }
-			catch(SQLException e) { }
-			if(It_agent_id == null) It_agent_id = "";
-			try { It_domain_id = eIt.domain_id(); }
-			catch(SQLException e) { }
-			if(It_domain_id == null) It_domain_id = "";
-			try { It_is_kis = (eIt.is_kis() == 0)? false : true; }
-			catch(SQLException e) { }
-			try { It_modified = eIt.modified().getTime(); }
-			catch(SQLException e) { }
-
-			vector2 = loadCharacteristics(
-					"EQUIPMENTCHARACTERISTICS",
-					"EQUIPMENT_ID",
-					It_id);
-			characteristics = new Characteristic_Transferable[vector2.size()];
-			vector2.copyInto(characteristics);
-
-			vector2 = NetdbInterfaceLoad.loadElementPorts(It_id);
-			port_ids = new String[vector2.size()];
-			vector2.copyInto(port_ids);
-
-			vector2 = NetdbInterfaceLoad.loadElementCablePorts(It_id);
-			cport_ids = new String[vector2.size()];
-			vector2.copyInto(cport_ids);
-
-			vector2 = NetdbInterfaceLoad.loadElementTestPorts(It_id);
-			test_port_ids = new String[vector2.size()];
-			vector2.copyInto(test_port_ids);
-
-			e_t = new Equipment_Transferable(
-				It_id,
-				It_name,
-				It_description,
-				It_type_id,
-				It_longitude,
-				It_latitude,
-
-				It_hw_serial,
-				It_sw_serial,
-				It_hw_version,
-				It_sw_version,
-				It_inventory_nr,
-				It_manufacturer,
-				It_manufacturer_code,
-				It_supplier,
-				It_supplier_code,
-
-				It_eq_class,
-				It_image_id,
-				It_agent_id,
-				It_domain_id,
-				It_is_kis,
-
-				It_modified,
-
-				port_ids,
-				cport_ids,
-				test_port_ids,
-				characteristics);
-			return e_t;
-		}
-		catch(SQLException e)
-		{
-			System.out.println("error loading equipments: " + e.getMessage());
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public static int loadPorts(
-			PortSeq_TransferableHolder portseq)
-	{
-		String It_id = "";
-		String It_name = "";
-		String It_description = "";
-		String It_interface_id = "";
-		String It_address_id = "";
-		String It_local_id = "";
-		String It_type_id = "";
-		String It_equipment_id = "";
-		String It_link_id = "";
-		String It_domain_id = "";
-
-		Characteristic_Transferable characteristics[];
-
-		Vector vector = new Vector();
-
-		Port_Transferable pt_t;
-		Port_Transferable[] pt_ts;
-		PortIterator ptIt = null;
-		Vector vector2;
-
-		try
-		{
-			#sql ptIt = { select
-						ID,
-						NAME,
-						DESCRIPTION,
-						INTERFACE_ID,
-						ADDRESS_ID,
-						LOCAL_ID,
-						TYPE_ID,
-						EQUIPMENT_ID,
-						DOMAIN_ID
-					from AMFICOM.PORTS
-			};
-
-			while (ptIt.next())
-			{
-				try { It_id = ptIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_name = ptIt.name(); }
-				catch(SQLException e) { }
-				if(It_name == null) It_name = "";
-				try { It_description = ptIt.description(); }
-				catch(SQLException e) { }
-				if(It_description == null) It_description = "";
-				try { It_interface_id = ptIt.interface_id(); }
-				catch(SQLException e) { }
-				if(It_interface_id == null) It_interface_id = "";
-
-				try { It_address_id = ptIt.address_id(); }
-				catch(Exception e) { }
-				if(It_address_id == null) It_address_id = "";
-				try { It_local_id = ptIt.local_id(); }
-				catch(SQLException e) { }
-				if(It_local_id == null) It_local_id = "";
-				try { It_type_id = ptIt.type_id(); }
-				catch(SQLException e) { }
-				if(It_type_id == null) It_type_id = "";
-				try { It_equipment_id = ptIt.equipment_id(); }
-				catch(SQLException e) { }
-				if(It_equipment_id == null) It_equipment_id = "";
-				try { It_domain_id = ptIt.domain_id(); }
-				catch(SQLException e) { }
-				if(It_domain_id == null) It_domain_id = "";
-
-				vector2 = loadCharacteristics(
-						"PORTCHARACTERISTICS",
-						"PORT_ID",
-						It_id);
-				characteristics = new Characteristic_Transferable[vector2.size()];
-				vector2.copyInto(characteristics);
-
-				pt_t = new Port_Transferable(
-					It_id,
-					It_name,
-					It_description,
-					It_interface_id,
-					It_address_id,
-					It_local_id,
-					It_type_id,
-					It_equipment_id,
-					It_domain_id,
-					characteristics);
-
-				vector.add(pt_t);
-			}
-			ptIt.close();
-			pt_ts = new Port_Transferable[vector.size()];
-			vector.copyInto(pt_ts);
-			portseq.value = pt_ts;
-
-		}
-		catch(SQLException e)
-		{
-			if(ptIt != null) try {
-			ptIt.close();
-			}catch(Exception exe) {}
-			System.out.println("error loading port: " + e.getMessage());
-			e.printStackTrace();
-			return Constants.ERROR_LOADING;
-		}
-		finally
-		{
-			try {
-				ptIt.close();
-			}catch(Exception exe) {}
-		}
-		
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int loadEquipments(
+	static int loadEquipments(
 			String domain_id,
 			EquipmentSeq_TransferableHolder equipments,
 			Vector port_vec,
@@ -1372,23 +723,23 @@ public class NetdbInterfaceLoad
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
-				vector2 = NetdbInterfaceLoad.loadElementPorts(It_id);
+				vector2 = loadElementPorts(It_id);
 				port_ids = new String[vector2.size()];
 				vector2.copyInto(port_ids);
 				for(k = 0; k < port_ids.length; k++)
-					port_vec.add(NetdbInterfaceLoad.loadPort(port_ids[k]));
+					port_vec.add(loadPort(port_ids[k]));
 
-				vector2 = NetdbInterfaceLoad.loadElementCablePorts(It_id);
+				vector2 = loadElementCablePorts(It_id);
 				cport_ids = new String[vector2.size()];
 				vector2.copyInto(cport_ids);
 				for(k = 0; k < cport_ids.length; k++)
-					cport_vec.add(NetdbInterfaceLoad.loadCablePort(cport_ids[k]));
+					cport_vec.add(loadCablePort(cport_ids[k]));
 
-				vector2 = NetdbInterfaceLoad.loadElementTestPorts(It_id);
+				vector2 = loadElementTestPorts(It_id);
 				test_port_ids = new String[vector2.size()];
 				vector2.copyInto(test_port_ids);
 				for(k = 0; k < test_port_ids.length; k++)
-					test_port_vec.add(NetdbInterfaceLoad.loadTestPort(test_port_ids[k]));
+					test_port_vec.add(loadTestPort(test_port_ids[k]));
 
 				e_t = new Equipment_Transferable(
 					It_id,
@@ -1450,7 +801,7 @@ public class NetdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadLinks(
+	static int loadLinks(
 			String domain_id,
 			LinkSeq_TransferableHolder links)
 	{
@@ -1630,7 +981,7 @@ public class NetdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadCableLinks(
+	static int loadCableLinks(
 			String domain_id,
 			CableLinkSeq_TransferableHolder links)
 	{
@@ -1759,7 +1110,7 @@ public class NetdbInterfaceLoad
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
-				vector2 = NetdbInterfaceLoad.loadCableThreads(It_id);
+				vector2 = loadCableThreads(It_id);
 				threads = new CableLinkThread_Transferable[vector2.size()];
 				vector2.copyInto(threads);
 
@@ -1813,98 +1164,617 @@ public class NetdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadTestPorts(
-			TestPortSeq_TransferableHolder tportseq)
+	static int loadEquipments(
+			String domain_id,
+			String[] ids,
+			EquipmentSeq_TransferableHolder equipments,
+			Vector port_vec,
+			Vector cport_vec,
+			Vector test_port_vec)
 	{
+		int k;
+
 		String It_id = "";
 		String It_name = "";
+		String It_description = "";
 		String It_type_id = "";
-		String It_equipment_id = "";
-		String It_port_id = "";
+		String It_longitude = "";
+		String It_latitude = "";
+
+		String It_hw_serial = "";
+		String It_sw_serial = "";
+		String It_hw_version = "";
+		String It_sw_version = "";
+		String It_inventory_nr = "";
+		String It_manufacturer = "";
+		String It_manufacturer_code = "";
+		String It_supplier = "";
+		String It_supplier_code = "";
+
+		String It_eq_class = "";
+		String It_image_id = "";
+
+		String It_agent_id = "";
+		String It_domain_id = "";
+		boolean It_is_kis = false;
+		long It_modified = 0;
 
 		Characteristic_Transferable characteristics[];
+		String[] port_ids;
+		String[] cport_ids;
+		String[] test_port_ids;
 
 		Vector vector = new Vector();
 
-		TestPort_Transferable tpt_t;
-		TestPort_Transferable[] tpt_ts;
-		TestPortIterator tptIt = null;
+		Equipment_Transferable e_t;
+		Equipment_Transferable[] e_ts;
+		EquipmentIterator eIt = null;
 		Vector vector2;
 
+		Vector loadvec = new Vector();
+		for(int i = 0; i < ids.length; i++)
+			loadvec.add(ids[i]);
 		try
 		{
-			#sql tptIt = { select
+			#sql eIt = { select
 						ID,
 						NAME,
+						DESCRIPTION,
 						TYPE_ID,
-						EQUIPMENT_ID,
-						PORT_ID
-					from AMFICOM.TESTPORTS
+						LONGITUDE,
+						LATITUDE,
+						HW_SERIAL,
+						SW_SERIAL,
+						HW_VERSION,
+						SW_VERSION,
+						INVENTORY_NR,
+						MANUFACTURER,
+						MANUFACTURER_CODE,
+						SUPPLIER,
+						SUPPLIER_CODE,
+						EQ_CLASS,
+						IMAGE_ID,
+						AGENT_ID,
+						DOMAIN_ID,
+						IS_KIS,
+						MODIFIED
+					from AMFICOM.EQUIPMENTS
+					where IS_KIS = 0
+					and DOMAIN_ID = :domain_id
 			};
 
-			while (tptIt.next())
+			while (eIt.next())
 			{
-				try { It_id = tptIt.id(); }
+				if(! loadvec.contains(eIt.id()))
+					continue;
+
+				try { It_id = eIt.id(); }
 				catch(SQLException e) { }
 				if(It_id == null) It_id = "";
-				try { It_name = tptIt.name(); }
+				try { It_name = eIt.name(); }
 				catch(SQLException e) { }
 				if(It_name == null) It_name = "";
-				try { It_type_id = tptIt.type_id(); }
+				try { It_description = eIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_type_id = eIt.type_id(); }
 				catch(SQLException e) { }
 				if(It_type_id == null) It_type_id = "";
-				try { It_equipment_id = tptIt.equipment_id(); }
+				try { It_longitude = eIt.longitude(); }
 				catch(SQLException e) { }
-				if(It_equipment_id == null) It_equipment_id = "";
-				try { It_port_id = tptIt.port_id(); }
+				if(It_longitude == null) It_longitude = "";
+				try { It_latitude = eIt.latitude(); }
 				catch(SQLException e) { }
-				if(It_port_id == null) It_port_id = "";
+				if(It_latitude == null) It_latitude = "";
+				try { It_hw_serial = eIt.hw_serial(); }
+				catch(SQLException e) { }
+				if(It_hw_serial == null) It_hw_serial = "";
+				try { It_sw_serial = eIt.sw_serial(); }
+				catch(SQLException e) { }
+				if(It_sw_serial == null) It_sw_serial = "";
+				try { It_hw_version = eIt.hw_version(); }
+				catch(SQLException e) { }
+				if(It_hw_version == null) It_hw_version = "";
+				try { It_sw_version = eIt.sw_version(); }
+				catch(SQLException e) { }
+				if(It_sw_version == null) It_sw_version = "";
+				try { It_inventory_nr = eIt.inventory_nr(); }
+				catch(SQLException e) { }
+				if(It_inventory_nr == null) It_inventory_nr = "";
+				try { It_manufacturer = eIt.manufacturer(); }
+				catch(SQLException e) { }
+				if(It_manufacturer == null) It_manufacturer = "";
+				try { It_manufacturer_code = eIt.manufacturer_code(); }
+				catch(SQLException e) { }
+				if(It_manufacturer_code == null) It_manufacturer_code = "";
+				try { It_supplier = eIt.supplier(); }
+				catch(SQLException e) { }
+				if(It_supplier == null) It_supplier = "";
+				try { It_supplier_code = eIt.supplier_code(); }
+				catch(SQLException e) { }
+				if(It_supplier_code == null) It_supplier_code = "";
+				try { It_eq_class = eIt.eq_class(); }
+				catch(SQLException e) { }
+				if(It_eq_class == null) It_eq_class = "";
+				try { It_image_id = eIt.image_id(); }
+				catch(SQLException e) { }
+				if(It_image_id == null) It_image_id = "";
+				try { It_agent_id = eIt.agent_id(); }
+				catch(SQLException e) { }
+				if(It_agent_id == null) It_agent_id = "";
+				try { It_domain_id = eIt.domain_id(); }
+				catch(SQLException e) { }
+				if(It_domain_id == null) It_domain_id = "";
+				try { It_is_kis = (eIt.is_kis() == 0)? false : true; }
+				catch(SQLException e) { }
+				try { It_modified = eIt.modified().getTime(); }
+				catch(SQLException e) { }
 
 				vector2 = loadCharacteristics(
-						"TESTPORTCHARACTERISTICS",
-						"TEST_PORT_ID",
+						"EQUIPMENTCHARACTERISTICS",
+						"EQUIPMENT_ID",
 						It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
-				tpt_t = new TestPort_Transferable(
+				vector2 = loadElementPorts(It_id);
+				port_ids = new String[vector2.size()];
+				vector2.copyInto(port_ids);
+				for(k = 0; k < port_ids.length; k++)
+					port_vec.add(loadPort(port_ids[k]));
+
+				vector2 = loadElementCablePorts(It_id);
+				cport_ids = new String[vector2.size()];
+				vector2.copyInto(cport_ids);
+				for(k = 0; k < cport_ids.length; k++)
+					cport_vec.add(loadCablePort(cport_ids[k]));
+
+				vector2 = loadElementTestPorts(It_id);
+				test_port_ids = new String[vector2.size()];
+				vector2.copyInto(test_port_ids);
+				for(k = 0; k < test_port_ids.length; k++)
+					test_port_vec.add(loadTestPort(test_port_ids[k]));
+
+				e_t = new Equipment_Transferable(
 					It_id,
 					It_name,
+					It_description,
 					It_type_id,
-					It_equipment_id,
-					It_port_id,
+					It_longitude,
+					It_latitude,
+
+					It_hw_serial,
+					It_sw_serial,
+					It_hw_version,
+					It_sw_version,
+					It_inventory_nr,
+					It_manufacturer,
+					It_manufacturer_code,
+					It_supplier,
+					It_supplier_code,
+
+					It_eq_class,
+					It_image_id,
+
+					It_agent_id,
+					It_domain_id,
+					It_is_kis,
+					It_modified,
+
+					port_ids,
+					cport_ids,
+					test_port_ids,
 					characteristics);
 
-				vector.add(tpt_t);
+				vector.add(e_t);
 			}
-			tptIt.close();
-			tpt_ts = new TestPort_Transferable[vector.size()];
-			vector.copyInto(tpt_ts);
-			tportseq.value = tpt_ts;
+			eIt.close();
+			e_ts = new Equipment_Transferable[vector.size()];
+			vector.copyInto(e_ts);
+			equipments.value = e_ts;
 
 		}
 		catch(SQLException e)
 		{
-			if(tptIt != null) try {
-			tptIt.close();
+			if(eIt != null) try {
+			eIt.close();
 			}catch(Exception exe) {}
-			System.out.println("error loading test ports: " + e.getMessage());
+			System.out.println("error loading equipments: " + e.getMessage());
 			e.printStackTrace();
 			return Constants.ERROR_LOADING;
 		}
 		finally
 		{
 			try {
-				tptIt.close();
+				eIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadLinks(
+			String domain_id,
+			String[] ids,
+			LinkSeq_TransferableHolder links)
+	{
+		int k;
+
+		String It_id = "";
+		String It_name = "";
+		String It_type_id = "";
+		String It_description = "";
+		String It_inventory_nr = "";
+		String It_manufacturer = "";
+		String It_manufacturer_code = "";
+		String It_supplier = "";
+		String It_supplier_code = "";
+		String It_link_class = "";
+		String It_holder_id = "";
+		String It_start_equipment_id = "";
+		String It_start_port_id = "";
+		String It_end_equipment_id = "";
+		String It_end_port_id = "";
+		boolean It_is_holder = false;
+		String It_image_id = "";
+		String It_domain_id = "";
+		long It_modified = 0;
+		String It_physical_length = "";
+		String It_optical_length = "";
+
+		String[] link_ids;
+
+		Characteristic_Transferable characteristics[];
+
+		Vector vector = new Vector();
+
+		Link_Transferable lt_t;
+		Link_Transferable[] lt_ts;
+		LinkIterator lIt = null;
+		Vector vector2;
+
+		Vector loadvec = new Vector();
+		for(int i = 0; i < ids.length; i++)
+			loadvec.add(ids[i]);
+		try
+		{
+			#sql lIt = { select
+						ID,
+						NAME,
+						TYPE_ID,
+						DESCRIPTION,
+						INVENTORY_NR,
+						MANUFACTURER,
+						MANUFACTURER_CODE,
+						SUPPLIER,
+						SUPPLIER_CODE,
+						LINK_CLASS,
+						START_EQUIPMENT_ID,
+						START_PORT_ID,
+						END_EQUIPMENT_ID,
+						END_PORT_ID,
+						IMAGE_ID,
+						MODIFIED,
+						DOMAIN_ID,
+						PHYSICAL_LENGTH,
+						OPTICAL_LENGTH
+					from AMFICOM.LINKS
+					where DOMAIN_ID = :domain_id
+			};
+
+			while (lIt.next())
+			{
+				if(! loadvec.contains(lIt.id()))
+					continue;
+
+				try { It_id = lIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = lIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_type_id = lIt.type_id(); }
+				catch(SQLException e) { }
+				if(It_type_id == null) It_type_id = "";
+				try { It_description = lIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_inventory_nr = lIt.inventory_nr(); }
+				catch(SQLException e) { }
+				if(It_inventory_nr == null) It_inventory_nr = "";
+				try { It_manufacturer = lIt.manufacturer(); }
+				catch(SQLException e) { }
+				if(It_manufacturer == null) It_manufacturer = "";
+				try { It_manufacturer_code = lIt.manufacturer_code(); }
+				catch(SQLException e) { }
+				if(It_manufacturer_code == null) It_manufacturer_code = "";
+				try { It_supplier = lIt.supplier(); }
+				catch(SQLException e) { }
+				if(It_supplier == null) It_supplier = "";
+				try { It_supplier_code = lIt.supplier_code(); }
+				catch(SQLException e) { }
+				if(It_supplier_code == null) It_supplier_code = "";
+				try { It_link_class = lIt.link_class(); }
+				catch(SQLException e) { }
+				if(It_link_class == null) It_link_class = "";
+				try { It_start_equipment_id = lIt.start_equipment_id(); }
+				catch(SQLException e) { }
+				if(It_start_equipment_id == null) It_start_equipment_id = "";
+				try { It_start_port_id = lIt.start_port_id(); }
+				catch(SQLException e) { }
+				if(It_start_port_id == null) It_start_port_id = "";
+				try { It_end_equipment_id = lIt.end_equipment_id(); }
+				catch(SQLException e) { }
+				if(It_end_equipment_id == null) It_end_equipment_id = "";
+				try { It_end_port_id = lIt.end_port_id(); }
+				catch(SQLException e) { }
+				if(It_end_port_id == null) It_end_port_id = "";
+				try { It_image_id = lIt.image_id(); }
+				catch(SQLException e) { }
+				if(It_image_id == null) It_image_id = "";
+				try { It_modified = lIt.modified().getTime(); }
+				catch(SQLException e) { }
+				try { It_domain_id = lIt.domain_id(); }
+				catch(SQLException e) { }
+				if(It_domain_id == null) It_domain_id = "";
+				try { It_physical_length = lIt.physical_length(); }
+				catch(SQLException e) { }
+				if(It_physical_length == null) It_physical_length = "";
+				try { It_optical_length = lIt.optical_length(); }
+				catch(SQLException e) { }
+				if(It_optical_length == null) It_optical_length = "";
+
+				vector2 = loadCharacteristics(
+						"LINKCHARACTERISTICS",
+						"LINK_ID",
+						It_id);
+				characteristics = new Characteristic_Transferable[vector2.size()];
+				vector2.copyInto(characteristics);
+
+				lt_t = new Link_Transferable(
+					It_id,
+					It_name,
+					It_type_id,
+					It_description,
+					It_inventory_nr,
+					It_manufacturer,
+					It_manufacturer_code,
+					It_supplier,
+					It_supplier_code,
+					It_link_class,
+					It_image_id,
+					It_start_equipment_id,
+					It_start_port_id,
+					It_end_equipment_id,
+					It_end_port_id,
+					It_domain_id,
+					It_modified,
+					It_physical_length,
+					It_optical_length,
+					characteristics);
+
+				vector.add(lt_t);
+			}
+			lIt.close();
+			lt_ts = new Link_Transferable[vector.size()];
+			vector.copyInto(lt_ts);
+			links.value = lt_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(lIt != null) try {
+			lIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading links: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				lIt.close();
 			}catch(Exception exe) {}
 		}
 		
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	#sql public static iterator IdIterator ( String id );
+	static int loadCableLinks(
+			String domain_id,
+			String[] ids,
+			CableLinkSeq_TransferableHolder links)
+	{
+		int k;
 
-	#sql public static iterator CharacteristicIterator (
+		String It_id = "";
+		String It_name = "";
+		String It_type_id = "";
+		String It_description = "";
+		String It_inventory_nr = "";
+		String It_manufacturer = "";
+		String It_manufacturer_code = "";
+		String It_supplier = "";
+		String It_supplier_code = "";
+		String It_link_class = "";
+		String It_start_equipment_id = "";
+		String It_start_port_id = "";
+		String It_end_equipment_id = "";
+		String It_end_port_id = "";
+		String It_image_id = "";
+		String It_domain_id = "";
+		long It_modified = 0;
+		String It_physical_length = "";
+		String It_optical_length = "";
+
+		CableLinkThread_Transferable[] threads;
+
+		Characteristic_Transferable characteristics[];
+
+		Vector vector = new Vector();
+
+		CableLink_Transferable lt_t;
+		CableLink_Transferable[] lt_ts;
+		CableLinkIterator lIt = null;
+		Vector vector2;
+
+		Vector loadvec = new Vector();
+		for(int i = 0; i < ids.length; i++)
+			loadvec.add(ids[i]);
+		try
+		{
+			#sql lIt = { select
+						ID,
+						NAME,
+						TYPE_ID,
+						DESCRIPTION,
+						INVENTORY_NR,
+						MANUFACTURER,
+						MANUFACTURER_CODE,
+						SUPPLIER,
+						SUPPLIER_CODE,
+						LINK_CLASS,
+						START_EQUIPMENT_ID,
+						START_PORT_ID,
+						END_EQUIPMENT_ID,
+						END_PORT_ID,
+						IMAGE_ID,
+						MODIFIED,
+						DOMAIN_ID,
+						PHYSICAL_LENGTH,
+						OPTICAL_LENGTH
+					from AMFICOM.CABLELINKS
+					where DOMAIN_ID = :domain_id
+			};
+
+			while (lIt.next())
+			{
+				if(! loadvec.contains(lIt.id()))
+					continue;
+
+				try { It_id = lIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = lIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_type_id = lIt.type_id(); }
+				catch(SQLException e) { }
+				if(It_type_id == null) It_type_id = "";
+				try { It_description = lIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_inventory_nr = lIt.inventory_nr(); }
+				catch(SQLException e) { }
+				if(It_inventory_nr == null) It_inventory_nr = "";
+				try { It_manufacturer = lIt.manufacturer(); }
+				catch(SQLException e) { }
+				if(It_manufacturer == null) It_manufacturer = "";
+				try { It_manufacturer_code = lIt.manufacturer_code(); }
+				catch(SQLException e) { }
+				if(It_manufacturer_code == null) It_manufacturer_code = "";
+				try { It_supplier = lIt.supplier(); }
+				catch(SQLException e) { }
+				if(It_supplier == null) It_supplier = "";
+				try { It_supplier_code = lIt.supplier_code(); }
+				catch(SQLException e) { }
+				if(It_supplier_code == null) It_supplier_code = "";
+				try { It_link_class = lIt.link_class(); }
+				catch(SQLException e) { }
+				if(It_link_class == null) It_link_class = "";
+				try { It_start_equipment_id = lIt.start_equipment_id(); }
+				catch(SQLException e) { }
+				if(It_start_equipment_id == null) It_start_equipment_id = "";
+				try { It_start_port_id = lIt.start_port_id(); }
+				catch(SQLException e) { }
+				if(It_start_port_id == null) It_start_port_id = "";
+				try { It_end_equipment_id = lIt.end_equipment_id(); }
+				catch(SQLException e) { }
+				if(It_end_equipment_id == null) It_end_equipment_id = "";
+				try { It_end_port_id = lIt.end_port_id(); }
+				catch(SQLException e) { }
+				if(It_end_port_id == null) It_end_port_id = "";
+				try { It_image_id = lIt.image_id(); }
+				catch(SQLException e) { }
+				if(It_image_id == null) It_image_id = "";
+				try { It_modified = lIt.modified().getTime(); }
+				catch(SQLException e) { }
+				try { It_domain_id = lIt.domain_id(); }
+				catch(SQLException e) { }
+				if(It_domain_id == null) It_domain_id = "";
+				try { It_physical_length = lIt.physical_length(); }
+				catch(SQLException e) { }
+				if(It_physical_length == null) It_physical_length = "";
+				try { It_optical_length = lIt.optical_length(); }
+				catch(SQLException e) { }
+				if(It_optical_length == null) It_optical_length = "";
+
+				vector2 = loadCharacteristics(
+						"CABLELINKCHARACTERISTICS",
+						"CABLE_LINK_ID",
+						It_id);
+				characteristics = new Characteristic_Transferable[vector2.size()];
+				vector2.copyInto(characteristics);
+
+				vector2 = loadCableThreads(It_id);
+				threads = new CableLinkThread_Transferable[vector2.size()];
+				vector2.copyInto(threads);
+
+				lt_t = new CableLink_Transferable(
+					It_id,
+					It_name,
+					It_type_id,
+					It_description,
+					It_inventory_nr,
+					It_manufacturer,
+					It_manufacturer_code,
+					It_supplier,
+					It_supplier_code,
+					It_link_class,
+					It_image_id,
+					It_start_equipment_id,
+					It_start_port_id,
+					It_end_equipment_id,
+					It_end_port_id,
+					It_domain_id,
+					It_modified,
+					It_physical_length,
+					It_optical_length,
+					threads,
+					characteristics);
+
+				vector.add(lt_t);
+			}
+			lIt.close();
+			lt_ts = new CableLink_Transferable[vector.size()];
+			vector.copyInto(lt_ts);
+			links.value = lt_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(lIt != null) try {
+			lIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading links: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				lIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	#sql public static iterator IdIterator(
+		String id);
+
+	#sql public static iterator CharacteristicIterator(
 		String id,
 		String characteristic_type_id,
 		String value);

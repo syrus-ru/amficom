@@ -1,5 +1,5 @@
 /*
- * $Id: ResultSetdbInterface.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
+ * $Id: ResultSetdbInterface.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,17 +15,15 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class ResultSetdbInterface
-{
-	protected ResultSetdbInterface()
-	{
+final class ResultSetdbInterface {
+	private ResultSetdbInterface() {
 	}
 
-	public static int getResultSets(
+	static int getResultSets(
 			String domain_id,
 			ResultSetSeq_TransferableHolder resultsets)
 	{
@@ -127,7 +125,7 @@ public class ResultSetdbInterface
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int getResultSets(
+	static int getResultSets(
 			String domain_id,
 			ResultSetSeq_TransferableHolder resultsets,
 			String[] ids)
@@ -236,7 +234,7 @@ public class ResultSetdbInterface
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int getResultIds(
+	static int getResultIds(
 			String result_set_id,
 			ResourceDescriptorSeq_TransferableHolder result_ids)
 	{
@@ -284,7 +282,7 @@ public class ResultSetdbInterface
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int getResultIds(
+	static int getResultIds(
 			String result_set_id,
 			String me_id,
 			ResourceDescriptorSeq_TransferableHolder result_ids)
@@ -351,19 +349,16 @@ public class ResultSetdbInterface
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	#sql public static iterator IdIterator( String id );
-	#sql public static iterator ResultIdIterator( String id, Timestamp elementary_start_time );
-
-	#sql public static iterator IdTestIterator(
+	#sql private static iterator ResultIdIterator(
 		String id,
-		String test_id);
+		Timestamp elementary_start_time);
 
-	#sql public static iterator ResultIdTestIterator(
+	#sql private static iterator ResultIdTestIterator(
 		String id,
 		Timestamp elementary_start_time,
 		String test_id);
 
-	#sql public static iterator ResultSetIterator(
+	#sql private static iterator ResultSetIterator(
 		String id,
 		String name,
 		String comments,

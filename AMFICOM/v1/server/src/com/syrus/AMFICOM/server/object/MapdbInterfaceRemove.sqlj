@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceRemove.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
+ * $Id: MapdbInterfaceRemove.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,21 +13,15 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class MapdbInterfaceRemove
-{
-	protected MapdbInterfaceRemove()
-	{
+final class MapdbInterfaceRemove {
+	private MapdbInterfaceRemove() {
 	}
 
-	public static int removeElementAttributes(
-			String elementAttributeTable,
-			String elementAttributeField,
-			String element_id)
-	{
+	static int removeElementAttributes(String elementAttributeTable, String elementAttributeField, String element_id) {
 		int i;
 		try
 		{
@@ -51,8 +45,7 @@ public class MapdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeMaps(String[] mapseq)
-	{
+	static int removeMaps(String[] mapseq) {
 		Vector vector2 = new Vector();
 		String equipment_ids[] = new String[0];
 		String kis_ids[] = new String[0];
@@ -66,43 +59,43 @@ public class MapdbInterfaceRemove
 		int i;
 		for(i = mapseq.length - 1; i >= 0; i--)
 		{
-			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPELEMENTLINKS", "MAP_ELEMENT_ID", mapseq[i]);
+			vector2 = MapdbInterfaceLoad.loadMapElementIds2("MAPELEMENTLINKS", "MAP_ELEMENT_ID", mapseq[i]);
 			equipment_ids = new String[vector2.size()];
 			vector2.copyInto(equipment_ids);
 			removeElements(equipment_ids);
 			System.out.println("removing " + vector2.size() + " equipments for map " + mapseq[i]);
 
-			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPKISLINKS", "MAP_KIS_ID", mapseq[i]);
+			vector2 = MapdbInterfaceLoad.loadMapElementIds2("MAPKISLINKS", "MAP_KIS_ID", mapseq[i]);
 			kis_ids = new String[vector2.size()];
 			vector2.copyInto(kis_ids);
 			removeKISs(kis_ids);
 			System.out.println("removing " + vector2.size() + " kiss for map " + mapseq[i]);
 
-			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPNODELINKS", "MAP_NODE_ID", mapseq[i]);
+			vector2 = MapdbInterfaceLoad.loadMapElementIds2("MAPNODELINKS", "MAP_NODE_ID", mapseq[i]);
 			node_ids = new String[vector2.size()];
 			vector2.copyInto(node_ids);
 			removeNodes(node_ids);
 			System.out.println("removing " + vector2.size() + " nodes for map " + mapseq[i]);
 
-			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPNODELINKLINKS", "MAP_NODE_LINK_ID", mapseq[i]);
+			vector2 = MapdbInterfaceLoad.loadMapElementIds2("MAPNODELINKLINKS", "MAP_NODE_LINK_ID", mapseq[i]);
 			nodeLink_ids = new String[vector2.size()];
 			vector2.copyInto(nodeLink_ids);
 			removeNodeLinks(nodeLink_ids);
 			System.out.println("removing " + vector2.size() + " node links for map " + mapseq[i]);
 
-			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPLINKLINKS", "MAP_LINK_ID", mapseq[i]);
+			vector2 = MapdbInterfaceLoad.loadMapElementIds2("MAPLINKLINKS", "MAP_LINK_ID", mapseq[i]);
 			physicalLink_ids = new String[vector2.size()];
 			vector2.copyInto(physicalLink_ids);
 			removeLinks(physicalLink_ids);
 			System.out.println("removing " + vector2.size() + " links for map " + mapseq[i]);
 
-			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPPATHSLINKS", "MAP_PATH_ID", mapseq[i]);
+			vector2 = MapdbInterfaceLoad.loadMapElementIds2("MAPPATHSLINKS", "MAP_PATH_ID", mapseq[i]);
 			path_ids = new String[vector2.size()];
 			vector2.copyInto(path_ids);
 			removePaths(path_ids);
 			System.out.println("removing " + vector2.size() + " paths for map " + mapseq[i]);
 
-			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPMARKLINKS", "MAP_MARK_ID", mapseq[i]);
+			vector2 = MapdbInterfaceLoad.loadMapElementIds2("MAPMARKLINKS", "MAP_MARK_ID", mapseq[i]);
 			mark_ids = new String[vector2.size()];
 			vector2.copyInto(mark_ids);
 			removeMarks(mark_ids);
@@ -123,7 +116,7 @@ public class MapdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeJMaps(String[] mapseq)
+	static int removeJMaps(String[] mapseq)
 	{
 		Vector vector2 = new Vector();
 		String kis_ids[] = new String[0];
@@ -132,13 +125,13 @@ public class MapdbInterfaceRemove
 		int i;
 		for(i = mapseq.length - 1; i >= 0; i--)
 		{
-			vector2 = MapdbInterfaceLoad4.loadISMMapElementIds("MAPKISELEMENTS", mapseq[i]);
+			vector2 = MapdbInterfaceLoad.loadISMMapElementIds("MAPKISELEMENTS", mapseq[i]);
 			kis_ids = new String[vector2.size()];
 			vector2.copyInto(kis_ids);
 			removeKISs(kis_ids);
 			System.out.println("removing " + vector2.size() + " kiss for ism map " + mapseq[i]);
 
-			vector2 = MapdbInterfaceLoad4.loadISMMapElementIds("MAPPATHELEMENTS", mapseq[i]);
+			vector2 = MapdbInterfaceLoad.loadISMMapElementIds("MAPPATHELEMENTS", mapseq[i]);
 			path_ids = new String[vector2.size()];
 			vector2.copyInto(path_ids);
 			removePaths(path_ids);
@@ -158,8 +151,7 @@ public class MapdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeElements(String[] equipmentseq)
-	{
+	static int removeElements(String[] equipmentseq) {
 		int i;
 		for(i = equipmentseq.length - 1; i >= 0; i--)
 		{
@@ -185,7 +177,7 @@ public class MapdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeKISs(String[] kisseq)
+	static int removeKISs(String[] kisseq)
 	{
 		int i;
 		for(i = kisseq.length - 1; i >= 0; i--)
@@ -212,7 +204,7 @@ public class MapdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeMarks(String[] markseq)
+	static int removeMarks(String[] markseq)
 	{
 		int i;
 		for(i = markseq.length - 1; i >= 0; i--)
@@ -239,7 +231,7 @@ public class MapdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeNodes(String[] nodeseq)
+	static int removeNodes(String[] nodeseq)
 	{
 		int i;
 		for(i = nodeseq.length - 1; i >= 0; i--)
@@ -266,7 +258,7 @@ public class MapdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeNodeLinks(String[] nodelinkseq)
+	static int removeNodeLinks(String[] nodelinkseq)
 	{
 		int i;
 		for(i = nodelinkseq.length - 1; i >= 0; i--)
@@ -293,7 +285,7 @@ public class MapdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeLinks(String[] linkseq)
+	static int removeLinks(String[] linkseq)
 	{
 		int i;
 		for(i = linkseq.length - 1; i >= 0; i--)
@@ -320,7 +312,7 @@ public class MapdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removePaths(String[] pathseq)
+	static int removePaths(String[] pathseq)
 	{
 		int i;
 		for(i = pathseq.length - 1; i >= 0; i--)

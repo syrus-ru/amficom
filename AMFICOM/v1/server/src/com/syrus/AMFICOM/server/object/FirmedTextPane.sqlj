@@ -1,5 +1,5 @@
 /*
- * $Id: FirmedTextPane.sqlj,v 1.1.2.2 2004/08/20 17:12:08 bass Exp $
+ * $Id: FirmedTextPane.sqlj,v 1.1.2.3 2004/08/24 15:43:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:08 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:43 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -35,7 +35,7 @@ public class FirmedTextPane
 	private String report_template_id;
 
 	public FirmedTextPane(FirmedTextPane_Transferable ftp, String r_t_id)
-			throws Exception
+			throws SQLException
 	{
 		this.id = ResourcedbInterface.getUId("reporttemplatebox");
 		this.labelX = ftp.labelX;
@@ -82,7 +82,7 @@ public class FirmedTextPane
 	}
 
 	public FirmedTextPane(String id)
-			throws Exception
+			throws SQLException
 	{
 		FirmedTextPaneIterator ftpIt = null;
 
@@ -107,7 +107,7 @@ public class FirmedTextPane
 
 			if(!ftpIt.next())
 			{
-				throw new Exception("NO firmedtextpane for id " + id);
+				throw new SQLException("NO firmedtextpane for id " + id);
 			}
 
 			try { this.id = ftpIt.id(); }
@@ -153,24 +153,22 @@ public class FirmedTextPane
 
 			ftpIt.close();
 		}
-		catch(Exception e)
+		catch(SQLException e)
 		{
 			if(ftpIt != null) try {
 			ftpIt.close();
-			}catch(Exception exe) {}
+			}catch(SQLException exe) {}
 			System.out.println("error loading report template: " + e.getMessage());
 			throw e;
 		}
 	}
 
-	public FirmedTextPane_Transferable getTransferable()
-			throws Exception
-	{
+	FirmedTextPane_Transferable getTransferable() {
 		return new FirmedTextPane_Transferable(
 			this.labelX,
 			this.labelY,
 			this.strings_contained,
-      this.labels_font,
+			this.labels_font,
 			this.vertFirmer,
 			this.horizFirmer,
 			this.verticalFirmTo,
@@ -228,7 +226,7 @@ public class FirmedTextPane
 		#sql { commit };
 	}
 
-	public static FirmedTextPane[] retrieveBoxes(String rt_id) throws Exception
+	public static FirmedTextPane[] retrieveBoxes(String rt_id) throws SQLException
 	{
 		IdIterator idIt = null;
 		Vector linkedlist = new Vector();
@@ -243,11 +241,11 @@ public class FirmedTextPane
 				linkedlist.add(new FirmedTextPane(idIt.id()));
 			idIt.close();
 		}
-		catch(Exception ex)
+		catch(SQLException ex)
 		{
 			if(idIt != null) try {
 			idIt.close();
-			}catch(Exception exe) {}
+			}catch(SQLException exe) {}
 			throw ex;
 		}
 		FirmedTextPane[] ftps = new FirmedTextPane[linkedlist.size()];

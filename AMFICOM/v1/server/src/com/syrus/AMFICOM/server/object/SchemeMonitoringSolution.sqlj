@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeMonitoringSolution.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: SchemeMonitoringSolution.sqlj,v 1.1.2.2 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,25 +14,22 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class SchemeMonitoringSolution
-{
-	SchemeMonitoringSolution_Transferable sms;
+final class SchemeMonitoringSolution {
+	private SchemeMonitoringSolution_Transferable sms;
 
-	String id = "";
-    String name = "";
-	String scheme_id = "";
+	private String id = "";
+	private String name = "";
+	private String scheme_id = "";
 
-	double price = 0.0;
+	private double price = 0.0;
 
-	ArrayList paths = new ArrayList();
+	private ArrayList paths = new ArrayList();
 
-	public SchemeMonitoringSolution(SchemeMonitoringSolution_Transferable sms)
-    	throws SQLException
-	{
+	SchemeMonitoringSolution(SchemeMonitoringSolution_Transferable sms) throws SQLException {
     	this.sms = sms;
 
 		this.id = sms.id;
@@ -68,9 +65,7 @@ public class SchemeMonitoringSolution
     	#sql { commit };
 	}
 
-	public SchemeMonitoringSolution(String sms_id)
-    	throws SQLException
-    {
+	SchemeMonitoringSolution(String sms_id) throws SQLException {
 		#sql { select
 				id,
 				name,
@@ -88,9 +83,7 @@ public class SchemeMonitoringSolution
 		loadPaths();
     }
 
-    public void delete()
-    	throws SQLException
-    {
+    void delete() throws SQLException {
 		deletePaths();
 		
     	#sql { delete
@@ -100,8 +93,7 @@ public class SchemeMonitoringSolution
     	#sql { commit };
     }
 
-    public SchemeMonitoringSolution_Transferable getTransferable()
-    {
+    private SchemeMonitoringSolution_Transferable getTransferable() {
     	sms = new SchemeMonitoringSolution_Transferable(
 				id,
 				name,
@@ -111,9 +103,7 @@ public class SchemeMonitoringSolution
         return sms;
     }
 
-	public void savePaths()
-    	throws SQLException
-	{
+	private void savePaths() throws SQLException {
     	#sql { delete
             from PATHSINSOLUTION
             where solution_id = :id
@@ -138,9 +128,7 @@ public class SchemeMonitoringSolution
 
 	}
 
-	public void loadPaths()
-    	throws SQLException
-	{
+	private void loadPaths() throws SQLException {
 		PathIdIterator pIt = null;
 
 		try
@@ -169,9 +157,7 @@ public class SchemeMonitoringSolution
 		
 	}
 
-	public void deletePaths()
-    	throws SQLException
-	{
+	private void deletePaths() throws SQLException {
         for(int i = 0; i < paths.size(); i++)
 		{
 			SchemePath_Transferable pt = (SchemePath_Transferable )paths.get(i);
@@ -184,9 +170,7 @@ public class SchemeMonitoringSolution
         };
 	}
 
-    public static SchemeMonitoringSolution_Transferable[] getSMSs()
-    	throws SQLException
-    {
+	static SchemeMonitoringSolution_Transferable[] getSMSs() throws SQLException {
     	Vector vec = new Vector();
 
     	IdIterator idIt = null;

@@ -1,5 +1,5 @@
 /*
- * $Id: NetDirectorydbInterfaceRemove.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: NetDirectorydbInterfaceRemove.sqlj,v 1.1.2.2 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,17 +12,15 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class NetDirectorydbInterfaceRemove
-{
-	protected NetDirectorydbInterfaceRemove()
-	{
+final class NetDirectorydbInterfaceRemove {
+	private NetDirectorydbInterfaceRemove() {
 	}
 
-	public static void removeCharacteristicLinks(
+	static void removeCharacteristicLinks(
 			String charLinkTable,
 			String charLinkField,
 			String element_id)
@@ -49,7 +47,7 @@ public class NetDirectorydbInterfaceRemove
 		}
 	}
 
-	public static int removePortTypes(
+	static int removePortTypes(
 			String[] porttype_ids)
 	{
 		int i;
@@ -82,7 +80,7 @@ public class NetDirectorydbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeCablePortTypes(
+	static int removeCablePortTypes(
 			String[] porttype_ids)
 	{
 		int i;
@@ -115,7 +113,7 @@ public class NetDirectorydbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeLinkTypes(
+	static int removeLinkTypes(
 			String[] linktype_ids)
 	{
 		int i;
@@ -148,7 +146,7 @@ public class NetDirectorydbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeCableTypeThreads(String cabletype_id)
+	private static int removeCableTypeThreads(String cabletype_id)
 	{
 		try
 		{
@@ -164,7 +162,7 @@ public class NetDirectorydbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeCableLinkTypes(
+	static int removeCableLinkTypes(
 			String[] linktype_ids)
 	{
 		int i;
@@ -199,7 +197,7 @@ public class NetDirectorydbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeEquipmentTypes(
+	static int removeEquipmentTypes(
 			String[] equipmenttype_ids)
 	{
 		int i;

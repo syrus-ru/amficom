@@ -1,5 +1,5 @@
 /*
- * $Id: ImagePane.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
+ * $Id: ImagePane.sqlj,v 1.1.2.3 2004/08/24 15:43:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:43 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -37,7 +37,7 @@ public class ImagePane
 	private String report_template_id;
 
 	public ImagePane(ImagePane_Transferable ip, String r_t_id)
-			throws Exception  
+			throws SQLException  
 	{
 		this.id = ResourcedbInterface.getUId("reportimagepane");
 		this.x = ip.x;
@@ -93,7 +93,7 @@ public class ImagePane
 	}
 
 	public ImagePane(String id)
-			throws Exception
+			throws SQLException
 	{
 		ImagePaneIterator ipIt = null;
 
@@ -113,7 +113,7 @@ public class ImagePane
 
 			if(!ipIt.next())
 			{
-				throw new Exception("NO imagepane for id " + id);
+				throw new SQLException("NO imagepane for id " + id);
 			}
 
 			try { this.id = ipIt.id(); }
@@ -139,35 +139,25 @@ public class ImagePane
 
 			ipIt.close();
       
-			try
-			{
-				this.bytes = image_bytes;
-			}
-			catch(Exception ioe)
-			{
-				System.out.println("error loading image: " + ioe.getMessage());
-				ioe.printStackTrace();
-			}
+			this.bytes = image_bytes;
       
 		}
-		catch(Exception e)
+		catch(SQLException e)
 		{
 			if(ipIt != null) try {
 			ipIt.close();
-			}catch(Exception exe) {}
+			}catch(SQLException exe) {}
 			System.out.println("error loading report template: " + e.getMessage());
 			throw e;
 		}
 	}
 
-	public ImagePane_Transferable getTransferable()
-			throws Exception
-	{
+	ImagePane_Transferable getTransferable() {
 		return new ImagePane_Transferable(
 			this.x,
 			this.y,
 			this.width,
-      this.height,
+			this.height,
 			this.bytes);
 	}
 
@@ -235,7 +225,7 @@ public class ImagePane
 		#sql { commit };
 	}
 
-	public static ImagePane[] retrieveImages(String rt_id) throws Exception
+	public static ImagePane[] retrieveImages(String rt_id) throws SQLException
 	{
 		IdIterator idIt = null;
 		Vector linkedlist = new Vector();
@@ -250,11 +240,11 @@ public class ImagePane
 				linkedlist.add(new ImagePane(idIt.id()));
 			idIt.close();
 		}
-		catch(Exception ex)
+		catch(SQLException ex)
 		{
 			if(idIt != null) try {
 			idIt.close();
-			}catch(Exception exe) {}
+			}catch(SQLException exe) {}
 			throw ex;
 		}
 		ImagePane[] ips = new ImagePane[linkedlist.size()];

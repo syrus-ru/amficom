@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbInterface.sqlj,v 1.1.2.2 2004/08/23 11:43:50 bass Exp $
+ * $Id: AMFICOMdbInterface.sqlj,v 1.1.2.3 2004/08/24 15:43:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,18 +27,15 @@ import com.syrus.AMFICOM.server.event.*;
 import com.syrus.AMFICOM.server.measurement.*;
 import java.io.*;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import org.omg.CORBA.StringHolder;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/23 11:43:50 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:43 $
  * @author $Author: bass $
  * @module server_v1
  */
 final class AMFICOMdbInterface {
-	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-
 	private AMFICOMdbInterface() {
 	}
 
@@ -204,13 +201,13 @@ final class AMFICOMdbInterface {
 		ret = ObjectdbInterfaceSave.saveDomains(domainseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = ObjectdbInterfaceSave2.saveCategories(categoryseq);
+		ret = ObjectdbInterfaceSave.saveCategories(categoryseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = ObjectdbInterfaceSave2.saveGroups(groupseq);
+		ret = ObjectdbInterfaceSave.saveGroups(groupseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = ObjectdbInterfaceSave2.saveProfiles(profileseq);
+		ret = ObjectdbInterfaceSave.saveProfiles(profileseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		ret = ObjectdbInterfaceSave.saveExecs(execseq);
@@ -388,31 +385,31 @@ final class AMFICOMdbInterface {
 		linkseq.value = new MapPhysicalLinkElement_Transferable[0];
 		pathseq.value = new MapPathElement_Transferable[0];
 
-		ret = MapdbInterfaceLoad1.loadMaps(accessIdentity.domain_id, map_ids, mapseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMaps(accessIdentity.domain_id, map_ids, mapseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad1.loadMapElements(map_ids, equipmentseq, img_ids);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-
-		ret = MapdbInterfaceLoad1.loadMapKISs(map_ids, kisseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMapElements(map_ids, equipmentseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
-		ret = MapdbInterfaceLoad1.loadMapMarks(map_ids, markseq, img_ids);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = MapdbInterfaceLoad2.loadMapNodes(map_ids, nodeseq, img_ids);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = MapdbInterfaceLoad2.loadMapNodeLinks(map_ids, nodelinkseq, img_ids);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = MapdbInterfaceLoad2.loadMapLinks(map_ids, linkseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMapKISs(map_ids, kisseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
-		ret = MapdbInterfaceLoad2.loadMapPaths(map_ids, pathseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMapMarks(map_ids, markseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad.loadMapNodes(map_ids, nodeseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad.loadMapNodeLinks(map_ids, nodelinkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceLoad.loadMapLinks(map_ids, linkseq, img_ids);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceLoad.loadMapPaths(map_ids, pathseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		return Constants.ERROR_NO_ERROR;
@@ -444,22 +441,22 @@ final class AMFICOMdbInterface {
 		linkseq.value = new MapPhysicalLinkElement_Transferable[0];
 		pathseq.value = new MapPathElement_Transferable[0];
 
-		ret = MapdbInterfaceLoad3.loadJMaps(map_ids, mapseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMaps(map_ids, mapseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad3.loadJMapKISs(map_ids, kisseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMapKISs(map_ids, kisseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad5.loadJMapNodes(map_ids, nodeseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMapNodes(map_ids, nodeseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad5.loadJMapNodeLinks(map_ids, nodelinkseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMapNodeLinks(map_ids, nodelinkseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad5.loadJMapLinks(map_ids, linkseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMapLinks(map_ids, linkseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad3.loadJMapPaths(map_ids, pathseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMapPaths(map_ids, pathseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
@@ -499,7 +496,7 @@ final class AMFICOMdbInterface {
 		linkseq.value = new MapPhysicalLinkElement_Transferable[0];
 		pathseq.value = new MapPathElement_Transferable[0];
 
-		ret = MapdbInterfaceLoad1.loadMaps(accessIdentity.domain_id, map_ids, mapseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMaps(accessIdentity.domain_id, map_ids, mapseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		int ind = map_ids.indexOf(map_id);
@@ -509,28 +506,28 @@ final class AMFICOMdbInterface {
 		mapseq.value = new MapContext_Transferable[1];
 		mapseq.value[0] = mc_t;
 
-		ret = MapdbInterfaceLoad1.loadMapElements(map_ids, equipmentseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMapElements(map_ids, equipmentseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
-		ret = MapdbInterfaceLoad1.loadMapKISs(map_ids, kisseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMapKISs(map_ids, kisseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
-		ret = MapdbInterfaceLoad1.loadMapMarks(map_ids, markseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMapMarks(map_ids, markseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad2.loadMapNodes(map_ids, nodeseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMapNodes(map_ids, nodeseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad2.loadMapNodeLinks(map_ids, nodelinkseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMapNodeLinks(map_ids, nodelinkseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad2.loadMapLinks(map_ids, linkseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMapLinks(map_ids, linkseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
-		ret = MapdbInterfaceLoad2.loadMapPaths(map_ids, pathseq, img_ids);
+		ret = MapdbInterfaceLoad.loadMapPaths(map_ids, pathseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		return Constants.ERROR_NO_ERROR;
@@ -564,7 +561,7 @@ final class AMFICOMdbInterface {
 		linkseq.value = new MapPhysicalLinkElement_Transferable[0];
 		pathseq.value = new MapPathElement_Transferable[0];
 
-		ret = MapdbInterfaceLoad3.loadJMaps(map_ids, mapseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMaps(map_ids, mapseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		int ind = map_ids.indexOf(map_id);
@@ -574,19 +571,19 @@ final class AMFICOMdbInterface {
 		mapseq.value = new ISMMapContext_Transferable[1];
 		mapseq.value[0] = mc_t;
 
-		ret = MapdbInterfaceLoad3.loadJMapKISs(map_ids, kisseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMapKISs(map_ids, kisseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad5.loadJMapNodes(map_ids, nodeseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMapNodes(map_ids, nodeseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad5.loadJMapNodeLinks(map_ids, nodelinkseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMapNodeLinks(map_ids, nodelinkseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad5.loadJMapLinks(map_ids, linkseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMapLinks(map_ids, linkseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceLoad3.loadJMapPaths(map_ids, pathseq, img_ids);
+		ret = MapdbInterfaceLoad.loadJMapPaths(map_ids, pathseq, img_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		ret = ResourcedbInterface.loadImages(imageseq, img_ids);
@@ -615,31 +612,31 @@ final class AMFICOMdbInterface {
 		ret = ResourcedbInterface.saveImages(imageseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceSave1.saveMaps(mapseq);
+		ret = MapdbInterfaceSave.saveMaps(mapseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceSave1.saveMapElements(equipmentseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-
-		ret = MapdbInterfaceSave1.saveMapKISs(kisseq);
+		ret = MapdbInterfaceSave.saveMapElements(equipmentseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
-		ret = MapdbInterfaceSave1.saveMapMarks(markseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = MapdbInterfaceSave2.saveMapNodes(nodeseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = MapdbInterfaceSave2.saveMapNodeLinks(nodelinkseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = MapdbInterfaceSave2.saveMapLinks(linkseq);
+		ret = MapdbInterfaceSave.saveMapKISs(kisseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
-		ret = MapdbInterfaceSave3.saveMapPaths(pathseq);
+		ret = MapdbInterfaceSave.saveMapMarks(markseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave.saveMapNodes(nodeseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave.saveMapNodeLinks(nodelinkseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+		ret = MapdbInterfaceSave.saveMapLinks(linkseq);
+		if(ret != Constants.ERROR_NO_ERROR)
+			return ret;
+
+		ret = MapdbInterfaceSave.saveMapPaths(pathseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
@@ -664,22 +661,22 @@ final class AMFICOMdbInterface {
 		ret = ResourcedbInterface.saveImages(imageseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceSave4.saveJMaps(mapseq);
+		ret = MapdbInterfaceSave.saveJMaps(mapseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceSave4.saveJMapKISs(kisseq);
+		ret = MapdbInterfaceSave.saveJMapKISs(kisseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceSave5.saveJMapNodes(nodeseq);
+		ret = MapdbInterfaceSave.saveJMapNodes(nodeseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceSave5.saveJMapNodeLinks(nodelinkseq);
+		ret = MapdbInterfaceSave.saveJMapNodeLinks(nodelinkseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceSave5.saveJMapLinks(linkseq);
+		ret = MapdbInterfaceSave.saveJMapLinks(linkseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = MapdbInterfaceSave4.saveJMapPaths(pathseq);
+		ret = MapdbInterfaceSave.saveJMapPaths(pathseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		return Constants.ERROR_NO_ERROR;
@@ -1050,7 +1047,7 @@ final class AMFICOMdbInterface {
 
 		int ret = Constants.ERROR_NO_ERROR;
 
-		ret = MapdbInterfaceLoad4.loadAttributeTypes(attrseq);
+		ret = MapdbInterfaceLoad.loadAttributeTypes(attrseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		return ret;
@@ -1066,7 +1063,7 @@ final class AMFICOMdbInterface {
 
 		int ret = Constants.ERROR_NO_ERROR;
 
-		ret = MapdbInterfaceLoad4.loadAttributeTypes(ids, attrseq);
+		ret = MapdbInterfaceLoad.loadAttributeTypes(ids, attrseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		return ret;
@@ -1085,7 +1082,7 @@ final class AMFICOMdbInterface {
 		attrseq.value = new ElementAttribute_Transferable[0];
 
 		Vector vector = new Vector();
-		ret = MapdbInterfaceLoad4.reloadAttributes(map_ids, vector);
+		ret = MapdbInterfaceLoad.reloadAttributes(map_ids, vector);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
@@ -1109,7 +1106,7 @@ final class AMFICOMdbInterface {
 		attrseq.value = new ElementAttribute_Transferable[0];
 
 		Vector vector = new Vector();
-		ret = MapdbInterfaceLoad4.reloadISMAttributes(ism_map_ids, vector);
+		ret = MapdbInterfaceLoad.reloadISMAttributes(ism_map_ids, vector);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
@@ -1843,7 +1840,7 @@ final class AMFICOMdbInterface {
 
 		treqseq.value = new ClientTestRequest_Transferable[0];
 
-		ret = SurveydbInterfaceLoad3.loadRequests(accessIdentity.domain_id, treqseq);
+		ret = SurveydbInterfaceLoad.loadRequests(accessIdentity.domain_id, treqseq);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		return ret;
@@ -2049,7 +2046,7 @@ final class AMFICOMdbInterface {
 		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
 
 		int ret = Constants.ERROR_NO_ERROR;
-		return SurveydbInterfaceLoad.GetTestIdsForMonitoredElement(me_id, testids);
+		return SurveydbInterfaceLoad.getTestIdsForMonitoredElement(me_id, testids);
 	}
 
 	static int GetAnalysis(
@@ -2996,7 +2993,7 @@ final class AMFICOMdbInterface {
 
 		int ret = Constants.ERROR_NO_ERROR;
 		GlobalParameterType_Transferable[] gp = new GlobalParameterType_Transferable[0];
-		ret = SurveydbInterfaceLoad5.loadGlobalParameterTypes(params);
+		ret = SurveydbInterfaceLoad.loadGlobalParameterTypes(params);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		return ret;
@@ -3012,7 +3009,7 @@ final class AMFICOMdbInterface {
 
 		int ret = Constants.ERROR_NO_ERROR;
 		GlobalParameterType_Transferable[] gp = new GlobalParameterType_Transferable[0];
-		ret = SurveydbInterfaceLoad5.loadGlobalParameterTypes(ids, params);
+		ret = SurveydbInterfaceLoad.loadGlobalParameterTypes(ids, params);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		return ret;
@@ -3573,22 +3570,22 @@ final class AMFICOMdbInterface {
 		characteristictypes.value = new CharacteristicType_Transferable[0];
 		cableporttypes.value = new CablePortType_Transferable[0];
 		cablelinktypes.value = new CableLinkType_Transferable[0];
-		ret = NetDirectorydbInterfaceLoad2.loadPortTypes(pt_ids, porttypes);
+		ret = NetDirectorydbInterfaceLoad.loadPortTypes(pt_ids, porttypes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = NetDirectorydbInterfaceLoad2.loadEquipmentTypes(eqt_ids, equipmenttypes);
+		ret = NetDirectorydbInterfaceLoad.loadEquipmentTypes(eqt_ids, equipmenttypes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = NetDirectorydbInterfaceLoad2.loadLinkTypes(lt_ids, linktypes);
+		ret = NetDirectorydbInterfaceLoad.loadLinkTypes(lt_ids, linktypes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = NetDirectorydbInterfaceLoad2.loadCharacteristicTypes(cht_ids, characteristictypes);
+		ret = NetDirectorydbInterfaceLoad.loadCharacteristicTypes(cht_ids, characteristictypes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = NetDirectorydbInterfaceLoad2.loadCablePortTypes(cpt_ids, cableporttypes);
+		ret = NetDirectorydbInterfaceLoad.loadCablePortTypes(cpt_ids, cableporttypes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = NetDirectorydbInterfaceLoad2.loadCableTypes(clt_ids, cablelinktypes);
+		ret = NetDirectorydbInterfaceLoad.loadCableTypes(clt_ids, cablelinktypes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		return ret;
@@ -3829,14 +3826,14 @@ final class AMFICOMdbInterface {
 		links.value = new Link_Transferable[0];
 		clinks.value = new CableLink_Transferable[0];
 		testports.value = new TestPort_Transferable[0];
-		ret = NetdbInterfaceLoad2.loadEquipments(accessIdentity.domain_id, eq_ids, equipments, port_vec, cport_vec, testport_vec);
+		ret = NetdbInterfaceLoad.loadEquipments(accessIdentity.domain_id, eq_ids, equipments, port_vec, cport_vec, testport_vec);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
-		ret = NetdbInterfaceLoad2.loadLinks(accessIdentity.domain_id, l_ids, links);
+		ret = NetdbInterfaceLoad.loadLinks(accessIdentity.domain_id, l_ids, links);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = NetdbInterfaceLoad2.loadCableLinks(accessIdentity.domain_id, cl_ids, clinks);
+		ret = NetdbInterfaceLoad.loadCableLinks(accessIdentity.domain_id, cl_ids, clinks);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 

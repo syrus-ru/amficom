@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
+ * $Id: SchemedbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import java.util.*;
 import oracle.sql.BLOB;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -172,7 +172,7 @@ final class SchemedbInterfaceLoad {
 			links = new PathElement_Transferable[vector.size()];
 			vector.copyInto(links);
 
-			vector2 = MapdbInterfaceLoad4.loadAttributes(
+			vector2 = MapdbInterfaceLoad.loadAttributes(
 					"SCHEMEPATHATTRIBUTES",
 					"SCHEME_PATH_ID",
 					It_id);
@@ -337,7 +337,7 @@ final class SchemedbInterfaceLoad {
 			cable_threads = new SchemeCableThread_Transferable[vector2.size()];
 			vector2.copyInto(cable_threads);
 
-			vector2 = MapdbInterfaceLoad4.loadAttributes(
+			vector2 = MapdbInterfaceLoad.loadAttributes(
 					"SCHEMECABLEATTRIBUTES",
 					"SCHEME_CABLE_ID",
 					It_id);
@@ -549,7 +549,7 @@ final class SchemedbInterfaceLoad {
 				It_img2 = new byte[0];
 			}
 
-			vector2 = MapdbInterfaceLoad4.loadAttributes(
+			vector2 = MapdbInterfaceLoad.loadAttributes(
 					"SCHEMEELEMENTATTRIBUTES",
 					"SCHEME_ELEMENT_ID",
 					It_id);

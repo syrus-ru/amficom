@@ -1,0 +1,3046 @@
+/*
+ * $Id: MapdbInterfaceLoad.sqlj,v 1.1.2.1 2004/08/24 15:43:43 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.server.object;
+
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import java.sql.*;
+import java.util.Vector;
+import sqlj.runtime.SQLNullException;
+import sqlj.runtime.ref.DefaultContext;
+
+/**
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/08/24 15:43:43 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+final class MapdbInterfaceLoad {
+	private MapdbInterfaceLoad() {
+	}
+
+	static int loadMaps(
+			String domain_id,
+			Vector map_ids,
+			MapContextSeq_TransferableHolder mapseq,
+			Vector images)
+	{
+		int count;
+		MapContext_Transferable mc_t;
+		Vector vector = new Vector();
+		MapContext_Transferable mc_ts[];
+		MapContextIterator mcIt = null;
+
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+		long It_created = 0;
+		String It_created_by = "";
+		long It_modified = 0;
+		String It_modified_by = "";
+		String It_domain_id = "";
+		boolean It_show_nodes = true;
+		int It_mouse_tolerancy = 0;
+		double It_zoom_factor = 1.0;
+		double It_default_zoom_factor = 1.0;
+		String It_user_id = "";
+		String It_longitude = "";
+		String It_latitude = "";
+		String It_scheme_id = "";
+
+		Vector vector2 = new Vector();
+		String equipment_ids[] = new String[0];
+		String kis_ids[] = new String[0];
+		String node_ids[] = new String[0];
+		String nodeLink_ids[] = new String[0];
+		String physicalLink_ids[] = new String[0];
+		String path_ids[] = new String[0];
+		String mark_ids[] = new String[0];
+		IdIterator idIt = null;
+
+		try
+		{
+			#sql mcIt = { select
+					ID,
+					NAME,
+					CODENAME,
+					DESCRIPTION,
+					CREATED,
+					CREATED_BY,
+					MODIFIED,
+					MODIFIED_BY,
+					DOMAIN_ID,
+					SHOW_NODES,
+					MOUSE_TOLERANCY,
+					ZOOM_FACTOR,
+					DEFAULT_ZOOM_FACTOR,
+					USER_ID,
+					LONGITUDE,
+					LATITUDE,
+					SCHEME_ID
+				from AMFICOM.MAPCONTEXTS
+			};
+
+		count = 0;
+		while (mcIt.next())
+		{
+			count ++;
+			try { It_id = mcIt.id(); }
+			catch(SQLException e) { }
+			if(It_id == null) It_id = "";
+			try { It_name = mcIt.name(); }
+			catch(SQLException e) { }
+			if(It_name == null) It_name = "";
+			try { It_codename = mcIt.codename(); }
+			catch(SQLException e) { }
+			if(It_codename == null) It_codename = "";
+			try { It_description = mcIt.description(); }
+			catch(SQLException e) { }
+			if(It_description == null) It_description = "";
+			try { It_created = (mcIt.created()).getTime(); }
+			catch(Exception e) { }
+			try { It_created_by = mcIt.created_by(); }
+			catch(SQLException e) { }
+			if(It_created_by == null) It_created_by = "";
+			try { It_modified = (mcIt.modified()).getTime(); }
+			catch(Exception e) { }
+			try { It_modified_by = mcIt.modified_by(); }
+			catch(SQLException e) { }
+			if(It_modified_by == null) It_modified_by = "";
+			try { It_domain_id = mcIt.domain_id(); }
+			catch(SQLException e) { }
+			if(It_domain_id == null) It_domain_id = "";
+			try { It_show_nodes = (mcIt.show_nodes() == 0)? false:true; }
+			catch(SQLException e) { }
+			try { It_mouse_tolerancy = mcIt.mouse_tolerancy(); }
+			catch(SQLException e) { }
+			try { It_zoom_factor = Double.parseDouble(mcIt.zoom_factor()); }
+			catch(SQLException e) { }
+			try { It_default_zoom_factor = Double.parseDouble(mcIt.default_zoom_factor()); }
+			catch(SQLException e) { }
+			try { It_user_id = mcIt.user_id(); }
+			catch(SQLException e) { }
+			if(It_user_id == null) It_user_id = "";
+			try { It_longitude = mcIt.longitude(); }
+			catch(SQLException e) { }
+			if(It_longitude == null) It_longitude = "";
+			try { It_latitude = mcIt.latitude(); }
+			catch(SQLException e) { }
+			if(It_latitude == null) It_latitude = "";
+			try { It_scheme_id = mcIt.scheme_id(); }
+			catch(SQLException e) { }
+			if(It_scheme_id == null) It_scheme_id = "";
+
+			vector2 = loadMapElementIds2("MAPELEMENTLINKS", "MAP_ELEMENT_ID", It_id);
+			equipment_ids = new String[vector2.size()];
+			vector2.copyInto(equipment_ids);
+
+			vector2 = loadMapElementIds2("MAPKISLINKS", "MAP_KIS_ID", It_id);
+			kis_ids = new String[vector2.size()];
+			vector2.copyInto(kis_ids);
+			System.out.println("found " + vector2.size() + " kiss for map " + It_id);
+
+			vector2 = loadMapElementIds2("MAPNODELINKS", "MAP_NODE_ID", It_id);
+			node_ids = new String[vector2.size()];
+			vector2.copyInto(node_ids);
+
+			vector2 = loadMapElementIds2("MAPNODELINKLINKS", "MAP_NODE_LINK_ID", It_id);
+			nodeLink_ids = new String[vector2.size()];
+			vector2.copyInto(nodeLink_ids);
+
+			vector2 = loadMapElementIds2("MAPLINKLINKS", "MAP_LINK_ID", It_id);
+			physicalLink_ids = new String[vector2.size()];
+			vector2.copyInto(physicalLink_ids);
+
+			vector2 = loadMapElementIds2("MAPPATHSLINKS", "MAP_PATH_ID", It_id);
+			path_ids = new String[vector2.size()];
+			vector2.copyInto(path_ids);
+
+			vector2 = loadMapElementIds2("MAPMARKLINKS", "MAP_MARK_ID", It_id);
+			mark_ids = new String[vector2.size()];
+			vector2.copyInto(mark_ids);
+
+			mc_t = new MapContext_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_user_id,
+					It_description,
+					It_domain_id,
+
+					It_created,
+					It_created_by,
+					It_modified,
+					It_modified_by,
+
+					It_scheme_id,
+
+					equipment_ids,
+					kis_ids,
+					node_ids,
+					nodeLink_ids,
+					physicalLink_ids,
+					path_ids,
+					mark_ids,
+
+					It_show_nodes,
+					It_longitude,
+					It_latitude,
+					It_zoom_factor,
+					It_default_zoom_factor,
+					It_mouse_tolerancy);
+
+			vector.addElement(mc_t);
+			map_ids.addElement(It_id);
+		}
+		mcIt.close();
+		mc_ts = new MapContext_Transferable[vector.size()];
+		vector.copyInto(mc_ts);
+		mapseq.value = mc_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(mcIt != null) try {
+			mcIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading maps: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				mcIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	private static MapElement_Transferable loadMapElement(
+			String id,
+			Vector images)
+	{
+		MapElement_Transferable eq_t = null;
+
+		MapElementIterator eqIt = null;
+
+		String It_owner_id = "";
+		String It_latitude = "";
+		String It_name = "";
+		String It_symbol_id = "";
+		String It_type_id = "";
+		String It_description = "";
+		String It_longitude = "";
+		String It_kis_type_id = "";
+		String It_id = "";
+		String It_map_id = "";
+		String It_element_id = "";
+		String It_element_type_id = "";
+
+		long It_modified = 0;
+		boolean It_has_kis = false;
+		String It_ism_map_id = "";
+		String It_map_kis_id = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		Vector vector2 = new Vector();
+
+		try
+		{
+			#sql eqIt = { select
+					OWNER_ID,
+					LATITUDE,
+					NAME,
+					SYMBOL_ID,
+					TYPE_ID,
+					DESCRIPTION,
+					LONGITUDE,
+					KIS_TYPE_ID,
+					ID,
+					MAP_ID,
+					ELEMENT_ID,
+					ELEMENT_TYPE_ID
+				from AMFICOM.MAPELEMENTS
+				where ID = :id
+			};
+
+			if(eqIt.next())
+			{
+				try { It_id = eqIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_owner_id = eqIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_latitude = eqIt.latitude(); }
+				catch(SQLException e) { }
+				if(It_latitude == null) It_latitude = "";
+				try { It_name = eqIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_symbol_id = eqIt.symbol_id(); }
+				catch(SQLException e) { }
+				if(It_symbol_id == null) It_symbol_id = "";
+				try { It_type_id = eqIt.type_id(); }
+				catch(SQLException e) { }
+				if(It_type_id == null) It_type_id = "";
+				try { It_description = eqIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_longitude = eqIt.longitude(); }
+				catch(SQLException e) { }
+				if(It_longitude == null) It_longitude = "";
+				try { It_kis_type_id = eqIt.kis_type_id(); }
+				catch(SQLException e) { }
+				if(It_kis_type_id == null) It_kis_type_id = "";
+				try { It_map_id = eqIt.map_id(); }
+				catch(SQLException e) { }
+				if(It_map_id == null) It_map_id = "";
+				try { It_element_id = eqIt.element_id(); }
+				catch(SQLException e) { }
+				if(It_element_id == null) It_element_id = "";
+				try { It_element_type_id = eqIt.element_type_id(); }
+				catch(SQLException e) { }
+				if(It_element_type_id == null) It_element_type_id = "";
+
+				vector2 = loadAttributes(
+						"MAPELEMENTATTRIBUTES",
+						"MAP_ELEMENT_ID",
+						It_id);
+				attributes = new ElementAttribute_Transferable[vector2.size()];
+				vector2.copyInto(attributes);
+
+				eq_t = new MapElement_Transferable(
+						It_id,
+						It_name,
+						It_type_id,
+						It_description,
+						It_owner_id,
+						It_longitude,
+						It_latitude,
+						It_map_id,
+						It_symbol_id,
+						It_element_id,
+						It_element_type_id,
+						It_modified,
+						It_has_kis,
+						It_kis_type_id,
+						It_ism_map_id,
+						It_map_kis_id,
+						attributes);
+
+				images.add(It_symbol_id);
+			}
+			eqIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(eqIt != null) try {
+			eqIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading equipment: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				eqIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return eq_t;
+	}
+
+	static int loadMapElements(
+			Vector map_ids,
+			MapElementSeq_TransferableHolder equipmentseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapElement_Transferable eq_t;
+		Vector vector = new Vector();
+		MapElement_Transferable eq_ts[];
+		MapElementIterator eqIt = null;
+
+		String current_map_id = "";
+
+		MapElementIdIterator midIt = null;
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+
+			try
+			{
+				#sql midIt = {
+					select MAP_ELEMENT_ID
+						from MAPELEMENTLINKS
+							where MAP_ID = :current_map_id
+				};
+
+				while (midIt.next())
+				{
+					eq_t = loadMapElement(midIt.map_element_id(), images);
+					eq_t.map_id = current_map_id;
+					vector.add(eq_t);
+				}
+				midIt.close();
+
+				eq_ts = new MapElement_Transferable[vector.size()];
+				vector.copyInto(eq_ts);
+				equipmentseq.value = eq_ts;
+			}
+			catch(SQLException e)
+			{
+				if(midIt != null) try {
+				midIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading equipments: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+			finally
+			{
+				try {
+					midIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	private static MapMarkElement_Transferable loadMapMark(
+			String id,
+			Vector images)
+	{
+		MapMarkElement_Transferable eq_t = null;
+		MapMarkIterator eqIt = null;
+
+		String It_owner_id = "";
+		String It_latitude = "";
+		String It_name = "";
+		String It_symbol_id = "";
+		String It_description = "";
+		String It_longitude = "";
+		String It_id = "";
+		String It_map_id = "";
+		String It_link_id = "";
+		String It_distance = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		Vector vector2 = new Vector();
+
+		try
+		{
+			#sql eqIt = { select
+					OWNER_ID,
+					LATITUDE,
+					NAME,
+					SYMBOL_ID,
+					DESCRIPTION,
+					LONGITUDE,
+					ID,
+					MAP_ID,
+					LINK_ID,
+					DISTANCE
+				from AMFICOM.MAPMARKELEMENTS
+				where ID = :id
+			};
+
+			if(eqIt.next())
+			{
+				try { It_id = eqIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_owner_id = eqIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_latitude = eqIt.latitude(); }
+				catch(SQLException e) { }
+				if(It_latitude == null) It_latitude = "";
+				try { It_name = eqIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_symbol_id = eqIt.symbol_id(); }
+				catch(SQLException e) { }
+				if(It_symbol_id == null) It_symbol_id = "";
+				try { It_description = eqIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_longitude = eqIt.longitude(); }
+				catch(SQLException e) { }
+				if(It_longitude == null) It_longitude = "";
+				try { It_map_id = eqIt.map_id(); }
+				catch(SQLException e) { }
+				if(It_map_id == null) It_map_id = "";
+				try { It_link_id = eqIt.link_id(); }
+				catch(SQLException e) { }
+				if(It_link_id == null) It_link_id = "";
+				try { It_distance = eqIt.distance(); }
+				catch(SQLException e) { }
+				if(It_distance == null) It_distance = "";
+
+				vector2 = loadAttributes(
+						"MAPMARKELEMENTATTRIBUTES",
+						"MAP_MARK_ELEMENT_ID",
+						It_id);
+				attributes = new ElementAttribute_Transferable[vector2.size()];
+				vector2.copyInto(attributes);
+
+				eq_t = new MapMarkElement_Transferable(
+						It_id,
+						It_name,
+						It_longitude,
+						It_latitude,
+						It_description,
+						It_owner_id,
+						It_map_id,
+						It_symbol_id,
+						It_link_id,
+						Double.parseDouble(It_distance),
+						attributes);
+			}
+			eqIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(eqIt != null) try {
+			eqIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading mark: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				eqIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return eq_t;
+	}
+
+	static int loadMapMarks(
+			Vector map_ids,
+			MapMarkElementSeq_TransferableHolder markseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapMarkElement_Transferable eq_t;
+		Vector vector = new Vector();
+		MapMarkElement_Transferable eq_ts[];
+
+		String current_map_id = "";
+		MapMarkIdIterator midIt = null;
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+			try
+			{
+				#sql midIt = {
+					select MAP_MARK_ID
+						from MAPMARKLINKS
+							where MAP_ID = :current_map_id
+				};
+
+				while (midIt.next())
+				{
+					eq_t = loadMapMark(midIt.map_mark_id(), images);
+					eq_t.map_id = current_map_id;
+					vector.add(eq_t);
+				}
+				midIt.close();
+
+				eq_ts = new MapMarkElement_Transferable[vector.size()];
+				vector.copyInto(eq_ts);
+				markseq.value = eq_ts;
+			}
+			catch(SQLException e)
+			{
+				if(midIt != null) try {
+				midIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading marks: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+			finally
+			{
+				try {
+					midIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	private static MapElement_Transferable loadMapKIS(
+			String id,
+			Vector images)
+	{
+		String It_id = "";
+		String It_map_element_id = "";
+		String It_ism_map_id = "";
+		String It_map_id = "";
+
+		MapKISIterator kisIt = null;
+		MapElement_Transferable kis_t = null;
+
+		Vector vector2 = new Vector();
+		ElementAttribute_Transferable[] attributes;
+		try
+		{
+			#sql kisIt = { select
+					ID,
+					MAP_ELEMENT_ID,
+					ISM_MAP_ID,
+					MAP_ID
+				from AMFICOM.MAPKISELEMENTS
+				where ID = :id
+			};
+
+			if(kisIt.next())
+			{
+				try { It_id = kisIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_map_element_id = kisIt.map_element_id(); }
+				catch(SQLException e) { }
+				if(It_map_element_id == null) It_map_element_id = "";
+				try { It_ism_map_id = kisIt.ism_map_id(); }
+				catch(SQLException e) { }
+				if(It_ism_map_id == null) It_ism_map_id = "";
+				try { It_map_id = kisIt.map_id(); }
+				catch(SQLException e) { }
+				if(It_map_id == null) It_map_id = "";
+
+				vector2 = loadAttributes(
+						"MAPKISELEMENTATTRIBUTES",
+						"MAP_KIS_ELEMENT_ID",
+						It_id);
+				attributes = new ElementAttribute_Transferable[vector2.size()];
+				vector2.copyInto(attributes);
+
+				kis_t = loadMapElement(It_map_element_id, images);
+				kis_t.map_id = It_map_id;
+				kis_t.ism_map_id = It_ism_map_id;
+				kis_t.map_kis_id = It_id;
+				kis_t.has_kis = true;
+
+				System.out.println(" KIS element is: " + It_map_element_id);
+			}
+			kisIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(kisIt != null) try {
+			kisIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading KISs: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				kisIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return kis_t;
+	}
+
+	static int loadMapKISs(
+			Vector map_ids,
+			MapElementSeq_TransferableHolder kisseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapElement_Transferable kis_t;
+		Vector vector = new Vector();
+		MapElement_Transferable kis_ts[];
+		MapKISIdIterator kidIt = null;
+
+		String current_map_id = "";
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+			try
+			{
+				#sql kidIt = { select MAP_KIS_ID
+					from AMFICOM.MAPKISLINKS
+						where MAP_ID = :current_map_id
+				};
+
+				while (kidIt.next())
+				{
+					System.out.println("...loading KIS: " + kidIt.map_kis_id());
+					kis_t = loadMapKIS(kidIt.map_kis_id(), images);
+					kis_t.map_id = current_map_id;
+					vector.add(kis_t);
+				}
+				kidIt.close();
+				kis_ts = new MapElement_Transferable[vector.size()];
+				vector.copyInto(kis_ts);
+				kisseq.value = kis_ts;
+			}
+			catch(SQLException e)
+			{
+				if(kidIt != null) try {
+				kidIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading KISs: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+			finally
+			{
+				try {
+					kidIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	private static MapPhysicalNodeElement_Transferable loadMapNode(
+			String id,
+			Vector images)
+	{
+		MapPhysicalNodeElement_Transferable node_t = null;
+		MapPhysicalNodeElement_Transferable node_ts[];
+		MapNodeIterator nodeIt = null;
+
+		String It_symbol_id = "";
+		String It_latitude = "";
+		String It_owner_id = "";
+		String It_type_id = "";
+		String It_description = "";
+		String It_id = "";
+		String It_map_id = "";
+		String It_ism_map_id = "";
+		boolean It_active = false;
+		String It_name = "";
+		String It_physical_link_id = "";
+		String It_longitude = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		Vector vector2 = new Vector();
+		ElementAttributeIterator eaIt = null;
+
+		try
+		{
+			#sql nodeIt = { select
+					SYMBOL_ID,
+					LATITUDE,
+					OWNER_ID,
+					DESCRIPTION,
+					ID,
+					MAP_ID,
+					ISM_MAP_ID,
+					ACTIVE,
+					NAME,
+					PHYSICAL_LINK_ID,
+					LONGITUDE
+				from AMFICOM.MAPPHYSICALNODEELEMENTS
+				where ID = :id
+			};
+
+			while (nodeIt.next())
+			{
+				try { It_symbol_id = nodeIt.symbol_id(); }
+				catch(SQLException e) { }
+				if(It_symbol_id == null) It_symbol_id = "";
+				try { It_latitude = nodeIt.latitude(); }
+				catch(SQLException e) { }
+				if(It_symbol_id == null) It_symbol_id = "";
+				try { It_owner_id = nodeIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_description = nodeIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_id = nodeIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_map_id = nodeIt.map_id(); }
+				catch(SQLException e) { }
+				if(It_map_id == null) It_map_id = "";
+				try { It_active = (nodeIt.active() == 0)? false:true; }
+				catch(SQLException e) { }
+				try { It_name = nodeIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_physical_link_id = nodeIt.physical_link_id(); }
+				catch(SQLException e) { }
+				if(It_physical_link_id == null) It_physical_link_id = "";
+				try { It_longitude = nodeIt.longitude(); }
+				catch(SQLException e) { }
+				if(It_longitude == null) It_longitude = "";
+
+				vector2 = loadAttributes(
+						"MAPPHYSICALNODEELEMENTATTRIBUT",
+						"MAP_PHYSICAL_NODE_ELEMENT_ID",
+						It_id);
+				attributes = new ElementAttribute_Transferable[vector2.size()];
+				vector2.copyInto(attributes);
+
+				node_t = new MapPhysicalNodeElement_Transferable(
+						It_id,
+						It_name,
+						It_longitude,
+						It_latitude,
+						It_description,
+						It_owner_id,
+						It_map_id,
+						It_ism_map_id,
+						It_symbol_id,
+						It_physical_link_id,
+						It_active,
+						attributes);
+
+				images.add(It_symbol_id);
+			}
+			nodeIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(nodeIt != null) try {
+			nodeIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading physical node: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				nodeIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return node_t;
+	}
+
+	static int loadMapNodes(
+			Vector map_ids,
+			MapPhysicalNodeElementSeq_TransferableHolder nodeseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapPhysicalNodeElement_Transferable node_t;
+		Vector vector = new Vector();
+		MapPhysicalNodeElement_Transferable node_ts[];
+		MapNodeIdIterator nidIt = null;
+
+		String current_map_id = "";
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+			try
+			{
+				#sql nidIt = { select MAP_NODE_ID
+					from AMFICOM.MAPNODELINKS
+						where MAP_ID = :current_map_id
+				};
+
+				while (nidIt.next())
+				{
+					node_t = loadMapNode(nidIt.map_node_id(), images);
+					node_t.map_id = current_map_id;
+					vector.add(node_t);
+				}
+				nidIt.close();
+				node_ts = new MapPhysicalNodeElement_Transferable[vector.size()];
+				vector.copyInto(node_ts);
+				nodeseq.value = node_ts;
+
+			}
+			catch(SQLException e)
+			{
+				if(nidIt != null) try {
+				nidIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading physical nodes: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+			finally
+			{
+				try {
+					nidIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	private static MapNodeLinkElement_Transferable loadMapNodeLink(String id)
+	{
+		MapNodeLinkElement_Transferable nl_t = null;
+		MapNodeLinkIterator nlIt = null;
+
+		String It_physical_link_id = "";
+		String It_description = "";
+		String It_id = "";
+		String It_end_node_id = "";
+		String It_start_node_id = "";
+		String It_name = "";
+		String It_owner_id = "";
+		String It_map_id = "";
+		String It_ism_map_id = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		String current_map_id = "";
+
+		Vector vector2 = new Vector();
+		ElementAttributeIterator eaIt = null;
+
+		try
+		{
+			#sql nlIt = { select
+					PHYSICAL_LINK_ID,
+					ID,
+					END_NODE_ID,
+					START_NODE_ID,
+					NAME,
+					OWNER_ID,
+					MAP_ID,
+					ISM_MAP_ID
+				from AMFICOM.MAPNODELINKELEMENTS
+				where ID = :id
+			};
+
+			if(nlIt.next())
+			{
+				try { It_physical_link_id = nlIt.physical_link_id(); }
+				catch(SQLException e) { }
+				if(It_physical_link_id == null) It_physical_link_id = "";
+				try { It_id = nlIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_end_node_id = nlIt.end_node_id(); }
+				catch(SQLException e) { }
+				if(It_end_node_id == null) It_end_node_id = "";
+				try { It_start_node_id = nlIt.start_node_id(); }
+				catch(SQLException e) { }
+				if(It_start_node_id == null) It_start_node_id = "";
+				try { It_name = nlIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_owner_id = nlIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_map_id = nlIt.map_id(); }
+				catch(SQLException e) { }
+				if(It_map_id == null) It_map_id = "";
+
+				vector2 = loadAttributes(
+						"MAPNODELINKELEMENTATTRIBUTES",
+						"MAP_NODE_LINK_ID",
+						It_id);
+				attributes = new ElementAttribute_Transferable[vector2.size()];
+				vector2.copyInto(attributes);
+
+				nl_t = new MapNodeLinkElement_Transferable(
+						It_id,
+						It_name,
+						It_owner_id,
+						It_map_id,
+						It_ism_map_id,
+						It_start_node_id,
+						It_end_node_id,
+						It_physical_link_id,
+						attributes);
+
+			}
+			nlIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(nlIt != null) try {
+			nlIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading node links: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				nlIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return nl_t;
+	}
+
+	static int loadMapNodeLinks(
+			Vector map_ids,
+			MapNodeLinkElementSeq_TransferableHolder nodelinkseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapNodeLinkElement_Transferable nl_t;
+		Vector vector = new Vector();
+		MapNodeLinkElement_Transferable nl_ts[];
+		MapNodeLinkIdIterator nidIt = null;
+
+		String current_map_id = "";
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+			try
+			{
+				#sql nidIt = { select MAP_NODE_LINK_ID
+					from AMFICOM.MAPNODELINKLINKS
+						where MAP_ID = :current_map_id
+				};
+
+				while (nidIt.next())
+				{
+					nl_t = loadMapNodeLink(nidIt.map_node_link_id());
+					nl_t.map_id = current_map_id;
+					vector.add(nl_t);
+				}
+
+				nidIt.close();
+				nl_ts = new MapNodeLinkElement_Transferable[vector.size()];
+				vector.copyInto(nl_ts);
+				nodelinkseq.value = nl_ts;
+			}
+			catch(SQLException e)
+			{
+				if(nidIt != null) try {
+				nidIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading node links: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+			finally
+			{
+				try {
+					nidIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	private static MapPhysicalLinkElement_Transferable loadMapLink(String id)
+	{
+		MapPhysicalLinkElement_Transferable link_t = null;
+		Vector vector = new Vector();
+		MapPhysicalLinkIterator linkIt = null;
+
+		String It_description = "";
+		String It_id = "";
+		String It_end_node_id = "";
+		String It_start_node_id = "";
+		String It_name = "";
+		String It_owner_id = "";
+		String It_type_id = "";
+		String It_map_id = "";
+		String It_ism_map_id = "";
+		String It_link_id = "";
+		String It_link_type_id = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		String current_map_id = "";
+
+		Vector vector2 = new Vector();
+		ElementAttributeIterator eaIt = null;
+
+		String nodelink_ids[] = new String[0];
+		IdIterator idIt = null;
+
+		try
+		{
+			#sql linkIt = { select
+					DESCRIPTION,
+					ID,
+					END_NODE_ID,
+					START_NODE_ID,
+					NAME,
+					OWNER_ID,
+					TYPE_ID,
+					MAP_ID,
+					ISM_MAP_ID,
+					LINK_ID,
+					LINK_TYPE_ID
+				from AMFICOM.MAPPHYSICALLINKELEMENTS
+				where ID = :id
+			};
+
+			if(linkIt.next())
+			{
+				try { It_description = linkIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_id = linkIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_end_node_id = linkIt.end_node_id(); }
+				catch(SQLException e) { }
+				if(It_end_node_id == null) It_end_node_id = "";
+				try { It_start_node_id = linkIt.start_node_id(); }
+				catch(SQLException e) { }
+				if(It_start_node_id == null) It_start_node_id = "";
+				try { It_name = linkIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_owner_id = linkIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_type_id = linkIt.type_id(); }
+				catch(SQLException e) { }
+				if(It_type_id == null) It_type_id = "";
+				try { It_map_id = linkIt.map_id(); }
+				catch(SQLException e) { }
+				if(It_map_id == null) It_map_id = "";
+				try { It_link_id = linkIt.link_id(); }
+				catch(SQLException e) { }
+				if(It_link_id == null) It_link_id = "";
+				try { It_link_type_id = linkIt.link_type_id(); }
+				catch(SQLException e) { }
+				if(It_link_type_id == null) It_link_type_id = "";
+
+				vector2 = loadAttributes(
+						"MAPPHYSICALLINKELEMENTATTRIBUT",
+						"MAP_PHYSICAL_LINK_ELEMENT_ID",
+						It_id);
+				attributes = new ElementAttribute_Transferable[vector2.size()];
+				vector2.copyInto(attributes);
+
+				vector2 = new Vector();
+				try
+				{
+					#sql idIt = { select ID from AMFICOM.MAPNODELINKELEMENTS
+							where PHYSICAL_LINK_ID = :It_id };
+					while (idIt.next())
+					{
+						try { vector2.addElement(idIt.id()); }
+						catch(SQLNullException e) { }
+					}
+					idIt.close();
+				}
+				catch(SQLException e)
+				{
+					idIt.close();
+					System.out.println("could not get nodelinks for physical link " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				nodelink_ids = new String[vector2.size()];
+				vector2.copyInto(nodelink_ids);
+
+				link_t = new MapPhysicalLinkElement_Transferable(
+						It_id,
+						It_name,
+						It_type_id,
+						It_description,
+						It_owner_id,
+						It_map_id,
+						It_ism_map_id,
+						It_start_node_id,
+						It_end_node_id,
+						attributes,
+						It_link_id,
+						It_link_type_id,
+						nodelink_ids);
+
+			}
+			linkIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(linkIt != null) try {
+			linkIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading physical link: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				linkIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return link_t;
+	}
+
+	static int loadMapLinks(
+			Vector map_ids,
+			MapPhysicalLinkElementSeq_TransferableHolder linkseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapPhysicalLinkElement_Transferable link_t;
+		Vector vector = new Vector();
+		MapPhysicalLinkElement_Transferable link_ts[];
+		MapLinkIdIterator lidIt = null;
+
+		String current_map_id = "";
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+			try
+			{
+				#sql lidIt = { select MAP_LINK_ID
+					from AMFICOM.MAPLINKLINKS
+						where MAP_ID = :current_map_id
+				};
+
+				while (lidIt.next())
+				{
+					link_t = loadMapLink(lidIt.map_link_id());
+					link_t.map_id = current_map_id;
+					vector.add(link_t);
+				}
+				lidIt.close();
+				link_ts = new MapPhysicalLinkElement_Transferable[vector.size()];
+				vector.copyInto(link_ts);
+				linkseq.value = link_ts;
+
+			}
+			catch(SQLException e)
+			{
+				if(lidIt != null) try {
+				lidIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading physical links for map " + current_map_id + ": " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+			finally
+			{
+				try {
+					lidIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	private static MapPathElement_Transferable loadMapPath(String id)
+	{
+		MapPathElement_Transferable path_t = null;
+		MapPathIterator pathIt = null;
+
+		String It_description = "";
+		String It_id = "";
+		String It_end_node_id = "";
+		String It_start_node_id = "";
+		String It_name = "";
+		String It_owner_id = "";
+		String It_type_id = "";
+		String It_map_id = "";
+		String It_ism_map_id = "";
+		String It_path_id = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		Vector vector2 = new Vector();
+
+		String link_ids[] = new String[0];
+		PathLinkIterator plIt = null;
+
+		try
+		{
+			#sql pathIt = { select
+					DESCRIPTION,
+					ID,
+					END_NODE_ID,
+					START_NODE_ID,
+					NAME,
+					OWNER_ID,
+					TYPE_ID,
+					MAP_ID,
+					ISM_MAP_ID,
+					PATH_ID
+				from AMFICOM.MAPPATHELEMENTS
+				where ID = :id
+			};
+
+			if(pathIt.next())
+			{
+				try { It_description = pathIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_id = pathIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_end_node_id = pathIt.end_node_id(); }
+				catch(SQLException e) { }
+				if(It_end_node_id == null) It_end_node_id = "";
+				try { It_start_node_id = pathIt.start_node_id(); }
+				catch(SQLException e) { }
+				if(It_start_node_id == null) It_start_node_id = "";
+				try { It_name = pathIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_owner_id = pathIt.owner_id(); }
+				catch(SQLException e) { }
+				if(It_owner_id == null) It_owner_id = "";
+				try { It_type_id = pathIt.type_id(); }
+				catch(SQLException e) { }
+				if(It_type_id == null) It_type_id = "";
+				try { It_map_id = pathIt.map_id(); }
+				catch(SQLException e) { }
+				if(It_map_id == null) It_map_id = "";
+				try { It_ism_map_id = pathIt.ism_map_id(); }
+				catch(SQLException e) { }
+				if(It_ism_map_id == null) It_ism_map_id = "";
+				try { It_path_id = pathIt.path_id(); }
+				catch(SQLException e) { }
+				if(It_path_id == null) It_path_id = "";
+
+				vector2 = loadAttributes(
+						"MAPPATHELEMENTATTRIBUTES",
+						"MAP_PATH_ELEMENT_ID",
+						It_id);
+				attributes = new ElementAttribute_Transferable[vector2.size()];
+				vector2.copyInto(attributes);
+
+				vector2 = new Vector();
+				try
+				{
+					#sql plIt = { select PHYSICAL_LINK_ID, PATH_ID
+						from AMFICOM.MAPPATHLINKS
+							where PATH_ID = :It_id };
+					while (plIt.next())
+					{
+						try { vector2.addElement(plIt.physical_link_id()); }
+						catch(SQLNullException e) { }
+					}
+					plIt.close();
+				}
+				catch(SQLException e)
+				{
+					plIt.close();
+					System.out.println("could not get links for path " + It_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+				finally
+				{
+					try {
+						plIt.close();
+					}catch(Exception exe) {}
+				}
+				
+				link_ids = new String[vector2.size()];
+				vector2.copyInto(link_ids);
+
+				path_t = new MapPathElement_Transferable(
+						It_id,
+						It_name,
+						It_type_id,
+						It_description,
+						It_owner_id,
+						It_map_id,
+						It_ism_map_id,
+						It_start_node_id,
+						It_end_node_id,
+						attributes,
+						It_path_id,
+						link_ids);
+			}
+			pathIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(pathIt != null) try {
+			pathIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading path: " + e.getMessage());
+			e.printStackTrace();
+			return null;
+		}
+		finally
+		{
+			try {
+				pathIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return path_t;
+	}
+
+	static int loadMapPaths(
+			Vector map_ids,
+			MapPathElementSeq_TransferableHolder pathseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapPathElement_Transferable path_t;
+		Vector vector = new Vector();
+		MapPathElement_Transferable path_ts[];
+		MapPathIdIterator pidIt = null;
+
+		String current_map_id = "";
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+			try
+			{
+				#sql pidIt = { select MAP_PATH_ID
+					from AMFICOM.MAPPATHSLINKS
+						where MAP_ID = :current_map_id
+				};
+
+				while (pidIt.next())
+				{
+					path_t = loadMapPath(pidIt.map_path_id());
+					path_t.map_id = current_map_id;
+					vector.add(path_t);
+				}
+
+				pidIt.close();
+				path_ts = new MapPathElement_Transferable[vector.size()];
+				vector.copyInto(path_ts);
+				pathseq.value = path_ts;
+
+			}
+			catch(SQLException e)
+			{
+				if(pidIt != null) try {
+				pidIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading paths: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+		}
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadJMaps(
+			Vector map_ids,
+			ISMMapContextSeq_TransferableHolder mapseq,
+			Vector images)
+	{
+		int count;
+		ISMMapContext_Transferable mc_t;
+		Vector vector = new Vector();
+		ISMMapContext_Transferable mc_ts[];
+		ISMMapContextIterator mcIt = null;
+
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+		long It_created = 0;
+		String It_created_by = "";
+		long It_modified = 0;
+		String It_modified_by = "";
+		String It_domain_id = "";
+		String It_user_id = "";
+		String It_map_id = "";
+
+		Vector vector2 = new Vector();
+		String kis_ids[] = new String[0];
+		String node_ids[] = new String[0];
+		String nodeLink_ids[] = new String[0];
+		String physicalLink_ids[] = new String[0];
+		String path_ids[] = new String[0];
+		String mark_ids[] = new String[0];
+		IdIterator idIt = null;
+
+		try
+		{
+			#sql mcIt = { select
+					ID,
+					NAME,
+					CODENAME,
+					DESCRIPTION,
+					CREATED,
+					CREATED_BY,
+					MODIFIED,
+					MODIFIED_BY,
+					DOMAIN_ID,
+					OWNER_ID,
+					MAP_ID
+				from AMFICOM.ISMMAPCONTEXTS };
+
+		count = 0;
+		while (mcIt.next())
+		{
+			count ++;
+			try { It_id = mcIt.id(); }
+			catch(SQLException e) { }
+			if(It_id == null) It_id = "";
+			try { It_name = mcIt.name(); }
+			catch(SQLException e) { }
+			if(It_name == null) It_name = "";
+			try { It_codename = mcIt.codename(); }
+			catch(SQLException e) { }
+			if(It_codename == null) It_codename = "";
+			try { It_description = mcIt.description(); }
+			catch(SQLException e) { }
+			if(It_description == null) It_description = "";
+			try { It_created = (mcIt.created()).getTime(); }
+			catch(Exception e) { }
+			try { It_created_by = mcIt.created_by(); }
+			catch(SQLException e) { }
+			if(It_created_by == null) It_created_by = "";
+			try { It_modified = (mcIt.modified()).getTime(); }
+			catch(Exception e) { }
+			try { It_modified_by = mcIt.modified_by(); }
+			catch(SQLException e) { }
+			if(It_modified_by == null) It_modified_by = "";
+			try { It_domain_id = mcIt.domain_id(); }
+			catch(SQLException e) { }
+			if(It_domain_id == null) It_domain_id = "";
+			try { It_user_id = mcIt.owner_id(); }
+			catch(SQLException e) { }
+			if(It_user_id == null) It_user_id = "";
+			try { It_map_id = mcIt.map_id(); }
+			catch(SQLException e) { }
+			if(It_map_id == null) It_map_id = "";
+
+			vector2 = loadISMMapElementIds("MAPKISELEMENTS", It_id);
+			kis_ids = new String[vector2.size()];
+			vector2.copyInto(kis_ids);
+
+			vector2 = loadISMMapElementIds("MAPPHYSICALNODEELEMENTS", It_id);
+			node_ids = new String[vector2.size()];
+			vector2.copyInto(node_ids);
+
+			vector2 = loadISMMapElementIds("MAPNODELINKELEMENTS", It_id);
+			nodeLink_ids = new String[vector2.size()];
+			vector2.copyInto(nodeLink_ids);
+
+			vector2 = loadISMMapElementIds("MAPPHYSICALLINKELEMENTS", It_id);
+			physicalLink_ids = new String[vector2.size()];
+			vector2.copyInto(physicalLink_ids);
+
+			vector2 = loadISMMapElementIds("MAPPATHELEMENTS", It_id);
+			path_ids = new String[vector2.size()];
+			vector2.copyInto(path_ids);
+
+			vector2 = loadISMMapElementIds("MAPMARKELEMENTS", It_id);
+			mark_ids = new String[vector2.size()];
+			vector2.copyInto(mark_ids);
+
+			mc_t = new ISMMapContext_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_user_id,
+					It_description,
+					It_domain_id,
+
+					It_created,
+					It_created_by,
+					It_modified,
+					It_modified_by,
+
+					It_map_id,
+
+					kis_ids,
+					node_ids,
+					nodeLink_ids,
+					physicalLink_ids,
+					path_ids,
+					mark_ids);
+
+			vector.addElement(mc_t);
+			map_ids.addElement(It_id);
+		}
+		mcIt.close();
+		mc_ts = new ISMMapContext_Transferable[vector.size()];
+		vector.copyInto(mc_ts);
+		mapseq.value = mc_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(mcIt != null) try {
+			mcIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading ISM maps: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				mcIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadJMapKISs(
+			Vector map_ids,
+			MapKISElementSeq_TransferableHolder kisseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapKISElement_Transferable kis_t;
+		Vector vector = new Vector();
+		MapKISElement_Transferable kis_ts[];
+		MapKISIterator2 kisIt = null;
+
+		String It_scheme_kis_element_id = "";
+		String It_owner_id = "";
+		String It_latitude = "";
+		String It_name = "";
+		String It_symbol_id = "";
+		String It_type_id = "";
+		String It_description = "";
+		String It_longitude = "";
+		String It_codename = "";
+		String It_id = "";
+		String It_map_id = "";
+		String It_ism_map_id = "";
+		String It_kis_id = "";
+		String It_kis_type_id = "";
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		String current_map_id = "";
+
+		String It_e_id = "";
+		String It_attribute_id = "";
+		String It_attribute_type_id = "";
+		String It_attribute_value = "";
+		String It_attribute_name = "";
+		Vector vector2 = new Vector();
+		ElementAttributeIterator eaIt = null;
+
+		String connection_point_ids[] = new String[0];
+		IdIterator idIt = null;
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadJMapPaths(
+			Vector map_ids,
+			MapPathElementSeq_TransferableHolder pathseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapPathElement_Transferable path_t;
+		Vector vector = new Vector();
+		MapPathElement_Transferable path_ts[];
+		MapPathIterator pathIt = null;
+
+		String It_description = "";
+		String It_id = "";
+		String It_end_node_id = "";
+		String It_start_node_id = "";
+		String It_name = "";
+		String It_owner_id = "";
+		String It_type_id = "";
+		String It_map_id = "";
+		String It_ism_map_id = "";
+		String It_path_id = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		String current_map_id = "";
+
+		Vector vector2 = new Vector();
+
+		String link_ids[] = new String[0];
+		PathLinkIterator plIt = null;
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+			try
+			{
+				#sql pathIt = { select
+						DESCRIPTION,
+						ID,
+						END_NODE_ID,
+						START_NODE_ID,
+						NAME,
+						OWNER_ID,
+						TYPE_ID,
+						MAP_ID,
+						ISM_MAP_ID,
+						PATH_ID
+					from AMFICOM.MAPPATHELEMENTS
+					where ISM_MAP_ID = :current_map_id
+					};
+
+				count = 0;
+				while (pathIt.next())
+				{
+					count ++;
+
+					try { It_description = pathIt.description(); }
+					catch(SQLException e) { }
+					if(It_description == null) It_description = "";
+					try { It_id = pathIt.id(); }
+					catch(SQLException e) { }
+					if(It_id == null) It_id = "";
+					try { It_end_node_id = pathIt.end_node_id(); }
+					catch(SQLException e) { }
+					if(It_end_node_id == null) It_end_node_id = "";
+					try { It_start_node_id = pathIt.start_node_id(); }
+					catch(SQLException e) { }
+					if(It_start_node_id == null) It_start_node_id = "";
+					try { It_name = pathIt.name(); }
+					catch(SQLException e) { }
+					if(It_name == null) It_name = "";
+					try { It_owner_id = pathIt.owner_id(); }
+					catch(SQLException e) { }
+					if(It_owner_id == null) It_owner_id = "";
+					try { It_type_id = pathIt.type_id(); }
+					catch(SQLException e) { }
+					if(It_type_id == null) It_type_id = "";
+					try { It_map_id = pathIt.map_id(); }
+					catch(SQLException e) { }
+					if(It_map_id == null) It_map_id = "";
+					try { It_ism_map_id = pathIt.ism_map_id(); }
+					catch(SQLException e) { }
+					if(It_ism_map_id == null) It_ism_map_id = "";
+					try { It_path_id = pathIt.path_id(); }
+					catch(SQLException e) { }
+					if(It_path_id == null) It_path_id = "";
+
+					vector2 = loadAttributes(
+							"MAPPATHELEMENTATTRIBUTES",
+							"MAP_PATH_ELEMENT_ID",
+							It_id);
+					attributes = new ElementAttribute_Transferable[vector2.size()];
+					vector2.copyInto(attributes);
+
+					vector2 = new Vector();
+					try
+					{
+						#sql plIt = { select PHYSICAL_LINK_ID, PATH_ID
+							from AMFICOM.MAPPATHLINKS
+								where PATH_ID = :It_id };
+						while (plIt.next())
+						{
+							try { vector2.addElement(plIt.physical_link_id()); }
+							catch(SQLNullException e) { }
+						}
+						plIt.close();
+					}
+					catch(SQLException e)
+					{
+						if(plIt != null) try {
+						plIt.close();
+						}catch(Exception exe) {}
+						System.out.println("could not get links for path " + It_id + ": " + e.getMessage());
+						e.printStackTrace();
+					}
+					finally
+					{
+						try {
+							plIt.close();
+						}catch(Exception exe) {}
+					}
+					
+					link_ids = new String[vector2.size()];
+					vector2.copyInto(link_ids);
+
+					path_t = new MapPathElement_Transferable(
+							It_id,
+							It_name,
+							It_type_id,
+							It_description,
+							It_owner_id,
+							It_map_id,
+							It_ism_map_id,
+							It_start_node_id,
+							It_end_node_id,
+							attributes,
+							It_path_id,
+							link_ids);
+
+					vector.addElement(path_t);
+				}
+				pathIt.close();
+				path_ts = new MapPathElement_Transferable[vector.size()];
+				vector.copyInto(path_ts);
+				pathseq.value = path_ts;
+
+			}
+			catch(SQLException e)
+			{
+				if(pathIt != null) try {
+				pathIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading paths: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+			finally
+			{
+				try {
+					pathIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static Vector loadAttributes(
+			String elementAttributeTable,
+			String elementAttributeField,
+			String element_id)
+	{
+		String It_e_id = "";
+		String It_attribute_id = "";
+		String It_attribute_type_id = "";
+		String It_attribute_value = "";
+		String It_attribute_name = "";
+
+		boolean It_is_editable = true;
+		boolean It_is_visible = true;
+
+		Vector vector2 = new Vector();
+		ElementAttributeIterator2 eaIt = null;
+
+		String qry = "select ID, ATTRIBUTE_TYPE_ID, VALUE, IS_EDITABLE, IS_VISIBLE " +
+							"from AMFICOM." + elementAttributeTable +
+								" where " + elementAttributeField +
+								" = '" + element_id + "'";
+
+
+		try
+		{
+			#sql
+			{
+				BEGIN
+					open :OUT eaIt for :qry;
+				END;
+			};
+
+			while (eaIt.next())
+			{
+				try { It_attribute_id = eaIt.id(); }
+				catch(SQLException e) { }
+				if(It_attribute_id == null) It_attribute_id = "";
+				try { It_attribute_type_id = eaIt.attribute_type_id(); }
+				catch(SQLException e) { }
+				if(It_attribute_type_id == null) It_attribute_type_id = "";
+				try { It_attribute_value = eaIt.value(); }
+				catch(SQLException e) { }
+				if(It_attribute_value == null) It_attribute_value = "";
+				try { It_is_editable = (eaIt.is_editable() == 1)? true : false; }
+				catch(SQLException e) { }
+				try { It_is_visible = (eaIt.is_visible() == 1)? true : false; }
+				catch(SQLException e) { }
+
+				try
+				{
+					#sql {
+						select NAME into :It_attribute_name
+						from AMFICOM.ELEMENTATTRIBUTETYPES
+						where ID = :It_attribute_type_id };
+
+					if(It_attribute_name == null)
+						It_attribute_name = "";
+
+					ElementAttribute_Transferable ea =
+						new ElementAttribute_Transferable(
+							It_attribute_id,
+							It_attribute_name,
+							It_attribute_value,
+							It_attribute_type_id,
+							It_is_editable,
+							It_is_visible);
+						vector2.addElement(ea);
+				}
+				catch(SQLException e)
+				{
+					System.out.println("could not get attribute " + It_e_id + ": " + e.getMessage());
+					e.printStackTrace();
+				}
+			}
+			eaIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(eaIt != null) try {
+			eaIt.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get attributes for element " + element_id + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				eaIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return vector2;
+	}
+
+	private static Vector loadMapElementIds(
+			String elementAttributeTable,
+			String map_id)
+	{
+		Vector vector2 = new Vector();
+		IdIterator idIt = null;
+		String It_id = "";
+
+		String qry = "select ID " +
+						"from AMFICOM." + elementAttributeTable +
+							" where MAP_ID = '" + map_id + "'";
+
+
+		try
+		{
+			#sql
+			{
+				BEGIN
+					open :OUT idIt for :qry;
+				END;
+			};
+
+			while (idIt.next())
+			{
+				try { vector2.addElement(idIt.id()); }
+				catch(SQLNullException e) { }
+			}
+			idIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get elements for map " + map_id + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				idIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return vector2;
+	}
+
+	static Vector loadMapElementIds2(
+			String elementAttributeTable,
+			String elementAttributeField,
+			String map_id)
+	{
+		Vector vector2 = new Vector();
+		IdIterator idIt = null;
+		String It_id = "";
+
+		String qry = "select " + elementAttributeField +
+						" from AMFICOM." + elementAttributeTable +
+							" where MAP_ID = '" + map_id + "'";
+
+
+		Statement statement = null;
+		ResultSet resultset = null;
+		try {
+			statement = DefaultContext.getDefaultContext().getConnection().createStatement();
+			resultset =  statement.executeQuery(qry);
+			while(resultset.next())
+			{
+				vector2.addElement(resultset.getString(elementAttributeField));
+			}
+			resultset.close();
+		}
+		catch(SQLException sqlexception1)
+		{
+			if(resultset != null) try {
+			resultset.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get elements for map " + map_id + ": " + sqlexception1.getMessage());
+			sqlexception1.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				if(resultset != null)
+					resultset.close();
+				if(statement != null)
+					statement.close();
+			}
+			catch(SQLException _ex) { }
+		}
+
+		return vector2;
+	}
+
+	static Vector loadISMMapElementIds(
+			String elementAttributeTable,
+			String map_id)
+	{
+		Vector vector2 = new Vector();
+		IdIterator idIt = null;
+		String It_id = "";
+
+		String qry = "select ID " +
+						"from AMFICOM." + elementAttributeTable +
+							" where ISM_MAP_ID = '" + map_id + "'";
+
+		try
+		{
+			#sql
+			{
+				BEGIN
+					open :OUT idIt for :qry;
+				END;
+			};
+
+			while (idIt.next())
+			{
+				try { vector2.addElement(idIt.id()); }
+				catch(SQLNullException e) { }
+			}
+			idIt.close();
+		}
+		catch(SQLException e)
+		{
+			if(idIt != null) try {
+			idIt.close();
+			}catch(Exception exe) {}
+			System.out.println("could not get elements for ISM map " + map_id + ": " + e.getMessage());
+			e.printStackTrace();
+		}
+		finally
+		{
+			try {
+				idIt.close();
+			}catch(Exception exe) {}
+		}
+		
+
+		return vector2;
+	}
+
+	static int reloadAttributes(
+			String[] map_ids,
+			Vector vector)
+	{
+		int count;
+		int mapcount = map_ids.length;
+		String current_map_id = "";
+		ElementAttribute_Transferable[] attributes;
+		IdIterator idIt = null;
+		Vector vector2;
+		Vector vector3;
+		int i;
+		int ai;
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids[j];
+
+			vector2 = loadMapElementIds("MAPEQUIPMENTELEMENTS", current_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPEQUIPMENTELEMENTATTRIBUTES",
+						"MAP_EQUIPMENT_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+			vector2 = loadMapElementIds("MAPKISELEMENTS", current_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPKISELEMENTATTRIBUTES",
+						"MAP_KIS_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+			vector2 = loadMapElementIds("MAPPHYSICALNODEELEMENTS", current_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPPHYSICALNODEELEMENTATTRIBUT",
+						"MAP_PHYSICAL_NODE_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+			vector2 = loadMapElementIds("MAPPHYSICALLINKELEMENTS", current_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPPHYSICALLINKELEMENTATTRIBUT",
+						"MAP_PHYSICAL_LINK_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+			vector2 = loadMapElementIds("MAPPATHELEMENTS", current_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPPATHELEMENTATTRIBUTES",
+						"MAP_PATH_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int reloadISMAttributes(
+			String[] ism_map_ids,
+			Vector vector)
+	{
+		int count;
+		int mapcount = ism_map_ids.length;
+		String current_ism_map_id = "";
+		String current_map_id = "";
+		ElementAttribute_Transferable[] attributes;
+		IdIterator idIt = null;
+		Vector vector2;
+		Vector vector3;
+		int i;
+		int ai;
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_ism_map_id = (String) ism_map_ids[j];
+
+			try
+			{
+				#sql { select MAP_ID into :current_map_id from ISMMAPCONTEXTS
+					where ID = :current_ism_map_id };
+
+				int r = reloadAttributes(new String[] { current_map_id }, vector);
+			}
+			catch(Exception ex)
+			{
+
+			}
+
+			vector2 = loadISMMapElementIds("MAPKISELEMENTS", current_ism_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPKISELEMENTATTRIBUTES",
+						"MAP_KIS_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+			vector2 = loadISMMapElementIds("MAPPATHELEMENTS", current_ism_map_id);
+			for(i = vector2.size() - 1; i >= 0; i--)
+			{
+				String e_id = (String )vector2.get(i);
+				vector3 = loadAttributes(
+						"MAPPATHELEMENTATTRIBUTES",
+						"MAP_PATH_ELEMENT_ID",
+						e_id);
+
+				for(ai = vector3.size() - 1; ai >= 0; ai--)
+					vector.add(vector3.get(ai));
+			}
+
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadAttributeTypes(
+			ElementAttributeTypeSeq_TransferableHolder atypeseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_value_type_id = "";
+		String It_default_value = "";
+
+		boolean It_is_editable = true;
+		boolean It_is_visible = true;
+
+		long It_modified = 0;
+
+		Vector vector = new Vector();
+
+		ElementAttributeType_Transferable ch_t;
+		ElementAttributeType_Transferable[] ch_ts;
+		ElementAttributeTypeIterator chIt = null;
+		Vector vector2;
+
+		try
+		{
+			#sql chIt = { select
+						ID,
+						NAME,
+						VALUE_TYPE,
+						DEFAULT_VALUE,
+						IS_EDITABLE,
+						IS_VISIBLE,
+						MODIFIED
+					from AMFICOM.ELEMENTATTRIBUTETYPES
+			};
+
+			while (chIt.next())
+			{
+				try { It_id = chIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = chIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_value_type_id = chIt.value_type(); }
+				catch(SQLException e) { }
+				if(It_value_type_id == null) It_value_type_id = "";
+				try { It_default_value = chIt.default_value(); }
+				catch(SQLException e) { }
+				if(It_default_value == null) It_default_value = "";
+				try { It_is_editable = (chIt.is_editable() == 1)? true : false; }
+				catch(SQLException e) { }
+				try { It_is_visible = (chIt.is_visible() == 1)? true : false; }
+				catch(SQLException e) { }
+				try { It_modified = chIt.modified().getTime(); }
+				catch(SQLException e) { }
+
+				ch_t = new ElementAttributeType_Transferable(
+					It_id,
+					It_name,
+					It_value_type_id,
+					It_default_value,
+					It_is_editable,
+					It_is_visible,
+					It_modified);
+
+				vector.add(ch_t);
+			}
+			chIt.close();
+			ch_ts = new ElementAttributeType_Transferable[vector.size()];
+			vector.copyInto(ch_ts);
+			atypeseq.value = ch_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(chIt != null) try {
+			chIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading attribute types: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				chIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadAttributeTypes(
+			String[] ids,
+			ElementAttributeTypeSeq_TransferableHolder atypeseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_value_type_id = "";
+		String It_default_value = "";
+
+		boolean It_is_editable = true;
+		boolean It_is_visible = true;
+
+		long It_modified = 0;
+
+		Vector vector = new Vector();
+
+		ElementAttributeType_Transferable ch_t;
+		ElementAttributeType_Transferable[] ch_ts;
+		ElementAttributeTypeIterator chIt = null;
+		Vector vector2;
+
+		Vector loadvec = new Vector();
+		for(int i = 0; i < ids.length; i++)
+			loadvec.add(ids[i]);
+		try
+		{
+			#sql chIt = { select
+						ID,
+						NAME,
+						VALUE_TYPE,
+						DEFAULT_VALUE,
+						IS_EDITABLE,
+						IS_VISIBLE,
+						MODIFIED
+					from AMFICOM.ELEMENTATTRIBUTETYPES
+			};
+
+			while (chIt.next())
+			{
+				if(! loadvec.contains(chIt.id()))
+					continue;
+
+				try { It_id = chIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = chIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_value_type_id = chIt.value_type(); }
+				catch(SQLException e) { }
+				if(It_value_type_id == null) It_value_type_id = "";
+				try { It_default_value = chIt.default_value(); }
+				catch(SQLException e) { }
+				if(It_default_value == null) It_default_value = "";
+				try { It_is_editable = (chIt.is_editable() == 1)? true : false; }
+				catch(SQLException e) { }
+				try { It_is_visible = (chIt.is_visible() == 1)? true : false; }
+				catch(SQLException e) { }
+				try { It_modified = chIt.modified().getTime(); }
+				catch(SQLException e) { }
+
+				ch_t = new ElementAttributeType_Transferable(
+					It_id,
+					It_name,
+					It_value_type_id,
+					It_default_value,
+					It_is_editable,
+					It_is_visible,
+					It_modified);
+
+				vector.add(ch_t);
+			}
+			chIt.close();
+			ch_ts = new ElementAttributeType_Transferable[vector.size()];
+			vector.copyInto(ch_ts);
+			atypeseq.value = ch_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(chIt != null) try {
+			chIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading attribute types: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				chIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadJMapNodes(
+			Vector map_ids,
+			MapPhysicalNodeElementSeq_TransferableHolder nodeseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapPhysicalNodeElement_Transferable node_t;
+		Vector vector = new Vector();
+		MapPhysicalNodeElement_Transferable node_ts[];
+		MapNodeIterator nodeIt = null;
+
+		String It_symbol_id = "";
+		String It_latitude = "";
+		String It_owner_id = "";
+		String It_type_id = "";
+		String It_description = "";
+		String It_id = "";
+		String It_map_id = "";
+		String It_ism_map_id = "";
+		boolean It_active = false;
+		String It_name = "";
+		String It_physical_link_id = "";
+		String It_longitude = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		String current_map_id = "";
+
+		String It_e_id = "";
+		String It_attribute_id = "";
+		String It_attribute_type_id = "";
+		String It_attribute_value = "";
+		String It_attribute_name = "";
+		Vector vector2 = new Vector();
+		ElementAttributeIterator eaIt = null;
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+			try
+			{
+				#sql nodeIt = { select
+						SYMBOL_ID,
+						LATITUDE,
+						OWNER_ID,
+						DESCRIPTION,
+						ID,
+						MAP_ID,
+						ISM_MAP_ID,
+						ACTIVE,
+						NAME,
+						PHYSICAL_LINK_ID,
+						LONGITUDE
+					from AMFICOM.MAPPHYSICALNODEELEMENTS
+					where ISM_MAP_ID = :current_map_id
+					};
+
+				count = 0;
+				while (nodeIt.next())
+				{
+					count ++;
+
+					try { It_symbol_id = nodeIt.symbol_id(); }
+					catch(SQLException e) { }
+					if(It_symbol_id == null) It_symbol_id = "";
+					try { It_latitude = nodeIt.latitude(); }
+					catch(SQLException e) { }
+					if(It_symbol_id == null) It_symbol_id = "";
+					try { It_owner_id = nodeIt.owner_id(); }
+					catch(SQLException e) { }
+					if(It_owner_id == null) It_owner_id = "";
+					try { It_description = nodeIt.description(); }
+					catch(SQLException e) { }
+					if(It_description == null) It_description = "";
+					try { It_id = nodeIt.id(); }
+					catch(SQLException e) { }
+					if(It_id == null) It_id = "";
+					try { It_map_id = nodeIt.map_id(); }
+					catch(SQLException e) { }
+					if(It_map_id == null) It_map_id = "";
+					try { It_active = (nodeIt.active() == 0)? false:true; }
+					catch(SQLException e) { }
+					try { It_name = nodeIt.name(); }
+					catch(SQLException e) { }
+					if(It_name == null) It_name = "";
+					try { It_physical_link_id = nodeIt.physical_link_id(); }
+					catch(SQLException e) { }
+					if(It_physical_link_id == null) It_physical_link_id = "";
+					try { It_longitude = nodeIt.longitude(); }
+					catch(SQLException e) { }
+					if(It_longitude == null) It_longitude = "";
+
+					vector2 = loadAttributes(
+							"MAPPHYSICALNODEELEMENTATTRIBUT",
+							"MAP_PHYSICAL_NODE_ELEMENT_ID",
+							It_id);
+					attributes = new ElementAttribute_Transferable[vector2.size()];
+					vector2.copyInto(attributes);
+
+					node_t = new MapPhysicalNodeElement_Transferable(
+							It_id,
+							It_name,
+							It_longitude,
+							It_latitude,
+							It_description,
+							It_owner_id,
+							It_map_id,
+							It_ism_map_id,
+							It_symbol_id,
+							It_physical_link_id,
+							It_active,
+							attributes);
+
+					images.add(It_symbol_id);
+					vector.addElement(node_t);
+				}
+				nodeIt.close();
+				node_ts = new MapPhysicalNodeElement_Transferable[vector.size()];
+				vector.copyInto(node_ts);
+				nodeseq.value = node_ts;
+
+			}
+			catch(SQLException e)
+			{
+				if(nodeIt != null) try {
+				nodeIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading physical nodes: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+			finally
+			{
+				try {
+					nodeIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadJMapNodeLinks(
+			Vector map_ids,
+			MapNodeLinkElementSeq_TransferableHolder nodelinkseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapNodeLinkElement_Transferable nl_t;
+		Vector vector = new Vector();
+		MapNodeLinkElement_Transferable nl_ts[];
+		MapNodeLinkIterator nlIt = null;
+
+		int It_alarmed_line_size = 1;
+		String It_metric = "";
+		String It_physical_link_id = "";
+		int It_alarmed_color = 0;
+		String It_codename = "";
+		String It_description = "";
+		String It_id = "";
+		int It_color = 0;
+		String It_end_node_id = "";
+		String It_start_node_id = "";
+		String It_name = "";
+		boolean It_alarmed = false;
+		String It_style = "";
+		boolean It_show_alarmed = false;
+		String It_alarmed_style = "";
+		int It_line_size = 1;
+		String It_owner_id = "";
+		String It_type_id = "";
+		String It_font_id = "";
+		boolean It_show_metric = false;
+		String It_selected_style = "";
+		String It_map_id = "";
+		String It_ism_map_id = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		String current_map_id = "";
+
+		String It_e_id = "";
+		String It_attribute_id = "";
+		String It_attribute_type_id = "";
+		String It_attribute_value = "";
+		String It_attribute_name = "";
+		Vector vector2 = new Vector();
+		ElementAttributeIterator eaIt = null;
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+			try
+			{
+				#sql nlIt = { select
+						PHYSICAL_LINK_ID,
+						ID,
+						END_NODE_ID,
+						START_NODE_ID,
+						NAME,
+						OWNER_ID,
+						MAP_ID,
+						ISM_MAP_ID
+					from AMFICOM.MAPNODELINKELEMENTS
+					where ISM_MAP_ID = :current_map_id
+					};
+
+				count = 0;
+				while (nlIt.next())
+				{
+					count ++;
+
+					try { It_physical_link_id = nlIt.physical_link_id(); }
+					catch(SQLException e) { }
+					if(It_physical_link_id == null) It_physical_link_id = "";
+					try { It_id = nlIt.id(); }
+					catch(SQLException e) { }
+					if(It_id == null) It_id = "";
+					try { It_end_node_id = nlIt.end_node_id(); }
+					catch(SQLException e) { }
+					if(It_end_node_id == null) It_end_node_id = "";
+					try { It_start_node_id = nlIt.start_node_id(); }
+					catch(SQLException e) { }
+					if(It_start_node_id == null) It_start_node_id = "";
+					try { It_name = nlIt.name(); }
+					catch(SQLException e) { }
+					if(It_name == null) It_name = "";
+					try { It_owner_id = nlIt.owner_id(); }
+					catch(SQLException e) { }
+					if(It_owner_id == null) It_owner_id = "";
+					try { It_map_id = nlIt.map_id(); }
+					catch(SQLException e) { }
+					if(It_map_id == null) It_map_id = "";
+
+					vector2 = loadAttributes(
+							"MAPNODELINKELEMENTATTRIBUTES",
+							"MAP_NODE_LINK_ID",
+							It_id);
+					attributes = new ElementAttribute_Transferable[vector2.size()];
+					vector2.copyInto(attributes);
+
+					nl_t = new MapNodeLinkElement_Transferable(
+							It_id,
+							It_name,
+							It_owner_id,
+							It_map_id,
+							It_ism_map_id,
+							It_start_node_id,
+							It_end_node_id,
+							It_physical_link_id,
+							attributes);
+
+					vector.addElement(nl_t);
+				}
+				nlIt.close();
+				nl_ts = new MapNodeLinkElement_Transferable[vector.size()];
+				vector.copyInto(nl_ts);
+				nodelinkseq.value = nl_ts;
+
+			}
+			catch(SQLException e)
+			{
+				if(nlIt != null) try {
+				nlIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading node links: " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+			finally
+			{
+				try {
+					nlIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadJMapLinks(
+			Vector map_ids,
+			MapPhysicalLinkElementSeq_TransferableHolder linkseq,
+			Vector images)
+	{
+		int count;
+		int mapcount = map_ids.size();
+		MapPhysicalLinkElement_Transferable link_t;
+		Vector vector = new Vector();
+		MapPhysicalLinkElement_Transferable link_ts[];
+		MapPhysicalLinkIterator linkIt = null;
+
+		int It_alarmed_line_size = 1;
+		String It_metric = "";
+		int It_alarmed_color = 0;
+		String It_codename = "";
+		String It_description = "";
+		String It_id = "";
+		int It_color = 0;
+		String It_end_node_id = "";
+		String It_start_node_id = "";
+		String It_name = "";
+		boolean It_alarmed = false;
+		String It_style = "";
+		boolean It_show_alarmed = false;
+		String It_alarmed_style = "";
+		int It_line_size = 1;
+		String It_owner_id = "";
+		String It_type_id = "";
+		String It_font_id = "";
+		boolean It_show_metric = false;
+		String It_selected_style = "";
+		String It_map_id = "";
+		String It_ism_map_id = "";
+		String It_link_id = "";
+		String It_link_type_id = "";
+
+		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
+
+		String current_map_id = "";
+
+		String It_e_id = "";
+		String It_attribute_id = "";
+		String It_attribute_type_id = "";
+		String It_attribute_value = "";
+		String It_attribute_name = "";
+		Vector vector2 = new Vector();
+		ElementAttributeIterator eaIt = null;
+
+		String nodelink_ids[] = new String[0];
+		IdIterator idIt = null;
+
+		for(int j = 0; j < mapcount; j++)
+		{
+			current_map_id = (String) map_ids.get(j);
+			try
+			{
+				#sql linkIt = { select
+						DESCRIPTION,
+						ID,
+						END_NODE_ID,
+						START_NODE_ID,
+						NAME,
+						OWNER_ID,
+						TYPE_ID,
+						MAP_ID,
+						ISM_MAP_ID,
+						LINK_ID,
+						LINK_TYPE_ID
+					from AMFICOM.MAPPHYSICALLINKELEMENTS
+					where ISM_MAP_ID = :current_map_id
+					};
+
+				count = 0;
+				while (linkIt.next())
+				{
+					count ++;
+
+					try { It_description = linkIt.description(); }
+					catch(SQLException e) { }
+					if(It_description == null) It_description = "";
+					try { It_id = linkIt.id(); }
+					catch(SQLException e) { }
+					if(It_id == null) It_id = "";
+					try { It_end_node_id = linkIt.end_node_id(); }
+					catch(SQLException e) { }
+					if(It_end_node_id == null) It_end_node_id = "";
+					try { It_start_node_id = linkIt.start_node_id(); }
+					catch(SQLException e) { }
+					if(It_start_node_id == null) It_start_node_id = "";
+					try { It_name = linkIt.name(); }
+					catch(SQLException e) { }
+					if(It_name == null) It_name = "";
+					try { It_owner_id = linkIt.owner_id(); }
+					catch(SQLException e) { }
+					if(It_owner_id == null) It_owner_id = "";
+					try { It_type_id = linkIt.type_id(); }
+					catch(SQLException e) { }
+					if(It_type_id == null) It_type_id = "";
+					try { It_map_id = linkIt.map_id(); }
+					catch(SQLException e) { }
+					if(It_map_id == null) It_map_id = "";
+					try { It_link_id = linkIt.link_id(); }
+					catch(SQLException e) { }
+					if(It_link_id == null) It_link_id = "";
+					try { It_link_type_id = linkIt.link_type_id(); }
+					catch(SQLException e) { }
+					if(It_link_type_id == null) It_link_type_id = "";
+
+					vector2 = loadAttributes(
+							"MAPPHYSICALLINKELEMENTATTRIBUT",
+							"MAP_PHYSICAL_LINK_ELEMENT_ID",
+							It_id);
+					attributes = new ElementAttribute_Transferable[vector2.size()];
+					vector2.copyInto(attributes);
+
+					vector2 = new Vector();
+					try
+					{
+						#sql idIt = { select ID from AMFICOM.MAPNODELINKELEMENTS
+								where PHYSICAL_LINK_ID = :It_id };
+						while (idIt.next())
+						{
+							try { vector2.addElement(idIt.id()); }
+							catch(SQLNullException e) { }
+						}
+						idIt.close();
+					}
+					catch(SQLException e)
+					{
+						idIt.close();
+						System.out.println("could not get nodelinks for physical link " + It_id + ": " + e.getMessage());
+						e.printStackTrace();
+					}
+					nodelink_ids = new String[vector2.size()];
+					vector2.copyInto(nodelink_ids);
+
+					link_t = new MapPhysicalLinkElement_Transferable(
+							It_id,
+							It_name,
+							It_type_id,
+							It_description,
+							It_owner_id,
+							It_map_id,
+							It_ism_map_id,
+							It_start_node_id,
+							It_end_node_id,
+							attributes,
+							It_link_id,
+							It_link_type_id,
+							nodelink_ids);
+
+					vector.addElement(link_t);
+				}
+				linkIt.close();
+				link_ts = new MapPhysicalLinkElement_Transferable[vector.size()];
+				vector.copyInto(link_ts);
+				linkseq.value = link_ts;
+
+			}
+			catch(SQLException e)
+			{
+				if(linkIt != null) try {
+				linkIt.close();
+				}catch(Exception exe) {}
+				System.out.println("error loading physical links for map " + current_map_id + ": " + e.getMessage());
+				e.printStackTrace();
+				return Constants.ERROR_LOADING;
+			}
+			finally
+			{
+				try {
+					linkIt.close();
+				}catch(Exception exe) {}
+			}
+			
+		}
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	#sql private static iterator ElementAttributeIterator(
+		String id,
+		String attribute_id);
+
+	#sql public static iterator ElementAttributeIterator2(
+		String id,
+		String attribute_type_id,
+		String value,
+		int is_editable,
+		int is_visible);
+
+	#sql private static iterator ElementAttributeTypeIterator(
+		String id,
+		String name,
+		String value_type,
+		String default_value,
+		int is_editable,
+		int is_visible,
+		Timestamp modified );
+
+	#sql public static iterator IdIterator(
+		String id);
+
+	#sql private static iterator ISMMapContextIterator(
+		String id,
+		String name,
+		String codename,
+		String description,
+		Timestamp created,
+		String created_by,
+		Timestamp modified,
+		String modified_by,
+		String domain_id,
+		String owner_id,
+		String map_id);
+
+	#sql private static iterator MapContextIterator(
+		String id,
+		String name,
+		String codename,
+		String description,
+		Timestamp created,
+		String created_by,
+		Timestamp modified,
+		String modified_by,
+		String domain_id,
+		int show_nodes,
+		int mouse_tolerancy,
+		String zoom_factor,
+		String default_zoom_factor,
+		String user_id,
+		String longitude,
+		String latitude,
+		String scheme_id);
+
+	#sql private static iterator MapElementIdIterator(
+		String map_element_id);
+
+	#sql private static iterator MapElementIterator(
+		String owner_id,
+		String latitude,
+		String name,
+		String symbol_id,
+		String type_id,
+		String description,
+		String longitude,
+		String kis_type_id,
+		String id,
+		String map_id,
+		String element_id,
+		String element_type_id);
+
+	#sql private static iterator MapKISIdIterator(
+		String map_kis_id);
+
+	#sql private static iterator MapKISIterator(
+		String id,
+		String map_element_id,
+		String ism_map_id,
+		String map_id);
+
+	#sql private static iterator MapKISIterator2(
+		String scheme_kis_element_id,
+		String owner_id,
+		String latitude,
+		String name,
+		String symbol_id,
+		String type_id,
+		String description,
+		String longitude,
+		String codename,
+		String id,
+		String map_id,
+		String ism_map_id,
+		String kis_id,
+		String kis_type_id);
+
+	#sql private static iterator MapLinkIdIterator(
+		String map_link_id);
+
+	#sql private static iterator MapMarkIdIterator(
+		String map_mark_id);
+
+	#sql private static iterator MapMarkIterator(
+		String owner_id,
+		String latitude,
+		String name,
+		String symbol_id,
+		String description,
+		String longitude,
+		String id,
+		String map_id,
+		String link_id,
+		String distance);
+
+	#sql private static iterator MapNodeIdIterator(
+		String map_node_id);
+
+	#sql private static iterator MapNodeIterator (
+		String symbol_id,
+		String latitude,
+		String owner_id,
+		String description,
+		String id,
+		String map_id,
+		String ism_map_id,
+		int active,
+		String name,
+		String physical_link_id,
+		String longitude);
+
+	#sql private static iterator MapNodeLinkIdIterator(
+		String map_node_link_id);
+
+	#sql private static iterator MapNodeLinkIterator(
+		String physical_link_id,
+		String id,
+		String end_node_id,
+		String start_node_id,
+		String name,
+		String owner_id,
+		String map_id,
+		String ism_map_id);
+
+	#sql private static iterator MapPathIdIterator(
+		String map_path_id);
+
+	#sql private static iterator MapPathIterator (
+		String description,
+		String id,
+		String end_node_id,
+		String start_node_id,
+		String name,
+		String owner_id,
+		String type_id,
+		String map_id,
+		String ism_map_id,
+		String path_id);
+
+	#sql private static iterator MapPhysicalLinkIterator (
+		String description,
+		String id,
+		String end_node_id,
+		String start_node_id,
+		String name,
+		String owner_id,
+		String type_id,
+		String map_id,
+		String ism_map_id,
+		String link_id,
+		String link_type_id);
+
+	#sql private static iterator PathLinkIterator (
+		String physical_link_id,
+		String path_id );
+}

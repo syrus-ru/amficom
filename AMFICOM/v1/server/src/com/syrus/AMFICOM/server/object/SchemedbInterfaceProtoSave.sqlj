@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceProtoSave.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
+ * $Id: SchemedbInterfaceProtoSave.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,17 +15,15 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class SchemedbInterfaceProtoSave
-{
-	protected SchemedbInterfaceProtoSave()
-	{
+final class SchemedbInterfaceProtoSave {
+	private SchemedbInterfaceProtoSave() {
 	}
 
-	public static int saveDevicePorts(String device_id, SchemePort_Transferable[] ports)
+	private static int saveDevicePorts(String device_id, SchemePort_Transferable[] ports)
 	{
 		PortIdIterator idIt = null;
 
@@ -70,7 +68,7 @@ public class SchemedbInterfaceProtoSave
 									DIRECTION_TYPE = :(ports[index].direction_type)
 								where ID = :(ports[index].id)
 						};
-						MapdbInterfaceSave3.saveAttributes(
+						MapdbInterfaceSave.saveAttributes(
 							"SCHEMEPORTATTRIBUTES",
 							"SCHEME_PORT_ID",
 							ports[index].id,
@@ -128,7 +126,7 @@ public class SchemedbInterfaceProtoSave
 							 :(port.direction_type) )
 				};
 
-				MapdbInterfaceSave3.saveAttributes(
+				MapdbInterfaceSave.saveAttributes(
 					"SCHEMEPORTATTRIBUTES",
 					"SCHEME_PORT_ID",
 					port.id,
@@ -185,7 +183,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveDeviceCablePorts(String device_id, SchemeCablePort_Transferable[] ports)
+	private static int saveDeviceCablePorts(String device_id, SchemeCablePort_Transferable[] ports)
 	{
 		CablePortIdIterator idIt = null;
 
@@ -230,7 +228,7 @@ public class SchemedbInterfaceProtoSave
 									DIRECTION_TYPE = :(ports[index].direction_type)
 								where ID = :(ports[index].id)
 						};
-						MapdbInterfaceSave3.saveAttributes(
+						MapdbInterfaceSave.saveAttributes(
 							"SCHEMECABLEPORTATTRIBUTES",
 							"SCHEME_CABLE_PORT_ID",
 							ports[index].id,
@@ -288,7 +286,7 @@ public class SchemedbInterfaceProtoSave
 							 :(port.direction_type) )
 				};
 
-				MapdbInterfaceSave3.saveAttributes(
+				MapdbInterfaceSave.saveAttributes(
 					"SCHEMECABLEPORTATTRIBUTES",
 					"SCHEME_CABLE_PORT_ID",
 					port.id,
@@ -346,7 +344,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveLinks(SchemeLink_Transferable[] links)
+	static int saveLinks(SchemeLink_Transferable[] links)
 	{
 		int i;
 		int len;
@@ -423,7 +421,7 @@ public class SchemedbInterfaceProtoSave
 					return Constants.ERROR_SAVING;
 				}
 			}
-			MapdbInterfaceSave3.saveAttributes(
+			MapdbInterfaceSave.saveAttributes(
 				"SCHEMELINKATTRIBUTES",
 				"SCHEME_LINK_ID",
 				links[i].id,
@@ -434,7 +432,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveSchemeDevices(SchemeDevice_Transferable[] devices)
+	static int saveSchemeDevices(SchemeDevice_Transferable[] devices)
 	{
 		int i;
 		int j;
@@ -492,7 +490,7 @@ public class SchemedbInterfaceProtoSave
 				}
 			}
 
-			MapdbInterfaceSave3.saveAttributes(
+			MapdbInterfaceSave.saveAttributes(
 				"SCHEMEDEVICEATTRIBUTES",
 				"SCHEME_DEVICE_ID",
 				devices[i].id,
@@ -504,7 +502,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveProtoElement(
+	private static int saveProtoElement(
 			String domain_id,
 			SchemeProtoElement_Transferable proto,
 			Hashtable other_protos)
@@ -615,7 +613,7 @@ public class SchemedbInterfaceProtoSave
 			}
 		}
 
-		MapdbInterfaceSave3.saveAttributes(
+		MapdbInterfaceSave.saveAttributes(
 			"SCHEMEPROTOELEMENTATTRIBUTES",
 			"SCHEME_PROTO_ELEMENT_ID",
 			proto.id,
@@ -692,7 +690,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveProtoElements(
+	static int saveProtoElements(
 			String domain_id,
 			SchemeProtoElement_Transferable[] protos)
 	{
@@ -710,7 +708,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeSchemePort(String id)
+	private static int removeSchemePort(String id)
 	{
 		PortIdIterator pidIt = null;
 		try
@@ -738,7 +736,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeSchemeCablePort(String id)
+	private static int removeSchemeCablePort(String id)
 	{
 		CablePortIdIterator pidIt = null;
 		try
@@ -766,7 +764,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeSchemeDevice(String id)
+	static int removeSchemeDevice(String id)
 	{
 		PortIdIterator pidIt = null;
 		CablePortIdIterator cpidIt = null;
@@ -817,23 +815,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeSchemeDevices(String[] ids)
-	{
-		int i;
-		int j;
-		int len;
-		int count = 0;
-
-		String id = "";
-		len = ids.length;
-		for (i = 0; i < len; i++)
-		{
-			removeSchemeDevice(ids[i]);
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int removeSchemeLink(String id)
+	static int removeSchemeLink(String id)
 	{
 		PortIdIterator pidIt = null;
 		try
@@ -857,23 +839,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeSchemeLinks(String[] ids)
-	{
-		int i;
-		int j;
-		int len;
-		int count = 0;
-
-		String id = "";
-		len = ids.length;
-		for (i = 0; i < len; i++)
-		{
-			removeSchemeLink(ids[i]);
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int removeProtoElements(String[] proto_ids)
+	static int removeProtoElements(String[] proto_ids)
 	{
 		String scheme_cell_id = "";
 		String ugo_cell_id = "";
@@ -1004,9 +970,9 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	#sql public static iterator DeviceIdIterator ( String scheme_device_id );
-	#sql public static iterator LinkIdIterator ( String scheme_link_id );
-	#sql public static iterator PortIdIterator ( String scheme_port_id );
-	#sql public static iterator CablePortIdIterator ( String scheme_cable_port_id );
-	#sql public static iterator MapProtoIdIterator ( String map_proto_element_id );
+	#sql private static iterator DeviceIdIterator ( String scheme_device_id );
+	#sql private static iterator LinkIdIterator ( String scheme_link_id );
+	#sql private static iterator PortIdIterator ( String scheme_port_id );
+	#sql private static iterator CablePortIdIterator ( String scheme_cable_port_id );
+	#sql private static iterator MapProtoIdIterator ( String map_proto_element_id );
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: SurveydbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
+ * $Id: SurveydbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,23 +11,21 @@ package com.syrus.AMFICOM.server.object;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
+import com.syrus.AMFICOM.CORBA.Survey.*;
 import java.sql.*;
-import java.util.*;
-import oracle.sql.BLOB;
+import java.util.Vector;
+import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class SurveydbInterfaceLoad
-{
-	protected SurveydbInterfaceLoad()
-	{
+final class SurveydbInterfaceLoad {
+	private SurveydbInterfaceLoad() {
 	}
 
-	public static int GetTestIdsForMonitoredElement(
+	static int getTestIdsForMonitoredElement(
 			String me_id,
 			ResourceDescriptorSeq_TransferableHolder testids)
 		throws AMFICOMRemoteException
@@ -70,193 +68,336 @@ public class SurveydbInterfaceLoad
 		return ret;
 	}
 
-
-
-	public static ClientParameter_Transferable[] loadTestArguments(String test_id)
+	static int loadRequests(
+			String domain_id,
+			ClientTestRequestSeq_TransferableHolder treqseq)
 	{
 		String It_id = "";
 		String It_name = "";
-		String It_codename = "";
-		String It_parameter_type_name = "";
-		String It_parameter_type_id = "";
-		String It_data_type = "";
-		String It_p_type_id = "";
-		String It_action_id = "";
-		String It_arg_id = "";
+		long It_created = 0;
+		int It_status = 0;
+		String It_user_id = "";
 
+		TestRequestIterator trIt = null;
+		ClientTestRequest_Transferable tr;
+		ClientTestRequest_Transferable[] tr_s;
 		Vector vector = new Vector();
-		ClientParameter_Transferable[] args = new ClientParameter_Transferable[0];
-		ClientParameter_Transferable arg;
-		TestArgumentIterator tparIt = null;
-		return args;
-	}
 
-	public static long[] getTestTimeTableStamps(String test_i_d)
-		throws SQLException
-	{
-		TestTimeTableStampsIterator ttsIt = null;
-		LinkedList ll = new LinkedList();
+		String test_ids[];
+		Vector vector2 = new Vector();
+
+		IdIterator idIt = null;
+
 		try
 		{
-			#sql ttsIt = {select time_stamp from amficom.testtimetablestamps where test_id = :test_i_d } ;
-			while (ttsIt.next())
-				ll.add(ttsIt.time_stamp());
-			ttsIt.close();
+			#sql trIt = { select
+					ID,
+					NAME,
+					CREATED,
+					STATUS,
+					USER_ID
+				from AMFICOM.TESTREQUESTS
+				where DELETED IS NULL
+				and DOMAIN_ID = :domain_id
+			};
+			while (trIt.next())
+			{
+				try {It_id = trIt.id();}
+				catch(SQLNullException e) { }
+				if(It_id == null) It_id = "";
+				try {It_name = trIt.name();}
+				catch(SQLNullException e) { }
+				if(It_name == null) It_name = "";
+				try	{It_created = (trIt.created()).getTime();}
+				catch(SQLNullException e){ }
+				catch(NullPointerException e){ }
+				try	{It_status = trIt.status();}
+				catch(SQLNullException e){ }
+				try {It_user_id = trIt.user_id();}
+				catch(SQLNullException e){ }
+				if(It_user_id == null) It_user_id = "";
+
+				test_ids = new String[0];
+				vector2 = new Vector();
+
+				#sql idIt = {
+						select Id from TESTS
+						where REQUEST_ID = :It_id
+							and DELETED IS NULL };
+				while (idIt.next())
+				{
+					vector2.add(idIt.id());
+				}
+				idIt.close();
+				test_ids = new String[vector2.size()];
+				vector2.copyInto(test_ids);
+
+				tr = new ClientTestRequest_Transferable(
+						It_id,
+						It_name,
+						TestRequestStatus.from_int(It_status),
+						It_created,
+						It_user_id,
+						0,
+						0,
+						"",
+						test_ids);
+
+				vector.add(tr);
+			}
+			trIt.close();
 		}
-		catch(SQLException ex)
+		catch(SQLException e)
 		{
-			if(ttsIt != null) try {
-			ttsIt.close();
+			if(idIt != null) try {
+			idIt.close();
 			}catch(Exception exe) {}
-			throw ex;
+			if(trIt != null) try {
+			trIt.close();
+			}catch(Exception exe) {}
+			System.out.println("Error - test request exists!" + ": " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_SAVING;
 		}
 		finally
 		{
 			try {
-				ttsIt.close();
+				idIt.close();
+				trIt.close();
 			}catch(Exception exe) {}
 		}
 		
-		long[] ts = new long[0];
-		if (ll.size() == 0)
-			System.out.println("No time stamps for test id: " + test_i_d);
-		else
+		tr_s = new ClientTestRequest_Transferable[vector.size()];
+		vector.copyInto(tr_s);
+		treqseq.value = tr_s;
+
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadGlobalParameterTypes(GlobalParameterTypeSeq_TransferableHolder paramtypeseq) {
+		String It_id = "";
+		String It_name = "";
+		String It_codename = "";
+		String It_description = "";
+		String It_norm = "";
+		String It_value_type_id = "";
+		String It_unit = "";
+		String It_granularity = "";
+		String It_rangehi = "";
+		String It_rangelo = "";
+		String It_formula = "";
+		long It_modified = 0;
+
+		Vector vector = new Vector();
+
+		GlobalParameterType_Transferable ch_t;
+		GlobalParameterType_Transferable[] ch_ts;
+		GlobalParameterTypeIterator chIt = null;
+		Vector vector2;
+
+		try
 		{
-			ts = new long[ll.size()];
-			for (int j = 0; j < ts.length; j++)
-				ts[j] = ((Timestamp)(ll.get(j))).getTime();
+			#sql chIt = { select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+						NORM,
+						TYPE_ID,
+						UNIT,
+						GRANULARITY,
+						RANGEHI,
+						RANGELO,
+						FORMULA,
+						MODIFIED
+					from AMFICOM.PARAMETERTYPES
+			};
+
+			while (chIt.next())
+			{
+				try { It_id = chIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = chIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_value_type_id = chIt.type_id(); }
+				catch(SQLException e) { }
+				if(It_value_type_id == null) It_value_type_id = "";
+
+				try { It_modified = chIt.modified().getTime(); }
+				catch(SQLException e) { }
+
+				ch_t = new GlobalParameterType_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_description,
+					It_norm,
+					It_value_type_id,
+					It_unit,
+					It_granularity,
+					It_rangehi,
+					It_rangelo,
+					It_formula,
+					It_modified);
+
+				vector.add(ch_t);
+			}
+			chIt.close();
+			ch_ts = new GlobalParameterType_Transferable[vector.size()];
+			vector.copyInto(ch_ts);
+			paramtypeseq.value = ch_ts;
+
 		}
-		return ts;
+		catch(SQLException e)
+		{
+			if(chIt != null) try {
+			chIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading characteristic types: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				chIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static Vector loadResultParameters(
-			String paramTableName,
-			String result_id)
+	static int loadGlobalParameterTypes(
+			String[] ids,
+			GlobalParameterTypeSeq_TransferableHolder paramtypeseq)
 	{
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
-		String It_parameter_type_name = "";
-		String It_parameter_type_id = "";
-		String It_data_type = "";
-		String It_p_type_id = "";
-		String It_action_id = "";
-		BLOB It_value;
-		byte[] val = new byte[0];
-		octetSeqHolder osh;
-
-		Vector vector2 = new Vector();
-		ResultParameterIterator paramIt = null;
-		return vector2;
-	}
-
-	public static ClientParameter_Transferable[] loadActionArguments(
-			String argumentTableName,
-			String argumentFieldName,
-			String argumentParameterFieldName,
-			String argumentTypeTableName,
-			String action_id)
-	{
-		String It_id = "";
-		String It_name = "";
-		String It_codename = "";
-		String It_parameter_type_name = "";
-		String It_parameter_type_id = "";
-		String It_data_type = "";
-		String It_arg_id = "";
-
-		byte[] val = new byte[0];
+		String It_description = "";
+		String It_norm = "";
+		String It_value_type_id = "";
+		String It_unit = "";
+		String It_granularity = "";
+		String It_rangehi = "";
+		String It_rangelo = "";
+		String It_formula = "";
+		long It_modified = 0;
 
 		Vector vector = new Vector();
-		ClientParameter_Transferable[] args = new ClientParameter_Transferable[0];
-		ClientParameter_Transferable arg;
-		return args;
+
+		GlobalParameterType_Transferable ch_t;
+		GlobalParameterType_Transferable[] ch_ts;
+		GlobalParameterTypeIterator chIt = null;
+		Vector vector2;
+
+		Vector loadvec = new Vector();
+		for(int i = 0; i < ids.length; i++)
+			loadvec.add(ids[i]);
+		try
+		{
+			#sql chIt = { select
+						ID,
+						NAME,
+						CODENAME,
+						DESCRIPTION,
+						NORM,
+						TYPE_ID,
+						UNIT,
+						GRANULARITY,
+						RANGEHI,
+						RANGELO,
+						FORMULA,
+						MODIFIED
+					from AMFICOM.PARAMETERTYPES
+			};
+
+			while (chIt.next())
+			{
+				if(! loadvec.contains(chIt.id()))
+					continue;
+
+				try { It_id = chIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = chIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_value_type_id = chIt.type_id(); }
+				catch(SQLException e) { }
+				if(It_value_type_id == null) It_value_type_id = "";
+
+				try { It_modified = chIt.modified().getTime(); }
+				catch(SQLException e) { }
+
+				ch_t = new GlobalParameterType_Transferable(
+					It_id,
+					It_name,
+					It_codename,
+					It_description,
+					It_norm,
+					It_value_type_id,
+					It_unit,
+					It_granularity,
+					It_rangehi,
+					It_rangelo,
+					It_formula,
+					It_modified);
+
+				vector.add(ch_t);
+			}
+			chIt.close();
+			ch_ts = new GlobalParameterType_Transferable[vector.size()];
+			vector.copyInto(ch_ts);
+			paramtypeseq.value = ch_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(chIt != null) try {
+			chIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading characteristic types: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				chIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static ClientParameter_Transferable[] loadActionArguments(
-			String tableName,
-			String actionFieldName,
-			String element_id)
-	{
-		String It_id = "";
-		String It_name = "";
-		String It_codename = "";
-		String It_parameter_type_name = "";
-		String It_parameter_type_id = "";
-		String It_data_type = "";
-		String It_action_id = "";
-		BLOB It_value;
-		byte[] val = new byte[0];
-		octetSeqHolder osh;
-
-		ClientParameter_Transferable arg;
-		ClientParameter_Transferable args[] = new ClientParameter_Transferable[0];
-		ActionArgumentIterator argIt = null;
-		Vector vector = new Vector();
-		return args;
-	}
-
-	public static ClientParameter_Transferable[] loadActionParameters(
-			String tableName,
-			String actionFieldName,
-			String element_id)
-	{
-		String It_id = "";
-		String It_name = "";
-		String It_codename = "";
-		String It_parameter_type_name = "";
-		String It_parameter_type_id = "";
-		String It_data_type = "";
-		String It_action_id = "";
-		byte[] val = new byte[0];
-
-		ClientParameter_Transferable param;
-		ClientParameter_Transferable[] params = new ClientParameter_Transferable[0];
-		ActionParameterIterator paramIt = null;
-		Vector vector = new Vector();
-		return params;
-	}
-
-	#sql public static iterator IdIterator ( String id );
-	#sql public static iterator ResourceIdIterator( String id, Timestamp modified );
-
-	#sql public static iterator TestIterator (
+	#sql public static iterator ResourceIdIterator(
 		String id,
+		Timestamp modified);
+
+	#sql public static iterator IdIterator (
+		String id);
+
+	#sql public static iterator TestRequestIterator(
+		String id,
+		String name,
 		Timestamp created,
-		String test_type_id,
-		int temporal_type,
-		Timestamp start_time,
-		Timestamp period,
-		Timestamp end_time,
 		int status,
-		String kis_id,
-		String local_id,
-		String request_id);
+		String user_id);
 
-  #sql public static iterator TestArgumentIterator (
-	  String id,
-	  BLOB value,
-	  String type_id,
-	  String test_id);
-
-	#sql public static iterator TestTimeTableStampsIterator (Timestamp time_stamp);
-
-	#sql public static iterator ResultParameterIterator(
-		String id,
-		String parameter_type_id,
-		BLOB value,
-		String result_id);
-
-	#sql public static iterator ActionArgumentIterator(
+	#sql public static iterator GlobalParameterTypeIterator(
 		String id,
 		String name,
 		String codename,
-		String parameter_type_id,
-		BLOB value);
-
-	#sql public static iterator ActionParameterIterator(
-		String id,
-		String name,
-		String codename,
-		String parameter_type_id);
+		String description,
+		String norm,
+		String type_id,
+		String unit,
+		String granularity,
+		String rangehi,
+		String rangelo,
+		String formula,
+		Timestamp modified);
 }

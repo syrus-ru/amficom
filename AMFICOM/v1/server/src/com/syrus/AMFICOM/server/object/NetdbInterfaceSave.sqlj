@@ -1,5 +1,5 @@
 /*
- * $Id: NetdbInterfaceSave.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
+ * $Id: NetdbInterfaceSave.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,25 +12,17 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.SQLException;
-import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class NetdbInterfaceSave
-{
-	protected NetdbInterfaceSave()
-	{
+final class NetdbInterfaceSave {
+	private NetdbInterfaceSave() {
 	}
 
-	public static void saveCharacteristics(
-			String charTable,
-			String charField,
-			String element_id,
-			Characteristic_Transferable[] characteristics)
-	{
+	static void saveCharacteristics(String charTable, String charField, String element_id, Characteristic_Transferable[] characteristics) {
 		int count;
 		int len2;
 		int j;
@@ -87,9 +79,7 @@ public class NetdbInterfaceSave
 		}
 	}
 
-	public static int savePorts(
-			Port_Transferable[] ports)
-	{
+	static int savePorts(Port_Transferable[] ports) {
 		int i;
 		int j;
 		int len;
@@ -186,8 +176,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveCablePorts(CablePort_Transferable[] cports)
-	{
+	static int saveCablePorts(CablePort_Transferable[] cports) {
 		int i;
 		int j;
 		int len;
@@ -284,8 +273,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveTestPorts(TestPort_Transferable[] testports)
-	{
+	static int saveTestPorts(TestPort_Transferable[] testports) {
 		int i;
 		int j;
 		int len;
@@ -380,8 +368,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveLinks(Link_Transferable[] links)
-	{
+	static int saveLinks(Link_Transferable[] links) {
 		int i;
 		int j;
 		int len;
@@ -503,8 +490,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveCableThreads(String cable_id, CableLinkThread_Transferable[] threads)
-	{
+	private static int saveCableThreads(String cable_id, CableLinkThread_Transferable[] threads) {
 		try
 		{
 			#sql { delete from AMFICOM.CABLELINKTHREADS
@@ -549,131 +535,8 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveCableThreads2(String cable_id, CableLinkThread_Transferable[] threads)
-	{
-		IdIterator idIt = null;
 
-		int i;
-		int len;
-		int index = 0;
-
-		Vector vec = new Vector();
-		Vector id_vec = new Vector();
-		Vector del_vec = new Vector();
-
-		for (i = 0; i < threads.length; i++)
-		{
-			vec.add(threads[i]);
-			id_vec.add(threads[i].id);
-		}
-
-		try
-		{
-			#sql idIt = { select ID
-				from AMFICOM.CABLELINKTHREADS
-					where CABLE_ID = :cable_id };
-
-			while (idIt.next())
-			{
-				if(id_vec.contains(idIt.id()))
-				{
-					index = id_vec.indexOf(idIt.id());
-					System.out.println("update cable thread " + threads[index].id);
-					try
-					{
-						#sql {
-							update AMFICOM.CABLELINKTHREADS
-								set
-									NAME = :(threads[index].name),
-									LINK_TYPE_ID = :(threads[index].link_type_id),
-									COLOR = :(threads[index].color),
-									MARK = :(threads[index].mark)
-								where ID = :(threads[index].id)
-						};
-					}
-					catch(SQLException e)
-					{
-						System.out.println("error saVing cable link: " + e.getMessage());
-						e.printStackTrace();
-						return Constants.ERROR_UPDATING;
-					}
-					#sql { commit };
-					vec.remove(threads[index]);
-				}
-				else
-					del_vec.add(idIt.id());
-			}
-			idIt.close();
-		}
-		catch(Exception e)
-		{
-			if(idIt != null) try {
-			idIt.close();
-			}catch(Exception exe) {}
-		}
-
-		len = vec.size();
-		for (i = 0; i < len; i++)
-		{
-			CableLinkThread_Transferable thread = (CableLinkThread_Transferable )vec.get(i);
-			System.out.println("insert new cable thread " + thread.id);
-			try
-			{
-				#sql {
-					insert into AMFICOM.CABLELINKTHREADS(
-							ID,
-							NAME,
-							MARK,
-							COLOR,
-							CABLE_ID,
-							LINK_TYPE_ID)
-						values(
-							 :(thread.id),
-							 :(thread.name),
-							 :(thread.mark),
-							 :(thread.color),
-							 :cable_id,
-							 :(thread.link_type_id) )
-				};
-				#sql { commit };
-			}
-			catch(SQLException ex)
-			{
-				System.out.println("error saVing cable thread: " + ex.getMessage());
-				ex.printStackTrace();
-				return Constants.ERROR_SAVING;
-			}
-			catch(Exception exx)
-			{
-				System.out.println("error generating cable thread: " + exx.getMessage());
-				return Constants.ERROR_SAVING;
-			}
-		}
-
-		len = del_vec.size();
-		for (i = 0; i < len; i++)
-		{
-			try
-			{
-				String s = (String )del_vec.get(i);
-				#sql {
-					delete from AMFICOM.CABLELINKTHREADS
-						where ID = :s
-				};
-				#sql { commit };
-			}
-			catch(SQLException e)
-			{
-				System.out.println("could not delete cable threads for cable " + cable_id + ": " + e.getMessage());
-				e.printStackTrace();
-				return Constants.ERROR_DELETING;
-			}
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int saveCableLinks(CableLink_Transferable[] links)
-	{
+	static int saveCableLinks(CableLink_Transferable[] links) {
 		int i;
 		int j;
 		int len;
@@ -796,9 +659,7 @@ public class NetdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveEquipments(
-			Equipment_Transferable[] equipments)
-	{
+	static int saveEquipments(Equipment_Transferable[] equipments) {
 		int i;
 		int j;
 		int len;
@@ -928,6 +789,4 @@ public class NetdbInterfaceSave
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
-
-	#sql public static iterator IdIterator ( String id );
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AlarmFilter.java,v 1.1.2.1 2004/08/20 17:12:08 bass Exp $
+ * $Id: AlarmFilter.java,v 1.1.2.2 2004/08/24 15:43:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 17:12:08 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/24 15:43:43 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -26,40 +26,40 @@ final class AlarmFilter implements Filter {
 			FilterExpressionBase expr = (FilterExpressionBase) filterExpressionInterface;
 			boolean result = false;
 			Alarm a = (Alarm) obj;
-			Vector vec = expr.getVec();
-			String type = (String) vec.elementAt(0);
+			List list = expr.getVec();
+			String type = (String) list.get(0);
 			if (type.equals("numeric")) {
 				if (expr.getId().equals("time")) {
-					if (((String)vec.elementAt(1)).equals("=")) {
-						if (a.getGenerated().getTime() == Long.parseLong((String)vec.elementAt(2)))
+					if (((String)list.get(1)).equals("=")) {
+						if (a.getGenerated().getTime() == Long.parseLong((String)list.get(2)))
 							result = true;
-					} else if (((String)vec.elementAt(1)).equals(">")) {
-						if (a.getGenerated().getTime() > Long.parseLong((String)vec.elementAt(2)))
+					} else if (((String)list.get(1)).equals(">")) {
+						if (a.getGenerated().getTime() > Long.parseLong((String)list.get(2)))
 							result = true;
-					} else if (((String)vec.elementAt(1)).equals("<")) {
-						if (a.getGenerated().getTime() < Long.parseLong((String)vec.elementAt(2)))
+					} else if (((String)list.get(1)).equals("<")) {
+						if (a.getGenerated().getTime() < Long.parseLong((String)list.get(2)))
 							result = true;
 					}
 				}
 			} else if (type.equals("time")) {
 				if (expr.getId().equals("time")) {
-					if ( a.getGenerated().getTime() > Long.parseLong((String)vec.elementAt(1)) &&  a.getGenerated().getTime() < Long.parseLong((String)vec.elementAt(2))) {
+					if ( a.getGenerated().getTime() > Long.parseLong((String)list.get(1)) &&  a.getGenerated().getTime() < Long.parseLong((String)list.get(2))) {
 						result = true;
 					}
 				}
 			} else if (type.equals("range")) {
 				if (expr.getId().equals("time")) {
-					if ( a.getGenerated().getTime() > Long.parseLong((String)vec.elementAt(1)) &&  a.getGenerated().getTime() < Long.parseLong((String)vec.elementAt(2)))
+					if ( a.getGenerated().getTime() > Long.parseLong((String)list.get(1)) &&  a.getGenerated().getTime() < Long.parseLong((String)list.get(2)))
 						result = true;
 				}
 			} else if (type.equals("string")) {
-				String substring = (String)vec.elementAt(1);
+				String substring = (String)list.get(1);
 				if (expr.getId().equals("source"))
 					return ((new EventSource((new Event(a.getEventId())).getSourceId())).getTransferable().object_source_name.indexOf(substring) != -1);
 				else if (expr.getId().equals("monitoredelement"))
 					return ((new MonitoredElement(Test.retrieveTestForEvaluation(((Evaluation) (new Result((new Event(a.getEventId())).getDescriptor())).getAction()).getId()).getTransferable().monitored_element_id)).getName().indexOf(substring) != -1);
 			} else if (type.equals("list")) {
-				Hashtable tree = (Hashtable )vec.elementAt(1);
+				Hashtable tree = (Hashtable )list.get(1);
 				if (expr.getId().equals("monitoredelement")) {
 					Event ev = new Event(a.getEventId());
 					Result res = new Result(ev.getDescriptor());

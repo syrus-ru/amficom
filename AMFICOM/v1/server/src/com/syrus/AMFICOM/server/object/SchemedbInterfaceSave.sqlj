@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceSave.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
+ * $Id: SchemedbInterfaceSave.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,17 +18,15 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class SchemedbInterfaceSave
-{
-	protected SchemedbInterfaceSave()
-	{
+final class SchemedbInterfaceSave {
+	private SchemedbInterfaceSave() {
 	}
 
-	public static int saveCableThreads(String cable_id, SchemeCableThread_Transferable[] threads)
+	private static int saveCableThreads(String cable_id, SchemeCableThread_Transferable[] threads)
 	{
 		CableThreadIdIterator idIt = null;
 
@@ -163,7 +161,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveCableLinks(SchemeCableLink_Transferable[] links)
+	private static int saveCableLinks(SchemeCableLink_Transferable[] links)
 	{
 		int i;
 		int len;
@@ -240,7 +238,7 @@ public class SchemedbInterfaceSave
 					return Constants.ERROR_SAVING;
 				}
 			}
-			MapdbInterfaceSave3.saveAttributes(
+			MapdbInterfaceSave.saveAttributes(
 				"SCHEMECABLEATTRIBUTES",
 				"SCHEME_CABLE_ID",
 				links[i].id,
@@ -252,7 +250,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveSchemePaths(SchemePath_Transferable[] paths)
+	static int saveSchemePaths(SchemePath_Transferable[] paths)
 	{
 		int i;
 		int len;
@@ -324,7 +322,7 @@ public class SchemedbInterfaceSave
 				}
 			}
 
-			MapdbInterfaceSave3.saveAttributes(
+			MapdbInterfaceSave.saveAttributes(
 				"SCHEMEPATHATTRIBUTES",
 				"SCHEME_PATH_ID",
 				paths[i].id,
@@ -371,7 +369,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveElement(SchemeElement_Transferable element)
+	private static int saveElement(SchemeElement_Transferable element)
 	{
 		int i;
 		int j;
@@ -478,7 +476,7 @@ public class SchemedbInterfaceSave
 			}
 		}
 
-		MapdbInterfaceSave3.saveAttributes(
+		MapdbInterfaceSave.saveAttributes(
 			"SCHEMEELEMENTATTRIBUTES",
 			"SCHEME_ELEMENT_ID",
 			element.id,
@@ -558,7 +556,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveSchemeElements(SchemeElement_Transferable[] elements)
+	private static int saveSchemeElements(SchemeElement_Transferable[] elements)
 	{
 		int i;
 		int len;
@@ -572,7 +570,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveScheme(
+	private static int saveScheme(
 			String domain_id,
 			Scheme_Transferable scheme)
 	{
@@ -808,7 +806,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveSchemes(
+	static int saveSchemes(
 			String domain_id,
 			Scheme_Transferable[] schemes)
 	{
@@ -824,7 +822,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeCableThread(String id)
+	private static int removeCableThread(String id)
 	{
 		SchemedbInterfaceLoad.CableThreadIdIterator tidIt = null;
 		try
@@ -847,7 +845,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeCableLink(String id)
+	private static int removeCableLink(String id)
 	{
 		CableThreadIdIterator tidIt = null;
 		try
@@ -884,7 +882,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeCableLinks(String[] ids)
+	static int removeCableLinks(String[] ids)
 	{
 		int i;
 		int j;
@@ -900,7 +898,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeSchemePath(String id)
+	static int removeSchemePath(String id)
 	{
 		try
 		{
@@ -928,23 +926,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeSchemePaths(String[] ids)
-	{
-		int i;
-		int j;
-		int len;
-		int count = 0;
-
-		String id = "";
-		len = ids.length;
-		for (i = 0; i < len; i++)
-		{
-			removeSchemePath(ids[i]);
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int removeSchemeElement(String element_id)
+	private static int removeSchemeElement(String element_id)
 	{
 		String scheme_cell_id = "";
 		String ugo_cell_id = "";
@@ -1043,7 +1025,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeSchemeElements(String[] ids)
+	static int removeSchemeElements(String[] ids)
 	{
 		int i;
 		int j;
@@ -1059,7 +1041,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeScheme(String scheme_id)
+	private static int removeScheme(String scheme_id)
 	{
 		String scheme_cell_id = "";
 		String ugo_cell_id = "";
@@ -1198,7 +1180,7 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeSchemes(String[] ids)
+	static int removeSchemes(String[] ids)
 	{
 		int i;
 		int j;
@@ -1214,12 +1196,11 @@ public class SchemedbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	#sql public static iterator DeviceIdIterator ( String scheme_device_id );
-	#sql public static iterator LinkIdIterator ( String scheme_link_id );
-	#sql public static iterator CableLinkIdIterator ( String scheme_cable_link_id );
-	#sql public static iterator PortIdIterator ( String scheme_port_id );
-	#sql public static iterator MapProtoIdIterator ( String map_proto_element_id );
-	#sql public static iterator ElementIdIterator ( String scheme_element_id );
-	#sql public static iterator PathIdIterator ( String scheme_path_id );
-	#sql public static iterator CableThreadIdIterator ( String scheme_cable_thread_id );
+	#sql private static iterator DeviceIdIterator ( String scheme_device_id );
+	#sql private static iterator LinkIdIterator ( String scheme_link_id );
+	#sql private static iterator CableLinkIdIterator ( String scheme_cable_link_id );
+	#sql private static iterator MapProtoIdIterator ( String map_proto_element_id );
+	#sql private static iterator ElementIdIterator ( String scheme_element_id );
+	#sql private static iterator PathIdIterator ( String scheme_path_id );
+	#sql private static iterator CableThreadIdIterator ( String scheme_cable_thread_id );
 }

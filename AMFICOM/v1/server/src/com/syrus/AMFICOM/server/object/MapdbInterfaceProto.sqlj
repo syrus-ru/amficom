@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceProto.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
+ * $Id: MapdbInterfaceProto.sqlj,v 1.1.2.3 2004/08/24 15:43:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,21 +16,15 @@ import java.util.Vector;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:43 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class MapdbInterfaceProto
-{
-	protected MapdbInterfaceProto()
-	{
+final class MapdbInterfaceProto {
+	private MapdbInterfaceProto() {
 	}
 
-	public static int loadProtoElements(
-			String domain_id,
-			MapProtoElementSeq_TransferableHolder protoseq,
-			Vector images)
-	{
+	static int loadProtoElements(String domain_id, MapProtoElementSeq_TransferableHolder protoseq, Vector images) {
 		int count;
 		MapProtoElement_Transferable pr_t;
 		Vector vector = new Vector();
@@ -117,7 +111,7 @@ public class MapdbInterfaceProto
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad4.loadAttributes(
+				vector2 = MapdbInterfaceLoad.loadAttributes(
 						"MAPPROTOELEMENTATTRIBUTES",
 						"MAP_PROTO_ELEMENT_ID",
 						It_id);
@@ -194,12 +188,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadProtoElements(
-			String domain_id,
-			String[] ids,
-			MapProtoElementSeq_TransferableHolder protoseq,
-			Vector images)
-	{
+	static int loadProtoElements(String domain_id, String[] ids, MapProtoElementSeq_TransferableHolder protoseq, Vector images) {
 		int count;
 		MapProtoElement_Transferable pr_t;
 		Vector vector = new Vector();
@@ -293,7 +282,7 @@ public class MapdbInterfaceProto
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad4.loadAttributes(
+				vector2 = MapdbInterfaceLoad.loadAttributes(
 						"MAPPROTOELEMENTATTRIBUTES",
 						"MAP_PROTO_ELEMENT_ID",
 						It_id);
@@ -371,10 +360,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveProtoElements(
-			String domain_id,
-			MapProtoElement_Transferable[] protos)
-	{
+	static int saveProtoElements(String domain_id, MapProtoElement_Transferable[] protos) {
 		for(int i = 0; i < protos.length; i++)
 		{
 			int is_kis = (protos[i].pe_is_kis) ? 1 : 0;
@@ -439,7 +425,7 @@ public class MapdbInterfaceProto
 				}
 			}
 
-			MapdbInterfaceSave3.saveAttributes(
+			MapdbInterfaceSave.saveAttributes(
 					"MAPPROTOELEMENTATTRIBUTES",
 					"MAP_PROTO_ELEMENT_ID",
 					protos[i].id,
@@ -478,9 +464,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeProtoElements(
-			String[] proto_ids)
-	{
+	static int removeProtoElements(String[] proto_ids) {
 		for(int i = 0; i < proto_ids.length; i++)
 		{
 			try
@@ -512,9 +496,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadProtoGroups(
-			String domain_id,
-			MapProtoGroupSeq_TransferableHolder groupseq)
+	static int loadProtoGroups(String domain_id, MapProtoGroupSeq_TransferableHolder groupseq)
 	{
 		int count;
 		MapProtoGroup_Transferable pr_t;
@@ -658,11 +640,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadProtoGroups(
-			String domain_id,
-			String[] group_ids,
-			MapProtoGroupSeq_TransferableHolder groupseq)
-	{
+	static int loadProtoGroups(String domain_id, String[] group_ids, MapProtoGroupSeq_TransferableHolder groupseq) {
 		int count;
 		MapProtoGroup_Transferable pr_t;
 		Vector vector = new Vector();
@@ -819,10 +797,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveProtoGroups(
-			String domain_id,
-			MapProtoGroup_Transferable[] groups)
-	{
+	static int saveProtoGroups(String domain_id, MapProtoGroup_Transferable[] groups) {
 		for(int i = 0; i < groups.length; i++)
 		{
 			try
@@ -940,9 +915,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeProtoGroups(
-			String[] group_ids)
-	{
+	static int removeProtoGroups(String[] group_ids) {
 		for(int i = 0; i < group_ids.length; i++)
 		{
 			try
@@ -975,11 +948,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadLinkProto(
-			String domain_id,
-			MapLinkProtoElementSeq_TransferableHolder linkseq,
-			Vector images)
-	{
+	static int loadLinkProto(String domain_id, MapLinkProtoElementSeq_TransferableHolder linkseq, Vector images) {
 		int count;
 		Vector vector = new Vector();
 		MapLinkProtoElement_Transferable link_t;
@@ -1031,7 +1000,7 @@ public class MapdbInterfaceProto
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad4.loadAttributes(
+				vector2 = MapdbInterfaceLoad.loadAttributes(
 						"MAPLINKPROTOELEMENTATTRIBUTES",
 						"MAP_LINK_PROTO_ELEMENT_ID",
 						It_id);
@@ -1095,12 +1064,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadLinkProto(
-			String domain_id,
-			String[] ids,
-			MapLinkProtoElementSeq_TransferableHolder linkseq,
-			Vector images)
-	{
+	static int loadLinkProto(String domain_id, String[] ids, MapLinkProtoElementSeq_TransferableHolder linkseq, Vector images) {
 		int count;
 		Vector vector = new Vector();
 		MapLinkProtoElement_Transferable link_t;
@@ -1159,7 +1123,7 @@ public class MapdbInterfaceProto
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad4.loadAttributes(
+				vector2 = MapdbInterfaceLoad.loadAttributes(
 						"MAPLINKPROTOELEMENTATTRIBUTES",
 						"MAP_LINK_PROTO_ELEMENT_ID",
 						It_id);
@@ -1223,11 +1187,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadPathProto(
-			String domain_id,
-			MapPathProtoElementSeq_TransferableHolder pathseq,
-			Vector images)
-	{
+	static int loadPathProto(String domain_id, MapPathProtoElementSeq_TransferableHolder pathseq, Vector images) {
 		int count;
 		MapPathProtoElement_Transferable path_t;
 		Vector vector = new Vector();
@@ -1282,7 +1242,7 @@ public class MapdbInterfaceProto
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad4.loadAttributes(
+				vector2 = MapdbInterfaceLoad.loadAttributes(
 						"MAPPATHPROTOELEMENTATTRIBUTES",
 						"MAP_PATH_PROTO_ELEMENT_ID",
 						It_id);
@@ -1348,12 +1308,7 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadPathProto(
-			String domain_id,
-			String[] ids,
-			MapPathProtoElementSeq_TransferableHolder pathseq,
-			Vector images)
-	{
+	static int loadPathProto(String domain_id, String[] ids, MapPathProtoElementSeq_TransferableHolder pathseq, Vector images) {
 		int count;
 		MapPathProtoElement_Transferable path_t;
 		Vector vector = new Vector();
@@ -1415,7 +1370,7 @@ public class MapdbInterfaceProto
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad4.loadAttributes(
+				vector2 = MapdbInterfaceLoad.loadAttributes(
 						"MAPPATHPROTOELEMENTATTRIBUTES",
 						"MAP_PATH_PROTO_ELEMENT_ID",
 						It_id);
@@ -1481,35 +1436,25 @@ public class MapdbInterfaceProto
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	#sql public static iterator IdIterator ( String id );
-	#sql public static iterator CableTypeIdIterator ( String cable_type_id );
-	#sql public static iterator PathTypeIdIterator ( String path_type_id );
-	#sql public static iterator ChildIdIterator ( String child_id );
-	#sql public static iterator ProtoIdIterator ( String proto_id );
+	#sql public static iterator IdIterator (
+		String id);
+
+	#sql public static iterator CableTypeIdIterator (
+		String cable_type_id);
+
+	#sql public static iterator PathTypeIdIterator (
+		String path_type_id);
+
+	#sql public static iterator ChildIdIterator (
+		String child_id);
+
+	#sql public static iterator ProtoIdIterator (
+		String proto_id);
 
 	#sql public static iterator MapProtoGroupIterator (
 		String id,
 		String name,
 		Timestamp modified );
-
-	#sql public static iterator ElementAttributeIterator (
-		String id,
-		String attribute_id );
-
-	#sql public static iterator MapKISIterator (
-		String scheme_kis_element_id,
-		String owner_id,
-		String latitude,
-		String name,
-		String symbol_id,
-		String type_id,
-		String description,
-		String longitude,
-		String codename,
-		String id,
-		String map_id,
-		String kis_id,
-		String kis_type_id);
 
 	#sql public static iterator MapProtoIterator (
 		String id,
@@ -1530,21 +1475,6 @@ public class MapdbInterfaceProto
 		String map_proto_element_id,
 		String proto_element_id);
 
-	#sql public static iterator MapEquipmentIterator (
-		String scheme_equipment_element_id,
-		String owner_id,
-		String latitude,
-		String name,
-		String symbol_id,
-		String type_id,
-		String description,
-		String longitude,
-		String codename,
-		String id,
-		String map_id,
-		String equipment_id,
-		String equipment_type_id);
-
 	#sql public static iterator MapLinkProtoIterator (
 		String id,
 		String name,
@@ -1552,78 +1482,4 @@ public class MapdbInterfaceProto
 		String owner_id,
 		Timestamp modified,
 		String domain_id);
-
-	#sql public static iterator MapPhysicalLinkIterator (
-		int alarmed_line_size,
-		String metric,
-		int alarmed_color,
-		String codename,
-		String description,
-		String id,
-		int color,
-		String end_node_id,
-		String start_node_id,
-		String name,
-		int alarmed,
-		String style,
-		int show_alarmed,
-		String alarmed_style,
-		int line_size,
-		String owner_id,
-		String type_id,
-		String font_id,
-		int show_metric,
-		String selected_style,
-		String map_id,
-		String ism_map_id,
-		String link_id,
-		String link_type_id);
-
-	#sql public static iterator MapConnectionPointIterator (
-		String id,
-		String name,
-		String description,
-		String map_id,
-		String in_out,
-		String element_id,
-		String physical_link_id,
-
-		String interface_id,
-		String port_id,
-		String port_local_id,
-		String port_type_id,
-		String test_port_id,
-		String test_port_type_id,
-		String test_port_local_id,
-		String access_port_id,
-		String access_port_type_id,
-		String access_port_local_id,
-
-		int is_test_port,
-		int is_access_port);
-
-	#sql public static iterator MapPathIterator (
-		int alarmed_line_size,
-		String metric,
-		int alarmed_color,
-		String codename,
-		String description,
-		String id,
-		int color,
-		String end_node_id,
-		String start_node_id,
-		String name,
-		int alarmed,
-		String style,
-		int show_alarmed,
-		String alarmed_style,
-		int line_size,
-		String owner_id,
-		String type_id,
-		String font_id,
-		int show_metric,
-		String selected_style,
-		String map_id,
-		String ism_map_id,
-		String path_id);
 }
