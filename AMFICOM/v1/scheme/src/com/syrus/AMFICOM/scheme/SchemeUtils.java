@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.8 2005/03/01 14:00:39 bass Exp $
+ * $Id: SchemeUtils.java,v 1.9 2005/03/04 19:25:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import java.util.*;
@@ -17,7 +17,7 @@ import java.util.*;
  * Functionality will be partially moved to {@link PathElement}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/04 19:25:01 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */

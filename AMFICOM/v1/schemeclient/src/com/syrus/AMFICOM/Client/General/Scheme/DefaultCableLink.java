@@ -5,7 +5,7 @@ import java.awt.*;
 import com.jgraph.graph.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.general.Identifier;
 
 public class DefaultCableLink extends DefaultEdge
 {

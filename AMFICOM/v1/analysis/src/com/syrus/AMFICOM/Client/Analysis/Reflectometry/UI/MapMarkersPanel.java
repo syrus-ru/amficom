@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.general.*;
 public class MapMarkersPanel extends ThresholdsPanel
 {
 	protected Identifier monitored_element_id = null;
-	protected com.syrus.AMFICOM.general.corba.Identifier scheme_path_id = null;
+	protected com.syrus.AMFICOM.general.Identifier scheme_path_id = null;
 
 	protected boolean show_markers = true;
 	protected boolean creating_marker = false;
@@ -50,7 +50,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 		this.monitored_element_id = monitored_element_id;
 	}
 
-	public void setSchemePathId (com.syrus.AMFICOM.general.corba.Identifier scheme_path_id)
+	public void setSchemePathId (com.syrus.AMFICOM.general.Identifier scheme_path_id)
 	{
 		this.scheme_path_id = scheme_path_id;
 	}

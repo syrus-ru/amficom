@@ -59,7 +59,7 @@ class CableLayoutReportTableModel extends DividableTableModel
 	{
 		super(divisionsNumber, 4);
 
-		com.syrus.AMFICOM.general.corba.Identifier schemeCableLinkId = (com.syrus.AMFICOM.general.corba.Identifier )report
+		com.syrus.AMFICOM.general.Identifier schemeCableLinkId = (com.syrus.AMFICOM.general.Identifier )report
 				.getReserve();
 		if(schemeCableLinkId == null)
 			throw new CreateReportException(

@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementImpl.java,v 1.10 2005/03/01 14:00:39 bass Exp $
+ * $Id: PathElementImpl.java,v 1.11 2005/03/04 19:25:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -8,14 +8,16 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/04 19:25:01 $
  * @module scheme_v1
  */
 final class PathElementImpl extends PathElement implements Cloneable {
@@ -61,27 +63,6 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	}
 
 	/**
-	 * @see StorableObject#getCreated()
-	 */
-	public long getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getCreatorId()
-	 */
-	public Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getDependencies()
-	 */
-	public Identifier[] getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see Describable#description()
 	 */
 	public String description() {
@@ -110,6 +91,27 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	}
 
 	/**
+	 * @see StorableObject#getCreated()
+	 */
+	public long getCreated() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getCreatorId()
+	 */
+	public Identifier getCreatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getDependencies()
+	 */
+	public Identifier[] getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @see StorableObject#getHeaderTransferable()
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
@@ -124,13 +126,6 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	}
 
 	/**
-	 * @see IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see StorableObject#getModified()
 	 */
 	public long getModified() {
@@ -141,6 +136,20 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	 * @see StorableObject#getModifierId()
 	 */
 	public Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getVersion()
+	 */
+	public long getVersion() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -236,13 +245,6 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	 * @see PathElement#type(Type)
 	 */
 	public void type(Type type) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getVersion()
-	 */
-	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 

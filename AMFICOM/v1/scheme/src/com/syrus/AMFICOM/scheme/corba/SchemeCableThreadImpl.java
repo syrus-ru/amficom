@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThreadImpl.java,v 1.14 2005/03/01 14:00:39 bass Exp $
+ * $Id: SchemeCableThreadImpl.java,v 1.15 2005/03/04 19:25:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,16 @@ package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.List;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/04 19:25:01 $
  * @module scheme_v1
  */
 final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable {
@@ -95,6 +97,22 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		}
 	}
 
+	public String description() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void description(String description) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
+	 */
+	public List getCharacteristics() {
+		throw new UnsupportedOperationException();
+	}
+
 	public long getCreated() {
 		throw new UnsupportedOperationException();
 	}
@@ -113,11 +131,25 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		throw new UnsupportedOperationException();
 	}
 
-	public String description() {
+	/**
+	 * @see StorableObject#getHeaderTransferable()
+	 */
+	public StorableObject_Transferable getHeaderTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getModifierId()
+	 */
+	public Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -140,14 +172,7 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 			throw new IllegalArgumentException("This scheme cable thread is in no way connected to the scheme device specified."); //$NON-NLS-1$
 	}
 
-	/**
-	 * @see StorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Identifier getId() {
+	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -155,17 +180,6 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	 * @see IStorableObject#isChanged()
 	 */
 	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getModifierId()
-	 */
-	public Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -203,6 +217,14 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
 	 */
 	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.List)
+	 */
+	public void setCharacteristics(List characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -271,10 +293,6 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#threadImpl(com.syrus.AMFICOM.configuration.Link)
 	 */
 	public void threadImpl(Link newThreadImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 

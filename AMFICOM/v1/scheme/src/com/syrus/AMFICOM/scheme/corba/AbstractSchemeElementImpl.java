@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElementImpl.java,v 1.12 2005/03/01 14:00:39 bass Exp $
+ * $Id: AbstractSchemeElementImpl.java,v 1.13 2005/03/04 19:25:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,11 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
+import java.util.List;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -18,7 +20,7 @@ import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
  * {@link AbstractSchemeElement} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/04 19:25:01 $
  * @module scheme_v1
  */
 final class AbstractSchemeElementImpl extends AbstractSchemeElement {
@@ -56,6 +58,22 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
+	public String description() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void description(String description) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
+	 */
+	public List getCharacteristics() {
+		throw new UnsupportedOperationException();
+	}
+
 	public long getCreated() {
 		throw new UnsupportedOperationException();
 	}
@@ -71,26 +89,11 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
-	public String description() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void description(String description) {
-		throw new UnsupportedOperationException();
-	}
-
 	public StorableObject_Transferable getHeaderTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
 	public Identifier getId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -102,6 +105,17 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 	 * @see StorableObject#getModifierId()
 	 */
 	public Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getVersion() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -138,7 +152,11 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
-	public long getVersion() {
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.List)
+	 */
+	public void setCharacteristics(List characteristics) {
 		throw new UnsupportedOperationException();
 	}
 }

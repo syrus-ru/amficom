@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoGroupImpl.java,v 1.11 2005/03/01 14:00:39 bass Exp $
+ * $Id: SchemeProtoGroupImpl.java,v 1.12 2005/03/04 19:25:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
@@ -15,7 +16,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/04 19:25:02 $
  * @module scheme_v1
  */
 final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {

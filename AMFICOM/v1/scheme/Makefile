@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.13 2005/02/28 15:02:39 bass Exp $
+# $Id: Makefile,v 1.14 2005/03/04 19:25:01 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -59,12 +59,12 @@ idl: .idl
 
 # Just idl-to-java compilation
 .idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-administration.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-configuration.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-general.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-map.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-resource.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-vt.idl
+#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-administration.idl
+#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-configuration.idl
+#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-general.idl
+#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-map.idl
+#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-resource.idl
+#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-vt.idl
 	touch $@
 
 

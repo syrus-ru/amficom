@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableLinkImpl.java,v 1.12 2005/03/01 14:00:39 bass Exp $
+ * $Id: SchemeCableLinkImpl.java,v 1.13 2005/03/04 19:25:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,16 @@ package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.List;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/04 19:25:01 $
  * @module scheme_v1
  */
 final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
@@ -150,6 +152,22 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		}
 	}
 
+	public String description() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void description(String description) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
+	 */
+	public List getCharacteristics() {
+		throw new UnsupportedOperationException();
+	}
+
 	public long getCreated() {
 		throw new UnsupportedOperationException();
 	}
@@ -168,14 +186,6 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public String description() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void description(String description) {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @see StorableObject#getHeaderTransferable()
 	 */
@@ -184,6 +194,21 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 	}
 
 	public Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getModifierId()
+	 */
+	public Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -221,17 +246,6 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#linkImpl(com.syrus.AMFICOM.configuration.Link)
 	 */
 	public void linkImpl(Link newLinkImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getModifierId()
-	 */
-	public Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -296,6 +310,14 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.List)
+	 */
+	public void setCharacteristics(List characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
 	public AbstractSchemePort sourceAbstractSchemePort() {
 		throw new UnsupportedOperationException();
 	}
@@ -341,10 +363,6 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableLink#targetSchemeCablePort(com.syrus.AMFICOM.scheme.corba.SchemeCablePort)
 	 */
 	public void targetSchemeCablePort(SchemeCablePort newTargetSchemeCablePort) {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 

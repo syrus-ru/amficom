@@ -1,5 +1,5 @@
 /*
- * $Id: CableChannelingItemImpl.java,v 1.11 2005/03/01 14:00:39 bass Exp $
+ * $Id: CableChannelingItemImpl.java,v 1.12 2005/03/04 19:25:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,16 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.map.*;
 import com.syrus.AMFICOM.map.corba.*;
 import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/04 19:25:01 $
  * @module scheme_v1
  */
 final class CableChannelingItemImpl extends CableChannelingItem implements Cloneable {
@@ -39,27 +41,6 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 			ERROR_HANDLER.error(cnse);
 			return null;
 		}
-	}
-
-	/**
-	 * @see StorableObject#getCreated()
-	 */
-	public long getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getCreatorId()
-	 */
-	public Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getDependencies()
-	 */
-	public Identifier[] getDependencies() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -121,6 +102,27 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	}
 
 	/**
+	 * @see StorableObject#getCreated()
+	 */
+	public long getCreated() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getCreatorId()
+	 */
+	public Identifier getCreatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getDependencies()
+	 */
+	public Identifier[] getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @see StorableObject#getHeaderTransferable()
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
@@ -135,13 +137,6 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	}
 
 	/**
-	 * @see IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see StorableObject#getModified()
 	 */
 	public long getModified() {
@@ -152,6 +147,20 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	 * @see StorableObject#getModifierId()
 	 */
 	public Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getVersion()
+	 */
+	public long getVersion() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -290,13 +299,6 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	 * @see CableChannelingItem#startSpare(double)
 	 */
 	public void startSpare(double startSpare) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getVersion()
-	 */
-	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 

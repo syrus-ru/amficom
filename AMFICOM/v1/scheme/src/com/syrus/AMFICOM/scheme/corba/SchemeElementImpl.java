@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.15 2005/03/01 14:00:39 bass Exp $
+ * $Id: SchemeElementImpl.java,v 1.16 2005/03/04 19:25:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -10,18 +10,20 @@ package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.List;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.16 $, $Date: 2005/03/04 19:25:01 $
  * @module scheme_v1
  */
 final class SchemeElementImpl extends SchemeElement implements Cloneable {
@@ -95,24 +97,6 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 		}
 	}
 
-	public long getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getCreatorId()
-	 */
-	public Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getDependencies()
-	 */
-	public Identifier[] getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
 	public String description() {
 		throw new UnsupportedOperationException();
 	}
@@ -168,6 +152,32 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
+	 */
+	public List getCharacteristics() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getCreated() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getCreatorId()
+	 */
+	public Identifier getCreatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getDependencies()
+	 */
+	public Identifier[] getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @see StorableObject#getHeaderTransferable()
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
@@ -175,6 +185,21 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	public Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getModifierId()
+	 */
+	public Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -205,17 +230,6 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	 * @see SchemeElement#label(String)
 	 */
 	public void label(final String newLabel) {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getModifierId()
-	 */
-	public Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -339,6 +353,14 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.List)
+	 */
+	public void setCharacteristics(List characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeElement#siteNode()
 	 */
 	public SiteNode_Transferable siteNode() {
@@ -415,10 +437,6 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCellImpl(SchemeImageResource)
 	 */
 	public void ugoCellImpl(final SchemeImageResource ugoCellImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 

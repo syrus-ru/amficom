@@ -39,31 +39,18 @@ public class CharacteristicsPanel extends GeneralPanel implements
 	UniTreePanel utp;
 	JTable jTable;
 	PropsTableModel tModel;
-	private class CharacterizedObject {
-		CharacteristicSort sort;
-
-		Identifier characterizedId;
-
-		Characterizable characterized;
-
-		CharacterizedObject(CharacteristicSort sort, Characterizable characterized,
-				Identifier characterizedId) {
-			this.characterized = characterized;
-			this.characterizedId = characterizedId;
-			this.sort = sort;
-		}
-	}
+	
 	private class CharacterizableObject {
 		CharacteristicSort sort;
 
-		Identifier characterizedId;
+		Identifier characterizableId;
 
 		Characterizable characterizable;
 
 		CharacterizableObject(CharacteristicSort sort,
 				Characterizable characterizable, Identifier characterizedId) {
 			this.characterizable = characterizable;
-			this.characterizedId = characterizedId;
+			this.characterizableId = characterizedId;
 			this.sort = sort;
 		}
 	}
@@ -163,20 +150,6 @@ public class CharacteristicsPanel extends GeneralPanel implements
 						characterizable.removeCharacteristic((Characteristic) it.next());
 					}
 				}
-			} else if (obj instanceof CharacterizedObject) {
-				Characterizable characterized = ((CharacterizedObject) obj).characterized;
-				List added = (List) addedCharacteristics.get(obj);
-				if (added != null) {
-					for (Iterator it = added.iterator(); it.hasNext();) {
-						characterized.addCharacteristic((Characteristic) it.next());
-					}
-				}
-				List removed = (List) removedCharacteristics.get(obj);
-				if (removed != null) {
-					for (Iterator it = removed.iterator(); it.hasNext();) {
-						characterized.removeCharacteristic((Characteristic) it.next());
-					}
-				}
 			}
 		}
 		return true;
@@ -223,20 +196,9 @@ public class CharacteristicsPanel extends GeneralPanel implements
 
 	public void setTypeSortMapping(CharacteristicTypeSort typeSort,
 			CharacteristicSort sort, Characterizable characterizable,
-			Identifier characterizedId, boolean isEditable) {
+			Identifier characterizableId, boolean isEditable) {
 		typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(sort,
-				characterizable, characterizedId));
-		if (isEditable)
-			editableSorts.add(typeSort);
-		else
-			editableSorts.remove(typeSort);
-	}
-
-	public void setTypeSortMapping(CharacteristicTypeSort typeSort,
-			CharacteristicSort sort, Characterizable characterized,
-			Identifier characterizedId, boolean isEditable) {
-		typeSortsCharacterizedIds.put(typeSort, new CharacterizedObject(sort,
-				characterized, characterizedId));
+				characterizable, characterizableId));
 		if (isEditable)
 			editableSorts.add(typeSort);
 		else
@@ -340,7 +302,7 @@ public class CharacteristicsPanel extends GeneralPanel implements
 	}
 
 	List getCharacteristics() {
-		CharacterizedObject obj = (CharacterizedObject) typeSortsCharacterizedIds
+		CharacterizableObject obj = (CharacterizableObject) typeSortsCharacterizedIds
 				.get(selectedTypeSort);
 		if (obj == null) {
 			System.err
@@ -348,7 +310,7 @@ public class CharacteristicsPanel extends GeneralPanel implements
 							+ selectedTypeSort);
 			return null;
 		}
-		Identifier characterizedId = obj.characterizedId;
+		Identifier characterizedId = obj.characterizableId;
 		List chars = (List) characteristics.get(characterizedId);
 		List newChars = (List) addedCharacteristics.get(obj);
 		if (newChars == null)
@@ -439,31 +401,9 @@ public class CharacteristicsPanel extends GeneralPanel implements
 
 				if (obj instanceof CharacterizableObject) {
 					CharacteristicSort sort = ((CharacterizableObject) obj).sort;
-					Identifier characterizedId = ((CharacterizableObject) obj).characterizedId;
+					Identifier characterizedId = ((CharacterizableObject) obj).characterizableId;
 //					 Characterizable characterizable =
 //					 ((CharacterizableObject)obj).characterizable;
-
-					try {
-						Characteristic ch = Characteristic.createInstance(userId, type,
-								type.getDescription(), "", sort.value(), "", characterizedId,
-								true, true);
-						List added = (List) addedCharacteristics.get(obj);
-						if (added == null) {
-							added = new LinkedList();
-							addedCharacteristics.put(obj, added);
-						}
-						added.add(ch);
-
-						int n = tModel.addRow(ch.getName(), new String[] { "" });
-						jTable.setRowSelectionInterval(n, n);
-					} catch (CreateObjectException ex) {
-						ex.printStackTrace();
-					}
-				} else if (obj instanceof CharacterizedObject) {
-					CharacteristicSort sort = ((CharacterizedObject) obj).sort;
-					Identifier characterizedId = ((CharacterizedObject) obj).characterizedId;
-//					 Characterizable characterized =
-//					 ((CharacterizedObject)obj).characterized;
 
 					try {
 						Characteristic ch = Characteristic.createInstance(userId, type,

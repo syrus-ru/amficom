@@ -474,8 +474,8 @@ public class SchemeEditorMainFrame extends JFrame
 		}*/
 		else if (ae.getActionCommand().equals("addschemeevent"))
 		{
-			com.syrus.AMFICOM.general.corba.Identifier scheme_id =
-					(com.syrus.AMFICOM.general.corba.Identifier)ae.getSource();
+			com.syrus.AMFICOM.general.Identifier scheme_id =
+					(com.syrus.AMFICOM.general.Identifier)ae.getSource();
 			try {
 				Scheme scheme = (Scheme)SchemeStorableObjectPool.getStorableObject(
 								scheme_id, true);
@@ -487,8 +487,8 @@ public class SchemeEditorMainFrame extends JFrame
 		}
 		else if (ae.getActionCommand().equals("addschemeelementevent"))
 		{
-			com.syrus.AMFICOM.general.corba.Identifier se_id =
-					(com.syrus.AMFICOM.general.corba.Identifier)ae.getSource();
+			com.syrus.AMFICOM.general.Identifier se_id =
+					(com.syrus.AMFICOM.general.Identifier)ae.getSource();
 			try {
 				SchemeElement se = (SchemeElement)SchemeStorableObjectPool.getStorableObject(se_id, true);
 				schemeTab.openSchemeElement(se);

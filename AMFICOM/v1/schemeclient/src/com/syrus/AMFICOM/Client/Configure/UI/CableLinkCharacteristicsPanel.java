@@ -64,7 +64,7 @@ public class CableLinkCharacteristicsPanel extends GeneralPanel
 	public void setObject(Object or)
 	{
 		link = (SchemeCableLink)or;
-		linkId = new Identifier(link.getId().getTransferable());
+		linkId = link.getId();
 		charPane.clear();
 
 		for (int i = 0; i < sorts.length; i++)

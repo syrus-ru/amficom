@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeOptimizeInfoImpl.java,v 1.9 2005/03/01 14:00:39 bass Exp $
+ * $Id: SchemeOptimizeInfoImpl.java,v 1.10 2005/03/04 19:25:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,14 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode;
 import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/04 19:25:02 $
  * @module scheme_v1
  */
 final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneable {
@@ -32,6 +33,14 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 			ERROR_HANDLER.error(cnse);
 			return null;
 		}
+	}
+
+	public String description() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void description(String description) {
+		throw new UnsupportedOperationException();
 	}
 
 	public long getCreated() {
@@ -52,14 +61,6 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 		throw new UnsupportedOperationException();
 	}
 
-	public String description() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void description(String description) {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @see StorableObject#getHeaderTransferable()
 	 */
@@ -68,6 +69,21 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	}
 
 	public Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#getModifierId()
+	 */
+	public Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -99,17 +115,6 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#lenMargin(double)
 	 */
 	public void lenMargin(double newLenMargin) {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getModified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see StorableObject#getModifierId()
-	 */
-	public Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -331,10 +336,6 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#switchPrices(double[])
 	 */
 	public void switchPrices(double[] newSwitchPrices) {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 

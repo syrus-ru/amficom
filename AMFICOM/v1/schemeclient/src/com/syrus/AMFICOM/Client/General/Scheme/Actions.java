@@ -1427,7 +1427,7 @@ class CreateBlockPortAction extends AbstractAction
 		DefaultPort vport = null;
 		String direction = null;
 		Rectangle bounds = null;
-		com.syrus.AMFICOM.general.corba.Identifier port_id = null;
+		com.syrus.AMFICOM.general.Identifier port_id = null;
 		String name = "";
 		boolean is_cable = false;
 
@@ -1525,7 +1525,7 @@ class CreateBlockPortAction extends AbstractAction
 			Object userObject,
 			Rectangle bounds,
 			boolean is_cable,
-			com.syrus.AMFICOM.general.corba.Identifier scheme_port_id,
+			com.syrus.AMFICOM.general.Identifier scheme_port_id,
 			String direction)
 	{
 		Font f = graph.getFont();

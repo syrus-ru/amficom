@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeDeviceImpl.java,v 1.11 2005/03/01 14:00:39 bass Exp $
+ * $Id: SchemeDeviceImpl.java,v 1.12 2005/03/04 19:25:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,16 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.List;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/04 19:25:01 $
  * @module scheme_v1
  */
 final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
@@ -66,6 +68,22 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 		}
 	}
 
+	public String description() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void description(String description) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
+	 */
+	public List getCharacteristics() {
+		throw new UnsupportedOperationException();
+	}
+
 	public long getCreated() {
 		throw new UnsupportedOperationException();
 	}
@@ -84,14 +102,6 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public String description() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void description(String description) {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @see StorableObject#getHeaderTransferable()
 	 */
@@ -103,13 +113,6 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
 	public long getModified() {
 		throw new UnsupportedOperationException();
 	}
@@ -118,6 +121,17 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 	 * @see StorableObject#getModifierId()
 	 */
 	public Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getVersion() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -170,7 +184,11 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public long getVersion() {
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.List)
+	 */
+	public void setCharacteristics(List characteristics) {
 		throw new UnsupportedOperationException();
 	}
 

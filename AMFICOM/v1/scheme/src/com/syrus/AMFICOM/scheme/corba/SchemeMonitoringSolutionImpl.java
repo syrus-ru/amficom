@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeMonitoringSolutionImpl.java,v 1.9 2005/03/01 14:00:39 bass Exp $
+ * $Id: SchemeMonitoringSolutionImpl.java,v 1.10 2005/03/04 19:25:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,13 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/01 14:00:39 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/04 19:25:02 $
  * @module scheme_v1
  */
 final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implements Cloneable {
@@ -31,6 +32,14 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 			ERROR_HANDLER.error(cnse);
 			return null;
 		}
+	}
+
+	public String description() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void description(String description) {
+		throw new UnsupportedOperationException();
 	}
 
 	public long getCreated() {
@@ -51,14 +60,6 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 		throw new UnsupportedOperationException();
 	}
 
-	public String description() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void description(String description) {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @see StorableObject#getHeaderTransferable()
 	 */
@@ -70,13 +71,6 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
 	public long getModified() {
 		throw new UnsupportedOperationException();
 	}
@@ -85,6 +79,17 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 	 * @see StorableObject#getModifierId()
 	 */
 	public Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public long getVersion() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -138,10 +143,6 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
 	 */
 	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getVersion() {
 		throw new UnsupportedOperationException();
 	}
 

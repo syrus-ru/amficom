@@ -65,7 +65,7 @@ public class CablePortCharacteristicsPanel extends GeneralPanel
 	public void setObject(Object or)
 	{
 		port = (SchemeCablePort)or;
-		portId = new Identifier(port.getId().getTransferable());
+		portId = port.getId();
 		charPane.clear();
 
 		for (int i = 0; i < sorts.length; i++)
