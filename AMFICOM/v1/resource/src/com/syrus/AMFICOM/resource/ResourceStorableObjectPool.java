@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.7 2005/02/08 10:23:10 bob Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.8 2005/02/15 08:50:51 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,14 @@ package com.syrus.AMFICOM.resource;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.util.Log;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Set;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/02/08 10:23:10 $
+ * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2005/02/15 08:50:51 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -88,16 +88,16 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 	
-	public static List getStorableObjects(List objectIds, boolean useLoader)
+	public static Collection getStorableObjects(Collection objectIds, boolean useLoader)
 			throws DatabaseException, CommunicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 	
-	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(List ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+	public static Collection getStorableObjectsByConditionButIds(Collection ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 	
@@ -116,9 +116,9 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 	
-	protected List loadStorableObjects(Short entityCode, List ids)
+	protected Collection loadStorableObjects(Short entityCode, Collection ids)
 			throws DatabaseException, CommunicationException {
-		List storableObjects;
+		Collection storableObjects;
 		switch (entityCode.shortValue()) {
 		case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
 			storableObjects = rObjectLoader.loadImageResources(ids);
@@ -130,9 +130,9 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		return storableObjects;
 	}
 	
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids)
+	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException, CommunicationException {
-		List loadedList = null;
+		Collection loadedList = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
@@ -145,13 +145,13 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		return loadedList;
 	}
 	
-	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{
+	protected void saveStorableObjects(short code, Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{
 		if (!list.isEmpty()) {
 			boolean alone = (list.size()==1);			
 			switch (code) {
 				case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
 					if (alone)
-						rObjectLoader.saveImageResource((AbstractImageResource)list.get(0), force);
+						rObjectLoader.saveImageResource((AbstractImageResource)list.iterator().next(), force);
 					else 
 						rObjectLoader.saveImageResources(list, force);
 					break;
@@ -187,7 +187,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		}
 	}
 	
-	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObjects(Collection ids) throws DatabaseException, CommunicationException {
 		try {
 			rObjectLoader.delete(ids);
 		} catch (DatabaseException e) {
@@ -200,7 +200,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List ids) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection ids) throws DatabaseException, CommunicationException, IllegalDataException {
 		instance.deleteImpl(ids);
 	}
 
