@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.Schematics.Elements.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
 import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.client_.scheme.ui.*;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.client_.scheme.ui.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
