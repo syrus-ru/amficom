@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.17 2005/03/04 19:50:00 bass Exp $
+ * $Id: ServerDatabase.java,v 1.18 2005/03/05 09:37:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/03/05 09:37:52 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -140,13 +140,14 @@ public class ServerDatabase extends StorableObjectDatabase {
 		return i;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg)
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Server server = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+		switch (retrieveKind) {
 			case Server.RETRIEVE_MCM_IDS:
 				return this.retrieveMCMIds(server);
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  server.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.20 2005/03/04 19:50:00 bass Exp $
+ * $Id: DomainDatabase.java,v 1.21 2005/03/05 09:37:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,13 +31,14 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/03/05 09:37:52 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -131,9 +132,10 @@ public class DomainDatabase extends StorableObjectDatabase {
 		
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		Domain domain = this.fromStorableObject(storableObject);
+		Domain domain = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  domain.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

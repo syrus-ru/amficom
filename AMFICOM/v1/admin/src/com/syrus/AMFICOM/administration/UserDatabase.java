@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.17 2005/03/04 19:50:00 bass Exp $
+ * $Id: UserDatabase.java,v 1.18 2005/03/05 09:37:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,12 +22,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/03/05 09:37:52 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -101,9 +102,10 @@ public class UserDatabase extends StorableObjectDatabase {
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		User user = this.fromStorableObject(storableObject);
+		User user = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  user.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}	

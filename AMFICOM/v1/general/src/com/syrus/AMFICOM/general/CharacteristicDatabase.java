@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.24 2005/03/04 19:50:01 bass Exp $
+ * $Id: CharacteristicDatabase.java,v 1.25 2005/03/05 09:37:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/03/04 19:50:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/03/05 09:37:31 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -237,7 +237,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		StringBuffer stringBuffer = new StringBuffer(CharacteristicWrapper.COLUMN_SORT + EQUALS + Integer.toString(sortValue)
 							+ SQL_AND);
 		stringBuffer.append(this.idsEnumerationString(objects, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID, true));
-		String sql = retrieveQuery(stringBuffer.toString());
+		String sql = this.retrieveQuery(stringBuffer.toString());
 
 		Statement statement = null;
 		ResultSet resultSet = null;
