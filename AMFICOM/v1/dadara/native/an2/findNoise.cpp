@@ -39,13 +39,6 @@ const double MAX_VALUE_TO_INITIAL_DB_NOISE = -10; // -5..-10..-15
 // оценка ширины сглаживания белого шума NetTest'ом
 const int NETTESTWIDTH = 16;
 
-static int dfcmp(const void *a, const void *b)
-{
-	const double *x = (const double *)a;
-	const double *y = (const double *)b;
-	return *x <= *y ? *x < *y ? -1 : 0 : 1;
-}
-
 const double L10O5 = log(10) / 5;
 
 static double log2add(double v)
@@ -55,6 +48,13 @@ static double log2add(double v)
 static double add2log(double v)
 {
 	return 5.0 * log10(v);
+}
+
+static int dfcmp(const void *a, const void *b)
+{
+	const double *x = (const double *)a;
+	const double *y = (const double *)b;
+	return *x <= *y ? *x < *y ? -1 : 0 : 1;
 }
 
 double findNoise3s(double *data, int size)
@@ -121,9 +121,47 @@ inline double dy2dB(double y0, double dy)
 	return y0 + dy + 5.0 * log10(1.0 - exp(-dy * L10O5));
 }
 
-inline double dB2dy(double y0, double dB)
+// таблица экспонент для приближенного расчета
+double exptable[100];
+int exptableok = 0;
+static void init_exp()
 {
+	if (exptableok)
+		return;
+	exptableok = 1;
+	int i;
+	for (i = 0; i < 100; i++)
+		exptable[i] = exp(i * -0.1);
+}
+
+// 'rough' dB2dy
+inline double rdB2dy(double y0, double dB)
+{
+#if 0	// точная формула
 	double ret = 5.0 * log10(1.0 + exp((dB - y0) * L10O5));
+#else	// приближенный расчет (отн. погрешность ~2%)
+	double tmp = (dB - y0) * L10O5;
+	// exp(x), x=-10..0 с точностью +- 1%
+	{
+		int id = (int) (tmp * -10);
+		if (id > 0 && id < 100)
+			tmp = exptable[id] * (1.0 + tmp - id * -0.1);
+		else
+			tmp = exp(tmp);
+	}
+
+	// log(1+x), x~0: +- 1%
+	if (tmp > 0.15)
+		tmp = log(1.0 + tmp);
+	else
+		tmp = tmp * (1 - tmp / 2);
+
+	double ret = tmp / L10O5;
+
+	// проверить расчет можно так:
+	//double ret0 = 5.0 * log10(1.0 + exp((dB - y0) * L10O5));
+	//assert(fabs(ret - ret0) < ret0 * 0.02);
+#endif
 	if (ret > 20.0) // XXX
 		ret = 20.0;
 	return ret;
@@ -158,21 +196,24 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 
 	assert(size > mlen); // XXX
 
-	double *temp = new double[size]; // здесь временно будет исх. р/г в лин. масшт.
+	// два временных массива
+	double *temp = new double[size];
+	double *out = new double[size];
 	assert(temp);
-	double *out = new double[size]; // здесь - шум
 	assert(out);
 
-	double levelPrec0 = log2add(prec0) - 1; // XXX
+	double levelPrec0 = log2add(prec0) - 1;
+	const int effSize = size < len2 + mlen - mofs ? size : len2 + mlen - mofs;
+
+	int i;
 
 	prf_b("findNoiseArray: log2add");
 
-	int i;
-	const int effSize = size < len2 + mlen - mofs ? size : len2 + mlen - mofs;
-
 	// приводим к линейному масштабу
 	for (i = 0; i < effSize; i++)
+	{
 		out[i] = log2add(data[i]);
+	}
 
 	// начальная оценка уровня шума
 	prf_b("findNoiseArray: first estimation");
@@ -276,10 +317,12 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 			out[i] = out[i - 1];
 	}
 
+	prf_b("findNoiseArray: init exp");
+	init_exp();
 	prf_b("findNoiseArray: dB2dy");
 	// формируем выходной массив
 	for (i = 0; i < len2; i++)
-		outNoise[i] = dB2dy(data[i], out[i]);
+		outNoise[i] = rdB2dy(data[i], out[i]);
 
 	prf_b("findNoiseArray: done");
 
