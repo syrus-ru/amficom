@@ -1,5 +1,5 @@
-/*
- * $Id: Scheme.java,v 1.4 2005/03/22 17:31:55 bass Exp $
+/*-
+ * $Id: Scheme.java,v 1.5 2005/03/23 14:55:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,10 @@ import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 import java.util.*;
 
 /**
- * #02 in hierarchy.
+ * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/22 17:31:55 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/23 14:55:35 $
  * @module scheme_v1
  */
 public final class Scheme extends AbstractCloneableDomainMember implements Describable, SchemeCellContainer {
@@ -36,6 +36,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	private Identifier mapId;
 
 	private String name;
+
+	private Identifier parentSchemeElementId;
 
 	private Identifier schemeCellId;
 
@@ -160,6 +162,10 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		return this.name;
 	}
 
+	public SchemeElement getParentSchemeElement() {
+		throw new UnsupportedOperationException();
+	}
+
 	public Collection getSchemeCableLinks() {
 		throw new UnsupportedOperationException();
 	}
@@ -168,7 +174,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @deprecated
 	 */
 	public SchemeCableLink[] getSchemeCableLinksAsArray() {
-		throw new UnsupportedOperationException();
+		final Collection schemeCableLinks = getSchemeCableLinks();
+		return (SchemeCableLink[]) schemeCableLinks.toArray(new SchemeCableLink[schemeCableLinks.size()]);
 	}
 
 	/**
@@ -186,7 +193,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @deprecated
 	 */
 	public SchemeElement[] getSchemeElementsAsArray() {
-		throw new UnsupportedOperationException();
+		final Collection schemeElements = getSchemeElements();
+		return (SchemeElement[]) schemeElements.toArray(new SchemeElement[schemeElements.size()]);
 	}
 
 	public SchemeKind getSchemeKind() {
@@ -201,7 +209,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @deprecated
 	 */
 	public SchemeLink[] getSchemeLinksAsArray() {
-		throw new UnsupportedOperationException();
+		final Collection schemeLinks = getSchemeLinks();
+		return (SchemeLink[]) schemeLinks.toArray(new SchemeLink[schemeLinks.size()]);
 	}
 
 	public Collection getSchemeOptimizeInfos() {
@@ -287,6 +296,10 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			return;
 		this.name = name;
 		this.changed = true;
+	}
+
+	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
+		throw new UnsupportedOperationException();
 	}
 
 	public void setSchemeCableLinks(final Collection schemeCableLinks) {

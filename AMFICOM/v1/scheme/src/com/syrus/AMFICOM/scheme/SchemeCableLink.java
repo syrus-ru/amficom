@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableLink.java,v 1.3 2005/03/22 17:31:55 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.4 2005/03/23 14:55:35 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/22 17:31:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/23 14:55:35 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -76,10 +76,10 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 * @see Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLELINK;
 	}
 
 	/**

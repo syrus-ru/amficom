@@ -1,7 +1,7 @@
-/*
- * $Id: SchemeElement.java,v 1.5 2005/03/22 17:31:55 bass Exp $
+/*-
+ * $Id: SchemeElement.java,v 1.6 2005/03/23 14:55:35 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -16,8 +16,10 @@ import com.syrus.AMFICOM.resource.*;
 import java.util.*;
 
 /**
+ * #04 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/22 17:31:55 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/23 14:55:35 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -26,13 +28,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	protected Identifier equipmentId = null;
 
-	/**
-	 * Value is either taken from entity pointed to by
-	 * {@link #schemeProtoElementId}or assigned directly.
-	 */
 	protected Identifier equipmentTypeId = null;
-
-	protected Identifier internalSchemeId = null;
 
 	protected Identifier rtuId = null;
 
@@ -40,18 +36,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * Takes non-null value at pack time.
 	 */
 	protected Identifier schemeCellId = null;
-
-	protected Identifier schemeDeviceIds[] = null;
-
-	protected Identifier schemeElementIds[] = null;
-
-	protected Identifier schemeLinkIds[] = null;
-
-	/**
-	 * May be empty. Probably is subject removal (see
-	 * {@link #equipmentTypeId}).
-	 */
-	protected Identifier schemeProtoElementId = null;
 
 	protected Identifier siteId = null;
 
@@ -85,6 +69,54 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
+	/**
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 */
+	public static SchemeElement createInstance() {
+		throw new UnsupportedOperationException();
+	}
+
+	public static SchemeElement createInstance(final Identifier creatorId)
+			throws CreateObjectException {
+		assert creatorId != null;
+		try {
+			final Date created = new Date();
+			final SchemeElement schemeElement = new SchemeElement(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L);
+			schemeElement.changed = true;
+			return schemeElement;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 */
+	public static SchemeElement createInstance(final SchemeProtoElement schemeProtoElement) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addInnerScheme(final Scheme innerScheme) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeDevice(final SchemeDevice schemeDevice) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeElement(final SchemeElement schemeElement) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeLink(final SchemeLink schemeLink) {
+		throw new UnsupportedOperationException();
+	}
+
 	public SchemePath alarmedPath() {
 		throw new UnsupportedOperationException();
 	}
@@ -110,33 +142,11 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		return schemeElement;
 	}
 
-	public Equipment getEquipment() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @param newEquipmentImpl
-	 */
-	public void setEquipment(Equipment newEquipmentImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public EquipmentType getEquipmentType() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newEquipmentTypeImpl
-	 */
-	public void setEquipmentType(EquipmentType newEquipmentTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 * @see Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEELEMENT;
 	}
 
 	/**
@@ -146,11 +156,91 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public Scheme internalScheme() {
+	public Equipment getEquipment() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void internalScheme(Scheme internalScheme) {
+	public EquipmentType getEquipmentType() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Scheme getInnerScheme() {
+		final Iterator innerSchemeIterator = getInnerSchemes().iterator();
+		if (innerSchemeIterator.hasNext())
+			return (Scheme) innerSchemeIterator.next();
+		return null;
+	}
+
+	public Collection getInnerSchemes() {
+		throw new UnsupportedOperationException();
+	}
+
+	public KIS getKis() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getSchemeCell()
+	 */
+	public SchemeImageResource getSchemeCell() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeDevices() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public SchemeDevice[] getSchemeDevicesAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeElements() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public SchemeElement[] getSchemeElementsAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeLinks() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public SchemeLink[] getSchemeLinksAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	public SiteNode getSiteNode() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see SchemeSymbolContainer#getSymbol()
+	 */
+	public BitmapImageResource getSymbol() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getUgoCell()
+	 */
+	public SchemeImageResource getUgoCell() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -169,7 +259,46 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public KIS getKis() {
+	public void removeInnerScheme(final Scheme innerScheme) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeSchemeDevice(final SchemeDevice schemeDevice) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeSchemeElement(final SchemeElement schemeElement) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeSchemeLink(final SchemeLink schemeLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newEquipmentImpl
+	 */
+	public void setEquipment(Equipment newEquipmentImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newEquipmentTypeImpl
+	 */
+	public void setEquipmentType(EquipmentType newEquipmentTypeImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setInnerScheme(final Scheme innerScheme) {
+		setInnerSchemes(innerScheme == null 
+				? Collections.EMPTY_LIST
+				: Collections.singletonList(innerScheme));
+	}
+
+	public void setInnerSchemes(final Collection innerSchemes) {
+		/**
+		 * @todo Check for circualr deps.
+		 */
 		throw new UnsupportedOperationException();
 	}
 
@@ -181,13 +310,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getSchemeCell()
-	 */
-	public SchemeImageResource getSchemeCell() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param schemeCellImpl
 	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setSchemeCell(SchemeImageResource)
 	 */
@@ -195,42 +317,19 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeDevice[] schemeDevices() {
+	public void setSchemeDevices(final Collection schemeDevices) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void schemeDevices(SchemeDevice[] schemeDevices) {
+	public void setSchemeElements(final Collection schemeElements) {
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeElement[] schemeElements() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void schemeElements(SchemeElement[] schemeElements) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeLink[] schemeLinks() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void schemeLinks(SchemeLink[] schemeLinks) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SiteNode getSiteNode() {
+	public void setSchemeLinks(final Collection schemeLinks) {
 		throw new UnsupportedOperationException();
 	}
 
 	public void setSiteNode(final SiteNode siteNode) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#getSymbol()
-	 */
-	public BitmapImageResource getSymbol() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -243,56 +342,10 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getUgoCell()
-	 */
-	public SchemeImageResource getUgoCell() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param ugoCellImpl
 	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCellImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
-	 */
-	public Object getTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public static SchemeElement createInstance(final Identifier creatorId)
-			throws CreateObjectException {
-		assert creatorId != null;
-		try {
-			final Date created = new Date();
-			final SchemeElement schemeElement = new SchemeElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L);
-			schemeElement.changed = true;
-			return schemeElement;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemeElement createInstance() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemeElement createInstance(final SchemeProtoElement schemeProtoElement) {
 		throw new UnsupportedOperationException();
 	}
 }

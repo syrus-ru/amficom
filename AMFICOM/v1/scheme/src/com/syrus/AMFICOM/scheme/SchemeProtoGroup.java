@@ -1,5 +1,5 @@
-/*
- * $Id: SchemeProtoGroup.java,v 1.5 2005/03/21 16:46:50 bass Exp $
+/*-
+ * $Id: SchemeProtoGroup.java,v 1.6 2005/03/23 14:55:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.*;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/21 16:46:50 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/23 14:55:35 $
  * @module scheme_v1
  */
 public final class SchemeProtoGroup extends AbstractCloneableStorableObject
@@ -274,14 +274,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
-		Collection schemeProtoElements;
-		try {
-			schemeProtoElements = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
-			schemeProtoElements = Collections.EMPTY_LIST;
-		}
-		assert schemeProtoElements.contains(schemeProtoElement);
+		assert getSchemeProtoElements().contains(schemeProtoElement): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		SchemeStorableObjectPool.delete(schemeProtoElement.getId());
 	}
 
@@ -295,14 +288,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
 		assert schemeProtoGroup != null: ErrorMessages.NON_NULL_EXPECTED;
-		Collection schemeProtoGroups;
-		try {
-			schemeProtoGroups = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE), true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
-			schemeProtoGroups = Collections.EMPTY_LIST;
-		}
-		assert schemeProtoGroups.contains(schemeProtoGroup);
+		assert getSchemeProtoGroups().contains(schemeProtoGroup): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeProtoGroup.parentSchemeProtoGroupId = Identifier.VOID_IDENTIFIER;
 		schemeProtoGroup.changed = true;
 	}
@@ -363,6 +349,31 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * To make a slight alteration of <code>schemeProtoElements</code> for
+	 * this <code>schemeProtoGroup</code>, use
+	 * {@link #addSchemeProtoElement(SchemeProtoElement)} and/or
+	 * {@link #removeSchemeProtoElement(SchemeProtoElement)}. This method
+	 * will completely overwrite old <code>schemeProtoElements</code> with
+	 * the new ones (i. e. remove old and add new ones). Since
+	 * <em>removal</em> of a <code>schemeProtoElement</code> means its
+	 * <em>physical removal</em>, the collection of new ones <em>must
+	 * not</em> contain any <code>schemeProtoElement</code> from old ones,
+	 * or crap will meet the fan.
+	 * 
+	 * @param schemeProtoElements
+	 */
+	public void setSchemeProtoElements(final Collection schemeProtoElements) {
+		assert schemeProtoElements != null: ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemeProtoElementIterator = getSchemeProtoElements().iterator(); oldSchemeProtoElementIterator.hasNext();) {
+			final SchemeProtoElement oldSchemeProtoElement = (SchemeProtoElement) oldSchemeProtoElementIterator.next();
+			assert !schemeProtoElements.contains(oldSchemeProtoElement);
+			removeSchemeProtoElement(oldSchemeProtoElement);
+		}
+		for (final Iterator schemeProtoElementIterator = schemeProtoElements.iterator(); schemeProtoElementIterator.hasNext();)
+			addSchemeProtoElement((SchemeProtoElement) schemeProtoElementIterator.next());
+	}
+
+	/**
 	 * To make a slight alteration of <code>schemeProtoGroups</code> for
 	 * this <code>schemeProtoGroup</code>, use
 	 * {@link #addSchemeProtoGroup(SchemeProtoGroup)} and/or
@@ -374,14 +385,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public void setSchemeProtoGroups(final Collection schemeProtoGroups) {
 		assert schemeProtoGroups != null: ErrorMessages.NON_NULL_EXPECTED;
-		Collection oldSchemeProtoGroups;
-		try {
-			oldSchemeProtoGroups = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE), true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
-			oldSchemeProtoGroups = Collections.EMPTY_LIST;
-		}
-		for (final Iterator oldSchemeProtoGroupIterator = oldSchemeProtoGroups.iterator(); oldSchemeProtoGroupIterator.hasNext();)
+		for (final Iterator oldSchemeProtoGroupIterator = getSchemeProtoGroups().iterator(); oldSchemeProtoGroupIterator.hasNext();)
 			removeSchemeProtoGroup((SchemeProtoGroup) oldSchemeProtoGroupIterator.next());
 		for (final Iterator schemeProtoGroupIterator = schemeProtoGroups.iterator(); schemeProtoGroupIterator.hasNext();)
 			addSchemeProtoGroup((SchemeProtoGroup) schemeProtoGroupIterator.next());
@@ -400,37 +404,5 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 			return;
 		this.symbolId = newSymbolId;
 		this.changed = true;
-	}
-
-	/**
-	 * To make a slight alteration of <code>schemeProtoElements</code> for
-	 * this <code>schemeProtoGroup</code>, use
-	 * {@link #addSchemeProtoElement(SchemeProtoElement)} and/or
-	 * {@link #removeSchemeProtoElement(SchemeProtoElement)}. This method
-	 * will completely overwrite old <code>schemeProtoElements</code> with
-	 * the new ones (i. e. remove old and add new ones). Since
-	 * <em>removal</em> of a <code>schemeProtoElement</code> means its
-	 * <em>physical removal</em>, the collection of new ones <em>must
-	 * not</em> contain any <code>schemeProtoElement</code> from old ones,
-	 * or crap will meet the fan.
-	 * 
-	 * @param schemeProtoElements
-	 */
-	public void setSchemeProtoElements(final Collection schemeProtoElements) {
-		assert schemeProtoElements != null: ErrorMessages.NON_NULL_EXPECTED;
-		Collection oldSchemeProtoElements;
-		try {
-			oldSchemeProtoElements = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
-			oldSchemeProtoElements = Collections.EMPTY_LIST;
-		}
-		for (final Iterator oldSchemeProtoElementIterator = oldSchemeProtoElements.iterator(); oldSchemeProtoElementIterator.hasNext();) {
-			final SchemeProtoElement oldSchemeProtoElement = (SchemeProtoElement) oldSchemeProtoElementIterator.next();
-			assert !schemeProtoElements.contains(oldSchemeProtoElement);
-			removeSchemeProtoElement(oldSchemeProtoElement);
-		}
-		for (final Iterator schemeProtoElementIterator = schemeProtoElements.iterator(); schemeProtoElementIterator.hasNext();)
-			addSchemeProtoElement((SchemeProtoElement) schemeProtoElementIterator.next());
 	}
 }

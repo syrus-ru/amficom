@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.4 2005/03/22 17:31:55 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.5 2005/03/23 14:55:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
@@ -18,7 +17,7 @@ import java.util.*;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/22 17:31:55 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/23 14:55:35 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -62,18 +61,17 @@ public abstract class AbstractSchemeElement extends
 	 * @see Characterizable#addCharacteristic(Characteristic)
 	 */
 	public final void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
+		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert !getCharacteristics().contains(characteristic): ErrorMessages.COLLECTION_IS_A_SET;
+		this.characteristics.add(characteristic);
+		this.changed = true;
 	}
 
 	/**
 	 * @see Characterizable#getCharacteristics()
 	 */
 	public final Collection getCharacteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return Collections.unmodifiableCollection(this.characteristics);
 	}
 
 	/**
@@ -114,7 +112,10 @@ public abstract class AbstractSchemeElement extends
 	 * @see Characterizable#removeCharacteristic(Characteristic)
 	 */
 	public final void removeCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
+		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		this.characteristics.remove(characteristic);
+		this.changed = true;
 	}
 
 	/**
@@ -129,7 +130,8 @@ public abstract class AbstractSchemeElement extends
 	 * @see Characterizable#setCharacteristics(Collection)
 	 */
 	public final void setCharacteristics(final Collection characteristics) {
-		throw new UnsupportedOperationException();
+		setCharacteristics0(characteristics);
+		this.changed = true;
 	}
 
 	/**
@@ -137,7 +139,9 @@ public abstract class AbstractSchemeElement extends
 	 * @see Characterizable#setCharacteristics0(Collection)
 	 */
 	public final void setCharacteristics0(final Collection characteristics) {
-		throw new UnsupportedOperationException();
+		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
+		this.characteristics.clear();
+		this.characteristics.addAll(characteristics);
 	}
 
 	/**

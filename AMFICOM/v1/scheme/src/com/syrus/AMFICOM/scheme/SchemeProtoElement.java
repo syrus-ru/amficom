@@ -1,5 +1,5 @@
-/*
- * $Id: SchemeProtoElement.java,v 1.7 2005/03/22 11:29:22 bass Exp $
+/*-
+ * $Id: SchemeProtoElement.java,v 1.8 2005/03/23 14:55:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,14 @@ import java.util.*;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/22 11:29:22 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/23 14:55:35 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer, Characterizable {
 	private static final long serialVersionUID = 3689348806202569782L;
+
+	private Collection characteristics;
 
 	private String description;
 
@@ -54,6 +56,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	SchemeProtoElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
+		this.characteristics = new ArrayList();
 		this.schemeProtoElementDatabase = SchemeDatabaseContext.schemeProtoElementDatabase;
 		try {
 			this.schemeProtoElementDatabase.retrieve(this);
@@ -118,6 +121,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				= parentSchemeProtoElement == null
 				? Identifier.VOID_IDENTIFIER
 				: parentSchemeProtoElement.getId();
+
+		this.characteristics = new ArrayList();
 
 		this.schemeProtoElementDatabase = SchemeDatabaseContext.schemeProtoElementDatabase;
 	}
@@ -269,7 +274,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see Characterizable#addCharacteristic(Characteristic)
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
+		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert !getCharacteristics().contains(characteristic): ErrorMessages.COLLECTION_IS_A_SET;
+		this.characteristics.add(characteristic);
+		this.changed = true;
 	}
 
 	public void addSchemeDevice(final SchemeDevice schemeDevice) {
@@ -297,14 +305,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see Characterizable#getCharacteristics()
 	 */
 	public Collection getCharacteristics() {
-		throw new UnsupportedOperationException();
+		return Collections.unmodifiableCollection(this.characteristics);
 	}
 
 	/**
 	 * @see Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPROTOELEMENT;
 	}
 
 	/**
@@ -490,7 +498,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see Characterizable#removeCharacteristic(Characteristic)
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
+		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		this.characteristics.remove(characteristic);
+		this.changed = true;
 	}
 
 	public void removeSchemeDevice(final SchemeDevice schemeDevice) {
@@ -510,7 +521,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see Characterizable#setCharacteristics(Collection)
 	 */
 	public void setCharacteristics(final Collection characteristics) {
-		throw new UnsupportedOperationException();
+		setCharacteristics0(characteristics);
+		this.changed = true;
 	}
 
 	/**
@@ -518,7 +530,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see Characterizable#setCharacteristics0(Collection)
 	 */
 	public void setCharacteristics0(final Collection characteristics) {
-		throw new UnsupportedOperationException();
+		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
+		this.characteristics.clear();
+		this.characteristics.addAll(characteristics);
 	}
 
 	/**
