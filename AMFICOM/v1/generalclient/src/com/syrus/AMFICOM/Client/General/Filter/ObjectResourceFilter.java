@@ -107,10 +107,10 @@ public abstract class ObjectResourceFilter implements Filter
 //		return criteria;
 	}
 
-	public List filter(List dataSet)
+	public List filter(List list)
 	{
-		List ds = new ArrayList(dataSet);
-		for(Iterator it = dataSet.iterator(); it.hasNext();){
+		List ds = new ArrayList(list);
+		for(Iterator it = list.iterator(); it.hasNext();){
 			ObjectResource or = (ObjectResource )it.next();
 			if (!this.logicScheme.passesAllConstraints(or))
 				ds.remove(or);
