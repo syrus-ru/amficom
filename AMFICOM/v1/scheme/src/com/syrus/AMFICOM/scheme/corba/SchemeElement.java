@@ -80,9 +80,6 @@ public abstract class SchemeElement extends com.syrus.AMFICOM.scheme.corba.Abstr
 
   public abstract void label (String newLabel);
 
-  public abstract com.syrus.AMFICOM.scheme.corba.SchemeElement cloneInstance ();
-
-
   /**
   						 * Transient attribute.
   						 */

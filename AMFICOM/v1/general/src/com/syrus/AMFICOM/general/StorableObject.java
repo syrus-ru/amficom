@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.39 2005/03/04 13:29:36 bass Exp $
+ * $Id: StorableObject.java,v 1.40 2005/03/10 15:04:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/03/04 13:29:36 $
+ * @version $Revision: 1.40 $, $Date: 2005/03/10 15:04:11 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -63,7 +63,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
-	 * @see com.syrus.AMFICOM.general.corba.StorableObjectImpl#StorableObjectImpl(com.syrus.AMFICOM.general.corba.Identifier, long, long, com.syrus.AMFICOM.general.corba.Identifier, com.syrus.AMFICOM.general.corba.Identifier, long)
+	 * @see com.syrus.AMFICOM.general.corba.StorableObjectImpl#StorableObjectImpl(com.syrus.AMFICOM.general.corba.Identifier, Date, Date, com.syrus.AMFICOM.general.corba.Identifier, com.syrus.AMFICOM.general.corba.Identifier, long)
 	 */
 	protected StorableObject(final Identifier id, final Date created, final Date modified, final Identifier creatorId, final Identifier modifierId, final long version) {
 		this.id = id;
@@ -249,7 +249,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#setAttributes(long, long, com.syrus.AMFICOM.general.corba.Identifier, com.syrus.AMFICOM.general.corba.Identifier, long)
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#setAttributes(Date, Date, com.syrus.AMFICOM.general.corba.Identifier, com.syrus.AMFICOM.general.corba.Identifier, long)
 	 */
 	protected synchronized void setAttributes(Date created, Date modified, Identifier creatorId, Identifier modifierId, long version) {
 		this.created = created;

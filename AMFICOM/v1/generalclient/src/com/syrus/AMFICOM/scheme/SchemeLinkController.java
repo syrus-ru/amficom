@@ -76,11 +76,11 @@ public final class SchemeLinkController implements ObjectResourceController
 			if (key.equals(COLUMN_ID))
 				result = link.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(link.getCreated());
+				result = Long.toString(link.getCreated().getTime());
 			else if (key.equals(COLUMN_CREATOR_ID))
 				result = link.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(link.getModified());
+				result = Long.toString(link.getModified().getTime());
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = link.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -104,8 +104,8 @@ public final class SchemeLinkController implements ObjectResourceController
 			else if (key.equals(COLUMN_SCHEME_ID))
 				result = link.scheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(link.characteristics().length);
-				for (Iterator it = link.characteristicsImpl().getValue().iterator(); it.hasNext(); ) {
+				List res = new ArrayList(link.getCharacteristics().size());
+				for (Iterator it = link.getCharacteristics().iterator(); it.hasNext(); ) {
 					Characteristic ch = (Characteristic)it.next();
 					res.add(ch.getId().getIdentifierString());
 				}

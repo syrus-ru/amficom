@@ -72,11 +72,11 @@ public final class SchemePathController implements ObjectResourceController
 			if (key.equals(COLUMN_ID))
 				result = path.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(path.getCreated());
+				result = Long.toString(path.getCreated().getTime());
 			else if (key.equals(COLUMN_CREATOR_ID))
 				result = path.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(path.getModified());
+				result = Long.toString(path.getModified().getTime());
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = path.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -102,8 +102,8 @@ public final class SchemePathController implements ObjectResourceController
 				result = res;
 			}
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(path.characteristics().length);
-				for (Iterator it = path.characteristicsImpl().getValue().iterator(); it.hasNext(); ) {
+				List res = new ArrayList(path.getCharacteristics().size());
+				for (Iterator it = path.getCharacteristics().iterator(); it.hasNext(); ) {
 					Characteristic ch = (Characteristic)it.next();
 					res.add(ch.getId().getIdentifierString());
 				}

@@ -66,6 +66,4 @@ public abstract class PathElement implements com.syrus.AMFICOM.general.corba.ISt
   public abstract com.syrus.AMFICOM.scheme.corba.Scheme scheme ();
 
   public abstract void scheme (com.syrus.AMFICOM.scheme.corba.Scheme newScheme);
-
-  public abstract com.syrus.AMFICOM.scheme.corba.PathElement cloneInstance ();
 } // class PathElement

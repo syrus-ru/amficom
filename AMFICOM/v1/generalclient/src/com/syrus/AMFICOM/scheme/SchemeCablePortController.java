@@ -55,11 +55,11 @@ public final class SchemeCablePortController implements ObjectResourceController
 			if (key.equals(COLUMN_ID))
 				result = port.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(port.getCreated());
+				result = Long.toString(port.getCreated().getTime());
 			else if (key.equals(COLUMN_CREATOR_ID))
 				result = port.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(port.getModified());
+				result = Long.toString(port.getModified().getTime());
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = port.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -81,8 +81,8 @@ public final class SchemeCablePortController implements ObjectResourceController
 			else if (key.equals(COLUMN_SCHEME_DEVICE_ID))
 				result = port.schemeDevice().getId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(port.characteristics().length);
-				for (Iterator it = port.characteristicsImpl().getValue().iterator(); it.hasNext();) {
+				List res = new ArrayList(port.getCharacteristics().size());
+				for (Iterator it = port.getCharacteristics().iterator(); it.hasNext();) {
 					Characteristic ch = (Characteristic) it.next();
 					res.add(ch.getId().getIdentifierString());
 				}

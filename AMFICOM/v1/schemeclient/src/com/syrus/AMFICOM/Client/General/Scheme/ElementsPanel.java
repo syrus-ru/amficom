@@ -198,7 +198,7 @@ public class ElementsPanel extends UgoPanel
 			if (cpe.EDIT_PATH)
 			{
 				if (getGraph().getCurrentPath() != null)
-					editing_path = getGraph().getCurrentPath().cloneInstance();
+					editing_path = (SchemePath) getGraph().getCurrentPath().clone();
 			}
 		}
 		if (ae.getActionCommand().equals(SchemeElementsEvent.type))
@@ -227,7 +227,7 @@ public class ElementsPanel extends UgoPanel
 	{
 		if (proto != null)
 		{
-			SchemeProtoElement new_proto = proto.cloneInstance();
+			SchemeProtoElement new_proto = (SchemeProtoElement) proto.clone();
 			insertCell(new_proto.schemeCellImpl().getData(), false, p);
 		}
 	}

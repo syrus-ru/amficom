@@ -95,7 +95,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 				break;
 		}
 //		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
-		scheme = scheme.cloneInstance();
+		scheme = (Scheme) scheme.clone();
 
 		for (int i = 0; i < scheme.schemeElements().length; i++)
 		{

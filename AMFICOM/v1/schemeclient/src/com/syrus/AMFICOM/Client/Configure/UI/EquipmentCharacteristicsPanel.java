@@ -74,7 +74,7 @@ public class EquipmentCharacteristicsPanel extends GeneralPanel
 					element,
 					elementId,
 					true);
-		charPane.addCharacteristics(element.characteristicsImpl().getValue(), elementId);
+		charPane.addCharacteristics(element.getCharacteristics(), elementId);
 
 		if (element.equipment() != null)
 		{

@@ -41,5 +41,4 @@ public abstract class CableChannelingItem implements com.syrus.AMFICOM.general.c
 
   public abstract void endSpare (double newEndSpare);
 
-  public abstract com.syrus.AMFICOM.scheme.corba.CableChannelingItem cloneInstance ();
 } // class CableChannelingItem

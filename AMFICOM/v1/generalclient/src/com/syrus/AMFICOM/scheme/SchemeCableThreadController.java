@@ -69,11 +69,11 @@ public final class SchemeCableThreadController implements ObjectResourceControll
 			if (key.equals(COLUMN_ID))
 				result = thread.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(thread.getCreated());
+				result = Long.toString(thread.getCreated().getTime());
 			else if (key.equals(COLUMN_CREATOR_ID))
 				result = thread.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(thread.getModified());
+				result = Long.toString(thread.getModified().getTime());
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = thread.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -91,8 +91,8 @@ public final class SchemeCableThreadController implements ObjectResourceControll
 			else if (key.equals(COLUMN_SCHEME_CABLE_LINK_ID))
 				result = thread.schemeCablelink().getId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(thread.characteristics().length);
-				for (Iterator it = thread.characteristicsImpl().getValue().iterator(); it.hasNext(); ) {
+				List res = new ArrayList(thread.getCharacteristics().size());
+				for (Iterator it = thread.getCharacteristics().iterator(); it.hasNext(); ) {
 					Characteristic ch = (Characteristic)it.next();
 					res.add(ch.getId().getIdentifierString());
 				}

@@ -21,6 +21,4 @@ public abstract class SchemeCablePort extends com.syrus.AMFICOM.scheme.corba.Abs
   						 * @see AbstractSchemePort#abstractSchemeLinkId
   						 */
   public abstract void schemeCableLink (com.syrus.AMFICOM.scheme.corba.SchemeCableLink newSchemeCableLink);
-
-  public abstract com.syrus.AMFICOM.scheme.corba.SchemeCablePort cloneInstance ();
 } // class SchemeCablePort

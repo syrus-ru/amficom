@@ -93,11 +93,11 @@ public final class SchemeController implements ObjectResourceController
 			if (key.equals(COLUMN_ID))
 				result = scheme.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(scheme.getCreated());
+				result = Long.toString(scheme.getCreated().getTime());
 			else if (key.equals(COLUMN_CREATOR_ID))
 				result = scheme.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(scheme.getModified());
+				result = Long.toString(scheme.getModified().getTime());
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = scheme.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.17 2005/03/10 06:58:50 bass Exp $ Copyright ¿
+ * $Id: SchemeElementImpl.java,v 1.18 2005/03/10 15:06:08 bass Exp $ Copyright ¿
  * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
@@ -16,11 +16,12 @@ import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.*;
 import java.util.Collection;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/03/10 06:58:50 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/10 15:06:08 $
  * @module scheme_v1
  */
 final class SchemeElementImpl extends SchemeElement implements Cloneable {
@@ -62,39 +63,6 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 
 	public void alarmedPathElement(PathElement alarmedPathElement) {
 		throw new UnsupportedOperationException();
-	}
-
-	public Characteristic_Transferable[] characteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void characteristics(
-			Characteristic_Transferable[] characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl()
-	 */
-	public CharacteristicSeqContainer characteristicsImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl(CharacteristicSeqContainer)
-	 */
-	public void characteristicsImpl(
-			final CharacteristicSeqContainer characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeElement cloneInstance() {
-		try {
-			return (SchemeElement) this.clone();
-		} catch (CloneNotSupportedException cnse) {
-			ERROR_HANDLER.error(cnse);
-			return null;
-		}
 	}
 
 	public String description() {
@@ -158,7 +126,7 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public long getCreated() {
+	public Date getCreated() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -187,7 +155,7 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public long getModified() {
+	public Date getModified() {
 		throw new UnsupportedOperationException();
 	}
 

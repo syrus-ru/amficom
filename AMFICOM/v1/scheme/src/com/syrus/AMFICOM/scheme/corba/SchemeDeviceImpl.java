@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeDeviceImpl.java,v 1.13 2005/03/10 06:58:50 bass Exp $ Copyright ¿
+ * $Id: SchemeDeviceImpl.java,v 1.14 2005/03/10 15:06:08 bass Exp $ Copyright ¿
  * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
@@ -10,11 +10,12 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.*;
 import java.util.Collection;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/03/10 06:58:50 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/10 15:06:08 $
  * @module scheme_v1
  */
 final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
@@ -34,40 +35,6 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public Characteristic_Transferable[] characteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void characteristics(
-			Characteristic_Transferable[] characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl()
-	 */
-	public CharacteristicSeqContainer characteristicsImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl(CharacteristicSeqContainer)
-	 */
-	public void characteristicsImpl(
-			final CharacteristicSeqContainer characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeDevice cloneInstance() {
-		try {
-			return (SchemeDevice) this.clone();
-		} catch (CloneNotSupportedException cnse) {
-			ERROR_HANDLER.error(cnse);
-			return null;
-		}
-	}
-
 	public String description() {
 		throw new UnsupportedOperationException();
 	}
@@ -83,7 +50,7 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public long getCreated() {
+	public Date getCreated() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -112,7 +79,7 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public long getModified() {
+	public Date getModified() {
 		throw new UnsupportedOperationException();
 	}
 

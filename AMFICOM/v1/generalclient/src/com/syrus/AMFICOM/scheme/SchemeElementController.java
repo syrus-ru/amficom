@@ -88,11 +88,11 @@ public final class SchemeElementController implements ObjectResourceController
 			if (key.equals(COLUMN_ID))
 				result = element.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(element.getCreated());
+				result = Long.toString(element.getCreated().getTime());
 			else if (key.equals(COLUMN_CREATOR_ID))
 				result = element.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(element.getModified());
+				result = Long.toString(element.getModified().getTime());
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = element.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -146,8 +146,8 @@ public final class SchemeElementController implements ObjectResourceController
 			else if (key.equals(COLUMN_UGO_CELL_ID))
 				result = element.ugoCellImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(element.characteristics().length);
-				for (Iterator it = element.characteristicsImpl().getValue().iterator(); it.hasNext(); ) {
+				List res = new ArrayList(element.getCharacteristics().size());
+				for (Iterator it = element.getCharacteristics().iterator(); it.hasNext(); ) {
 					Characteristic ch = (Characteristic)it.next();
 					res.add(ch.getId().getIdentifierString());
 				}

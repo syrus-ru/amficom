@@ -75,7 +75,7 @@ public class CableLinkCharacteristicsPanel extends GeneralPanel
 					link,
 					linkId,
 					true);
-		charPane.addCharacteristics(link.characteristicsImpl().getValue(), linkId);
+		charPane.addCharacteristics(link.getCharacteristics(), linkId);
 
 		if (link.link() != null)
 		{

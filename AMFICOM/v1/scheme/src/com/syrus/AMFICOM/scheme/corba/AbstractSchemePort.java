@@ -8,7 +8,7 @@ package com.syrus.AMFICOM.scheme.corba;
 * 4 Март 2005 г. 18:11:15 MSK
 */
 
-public abstract class AbstractSchemePort implements com.syrus.AMFICOM.general.corba.IStorableObject, com.syrus.AMFICOM.general.corba.Namable, com.syrus.AMFICOM.general.corba.Describable, com.syrus.AMFICOM.scheme.Characterizable, com.syrus.AMFICOM.general.Characterizable, com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort
+public abstract class AbstractSchemePort implements com.syrus.AMFICOM.general.corba.IStorableObject, com.syrus.AMFICOM.general.corba.Namable, com.syrus.AMFICOM.general.corba.Describable, com.syrus.AMFICOM.general.Characterizable, com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort
 {
   protected String thisName = null;
   protected String thisDescription = null;

@@ -27,6 +27,4 @@ public abstract class SchemeMonitoringSolution implements com.syrus.AMFICOM.gene
   public abstract com.syrus.AMFICOM.scheme.corba.SchemePath[] schemePaths ();
 
   public abstract void schemePaths (com.syrus.AMFICOM.scheme.corba.SchemePath[] newSchemePaths);
-
-  public abstract com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution cloneInstance ();
 } // class SchemeMonitoringSolution

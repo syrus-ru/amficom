@@ -20,7 +20,5 @@ public abstract class SchemeProtoGroup implements com.syrus.AMFICOM.scheme.corba
   protected com.syrus.AMFICOM.general.Identifier symbolId = null;
   protected com.syrus.AMFICOM.general.Identifier parentSchemeProtoGroupId = null;
 
-  public abstract com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup cloneInstance ();
-
   public abstract void setAttributes (long created, long modified, com.syrus.AMFICOM.general.Identifier creatorId, com.syrus.AMFICOM.general.Identifier modifierId, long version, String name, String description, com.syrus.AMFICOM.resource.corba.ImageResource_Transferable symbol, com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup parentSchemeProtoGroup);
 } // class SchemeProtoGroup

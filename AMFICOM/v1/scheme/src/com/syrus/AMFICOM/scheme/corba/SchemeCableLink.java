@@ -44,6 +44,4 @@ public abstract class SchemeCableLink extends com.syrus.AMFICOM.scheme.corba.Abs
   public abstract com.syrus.AMFICOM.scheme.corba.CableChannelingItem[] cableChannelingItems ();
 
   public abstract void cableChannelingItems (com.syrus.AMFICOM.scheme.corba.CableChannelingItem[] newCableChannelingItems);
-
-  public abstract com.syrus.AMFICOM.scheme.corba.SchemeCableLink cloneInstance ();
 } // class SchemeCableLink

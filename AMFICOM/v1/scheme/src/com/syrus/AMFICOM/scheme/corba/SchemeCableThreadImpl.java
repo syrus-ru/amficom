@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThreadImpl.java,v 1.16 2005/03/10 06:58:50 bass Exp $
+ * $Id: SchemeCableThreadImpl.java,v 1.17 2005/03/10 15:06:08 bass Exp $
  * Copyright ¿ 2004 Syrus Systems. Dept. of Science & Technology. Project:
  * AMFICOM.
  */
@@ -13,11 +13,12 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.*;
 import java.util.Collection;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/03/10 06:58:50 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/10 15:06:08 $
  * @module scheme_v1
  */
 final class SchemeCableThreadImpl extends SchemeCableThread implements
@@ -66,40 +67,6 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements
 		throw new UnsupportedOperationException();
 	}
 
-	public Characteristic_Transferable[] characteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void characteristics(
-			Characteristic_Transferable[] characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl()
-	 */
-	public CharacteristicSeqContainer characteristicsImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl(CharacteristicSeqContainer)
-	 */
-	public void characteristicsImpl(
-			final CharacteristicSeqContainer characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeCableThread cloneInstance() {
-		try {
-			return (SchemeCableThread) this.clone();
-		} catch (CloneNotSupportedException cnse) {
-			ERROR_HANDLER.error(cnse);
-			return null;
-		}
-	}
-
 	public String description() {
 		throw new UnsupportedOperationException();
 	}
@@ -115,7 +82,7 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements
 		throw new UnsupportedOperationException();
 	}
 
-	public long getCreated() {
+	public Date getCreated() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -144,7 +111,7 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements
 		throw new UnsupportedOperationException();
 	}
 
-	public long getModified() {
+	public Date getModified() {
 		throw new UnsupportedOperationException();
 	}
 

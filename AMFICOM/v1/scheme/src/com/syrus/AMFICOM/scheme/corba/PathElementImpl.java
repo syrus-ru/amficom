@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementImpl.java,v 1.11 2005/03/04 19:25:01 bass Exp $
+ * $Id: PathElementImpl.java,v 1.12 2005/03/10 15:06:08 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -14,10 +14,11 @@ import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.Date;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/04 19:25:01 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/10 15:06:08 $
  * @module scheme_v1
  */
 final class PathElementImpl extends PathElement implements Cloneable {
@@ -51,18 +52,6 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	}
 
 	/**
-	 * @see PathElement#cloneInstance()
-	 */
-	public PathElement cloneInstance() {
-		try {
-			return (PathElement) this.clone();
-		} catch (CloneNotSupportedException cnse) {
-			ERROR_HANDLER.error(cnse);
-			return null;
-		}
-	}
-
-	/**
 	 * @see Describable#description()
 	 */
 	public String description() {
@@ -93,7 +82,7 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	/**
 	 * @see StorableObject#getCreated()
 	 */
-	public long getCreated() {
+	public Date getCreated() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -128,7 +117,7 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	/**
 	 * @see StorableObject#getModified()
 	 */
-	public long getModified() {
+	public Date getModified() {
 		throw new UnsupportedOperationException();
 	}
 

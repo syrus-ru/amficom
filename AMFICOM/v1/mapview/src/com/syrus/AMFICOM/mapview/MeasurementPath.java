@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.8 2005/03/09 14:57:55 bass Exp $
+ * $Id: MeasurementPath.java,v 1.9 2005/03/10 15:05:00 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/09 14:57:55 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/10 15:05:00 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -161,7 +161,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public Collection getCharacteristics() 
 	{
-		return Collections.unmodifiableList(this.schemePath.characteristicsImpl().getValue());
+		return this.schemePath.getCharacteristics();
 	}
 
 	/**

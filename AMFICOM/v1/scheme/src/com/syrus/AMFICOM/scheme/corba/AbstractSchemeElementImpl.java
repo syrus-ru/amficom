@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElementImpl.java,v 1.14 2005/03/10 06:58:50 bass Exp $
+ * $Id: AbstractSchemeElementImpl.java,v 1.15 2005/03/10 15:06:08 bass Exp $
  * Copyright ¿ 2004 Syrus Systems. Dept. of Science & Technology. Project:
  * AMFICOM.
  */
@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
+import java.util.*;
 import java.util.Collection;
 
 /**
@@ -18,7 +19,7 @@ import java.util.Collection;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/03/10 06:58:50 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/10 15:06:08 $
  * @module scheme_v1
  */
 final class AbstractSchemeElementImpl extends AbstractSchemeElement {
@@ -40,24 +41,6 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
-	public Characteristic_Transferable[] characteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void characteristics(
-			Characteristic_Transferable characteristics[]) {
-		throw new UnsupportedOperationException();
-	}
-
-	public CharacteristicSeqContainer characteristicsImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void characteristicsImpl(
-			final CharacteristicSeqContainer characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
 	public String description() {
 		throw new UnsupportedOperationException();
 	}
@@ -73,7 +56,7 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
-	public long getCreated() {
+	public Date getCreated() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -96,7 +79,7 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
-	public long getModified() {
+	public Date getModified() {
 		throw new UnsupportedOperationException();
 	}
 

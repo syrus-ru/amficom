@@ -1,5 +1,8 @@
 package com.syrus.AMFICOM.general.corba;
 
+import com.syrus.AMFICOM.general.Identifiable;
+import java.util.Date;
+
 
 /**
 * com/syrus/AMFICOM/general/corba/IStorableObject.java .
@@ -8,11 +11,11 @@ package com.syrus.AMFICOM.general.corba;
 * 4 Март 2005 г. 18:07:48 MSK
 */
 
-public interface IStorableObject extends com.syrus.AMFICOM.general.Identifiable
+public interface IStorableObject extends Identifiable
 {
-  public abstract long getCreated ();
+  public abstract Date getCreated ();
 
-  public abstract long getModified ();
+  public abstract Date getModified ();
 
   public abstract com.syrus.AMFICOM.general.Identifier getCreatorId ();
 
@@ -24,7 +27,7 @@ public interface IStorableObject extends com.syrus.AMFICOM.general.Identifiable
 
   public abstract void setChanged (StorableObjectFactory invoker, boolean changed);
 
-  public abstract com.syrus.AMFICOM.general.corba.StorableObject_Transferable getHeaderTransferable ();
+  public abstract StorableObject_Transferable getHeaderTransferable ();
 
 
   /**

@@ -77,7 +77,7 @@ public class CablePortCharacteristicsPanel extends GeneralPanel
 					portId,
 					true);
 		
-		charPane.addCharacteristics(port.characteristicsImpl().getValue(), portId);
+		charPane.addCharacteristics(port.getCharacteristics(), portId);
 
 		if (port.port() != null)
 		{

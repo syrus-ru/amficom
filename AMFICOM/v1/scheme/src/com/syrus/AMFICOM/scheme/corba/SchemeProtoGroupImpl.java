@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoGroupImpl.java,v 1.12 2005/03/04 19:25:02 bass Exp $
+ * $Id: SchemeProtoGroupImpl.java,v 1.13 2005/03/10 15:06:08 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,10 +13,11 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.Date;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/03/04 19:25:02 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/10 15:06:08 $
  * @module scheme_v1
  */
 final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
@@ -55,15 +56,6 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeProtoGroup cloneInstance() {
-		try {
-			return (SchemeProtoGroup) this.clone();
-		} catch (CloneNotSupportedException cnse) {
-			ERROR_HANDLER.error(cnse);
-			return null;
-		}
-	}
-
 	/**
 	 * @see Describable#description()
 	 */
@@ -82,7 +74,7 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 	/**
 	 * @see IStorableObject#getCreated()
 	 */
-	public long getCreated() {
+	public Date getCreated() {
 		return this.delegate.getCreated();
 	}
 
@@ -148,7 +140,7 @@ final class SchemeProtoGroupImpl extends SchemeProtoGroup implements Cloneable {
 	/**
 	 * @see IStorableObject#getModified()
 	 */
-	public long getModified() {
+	public Date getModified() {
 		return this.delegate.getModified();
 	}
 

@@ -112,6 +112,4 @@ public abstract class SchemeOptimizeInfo implements com.syrus.AMFICOM.general.co
   public abstract String[] switchNames ();
 
   public abstract void switchNames (String[] newSwitchNames);
-
-  public abstract com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo cloneInstance ();
 } // class SchemeOptimizeInfo

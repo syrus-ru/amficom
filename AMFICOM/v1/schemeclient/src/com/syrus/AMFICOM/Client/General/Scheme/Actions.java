@@ -949,7 +949,7 @@ class CreateUgoAction
 			SchemeProtoElement old_proto = ((DeviceGroup)old_devs[0]).getProtoElement();
 			if (old_proto != null)
 			{
-				proto.characteristics(old_proto.characteristics());
+				proto.setCharacteristics(old_proto.getCharacteristics());
 				proto.symbol(old_proto.symbol());
 				proto.label(old_proto.label());
 //				proto.scheme_proto_group = old_proto.scheme_proto_group;

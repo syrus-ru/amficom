@@ -77,10 +77,10 @@ public final class SchemeController implements ObjectResourceController
 			}
 		}
 		else if (key.equals(KEY_CREATED)) {
-			result = sdf.format(new Date(sc.getCreated()));
+			result = sdf.format(sc.getCreated());
 		}
 		else if (key.equals(KEY_MODIFIED)) {
-			result = sdf.format(new Date(sc.getModified()));
+			result = sdf.format(sc.getModified());
 		}
 		return result;
 	}

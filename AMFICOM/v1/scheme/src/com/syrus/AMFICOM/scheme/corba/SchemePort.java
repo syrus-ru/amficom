@@ -49,6 +49,4 @@ public abstract class SchemePort extends com.syrus.AMFICOM.scheme.corba.Abstract
   						 * @see SchemeCableThread#targetSchemePort()
   						 */
   public abstract void schemeCableThread (com.syrus.AMFICOM.scheme.corba.SchemeCableThread newSchemeCableThread);
-
-  public abstract com.syrus.AMFICOM.scheme.corba.SchemePort cloneInstance ();
 } // class SchemePort

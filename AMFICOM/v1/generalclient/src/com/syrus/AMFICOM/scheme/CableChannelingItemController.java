@@ -77,11 +77,11 @@ public final class CableChannelingItemController implements ObjectResourceContro
 			if (key.equals(COLUMN_ID))
 				result = item.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(item.getCreated());
+				result = Long.toString(item.getCreated().getTime());
 			else if (key.equals(COLUMN_CREATOR_ID))
 				result = item.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(item.getModified());
+				result = Long.toString(item.getModified().getTime());
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = item.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))

@@ -61,7 +61,7 @@ public class SchemeCopyCommand extends VoidCommand
 				break;
 		}
 
-		scheme = scheme.cloneInstance();
+		scheme = (Scheme) scheme.clone();
 		scheme.ugoCellImpl().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
 		scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
 

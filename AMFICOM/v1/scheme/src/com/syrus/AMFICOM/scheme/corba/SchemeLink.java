@@ -35,6 +35,4 @@ public abstract class SchemeLink extends com.syrus.AMFICOM.scheme.corba.Abstract
   						 * @see AbstractSchemeLink#targetAbstractSchemePortId
   						 */
   public abstract void targetSchemePort (com.syrus.AMFICOM.scheme.corba.SchemePort newTargetSchemePort);
-
-  public abstract com.syrus.AMFICOM.scheme.corba.SchemeLink cloneInstance ();
 } // class SchemeLink

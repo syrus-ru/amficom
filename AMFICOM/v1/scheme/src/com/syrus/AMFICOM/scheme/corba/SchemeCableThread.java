@@ -8,7 +8,7 @@ package com.syrus.AMFICOM.scheme.corba;
 * 4 Март 2005 г. 18:11:15 MSK
 */
 
-public abstract class SchemeCableThread implements com.syrus.AMFICOM.general.corba.IStorableObject, com.syrus.AMFICOM.general.corba.Namable, com.syrus.AMFICOM.general.corba.Describable, com.syrus.AMFICOM.scheme.Characterizable, com.syrus.AMFICOM.general.Characterizable, com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread
+public abstract class SchemeCableThread implements com.syrus.AMFICOM.general.corba.IStorableObject, com.syrus.AMFICOM.general.corba.Namable, com.syrus.AMFICOM.general.corba.Describable, com.syrus.AMFICOM.general.Characterizable, com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread
 {
   protected String thisName = null;
   protected String thisDescription = null;
@@ -74,9 +74,6 @@ public abstract class SchemeCableThread implements com.syrus.AMFICOM.general.cor
   						 * @see #schemeCableLinkId
   						 */
   public abstract void schemeCablelink (com.syrus.AMFICOM.scheme.corba.SchemeCableLink newSchemeCablelink);
-
-  public abstract com.syrus.AMFICOM.scheme.corba.SchemeCableThread cloneInstance ();
-
 
   /**
   						 * Returns a scheme port this cable thread is attached to (within scheme

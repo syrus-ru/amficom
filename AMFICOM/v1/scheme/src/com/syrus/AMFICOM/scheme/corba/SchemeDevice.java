@@ -8,7 +8,7 @@ package com.syrus.AMFICOM.scheme.corba;
 * 4 Март 2005 г. 18:11:15 MSK
 */
 
-public abstract class SchemeDevice implements com.syrus.AMFICOM.general.corba.IStorableObject, com.syrus.AMFICOM.general.corba.Namable, com.syrus.AMFICOM.general.corba.Describable, com.syrus.AMFICOM.scheme.Characterizable, com.syrus.AMFICOM.general.Characterizable
+public abstract class SchemeDevice implements com.syrus.AMFICOM.general.corba.IStorableObject, com.syrus.AMFICOM.general.corba.Namable, com.syrus.AMFICOM.general.corba.Describable, com.syrus.AMFICOM.general.Characterizable
 {
   protected String thisName = null;
   protected String thisDescription = null;
@@ -23,6 +23,4 @@ public abstract class SchemeDevice implements com.syrus.AMFICOM.general.corba.IS
   public abstract com.syrus.AMFICOM.scheme.corba.SchemeCablePort[] schemeCablePorts ();
 
   public abstract void schemeCablePorts (com.syrus.AMFICOM.scheme.corba.SchemeCablePort[] newSchemeCablePorts);
-
-  public abstract com.syrus.AMFICOM.scheme.corba.SchemeDevice cloneInstance ();
 } // class SchemeDevice

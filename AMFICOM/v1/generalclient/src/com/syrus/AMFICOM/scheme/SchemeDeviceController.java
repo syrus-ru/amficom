@@ -64,11 +64,11 @@ public final class SchemeDeviceController implements ObjectResourceController
 			if (key.equals(COLUMN_ID))
 				result = device.getId().toString();
 			else if (key.equals(COLUMN_CREATED))
-				result = Long.toString(device.getCreated());
+				result = Long.toString(device.getCreated().getTime());
 			else if (key.equals(COLUMN_CREATOR_ID))
 				result = device.getCreatorId().getIdentifierString();
 			else if (key.equals(COLUMN_MODIFIED))
-				result = Long.toString(device.getModified());
+				result = Long.toString(device.getModified().getTime());
 			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = device.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -92,8 +92,8 @@ public final class SchemeDeviceController implements ObjectResourceController
 				result = res;
 			}
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(device.characteristics().length);
-				for (Iterator it = device.characteristicsImpl().getValue().iterator(); it.hasNext(); ) {
+				List res = new ArrayList(device.getCharacteristics().size());
+				for (Iterator it = device.getCharacteristics().iterator(); it.hasNext(); ) {
 					Characteristic ch = (Characteristic)it.next();
 					res.add(ch.getId().getIdentifierString());
 				}
