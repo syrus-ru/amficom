@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.2 2004/10/20 06:29:19 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.3 2004/10/20 11:17:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/20 06:29:19 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/20 11:17:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -91,7 +91,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.EVALUATION_ENTITY_CODE:
+			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 				if (object instanceof Characteristic) {
 					Characteristic characteristic = (Characteristic) object;
 					Identifier id = characteristic.getCharacterizedId();

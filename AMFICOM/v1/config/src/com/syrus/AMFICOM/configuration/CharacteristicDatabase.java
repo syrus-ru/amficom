@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.30 2004/10/19 07:48:58 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.31 2004/10/20 11:17:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/10/19 07:48:58 $
+ * @version $Revision: 1.31 $, $Date: 2004/10/20 11:17:10 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -495,10 +495,45 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return super.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
-
+	
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
-		List list =  this.retrieveButIds(ids);
+		List list = null;
+		if (condition instanceof LinkedIdsCondition){
+			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+			Identifier id = linkedIdsCondition.getIdentifier();
+			CharacteristicSort sort = null;
+			switch(id.getMajor()){
+				case ObjectEntities.DOMAIN_ENTITY_CODE:
+					sort = CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN;
+					break;
+				case ObjectEntities.SERVER_ENTITY_CODE: 
+					sort = CharacteristicSort.CHARACTERISTIC_SORT_SERVER;
+					break;
+				case ObjectEntities.MCM_ENTITY_CODE:
+					sort = CharacteristicSort.CHARACTERISTIC_SORT_MCM;
+					break;
+				case ObjectEntities.TRANSPATH_ENTITY_CODE:
+					sort = CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH;
+					break;
+				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+					sort = CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT;
+					break;
+				case ObjectEntities.PORT_ENTITY_CODE:
+					sort = CharacteristicSort.CHARACTERISTIC_SORT_PORT;
+					break;
+					/**
+					 * FIXME how use links ???
+					 */
+//				sort = CharacteristicSort.CHARACTERISTIC_SORT_LINK;
+//					break;
+//				sort = CharacteristicSort.CHARACTERISTIC_SORT_CABLELINK;
+//					break;
+			}
+			if (sort != null){
+				list = retrieveCharacteristics(id, sort);
+			}
+		} else list =  this.retrieveButIds(ids);
 		return list;
 	}
 	
