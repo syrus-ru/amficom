@@ -26,7 +26,6 @@ CREATE TABLE Result (
   REFERENCES Evaluation (id) ON DELETE CASCADE,
  CONSTRAINT res_mod_fk FOREIGN KEY (modeling_id)
   REFERENCES Modeling (id) ON DELETE CASCADE
-
 );
 
 CREATE SEQUENCE result_seq ORDER;
