@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractMesurementTestCase.java,v 1.1 2004/08/16 14:23:50 bob Exp $
+ * $Id: AbstractMesurementTestCase.java,v 1.2 2004/08/19 13:10:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.util.database.DatabaseConnection;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/16 14:23:50 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/19 13:10:33 $
  * @author $Author: bob $
  * @module tools
  */
@@ -58,8 +58,8 @@ public abstract class AbstractMesurementTestCase extends TestCase{
 		establishDatabaseConnection();
 		DatabaseContextSetup.initDatabaseContext();
 		DatabaseContextSetup.initObjectPools();
-		AbstractMesurementTestCase.creatorId = new Identifier("Users_9");
-		AbstractMesurementTestCase.domainId = new Identifier("Domain_26");
+		AbstractMesurementTestCase.creatorId = new Identifier("Users_1");
+		AbstractMesurementTestCase.domainId = new Identifier("Domain_1");
 	}
 
 	static void oneTimeTearDown() {

@@ -1,5 +1,5 @@
 /*
- * $Id: SetTestCase.java,v 1.2 2004/08/18 05:15:23 bob Exp $
+ * $Id: SetTestCase.java,v 1.3 2004/08/19 13:10:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/18 05:15:23 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/19 13:10:33 $
  * @author $Author: bob $
  * @module tools
  */
@@ -107,11 +107,7 @@ public class SetTestCase extends AbstractMesurementTestCase {
 		assertEquals(set2, set3);
 		
 		System.out.println(set.toString());
-
-		if (!list.isEmpty())
-			SetDatabase.delete(set);
-
-
+		
 	}
 
 }
