@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.93 2005/03/29 20:56:33 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.94 2005/03/30 11:43:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/03/29 20:56:33 $
+ * @version $Revision: 1.94 $, $Date: 2005/03/30 11:43:11 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -213,16 +213,15 @@ public class CMServerImpl extends CMMeasurementTransmit {
 		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
 		Log.debugMessage("CMServerImpl.deleteList | Trying to delete " + id_Transferables.length
 				+ " objects on request of user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
-		List idList = new ArrayList(id_Transferables.length);
+
+		Collection ids = Identifier.fromTransferables(id_Transferables);
 		List generalList = new ArrayList(id_Transferables.length);
 		List administrationList = new ArrayList(id_Transferables.length);
 		List configurationList = new ArrayList(id_Transferables.length);
 		List measurementList = new ArrayList(id_Transferables.length);
-		for (int i = 0; i < id_Transferables.length; i++) {
-			idList.add(new Identifier(id_Transferables[i]));
-		}
-		for (Iterator iter = idList.iterator(); iter.hasNext();) {
-			Identifier id = (Identifier) iter.next();
+		Identifier id;
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			id = (Identifier) it.next();
 			short entityCode = id.getMajor();
 			if (ObjectGroupEntities.isInGeneralGroup(entityCode))
 				generalList.add(id);
