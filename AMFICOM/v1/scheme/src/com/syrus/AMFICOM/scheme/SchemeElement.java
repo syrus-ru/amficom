@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElement.java,v 1.3 2005/03/17 12:52:55 bass Exp $
+ * $Id: SchemeElement.java,v 1.4 2005/03/21 16:46:50 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 12:52:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/21 16:46:50 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -255,18 +255,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public void schemeLinks(SchemeLink[] schemeLinks) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeProtoElement schemeProtoElement() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSchemeProtoElement
-	 * @see com.syrus.AMFICOM.scheme.SchemeElement#schemeProtoElement(com.syrus.AMFICOM.scheme.corba.SchemeProtoElement)
-	 */
-	public void schemeProtoElement(SchemeProtoElement newSchemeProtoElement) {
 		throw new UnsupportedOperationException();
 	}
 

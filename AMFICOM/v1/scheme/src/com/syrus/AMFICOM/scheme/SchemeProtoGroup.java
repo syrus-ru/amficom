@@ -1,7 +1,7 @@
 /*
- * $Id: SchemeProtoGroup.java,v 1.4 2005/03/18 19:21:26 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.5 2005/03/21 16:46:50 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -17,9 +17,8 @@ import java.util.*;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/18 19:21:26 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/21 16:46:50 $
  * @module scheme_v1
- * @todo Implement equals() and hashCode().
  */
 public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		implements Describable, SchemeSymbolContainer {
@@ -99,7 +98,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 			final BitmapImageResource symbol,
 			final SchemeProtoGroup parentSchemeProtoGroup)
 			throws CreateObjectException {
-		assert creatorId != null && creatorId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.NON_VOID_EXPECTED;
+		assert creatorId != null && !creatorId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
 		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
 		
@@ -124,7 +123,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
-		schemeProtoElement.parent(this);
+		schemeProtoElement.setParentSchemeProtoGroup(this);
 	}
 
 	/**
@@ -138,6 +137,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		assert schemeProtoGroup != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert schemeProtoGroup != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 		schemeProtoGroup.parentSchemeProtoGroupId = this.getId();
+		schemeProtoGroup.changed = true;
 	}
 
 	/**
@@ -304,6 +304,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		}
 		assert schemeProtoGroups.contains(schemeProtoGroup);
 		schemeProtoGroup.parentSchemeProtoGroupId = Identifier.VOID_IDENTIFIER;
+		schemeProtoGroup.changed = true;
 	}
 
 	/**
@@ -343,7 +344,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	public void setDescription(final String description) {
 		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (description.equals(this.description))
+		if (this.description.equals(description))
 			return;
 		this.description = description;
 		this.changed = true;
@@ -355,7 +356,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		if (name.equals(this.name))
+		if (this.name.equals(name))
 			return;
 		this.name = name;
 		this.changed = true;
@@ -395,10 +396,10 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 			newSymbolId = Identifier.VOID_IDENTIFIER;
 		else
 			newSymbolId = symbol.getId();
-		if (!this.symbolId.equals(newSymbolId)) {
-			this.symbolId = newSymbolId;
-			this.changed = true;
-		}
+		if (this.symbolId.equals(newSymbolId))
+			return;
+		this.symbolId = newSymbolId;
+		this.changed = true;
 	}
 
 	/**
@@ -415,7 +416,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * 
 	 * @param schemeProtoElements
 	 */
-	void setSchemeProtoElements(final Collection schemeProtoElements) {
+	public void setSchemeProtoElements(final Collection schemeProtoElements) {
 		assert schemeProtoElements != null: ErrorMessages.NON_NULL_EXPECTED;
 		Collection oldSchemeProtoElements;
 		try {

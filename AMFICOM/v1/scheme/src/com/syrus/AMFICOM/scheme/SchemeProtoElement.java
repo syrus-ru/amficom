@@ -1,14 +1,14 @@
 /*
- * $Id: SchemeProtoElement.java,v 1.5 2005/03/18 19:21:26 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.6 2005/03/21 16:46:50 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.resource.*;
@@ -16,8 +16,10 @@ import com.syrus.util.Log;
 import java.util.*;
 
 /**
+ * #02 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/18 19:21:26 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/21 16:46:50 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -28,37 +30,44 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	protected Identifier deviceIds[] = null;
 
-	protected Identifier equipmentTypeId = null;
-
 	protected Identifier linkIds[] = null;
-
-	protected Identifier parentId = null;
 
 	protected Identifier protoElementIds[] = null;
 
-	/**
-	 * Takes non-null value at pack time.
-	 */
-	protected Identifier schemeCellId = null;
-
-	protected Identifier symbolId = null;
-
-	protected String thisLabel = null;
-
-	/**
-	 * Takes non-null value at pack time.
-	 */
-	protected Identifier ugoCellId = null;
-
 	private String description;
+
+	private Identifier equipmentTypeId;
+
+	private String label;
 
 	private String name;
 
+	private Identifier parentSchemeProtoElementId;
+
+	private Identifier parentSchemeProtoGroupId;
+
+	private Identifier schemeCellId;
+
+	private StorableObjectDatabase schemeProtoElementDatabase; 
+
+	private Identifier symbolId;
+
+	private Identifier ugoCellId;
+
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
-	protected SchemeProtoElement(Identifier id) {
+	SchemeProtoElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+
+		this.schemeProtoElementDatabase = SchemeDatabaseContext.schemeProtoElementDatabase;
+		try {
+			this.schemeProtoElementDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
@@ -68,31 +77,193 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @param name
+	 * @param description
+	 * @param label
+	 * @param equipmentType
+	 * @param symbol
+	 * @param ugoCell
+	 * @param schemeCell
+	 * @param parentSchemeProtoGroup
+	 * @param parentSchemeProtoElement
 	 */
-	protected SchemeProtoElement(Identifier id, Date created,
-			Date modified, Identifier creatorId,
-			Identifier modifierId, long version) {
+	SchemeProtoElement(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final String label, final EquipmentType equipmentType,
+			final BitmapImageResource symbol,
+			final SchemeImageResource ugoCell,
+			final SchemeImageResource schemeCell,
+			final SchemeProtoGroup parentSchemeProtoGroup,
+			final SchemeProtoElement parentSchemeProtoElement) {
 		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.label = label;
+		this.equipmentTypeId
+				= equipmentType == null
+				? Identifier.VOID_IDENTIFIER
+				: equipmentType.getId();
+		this.symbolId
+				= symbol == null
+				? Identifier.VOID_IDENTIFIER
+				: symbol.getId();
+		this.ugoCellId
+				= ugoCell == null
+				? Identifier.VOID_IDENTIFIER
+				: ugoCell.getId();
+		this.schemeCellId
+				= schemeCell == null
+				? Identifier.VOID_IDENTIFIER
+				: schemeCell.getId();
+		assert parentSchemeProtoGroup == null || parentSchemeProtoElement == null: ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+		this.parentSchemeProtoGroupId
+				= parentSchemeProtoGroup == null
+				? Identifier.VOID_IDENTIFIER
+				: parentSchemeProtoGroup.getId();
+		this.parentSchemeProtoElementId
+				= parentSchemeProtoElement == null
+				? Identifier.VOID_IDENTIFIER
+				: parentSchemeProtoElement.getId();
+
+		this.schemeProtoElementDatabase = SchemeDatabaseContext.schemeProtoElementDatabase;
 	}
 
 	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 * @deprecated Use one of
+	 *             {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource)},
+	 *             {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoGroup)},
+	 *             {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoElement)}
+	 *             instead.
 	 */
 	public static SchemeProtoElement createInstance() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param creatorId cannot be <code>null</code>.
+	 * @param name cannot be <code>null</code>.
+	 * @param description cannot be <code>null</code>, but can be empty.
+	 * @param label cannot be <code>null</code>, but can be empty.
+	 * @param equipmentType may be <code>null</code>.
+	 * @param symbol may be <code>null</code>.
+	 * @param ugoCell may be <code>null</code>.
+	 * @param schemeCell may be <code>null</code>.
+	 * @throws CreateObjectException
+	 */
 	public static SchemeProtoElement createInstance(
-			final Identifier creatorId)
+			final Identifier creatorId, final String name,
+			final String description, final String label,
+			final EquipmentType equipmentType,
+			final BitmapImageResource symbol,
+			final SchemeImageResource ugoCell,
+			final SchemeImageResource schemeCell)
 			throws CreateObjectException {
-		assert creatorId != null;
+		assert creatorId != null && !creatorId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+
 		try {
 			final Date created = new Date();
 			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
 					IdentifierPool
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
 					created, created, creatorId, creatorId,
-					0L);
+					0L, name, description, label,
+					equipmentType, symbol, ugoCell,
+					schemeCell, null, null);
+			schemeProtoElement.changed = true;
+			return schemeProtoElement;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeProtoElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+	}
+	
+	/**
+	 * @param creatorId cannot be <code>null</code>.
+	 * @param name cannot be <code>null</code>.
+	 * @param description cannot be <code>null</code>, but can be empty.
+	 * @param label cannot be <code>null</code>, but can be empty.
+	 * @param equipmentType may be <code>null</code>.
+	 * @param symbol may be <code>null</code>.
+	 * @param ugoCell may be <code>null</code>.
+	 * @param schemeCell may be <code>null</code>.
+	 * @param parentSchemeProtoElement cannot be <code>null</code>.
+	 * @throws CreateObjectException
+	 */
+	public static SchemeProtoElement createInstance(
+			final Identifier creatorId, final String name,
+			final String description, final String label,
+			final EquipmentType equipmentType,
+			final BitmapImageResource symbol,
+			final SchemeImageResource ugoCell,
+			final SchemeImageResource schemeCell,
+			final SchemeProtoElement parentSchemeProtoElement)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		try {
+			final Date created = new Date();
+			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, label,
+					equipmentType, symbol, ugoCell,
+					schemeCell, null,
+					parentSchemeProtoElement);
+			schemeProtoElement.changed = true;
+			return schemeProtoElement;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeProtoElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @param creatorId cannot be <code>null</code>.
+	 * @param name cannot be <code>null</code>.
+	 * @param description cannot be <code>null</code>, but can be empty.
+	 * @param label cannot be <code>null</code>, but can be empty.
+	 * @param equipmentType may be <code>null</code>.
+	 * @param symbol may be <code>null</code>.
+	 * @param ugoCell may be <code>null</code>.
+	 * @param schemeCell may be <code>null</code>.
+	 * @param parentSchemeProtoGroup cannot be <code>null</code>.
+	 * @throws CreateObjectException
+	 */
+	public static SchemeProtoElement createInstance(
+			final Identifier creatorId, final String name,
+			final String description, final String label,
+			final EquipmentType equipmentType,
+			final BitmapImageResource symbol,
+			final SchemeImageResource ugoCell,
+			final SchemeImageResource schemeCell,
+			final SchemeProtoGroup parentSchemeProtoGroup)
+			throws CreateObjectException {
+		assert creatorId != null && !creatorId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeProtoGroup != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		try {
+			final Date created = new Date();
+			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, label,
+					equipmentType, symbol, ugoCell,
+					schemeCell, parentSchemeProtoGroup,
+					null);
 			schemeProtoElement.changed = true;
 			return schemeProtoElement;
 		} catch (final IllegalObjectEntityException ioee) {
@@ -148,41 +319,127 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see StorableObject#getDependencies()
 	 */
 	public List getDependencies() {
+		assert this.equipmentTypeId != null
+				&& this.symbolId != null
+				&& this.ugoCellId != null
+				&& this.schemeCellId != null
+				&& this.parentSchemeProtoGroupId != null
+				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		final List dependencies = new ArrayList(5);
+		if (!this.equipmentTypeId.equals(Identifier.VOID_IDENTIFIER))
+			dependencies.add(this.equipmentTypeId);
+		if (!this.symbolId.equals(Identifier.VOID_IDENTIFIER))
+			dependencies.add(this.symbolId);
+		if (!this.ugoCellId.equals(Identifier.VOID_IDENTIFIER))
+			dependencies.add(this.ugoCellId);
+		if (!this.schemeCellId.equals(Identifier.VOID_IDENTIFIER))
+			dependencies.add(this.schemeCellId);
+		if (!this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER)) {
+			assert this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
+			dependencies.add(this.parentSchemeProtoGroupId);
+		} else {
+			assert !this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.HEADLESS_CHILD_PROHIBITED;
+			dependencies.add(this.parentSchemeProtoElementId);
+		}
+		return Collections.unmodifiableList(dependencies);
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	/**
+	 * @return <code>equipmentType</code> associated with this
+	 *         <code>schemeProtoElement</code>, or <code>null</code> if
+	 *         none.
+	 */
+	public EquipmentType getEquipmentType() {
+		assert this.equipmentTypeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.equipmentTypeId.equals(Identifier.VOID_IDENTIFIER))
+			return null;
+		try {
+			return (EquipmentType) ConfigurationStorableObjectPool
+					.getStorableObject(this.equipmentTypeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
+	}
+
+	/**
+	 * @return this <code>schemeProtoElement</code>&apos;s label, or
+	 *         empty string if none. Never returns <code>null</code>s.
+	 */
+	public String getLabel() {
+		assert this.label != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.label;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
+
+	public SchemeProtoElement getParentSchemeProtoElement() {
 		throw new UnsupportedOperationException();
 	}
 
-	public EquipmentType getEquipmentType() {
+	public SchemeProtoGroup getParentSchemeProtoGroup() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getSchemeCell()
+	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
-		throw new UnsupportedOperationException();
+		assert this.schemeCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.schemeCellId.equals(Identifier.VOID_IDENTIFIER))
+			return null;
+		try {
+			return (SchemeImageResource) ResourceStorableObjectPool
+					.getStorableObject(this.schemeCellId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#getSymbol()
+	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		throw new UnsupportedOperationException();
+		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.symbolId.equals(Identifier.VOID_IDENTIFIER))
+			return null;
+		try {
+			return (BitmapImageResource) ResourceStorableObjectPool
+					.getStorableObject(this.symbolId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @see TransferableObject#getTransferable()
+	 * @todo Implement.
 	 */
 	public Object getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @return <code>ugoCell</code> associated with this
-	 *         <code>SchemeProtoElement</code>, or <code>null</code> if
-	 *         none.
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
+		assert this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		if (this.ugoCellId.equals(Identifier.VOID_IDENTIFIER))
 			return null;
 		try {
@@ -194,14 +451,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 	}
 
-	public String label() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void label(String label) {
-		throw new UnsupportedOperationException();
-	}
-
 	public SchemeLink[] links() {
 		throw new UnsupportedOperationException();
 	}
@@ -211,21 +460,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.scheme.SchemeProtoElement#links(com.syrus.AMFICOM.scheme.corba.SchemeLink[])
 	 */
 	public void links(SchemeLink[] newLinks) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see SchemeProtoElement#parent()
-	 */
-	public SchemeProtoGroup parent() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newParent
-	 * @see SchemeProtoElement#parent(SchemeProtoGroup)
-	 */
-	public void parent(final SchemeProtoGroup newParent) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -266,30 +500,99 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param newEquipmentTypeImpl
+	 * @see Describable#setDescription(String)
 	 */
-	public void setEquipmentType(EquipmentType newEquipmentTypeImpl) {
+	public void setDescription(final String description) {
+		assert this.description != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (this.description.equals(description))
+			return;
+		this.description = description;
+		this.changed = true;
+	}
+
+	/**
+	 * @param equipmentType can be <code>null</code>.
+	 */
+	public void setEquipmentType(final EquipmentType equipmentType) {
+		Identifier newEquipmentTypeId;
+		if (equipmentType == null)
+			newEquipmentTypeId = Identifier.VOID_IDENTIFIER;
+		else
+			newEquipmentTypeId = equipmentType.getId();
+		if (this.equipmentTypeId.equals(newEquipmentTypeId))
+			return;
+		this.equipmentTypeId = newEquipmentTypeId;
+		this.changed = true;
+	}
+
+	/**
+	 * @param label cannot be <code>null</code>. For this purpose, supply
+	 *        an empty string as an argument.
+	 */
+	public void setLabel(final String label) {
+		assert this.label != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (this.label.equals(label))
+			return;
+		this.label = label;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Namable#setName(String)
+	 */
+	public void setName(final String name) {
+		assert this.name != null && this.name.length() != 0: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		if (this.name.equals(name))
+			return;
+		this.name = name;
+		this.changed = true;
+	}
+
+	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param schemeCellImpl
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setSchemeCell(SchemeImageResource)
+	 * @param parentSchemeProtoGroup
 	 */
-	public void setSchemeCell(SchemeImageResource schemeCellImpl) {
+	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param symbolImpl
-	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 * @see SchemeCellContainer#setSchemeCell(SchemeImageResource)
 	 */
-	public void setSymbol(BitmapImageResource symbolImpl) {
-		throw new UnsupportedOperationException();
+	public void setSchemeCell(final SchemeImageResource schemeCell) {
+		Identifier newSchemeCellId;
+		if (schemeCell == null)
+			newSchemeCellId = Identifier.VOID_IDENTIFIER;
+		else
+			newSchemeCellId = schemeCell.getId();
+		if (this.schemeCellId.equals(newSchemeCellId))
+			return;
+		this.schemeCellId = newSchemeCellId;
+		this.changed = true;
 	}
 
 	/**
-	 * @param ugoCell can be <code>null</code>.
+	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 */
+	public void setSymbol(final BitmapImageResource symbol) {
+		Identifier newSymbolId;
+		if (symbol == null)
+			newSymbolId = Identifier.VOID_IDENTIFIER;
+		else
+			newSymbolId = symbol.getId();
+		if (this.symbolId.equals(newSymbolId))
+			return;
+		this.symbolId = newSymbolId;
+		this.changed = true;
+	}
+
+	/**
 	 * @see SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCell) {
@@ -298,49 +601,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			newUgoCellId = Identifier.VOID_IDENTIFIER;
 		else
 			newUgoCellId = ugoCell.getId();
-		if (!this.ugoCellId.equals(newUgoCellId)) {
-			this.ugoCellId = newUgoCellId;
-			this.changed = true;
-		}
-	}
-
-	/**
-	 * @see Describable#setDescription(String)
-	 */
-	public void setDescription(final String description) {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (description.equals(this.description))
+		if (this.ugoCellId.equals(newUgoCellId))
 			return;
-		this.description = description;
+		this.ugoCellId = newUgoCellId;
 		this.changed = true;
-	}
-
-	/**
-	 * @see Describable#getDescription()
-	 */
-	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.description;
-	}
-
-	/**
-	 * @see Namable#setName(String)
-	 */
-	public void setName(final String name) {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-		if (name.equals(this.name))
-			return;
-		this.name = name;
-		this.changed = true;
-	}
-
-	/**
-	 * @see Namable#getName()
-	 */
-	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.name;
 	}
 }
