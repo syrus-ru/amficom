@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.5 2004/10/19 10:07:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
@@ -23,18 +22,13 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 
-import java.awt.Point;
-
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Разместить элемент типа mpe на карте. используется при переносе 
- * (drag/drop), в точке point (в экранных координатах)
+ * Разместить кабель на карте.
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/19 10:07:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -42,26 +36,29 @@ import java.util.List;
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 {
 	/**
-	 * Выбранный фрагмент линии
+	 * начальный узел кабельного пути
 	 */
 	MapSiteNodeElement startNode = null;
-	MapSiteNodeElement endNode = null;
-
-	MapCablePathElement cablePath = null;
-	MapUnboundLinkElement unbound = null;
-	MapNodeLinkElement nodeLink;
-
-	SchemeCableLink scl = null;
-	String prevSiteId;
-	
-	Map map;
-	MapView mapView;
 	
 	/**
-	 * точка, в которой создается новый топологический узел
+	 * конечный узел кабельного пути
 	 */
-	Point point;
+	MapSiteNodeElement endNode = null;
 
+	/**
+	 * создаваемый кабельный путь
+	 */
+	MapCablePathElement cablePath = null;
+	
+	/**
+	 * размещаемый кабель
+	 */
+	SchemeCableLink scl = null;
+	
+	Map map;
+
+	MapView mapView;
+	
 	public PlaceSchemeCableLinkCommand(SchemeCableLink scl)
 	{
 		super();
@@ -85,6 +82,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		endNode = mne[1];
 		
 		cablePath = mapView.findCablePath(scl);
+		// если кабельный путь уже есть - ничего не делать
 		if(cablePath != null)
 		{
 //			super.checkCablePathLinks(cablePath);
@@ -95,13 +93,19 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 
 		List ccis = (List )scl.channelingItems;
 
+		// идем по всем узлам кабельного пути от начального
 		MapSiteNodeElement bufferStartSite = startNode;
 
+		// цикл по элементам привязки кабеля.
 		for(Iterator it = ccis.iterator(); it.hasNext();)
 		{
 			CableChannelingItem cci = (CableChannelingItem )it.next();
 			MapSiteNodeElement smsne = map.getMapSiteNodeElement(cci.startSiteId);
 			MapSiteNodeElement emsne = map.getMapSiteNodeElement(cci.endSiteId);
+
+			// если элемент привязки не соответствует топологической схеме
+			// (один из узлов привязки не нанесен на карту) то элемент
+			// привязки опускается
 			if(smsne == null
 				|| emsne == null)
 			{
@@ -111,7 +115,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			// a link between bufferStartSite and current cci exists
 			boolean exists = false;
 			
-			MapPhysicalLinkElement link = null;
+			// переходим к следующему узлу кабельного пути
 			if(bufferStartSite.equals(smsne))
 			{
 				bufferStartSite = emsne;
@@ -123,43 +127,45 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				bufferStartSite = smsne;
 				exists = true;
 			}
-
+			
+			// если ни одно из двух предыдущих условий не выполнено, то есть
+			// существует разрыв последовательности привязки (линии 
+			// bufferStartSite - cci.startSiteId не существует), то
+			// создать на месте разрыва непроложенную линию из одного фрагмента
 			if(!exists)
 			{
-				unbound = super.createUnboundLink(bufferStartSite, smsne);
+				MapUnboundLinkElement unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, smsne);
 				cablePath.addLink(unbound);
 				unbound.setCablePath(cablePath);
 
-				nodeLink = super.createNodeLink(bufferStartSite, smsne);
-				unbound.addNodeLink(nodeLink);
-				nodeLink.setPhysicalLinkId(unbound.getId());
-
 				bufferStartSite = emsne;
 			}
-			
-			link = map.getPhysicalLink(cci.physicalLinkId);
-			if(link == null)
-				continue;
+			else
+			// в противном случае привязать кабель ксуществующей линии
+			{
+				
+				MapPhysicalLinkElement link = map.getPhysicalLink(cci.physicalLinkId);
+				
+				// если линия не существует, опустить данный элемент привязки
+				if(link == null)
+					continue;
 
-			link.getBinding().add(cablePath);
-			if(cci.row_x != -1
-				&& cci.place_y != -1)
-				link.getBinding().bind(cablePath, cci.row_x, cci.place_y);
-
-			cablePath.addLink(link);
-
-//			bufferStartSite = emsne;
+				link.getBinding().add(cablePath);
+				if(cci.row_x != -1
+					&& cci.place_y != -1)
+					link.getBinding().bind(cablePath, cci.row_x, cci.place_y);
+	
+				cablePath.addLink(link);
+			}
 		}
 
+		// если элементы привязки не доходят до конца, создать непривязанную
+		// линию от текущего до конечного узла
 		if(endNode != bufferStartSite)
 		{
-			unbound = super.createUnboundLink(bufferStartSite, endNode);
+			MapUnboundLinkElement unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, endNode);
 			cablePath.addLink(unbound);
 			unbound.setCablePath(cablePath);
-
-			nodeLink = super.createNodeLink(bufferStartSite, endNode);
-			unbound.addNodeLink(nodeLink);
-			nodeLink.setPhysicalLinkId(unbound.getId());
 		}
 
 		// операция закончена - оповестить слушателей
@@ -171,29 +177,5 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		logicalNetLayer.notifySchemeEvent(cablePath);
 		logicalNetLayer.notifyCatalogueEvent(cablePath);
 	}
-/*	
-	protected List sortCCIS(MapSiteNodeElement start, MapSiteNodeElement end, Collection ccis)
-	{
-		MapSiteNodeElement bufferSite = start;
-		
-		List retCCIs = new LinkedList();
-		
-		int count = ccis.size();
 
-		for (int i = 0; i < count; i++) 
-		{
-			for(Iterator it = ccis.iterator(); it.hasNext();)
-			{
-				CableChannelingItem cci = (CableChannelingItem )it.next();
-				if(cci.startSiteId.equals(bufferSite.getId()))
-				{
-					retCCIs.add(cci);
-					bufferSite = map.getMapSiteNodeElement(cci.endSiteId);
-					break;
-				}
-			}
-		}
-		return retCCIs;
-	}
-*/
 }

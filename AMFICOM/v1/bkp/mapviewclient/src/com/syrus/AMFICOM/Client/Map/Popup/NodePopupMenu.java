@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteNodeCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;

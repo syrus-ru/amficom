@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.11 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.12 2004/10/19 10:07:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateCablePathCablingCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateUnboundLinkCablingCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
@@ -60,7 +60,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/19 10:07:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -343,7 +343,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 
 	protected void insertSiteInPlaceOfANode(MapPhysicalNodeElement node, MapNodeProtoElement proto)
 	{
-		InsertSiteCommand command = new InsertSiteCommand(node, proto);
+		InsertSiteCommandBundle command = new InsertSiteCommandBundle(node, proto);
 		command.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();

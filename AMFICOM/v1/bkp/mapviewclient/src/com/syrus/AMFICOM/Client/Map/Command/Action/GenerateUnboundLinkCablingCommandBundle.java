@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.2 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,31 +12,21 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLinkBinding;
+
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
- *  Команда удаления элемента наследника класса MapNodeElement. Команда
- * состоит из  последовательности атомарных действий
+ *  Команда генерации тоннеля по непривязанной линии
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -44,16 +34,25 @@ import java.util.List;
 public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBundle
 {
 	/**
-	 * Удаляемый узел
+	 * кабельный путь
 	 */
 	MapCablePathElement path;
+	
+	/**
+	 * непривязанная линия
+	 */
 	MapUnboundLinkElement unbound;
+	
+	/**
+	 * созданный тоннель
+	 */
 	MapPhysicalLinkElement link;
 
 	/**
 	 * Карта, на которой производится операция
 	 */
 	MapView mapView;
+
 	Map map;
 
 	public GenerateUnboundLinkCablingCommandBundle(MapUnboundLinkElement unbound)
@@ -70,14 +69,16 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 				getClass().getName(), 
 				"execute()");
 
-		DataSourceInterface dataSource = getLogicalNetLayer().getContext().getDataSource();
-
 		mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 		
 		path.removeLink(unbound);
-		link = createPhysicalLink(unbound.getStartNode(), unbound.getEndNode());
+		link = super.createPhysicalLink(
+				unbound.getStartNode(), 
+				unbound.getEndNode());
 		super.removePhysicalLink(unbound);
+		
+		// перенести фрагменты линии в сгенерированный тоннель
 		for(Iterator it2 = unbound.getNodeLinks().iterator(); it2.hasNext();)
 		{
 			MapNodeLinkElement mnle = (MapNodeLinkElement )it2.next();
@@ -86,7 +87,6 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 		}
 		path.addLink(link);
 		link.getBinding().add(path);
-
 	}
 
 }

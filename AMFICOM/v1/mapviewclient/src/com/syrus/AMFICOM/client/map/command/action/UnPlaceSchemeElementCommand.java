@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeElementCommand.java,v 1.3 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: UnPlaceSchemeElementCommand.java,v 1.4 2004/10/19 10:07:43 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -20,10 +20,9 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 
 /**
- * –азместить элемент типа mpe на карте. используетс€ при переносе 
- * (drag/drop), в точке point (в экранных координатах)
+ * убрать прив€зку схемного элемента с карты
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 10:07:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -64,11 +63,5 @@ public class UnPlaceSchemeElementCommand extends MapActionCommandBundle
 
 		// операци€ закончена - оповестить слушателей
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-//		logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-//				cablePath, 
-//				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-//		logicalNetLayer.setCurrentMapElement(cablePath);
-//		logicalNetLayer.notifySchemeEvent(cablePath);
-//		logicalNetLayer.notifyCatalogueEvent(cablePath);
 	}
 }

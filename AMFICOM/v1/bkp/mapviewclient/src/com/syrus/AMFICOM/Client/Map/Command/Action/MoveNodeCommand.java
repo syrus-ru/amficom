@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.2 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MoveNodeCommand.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,6 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 
@@ -23,7 +22,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -57,18 +56,17 @@ public class MoveNodeCommand extends MapActionCommand
 
 		// запомнить начальное положение
 		anchor = node.getAnchor();
-//		setState(node.getState());
 	}
 
 	public void setParameter(String field, Object value)
 	{
-		if(field.equals(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.DELTA_X))
+		if(field.equals(MoveSelectionCommandBundle.DELTA_X))
 		{
 			deltaX = Double.parseDouble((String )value);
 			execute();
 		}
 		else
-		if(field.equals(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.DELTA_Y))
+		if(field.equals(MoveSelectionCommandBundle.DELTA_Y))
 		{
 			deltaY = Double.parseDouble((String )value);
 			execute();

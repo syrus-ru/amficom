@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommand.java,v 1.8 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.1 2004/10/19 10:07:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
@@ -26,44 +25,47 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
-import java.awt.Point;
-
 import java.util.Iterator;
 
 /**
- * Разместить элемент типа mpe на карте. используется при переносе 
- * (drag/drop), в точке point (в экранных координатах)
+ * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/19 10:07:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class InsertSiteCommand extends MapActionCommandBundle
+public class InsertSiteCommandBundle extends MapActionCommandBundle
 {
 	/**
-	 * Выбранный фрагмент линии
+	 * топологтический узел
 	 */
 	MapPhysicalNodeElement node;
+	
+	/**
+	 * новый сетевой узел
+	 */
 	MapSiteNodeElement site;
+	
+	/**
+	 * тип создаваемого сетевого узла
+	 */
 	MapNodeProtoElement proto;
+	
+	/**
+	 * линия, на которой находится топологический узел
+	 */
 	MapPhysicalLinkElement link;
 
-	MapNodeElement node1 = null;
-	MapNodeElement node2 = null;
-
-	MapPhysicalLinkElement link1 = null;
-	MapPhysicalLinkElement link2 = null;
+	/**
+	 * новая линия (если старая разделяется на 2 части)
+	 */
+	MapPhysicalLinkElement newLink = null;
 
 	
 	Map map;
 	
-	/**
-	 * точка, в которой создается новый топологический узел
-	 */
-	Point point;
-
-	public InsertSiteCommand(
+	public InsertSiteCommandBundle(
 			MapPhysicalNodeElement node,
 			MapNodeProtoElement proto)
 	{
@@ -92,20 +94,18 @@ public class InsertSiteCommand extends MapActionCommandBundle
 				node.getAnchor(),
 				proto);
 		site.setName(node.getName());
-		site.setScaleCoefficient(logicalNetLayer.getDefaultScale() / logicalNetLayer.getCurrentScale());
+		site.setScaleCoefficient(
+				logicalNetLayer.getDefaultScale() 
+				/ logicalNetLayer.getCurrentScale());
 
+		// обновить концевые узлы фрагментов
 		for(Iterator it = node.getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
 
-			if(node1 == null)
-				node1 = mnle.getOtherNode(node);
-			else
-				node2 = mnle.getOtherNode(node);
-
 			MapElementState nls = mnle.getState();
 
-			if(mnle.getStartNode() == node)
+			if(mnle.getStartNode().equals(node))
 				mnle.setStartNode(site);
 			else
 				mnle.setEndNode(site);
@@ -117,26 +117,32 @@ public class InsertSiteCommand extends MapActionCommandBundle
 
 		MapElementState pls = link.getState();
 
-		if(link.getStartNode() == node)
+		// обновить концевые узлы линии
+		if(link.getStartNode().equals(node))
 			link.setStartNode(site);
 		else
-		if(link.getEndNode() == node)
+		if(link.getEndNode().equals(node))
 			link.setEndNode(site);
 
+		// если топологический узел был активен, то разделить линию
+		// на две части
 		if(node.isActive())
 		{
 			if(link instanceof MapUnboundLinkElement)
-				link1 = super.createUnboundLink(link.getStartNode(), site);
+				newLink = super.createUnboundLink(link.getStartNode(), site);
 			else
-				link1 = super.createPhysicalLink(link.getStartNode(), site);
-			link1.setProto(link.getProto());
+				newLink = super.createPhysicalLink(link.getStartNode(), site);
+			newLink.setProto(link.getProto());
 			MapPipePathElement collector = map.getCollector(link);
 			if(collector != null)
-				collector.addLink(link1);
+				collector.addLink(newLink);
 
+			super.moveNodeLinks(link, newLink, true, site, null);
+			link.setStartNode(site);
+/*
 			// получить все фрагменты первой филической линии
 			java.util.List nodelinks = link.getNodeLinks();
-		
+
 			// определить начальный узел и начальный фрагмент физической линии
 			MapNodeLinkElement startNodeLink = null;
 			MapNodeElement startNode = link.getStartNode();
@@ -188,21 +194,23 @@ public class InsertSiteCommand extends MapActionCommandBundle
 					}
 				}
 			}//for(;;)
-
+*/
 			MapView mapView = logicalNetLayer.getMapView();
 	
+			// проверить все кабельные пути, прохидящие по линии,
+			// и добавить новую линию
 			for(Iterator it = mapView.getCablePaths(link).iterator(); it.hasNext();)
 			{
 				MapCablePathElement cpath = (MapCablePathElement )it.next();
-				cpath.addLink(link1);
-				if(link1 instanceof MapUnboundLinkElement)
-					((MapUnboundLinkElement )link1).setCablePath(cpath);
+				cpath.addLink(newLink);
+				if(newLink instanceof MapUnboundLinkElement)
+					((MapUnboundLinkElement )newLink).setCablePath(cpath);
 				else
-					link1.getBinding().add(cpath);
+					newLink.getBinding().add(cpath);
 			}
 		}
 
-		registerStateChange(link, pls, link.getState());
+		super.registerStateChange(link, pls, link.getState());
 	
 		// операция закончена - оповестить слушателей
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.7 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.8 2004/10/19 10:07:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,9 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
 import java.awt.geom.Point2D;
@@ -39,7 +41,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/19 10:07:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -75,7 +77,7 @@ public class MapActionCommandBundle extends CommandBundle
 	}
 	
 	/**
-	 * Создается топологический конечный узел в неактивном состоянии
+	 * Создается сетевой узел
 	 */
 	protected MapSiteNodeElement createSite(Point2D.Double point,  MapNodeProtoElement proto)
 	{
@@ -84,6 +86,18 @@ public class MapActionCommandBundle extends CommandBundle
 		cmd.execute();
 		add(cmd);
 		return cmd.getSite();
+	}
+
+	/**
+	 * Создается непривязанный элемент
+	 */
+	protected MapUnboundNodeElement createUnboundNode(Point2D.Double point, SchemeElement se)
+	{
+		CreateUnboundNodeCommandAtomic cmd = new CreateUnboundNodeCommandAtomic(se, point);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
+		add(cmd);
+		return cmd.getUnbound();
 	}
 
 	/**
@@ -113,7 +127,7 @@ public class MapActionCommandBundle extends CommandBundle
 	}
 
 	/**
-	 * Создается линия связи
+	 * Создается элемент линии связи
 	 */
 	protected MapPhysicalLinkElement createPhysicalLink(
 			MapNodeElement startNode,
@@ -127,7 +141,7 @@ public class MapActionCommandBundle extends CommandBundle
 	}
 	
 	/**
-	 * Создается линия связи
+	 * Создается кабельный путь
 	 */
 	protected MapCablePathElement createCablePath(
 			SchemeCableLink scl,
@@ -142,7 +156,7 @@ public class MapActionCommandBundle extends CommandBundle
 	}
 	
 	/**
-	 * Удаляется линия связи
+	 * Удаляется кабельный путь
 	 */
 	protected void removeCablePath(MapCablePathElement mcpe)
 	{
@@ -153,7 +167,7 @@ public class MapActionCommandBundle extends CommandBundle
 	}
 
 	/**
-	 * Создается линия связи
+	 * Создается измерительный путь
 	 */
 	protected MapMeasurementPathElement createMeasurementPath(
 			SchemePath path,
@@ -168,7 +182,7 @@ public class MapActionCommandBundle extends CommandBundle
 	}
 	
 	/**
-	 * Удаляется линия связи
+	 * Удаляется измерительный путь
 	 */
 	protected void removeMeasurementPath(MapMeasurementPathElement mpe)
 	{
@@ -179,7 +193,7 @@ public class MapActionCommandBundle extends CommandBundle
 	}
 
 	/**
-	 * Создается линия связи
+	 * Создается непривязанная линия
 	 */
 	protected MapUnboundLinkElement createUnboundLink(
 			MapNodeElement startNode,
@@ -192,6 +206,9 @@ public class MapActionCommandBundle extends CommandBundle
 		return cmd.getLink();
 	}
 	
+	/**
+	 * Создается непривязанная линия, состоящая из одного фрагмента
+	 */
 	protected MapUnboundLinkElement createUnboundLinkWithNodeLink(
 			MapNodeElement startNode,
 			MapNodeElement endNode)
@@ -218,7 +235,7 @@ public class MapActionCommandBundle extends CommandBundle
 	}
 
 	/**
-	 * Удаляется линия связи
+	 * Удаляется фрагмент линии
 	 */
 	protected void removeNodeLink(MapNodeLinkElement mple)
 	{
@@ -229,7 +246,7 @@ public class MapActionCommandBundle extends CommandBundle
 	}
 
 	/**
-	 * Удаляется линия связи
+	 * Удаляется точечный объект
 	 */
 	protected void removeNode(MapNodeElement mne)
 	{
@@ -260,6 +277,10 @@ public class MapActionCommandBundle extends CommandBundle
 		add(cmd);
 	}
 
+	/**
+	 * удаляется непривязанная линия, включая ее внутренние
+	 * топологические узлы и фрагменты
+	 */
 	protected void removeUnboundLink(MapUnboundLinkElement link)
 	{
 		this.removePhysicalLink(link);
@@ -280,6 +301,10 @@ public class MapActionCommandBundle extends CommandBundle
 		}
 	}
 
+	/**
+	 * удаляется информация о привязке кабеля. от тоннелей кабель
+	 * отвязывается, непривязанные линии удаляются
+	 */
 	protected void removeCablePathLinks(MapCablePathElement cablePath)
 	{
 		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
@@ -297,6 +322,9 @@ public class MapActionCommandBundle extends CommandBundle
 		cablePath.clearLinks();
 	}
 
+	/**
+	 * удаляется измерительный путь
+	 */
 	protected void removeMeasurementPathCables(MapMeasurementPathElement mPath)
 	{
 		mPath.clearCablePaths();

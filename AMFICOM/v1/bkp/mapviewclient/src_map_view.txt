@@ -26,13 +26,14 @@ src\com\syrus\AMFICOM\Client\Map\Command\Action\CreatePhysicalNodeCommandBundle.
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateSiteCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateUnboundLinkCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateUnboundLinkCommandBundle.java
+src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateUnboundNodeCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\DeleteNodeCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\DeleteNodeLinkCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\DeletePhysicalLinkCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\DeleteSelectionCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\GenerateCablePathCablingCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\GenerateUnboundLinkCablingCommandBundle.java
-src\com\syrus\AMFICOM\Client\Map\Command\Action\InsertSiteCommand.java
+src\com\syrus\AMFICOM\Client\Map\Command\Action\InsertSiteCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\MapActionCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\MapActionCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\MapElementStateChangeCommand.java

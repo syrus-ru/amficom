@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.2 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -65,13 +65,12 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	public MoveSelectionCommandBundle(Point point)
 	{
 		startPoint = point;
-//		setElements();
 	}
 
 	public MoveSelectionCommandBundle(LogicalNetLayer logicalNetLayer)
 	{
 		super();
-		setLogicalNetLayer(logicalNetLayer);
+		super.setLogicalNetLayer(logicalNetLayer);
 	}
 	
 	/**
@@ -97,7 +96,7 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 			startPoint = (Point )value;
 			endPoint = (Point )value;
 			//пересчитать смещение
-			setShift();
+			this.setShift();
 			super.setParameter(DELTA_X, String.valueOf(deltaX));
 			super.setParameter(DELTA_Y, String.valueOf(deltaY));
 		}
@@ -106,7 +105,7 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 		{
 			endPoint = (Point )value;
 			//пересчитать смещение
-			setShift();
+			this.setShift();
 			super.setParameter(DELTA_X, String.valueOf(deltaX));
 			super.setParameter(DELTA_Y, String.valueOf(deltaY));
 		}
@@ -122,11 +121,12 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	{
 		super.setLogicalNetLayer(logicalNetLayer);
 
-//		startPoint = logicalNetLayer.getStartPoint();
-		setElements();
+		this.setElements();
 	}
 	
-	// обновить абсолютное смещение по начальной и конечной точкам сдвига
+	/**
+	 * обновить абсолютное смещение по начальной и конечной точкам сдвига
+	 */
 	protected void setShift()
 	{
 		Point2D.Double sp = logicalNetLayer.convertScreenToMap(startPoint);
@@ -136,7 +136,8 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	}
 	
 	/**
-	 * создать отдельные команды на перемещение
+	 * создать отдельные команды на перемещение для всех выделенных
+	 * точечных объектов
 	 */
 	protected void setElements()
 	{
@@ -150,9 +151,9 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 				if(node instanceof MapMarkElement)
 				{
 					MapMarkElement mme = (MapMarkElement )node;
-					add(new MoveMarkCommand(mme));
+					super.add(new MoveMarkCommand(mme));
 				}
-				add(new MoveNodeCommand(node));
+				super.add(new MoveNodeCommand(node));
 			}
 		}
 	}

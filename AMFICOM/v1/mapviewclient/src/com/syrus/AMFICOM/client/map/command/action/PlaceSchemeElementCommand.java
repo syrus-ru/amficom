@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.2 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
@@ -27,37 +26,47 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 
 /**
- * Разместить элемент типа mpe на карте. используется при переносе 
- * (drag/drop), в точке point (в экранных координатах)
+ * Разместить c[tvysq элемент на карте в соответствии с привязкой
+ * или по координатам
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class PlaceSchemeElementCommand extends MapActionCommand
+public class PlaceSchemeElementCommand extends MapActionCommandBundle
 {
 	/**
-	 * Выбранный фрагмент линии
+	 * Размещеный узел
 	 */
 	MapSiteNodeElement site = null;
+	
+	/**
+	 * созданный непривязанный элемент
+	 */
 	MapUnboundNodeElement unbound = null;
+	
+	/**
+	 * размещаемый схемный элемент
+	 */
 	SchemeElement se = null;
-	String prevSiteId;
 	
 	Map map;
 	
 	/**
-	 * точка, в которой создается новый топологический узел
+	 * экранная точка, в которой размещается элемент
 	 */
 	Point point = null;
+
+	/**
+	 * географическая точка, в которой размещается элемент
+	 */
 	Point2D.Double coordinatePoint = null;
 
 	public PlaceSchemeElementCommand(
 			SchemeElement se,
 			Point2D.Double dpoint)
 	{
-		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.se = se;
 		this.coordinatePoint = dpoint;
 	}
@@ -67,7 +76,6 @@ public class PlaceSchemeElementCommand extends MapActionCommand
 			SchemeElement se,
 			Point point)
 	{
-		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.se = se;
 		this.point = point;
 	}
@@ -84,8 +92,7 @@ public class PlaceSchemeElementCommand extends MapActionCommand
 				.isEnabled("mapActionCreateEquipment"))
 			return;
 		
-		DataSourceInterface dataSource = aContext.getDataSource();
-	
+		// если географическая точка не задана, получить ее из экранной точки
 		if(coordinatePoint == null)
 			coordinatePoint = logicalNetLayer.convertScreenToMap(point);
 		
@@ -105,17 +112,7 @@ public class PlaceSchemeElementCommand extends MapActionCommand
 			}
 			else
 			{
-				unbound = new MapUnboundNodeElement(
-					se,
-					dataSource.GetUId(MapSiteNodeElement.typ),
-					coordinatePoint,
-					map,
-					logicalNetLayer.getDefaultScale() / logicalNetLayer.getScale(),
-					logicalNetLayer.getUnboundProto());
-			
-				Pool.put(MapSiteNodeElement.typ, unbound.getId(), unbound);
-				map.addNode(unbound);
-				
+				unbound = super.createUnboundNode(coordinatePoint, se);
 				site = unbound;
 			}
 			
@@ -131,29 +128,5 @@ public class PlaceSchemeElementCommand extends MapActionCommand
 		logicalNetLayer.notifySchemeEvent(site);
 		logicalNetLayer.notifyCatalogueEvent(site);
 
-	}
-	
-	public void undo()
-	{
-		if(unbound == null)
-		{
-			se.siteId = prevSiteId;
-		}
-		else
-		{
-			map.removeNode(unbound);
-		}
-	}
-	
-	public void redo()
-	{
-		if(unbound == null)
-		{
-			se.siteId = site.getId();
-		}
-		else
-		{
-			map.addNode(unbound);
-		}
 	}
 }

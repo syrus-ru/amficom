@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 

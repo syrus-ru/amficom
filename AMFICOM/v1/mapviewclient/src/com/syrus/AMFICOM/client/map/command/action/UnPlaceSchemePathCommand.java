@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemePathCommand.java,v 1.2 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: UnPlaceSchemePathCommand.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,10 +15,9 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 
 /**
- * Разместить элемент типа mpe на карте. используется при переносе 
- * (drag/drop), в точке point (в экранных координатах)
+ * убрать привязку измерительного пути с карты
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -30,9 +29,6 @@ public class UnPlaceSchemePathCommand extends MapActionCommandBundle
 	 */
 	MapMeasurementPathElement path = null;
 
-//	Map map;
-//	MapView mapView;
-	
 	public UnPlaceSchemePathCommand(MapMeasurementPathElement path)
 	{
 		super();
@@ -47,18 +43,9 @@ public class UnPlaceSchemePathCommand extends MapActionCommandBundle
 				getClass().getName(), 
 				"execute()");
 
-//		mapView = logicalNetLayer.getMapView();
-//		map = mapView.getMap();
-
 		super.removeMeasurementPath(path);
 
 		// операция закончена - оповестить слушателей
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-//		logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-//				cablePath, 
-//				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-//		logicalNetLayer.setCurrentMapElement(cablePath);
-//		logicalNetLayer.notifySchemeEvent(cablePath);
-//		logicalNetLayer.notifyCatalogueEvent(cablePath);
 	}
 }
