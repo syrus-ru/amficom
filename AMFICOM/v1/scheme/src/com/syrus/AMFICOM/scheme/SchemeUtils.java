@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.5 2004/12/22 08:22:18 bass Exp $
+ * $Id: SchemeUtils.java,v 1.6 2004/12/23 13:49:46 stas Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,10 @@ import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
 /**
- * Functionality will be partially moved to {@link PathElement}. 
+ * Functionality will be partially moved to {@link PathElement}.
  *
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/12/22 08:22:18 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2004/12/23 13:49:46 $
  * @module scheme_v1
  */
 public class SchemeUtils
@@ -28,6 +28,11 @@ public class SchemeUtils
 	private SchemeUtils() {
 	}
 
+	/**
+	 * returns cableports for sertain schemeelement
+	 * @param se SchemeElement
+	 * @return List of SchemeCablePort
+	 */
 	public static List getCablePorts(SchemeElement se)
 	{
 		if (se.schemeDevices().length == 1) {
@@ -42,6 +47,11 @@ public class SchemeUtils
 		return Collections.unmodifiableList(ports);
 	}
 
+	/**
+	 * returns cableports for sertain protoelement
+	 * @param proto SchemeProtoElement
+	 * @return List of SchemeCablePort
+	 */
 	public static List getCablePorts(SchemeProtoElement proto)
 	{
 		if (proto.devices().length == 1) {
@@ -56,6 +66,11 @@ public class SchemeUtils
 		return Collections.unmodifiableList(ports);
 	}
 
+	/**
+	 * returns ports for sertain schemeelement
+	 * @param se SchemeElement
+	 * @return List of SchemePort
+	 */
 	public static List getPorts(SchemeElement se)
 	{
 		if (se.schemeDevices().length == 1) {
@@ -70,6 +85,11 @@ public class SchemeUtils
 		return Collections.unmodifiableList(ports);
 	}
 
+	/**
+	 * returns ports for sertain protoelement
+	 * @param proto SchemeProtoElement
+	 * @return List of SchemePort
+	 */
 	public static List getPorts(SchemeProtoElement proto)
 	{
 		if (proto.devices().length == 1) {
