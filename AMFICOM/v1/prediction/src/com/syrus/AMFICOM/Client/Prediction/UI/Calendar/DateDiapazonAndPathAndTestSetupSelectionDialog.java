@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.DomainCondition;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
@@ -215,7 +215,7 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 	private void setTestSetupComboBox(MonitoredElement me)
 	{
 		testSetupComboBox.removeAllItems();
-		LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
+		LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.MS_ENTITY_CODE);
 		condition.setIdentifier(me.getId());
 		condition.setEntityCode(ObjectEntities.MS_ENTITY_CODE);
 		try

@@ -40,7 +40,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		start_y = MathRef.getLinearStartPoint(y);
 
 		markerA = new Marker("A", (int)(y.length*.2));
-		markerA.id = "A";
+//		markerA.id = "A";
 		lines[0] = new AnaLine();
 		lines[1] = new AnaLine();
 		lines[0].point[0] = markerA.pos - (int)(y.length*.05);
@@ -51,7 +51,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		lines[1].factor = MathRef.calcLSA(y, lines[1].point[0], lines[1].point[1]);
 
 		markerB = new Marker ("B", (int)(y.length * .8));
-		markerB.id = "B";
+//		markerB.id = "B";
 
 		try
 		{
@@ -454,7 +454,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		if (events == null)
 			return;
 		if (event < 0 || event >= events.length)
-		    return;
+				return;
 		if (!moved_here)
 		{
 			_activeEvent = activeEvent;

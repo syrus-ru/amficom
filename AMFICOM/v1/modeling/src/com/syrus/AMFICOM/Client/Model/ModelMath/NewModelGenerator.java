@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.Client.Model.ModelMath;
 
 import java.util.ArrayList;
-import com.syrus.AMFICOM.Client.Model.RefModelParamsFrame;
+
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 
 /////////////////////////////////////////////////////////////////

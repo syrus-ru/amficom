@@ -2,11 +2,12 @@ package com.syrus.AMFICOM.Client.Model.ModelMath;
 
 import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
 public class ModelGenerator
 {
@@ -34,11 +35,11 @@ public class ModelGenerator
 		this.defAttenuation = defAttenuation;
 		this.attenuationString = new StringBuffer("Attenuation_").append(waveLength).toString();
 
-		pathelements = path.links;
+		pathelements = Arrays.asList(path.links());
 //		ObjectResourceSorter sorter = SchemePath.getSorter();
 //		sorter.setDataSet(pathelements);
 //		path.links = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
-		Pool.put("activecontext", "activepathid", path.getId());
+		Pool.put("activecontext", "activepathid", path.id());
 	}
 
 	public ReflectogramEvent[] model(
@@ -187,19 +188,14 @@ public class ModelGenerator
 		for(Iterator it = pathelements.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
-			if(pe.is_cable) // CABLE LINK
+			if(pe.type().value() == Type._SCHEME_CABLE_LINK) // CABLE LINK
 			{
-				SchemeCableLink scl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
-				if(scl == null)
-				{
-					System.out.println("SchemeCableLink " + pe.link_id + " not found");
-					return null;
-				}
+				SchemeCableLink scl = (SchemeCableLink)pe.abstractSchemeElement();
 				SchemeCableThread thread = null;
-				for(Iterator it2 = scl.cable_threads.iterator(); it2.hasNext();)
+				for(int j = 0; j < scl.schemeCableThreads().length; j++)
 				{
-					SchemeCableThread sct = (SchemeCableThread)it2.next();
-					if(sct.getId().equals(pe.thread_id))
+					SchemeCableThread sct = scl.schemeCableThreads()[j];
+					if(sct.equals(pe.schemeCableThread()))
 					{
 						thread = sct;
 						break;
@@ -207,57 +203,48 @@ public class ModelGenerator
 				}
 				if(thread == null)
 				{
-					System.out.println("SchemeCableThread " + pe.thread_id + " not found");
+					System.out.println("SchemeCableThread " + pe.schemeCableThread().name() + " not found");
 					return null;
 				}
 				ModelingEvent event = addCableLink(scl, thread);
-				if (event == null)
-				{
-					System.out.println("Fail creating modeling element from cable " + scl.getName() + "(" + scl.getId() + ")");
+				if (event == null) {
+					System.out.println("Fail creating modeling element from cable " + scl.name() + "(" +
+														 scl.id().identifierString() + ")");
 					return null;
 				}
 				reflectoElements.add(event);
 			}
-			else // pe.isCable() == false
+			else if (pe.type().value() == Type._SCHEME_LINK)
 			{
-				SchemeLink sl =	(SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
-				if(sl == null)
-				{
-					System.out.println("SchemeLink " + pe.link_id + " not found");
-					return null;
-				}
-				SchemePort sourcePort =	(SchemePort)Pool.get(SchemePort.typ, sl.source_port_id);
+				SchemeLink sl =	(SchemeLink)pe.abstractSchemeElement();
+				SchemePort sourcePort =	sl.sourceSchemePort();
 				if(sourcePort == null)
-				{
-					System.out.println("SchemePort (source) " + sl.source_port_id + " not found");
 					return null;
-				}
+
 				ModelingEvent event = addPort(sourcePort);
-				if (event == null)
-				{
-					System.out.println("Fail creating modeling element from port " + sourcePort.getName() + "(" + sourcePort.getId() + ")");
+				if (event == null) {
+					System.out.println("Fail creating modeling element from port " + sourcePort.name() + "(" +
+														 sourcePort.id().identifierString() + ")");
 					return null;
 				}
 				reflectoElements.add(event);
 
 				event = addLink(sl);
-				if (event == null)
-				{
-					System.out.println("Fail creating modeling element from link " + sl.getName() + "(" + sl.getId() + ")");
+				if (event == null) {
+					System.out.println("Fail creating modeling element from link " + sl.name() + "(" +
+														 sl.id().identifierString() + ")");
 					return null;
 				}
 				reflectoElements.add(event);
 
-				SchemePort targetPort = (SchemePort)Pool.get(SchemePort.typ, sl.target_port_id);
+				SchemePort targetPort = sl.targetSchemePort();
 				if(targetPort == null)
-				{
-					System.out.println("Something is wrong... - Target port is null");
 					return null;
-				}
+
 				event = addPort(targetPort);
-				if (event == null)
-				{
-					System.out.println("Fail creating modeling element from port " + targetPort.getName() + "(" + targetPort.getId() + ")");
+				if (event == null) {
+					System.out.println("Fail creating modeling element from port " + targetPort.name() +
+														 "(" + targetPort.id().identifierString() + ")");
 					return null;
 				}
 				reflectoElements.add(event);
@@ -268,44 +255,33 @@ public class ModelGenerator
 
 	private ModelingEvent addCableLink(SchemeCableLink scl, SchemeCableThread thread)
 	{
-		Map ht = null;
+		List ht = null;
 		Characteristic c;
 		double length;
 		double attenuation;
 
-		if (!scl.cable_link_id.equals(""))
-		{
-			CableLink link = (CableLink)Pool.get(CableLink.typ, scl.cable_link_id);
-			if (link != null)
-				ht = link.characteristics;
-		}
+		if (scl.link() != null)
+			ht = scl.linkImpl().getCharacteristics();
+
 		if (ht == null)
 		{
-			LinkType linkType =	(LinkType)Pool.get(LinkType.typ, thread.link_type_id);
+			LinkType linkType =	thread.cableThreadTypeImpl().getLinkType();
 			if(linkType == null)
-			{
-				System.out.println("LinkType " + thread.link_type_id + " not found");
 				return null;
-			}
-				else
-					ht = linkType.characteristics;
-		}
-		if(ht == null)
-		{
-			System.out.println("Something wrong...  - linkType.characteristics == null");
-			return null;
+			else
+				ht = linkType.getCharacteristics();
 		}
 
-		c = (Characteristic)ht.get(attenuationString);
+		c = getCharacteristic(ht, attenuationString);
 		try
 		{
-			attenuation = Double.parseDouble(c.value);
+			attenuation = Double.parseDouble(c.getValue());
 		}
 		catch (Exception ex)
 		{
 			attenuation = defAttenuation; //defauld dE/dx value
 		}
-		length = scl.optical_length;
+		length = scl.opticalLength();
 		if(length < 0)
 			length = 0;
 
@@ -316,43 +292,37 @@ public class ModelGenerator
 
 	private ModelingEvent addPort(SchemePort sp)
 	{
-		Map ht;
+		List ht;
 		Characteristic c;
 		double reflectance;
 		double attenuation;
 
-		PortType portType = (PortType)Pool.get(PortType.typ, sp.port_type_id);
-		if(portType == null)
-		{
-			System.out.println("PortType " + sp.port_type_id + " not found");
+		PortType portType = sp.portTypeImpl();
+		if (portType == null) {
 			return null;
 		}
-		if (!sp.port_id.equals(""))
-		{
-			Port port = (Port)Pool.get(Port.typ, sp.port_id);
-			if (port != null)
-				ht = port.characteristics;
-			else
-				ht = portType.characteristics;
-		}
+
+		if (sp.port() != null)
+			ht = sp.portImpl().getCharacteristics();
 		else
-			ht = portType.characteristics;
+			ht = portType.getCharacteristics();
+
 		ModelingEvent event = new ModelingEvent();
-		if(portType.p_class.equals("optical")) // optical connector
+		if(portType.getSort().value() == PortTypeSort._PORTTYPESORT_OPTICAL) // optical connector
 		{
-			c = (Characteristic)ht.get("Attenuation_nom");
+			c = getCharacteristic(ht, "Attenuation_nom");
 			try
 			{
-				attenuation = Double.parseDouble(c.value);
+				attenuation = Double.parseDouble(c.getValue());
 			}
 			catch (Exception ex)
 			{
 				attenuation = defConnectorLoss;
 			}
-			c = (Characteristic)ht.get("Reflectance_nom");
+			c = getCharacteristic(ht, "Reflectance_nom");
 			try
 			{
-				reflectance = Math.abs(Double.parseDouble(c.value));
+				reflectance = Math.abs(Double.parseDouble(c.getValue()));
 			}
 			catch (Exception ex)
 			{
@@ -362,10 +332,10 @@ public class ModelGenerator
 		}
 		else // termo connection
 		{
-			c = (Characteristic)ht.get("Attenuation");
+			c = getCharacteristic(ht, "Attenuation");
 			try
 			{
-				attenuation = Double.parseDouble(c.value);
+				attenuation = Double.parseDouble(c.getValue());
 			}
 			catch (Exception ex)
 			{
@@ -378,49 +348,48 @@ public class ModelGenerator
 
 	private ModelingEvent addLink(SchemeLink sl)
 	{
-		Map ht = null;
+		List ht = null;
 		Characteristic c;
 		double length;
 		double attenuation;
 
-		if (!sl.link_id.equals(""))
-		{
-			Link link = (Link)Pool.get(Link.typ, sl.link_id);
-			if (link != null)
-				ht = link.characteristics;
-		}
+		if (sl.link() != null)
+				ht = sl.linkImpl().getCharacteristics();
 		if (ht == null)
 		{
-			LinkType linkType =	(LinkType)Pool.get(LinkType.typ, sl.link_type_id);
+			LinkType linkType =	sl.linkTypeImpl();
 			if(linkType == null)
-			{
-				System.out.println("LinkType " + sl.link_type_id + " not found");
 				return null;
-			}
 			else
-				ht = linkType.characteristics;
-		}
-		if(ht == null)
-		{
-			System.out.println("Something is wrong... - characteristics of link type is null");
-			return null;
+				ht = linkType.getCharacteristics();
 		}
 
-		c = (Characteristic)ht.get(attenuationString);
+		c = getCharacteristic(ht, attenuationString);
 		try
 		{
-			attenuation = Double.parseDouble(c.value);
+			attenuation = Double.parseDouble(c.getValue());
 		}
 		catch (Exception ex)
 		{
 			attenuation = defAttenuation;
 		}
-		length = sl.optical_length;
+		length = sl.opticalLength();
 		if(length < 0)
 			length = 0;
 
 		ModelingEvent event = new ModelingEvent();
 		event.setLinear(attenuation, length);
 		return event;
+	}
+
+	private Characteristic getCharacteristic(List characteristics, String codename)
+	{
+		for (Iterator it = characteristics.iterator(); it.hasNext();)
+		{
+			Characteristic ch = (Characteristic)it.next();
+			if (((CharacteristicType)ch.getType()).getCodename().equals(codename))
+				return ch;
+		}
+		return null;
 	}
 }

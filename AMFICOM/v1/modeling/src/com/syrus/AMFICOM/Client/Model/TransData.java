@@ -1,20 +1,11 @@
 package com.syrus.AMFICOM.Client.Model;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ItemEvent;
-
-import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
+import com.syrus.AMFICOM.Client.General.UI.*;
 
 public class TransData extends JInternalFrame {
 
@@ -35,6 +26,7 @@ public class TransData extends JInternalFrame {
 			e.printStackTrace();
 		}
 	}
+
 	private void jbInit() throws Exception
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
@@ -256,9 +248,5 @@ public class TransData extends JInternalFrame {
 						data[row][col] = value;
 						fireTableCellUpdated(row, col);
 				}
-
 	}
-
 }
-
-

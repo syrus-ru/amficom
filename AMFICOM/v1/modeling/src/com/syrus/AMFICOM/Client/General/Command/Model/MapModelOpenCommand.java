@@ -2,19 +2,12 @@ package com.syrus.AMFICOM.Client.General.Command.Model;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Command.Config.NewMapViewCommand;
-import com.syrus.AMFICOM.Client.General.Command.Map.MapOpenCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.MapModelingApplicationModelFactory;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapWindowCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
 import com.syrus.AMFICOM.Client.Model.ModelMDIMain;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 public class MapModelOpenCommand extends VoidCommand
 {
@@ -66,39 +59,26 @@ public class MapModelOpenCommand extends VoidCommand
 			 (checker.openMapForModeling))
 		return;
 
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
+		MapViewOpenCommand viewOpen = new MapViewOpenCommand(parent.desktopPane, null, aContext);
+		viewOpen.execute();
+		if (viewOpen.getReturnObject() == null)
 			return;
 
-		MapOpenCommand com = new MapOpenCommand(null, null, aContext);
-		com.execute();
-		if(com.retCode == 1)
-		{
-			parent.mapContext = (MapContext )Pool.get("mapcontext", com.retobj_id);
+		MapView view = (MapView) viewOpen.getReturnObject();
+		ViewMapWindowCommand com2 = new ViewMapWindowCommand(
+				aContext.getDispatcher(), parent.desktopPane, aContext,
+				new MapModelingApplicationModelFactory());
+		com2.execute();
+		com2.frame.setMapView(view);
+		com2.frame.setLocation(500, 0);
+		parent.mapframe = com2.frame;
 
-			NewMapViewCommand com2 = new NewMapViewCommand(
-					dispatcher,
-					parent.desktopPane,
-					aContext,
-					new MapModelingApplicationModelFactory());
-			com2.execute();
-			com2.frame.setMapContext(parent.mapContext);
-			com2.frame.setLocation(500, 0);
-			parent.mapframe = com2.frame;
-
-			if(forFirst)
-			{
-				new ViewModelMapPropertiesCommand(parent, parent.desktopPane, aContext).execute();
-				new ViewModelMapElementsCommand(parent, parent.desktopPane, aContext).execute();
-			}
-
-			Scheme scheme = (Scheme)Pool.get(Scheme.typ, parent.mapContext.scheme_id);
-			scheme.unpack();
-
-			dispatcher.notify(new OperationEvent(scheme, 0, "mapopenevent"));
-//			dispatcher.notify(new SchemeElementsEvent(this, scheme,
-//				SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
+		if (forFirst) {
+			new ViewModelMapPropertiesCommand(parent, parent.desktopPane, aContext).
+					execute();
+			new ViewModelMapElementsCommand(parent, parent.desktopPane, aContext).
+					execute();
 		}
+		dispatcher.notify(new OperationEvent(view.getSchemes(), 0, "mapopenevent"));
 	}
-
 }

@@ -6,9 +6,7 @@ import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
 import com.syrus.AMFICOM.Client.Model.ModelMDIMain;
-import com.syrus.AMFICOM.Client.Model.*;
 
 public class PerformModelingCommand extends VoidCommand
 {

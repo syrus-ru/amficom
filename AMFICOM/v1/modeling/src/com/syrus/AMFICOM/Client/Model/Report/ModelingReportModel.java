@@ -1,10 +1,9 @@
 package com.syrus.AMFICOM.Client.Model.Report;
 
 import java.util.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.*;
+
+import com.syrus.AMFICOM.Client.Analysis.Report.ESAPEReportModel;
+import com.syrus.AMFICOM.Client.General.Lang.*;
 
 /**
  * <p>Title: </p>

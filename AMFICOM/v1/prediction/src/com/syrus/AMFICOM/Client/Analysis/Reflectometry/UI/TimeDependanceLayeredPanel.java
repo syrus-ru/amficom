@@ -59,12 +59,12 @@ public class TimeDependanceLayeredPanel extends ScalableLayeredPanel implements 
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent refUpdateEvent = (RefUpdateEvent)ae;
-			if(refUpdateEvent.EVENT_SELECTED)
+			if(refUpdateEvent.eventSelected())
 			{
 				String eventNumber = (String)refUpdateEvent.getSource();
 				setSelectedEvent(Integer.parseInt(eventNumber));
 			}
-			if(refUpdateEvent.ANALYSIS_PERFORMED)
+			if(refUpdateEvent.analysisPerformed())
 			{
 				String id = (String)refUpdateEvent.getSource();
 				updateEvents(id);

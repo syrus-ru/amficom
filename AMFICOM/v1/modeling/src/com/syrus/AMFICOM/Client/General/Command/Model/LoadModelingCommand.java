@@ -1,25 +1,25 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
-import javax.swing.JOptionPane;
-
 import java.util.*;
-import com.syrus.AMFICOM.Client.General.Checker;
+
+import javax.swing.*;
+
+import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.InitialAnalysisCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.Modeling;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
-
-import com.syrus.AMFICOM.Client.Analysis.ReflectogrammLoadDialog;
-import com.syrus.io.BellcoreReader;
-import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.DomainCondition;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.SchemePath;
+import com.syrus.io.*;
 
 public class LoadModelingCommand extends VoidCommand
 {
@@ -73,20 +73,16 @@ public class LoadModelingCommand extends VoidCommand
 			return;
 		}
 
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-			return;
-
-
 		ReflectogrammLoadDialog dialog;
-		if(Pool.get("dialog", "TraceLoadDialog") == null)
+		JFrame parent = Environment.getActiveWindow();
+		if(Pool.get("dialog", parent.getName()) != null)
 		{
-			dialog = new ReflectogrammLoadDialog (this.aContext);
-			Pool.put("dialog", "TraceLoadDialog", dialog);
+			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", parent.getName());
 		}
 		else
 		{
-			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", "TraceLoadDialog");
+			dialog = new ReflectogrammLoadDialog (aContext);
+			Pool.put("dialog", parent.getName(), dialog);
 		}
 
 		dialog.show();
@@ -107,25 +103,53 @@ public class LoadModelingCommand extends VoidCommand
 
 		BellcoreStructure bs = null;
 
-		Iterator it = res.getParameterList().iterator();
-		while (it.hasNext())
+		SetParameter[] parameters =  res.getParameters();
+		for (int i = 0; i < parameters.length; i++)
 		{
-			Parameter param = (Parameter)it.next();
-			if (param.getGpt().getId().equals("reflectogramm"))
+			SetParameter param = parameters[i];
+			ParameterType type = (ParameterType)param.getType();
+			if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
 				bs = new BellcoreReader().getData(param.getValue());
 		}
 		if (bs == null)
 			return;
 
-		bs.title = res.getName();
-		Pool.put("bellcorestructure", "primarytrace", bs);
-
-
-		if(Pool.get(Modeling.TYPE, res.getModelingId()) != null)
+		if (res.getSort().equals(ResultSort.RESULT_SORT_MODELING))
 		{
-			String path_id = ((Modeling)Pool.get(Modeling.TYPE, res.getModelingId())).getSchemePathId();
-			Pool.put("activecontext", "activepathid", path_id);
+			Modeling m = (Modeling)res.getAction();
+			bs.title = m.getName();
+
+			try {
+				MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.
+						getStorableObject(m.getMonitoredElementId(), true);
+
+				if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
+					List tpathIds = me.getMonitoredDomainMemberIds();
+					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+							getAccessIdentifier().domain_id);
+					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+							domain_id, true);
+					DomainCondition condition = new DomainCondition(domain,
+							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
+					List paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+					for (Iterator it = paths.iterator(); it.hasNext(); ) {
+						SchemePath sp = (SchemePath)it.next();
+						if (tpathIds.contains(sp.pathImpl().getId()))
+						{
+							Pool.put("activecontext", "activepathid", sp.id());
+							break;
+						}
+					}
+				}
+			}
+			catch (ApplicationException ex) {
+				ex.printStackTrace();
+			}
 		}
+		else
+			bs.title = res.getMeasurement().getName();
+		Pool.put("bellcorestructure", "primarytrace", bs);
 
 		new InitialAnalysisCommand().execute();
 

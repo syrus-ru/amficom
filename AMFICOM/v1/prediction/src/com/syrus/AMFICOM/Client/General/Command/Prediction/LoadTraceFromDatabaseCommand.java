@@ -110,9 +110,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		ReflectoEventContainer statEtalon =
 				new ReflectoEventContainer(sre, re, bs, me.getCreated().getTime()); //???
 
-		LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
-		condition.setIdentifier(me.getId());
-		condition.setEntityCode(ObjectEntities.RESULT_ENTITY_CODE);
+		LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.RESULT_ENTITY_CODE);
 		List results = null;
 		try {
 			results = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
