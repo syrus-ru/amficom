@@ -29,7 +29,7 @@ public class KISConnectionManager/* extends SleepButWorkThread*/ {
 		if (kisConnection != null)
 			return kisConnection;
 
-		Log.debugMessage("KISConnection.getConnection | Connection for KIS '" + kisId + "' not found in map; establishing new one", Log.DEBUGLEVEL07);
+		Log.debugMessage("KISConnectionManager.getConnection | Connection for KIS '" + kisId + "' not found in map; establishing new one", Log.DEBUGLEVEL07);
 		kisConnection = this.establishNewConnection(kis);
 		this.kisConnections.put(kisId, kisConnection);
 		return kisConnection;

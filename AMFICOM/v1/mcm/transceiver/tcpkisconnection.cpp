@@ -126,14 +126,14 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_transmitM
 	WriteSegmentStatus wrt_ret = transmit_segment(kis_socket, timewait, measurement_segment);
 	switch (wrt_ret) {
 		case WSS_OK:
-			printf("Successfully transferred measurement segment\n");
+			printf("(tcpkisconnection) Successfully transferred measurement segment\n");
 			break;
 		case WSS_INVALID_SOCKET:
 		case WSS_CANNOT_WRITE_DATA:
-			printf("Cannot transmit measurement segment\n");
+			printf("(tcpkisconnection) Cannot transmit measurement segment\n");
 			break;
 		default:
-			printf("Illegal return value of transmit_segment: %d\n", wrt_ret);
+			printf("(tcpkisconnection) Illegal return value of transmit_segment: %d\n", wrt_ret);
 	}
 
 	delete measurement_segment;
@@ -162,7 +162,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_receiveKI
 	sel_ret = select(kis_socket + 1, &in, NULL, NULL, &tv);
 
 	if (sel_ret == 0) {
-		printf("Nothing to receive\n");
+		printf("(tcpkisconnection) Nothing to receive\n");
 		return JNI_TRUE;
 	}
 
@@ -174,13 +174,13 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_receiveKI
 		switch (rec_ret) {
 			case RSS_OK:
 				if (segment->getType() == SEGMENT_RESULT) {
-					printf("Received result segment\n");
+					printf("(tcpkisconnection) Received result segment\n");
 					jobject j_kis_report = create_kis_report(env, (ResultSegment*)segment);
 					fid = env->GetFieldID(cls, FIELDNAME_KIS_REPORT, "Lcom/syrus/AMFICOM/mcm/KISReport;");
 					env->SetObjectField(obj, fid, j_kis_report);	
 				}
 				else {
-					printf("Nothing to do with segment of type %d\n", segment->getType());
+					printf("(tcpkisconnection) Nothing to do with segment of type %d\n", segment->getType());
 				}
 				delete segment;
 				return JNI_TRUE;
@@ -188,10 +188,10 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_receiveKI
 			case RSS_CANNOT_READ_HEADER:
 			case RSS_CANNOT_READ_DATA:
 			case RSS_ILLEGAL_HEADER:
-				printf("Cannot receive segment\n");
+				printf("(tcpkisconnection) Cannot receive segment\n");
 				return JNI_FALSE;
 			default:
-				printf("Illegal return value of receive_segment: %d\n", rec_ret);
+				printf("(tcpkisconnection) Illegal return value of receive_segment: %d\n", rec_ret);
 				return JNI_FALSE;
 		}
 	}

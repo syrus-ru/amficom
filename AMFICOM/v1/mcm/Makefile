@@ -115,5 +115,5 @@ arch:
 		idl/mcm.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/*.java
 
-lib: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)
+install: $(LIBNAME) $(LIBNAME_INTERFACE)
+	$(CP) $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)

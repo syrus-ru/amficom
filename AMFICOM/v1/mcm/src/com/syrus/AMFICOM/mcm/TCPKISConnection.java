@@ -36,15 +36,15 @@ public class TCPKISConnection implements KISConnection {
 		this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
 	}
 
-	public boolean isEstablished() {
+	public synchronized boolean isEstablished() {
 		return (this.kisTCPSocket != KIS_TCP_SOCKET_DISCONNECTED);
 	}
 
-	public void establish(long kisConnectionTimeout) throws CommunicationException {
+	public synchronized void establish(long kisConnectionTimeout) throws CommunicationException {
 		this.establish(kisConnectionTimeout, true);
 	}
 
-	public void establish(long kisConnectionTimeout, boolean dropIfAlreadyEstablished) throws CommunicationException {
+	public synchronized void establish(long kisConnectionTimeout, boolean dropIfAlreadyEstablished) throws CommunicationException {
 		Log.debugMessage("TCPKISConnection.establish | Connecting to KIS '" + this.kisId + "' on host '" + this.kisHostName + "', port " + this.kisTCPPort, Log.DEBUGLEVEL07);
 		if (this.isEstablished()) {
 			if (dropIfAlreadyEstablished)
@@ -78,7 +78,7 @@ public class TCPKISConnection implements KISConnection {
 			throw new CommunicationException("Cannot connect to KIS '" + this.kisId + "' on host '" + this.kisHostName + "', port " + this.kisTCPPort);
 	}
 
-	public void drop() {
+	public synchronized void drop() {
 		if (this.kisTCPSocket != KIS_TCP_SOCKET_DISCONNECTED) {
 			Log.debugMessage("TCPKISConnection.drop | Closing socket: " + this.kisTCPSocket, Log.DEBUGLEVEL09);
 			this.dropSocketConnection();
@@ -86,7 +86,7 @@ public class TCPKISConnection implements KISConnection {
 		}
 	}
 
-	public void transmitMeasurement(Measurement measurement, long timewait) throws CommunicationException {
+	public synchronized void transmitMeasurement(Measurement measurement, long timewait) throws CommunicationException {
 		Identifier measurementId  = measurement.getId();
 		Log.debugMessage("TCPKISConnection.transmitMeasurement | Transmitting measurement '" + measurementId + "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
 		if (this.transmitMeasurementBySocket(measurementId.toString(),
@@ -100,7 +100,7 @@ public class TCPKISConnection implements KISConnection {
 			throw new CommunicationException("TCPKISConnection.transmitMeasurement | Cannot transmit measurement '" + measurementId + "' to KIS '" + this.kisId + "'");
 	}
 
-	public KISReport receiveKISReport(long timewait) throws CommunicationException {
+	public synchronized KISReport receiveKISReport(long timewait) throws CommunicationException {
 		this.kisReport = null;
 		if (this.receiveKISReportFromSocket(timewait)) {
 			if (this.kisReport != null)

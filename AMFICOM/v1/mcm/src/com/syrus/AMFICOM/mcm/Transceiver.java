@@ -121,6 +121,7 @@ public class Transceiver extends SleepButWorkThread {
 					if (this.kisReport == null) {
 						try {
 							this.kisReport = this.kisConnection.receiveKISReport(super.initialTimeToSleep);
+							super.clearFalls();
 						}
 						catch (CommunicationException ce) {
 							Log.errorException(ce);
@@ -186,6 +187,7 @@ public class Transceiver extends SleepButWorkThread {
 					long kisConnectionTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT, MeasurementControlModule.KIS_CONNECTION_TIMEOUT) * 1000;
 					try {
 						this.kisConnection.establish(kisConnectionTimeout, true);
+						super.clearFalls();
 					}
 					catch (CommunicationException ce) {
 						Log.errorException(ce);
@@ -197,6 +199,7 @@ public class Transceiver extends SleepButWorkThread {
 			else {
 				try {
 					this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(this.kis);
+					super.clearFalls();
 				}
 				catch (CommunicationException ce) {
 					Log.errorException(ce);

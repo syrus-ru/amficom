@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.20 2004/12/17 16:14:58 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.21 2004/12/21 17:12:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import java.io.FileOutputStream;
 import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/12/17 16:14:58 $
- * @author $Author: saa $
+ * @version $Revision: 1.21 $, $Date: 2004/12/21 17:12:58 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -265,7 +265,7 @@ catch (IOException ioe) {
 		Log.debugMessage("$$$$$$$$$ Number of events == " + ret.length, Log.DEBUGLEVEL05);
 //			----------
 
-		rEvents = correct_analyse_events(ret);
+		rEvents = correctAnalyseEvents(ret);
 	}
 
 	// TODO: rewrite!
@@ -351,7 +351,7 @@ catch (IOException ioe) {
 		}
 	}
 
-	private ReflectogramEvent[] correct_analyse_events(ReflectogramEvent[] rev)
+	private ReflectogramEvent[] correctAnalyseEvents(ReflectogramEvent[] rev)
 	{
 		// FIXME: now it is just a copy-pase + adaptation of old code
 
@@ -391,15 +391,15 @@ catch (IOException ioe) {
 
 	public AlarmLevel getAlarmLevel()
 	{
-		boolean have_soft_alarms = false;
+		boolean haveSoftAlarms = false;
 		for (int i = 0; i < rAlarms.length; i++)
 		{
 			if (rAlarms[i].level == ReflectogramAlarm.LEVEL_HARD)
 				return AlarmLevel.ALARM_LEVEL_HARD;
 			if (rAlarms[i].level == ReflectogramAlarm.LEVEL_SOFT)
-				have_soft_alarms = true;
+				haveSoftAlarms = true;
 		}
-		if (have_soft_alarms)
+		if (haveSoftAlarms)
 			return AlarmLevel.ALARM_LEVEL_SOFT;
 		return AlarmLevel.ALARM_LEVEL_NONE;
 	}
