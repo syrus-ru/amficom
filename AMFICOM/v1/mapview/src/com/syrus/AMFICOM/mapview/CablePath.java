@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.12 2005/04/06 16:06:35 krupenn Exp $
+ * $Id: CablePath.java,v 1.13 2005/04/06 17:40:07 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,8 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -43,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/04/06 16:06:35 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/06 17:40:07 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -109,7 +107,7 @@ public class CablePath implements MapElement
 	/**
 	 * —писок линий, по которым проходит кабель.
 	 */
-	protected transient SortedSet links = new TreeSet();
+	protected transient List links = new LinkedList();
 	/**
 	 * ‘лаг сортировки линий.
 	 */
@@ -551,9 +549,9 @@ public class CablePath implements MapElement
 	 * ѕолучить список линий, по которым проходит кабель.
 	 * @return список линий
 	 */
-	public SortedSet getLinks()
+	public List getLinks()
 	{	
-		return Collections.unmodifiableSortedSet(this.links);
+		return Collections.unmodifiableList(this.links);
 	}
 
 	/**
@@ -656,25 +654,19 @@ public class CablePath implements MapElement
 	 */
 	public PhysicalLink nextLink(PhysicalLink physicalLink)
 	{
-		final SortedSet physicalLinksTailSet  = this.links.tailSet(physicalLink);
-		if (physicalLinksTailSet.size() == 1)
-			return null;
-		final Iterator physicalLinksIterator = physicalLinksTailSet.iterator();
-		physicalLinksIterator.next();
-		return (PhysicalLink) physicalLinksIterator.next();
-//		PhysicalLink ret = null;
-//		if(link == null)
-//		{
-//			if(this.getLinks().size() != 0)
-//				ret = (PhysicalLink)this.getLinks().get(0);
-//		}
-//		else
-//		{
-//			int index = this.getLinks().indexOf(link);
-//			if(index != this.getLinks().size() - 1 && index != -1)
-//				ret = (PhysicalLink)this.getLinks().get(index + 1);
-//		}
-//		return ret;
+		PhysicalLink ret = null;
+		if(physicalLink == null)
+		{
+			if(this.getLinks().size() != 0)
+				ret = (PhysicalLink)this.getLinks().get(0);
+		}
+		else
+		{
+			int index = this.getLinks().indexOf(physicalLink);
+			if(index != this.getLinks().size() - 1 && index != -1)
+				ret = (PhysicalLink)this.getLinks().get(index + 1);
+		}
+		return ret;
 	}
 
 	/**
@@ -685,21 +677,19 @@ public class CablePath implements MapElement
 	 */
 	public PhysicalLink previousLink(PhysicalLink physicalLink)
 	{
-		final SortedSet physicalLinksHeadSet = this.links.headSet(physicalLink); 
-		return physicalLinksHeadSet.isEmpty() ? null : (PhysicalLink) physicalLinksHeadSet.last();
-//		PhysicalLink ret = null;
-//		if(link == null)
-//		{
-//			if(this.getLinks().size() != 0)
-//				ret = (PhysicalLink)this.getLinks().get(this.getLinks().size() - 1);
-//		}
-//		else
-//		{
-//			int index = this.getLinks().indexOf(link);
-//			if(index > 0)
-//				ret = (PhysicalLink)this.getLinks().get(index - 1);
-//		}
-//		return ret;
+		PhysicalLink ret = null;
+		if(physicalLink == null)
+		{
+			if(this.getLinks().size() != 0)
+				ret = (PhysicalLink)this.getLinks().get(this.getLinks().size() - 1);
+		}
+		else
+		{
+			int index = this.getLinks().indexOf(physicalLink);
+			if(index > 0)
+				ret = (PhysicalLink)this.getLinks().get(index - 1);
+		}
+		return ret;
 	}
 
 	/**
