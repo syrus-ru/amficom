@@ -37,7 +37,7 @@ public class User_Database extends StorableObject_Database {
 			+ "creator_id, "
 			+ "modifier_id, "
 			+ "login, "
-			+ "type, "
+			+ "user_type, "
 			+ DatabaseDate.toQuerySubString("last_logged") + ", "
 			+ DatabaseDate.toQuerySubString("logged") + ", "
 			+ "sessions"
@@ -55,7 +55,7 @@ public class User_Database extends StorableObject_Database {
 													 new Identifier(resultSet.getLong("creator_id")),
 													 new Identifier(resultSet.getLong("modifier_id")),
 													 resultSet.getString("login"),
-													 resultSet.getString("type"),
+													 resultSet.getString("user_type"),
 													 DatabaseDate.fromQuerySubString(resultSet, "last_logged"),
 													 DatabaseDate.fromQuerySubString(resultSet, "logged"),
 													 resultSet.getInt("sessions"));
@@ -124,7 +124,7 @@ public class User_Database extends StorableObject_Database {
 	private void insertUser(User user) throws Exception {
 		String user_id_str = user.getId().toString();
 		String sql = "INSERT INTO " + ObjectEntities.USER_ENTITY
-			+ " (id, created, modified, creator_id, modifier_id, login, type, last_logged, logged, sessions)"
+			+ " (id, created, modified, creator_id, modifier_id, login, user_type, last_logged, logged, sessions)"
 			+ " VALUES ("
 			+ user_id_str + ", "
 			+ DatabaseDate.toUpdateSubString(user.getCreated()) + ", "
@@ -132,7 +132,7 @@ public class User_Database extends StorableObject_Database {
 			+ user.getCreatorId().toString() + ", "
 			+ user.getModifierId().toString() + ", '"
 			+ user.getLogin() + "', '"
-			+ user.getType() + "', "
+			+ user.getUserType() + "', "
 			+ DatabaseDate.toUpdateSubString(user.getLastLogged()) + ", "
 			+ DatabaseDate.toUpdateSubString(user.getLogged()) + ", "
 			+ Integer.toString(user.getSessions())

@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.administration.corba.User_Transferable;
 
 public class User extends StorableObject {
 	private String login;
-	private String type;
+	private String user_type;
 	private Date last_logged;
 	private Date logged;
 	private int sessions;
@@ -43,7 +43,7 @@ public class User extends StorableObject {
 					new Identifier(ut.creator_id),
 					new Identifier(ut.modifier_id));
 		this.login = new String(ut.login);
-		this.type = new String(ut.type);
+		this.user_type = new String(ut.user_type);
 		this.last_logged = new Date(ut.last_login);
 		this.logged = new Date(ut.logged);
 		this.sessions = ut.sessions;
@@ -82,7 +82,7 @@ public class User extends StorableObject {
 																 (Identifier_Transferable)super.creator_id.getTransferable(),
 																 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																 new String(this.login),
-																 new String(this.type),
+																 new String(this.user_type),
 																 this.last_logged.getTime(),
 																 this.logged.getTime(),
 																 this.sessions,
@@ -94,8 +94,8 @@ public class User extends StorableObject {
 		return this.login;
 	}
 
-	public String getType() {
-		return this.type;
+	public String getUserType() {
+		return this.user_type;
 	}
 
 	public Date getLastLogged() {
@@ -123,7 +123,7 @@ public class User extends StorableObject {
 																						Identifier creator_id,
 																						Identifier modifier_id,
 																						String login,
-																						String type,
+																						String user_type,
 																						Date last_logged,
 																						Date logged,
 																						int sessions) {
@@ -132,7 +132,7 @@ public class User extends StorableObject {
 												creator_id,
 												modifier_id);
 		this.login = login;
-		this.type = type;
+		this.user_type = user_type;
 		this.last_logged = last_logged;
 		this.logged = logged;
 		this.sessions = sessions;
