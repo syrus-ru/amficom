@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.6 2004/09/27 12:24:25 bob Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.7 2004/09/28 10:31:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/09/27 12:24:25 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/28 10:31:15 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -633,4 +633,135 @@ public final class MCMMeasurementObjectLoader implements MeasurementObjectLoader
             throw new DatabaseException("MCMMeasumentObjectLoader.loadTests | Illegal Storable Object: " + e.getMessage());
         }
     }
+	
+	public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveAnalysisType(AnalysisType analysisType, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveSet(Set set, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveModeling(Modeling modeling, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMeasurement(Measurement measurement, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveAnalysis(Analysis analysis, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveEvaluation(Evaluation evaluation, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveTest(Test test, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveResult(Result result, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveParameterTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMeasurementTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveAnalysisTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveEvaluationTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveSets(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveModelings(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMeasurementSetups(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMeasurements(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveAnalyses(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveEvaluations(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveTests(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveResults(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveTemporalPatterns(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.5 2004/09/17 12:20:50 max Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.6 2004/09/28 10:31:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,8 +58,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/09/17 12:20:50 $
- * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2004/09/28 10:31:15 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -1107,4 +1107,165 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
         }
         return list;
 	}
+	
+	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void savePortType(PortType portType, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+//			public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+//		throw new UnsupportedOperationException("method isn't complete");
+//		}
+
+		public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveDomain(Domain domain, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveServer(Server server, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMCM(MCM mcm, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveEquipment(Equipment equipment, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void savePort(Port port, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveKIS(KIS kis, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveCharacteristicTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveEquipmentTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void savePortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMeasurementPortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveCharacteristics(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+//			public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+//		throw new UnsupportedOperationException("method isn't complete");
+//		}
+
+		public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveDomains(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveServers(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMCMs(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveEquipments(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void savePorts(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveTransmissionPaths(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveKISs(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMeasurementPorts(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public void saveMonitoredElements(List list, boolean force) throws DatabaseException, CommunicationException {
+//		 TODO method isn't complete
+		throw new UnsupportedOperationException("method isn't complete");
+		}
+
 }
