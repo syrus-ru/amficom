@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.5 2005/03/10 15:22:50 bob Exp $
+ * $Id: LogicalConditionUI.java,v 1.6 2005/03/15 11:11:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.logic.LogicalSchemeUI;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/10 15:22:50 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/15 11:11:36 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -154,7 +154,7 @@ public class LogicalConditionUI {
 
 	public JSplitPane getSplitPane() {
 		JPanel panel = this.getPanel();
-		LogicalTreeUI logicalTreeUI = new LogicalTreeUI(this.rootItems);
+		LogicalTreeUI logicalTreeUI = new LogicalTreeUI();
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, logicalTreeUI.getPanel(), panel);
 		if (this.logicalSchemeUI != null) {
 			logicalTreeUI.addSelectionListener(this.logicalSchemeUI);
@@ -163,6 +163,7 @@ public class LogicalConditionUI {
 		}
 		splitPane.setOneTouchExpandable(false);
 		splitPane.setResizeWeight(0.2);
+		logicalTreeUI.addItems(this.rootItems);
 		return splitPane;
 	}
 
