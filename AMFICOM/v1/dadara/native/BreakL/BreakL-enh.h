@@ -44,14 +44,24 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taDX, ThreshDYArray &taDY,
 //void BreakL_FixThresh (ModelF &mf, ThreshArray &ta);
 
 #if CANTTDXDY
+
 // √лавный метод ThreshDX/DY преобразовани€.
 // autoThresh - режим без сглаживани€ краев DX-порогов.
 // ¬ режиме autoThresh возможно полное отслеживание порогов запрошенных типов:
 // ttdxOut != 0: ThreshDX,
 // ttdyOut != 0: ThreshDY.
 // Ѕез autoThresh пороги отслеживаютс€ не полностью.
-void ChangeByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
+
+// дл€ mf
+void ChangeBreakLByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
 			   int xMin, int xMax, int autoThresh, TTDY *ttdyOut, TTDX *ttdxOut);
-#endif
+
+// дл€ массива
+// yArr[0] ~ xMin; yArr[xMax - xMin] ~ xMax
+void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thNpY, int isUpper,
+						   int xMin, int xMax, int autoThresh,
+						   TTDY *ttdyOut, TTDX *ttdxOut);
+
+#endif //CANTTDXDY
 
 #endif

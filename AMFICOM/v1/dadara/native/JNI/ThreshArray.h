@@ -20,6 +20,7 @@ private:
 
 	int UPPER[4]; // <-- this could be static if we had good initialization technique
 	int CONJ[4]; // <-- this could be static
+	int keys[4]; // <-- this could be static
 
 	void free_cur();
 public:
@@ -31,6 +32,10 @@ public:
 	int getX1(int id);
 	int isUpper(int key);
 	int getConjKey(int key);
+	int getKeySoftUp();
+	int getKeyHardUp();
+	int getKeySoftDown();
+	int getKeyHardDown();
 };
 
 class ThreshDYArray : public ThreshArray

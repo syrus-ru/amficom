@@ -9,10 +9,10 @@ import java.util.LinkedList;
 
 public class Threshold {
 	//public static final int THRESHOLD_SIZE = 128;
-	public static final int UP1 = 0; // soft high
-	public static final int UP2 = 1; // hard high
-	public static final int DOWN1 = 2; // soft low
-	public static final int DOWN2 = 3; // hard low
+	public static final int UP1 = Thresh.SOFT_UP; // soft high
+	public static final int UP2 = Thresh.HARD_UP; // hard high
+	public static final int DOWN1 = Thresh.SOFT_DOWN; // soft low
+	public static final int DOWN2 = Thresh.HARD_DOWN; // hard low
 
 	private double[] dA = new double[] { .2, .4, -.2, -.4 };
 	private double[] dC = new double[] { 0, 0, 0, 0 };

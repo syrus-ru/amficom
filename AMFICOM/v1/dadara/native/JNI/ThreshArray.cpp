@@ -44,6 +44,17 @@ ThreshArray::ThreshArray(JNIEnv *env, jobjectArray array)
 			CONJ[key] = data;
 		}
 	}
+
+	{
+		const char *names[] = { N_Thresh_SOFT_UP, N_Thresh_HARD_UP, N_Thresh_SOFT_DOWN, N_Thresh_HARD_DOWN };
+		const char *signs[] = { S_Thresh_SOFT_UP, S_Thresh_HARD_UP, S_Thresh_SOFT_DOWN, S_Thresh_HARD_DOWN };
+		int i;
+		for (i = 0; i < 4; i++)
+		{
+			jfieldID fid = env->GetStaticFieldID(clazz, names[i], signs[i]);
+			keys[i] = env->GetStaticIntField(clazz, fid);
+		}
+	}
 }
 
 ThreshArray::~ThreshArray()
@@ -51,12 +62,32 @@ ThreshArray::~ThreshArray()
 	free_cur();
 }
 
-ThreshDXArray::~ThreshDXArray()
+
+int ThreshArray::isUpper(int key)
 {
+	return UPPER[key];
 }
 
-ThreshDYArray::~ThreshDYArray()
+int ThreshArray::getConjKey(int key)
 {
+	return CONJ[key];
+}
+
+int ThreshArray::getKeySoftUp()
+{
+	return keys[0];
+}
+int ThreshArray::getKeyHardUp()
+{
+	return keys[1];
+}
+int ThreshArray::getKeySoftDown()
+{
+	return keys[2];
+}
+int ThreshArray::getKeyHardDown()
+{
+	return keys[3];
 }
 
 ThreshDYArray::ThreshDYArray(JNIEnv *env, jobjectArray array)
@@ -75,6 +106,14 @@ ThreshDXArray::ThreshDXArray(JNIEnv *env, jobjectArray array)
 	assert(clazz);
 	id_dX     = env->GetFieldID(clazz, N_ThreshDX_dX, S_ThreshDX_dX);
 	id_isRise = env->GetFieldID(clazz, N_ThreshDX_isRise, S_ThreshDX_isRise);
+}
+
+ThreshDXArray::~ThreshDXArray()
+{
+}
+
+ThreshDYArray::~ThreshDYArray()
+{
 }
 
 void ThreshArray::free_cur()
@@ -164,16 +203,6 @@ int ThreshDXArray::getIsRise(int id)
 		return 0;
 	jboolean rise = env->GetBooleanField(cur_obj, id_isRise);
 	return rise;
-}
-
-int ThreshArray::isUpper(int key)
-{
-	return UPPER[key];
-}
-
-int ThreshArray::getConjKey(int key)
-{
-	return CONJ[key];
 }
 
 // converters

@@ -268,7 +268,7 @@ static int isat(int x, int xMin, int xMax)
 //autoThresh - режим при автоматической генерации порогов (0,1)
 // ttdyOut - null если не нужен,
 // ttdxOut - null если не нужен
-void ChangeByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
+void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thNpY, int isUpper,
 						   int xMin, int xMax, int autoThresh,
 						   TTDY *ttdyOut, TTDX *ttdxOut)
 {
@@ -288,18 +288,7 @@ void ChangeByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int k
 
 #endif
 
-	// convert thresholds
-	int thNpX;
-	int thNpY;
-	THX *thX;
-	THY *thY;
-	ThreshDXArrayToTHXArray(taX, key, &thX, &thNpX);
-	ThreshDYArrayToTHYArray(taY, key, &thY, &thNpY);
-
-	int isUpper = taX.isUpper(key);
-
-	prf_b("BreakL_ChangeByThresh: unpacking BreakL");
-	double *unpk = BreakLToArray(mf.getP(), mf.getNPars(), xMin, Nx);
+	double *unpk = yArr;
 
 	prf_b("BreakL_ChangeByThresh: process AL threshs");
 
@@ -652,11 +641,39 @@ void ChangeByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int k
 		prf_b("BreakL_ChangeByThresh: committing DX thresholds: done");
 	}
 
-	prf_b("BreakL_ChangeByThresh: committing thresholds: BreakLFromArray");
+}
+
+void ChangeBreakLByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
+						   int xMin, int xMax, int autoThresh,
+						   TTDY *ttdyOut, TTDX *ttdxOut)
+{
+	int Nx = xMax - xMin + 1;
+	// convert thresholds
+	prf_b("ChangeBreakLByThreshEx: convert thresholds");
+	int thNpX;
+	int thNpY;
+	THX *thX;
+	THY *thY;
+	ThreshDXArrayToTHXArray(taX, key, &thX, &thNpX);
+	ThreshDYArrayToTHYArray(taY, key, &thY, &thNpY);
+
+	// unpack BreakL
+	prf_b("ChangeBreakLByThreshEx: unpacking BreakL");
+	double *unpk = BreakLToArray(mf.getP(), mf.getNPars(), xMin, Nx);
+
+	// process
+	prf_b("ChangeBreakLByThreshEx: call ChangeArrayByThreshEx");
+	int isUpper = taX.isUpper(key);
+	ChangeArrayByThreshEx (unpk, thX, thY, thNpX, thNpY, isUpper,
+						   xMin, xMax, autoThresh,
+						   ttdyOut, ttdxOut);
+
+	// pack
+	prf_b("ChangeBreakLByThreshEx: BreakLFromArray");
 	BreakLFromArray(mf, xMin, Nx, unpk);
 	delete[] unpk;
 
-	prf_b("BreakL_ChangeByThresh: done");
+	prf_b("ChangeBreakLByThreshEx: done");
 
 	//fflush(stderr);
 
@@ -695,7 +712,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 	}
 
 	prf_b("Outer BreakL_ChangeByThresh: go inside");
-	ChangeByThreshEx (mf, taX, taY, key, xMin, xMax, 0, ttdyOut, ttdxOut);
+	ChangeBreakLByThreshEx (mf, taX, taY, key, xMin, xMax, 0, ttdyOut, ttdxOut);
 	prf_b("Outer BreakL_ChangeByThresh: back from inside");
 
 	int ret = -1;
