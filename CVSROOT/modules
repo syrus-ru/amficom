@@ -134,8 +134,7 @@ database_v1	AMFICOM/v1/database
 akp		hw/akp
 trc		hw/trc
 t4		hw/t4
+r6		hw/r6
 
 
 tools		tools
-
-optimize_test	test/optimize
