@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.13 2004/07/30 14:31:21 bob Exp $
+ * $Id: Transceiver.java,v 1.14 2004/07/30 15:01:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -25,7 +24,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/07/30 14:31:21 $
+ * @version $Revision: 1.14 $, $Date: 2004/07/30 15:01:08 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -37,8 +36,7 @@ public class Transceiver extends SleepButWorkThread {
 	private final String taskFileName;
 	private final String reportFileName;
 	private boolean running;
-	
-	private Map measurementQueue;//Map <Measurement, KISReport>
+	private List measurementQueue;//List <Measurement>
 	private Map processingMeasurements;//Map <Identifier, Measurement>
 	private Map testProcessors;//Map <Measurement, TestProcessor>
 
@@ -55,7 +53,7 @@ public class Transceiver extends SleepButWorkThread {
 
 		this.running = true;
 		
-		this.measurementQueue = Collections.synchronizedMap(new Hashtable());
+		this.measurementQueue = Collections.synchronizedList(new ArrayList());
 		this.processingMeasurements = Collections.synchronizedMap(new Hashtable());
 		this.testProcessors = Collections.synchronizedMap(new Hashtable());
 	}
@@ -63,15 +61,11 @@ public class Transceiver extends SleepButWorkThread {
 	protected void addMeasurement(Measurement measurement, TestProcessor testProcessor) {
 		Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
-			this.measurementQueue.put(measurement, null);
+			this.measurementQueue.add(measurement);
 			this.testProcessors.put(measurement, testProcessor);
 		}
 		else
 			Log.errorMessage("Status: " + measurement.getStatus().value() + " of measurement '" + measurementId.toString() + "' not SCHEDULED -- cannot add to queue");
-	}
-	
-	protected KISReport getKISPreport(Measurement measurement){
-		return (KISReport) this.measurementQueue.get(measurement);		
 	}
 
 	public void run() {
@@ -80,11 +74,10 @@ public class Transceiver extends SleepButWorkThread {
 		KISReport kisReport = null;
 		TestProcessor testProcessor = null;
 		Result result;
-		Iterator measumentIterator = this.measurementQueue.keySet().iterator();
 		while (this.running) {
 			if (measurement == null) {
 				if (! this.measurementQueue.isEmpty()) {
-					measurement = (Measurement)measumentIterator.next();
+					measurement = (Measurement)this.measurementQueue.get(0);
 					measurementId = measurement.getId();
 				}
 			}//if (measurement == null)
@@ -134,10 +127,8 @@ public class Transceiver extends SleepButWorkThread {
 						catch (UpdateObjectException uoe) {
 							Log.errorException(uoe);
 						}
-						if (result != null){
-							this.measurementQueue.put(measurement, result);
-							testProcessor.addMeasurementResult(result);
-						}
+						if (result != null)
+							testProcessor.setMeasurementResult(measurement, result);
 					}
 					else
 						Log.errorMessage("Cannot find test processor for measurement '" + measurementId.toString() + "'; throwing away it's report");
