@@ -37,7 +37,7 @@ public final class CharacteristicController implements ObjectResourceController 
 
 	public String getName(final String key) {
 		String name = null;
-		if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+		if (key.equals(COLUMN_DESCRIPTION))
 			name = "Название";
 		return name;
 	}
