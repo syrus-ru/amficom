@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.2 2005/02/11 16:18:55 bob Exp $
+ * $Id: TypicalConditionImpl.java,v 1.3 2005/03/24 13:11:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,16 +11,15 @@ package com.syrus.AMFICOM.map;
 import java.util.Collection;
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
-import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/11 16:18:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/03/24 13:11:16 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class TypicalConditionImpl extends TypicalCondition {
@@ -94,24 +93,22 @@ public class TypicalConditionImpl extends TypicalCondition {
 		
 	}
 
-	public boolean isNeedMore(Collection collection) throws ApplicationException {
+	public boolean isNeedMore(Collection collection) {
 		return true;
 	}
 
-	public boolean isConditionTrue(Object object) throws ApplicationException {
-		boolean result = false;
-		Wrapper wrapper = null;
-		if (object instanceof PhysicalLinkType) {
+	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+		Wrapper wrapper;
+		if (object instanceof PhysicalLinkType)
 			wrapper = PhysicalLinkTypeWrapper.getInstance();
-		} else if (object instanceof SiteNodeType) {
-			wrapper = SiteNodeTypeWrapper.getInstance();
-		}
-		if (wrapper != null)
-			result = super.parseCondition(wrapper.getValue(object, this.key));
 		else
-			Log.errorMessage("TypicalConditionImpl.isConditionTrue | Class " + object.getClass().getName()
-					+ " is not supported");
-		return result;
+			if (object instanceof SiteNodeType)
+				wrapper = SiteNodeTypeWrapper.getInstance();
+			else
+				throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + object.getClass().getName(),
+						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+
+		return super.parseCondition(wrapper.getValue(object, this.key));
 	}
 
 }
