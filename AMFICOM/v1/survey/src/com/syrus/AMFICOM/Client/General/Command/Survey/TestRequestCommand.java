@@ -17,13 +17,12 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
 //import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Test.*;
 import com.syrus.AMFICOM.Client.Survey.*;
-import com.syrus.AMFICOM.Client.Survey.Test.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 
 public class TestRequestCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-	TestDialog td;
+//	TestDialog td;
 
 	public TestRequestCommand()
 	{
@@ -43,15 +42,15 @@ public class TestRequestCommand extends VoidCommand
 	{
         System.out.println("Creating new test request");
 
-		td = new TestDialog(null, "Testing this shit", false);
 /*    
+		td = new TestDialog(null, "Testing this shit", false);
 		td.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
         td.dispose();
 //				System.exit(0);
 			}      
 		});
-*/
+
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize =  td.getSize();
 
@@ -87,19 +86,7 @@ public class TestRequestCommand extends VoidCommand
 			t.request_id = treq.getId();
 			t.user_id = aContext.getSessionInterface().getUserId();
 			t.name = sdf.format(new Date(System.currentTimeMillis()));
-/*
-      new Test(dataSource.GetUId("test"));
-			byte[] value = new byte[0];
-			Parameter_Transferable arg1 = new Parameter_Transferable (
-					"0",
-					"נופכוךעמדנאללא",
-					"reflectogramm",
-					"נופכוךעמדנאללא",
-					"reflectogramm",
-					t.id,
-					value );
-			t.addArgument(new Parameter(arg1));
-*/
+
 			Pool.put("test", t.id, t);
 
 // test!!!!!!
@@ -108,6 +95,7 @@ public class TestRequestCommand extends VoidCommand
 
 			dataSource.RequestTest(treq.id, t.id);
 		}
+*/
 
 	}
 
