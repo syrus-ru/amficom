@@ -71,7 +71,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPort.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPortDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainCondition.java
 	touch $@
 
 .corba:	$(CLASSDIR)
