@@ -63,7 +63,7 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 .mach:	.corba .ora $(CLASSDIR)
-	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
+	$(JAVAC) $(JAVAC_FLAGS) \
 		-classpath $(APPCLASSPATH):$(ORACLECLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
