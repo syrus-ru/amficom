@@ -544,19 +544,20 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(MapContext.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(MapContext.typ));
-
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(
 						aContext.getDataSourceInterface().getSession().getDomainId());
-					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = MapContext.getDefaultSorter();
+            
+          Hashtable mcHash = Pool.getHash(MapContext.typ);
+					filter.filtrate(mcHash);
+          
+/*					ObjectResourceSorter sorter = MapContext.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
+					dSet = sorter.default_sort();*/
 
-					Enumeration enumerer = dSet.elements();
-					for (; enumerer.hasMoreElements(); )
+          Enumeration mcEnum = mcHash.elements();
+					for (; mcEnum.hasMoreElements(); )
 					{
-						MapContext mc = (MapContext) enumerer.nextElement();
+						MapContext mc = (MapContext) mcEnum.nextElement();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(mc,
 							mc.getName(), true);
 						vec.add(n);
@@ -568,7 +569,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode) node.
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
-
+////////////////////////////////////
 				DataSet dSet = new DataSet();
 				for (int i = 0; i < mc.getNodes().size(); i++)
 				{
@@ -583,6 +584,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				dSet = sorter.default_sort();
 
 				Enumeration enumerer = dSet.elements();
+/////////////////////////////////////////        
 				for (; enumerer.hasMoreElements(); )
 				{
 					MapEquipmentNodeElement me = (MapEquipmentNodeElement) enumerer.
