@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.3 2005/02/21 13:02:38 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.4 2005/03/04 13:08:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeDatabase;
 import com.syrus.AMFICOM.map.SiteNodeDatabase;
 import com.syrus.AMFICOM.map.SiteNodeTypeDatabase;
 import com.syrus.AMFICOM.map.TopologicalNodeDatabase;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
@@ -69,8 +70,8 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/21 13:02:38 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/03/04 13:08:59 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 
@@ -102,11 +103,11 @@ public abstract class DatabaseContextSetup {
 			new ServerDatabase(),
 			new MCMDatabase());
 	
-	GeneralDatabaseContext.init(new ParameterTypeDatabase(),
+		GeneralDatabaseContext.init(new ParameterTypeDatabase(),
 			new CharacteristicTypeDatabase(),
 			new CharacteristicDatabase());
 
-	ConfigurationDatabaseContext.init(
+		ConfigurationDatabaseContext.init(
 			new EquipmentTypeDatabase(),
 			new PortTypeDatabase(),
 			new MeasurementPortTypeDatabase(),
@@ -123,9 +124,10 @@ public abstract class DatabaseContextSetup {
 			new LinkDatabase(),
 			new CableThreadDatabase());
 
-	MeasurementDatabaseContext.init(new MeasurementTypeDatabase(),
+		MeasurementDatabaseContext.init(new MeasurementTypeDatabase(),
 			new AnalysisTypeDatabase(),
 			new EvaluationTypeDatabase(),
+			new ModelingTypeDatabase(),
 			new SetDatabase(),
 			new ModelingDatabase(),
 			new MeasurementSetupDatabase(),
@@ -146,9 +148,7 @@ public abstract class DatabaseContextSetup {
 				new SiteNodeDatabase(),
 				new TopologicalNodeDatabase());
 		
-	}	
-
-
+	}
 
 	public static void initObjectPools() {
 		int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, DEFAULT_GENERAL_POOL_SIZE);

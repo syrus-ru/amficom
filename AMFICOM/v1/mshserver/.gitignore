@@ -1,3 +1,6 @@
+.classpath
+.project
+.settings
 .corba
 .mach
 *.jar
@@ -9,6 +12,7 @@
 *.swp
 *.log
 classes
+test
 logs
 orb.db
 SerializedLRUMaps
