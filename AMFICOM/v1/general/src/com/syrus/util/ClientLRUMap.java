@@ -1,5 +1,5 @@
 /*
- * $Id: ClientLRUMap.java,v 1.1 2004/09/23 13:47:03 bob Exp $
+ * $Id: ClientLRUMap.java,v 1.2 2004/11/03 16:47:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,13 +16,13 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/23 13:47:03 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/03 16:47:10 $
  * @author $Author: bob $
  * @module util
  */
 
 public class ClientLRUMap extends LRUMap {
-	
+
 	public ClientLRUMap() {
 		super();
 	}
@@ -33,27 +33,33 @@ public class ClientLRUMap extends LRUMap {
 
 	
 	public synchronized Object put(Object key, Object value) {
+		super.modCount++;
 		Entry newEntry = new Entry(key, value);
 		Object ret = null;
-		if (this.array[this.array.length - 1] != null){
-			ret = this.array[this.array.length - 1].value;
+		// what additional entry(ies) at array;
+		int add = (super.entityCount == super.array.length) ? 0 : 1;
+		if (super.array[super.array.length - 1] != null){
+			ret = super.array[super.array.length - 1].value;
 			if (ret instanceof StorableObject){
 				StorableObject storableObject = (StorableObject) ret;
 				// changed Storable cannot be removed
 				// enlarge array when changed StorableObject at end of array
 				 
 				if (storableObject.isChanged()){
-					Entry[] array = new Entry[this.array.length + 10];
-					System.arraycopy(this.array, 0, array, 0, this.array.length);
-					this.array = array;
+					add = 1;
+					super.entityCount++;
+					Entry[] array = new Entry[super.array.length + 10];
+					System.arraycopy(super.array, 0, array, 0, super.array.length);
+					super.array = array;
 					ret = null;
 				}
 			}
 		}
 		
-		for (int i = this.array.length - 1; i > 0; i--)
-			this.array[i] = this.array[i - 1];
-		this.array[0] = newEntry;	
+		super.entityCount += add;
+		for (int i = super.array.length - 1; i > 0; i--)
+			super.array[i] = super.array[i - 1];
+		super.array[0] = newEntry;	
 		
 		// save ret
 		if (ret instanceof Serializable){
@@ -68,20 +74,22 @@ public class ClientLRUMap extends LRUMap {
 	
 	public synchronized List getChanged(){
 		List list = null;
-		for (int i = 0; i < this.array.length; i++){
-			Entry entry = this.array[i];
+		for (int i = 0; i < super.array.length; i++){
+			Entry entry = super.array[i];
 			if ((entry != null) && (entry.value instanceof StorableObject)){
 				if (list == null)
 					list = new LinkedList();
-				list.add(entry.value);
+				StorableObject object = (StorableObject)entry.value;
+				if (object.isChanged())
+					list.add(entry.value);				
 			}
 		}		
 		return list;
 	}
 	
 	public synchronized void removeChanged(){
-		for (int i = 0; i < this.array.length; i++){
-			Entry entry = this.array[i];
+		for (int i = 0; i < super.array.length; i++){
+			Entry entry = super.array[i];
 			if ((entry != null) && (entry.value instanceof StorableObject)){
 				StorableObject object = (StorableObject)entry.value;
 				if (object.isChanged())

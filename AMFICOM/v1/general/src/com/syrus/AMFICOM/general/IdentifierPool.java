@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.4 2004/09/30 10:55:47 bob Exp $
+ * $Id: IdentifierPool.java,v 1.5 2004/11/03 16:47:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/30 10:55:47 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/03 16:47:10 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -33,7 +33,7 @@ public class IdentifierPool {
 	/* Map <Short objectEntity, LRUMap idPool> */
 	private static Map	idPoolMap;
 
-	private static long	timeToSleep	= 200;
+	private static long	timeToSleep	= 500;
 
 	private IdentifierPool() {
 		// empty private construcor

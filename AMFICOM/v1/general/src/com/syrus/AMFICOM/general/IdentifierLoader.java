@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.2 2004/09/30 10:55:47 bob Exp $
+ * $Id: IdentifierLoader.java,v 1.3 2004/11/03 16:47:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/30 10:55:47 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/03 16:47:10 $
  * @author $Author: bob $
  * @module module
  */
@@ -26,7 +26,7 @@ public class IdentifierLoader extends SleepButWorkThread {
 	private IdentifierGeneratorServer	server;
 	private Fifo		idPool;
 	private short		entityCode;
-	private static int	timeToSleep	= 1000;
+	private static int	timeToSleep	= 200;
 
 	public IdentifierLoader(IdentifierGeneratorServer server, Fifo idPool, short entityCode) {
 		super(timeToSleep);
@@ -51,7 +51,7 @@ public class IdentifierLoader extends SleepButWorkThread {
 				generatedIdentifierRange = this.server.getGeneratedIdentifierRange(this.entityCode,
 													size);
 				Log.debugMessage("IdentifierLoader.run | fetched " + generatedIdentifierRange.length + " identifiers for "
-						+ this.entityCode, Log.DEBUGLEVEL10);
+						+ ObjectEntities.codeToString(this.entityCode), Log.DEBUGLEVEL10);
 			} catch (AMFICOMRemoteException e) {
 				Log.errorMessage(e.getMessage());
 				sleepCauseOfFall();
