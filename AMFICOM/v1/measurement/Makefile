@@ -9,7 +9,7 @@ LIBNAME=measurement.jar
 ARCHFILE=measurement.tar.gz
 
 ORACLECLASSPATH = $(ORACLE_HOME)/jdbc/lib/classes12.jar:$(ORACLE_HOME)/sqlj/lib/translator.jar:$(ORACLE_HOME)/sqlj/lib/runtime12ee.jar
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar
 
 IDL2JAVA = idl2java
 IDL2JAVA_FLAGS = \
