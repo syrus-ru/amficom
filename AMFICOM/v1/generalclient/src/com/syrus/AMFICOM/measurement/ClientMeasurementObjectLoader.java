@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.3 2004/11/17 09:41:00 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.4 2004/11/23 15:04:49 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/17 09:41:00 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/23 15:04:49 $
  * @author $Author: max $
  * @module generalclient_v1
  */
@@ -68,7 +68,33 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		accessIdentifierTransferable = accessIdentifier_Transferable;
 	}
 	
-	public ParameterType loadParameterType(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public void delete(Identifier id) throws CommunicationException {
+        Identifier_Transferable identifier_Transferable = (Identifier_Transferable) id.getTransferable();
+        try {
+            this.server.delete(identifier_Transferable, accessIdentifierTransferable);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.delete | Couldn't delete id ="
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
+    }
+    
+    public void delete(List ids) throws CommunicationException {
+        Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+        int i = 0;
+        for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+            Identifier id = (Identifier) it.next();
+            identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();           
+        }
+        try {
+            this.server.deleteList(identifier_Transferables, accessIdentifierTransferable);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.delete | AMFICOMRemoteException ";
+            throw new CommunicationException(msg, e);
+        }
+    }
+    
+    public ParameterType loadParameterType(Identifier id) throws RetrieveObjectException, CommunicationException {
 		try {
 			return new ParameterType(this.server.transmitParameterType((Identifier_Transferable) id
 					.getTransferable(), accessIdentifierTransferable));
