@@ -1,5 +1,25 @@
+/**
+ * $Id: MapApplicationModel.java,v 1.9 2005/01/30 15:34:56 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
+
 package com.syrus.AMFICOM.Client.General.Model;
 
+/**
+ * Модель приложения определяет функциональные элементы, досступные при работе
+ * с картой.
+ *  
+ * 
+ * @author Andrei Kroupennikov
+ * @version $Revision: 1.9 $, $Date: 2005/01/30 15:34:56 $
+ * @module mapviewclient_v1
+ */
 public class MapApplicationModel extends ApplicationModel
 {
 	public static final String ACTION_SAVE_MAP = "savemap";
@@ -56,5 +76,11 @@ public class MapApplicationModel extends ApplicationModel
 		super.add(OPERATION_MEASURE_DISTANCE);
 		super.add(OPERATION_MOVE_FIXED);
 
+	}
+
+	public String toString()
+	{
+		// TODO:  Override this java.lang.Object method
+		return getClass().getName();
 	}
 }
