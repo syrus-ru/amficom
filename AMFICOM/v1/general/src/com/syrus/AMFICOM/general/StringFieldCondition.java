@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.7 2005/02/03 14:26:43 arseniy Exp $
+ * $Id: StringFieldCondition.java,v 1.8 2005/02/07 09:06:23 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,9 @@ import java.lang.reflect.*;
 import java.util.*;
 
 /**
+ * 
+ * @deprecated use {@link com.syrus.AMFICOM.general.TypicalCondition}
+ * 
  * If one needs to write a <code>StringFieldCondition</code> for a certain
  * module (administration, configuration, etc.), the resulting class must meet
  * the following conditions:<ul>
@@ -37,8 +40,8 @@ import java.util.*;
  * }</pre></li>
  * <li>It must override {@link #isConditionTrue(Object)}.</li></ul> 
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/02/03 14:26:43 $
+ * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/02/07 09:06:23 $
  * @module general_v1
  */
 public class StringFieldCondition implements StorableObjectCondition {

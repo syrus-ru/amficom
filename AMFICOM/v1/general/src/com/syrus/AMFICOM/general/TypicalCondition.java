@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.6 2005/02/04 14:12:24 bob Exp $
+ * $Id: TypicalCondition.java,v 1.7 2005/02/07 09:06:23 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,6 @@ import com.syrus.AMFICOM.general.corba.TypicalSort;
 import com.syrus.util.Log;
 
 /**
- * @todo: TODO: WARNING ! UNTESTED YET !
- * 
  * If one needs to write a implementation for <code>TypicalCondition</code>
  * for a certain module (administration, configuration, etc.), the resulting
  * class must meet the following conditions:
@@ -121,7 +119,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.6 $, $Date: 2005/02/04 14:12:24 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/07 09:06:23 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -235,7 +233,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't inherit from " //$NON-NLS-1$
-					+ StringFieldCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't have the constructor expected" //$NON-NLS-1$
@@ -326,7 +324,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't inherit from " //$NON-NLS-1$
-					+ StringFieldCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't have the constructor expected" //$NON-NLS-1$
@@ -417,7 +415,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't inherit from " //$NON-NLS-1$
-					+ StringFieldCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't have the constructor expected" //$NON-NLS-1$
@@ -498,7 +496,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't inherit from " //$NON-NLS-1$
-					+ StringFieldCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't have the constructor expected" //$NON-NLS-1$
@@ -591,7 +589,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't inherit from " //$NON-NLS-1$
-					+ StringFieldCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't have the constructor expected" //$NON-NLS-1$
@@ -720,7 +718,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't inherit from " //$NON-NLS-1$
-					+ StringFieldCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class " //$NON-NLS-1$
 					+ className + " doesn't have the constructor expected" //$NON-NLS-1$
