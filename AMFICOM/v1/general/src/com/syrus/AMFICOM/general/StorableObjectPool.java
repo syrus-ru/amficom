@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.20 2005/02/09 12:37:24 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.21 2005/02/09 13:52:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/02/09 12:37:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/02/09 13:52:50 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -162,13 +162,7 @@ public abstract class StorableObjectPool {
 
 	/**
 	 * This method is only invoked by this class' descendants, using their
-	 * <code>public static void flush(boolean)</code> method. It completes
-	 * the following operations:
-	 * <ul>
-	 * <li>get modified objects from current module's pool;</li>
-	 * <li>analyse dependencies of these </li>
-	 * </ul>
-	 *
+	 * <code>public static void flush(boolean)</code> method.
 	 * @param force
 	 * @throws VersionCollisionException
 	 * @throws DatabaseException
@@ -180,50 +174,47 @@ public abstract class StorableObjectPool {
 				DatabaseException,
 				CommunicationException,
 				IllegalDataException {
-		synchronized (this) {
-			List list = new LinkedList();
-			if (this.flushedGroup == null)
-				this.flushedGroup = new HashMap();
-			else
-				this.flushedGroup.clear();
-			for (final Iterator entityCodeIterator = this.objectPoolMap.keySet().iterator(); entityCodeIterator.hasNext();) {
-				final Short entityCode = (Short) entityCodeIterator.next();
-				LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
-				if (objectPool != null) {
-					list.clear();
-					for (Iterator poolIt = objectPool.iterator(); poolIt.hasNext();) {
-						StorableObject storableObject = (StorableObject) poolIt.next();
-						this.selfGroupCode = ObjectGroupEntities.getGroupCode(storableObject.getId().getMajor());
-						if (storableObject.isChanged()) {
-							if (!list.contains(storableObject)) {
-								list.add(storableObject);
-								Log.debugMessage("StorableObjectPool.flushImpl | '" + storableObject.getId() + "' is changed", Log.DEBUGLEVEL10);
-							}
-						}
-					}
-					this.save(list, force);
 
+		if (this.flushedGroup == null)
+			this.flushedGroup = new HashMap();
+		else
+			this.flushedGroup.clear();
+
+		List changedObjects = new LinkedList();
+		for (final Iterator entityCodeIterator = this.objectPoolMap.keySet().iterator(); entityCodeIterator.hasNext();) {
+			final Short entityCode = (Short) entityCodeIterator.next();
+			LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
+			if (objectPool != null) {
+				changedObjects.clear();
+				for (Iterator poolIterator = objectPool.iterator(); poolIterator.hasNext();) {
+					StorableObject storableObject = (StorableObject) poolIterator.next();
+					if (storableObject.isChanged() && !changedObjects.contains(storableObject)) {
+						changedObjects.add(storableObject);
+						Log.debugMessage("StorableObjectPool.flushImpl | '" + storableObject.getId() + "' is changed; will save it", Log.DEBUGLEVEL10);
+					}
 				}
-				else {
-					Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity code: '"
-							+ ObjectEntities.codeToString(entityCode)
-							+ "'");
-				}
+//				this.selfGroupCode = ObjectGroupEntities.getGroupCode(entityCode);
+				this.save(changedObjects, force);
 			}
+			else
+				Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity code: '"
+						+ ObjectEntities.codeToString(entityCode) + "'");
 		}
 	}
 
-	protected StorableObject getStorableObjectImpl(final Identifier objectId, final boolean useLoader) throws DatabaseException, CommunicationException {
+	protected StorableObject getStorableObjectImpl(final Identifier objectId, final boolean useLoader)
+			throws DatabaseException,
+				CommunicationException {
 		if (objectId != null) {
 			short objectEntityCode = objectId.getMajor();
 			LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(objectEntityCode));
 			if (objectPool != null) {
 				StorableObject storableObject = (StorableObject) objectPool.get(objectId);
 				if (storableObject == null && useLoader) {
-					storableObject = loadStorableObject(objectId);
+					storableObject = this.loadStorableObject(objectId);
 					if (storableObject != null)
 						try {
-							putStorableObjectImpl(storableObject);
+							this.putStorableObjectImpl(storableObject);
 						}
 						catch (IllegalObjectEntityException ioee) {
 							Log.errorException(ioee);
@@ -232,16 +223,20 @@ public abstract class StorableObjectPool {
 				return storableObject;
 			}
 
-			Log.errorMessage("StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + ObjectEntities.codeToString(objectEntityCode) + "'");
+			Log.errorMessage("StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '"
+					+ objectId.toString()
+					+ "' entity code: '"
+					+ ObjectEntities.codeToString(objectEntityCode)
+					+ "'");
 			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
 				final Short entityCode = (Short) it.next();
 				Log.debugMessage("StorableObjectPool.getStorableObjectImpl | available "
-					+ ObjectEntities.codeToString(entityCode)
-					+ " / "
-					+ entityCode,
-					Log.DEBUGLEVEL05);
+						+ ObjectEntities.codeToString(entityCode)
+						+ " / "
+						+ entityCode, Log.DEBUGLEVEL05);
 			}
-		} else
+		}
+		else
 			Log.errorMessage("StorableObjectPool.getStorableObjectImpl | NULL identifier supplied");
 		return null;
 	}
@@ -470,8 +465,8 @@ public abstract class StorableObjectPool {
 						+ ObjectEntities.codeToString(entityCode) + "' entity",
 						Log.DEBUGLEVEL08);
 
-				final Set returnedStorableObjectsIds = refreshStorableObjects(storableObjects);				
-				getStorableObjectsImpl(new ArrayList(returnedStorableObjectsIds), true);
+				final Set returnedStorableObjectsIds = this.refreshStorableObjects(storableObjects);				
+				this.getStorableObjectsImpl(new ArrayList(returnedStorableObjectsIds), true);
 			}
 		} catch (DatabaseException de) {
 			Log.errorMessage("StorableObjectPool.refreshImpl | DatabaseException: " + de.getMessage());
@@ -527,6 +522,45 @@ public abstract class StorableObjectPool {
 
 		return ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
 	}
+
+//	private void save(final List storableObjects, final boolean force)
+//			throws VersionCollisionException,
+//				DatabaseException,
+//				CommunicationException,
+//				IllegalDataException {
+//		if (storableObjects == null || storableObjects.isEmpty())
+//			return;
+//
+//		assert this.hasSingleTypeEntities(storableObjects) : "Storable objects of different type have to be saved separately...";
+//
+//		StorableObject storableObject;
+//		List dependencies;
+//		
+//		for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
+//			storableObject = (StorableObject) storableObjectIterator.next();
+//			Log.debugMessage("StorableObjectPool.save | Processing dependencies for '" + storableObject.getId() + "'", Log.DEBUGLEVEL08);
+//			dependencies = storableObject.getDependencies();
+//			for (final Iterator dependencyIterator = dependencies.iterator(); dependencyIterator.hasNext();) {
+//				final Object dependency = dependencyIterator.next();
+//				Identifier dependencyId;
+//				if (dependency instanceof Identifier)
+//					dependencyId = (Identifier) dependency;
+//				else
+//					if (dependency instanceof Identified)
+//						dependencyId = ((Identified) dependency).getId();
+//					else
+//						throw new IllegalDataException("Illegal dependency object class: " + dependency.getClass().getName()
+//								+ " for object '" + storableObject.getId() + "'; must be Identifier or Identified");
+//
+//				final Short groupCode = new Short(ObjectGroupEntities.getGroupCode(dependencyId.getMajor()));
+//				if (groupCode.shortValue() != this.selfGroupCode) {
+//					if (!this.flushedGroup.containsKey(groupCode))
+//						this.flushedGroup.put(groupCode, Boolean.FALSE);
+//				}
+//
+//			}
+//		}
+//	}
 
 	private void save(final List storableObjects, final boolean force)
 			throws VersionCollisionException,
