@@ -30,6 +30,18 @@ module corba {
 		general::corba::Characteristic_Transferable transmitCharacteristic(in general::corba::Identifier_Transferable id)
 			raises (general::corba::AMFICOMRemoteException);
 
+
+
+
+		general::corba::ParameterTypeSeq_Transferable transmitParameterTypes(in general::corba::IdentifierSeq_Transferable idsT)
+			raises (general::corba::AMFICOMRemoteException);
+
+		general::corba::CharacteristicTypeSeq_Transferable transmitCharacteristicTypes(in general::corba::IdentifierSeq_Transferable idsT)
+			raises (general::corba::AMFICOMRemoteException);
+
+		general::corba::CharacteristicSeq_Transferable transmitCharacteristics(in general::corba::IdentifierSeq_Transferable idsT)
+			raises (general::corba::AMFICOMRemoteException);
+
 /////////////////////////////////////////	Administration ///////////////////////////////////////////////
 
 		administration::corba::User_Transferable transmitUser(in general::corba::Identifier_Transferable id)

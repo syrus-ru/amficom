@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.33 2005/03/23 12:29:34 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.34 2005/03/23 15:08:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.mserver;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,6 +53,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
@@ -97,7 +99,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/03/23 12:29:34 $
+ * @version $Revision: 1.34 $, $Date: 2005/03/23 15:08:43 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -764,6 +766,84 @@ public class MServerImplementation extends MServerPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
+
+
+
+
+
+	public ParameterType_Transferable[] transmitParameterTypes(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
+		Collection ids = new HashSet(idsT.length);
+		for (int i = 0; i < idsT.length; i++)
+			ids.add(new Identifier(idsT[i]));
+
+		Collection objects = null;
+		try {
+			objects = GeneralStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
+		int i = 0;
+		ParameterType parameterType;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			parameterType = (ParameterType) it.next();
+			transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
+		}
+		return transferables;
+	}
+
+	public CharacteristicType_Transferable[] transmitCharacteristicTypes(Identifier_Transferable[] idsT)
+			throws AMFICOMRemoteException {
+		Collection ids = new HashSet(idsT.length);
+		for (int i = 0; i < idsT.length; i++)
+			ids.add(new Identifier(idsT[i]));
+
+		Collection objects = null;
+		try {
+			objects = GeneralStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
+		int i = 0;
+		CharacteristicType characteristicType;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			characteristicType = (CharacteristicType) it.next();
+			transferables[i] = (CharacteristicType_Transferable) characteristicType.getTransferable();
+		}
+		return transferables;
+	}
+
+	public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
+		Collection ids = new HashSet(idsT.length);
+		for (int i = 0; i < idsT.length; i++)
+			ids.add(new Identifier(idsT[i]));
+
+		Collection objects = null;
+		try {
+			objects = GeneralStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
+		int i = 0;
+		Characteristic characteristic;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			characteristic = (Characteristic) it.next();
+			transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
+		}
+		return transferables;
+	}
+
+
+
+
 
 	public void updateTestStatus(Identifier_Transferable testIdT, TestStatus status, Identifier_Transferable mcmIdT) {
 		Identifier testId = new Identifier(testIdT);
