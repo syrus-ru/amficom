@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.82 2005/02/07 12:13:20 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.83 2005/02/07 12:59:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/02/07 12:13:20 $
+ * @version $Revision: 1.83 $, $Date: 2005/02/07 12:59:47 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -752,10 +752,9 @@ public abstract class StorableObjectDatabase {
 		String className = condition.getClass().getName();
 		int lastPoint = className.lastIndexOf('.');
 		String dbClassName = className.substring(0, lastPoint + 1) + "Database" + className.substring(lastPoint + 1);
-		// System.out.println("dbClassName:" + dbClassName);
 		try {
 			Class clazz = Class.forName(dbClassName);
-			Constructor constructor = clazz.getConstructor(new Class[] {condition.getClass()});
+			Constructor constructor = clazz.getDeclaredConstructor(new Class[] {condition.getClass()});
 			constructor.setAccessible(true);
 			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
 		}
