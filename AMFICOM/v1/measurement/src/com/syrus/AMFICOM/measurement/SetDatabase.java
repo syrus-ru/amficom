@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.65 2005/02/22 14:11:23 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.66 2005/02/24 12:36:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/02/22 14:11:23 $
+ * @version $Revision: 1.66 $, $Date: 2005/02/24 12:36:20 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -272,65 +272,26 @@ public class SetDatabase extends StorableObjectDatabase {
 		if ((sets == null) || (sets.isEmpty()))
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT + SetWrapper.LINK_COLUMN_ME_ID + COMMA
-				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
-				+ SQL_WHERE);
+		Map meIdsMap = null;
 		try {
-			sql.append(this.idsEnumerationString(sets, SetWrapper.LINK_COLUMN_SET_ID, true));
+			meIdsMap = this.retrieveLinkedEntityIds(sets,
+					ObjectEntities.SETMELINK_ENTITY,
+					SetWrapper.LINK_COLUMN_SET_ID,
+					SetWrapper.LINK_COLUMN_ME_ID);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);
 		}
 
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.retrieveSetMELinksByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
+		Set set;
+		Identifier setId;
+		Collection meIds;
+		for (Iterator it = sets.iterator(); it.hasNext();) {
+			set = (Set) it.next();
+			setId = set.getId();
+			meIds = (Collection) meIdsMap.get(setId);
 
-			Map meLinkMap = new HashMap();
-			Identifier setId;
-			List meIds;
-			while (resultSet.next()) {
-				setId = DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_SET_ID);
-				meIds = (List) meLinkMap.get(setId);
-				if (meIds == null) {
-					meIds = new ArrayList();
-					meLinkMap.put(setId, meIds);
-				}
-				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_ME_ID));
-
-				Set set;
-				for (Iterator it = sets.iterator(); it.hasNext();) {
-					set = (Set) it.next();
-					setId = set.getId();
-					meIds = (List) meLinkMap.get(setId);
-
-					set.setMonitoredElementIds0(meIds);
-				}
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retrieveSetMELinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
+			set.setMonitoredElementIds0(meIds);
 		}
 	}
 
