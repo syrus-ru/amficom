@@ -64,7 +64,8 @@ public class EquipmentCharacteristicsPanel extends GeneralPanel
 	{
 		element = (SchemeElement)or;
 		elementId = new Identifier(element.id().transferable());
-
+		charPane.clear();
+		
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
 					sorts[i],
@@ -86,8 +87,11 @@ public class EquipmentCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public boolean modify()
-	{
-		return true;
+	public boolean modify() {
+		return charPane.modify();
+	}
+	
+	public boolean save() {
+		return charPane.save();
 	}
 }

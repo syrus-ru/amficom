@@ -66,13 +66,8 @@ public class AddPropFrame extends JDialog {
 			}
 		});
 
-		EquivalentCondition condition = new EquivalentCondition(
-				ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
-		List charTypes = ConfigurationStorableObjectPool
-				.getStorableObjectsByCondition(condition, true);
-
 		characteristicTypeComboBox = new ObjComboBox(CharacteristicTypeController
-				.getInstance(), charTypes, StorableObjectWrapper.COLUMN_DESCRIPTION);
+				.getInstance(), StorableObjectWrapper.COLUMN_DESCRIPTION);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = new Dimension(350, 250);
@@ -134,11 +129,6 @@ public class AddPropFrame extends JDialog {
 
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(panel, BorderLayout.CENTER);
-		
-		if (charTypes.isEmpty())
-			newRadioButton.doClick();
-		else
-			existingRadioButton.doClick();
 	}
 
 	private void addToPanel(Component comp, GridBagLayout gridbag,
@@ -193,7 +183,7 @@ public class AddPropFrame extends JDialog {
 		try {
 			EquivalentCondition condition = new EquivalentCondition(
 					ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
-			List characteristicTypes = ConfigurationStorableObjectPool
+			List characteristicTypes = GeneralStorableObjectPool
 					.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {
 				CharacteristicType ctype = (CharacteristicType) it.next();
@@ -203,6 +193,14 @@ public class AddPropFrame extends JDialog {
 		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 		}
+		
+		if (characteristicTypeComboBox.getModel().getSize() == 0) {
+			existingRadioButton.setEnabled(false);
+			newRadioButton.doClick();
+		}
+		else
+			existingRadioButton.doClick();
+		
 		setModal(true);
 		setVisible(true);
 		return res;

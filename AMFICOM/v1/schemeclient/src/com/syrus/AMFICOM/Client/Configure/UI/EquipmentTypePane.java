@@ -85,20 +85,20 @@ public class EquipmentTypePane extends JPanel implements ObjectResourcePropertie
 		return false;
 	}
 
-	public boolean save()
-	{
-		if(modify())
-		{
-			try {
-				ConfigurationStorableObjectPool.putStorableObject(eq);
-				return true;
-			}
-			catch (ApplicationException ex) {
-				ex.printStackTrace();
+	public boolean save() {
+		if (modify()) {
+			if (chPanel.save()) {
+				try {
+					ConfigurationStorableObjectPool.putStorableObject(eq);
+					ConfigurationStorableObjectPool.flush(true);
+					return true;
+				} 
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
+				}
 			}
 		}
-		JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
+		JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}

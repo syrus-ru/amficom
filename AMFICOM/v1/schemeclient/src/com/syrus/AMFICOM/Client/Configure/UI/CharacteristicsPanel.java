@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
+import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.client_.general.ui_.tree.UniTreePanel;
@@ -23,110 +24,108 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.*;
 import oracle.jdeveloper.layout.*;
 
-public class CharacteristicsPanel extends JPanel implements OperationListener
-{
-	ApplicationContext aContext;
+public class CharacteristicsPanel extends GeneralPanel implements
+		OperationListener {
 	private Dispatcher dispatcher = new Dispatcher();
+
 	protected CharacteristicTypeSort selectedTypeSort;
 
 	Map characteristics = new HashMap();
+
 	Set editableSorts = new HashSet();
+
 	Map typeSortsCharacterizedIds = new HashMap();
 
+	Map addedCharacteristics = new HashMap();
+
+	Map removedCharacteristics = new HashMap();
+
 	PropsADToolBar toolBar;
+
 	UniTreePanel utp;
+
 	JTable jTable;
+
 	PropsTableModel tModel;
 
-	private class CharacterizedObject
-	{
+	private class CharacterizedObject {
 		CharacteristicSort sort;
+
 		Identifier characterizedId;
+
 		Characterized characterized;
 
-		CharacterizedObject(CharacteristicSort sort, Characterized characterized, Identifier characterizedId)
-		{
+		CharacterizedObject(CharacteristicSort sort, Characterized characterized,
+				Identifier characterizedId) {
 			this.characterized = characterized;
 			this.characterizedId = characterizedId;
 			this.sort = sort;
 		}
 	}
 
-	private class CharacterizableObject
-	{
+	private class CharacterizableObject {
 		CharacteristicSort sort;
+
 		Identifier characterizedId;
+
 		Characterizable characterizable;
 
-		CharacterizableObject(CharacteristicSort sort, Characterizable characterizable,
-												Identifier characterizedId)
-		{
+		CharacterizableObject(CharacteristicSort sort,
+				Characterizable characterizable, Identifier characterizedId) {
 			this.characterizable = characterizable;
 			this.characterizedId = characterizedId;
 			this.sort = sort;
 		}
 	}
 
-
-	public CharacteristicsPanel()
-	{
+	public CharacteristicsPanel() {
 		super();
 
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		this.dispatcher.register(this, TreeDataSelectionEvent.type);
 	}
 
-	public CharacteristicsPanel(List characteristics, Identifier characterizedId)
-	{
+	public CharacteristicsPanel(List characteristics, Identifier characterizedId) {
 		this();
 		addCharacteristics(characteristics, characterizedId);
 	}
 
-	public CharacteristicsPanel(ApplicationContext aContext, Characteristic[] characteristics, Identifier characterizedId)
-	{
+	public CharacteristicsPanel(ApplicationContext aContext,
+			Characteristic[] characteristics, Identifier characterizedId) {
 		this();
 		addCharacteristics(characteristics, characterizedId);
 	}
 
-	public void setContext(ApplicationContext aContext)
-	{
+	public void setContext(ApplicationContext aContext) {
 		this.aContext = new ApplicationContext();
 		this.aContext.setDispatcher(dispatcher);
 		this.aContext.setSessionInterface(aContext.getSessionInterface());
 		this.aContext.setApplicationModel(aContext.getApplicationModel());
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void jbInit() throws Exception {
 		toolBar = new PropsADToolBar();
 
-		tModel = new PropsTableModel(
-				new String[] {"", ""},
-				new Object[] {""},
-				null,
-				new int[]    { 1 }
-				);
+		tModel = new PropsTableModel(new String[] { "", "" }, new Object[] { "" },
+				null, new int[] { 1 });
 
-		jTable = new JTable (tModel);
-		jTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
-		{
-			public void valueChanged(ListSelectionEvent e)
-			{
-				if (e.getValueIsAdjusting())
-					return;
-				toolBar.setCancelButtonEnabled(!jTable.getSelectionModel().isSelectionEmpty());
-			}
-		});
+		jTable = new JTable(tModel);
+		jTable.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent e) {
+						if (e.getValueIsAdjusting())
+							return;
+						toolBar.setCancelButtonEnabled(!jTable.getSelectionModel()
+								.isSelectionEmpty());
+					}
+				});
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(180);
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		//jTable.setFocusable(false);
+		// jTable.setFocusable(false);
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getViewport().add(jTable);
@@ -140,238 +139,289 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 
 		JPanel n_panel = new JPanel();
 		n_panel.setLayout(new BorderLayout());
-		n_panel.add(toolBar,  BorderLayout.NORTH);
-		n_panel.add(utp,  BorderLayout.CENTER);
+		n_panel.add(toolBar, BorderLayout.NORTH);
+		n_panel.add(utp, BorderLayout.CENTER);
 
 		this.setLayout(new BorderLayout());
 		this.add(n_panel, BorderLayout.NORTH);
 		this.add(scrollPane, BorderLayout.CENTER);
 	}
 
-	public void clear()
-	{
+	public void clear() {
 		this.characteristics.clear();
 		this.editableSorts.clear();
+		this.typeSortsCharacterizedIds.clear();
+		this.addedCharacteristics.clear();
+		this.removedCharacteristics.clear();
 	}
 
-	public void addCharacteristics(List chars, Identifier characterizedId)
-	{
+	public boolean modify() {
+		if (selectedTypeSort == null)
+			return false;
+		Object obj = typeSortsCharacterizedIds.get(selectedTypeSort);
+		if (obj == null) {
+			System.err
+					.println("CharacterizedObject not set for CharacteristicTypeSort "
+							+ selectedTypeSort);
+			return false;
+		}
+
+		if (obj instanceof CharacterizableObject) {
+			Characterizable characterizable = ((CharacterizableObject) obj).characterizable;
+			List added = (List) addedCharacteristics.get(obj);
+			if (added != null) {
+				for (Iterator it = added.iterator(); it.hasNext();) {
+					characterizable.addCharacteristic((Characteristic) it.next());
+				}
+			}
+			List removed = (List) removedCharacteristics.get(obj);
+			if (removed != null) {
+				for (Iterator it = removed.iterator(); it.hasNext();) {
+					characterizable.removeCharacteristic((Characteristic) it.next());
+				}
+			}
+			return true;
+		} else if (obj instanceof CharacterizedObject) {
+			Characterized characterized = ((CharacterizedObject) obj).characterized;
+			List added = (List) addedCharacteristics.get(obj);
+			if (added != null) {
+				for (Iterator it = added.iterator(); it.hasNext();) {
+					characterized.addCharacteristic((Characteristic) it.next());
+				}
+			}
+			List removed = (List) removedCharacteristics.get(obj);
+			if (removed != null) {
+				for (Iterator it = removed.iterator(); it.hasNext();) {
+					characterized.removeCharacteristic((Characteristic) it.next());
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public boolean save() {
+		try {
+			for (Iterator it = addedCharacteristics.values().iterator(); it.hasNext();) {
+				List added = (List) it.next();
+				for (Iterator it2 = added.iterator(); it2.hasNext();) {
+					Characteristic ch = (Characteristic) it2.next();
+					GeneralStorableObjectPool.putStorableObject(ch.getType());
+					GeneralStorableObjectPool.putStorableObject(ch);
+				}
+			}
+			List removedIds = new LinkedList();
+			for (Iterator it = removedCharacteristics.values().iterator(); it.hasNext();) {
+				List removed = (List) it.next();
+				for (Iterator it2 = removed.iterator(); it2.hasNext();) {
+					Characteristic ch = (Characteristic) it2.next();
+					removedIds.add(ch.getId());
+				}
+			}
+			GeneralStorableObjectPool.delete(removedIds);
+			GeneralStorableObjectPool.flush(true);
+			return true;
+		} 
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	public void addCharacteristics(List chars, Identifier characterizedId) {
 		this.characteristics.put(characterizedId, chars);
 		elementSelected(selectedTypeSort);
 	}
 
-	public void addCharacteristics(Characteristic[] chars, Identifier characterizedId)
-	{
+	public void addCharacteristics(Characteristic[] chars,
+			Identifier characterizedId) {
 		this.characteristics.put(characterizedId, Arrays.asList(chars));
 		elementSelected(selectedTypeSort);
 	}
 
-	public void setTypeSortMapping(CharacteristicTypeSort typeSort, CharacteristicSort sort,
-			Characterizable characterizable, Identifier characterizedId, boolean isEditable)
-	{
-		typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(sort, characterizable, characterizedId));
+	public void setTypeSortMapping(CharacteristicTypeSort typeSort,
+			CharacteristicSort sort, Characterizable characterizable,
+			Identifier characterizedId, boolean isEditable) {
+		typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(sort,
+				characterizable, characterizedId));
 		if (isEditable)
 			editableSorts.add(typeSort);
 		else
 			editableSorts.remove(typeSort);
 	}
 
-	public void setTypeSortMapping(CharacteristicTypeSort typeSort, CharacteristicSort sort,
-			Characterized characterized, Identifier characterizedId, boolean isEditable)
-	{
-		typeSortsCharacterizedIds.put(typeSort,	new CharacterizedObject(sort, characterized, characterizedId));
+	public void setTypeSortMapping(CharacteristicTypeSort typeSort,
+			CharacteristicSort sort, Characterized characterized,
+			Identifier characterizedId, boolean isEditable) {
+		typeSortsCharacterizedIds.put(typeSort, new CharacterizedObject(sort,
+				characterized, characterizedId));
 		if (isEditable)
 			editableSorts.add(typeSort);
 		else
 			editableSorts.remove(typeSort);
 	}
 
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		if (ae.getActionCommand().equals(TreeDataSelectionEvent.type))
-		{
+	public void operationPerformed(OperationEvent ae) {
+		if (ae.getActionCommand().equals(TreeDataSelectionEvent.type)) {
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent) ae;
-			if (ev.getDataClass().equals(CharacteristicTypeSort.class))
-			{
-				selectedTypeSort = (CharacteristicTypeSort)ev.getSelectedObject();
+			if (ev.getDataClass().equals(CharacteristicTypeSort.class)) {
+				selectedTypeSort = (CharacteristicTypeSort) ev.getSelectedObject();
 				setPropsEditable(editableSorts.contains(selectedTypeSort));
-			}
-			else
+			} else
 				showNoSelection();
 
 			elementSelected(selectedTypeSort);
 		}
 	}
 
-	void setPropsEditable(boolean b)
-	{
+	void setPropsEditable(boolean b) {
 		toolBar.setAddButtonEnabled(b && selectedTypeSort != null);
-		toolBar.setCancelButtonEnabled(!jTable.getSelectionModel().isSelectionEmpty() && b);
+		toolBar.setCancelButtonEnabled(!jTable.getSelectionModel()
+				.isSelectionEmpty()
+				&& b);
 		if (b)
-			tModel.setEditableColumns(new int[] {1});
+			tModel.setEditableColumns(new int[] { 1 });
 		else
 			tModel.setEditableColumns(new int[0]);
 	}
 
-	void elementSelected(CharacteristicTypeSort selected_type)
-	{
-		if (selected_type == null)
-		{
+	void elementSelected(CharacteristicTypeSort selected_type) {
+		if (selected_type == null) {
 			showNoSelection();
 			return;
 		}
 
 		tModel.clearTable();
-		for (Iterator it = characteristics.values().iterator(); it.hasNext();)
-		{
-			List chars = (List)it.next();
-			for (Iterator it2 = chars.iterator(); it2.hasNext();) {
-				Characteristic ch = (Characteristic)it2.next();
-				if (((CharacteristicType)ch.getType()).getSort().equals(selected_type)) {
-					tModel.addRow(ch.getName(), new Object[] {ch.getValue()});
+		for (Iterator it = characteristics.values().iterator(); it.hasNext();) {
+			List chars = (List) it.next();
+			if (chars != null)
+				for (Iterator it2 = chars.iterator(); it2.hasNext();) {
+					Characteristic ch = (Characteristic) it2.next();
+					if (((CharacteristicType) ch.getType()).getSort().equals(
+							selected_type)) {
+						tModel.addRow(ch.getName(), new Object[] { ch.getValue() });
+					}
 				}
-			}
 		}
 		setPropsEditable(editableSorts.contains(selectedTypeSort));
 	}
 
-	void showNoSelection()
-	{
+	void showNoSelection() {
 		tModel.clearTable();
 		setPropsEditable(false);
 	}
 
-	void tableUpdated(Object value, int row, int col)
-	{
-		String name = (String)tModel.getValueAt(row, 0);
+	void tableUpdated(Object value, int row, int col) {
+		String name = (String) tModel.getValueAt(row, 0);
 		List chars = getCharacteristics();
 		if (chars != null)
-			setCharacteristic(chars, name, (String)value);
+			setCharacteristicValue(chars, name, (String) value);
 	}
 
-	class PropsTableModel extends FixedSizeEditableTableModel
-	{
-		public PropsTableModel(
-				String[] p_columns, // заголовки столбцов
+	class PropsTableModel extends FixedSizeEditableTableModel {
+
+		public PropsTableModel(String[] p_columns, // заголовки столбцов
 				Object[] p_defaultv,// дефолтные значения
-				String[] p_rows,    // заголовки (0й столбец) строк
-				int[] editable)
-		{
+				String[] p_rows, // заголовки (0й столбец) строк
+				int[] editable) {
 			super(p_columns, p_defaultv, p_rows, editable);
 		}
 
-		public void setValueAt(Object value, int row, int col)
-		{
+		public void setValueAt(Object value, int row, int col) {
 			super.setValueAt(value, row, col);
 			tableUpdated(value, row, col);
 		}
 
-		public List getData()
-		{
+		public List getData() {
 			return rows;
 		}
 	}
 
-	void removeCharacterisric(List chars, String name)
-	{
-		Object obj = typeSortsCharacterizedIds.get(selectedTypeSort);
-		if (obj == null) {
-			System.err.println("CharacterizedObject not set for CharacteristicTypeSort " +
-												 selectedTypeSort);
-			return;
-		}
-
-
-		for (Iterator it = chars.iterator(); it.hasNext(); )
-		{
-			Characteristic ch = (Characteristic)it.next();
-			if (ch.getName().equals(name))
-			{
-				if (obj instanceof CharacterizableObject)
-					((CharacterizableObject)obj).characterizable.removeCharacteristic(ch);
-				else if (obj instanceof CharacterizedObject)
-					((CharacterizedObject)obj).characterized.removeCharacteristic(ch);
-				break;
+	Characteristic getCharacterisric(List chars, String name) {
+		for (Iterator it = chars.iterator(); it.hasNext();) {
+			Characteristic ch = (Characteristic) it.next();
+			if (ch.getName().equals(name)) {
+				return ch;
 			}
 		}
+		return null;
 	}
 
-	void setCharacteristic(List characteristics, String name, String value)
-	{
-		for (Iterator it = characteristics.iterator(); it.hasNext(); )
-		{
-			Characteristic ch = (Characteristic)it.next();
-			if (ch.getName().equals(name))
-			{
+	void setCharacteristicValue(List characteristics, String name, String value) {
+		for (Iterator it = characteristics.iterator(); it.hasNext();) {
+			Characteristic ch = (Characteristic) it.next();
+			if (ch.getName().equals(name)) {
 				ch.setValue(value);
 				break;
 			}
 		}
 	}
 
-	List getCharacteristics()
-	{
-		CharacterizedObject obj = (CharacterizedObject)typeSortsCharacterizedIds.get(selectedTypeSort);
+	List getCharacteristics() {
+		CharacterizedObject obj = (CharacterizedObject) typeSortsCharacterizedIds
+				.get(selectedTypeSort);
 		if (obj == null) {
-			System.err.println("CharacterizedObject not set for CharacteristicTypeSort " +
-												 selectedTypeSort);
+			System.err
+					.println("CharacterizedObject not set for CharacteristicTypeSort "
+							+ selectedTypeSort);
 			return null;
 		}
 		Identifier characterizedId = obj.characterizedId;
-		List chars = (List)characteristics.get(characterizedId);
-		return chars;
+		List chars = (List) characteristics.get(characterizedId);
+		List newChars = (List) addedCharacteristics.get(obj);
+		if (newChars == null)
+			return chars;
+		List allChars = new ArrayList(chars.size() + newChars.size());
+		allChars.addAll(chars);
+		allChars.addAll(newChars);
+		return allChars;
 	}
 
-
-	class PropsADToolBar extends JPanel
-	{
+	class PropsADToolBar extends JPanel {
 		public final Dimension btn_size = new Dimension(24, 24);
+
 		JButton addButton = new JButton();
+
 		JButton deleteButton = new JButton();
 
-		public PropsADToolBar()
-		{
-			try
-			{
+		public PropsADToolBar() {
+			try {
 				jbInit();
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
-		private void jbInit() throws Exception
-		{
+		private void jbInit() throws Exception {
 			addButton.setToolTipText(LangModelConfig.getString("label_add_char"));
 			addButton.setPreferredSize(btn_size);
 			addButton.setMaximumSize(btn_size);
-			//addButton.setFocusable(false);
-			addButton.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+			// addButton.setFocusable(false);
+			addButton.setBorder(BorderFactory
+					.createEtchedBorder(EtchedBorder.LOWERED));
 			addButton.setFocusPainted(false);
 			addButton.setEnabled(false);
-			addButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newprop.gif")));
-			addButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
+			addButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+					"images/newprop.gif")));
+			addButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
 					addButton_actionPerformed(e);
 				}
 			});
 
-			deleteButton.setToolTipText(LangModelConfig.getString("label_delete_char"));
+			deleteButton.setToolTipText(LangModelConfig
+					.getString("label_delete_char"));
 			deleteButton.setPreferredSize(btn_size);
 			deleteButton.setMaximumSize(btn_size);
-			//deleteButton.setFocusable(false);
+			// deleteButton.setFocusable(false);
 			deleteButton.setEnabled(false);
-			deleteButton.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+			deleteButton.setBorder(BorderFactory
+					.createEtchedBorder(EtchedBorder.LOWERED));
 			deleteButton.setFocusPainted(false);
-			deleteButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/delete.gif")));
-			deleteButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
+			deleteButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+					"images/delete.gif")));
+			deleteButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
 					deleteButton_actionPerformed(e);
 				}
 			});
@@ -381,99 +431,109 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 			add(deleteButton, new XYConstraints(btn_size.width, 0, -1, -1));
 		}
 
-		public void setAddButtonEnabled (boolean b)
-		{
+		public void setAddButtonEnabled(boolean b) {
 			addButton.setEnabled(b);
 		}
 
-		public void setCancelButtonEnabled (boolean b)
-		{
+		public void setCancelButtonEnabled(boolean b) {
 			deleteButton.setEnabled(b);
 		}
 
-		void addButton_actionPerformed(ActionEvent e)
-		{
+		void addButton_actionPerformed(ActionEvent e) {
 			if (selectedTypeSort == null)
 				return;
 			Object obj = typeSortsCharacterizedIds.get(selectedTypeSort);
-			if (obj == null)
-			{
-				System.err.println("CharacterizedObject not set for CharacteristicTypeSort " + selectedTypeSort);
+			if (obj == null) {
+				System.err
+						.println("CharacterizedObject not set for CharacteristicTypeSort "
+								+ selectedTypeSort);
 				return;
 			}
 
-			AddPropFrame frame = new AddPropFrame(Environment.getActiveWindow(), "", aContext);
+			AddPropFrame frame = new AddPropFrame(Environment.getActiveWindow(), "",
+					aContext);
 			if (frame.showDialog(selectedTypeSort, tModel.getData()) == AddPropFrame.OK) {
 				CharacteristicType type = frame.getCharacteristicType();
-				Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+				Identifier userId = new Identifier(((RISDSessionInfo) aContext
+						.getSessionInterface()).getAccessIdentifier().user_id);
 
 				if (obj instanceof CharacterizableObject) {
-					CharacteristicSort sort = ((CharacterizableObject)obj).sort;
-					Identifier characterizedId = ((CharacterizableObject)obj).characterizedId;
-					Characterizable characterizable = ((CharacterizableObject)obj).characterizable;
+					CharacteristicSort sort = ((CharacterizableObject) obj).sort;
+					Identifier characterizedId = ((CharacterizableObject) obj).characterizedId;
+					// Characterizable characterizable =
+					// ((CharacterizableObject)obj).characterizable;
 
 					try {
-						Characteristic ch = Characteristic.createInstance(
-								userId,
-								type,
-								type.getDescription(),
-								"",
-								sort.value(),
-								"",
-								characterizedId,
-								true,
-								true);
-						characterizable.addCharacteristic(ch);
+						Characteristic ch = Characteristic.createInstance(userId, type,
+								type.getDescription(), "", sort.value(), "", characterizedId,
+								true, true);
+						List added = (List) addedCharacteristics.get(obj);
+						if (added == null) {
+							added = new LinkedList();
+							addedCharacteristics.put(obj, added);
+						}
+						added.add(ch);
 
-						int n = tModel.addRow(ch.getName(), new String[] {""});
+						int n = tModel.addRow(ch.getName(), new String[] { "" });
 						jTable.setRowSelectionInterval(n, n);
+					} catch (CreateObjectException ex) {
+						ex.printStackTrace();
 					}
-					catch (CreateObjectException ex) {
+				} else if (obj instanceof CharacterizedObject) {
+					CharacteristicSort sort = ((CharacterizedObject) obj).sort;
+					Identifier characterizedId = ((CharacterizedObject) obj).characterizedId;
+					// Characterized characterized =
+					// ((CharacterizedObject)obj).characterized;
+
+					try {
+						Characteristic ch = Characteristic.createInstance(userId, type,
+								type.getDescription(), "", sort.value(), "", characterizedId,
+								true, true);
+						List added = (List) addedCharacteristics.get(obj);
+						if (added == null) {
+							added = new LinkedList();
+							addedCharacteristics.put(obj, added);
+						}
+						added.add(ch);
+
+						int n = tModel.addRow(ch.getName(), new String[] { "" });
+						jTable.setRowSelectionInterval(n, n);
+					} catch (CreateObjectException ex) {
 						ex.printStackTrace();
 					}
 				}
-				else if (obj instanceof CharacterizedObject) {
-					CharacteristicSort sort = ((CharacterizedObject)obj).sort;
-					Identifier characterizedId = ((CharacterizedObject)obj).characterizedId;
-					Characterized characterized = ((CharacterizedObject)obj).characterized;
-
-					try {
-						Characteristic ch = Characteristic.createInstance(
-								userId,
-								type,
-								type.getDescription(),
-								"",
-								sort.value(),
-								"",
-								characterizedId,
-								true,
-								true);
-						characterized.addCharacteristic(ch);
-
-						int n = tModel.addRow(ch.getName(), new String[] {""});
-						jTable.setRowSelectionInterval(n, n);
-					}
-					catch (CreateObjectException ex) {
-						ex.printStackTrace();
-					}
-				}
-
 			}
 			jTable.updateUI();
 		}
 
-		void deleteButton_actionPerformed(ActionEvent e)
-		{
+		void deleteButton_actionPerformed(ActionEvent e) {
 			int n = jTable.getSelectedRow();
 			if (n == -1)
 				return;
 
-			String name = (String)tModel.getValueAt(n, 0);
+			if (selectedTypeSort == null)
+				return;
+			Object obj = typeSortsCharacterizedIds.get(selectedTypeSort);
+			if (obj == null) {
+				System.err
+						.println("CharacterizedObject not set for CharacteristicTypeSort "
+								+ selectedTypeSort);
+				return;
+			}
+
+			String name = (String) tModel.getValueAt(n, 0);
 
 			List chars = getCharacteristics();
-			if (chars != null)
-			{
-				removeCharacterisric(chars, name);
+			if (chars != null) {
+				Characteristic ch = getCharacterisric(chars, name);
+
+				List removed = (List) removedCharacteristics.get(obj);
+				if (removed == null) {
+					removed = new LinkedList();
+					removedCharacteristics.put(obj, removed);
+				}
+				removed.add(ch);
+
 				tModel.removeRow(n);
 				jTable.updateUI();
 			}
@@ -481,66 +541,61 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 	}
 }
 
-class PropsTreeModel extends ObjectResourceTreeModel
-{
+class PropsTreeModel extends ObjectResourceTreeModel {
 
-	public PropsTreeModel()
-	{
+	public PropsTreeModel() {
 	}
 
-	public ObjectResourceTreeNode getRoot()
-	{
-		return new ObjectResourceTreeNode ("root", LangModelConfig.getString("label_comp_chars"), true,
-																			 new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
+	public ObjectResourceTreeNode getRoot() {
+		return new ObjectResourceTreeNode("root", LangModelConfig
+				.getString("label_comp_chars"), true, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/folder.gif")));
 	}
 
-	public ImageIcon getNodeIcon(ObjectResourceTreeNode node)
-	{
+	public ImageIcon getNodeIcon(ObjectResourceTreeNode node) {
 		return null;
 	}
 
-	public Color getNodeTextColor(ObjectResourceTreeNode node)
-	{
+	public Color getNodeTextColor(ObjectResourceTreeNode node) {
 		return null;
 	}
 
-	public void nodeAfterSelected(ObjectResourceTreeNode node)
-	{
+	public void nodeAfterSelected(ObjectResourceTreeNode node) {
 	}
 
-	public void nodeBeforeExpanded(ObjectResourceTreeNode node)
-	{
+	public void nodeBeforeExpanded(ObjectResourceTreeNode node) {
 	}
 
-	public Class getNodeChildClass(ObjectResourceTreeNode node)
-	{
+	public Class getNodeChildClass(ObjectResourceTreeNode node) {
 		return CharacteristicTypeSort.class;
 	}
 
-	public ObjectResourceController getNodeChildController(ObjectResourceTreeNode node)
-	{
+	public ObjectResourceController getNodeChildController(
+			ObjectResourceTreeNode node) {
 		return CharacteristicTypeController.getInstance();
 	}
 
-	public List getChildNodes(ObjectResourceTreeNode node)
-	{
+	public List getChildNodes(ObjectResourceTreeNode node) {
 		List vec = new ArrayList(4);
 
-		if(node.getObject() instanceof String)
-		{
-			String s = (String )node.getObject();
+		if (node.getObject() instanceof String) {
+			String s = (String) node.getObject();
 
-			if(s.equals("root"))
-			{
-				vec.add(new ObjectResourceTreeNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,
+			if (s.equals("root")) {
+				vec.add(new ObjectResourceTreeNode(
+						CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,
 						LangModelConfig.getString("label_opt_chars"), true, true));
-				vec.add(new ObjectResourceTreeNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+				vec.add(new ObjectResourceTreeNode(
+						CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
 						LangModelConfig.getString("label_el_chars"), true, true));
-				vec.add(new ObjectResourceTreeNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+				vec.add(new ObjectResourceTreeNode(
+						CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
 						LangModelConfig.getString("label_exp_chars"), true, true));
-				vec.add(new ObjectResourceTreeNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+				vec.add(new ObjectResourceTreeNode(
+						CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
 						LangModelConfig.getString("label_interface_chars"), true, true));
-				vec.add(new ObjectResourceTreeNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+				vec.add(new ObjectResourceTreeNode(
+						CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						"Атрибуты отображения", true, true));
 			}
 		}

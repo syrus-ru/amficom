@@ -61,7 +61,8 @@ public class MeasurementPortCharacteristicsPanel extends GeneralPanel
 	public void setObject(Object or)
 	{
 		this.port = (MeasurementPort)or;
-
+		charPane.clear();
+		
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
 					sorts[i],
@@ -72,8 +73,11 @@ public class MeasurementPortCharacteristicsPanel extends GeneralPanel
 		charPane.addCharacteristics(port.getCharacteristics(), port.getId());
 	}
 
-	public boolean modify()
-	{
-		return true;
+	public boolean modify() {
+		return charPane.modify();
+	}
+	
+	public boolean save() {
+		return charPane.save();
 	}
 }

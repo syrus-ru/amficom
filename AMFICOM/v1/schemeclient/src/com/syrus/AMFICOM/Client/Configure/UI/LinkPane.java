@@ -78,23 +78,22 @@ public abstract class LinkPane extends JPanel implements ObjectResourcePropertie
 		return false;
 	}
 
-	public boolean save()
-	{
-		if(modify())
-		{
-			if (link.link() != null)
-			{
-				try {
-					ConfigurationStorableObjectPool.putStorableObject(link.linkImpl());
+	public boolean save() {
+		if (modify()) {
+			if (chPanel.save()) {
+				if (link.link() != null) {
+					try {
+						ConfigurationStorableObjectPool.putStorableObject(link.linkImpl());
+						ConfigurationStorableObjectPool.flush(true);
+						return true;
+					} 
+					catch (ApplicationException ex) {
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+								LangModelConfig.getString("err_incorrect_data_input"));
+					}
 				}
-				catch (ApplicationException ex) {
-				}
-				return true;
 			}
 		}
-		JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 

@@ -66,6 +66,7 @@ public class CablePortCharacteristicsPanel extends GeneralPanel
 	{
 		port = (SchemeCablePort)or;
 		portId = new Identifier(port.id().transferable());
+		charPane.clear();
 
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
@@ -88,8 +89,11 @@ public class CablePortCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public boolean modify()
-	{
-		return true;
+	public boolean modify() {
+		return charPane.modify();
+	}
+	
+	public boolean save() {
+		return charPane.save();
 	}
 }

@@ -84,22 +84,20 @@ public class TransmissionPathPane extends JPanel implements ObjectResourceProper
 		return false;
 	}
 
-	public boolean save()
-	{
-		if(modify())
-		{
-			if (path.path() != null)
-			{
+	public boolean save() {
+		if (modify()) {
+			if (path.path() != null) {
 				try {
 					ConfigurationStorableObjectPool.putStorableObject(path.pathImpl());
-				}
+					ConfigurationStorableObjectPool.flush(true);
+					return true;
+				} 
 				catch (ApplicationException ex) {
+					ex.printStackTrace();
 				}
-				return true;
 			}
 		}
-		JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
+		JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}

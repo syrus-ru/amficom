@@ -100,20 +100,23 @@ public class MeasurementPortTypePane extends JPanel implements ObjectResourcePro
 		return false;
 	}
 
-	public boolean save()
-	{
-		if(portType != null && modify())
-		{
-			try {
-				ConfigurationStorableObjectPool.putStorableObject(portType);
+	public boolean save() {
+		if (modify()) {
+			if (chPanel.save()) {
+				if (portType != null) {
+					try {
+						ConfigurationStorableObjectPool.putStorableObject(portType);
+						ConfigurationStorableObjectPool.flush(true);
+						return true;
+					} 
+					catch (ApplicationException ex) {
+						ex.printStackTrace();
+					}
+				}
 			}
-			catch (ApplicationException ex) {
-			}
-			return true;
 		}
-		JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				"Неправильно введены данные");
+		JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 

@@ -2,6 +2,8 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Iterator;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
@@ -103,15 +105,15 @@ public class LinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 
 	public boolean save()
 	{
-		if(modify())
-		{
-			try {
-				ConfigurationStorableObjectPool.putStorableObject(linkType);
-				ConfigurationStorableObjectPool.flush(true);
-				return true;
-			}
-			catch (ApplicationException ex) {
-				ex.printStackTrace();
+		if (modify()) {
+			if (chPanel.save()) {
+				try {
+					ConfigurationStorableObjectPool.putStorableObject(linkType);
+					ConfigurationStorableObjectPool.flush(true);
+					return true;
+				} catch (ApplicationException ex) {
+					ex.printStackTrace();
+				}
 			}
 		}
 		JOptionPane.showMessageDialog(

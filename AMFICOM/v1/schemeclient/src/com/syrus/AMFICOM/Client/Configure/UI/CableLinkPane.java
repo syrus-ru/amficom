@@ -84,18 +84,19 @@ public abstract class CableLinkPane extends JPanel implements ObjectResourceProp
 		return false;
 	}
 
-	public boolean save()
-	{
-		if(modify())
-		{
-			if (link.link() != null)
-			{
-				try {
-					ConfigurationStorableObjectPool.putStorableObject(link.linkImpl());
+	public boolean save() {
+		if (modify()) {
+			if (chPanel.save()) {
+				if (link.link() != null) {
+					try {
+						ConfigurationStorableObjectPool.putStorableObject(link.linkImpl());
+						ConfigurationStorableObjectPool.flush(true);
+						return true;
+					} 
+					catch (ApplicationException ex) {
+						ex.printStackTrace();
+					}
 				}
-				catch (ApplicationException ex) {
-				}
-				return true;
 			}
 		}
 		JOptionPane.showMessageDialog(

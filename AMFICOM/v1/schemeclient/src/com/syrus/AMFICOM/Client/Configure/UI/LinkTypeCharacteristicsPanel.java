@@ -61,7 +61,8 @@ public class LinkTypeCharacteristicsPanel extends GeneralPanel
 	public void setObject(Object or)
 	{
 		this.type = (LinkType)or;
-
+		charPane.clear();
+		
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
 					sorts[i],
@@ -72,8 +73,11 @@ public class LinkTypeCharacteristicsPanel extends GeneralPanel
 		charPane.addCharacteristics(type.getCharacteristics(), type.getId());
 	}
 
-	public boolean modify()
-	{
-		return true;
+	public boolean modify() {
+		return charPane.modify();
+	}
+	
+	public boolean save() {
+		return charPane.save();
 	}
 }

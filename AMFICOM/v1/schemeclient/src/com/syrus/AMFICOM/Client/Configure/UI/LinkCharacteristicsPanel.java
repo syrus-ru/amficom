@@ -65,7 +65,8 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 	{
 		link = (SchemeLink)or;
 		linkId = new Identifier(link.id().transferable());
-
+		charPane.clear();
+		
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
 					sorts[i],
@@ -87,8 +88,11 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public boolean modify()
-	{
-		return true;
+	public boolean modify() {
+		return charPane.modify();
+	}
+	
+	public boolean save() {
+		return charPane.save();
 	}
 }

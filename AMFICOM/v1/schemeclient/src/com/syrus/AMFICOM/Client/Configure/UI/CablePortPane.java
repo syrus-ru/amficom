@@ -100,20 +100,21 @@ public class CablePortPane extends JPanel implements ObjectResourcePropertiesPan
 		return false;
 	}
 
-	public boolean save()
-	{
-		if(modify())
-		{
-			try {
-				ConfigurationStorableObjectPool.putStorableObject(port.portImpl());
-				return true;
-			}
-			catch (ApplicationException ex) {
-				
+	public boolean save() {
+		if (modify()) {
+			if (chPanel.save()) {
+				if (port.port() != null) {
+					try {
+						ConfigurationStorableObjectPool.putStorableObject(port.portImpl());
+						ConfigurationStorableObjectPool.flush(true);
+						return true;
+					} catch (ApplicationException ex) {
+						ex.printStackTrace();
+					}
+				}
 			}
 		}
-		JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
+		JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}

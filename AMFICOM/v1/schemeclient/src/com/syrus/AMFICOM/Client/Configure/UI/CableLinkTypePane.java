@@ -2,6 +2,8 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Iterator;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
@@ -12,6 +14,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.*;
+
 import oracle.jdeveloper.layout.XYConstraints;
 
 public class CableLinkTypePane extends JPanel implements ObjectResourcePropertiesPane
@@ -107,14 +110,21 @@ public class CableLinkTypePane extends JPanel implements ObjectResourcePropertie
 
 	public boolean save()
 	{
-		if(modify())
-		{
-			try {
-				ConfigurationStorableObjectPool.putStorableObject(linkType);
-				return true;
-			}
-			catch (ApplicationException ex) {
-				ex.printStackTrace();
+		if (modify()) {
+			if (chPanel.save()) {
+				try {
+					ConfigurationStorableObjectPool.putStorableObject(linkType);
+					if (linkType.getCableThreadTypes() != null) {
+						for (Iterator it = linkType.getCableThreadTypes().iterator(); it.hasNext();) {
+							CableThreadType ctt = (CableThreadType) it.next();
+							ConfigurationStorableObjectPool.putStorableObject(ctt);
+						}
+					}
+					ConfigurationStorableObjectPool.flush(true);
+					return true;
+				} catch (ApplicationException ex) {
+					ex.printStackTrace();
+				}
 			}
 		}
 		JOptionPane.showMessageDialog(

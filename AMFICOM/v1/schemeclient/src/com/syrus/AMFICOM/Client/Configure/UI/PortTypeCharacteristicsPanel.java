@@ -21,16 +21,12 @@ public class PortTypeCharacteristicsPanel extends GeneralPanel
 
 	private CharacteristicsPanel charPane;
 
-	protected PortTypeCharacteristicsPanel()
-	{
+	protected PortTypeCharacteristicsPanel() {
 		super();
 
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -41,29 +37,27 @@ public class PortTypeCharacteristicsPanel extends GeneralPanel
 		setObject(type);
 	}
 
-	public void setContext(ApplicationContext aContext)
-	{
+	public void setContext(ApplicationContext aContext) {
 		super.setContext(aContext);
 		charPane.setContext(aContext);
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void jbInit() throws Exception {
 		charPane = new CharacteristicsPanel();
 		setName(LangModelConfig.getString("label_chars"));
 		this.setLayout(new BorderLayout());
 		this.add(charPane, BorderLayout.CENTER);
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return type;
 	}
 
 	public void setObject(Object or)
 	{
 		this.type = (PortType)or;
-
+		charPane.clear();
+		
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
 					sorts[i],
@@ -74,8 +68,11 @@ public class PortTypeCharacteristicsPanel extends GeneralPanel
 		charPane.addCharacteristics(type.getCharacteristics(), type.getId());
 	}
 
-	public boolean modify()
-	{
-		return true;
+	public boolean modify() {
+		return charPane.modify();
+	}
+	
+	public boolean save() {
+		return charPane.save();
 	}
 }

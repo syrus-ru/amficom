@@ -61,7 +61,8 @@ public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 	public void setObject(Object or)
 	{
 		this.type = (EquipmentType) or;
-
+		charPane.clear();
+		
 		for (int i = 0; i < sorts.length; i++)
 			charPane.setTypeSortMapping(
 					sorts[i],
@@ -73,8 +74,11 @@ public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 
 	}
 
-	public boolean modify()
-	{
-		return true;
+	public boolean modify() {
+		return charPane.modify();
+	}
+	
+	public boolean save() {
+		return charPane.save();
 	}
 }

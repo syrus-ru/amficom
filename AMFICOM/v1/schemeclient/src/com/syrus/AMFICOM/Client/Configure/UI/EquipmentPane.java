@@ -100,24 +100,21 @@ public class EquipmentPane extends JPanel implements ObjectResourcePropertiesPan
 
 	public boolean save()
 	{
-		if(modify())
-		{
-			if (element.equipment() != null)
-			{
-				try {
-					ConfigurationStorableObjectPool.putStorableObject(element.equipmentImpl());
-					return true;
+		if (modify()) {
+			if (chPanel.save()) {
+				if (element.equipment() != null) {
+					try {
+						ConfigurationStorableObjectPool.putStorableObject(element.equipmentImpl());
+						ConfigurationStorableObjectPool.flush(true);
+						return true;
+					} catch (ApplicationException ex) {
+						ex.printStackTrace();
+					}
 				}
-				catch (ApplicationException ex) {
-					ex.printStackTrace();
-				}
-
 			}
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
+		} 
+		else {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					LangModelConfig.getString("err_incorrect_data_input"));
 		}
 		return false;
