@@ -117,7 +117,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
-		if (id.equals("primarytrace") || id.equals("modeledtrace"))
+		if (id.equals(RefUpdateEvent.PRIMARY_TRACE) || id.equals("modeledtrace"))
 		{
 			try
 			{

@@ -5,9 +5,11 @@ import java.util.*;
 
 import java.awt.Color;
 
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+
 /**
  * @deprecated нахЪ
- * @version $Revision: 1.5 $, $Date: 2005/03/23 16:38:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/24 09:29:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -51,7 +53,7 @@ public class ColorManager
 		new Col ("selectColor", Color.gray),
 		new Col ("analysisMarkerColor", new Color(0, 0, 0)),//133,184,235)),
 		new Col ("referencetrace", Color.gray),
-		new Col ("primarytrace", Color.blue),
+		new Col (RefUpdateEvent.PRIMARY_TRACE, Color.blue),
 		new Col ("modeledtrace", Color.blue),
 		new Col ("wavelet", Color.blue),
 		new Col ("etalon", Color.darkGray),

@@ -79,7 +79,7 @@ public class FileSaveCommand extends VoidCommand
 		int returnVal = chooser.showSaveDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			bs = (BellcoreStructure)(Pool.get("bellcorestructure", "primarytrace"));
+			bs = (BellcoreStructure)(Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE));
 			try
 			{
 				FileOutputStream fos = new FileOutputStream(chooser.getSelectedFile());
@@ -87,11 +87,11 @@ public class FileSaveCommand extends VoidCommand
 				fos.write(bw.write(bs));
 
 				if (chooser.getSelectedFile().getAbsolutePath().equals(bs.title))
-					dispatcher.notify(new RefChangeEvent("primarytrace", RefChangeEvent.SAVE_EVENT));
+					dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SAVE_EVENT));
 				else
 				{
 					bs.title = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
-					dispatcher.notify(new RefChangeEvent("primarytrace",
+					dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
 																RefChangeEvent.SAVE_EVENT + RefChangeEvent.SELECT_EVENT));
 				}
 

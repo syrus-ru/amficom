@@ -107,7 +107,7 @@ public class DetailedEventsFrame extends JInternalFrame
 			if(rce.OPEN)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					alignedDataMT = null;
 //					ctModel.clearTable();
@@ -172,14 +172,14 @@ public class DetailedEventsFrame extends JInternalFrame
 			if (rue.analysisPerformed())
 			{
 				String id = (String)(rue.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					if ((RefAnalysis)Pool.get("refanalysis", id) != null)
 					{
 						a = (RefAnalysis)Pool.get("refanalysis", id);
 						bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 						res_km = bs.getResolution() / 1000.0;
-						dataMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace");
+						dataMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE);
 						if(dataMTM != null && etalonMTM != null)
 							makeAlignedDataMT();
 						else alignedDataMT = null;
@@ -188,7 +188,7 @@ public class DetailedEventsFrame extends JInternalFrame
 						updateTableModel (selected);
 					}
 				}
-				if (Pool.get("eventparams", "primarytrace") != null)
+				if (Pool.get("eventparams", RefUpdateEvent.PRIMARY_TRACE) != null)
 					analysis_performed = true;
 				if(etalon_loaded)
 					tabbedPane.setEnabledAt(1, true);

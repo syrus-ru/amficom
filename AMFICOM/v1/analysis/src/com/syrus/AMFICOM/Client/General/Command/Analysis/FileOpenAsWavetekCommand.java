@@ -92,20 +92,20 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 			}
 			if (Pool.getMap("bellcorestructure") != null )
 			{
-				if ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace") != null)
+				if ((BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE) != null)
 					new FileCloseCommand(dispatcher, aContext).execute();
 			}
 
 			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = chooser.getSelectedFile().getName();
-			Pool.put("bellcorestructure", "primarytrace", bs);
+			Pool.put("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE, bs);
 			Pool.put("activecontext", "activepathid", "");
 
 			new InitialAnalysisCommand().execute();
 
-			dispatcher.notify(new RefChangeEvent("primarytrace",
+			dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
 											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
-			dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
+			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
 			try
 			{

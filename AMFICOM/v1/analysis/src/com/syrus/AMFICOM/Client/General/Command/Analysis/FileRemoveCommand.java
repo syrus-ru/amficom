@@ -65,6 +65,6 @@ public class FileRemoveCommand extends VoidCommand
 			Pool.remove(bs);
 		bs = null;
 		dispatcher.notify(new RefChangeEvent(activeRefId, RefChangeEvent.CLOSE_EVENT));
-		dispatcher.notify(new RefChangeEvent("primarytrace", RefChangeEvent.SELECT_EVENT));
+		dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
 	}
 }

@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -54,7 +55,7 @@ public class PathElementsFrame extends AnalysisFrame
 		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
-		if (id.equals("primarytrace") || id.equals("modeledtrace"))
+		if (id.equals(RefUpdateEvent.PRIMARY_TRACE) || id.equals("modeledtrace"))
 		{
 			SchemePath path = null;
 

@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.util.Map;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
@@ -19,7 +20,7 @@ public class InitialAnalysisCommand extends VoidCommand {
 
 	public void execute()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
+		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
 		if (bs != null)
 		{
 			//double deltaX = bs.getResolution();
@@ -51,9 +52,9 @@ public class InitialAnalysisCommand extends VoidCommand {
 	        RefAnalysis a = new RefAnalysis();
 			a.decode(y, mtm);
 
-			Pool.put("refanalysis", "primarytrace", a);
-			//Pool.remove("eventparams", "primarytrace");
-			Pool.put(ModelTraceManager.CODENAME, "primarytrace", mtm);
+			Pool.put("refanalysis", RefUpdateEvent.PRIMARY_TRACE, a);
+			//Pool.remove("eventparams", RefUpdateEvent.PRIMARY_TRACE);
+			Pool.put(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE, mtm);
 		}
 	}
 }

@@ -65,7 +65,7 @@ public class HistogrammFrame extends ScalableFrame implements OperationListener
 
 	public void addTrace (String id)
 	{
-		if (id.equals("primarytrace") || id.equals("modeledtrace"))
+		if (id.equals(RefUpdateEvent.PRIMARY_TRACE) || id.equals("modeledtrace"))
 		{
 			HistogrammPanel p;
 

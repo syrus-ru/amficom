@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
@@ -74,7 +75,7 @@ public class PrimaryParametersFrame extends ATableFrame
 			if(rce.OPEN)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					setVisible(true);
 				}

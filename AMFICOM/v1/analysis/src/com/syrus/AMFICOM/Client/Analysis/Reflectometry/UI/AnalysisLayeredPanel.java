@@ -49,7 +49,7 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 					if(rue.analysisPerformed())
 					{
 						String id = (String)(rue.getSource());
-						if (id.equals("primarytrace"))
+						if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 						{
 							((AnalysisPanel)panel).updEvents(id);
 

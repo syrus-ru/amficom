@@ -8,6 +8,7 @@ import javax.swing.JFileChooser;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -75,7 +76,7 @@ public class FileSaveAsTextCommand extends VoidCommand
 		int returnVal = chooser.showSaveDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			bs = (BellcoreStructure)(Pool.get("bellcorestructure", "primarytrace"));
+			bs = (BellcoreStructure)(Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE));
 			try
 			{
 				FileOutputStream fos = new FileOutputStream(chooser.getSelectedFile());

@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -74,7 +75,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 			return;
 		}
 
-		CreateTestSetupCommand command = new CreateTestSetupCommand(aContext, "primarytrace");
+		CreateTestSetupCommand command = new CreateTestSetupCommand(aContext, RefUpdateEvent.PRIMARY_TRACE);
 		command.execute();
 		if (command.status != CreateTestSetupCommand.OK)
 			return;
@@ -100,7 +101,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 		new SaveTestSetupCommand(aContext, traceid, type).execute();
 
-		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
+		aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));
 	}
 }

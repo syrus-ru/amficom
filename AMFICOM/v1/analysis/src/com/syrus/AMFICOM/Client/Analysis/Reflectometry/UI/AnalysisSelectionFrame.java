@@ -84,7 +84,6 @@ public class AnalysisSelectionFrame extends ATableFrame
 	JPanel mainPanel = new JPanel();
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
-	JToolBar jToolBar1 = new JToolBar();
 	ApplicationContext aContext;
 	
 	private Object selectedEventId;
@@ -122,7 +121,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 			if(rce.OPEN)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 					if (bs.measurementId == null)
@@ -326,7 +325,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 		this.setContentPane(mainPanel);
 
-//		jToolBar1.setBorderPainted(true);
+		JToolBar jToolBar1 = new JToolBar();
 		jToolBar1.setFloatable(false);
 		jToolBar1.add(analysisStartButton);
 		jToolBar1.add(Box.createRigidArea(UIManager.getDimension(ResourceKeys.SIZE_BUTTON)));
@@ -376,9 +375,9 @@ public class AnalysisSelectionFrame extends ATableFrame
 		minuitParams[7] = ((Integer)getDoubleValueAt(jTable.getValueAt(7, 1), 7)).doubleValue();
 
 		Pool.put(OT_analysisparameters, OID_minuitanalysis, minuitParams);
-		new MinuitAnalyseCommand(dispatcher, "primarytrace", aContext).execute();
-		dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-		dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
+		new MinuitAnalyseCommand(dispatcher, RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
+		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
+		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		if (this.selectedEventId != null) {
 			dispatcher.notify(new RefUpdateEvent(this.selectedEventId, RefUpdateEvent.EVENT_SELECTED_EVENT));
 		}

@@ -104,10 +104,10 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 
 		if (Pool.getMap("bellcorestructure") != null )
 		{
-			if ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace") != null)
+			if ((BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE) != null)
 				new FileCloseCommand(dispatcher, aContext).execute();
 		}
-		Pool.put("bellcorestructure", "primarytrace", bs);
+		Pool.put("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE, bs);
 
 		if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 			Measurement m = (Measurement)res.getAction();
@@ -131,7 +131,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			new InitialAnalysisCommand().execute();
 	
 			ModelTraceManager mtmEtalon = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
-			ModelTraceManager mtmEvents = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace");
+			ModelTraceManager mtmEvents = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE);
 	
 			if (mtmEtalon != null && mtmEvents != null)
 			{
@@ -144,10 +144,10 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 				//mtmEvents.fixEventTypes(mtmEtalon, delta);
 			}
 	
-			dispatcher.notify(new RefChangeEvent("primarytrace",
+			dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 			
-			dispatcher.notify(new RefUpdateEvent("primarytrace",
+			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 			
 			dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,

@@ -37,6 +37,8 @@ public class RefUpdateEvent extends OperationEvent
 
 	public static final String typ = "refupdate";
 
+	public static final String PRIMARY_TRACE = "primarytrace";
+	
 	public RefUpdateEvent(Object source, long type)
 	{
 		super(source, 0, typ);

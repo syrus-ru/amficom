@@ -59,7 +59,7 @@ public class LoadTestSetupCommand extends VoidCommand
 		if (Pool.get("eventparams", AnalysisUtil.ETALON) != null)
 		{
 			aContext.getDispatcher().notify(new RefChangeEvent(AnalysisUtil.ETALON, RefChangeEvent.CLOSE_EVENT));
-			aContext.getDispatcher().notify(new RefChangeEvent("primarytrace", RefChangeEvent.SELECT_EVENT));
+			aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
 		}
 
 		AnalysisUtil.load_CriteriaSet(userId, ms);
@@ -72,13 +72,13 @@ public class LoadTestSetupCommand extends VoidCommand
 
 		aContext.getDispatcher().notify(new RefUpdateEvent(AnalysisUtil.ETALON,
 				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
-		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
+		aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));
-		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
+		aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefChangeEvent.CLOSE_EVENT));
-		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
+		aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
-		aContext.getDispatcher().notify(new RefUpdateEvent("primarytrace",
+		aContext.getDispatcher().notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 	}
 }

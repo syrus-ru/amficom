@@ -185,7 +185,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 		aModel.setCommand("menuFileAddCompare",new FileAddCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
 
-		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(internal_dispatcher, aContext, "primarytrace"));
+		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(internal_dispatcher, aContext, RefUpdateEvent.PRIMARY_TRACE));
 		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand(aContext));
 		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(internal_dispatcher, aContext));
@@ -368,7 +368,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 			if(rce.OPEN)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					aModel.setEnabled("menuFileSave", true);
 					aModel.setEnabled("menuFileSaveAll", true);
@@ -399,7 +399,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 
 					aModel.fireModelChanged("");
 
-					String name = ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace")).title;
+					String name = ((BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE)).title;
 					setTitle(LangModelAnalyse.getString("AnalyseTitle") + ": " + name);
 				}
 				else if (id.equals("referencetrace"))
@@ -467,7 +467,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 					}
 					Iterator it = Pool.getMap("bellcorestructure").keySet().iterator();
 					String nextId = (String)it.next();
-					if (nextId.equals("primarytrace"))
+					if (nextId.equals(RefUpdateEvent.PRIMARY_TRACE))
 					{
 						if (!it.hasNext())
 						{
@@ -489,7 +489,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 			if(rce.SELECT)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					aModel.setEnabled("menuFileRemoveCompare", false);
 					aModel.setEnabled("menuTraceRemoveCompare", false);

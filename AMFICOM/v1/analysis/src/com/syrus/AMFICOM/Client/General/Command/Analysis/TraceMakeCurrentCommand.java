@@ -54,12 +54,12 @@ public class TraceMakeCurrentCommand extends VoidCommand
 
 		bs = (BellcoreStructure)Pool.get("bellcorestructure", "referencetrace");
 		new FileRemoveCommand(dispatcher, "referencetrace", aContext).execute();
-		new FileRemoveCommand(dispatcher, "primarytrace", aContext).execute();
-		Pool.put("bellcorestructure", "primarytrace", bs);
+		new FileRemoveCommand(dispatcher, RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
+		Pool.put("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE, bs);
 
 		new InitialAnalysisCommand().execute();
 
-		dispatcher.notify(new RefChangeEvent("primarytrace",
+		dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
 											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 	}
 }

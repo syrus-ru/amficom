@@ -82,7 +82,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 					if(rue.analysisPerformed())
 					{
 						String id = (String)(rue.getSource());
-						//if (id.equals("primarytrace"))
+						//if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 						{
 							ModelTraceManager mtm = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id));
 							((ThresholdsPanel)panel).updEvents(id);

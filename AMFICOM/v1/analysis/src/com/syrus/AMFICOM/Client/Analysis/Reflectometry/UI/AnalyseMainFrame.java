@@ -213,12 +213,12 @@ public class AnalyseMainFrame extends JFrame
 		aModel.setCommand("menuFileAddCompare",new FileAddCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
 
-		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(internal_dispatcher, aContext, "primarytrace"));
-		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(aContext, "primarytrace"));
-		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(aContext, "primarytrace"));
-		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(aContext, "primarytrace",
+		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(internal_dispatcher, aContext, RefUpdateEvent.PRIMARY_TRACE));
+		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(aContext, RefUpdateEvent.PRIMARY_TRACE));
+		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(aContext, RefUpdateEvent.PRIMARY_TRACE));
+		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(aContext, RefUpdateEvent.PRIMARY_TRACE,
 				SaveTestSetupCommand.ETALON + SaveTestSetupCommand.CRITERIA));
-		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(aContext, "primarytrace",
+		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(aContext, RefUpdateEvent.PRIMARY_TRACE,
 				SaveTestSetupCommand.ETALON + SaveTestSetupCommand.CRITERIA));
 		aModel.setCommand("menuNetStudy", new NetStudyCommand());
 
@@ -425,7 +425,7 @@ public class AnalyseMainFrame extends JFrame
 			if(rce.OPEN)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					aModel.setEnabled("menuFileSave", true);
 					aModel.setEnabled("menuFileSaveAll", true);
@@ -466,7 +466,7 @@ public class AnalyseMainFrame extends JFrame
 
 					aModel.fireModelChanged("");
 
-					String name = ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace")).title;
+					String name = ((BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE)).title;
 					setTitle(LangModelAnalyse.getString("AnalyseExtTitle") + ": " + name);
 
 					updFrames(id);
@@ -551,7 +551,7 @@ public class AnalyseMainFrame extends JFrame
 					}
 					Iterator it = Pool.getMap("bellcorestructure").keySet().iterator();
 					String nextId = (String)it.next();
-					if (nextId.equals("primarytrace"))
+					if (nextId.equals(RefUpdateEvent.PRIMARY_TRACE))
 					{
 						if (!it.hasNext())
 						{
@@ -573,7 +573,7 @@ public class AnalyseMainFrame extends JFrame
 			if(rce.SELECT)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					aModel.setEnabled("menuFileRemoveCompare", false);
 					aModel.setEnabled("menuTraceRemoveCompare", false);
@@ -596,7 +596,7 @@ public class AnalyseMainFrame extends JFrame
 			if(rue.analysisPerformed())
 			{
 				String id = (String)(rue.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 					updFrames(id);
 			}
 		}

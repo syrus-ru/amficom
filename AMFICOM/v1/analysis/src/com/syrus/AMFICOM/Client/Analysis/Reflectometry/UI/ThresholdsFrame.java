@@ -174,7 +174,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
-		if (id.equals("primarytrace") || id.equals("modeledtrace"))
+		if (id.equals(RefUpdateEvent.PRIMARY_TRACE) || id.equals("modeledtrace"))
 		{
 			p = new ThresholdsPanel((ThresholdsLayeredPanel)panel, dispatcher, y, deltaX);
 			ModelTraceManager mtm = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id));

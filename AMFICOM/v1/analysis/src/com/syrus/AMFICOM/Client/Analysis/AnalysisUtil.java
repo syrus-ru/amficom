@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -349,7 +350,7 @@ public class AnalysisUtil
 			params[0] = SetParameter.createInstance(ptype,
 					mtm.eventsAndTraceToByteArray());
 
-			BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
+			BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
 
 			ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
 			params[1] = SetParameter.createInstance(ptype,
@@ -385,7 +386,7 @@ public class AnalysisUtil
 			byte[] minLevel;
 			try
 			{
-				Double level = (Double)Pool.get("min_trace_level", "primarytrace");
+				Double level = (Double)Pool.get("min_trace_level", RefUpdateEvent.PRIMARY_TRACE);
 				minLevel = ByteArray.toByteArray(level == null ? 0d : level.doubleValue());
 			}
 			catch(Exception ex)
@@ -427,7 +428,7 @@ public class AnalysisUtil
 				try
 				{
 					Double minLevel = new Double(new ByteArray(params[i].getValue()).toDouble());
-					Pool.put("min_trace_level", "primarytrace", minLevel);
+					Pool.put("min_trace_level", RefUpdateEvent.PRIMARY_TRACE, minLevel);
 				}
 				catch (IOException ex)
 				{
@@ -550,8 +551,8 @@ public class AnalysisUtil
 //
 //	public static void setThresholdsSetFromParams(ThresholdSet ts)
 //	{
-//		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", "primarytrace");
-//		Double min_level = (Double)Pool.get("min_trace_level", "primarytrace");
+//		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", RefUpdateEvent.PRIMARY_TRACE);
+//		Double min_level = (Double)Pool.get("min_trace_level", RefUpdateEvent.PRIMARY_TRACE);
 //		if (ep == null || min_level == null)
 //			return;
 //
@@ -591,7 +592,7 @@ public class AnalysisUtil
 //			}
 //			if (p.getCodename().equals(REFLECTOGRAMM))
 //			{
-//				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
+//				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
 //				p.setValue(new BellcoreWriter().write(bs));
 //			}
 //		}

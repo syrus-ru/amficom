@@ -99,7 +99,7 @@ implements OperationListener
 			if(rce.OPEN)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					updTableModel(id);
 					setVisible(true);
@@ -156,10 +156,10 @@ implements OperationListener
 			if(rue.analysisPerformed())
 			{
 				String id = (String)(rue.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 					updTableModel(id);
 
-				if (Pool.get("eventparams", "primarytrace") != null)
+				if (Pool.get("eventparams", RefUpdateEvent.PRIMARY_TRACE) != null)
 					analysis_performed = true;
 				if(etalon_loaded)
 				{
@@ -248,7 +248,7 @@ implements OperationListener
 	private void setWholeData()
 	{
 		ModelTraceManager etalonMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
-		ModelTraceManager dataMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace");
+		ModelTraceManager dataMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE);
 		if(etalonMTM == null || dataMTM == null || dataMTM.getNEvents() == 0)
 		{
 			tabbedPane.setSelectedIndex(0);

@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -38,7 +39,7 @@ public class LoadEtalonCommand extends VoidCommand
 
 	public void execute()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
+		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
 		if (bs.measurementId == null)
 		{
 			JOptionPane.showMessageDialog(

@@ -60,12 +60,12 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	public void updateMinTraceLevel(Double value)
 	{
 		min_trace_level = value;
-		Pool.put("min_trace_level", "primarytrace", min_trace_level);
+		Pool.put("min_trace_level", RefUpdateEvent.PRIMARY_TRACE, min_trace_level);
 	}
 
 	public void updateNoiseLevel()
 	{
-		RefAnalysis ana = (RefAnalysis)Pool.get("refanalysis", "primarytrace");
+		RefAnalysis ana = (RefAnalysis)Pool.get("refanalysis", RefUpdateEvent.PRIMARY_TRACE);
 		if (ana != null)
 		{
 			TraceEvent ev = ana.overallStats;
@@ -73,11 +73,11 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 				noise_level = ev.data[2];
 		}
 
-		min_trace_level = (Double)Pool.get("min_trace_level", "primarytrace");
+		min_trace_level = (Double)Pool.get("min_trace_level", RefUpdateEvent.PRIMARY_TRACE);
 		if (min_trace_level == null)
 		{
 			min_trace_level = new Double(noise_level - 3);
-			Pool.put("min_trace_level", "primarytrace", min_trace_level);
+			Pool.put("min_trace_level", RefUpdateEvent.PRIMARY_TRACE, min_trace_level);
 		}
 	}
 

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 
@@ -40,7 +41,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 
 	public ObjectResourceTreeNode getRoot()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
+		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
 		try
 		{
 			MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
@@ -103,7 +104,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 
 			if(s.equals("root"))
 			{
-				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
+				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", RefUpdateEvent.PRIMARY_TRACE);
 				if (bs != null && !bs.monitoredElementId.equals(""))
 				{
 					Identifier me_id = new Identifier(bs.monitoredElementId);

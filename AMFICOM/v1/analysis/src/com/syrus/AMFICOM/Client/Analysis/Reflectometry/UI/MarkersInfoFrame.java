@@ -70,7 +70,7 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 			if (rce.OPEN)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 					sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());

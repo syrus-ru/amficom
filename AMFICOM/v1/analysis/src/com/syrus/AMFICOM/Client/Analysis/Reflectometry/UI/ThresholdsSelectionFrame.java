@@ -314,13 +314,10 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		dispatcher.register(this, RefChangeEvent.typ);
 	}
 
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if (rce.CLOSE)
-			{
+	public void operationPerformed(OperationEvent ae) {
+		if (ae.getActionCommand().equals(RefChangeEvent.typ)) {
+			RefChangeEvent rce = (RefChangeEvent) ae;
+			if (rce.CLOSE) {
 				String id = (String) (rce.getSource());
 				if (id.equals("all")) {
 					this.mtm = null;
@@ -328,54 +325,49 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				}
 			}
 		}
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-			if(rue.thresholdsUpdated())
-			{
-				String id = (String)(rue.getSource());
-				//if (id.equals("primarytrace"))
+		if (ae.getActionCommand().equals(RefUpdateEvent.typ)) {
+			RefUpdateEvent rue = (RefUpdateEvent) ae;
+			if (rue.thresholdsUpdated()) {
+				String id = (String) (rue.getSource());
+				// if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
-					mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id);
+					mtm = (ModelTraceManager) Pool.get(ModelTraceManager.CODENAME, id);
 					updateThresholds();
 				}
 			}
-			if(rue.analysisPerformed())
-			{
-				String id = (String)(rue.getSource());
-				//if (id.equals("primarytrace"))
+			if (rue.analysisPerformed()) {
+				String id = (String) (rue.getSource());
+				// if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
-				    //System.out.println("thresholdsSelectionFrame: ANALYSIS_PERFORMED: source = '"+id+"'"); // FIXIT
+					// System.out.println("thresholdsSelectionFrame:
+					// ANALYSIS_PERFORMED: source = '"+id+"'"); // FIXIT
 
-					ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id);
-				    //ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", id);
-					bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-					
-					if (mtm != null)
-					{
+					ModelTraceManager mtm = (ModelTraceManager) Pool.get(ModelTraceManager.CODENAME, id);
+					// ReflectogramEvent[] ep =
+					// (ReflectogramEvent[])Pool.get("eventparams", id);
+					bs = (BellcoreStructure) Pool.get("bellcorestructure", id);
+
+					if (mtm != null) {
 						// FIXME:
 						// --- тут была попытка сохранить пороги при
 						// замене списка событий, и, в принципе, ее можно бы
-						// доделать, если только она будет делать что-то осмысленное
+						// доделать, если только она будет делать что-то
+						// осмысленное
 						updateThresholds();
 					}
 				}
 			}
-			if(rue.eventSelected())
-			{
-				if (mtm != null)
-				{
-					current_ev = Integer.parseInt((String)rue.getSource());
-					if (current_ev < 0 || current_ev >= mtm.getNEvents())
-					{
-					    System.out.println("Warning: current_ev out of range");
-					    current_ev = 0;
+			if (rue.eventSelected()) {
+				if (mtm != null) {
+					current_ev = Integer.parseInt((String) rue.getSource());
+					if (current_ev < 0 || current_ev >= mtm.getNEvents()) {
+						System.out.println("Warning: current_ev out of range");
+						current_ev = 0;
 					}
 					updateThresholds();
 				}
 			}
-			if(rue.thresholdChanged())
-			{
+			if (rue.thresholdChanged()) {
 				updateThresholds();
 			}
 		}
