@@ -1,5 +1,5 @@
 /*
-* $Id: CMServerConfigurationObjectLoader.java,v 1.4 2005/04/01 10:38:37 arseniy Exp $
+* $Id: CMServerConfigurationObjectLoader.java,v 1.5 2005/04/01 17:39:02 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,12 +12,10 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/01 10:38:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/01 17:39:02 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
