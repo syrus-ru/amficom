@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.25 2005/03/30 11:07:23 arseniy Exp $
+ * $Id: Identifier.java,v 1.26 2005/03/30 11:24:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.25 $, $Date: 2005/03/30 11:07:23 $
+ * @version $Revision: 1.26 $, $Date: 2005/03/30 11:24:10 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -118,11 +118,22 @@ public class Identifier implements
 		return this.identifierString;
 	}
 
-	public static Identifier_Transferable[] createTransferables(Collection ids) {
-		Identifier_Transferable[] idsT = new Identifier_Transferable[ids.size()];
+	public static Identifier_Transferable[] createTransferables(Collection objects) throws IllegalDataException {
+		Identifier_Transferable[] idsT = new Identifier_Transferable[objects.size()];
 		int i = 0;
-		for (Iterator it = ids.iterator(); it.hasNext(); i++)
-			idsT[i] = (Identifier_Transferable) ((Identifier) it.next()).getTransferable();
+		Object object;
+		Identifier id;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			object = it.next();
+			if (object instanceof Identifier)
+				id = (Identifier) object;
+			else
+				if (object instanceof Identifiable)
+					id = ((Identifiable) object).getId();
+				else
+					throw new IllegalDataException("Class '" + object.getClass().getName() + "' not 'Identifier' or 'Identifiable'");
+			idsT[i] = (Identifier_Transferable) id.getTransferable();
+		}
 		return idsT;
 	}
 
