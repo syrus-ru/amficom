@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.13 2005/03/24 15:53:53 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.14 2005/03/30 10:38:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/24 15:53:53 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/30 10:38:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -67,6 +67,27 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 						query = super.getLinkedQuery(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
 								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
 								ObjectEntities.MNTTYPEMEASPORTTYPELINK_ENTITY);
+						break;
+				}
+				break;
+			case ObjectEntities.ANALYSIS_ENTITY_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+						query = super.getQuery(AnalysisWrapper.COLUMN_MEASUREMENT_ID);
+						break;
+				}
+				break;
+			case ObjectEntities.EVALUATION_ENTITY_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+						query = super.getQuery(EvaluationWrapper.COLUMN_MEASUREMENT_ID);
+						break;
+				}
+				break;
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case ObjectEntities.TEST_ENTITY_CODE:
+						query = super.getQuery(MeasurementWrapper.COLUMN_TEST_ID);
 						break;
 				}
 				break;
@@ -144,7 +165,8 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 				}
 				break;
 			default:
-				throw new IllegalDataException("Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity type");
+				throw new IllegalDataException("Measurement.DatabaseLinkedIdsConditionImpl.getColumnName() | Unsupported entity type -- "
+						+ super.condition.getEntityCode().shortValue());
 		}
 		return query;
 	}
