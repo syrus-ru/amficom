@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.43 2005/03/30 15:46:54 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.44 2005/04/01 21:57:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,16 +31,12 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/03/30 15:46:54 $
+ * @version $Revision: 1.44 $, $Date: 2005/04/01 21:57:59 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public abstract class TestProcessor extends SleepButWorkThread {
-	private static final String KEY_FORGET_FRAME = "ForgetFrame";
-
-	private static final int FORGET_FRAME = 24 * 60 * 60;
-
 	Test test;
 	Transceiver transceiver;
 	int numberOfScheduledMeasurements;
@@ -60,7 +56,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 		this.numberOfScheduledMeasurements = this.numberOfReceivedMResults = 0;
 		this.lastMeasurementAcquisition = false;
-		this.forgetFrame = ApplicationProperties.getInt(KEY_FORGET_FRAME, FORGET_FRAME) * 1000;
+		this.forgetFrame = ApplicationProperties.getInt(MeasurementControlModule.KEY_FORGET_FRAME, MeasurementControlModule.FORGET_FRAME) * 1000;
 		this.measurementResultList = Collections.synchronizedList(new LinkedList());
 		this.running = true;
 
