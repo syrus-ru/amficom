@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.60 2005/02/03 08:36:47 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.61 2005/02/03 14:59:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.61 $, $Date: 2005/02/03 14:59:13 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -74,7 +74,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
+		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -227,7 +227,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				+ MeasurementSetupWrapper.COLUMN_CRITERIA_SET_ID + COMMA
 				+ MeasurementSetupWrapper.COLUMN_THRESHOLD_SET_ID + COMMA
 				+ MeasurementSetupWrapper.COLUMN_ETALON_ID + COMMA
-				+ MeasurementSetupWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ MeasurementSetupWrapper.COLUMN_MEASUREMENT_DURAION;
 		}		
 		return columns;
@@ -354,7 +354,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(MeasurementSetupWrapper.COLUMN_DESCRIPTION));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 									   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -593,7 +593,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		
 		String condition = MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID + SQL_IN + OPEN_BRACKET		
 							+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-							+ SQL_WHERE + SetWrapper.LINK_COLUMN_TYPE_ID + SQL_IN + OPEN_BRACKET			
+							+ SQL_WHERE + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_IN + OPEN_BRACKET			
 								+ SQL_SELECT + StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
 								+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY + SQL_WHERE
 								+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID 

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.10 2005/02/03 08:36:47 bob Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.11 2005/02/03 14:57:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/03 14:57:22 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -71,8 +71,8 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ ModelingTypeWrapper.COLUMN_CODENAME + COMMA
-				+ ModelingTypeWrapper.COLUMN_DESCRIPTION;
+				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 
 		return columns;
@@ -129,8 +129,8 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 									 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-									 DatabaseString.fromQuerySubString(resultSet.getString(ModelingTypeWrapper.COLUMN_CODENAME)),
-									 DatabaseString.fromQuerySubString(resultSet.getString(ModelingTypeWrapper.COLUMN_DESCRIPTION)));
+									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return modelingType;
 	}
 
@@ -303,7 +303,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		ModelingType modelingType = this.fromStorableObject(storableObject);
+		ModelingType modelingType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -459,7 +459,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	public ModelingType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
 		List list = null;
 		try {
-			list = this.retrieveByIds( null , ModelingTypeWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
@@ -487,7 +487,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		else
 			list = this.retrieveByIdsOneQuery(ids, condition);
 
-		retrieveParameterTypesByOneQuery(list);
+		this.retrieveParameterTypesByOneQuery(list);
 
 		return list;	
 	}
@@ -515,7 +515,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 
 			condition = ModelingTypeWrapper.PARAMETER_TYPE_ID + SQL_IN
 						+ OPEN_BRACKET
-						+ SQL_SELECT + SetWrapper.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+						+ SQL_SELECT + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 						+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN 
 							+ OPEN_BRACKET
 							+ argumentIds

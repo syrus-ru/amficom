@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.61 2005/02/03 08:36:47 bob Exp $
+ * $Id: TestDatabase.java,v 1.62 2005/02/03 14:57:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,8 +53,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.62 $, $Date: 2005/02/03 14:57:22 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -83,7 +83,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ TestWrapper.COLUMN_STATUS + COMMA
 				+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ TestWrapper.COLUMN_RETURN_TYPE + COMMA
-				+ TestWrapper.COLUMN_DESCRIPTION;
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}	
@@ -203,7 +203,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(TestWrapper.COLUMN_DESCRIPTION));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 						   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 						   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.32 2005/02/03 08:36:47 bob Exp $
+ * $Id: EvaluationDatabase.java,v 1.33 2005/02/03 14:57:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.33 $, $Date: 2005/02/03 14:57:22 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -62,7 +62,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ EvaluationWrapper.COLUMN_TYPE_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ EvaluationWrapper.COLUMN_MEASUREMENT_ID + COMMA
 				+ EvaluationWrapper.COLUMN_THRESHOLD_SET_ID;
@@ -124,7 +124,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		Measurement measurement = null;
 		Set thresholdSet;
 		try {
-			evaluationType = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_TYPE_ID), true);
+			evaluationType = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 			Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MEASUREMENT_ID);
 			if (measurementId != null)
 				measurement = (Measurement) MeasurementStorableObjectPool.getStorableObject(measurementId, true);

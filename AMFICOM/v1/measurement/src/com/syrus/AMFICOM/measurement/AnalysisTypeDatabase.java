@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.57 2005/02/03 08:36:47 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.58 2005/02/03 14:57:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.58 $, $Date: 2005/02/03 14:57:22 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -72,8 +72,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ AnalysisTypeWrapper.COLUMN_CODENAME + COMMA 
-				+ AnalysisTypeWrapper.COLUMN_DESCRIPTION;
+				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA 
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -111,8 +111,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 								   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 								   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 								   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-								   DatabaseString.fromQuerySubString(resultSet.getString(AnalysisTypeWrapper.COLUMN_CODENAME)),
-								   DatabaseString.fromQuerySubString(resultSet.getString(AnalysisTypeWrapper.COLUMN_DESCRIPTION)));
+								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return analysisType;
 	}
 
@@ -495,7 +495,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
 		List list = null;
 		try {
-			list = this.retrieveByIds(null, AnalysisTypeWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
@@ -564,7 +564,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			}
 
 	    condition = PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET
-					+ SQL_SELECT + SetWrapper.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+					+ SQL_SELECT + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 					+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames
 					+ CLOSE_BRACKET
 					+ CLOSE_BRACKET

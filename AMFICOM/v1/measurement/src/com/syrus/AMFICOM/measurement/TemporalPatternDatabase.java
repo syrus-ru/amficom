@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.33 2005/02/03 08:36:47 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.34 2005/02/03 14:57:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2005/02/03 14:57:22 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -60,7 +60,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ TemporalPatternWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ TemporalPatternWrapper.COLUMN_VALUE;
 		}
 		return columns;
@@ -96,7 +96,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 									  DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 									  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-									  DatabaseString.fromQuerySubString(resultSet.getString(TemporalPatternWrapper.COLUMN_DESCRIPTION)),
+									  DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 									  cronStrings);
 		return temporalPattern;
 	}

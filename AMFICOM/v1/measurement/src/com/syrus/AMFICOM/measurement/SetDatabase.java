@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.53 2005/02/03 08:36:47 bob Exp $
+ * $Id: SetDatabase.java,v 1.54 2005/02/03 14:57:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,8 +48,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.54 $, $Date: 2005/02/03 14:57:22 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -68,13 +68,13 @@ public class SetDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ SetWrapper.COLUMN_SORT  + COMMA
-				+ SetWrapper.COLUMN_DESCRIPTION;
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
 
 	protected String getUpdateMultiplySQLValues(int mode) {
-		if (updateMultiplySQLValues == null){
+		if (updateMultiplySQLValues == null) {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION  + COMMA
 				+ QUESTION;
@@ -123,7 +123,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		Set set = (storableObject == null) ?
 				new Set(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0, null, null, null) :			
 				this.fromStorableObject(storableObject);
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(SetWrapper.COLUMN_DESCRIPTION));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 						  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -139,7 +139,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		String setIdStr = DatabaseIdentifier.toSQLString(set.getId());
 		String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID + COMMA			
-			+ SetWrapper.LINK_COLUMN_TYPE_ID + COMMA
+			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 			+ SetWrapper.LINK_COLUMN_PARAMETER_VALUE
 			+ SQL_FROM
 			+ ObjectEntities.SETPARAMETER_ENTITY
@@ -157,7 +157,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			ParameterType parameterType;
 			while (resultSet.next()) {
 				try {
-					parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_TYPE_ID), true);
+					parameterType = (ParameterType) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -196,7 +196,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			return;
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT + StorableObjectWrapper.COLUMN_ID + COMMA
-				+ SetWrapper.LINK_COLUMN_TYPE_ID + COMMA + SetWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA + SetWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
 				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 				+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET);
 		int i = 1;
@@ -232,7 +232,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			List setParameters;
 			while (resultSet.next()) {
 				try {
-					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_TYPE_ID), true);
+					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -397,7 +397,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ ObjectEntities.SETPARAMETER_ENTITY
 			+ OPEN_BRACKET
 			+ StorableObjectWrapper.COLUMN_ID  + COMMA
-			+ SetWrapper.LINK_COLUMN_TYPE_ID + COMMA
+			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 			+ SetWrapper.LINK_COLUMN_SET_ID + COMMA
 			+ SetWrapper.LINK_COLUMN_PARAMETER_VALUE + CLOSE_BRACKET
 			+ SQL_VALUES 

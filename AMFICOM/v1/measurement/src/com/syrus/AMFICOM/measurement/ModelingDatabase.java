@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.21 2005/02/03 08:36:47 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.22 2005/02/03 14:57:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/02/03 14:57:22 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 
@@ -63,10 +63,10 @@ public class ModelingDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ ModelingWrapper.COLUMN_TYPE_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ ModelingWrapper.COLUMN_ARGUMENT_SET_ID + COMMA
-				+ ModelingWrapper.COLUMN_NAME;
+				+ StorableObjectWrapper.COLUMN_NAME;
 		}
 		return columns;
 	}
@@ -117,7 +117,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 		ModelingType modelingType;
 		Set argumentSet;
 		try {
-			modelingType = (ModelingType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_TYPE_ID), true);
+			modelingType = (ModelingType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 			argumentSet = (Set)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_ARGUMENT_SET_ID), true);
 		}
 		catch (ApplicationException ae) {
@@ -130,7 +130,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 													DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 													modelingType,
 													DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID),
-													DatabaseString.fromQuerySubString(resultSet.getString(ModelingWrapper.COLUMN_NAME)),
+													DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 													argumentSet);
     return modeling;
 	}
