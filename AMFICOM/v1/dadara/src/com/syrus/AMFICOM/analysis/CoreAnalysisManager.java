@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.14 2005/02/24 11:49:59 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.15 2005/03/03 10:45:21 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/02/24 11:49:59 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/03 10:45:21 $
  * @module
  */
 
@@ -182,12 +182,13 @@ public class CoreAnalysisManager
 		int reflSize = ReflectogramMath.getReflectiveEventSize(y, 0.5);
 		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
 				y,
-				1000,
+				1000, // @todo: брать длительность импульса извне
 				bs.getIOR(),
 				deltaX);
-		if (nReflSize > 3 * reflSize / 5)
+		if (nReflSize > 3 * reflSize / 5) // @todo: remove?
 			nReflSize = 3 * reflSize / 5;
 
+		System.out.println("reflSize="+reflSize+"; nReflSize="+nReflSize);
 		long t1 = System.currentTimeMillis();
 		// формирование событий
 		double[] meanAttenuation = { 0 }; // storage for meanAttenuation -- unused: XXX
