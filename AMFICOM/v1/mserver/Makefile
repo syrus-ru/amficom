@@ -4,7 +4,7 @@ LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 LIBNAME_INTERFACE= $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-INCIDLDIR=../idl_v1/idl
+IDLDIR=../idl_v1/idl
 
 HOST=mongol
 SERVICE_NAME=mongol
@@ -41,7 +41,7 @@ $(LIBNAME_INTERFACE):	.corba
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/mserver.idl
+	$(IDLJ) $(IDLJFLAGS) idl/mserver.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
@@ -71,7 +71,7 @@ cleancorba:
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDLDIR)/mserver.idl \
+		idl/mserver.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/*.java
 lib: $(LIBNAME)
 	$(CP) $(LIBNAME) $(LIBDIR)  
