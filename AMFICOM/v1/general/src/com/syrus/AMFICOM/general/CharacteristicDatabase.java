@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.10 2005/02/03 14:57:48 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.11 2005/02/11 09:29:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/03 14:57:48 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/11 09:29:27 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -128,6 +128,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		if (characteristic == null) {
 			characteristic = new Characteristic(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 																null,
+																0L,
 																null,
 																null,
 																null,
@@ -152,6 +153,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 									 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+									 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 									 characteristicType,
 									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
@@ -180,28 +182,28 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		super.insertEntity(characteristic);		
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj)
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(storableObject, true);
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
 				break;
 			case UPDATE_CHECK: 					
 			default:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
 		}
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(List storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
-			super.checkAndUpdateEntities(storableObjects, true);
+			super.checkAndUpdateEntities(storableObjects, modifierId, true);
 			break;
 		case UPDATE_CHECK: 					
 		default:
-			super.checkAndUpdateEntities(storableObjects, false);
+			super.checkAndUpdateEntities(storableObjects, modifierId, false);
 			break;
 		}
 	}
@@ -365,7 +367,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids);
 	}	
 
-	public void updateCharacteristics(StorableObject storableObject) throws UpdateObjectException {
+	public void updateCharacteristics(StorableObject storableObject, Identifier modifierId) throws UpdateObjectException {
 		if (!(storableObject instanceof Characterized)) {
 			String mesg = "CharacteristicDatabase.updateCharacteristics | Storable object " +
 				storableObject.getClass().getName() + " is not a type of Characterized";
@@ -409,7 +411,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			}
 
 			//  insert or update
-			super.checkAndUpdateEntities(characteristics, true);
+			super.checkAndUpdateEntities(characteristics, modifierId, true);
 		}
 		catch (SQLException sqle) {
 			String mesg = "CharacteristicDatabase.updateCharacteristics | SQLException: " + sqle.getMessage();
@@ -430,7 +432,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 
 	}
 
-  public void updateCharacteristics(List storableObjects) throws UpdateObjectException {
+  public void updateCharacteristics(List storableObjects, Identifier modifierId) throws UpdateObjectException {
     // Construction of Map <StorableObjectIdentifier> <List <CharacteristicIdentifier> >
 		if(storableObjects == null || storableObjects.isEmpty())
 			return;
@@ -520,7 +522,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			}
 			super.delete(listIdToDelete);
 			// insert and update. Iterating through InMap and matching it with DBMap 
-			super.checkAndUpdateEntities(characteristics, true);
+			super.checkAndUpdateEntities(characteristics, modifierId, true);
 		}
 		catch (SQLException sqle) {
 			String mesg = "CharacteristicDatabase.updateCharacteristics | SQLException: " + sqle.getMessage();

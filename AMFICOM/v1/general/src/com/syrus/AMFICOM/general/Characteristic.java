@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.12 2005/02/07 12:05:20 bob Exp $
+ * $Id: Characteristic.java,v 1.13 2005/02/11 09:29:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/07 12:05:20 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/11 09:29:27 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -70,6 +70,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 
 	protected Characteristic(Identifier id,
 						Identifier creatorId,
+						long version,
 						CharacteristicType type,
 						String name,
 						String description,
@@ -82,7 +83,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 						new Date(System.currentTimeMillis()),
 						new Date(System.currentTimeMillis()),
 						creatorId,
-						creatorId);
+						creatorId,
+						version);
 				this.type = type;
 				this.name = name;
 				this.description = description;
@@ -92,8 +94,6 @@ public class Characteristic extends StorableObject implements TypedObject {
 
 				this.editable = editable;
 				this.visible = visible;
-
-				super.currentVersion = super.getNextVersion();
 
 				this.characteristicDatabase = GeneralDatabaseContext.characteristicDatabase;
 	}
@@ -124,8 +124,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
+			Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
 										creatorId,
+										0L,
 										type,
 										name,
 										description,
@@ -134,6 +135,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 										characterizedId,
 										editable,
 										visible);
+			characteristic.changed = true;
+			return characteristic;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Characteristic.createInstance | cannot generate identifier ", e);
@@ -143,7 +146,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.characteristicDatabase != null)
-				this.characteristicDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.characteristicDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -180,12 +183,12 @@ public class Characteristic extends StorableObject implements TypedObject {
 	
 	public void setEditable(boolean editable) {
 		this.setEditable0(editable);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public void setVisible(boolean visible) {
 		this.setVisible0(visible);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public StorableObjectType getType() {
@@ -198,7 +201,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 
 	public void setType(CharacteristicType type) {
 		this.setType0(type);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public String getName() {
@@ -211,7 +214,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	
 	protected void setName(String name) {
 		this.setName0(name);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 
@@ -225,7 +228,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 
 	public void setDescription(String description){
 		this.setDescription0(description);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public CharacteristicSort getSort() {
@@ -239,7 +242,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	
 	public void setSort(CharacteristicSort sort){
 		this.setSort0(sort);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 
@@ -257,25 +260,27 @@ public class Characteristic extends StorableObject implements TypedObject {
 	
 	public void setCharacterizedId(Identifier characterizedId){
 		this.setCharacterizedId0(characterizedId);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						CharacteristicType type,
-																						String name,
-																						String description,
-																						int sort,
-																						String value,
-																						Identifier characterizedId,
-																						boolean editable,
-																						boolean visible) {
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												long version,
+												CharacteristicType type,
+												String name,
+												String description,
+												int sort,
+												String value,
+												Identifier characterizedId,
+												boolean editable,
+												boolean visible) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+							modified,
+							creatorId,
+							modifierId,
+							version);
 		this.type = type;
 		this.name = name;
 		this.description = description;
@@ -287,7 +292,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	}
 
 	public void setValue(String value){
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.value = value;
 	}
 

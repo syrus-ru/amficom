@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.9 2005/01/31 14:07:21 bob Exp $
+ * $Id: CharacteristicType.java,v 1.10 2005/02/11 09:29:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/31 14:07:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/11 09:29:27 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -54,6 +54,7 @@ public class CharacteristicType extends StorableObjectType {
 
 	protected CharacteristicType(Identifier id,
 							Identifier creatorId,
+							long version,
 							String codename,
 							String description,
 							int dataType,
@@ -63,12 +64,11 @@ public class CharacteristicType extends StorableObjectType {
 							new Date(System.currentTimeMillis()),
 							creatorId,
 							creatorId,
+							version,
 							codename,
 							description);
 		this.dataType = dataType;
 		this.sort = sort;
-
-		super.currentVersion = super.getNextVersion();
 
 		this.characteristicTypeDatabase = GeneralDatabaseContext.characteristicTypeDatabase;
 	}
@@ -91,12 +91,15 @@ public class CharacteristicType extends StorableObjectType {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
+			CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
 											creatorId,
+											0L,
 											codename,
 											description,
 											dataType,
 											sort.value());
+			characteristicType.changed = true;
+			return characteristicType;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("CharacteristicType.createInstance | cannot generate identifier ", e);
@@ -106,7 +109,7 @@ public class CharacteristicType extends StorableObjectType {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.characteristicTypeDatabase != null)
-				this.characteristicTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.characteristicTypeDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -139,23 +142,25 @@ public class CharacteristicType extends StorableObjectType {
 	
 	public void setSort(CharacteristicTypeSort sort) {
 		this.setSort(sort);
-		this.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						String codename,
-																						String description,
-																						int dataType,
-																						int sort) {
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												long version,
+												String codename,
+												String description,
+												int dataType,
+												int sort) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												codename,
-												description);
+							modified,
+							creatorId,
+							modifierId,
+							version,
+							codename,
+							description);
 		this.dataType = dataType;
 		this.sort = sort;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.6 2005/02/07 08:51:30 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.7 2005/02/11 09:29:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/07 08:51:30 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/11 09:29:28 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -104,6 +104,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		if (characteristicType == null) {
 			characteristicType = new CharacteristicType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 																	null,
+																	0L,
 																	null,
 																	null,
 																	0,
@@ -113,6 +114,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 										 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 										 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 										 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+										 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 										 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 										 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 										 resultSet.getInt(CharacteristicTypeWrapper.COLUMN_DATA_TYPE),
@@ -138,29 +140,29 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		super.insertEntities(storableObjects);
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) 
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) 
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(storableObject, true);
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
 				break;
 			case UPDATE_CHECK: 					
 			default:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
 		}
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(List storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException,
 			UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
-			super.checkAndUpdateEntities(storableObjects, true);
+			super.checkAndUpdateEntities(storableObjects, modifierId, true);
 			break;
 		case UPDATE_CHECK: 					
 		default:
-			super.checkAndUpdateEntities(storableObjects, false);
+			super.checkAndUpdateEntities(storableObjects, modifierId, false);
 			break;
 		}
 	}
