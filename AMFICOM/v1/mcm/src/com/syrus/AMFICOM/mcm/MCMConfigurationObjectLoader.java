@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.4 2004/09/17 07:36:42 max Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.5 2004/09/17 12:20:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,56 +12,53 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
+import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
+import com.syrus.AMFICOM.configuration.CharacteristicType;
 import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.ConfigurationObjectLoader;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
+import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainDatabase;
+import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
+import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
+import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.MCMDatabase;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
+import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
+import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.configuration.ServerDatabase;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.User;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.Server;
-import com.syrus.AMFICOM.configuration.MCM;
-import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.Port;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.UserDatabase;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/17 07:36:42 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/17 12:20:50 $
  * @author $Author: max $
  * @module mcm_v1
  */
