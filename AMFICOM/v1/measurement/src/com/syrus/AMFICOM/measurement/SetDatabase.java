@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.72 2005/02/28 15:30:35 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.73 2005/03/01 15:15:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,12 +13,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -41,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/02/28 15:30:35 $
+ * @version $Revision: 1.73 $, $Date: 2005/03/01 15:15:30 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -122,7 +121,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveSetParameters(Set set) throws RetrieveObjectException {
-		List parameters = new ArrayList();
+		Collection parameters = new HashSet();
 
 		String setIdStr = DatabaseIdentifier.toSQLString(set.getId());
 		String sql = SQL_SELECT
@@ -197,6 +196,10 @@ public class SetDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(e);
 		}
 
+		Map setParametersMap = new HashMap();
+		Identifier setId;
+		Collection setParameters;
+
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -205,11 +208,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			Log.debugMessage("SetDatabase.retrieveSetParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
-			Map setParametersMap = new HashMap();
-			Identifier setId;
 			ParameterType parameterType;
 			SetParameter parameter;
-			List setParameters;
 			while (resultSet.next()) {
 				try {
 					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
@@ -221,28 +221,16 @@ public class SetDatabase extends StorableObjectDatabase {
 														parameterType,
 														ByteArrayDatabase.toByteArray(resultSet.getBlob(SetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
 				setId = DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_SET_ID);
-				setParameters = (List) setParametersMap.get(setId);
+				setParameters = (Collection) setParametersMap.get(setId);
 				if (setParameters == null) {
-					setParameters = new ArrayList();
+					setParameters = new HashSet();
 					setParametersMap.put(setId, setParameters);
 				}
 				setParameters.add(parameter);
 			}
-
-			Set set;
-			for (Iterator it = sets.iterator(); it.hasNext();) {
-				set = (Set)it.next();
-				setId = set.getId();
-				setParameters = (List) setParametersMap.get(setId);
-
-				if (setParameters != null)
-					set.setParameters0((SetParameter[]) setParameters.toArray(new SetParameter[setParameters.size()]));
-				else
-					set.setParameters0(new SetParameter[0]);
-			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retrieveSetParametersByOneQuery | Cannot retrieve parameters for result -- "
+			String mesg = "SetDatabase.retrieveSetParametersByOneQuery | Cannot retrieve parameters for set -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
@@ -262,6 +250,19 @@ public class SetDatabase extends StorableObjectDatabase {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
+
+		Set set;
+		for (Iterator it = sets.iterator(); it.hasNext();) {
+			set = (Set) it.next();
+			setId = set.getId();
+			setParameters = (Collection) setParametersMap.get(setId);
+
+			if (setParameters != null)
+				set.setParameters0((SetParameter[]) setParameters.toArray(new SetParameter[setParameters.size()]));
+			else
+				set.setParameters0(new SetParameter[0]);
+		}
+
 	}
 
 	private void retrieveSetMELinksByOneQuery(Collection sets) throws RetrieveObjectException {
@@ -315,7 +316,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			Set set = (Set) it.next();
+			Set set = this.fromStorableObject((StorableObject) it.next());
 			this.insertSetParameters(set);
 			this.insertSetMELinks(set);			
 		}
@@ -323,7 +324,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertSetParameters(Set set) throws CreateObjectException {
-		String setIdStr = set.getId().toString();
+		Identifier setId = set.getId();
 		SetParameter[] setParameters = set.getParameters();
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.SETPARAMETER_ENTITY
@@ -339,20 +340,20 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ QUESTION + COMMA
 			+ SQL_FUNCTION_EMPTY_BLOB + CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
-		int i = 0;
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			for (i = 0; i < setParameters.length; i++) {
+			for (int i = 0; i < setParameters.length; i++) {
 				parameterId = setParameters[i].getId();
 				parameterTypeId = setParameters[i].getType().getId();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, 3, set.getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, 3, setId);
 
-				Log.debugMessage("SetDatabase.insertSetParameters | Inserting parameter " + parameterTypeId.toString() + " for set " + setIdStr, Log.DEBUGLEVEL09);
+				Log.debugMessage("SetDatabase.insertSetParameters | Inserting parameter " + parameterTypeId.toString()
+						+ " for set '" + setId + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
 											 connection,
@@ -363,7 +364,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.insertSetParameters | Cannot insert parameter '" + parameterId.toString() + "' of type '" + parameterTypeId.toString() + "' for set '" + setIdStr + "' -- " + sqle.getMessage();
+			String mesg = "SetDatabase.insertSetParameters | Cannot insert parameter '" + parameterId.toString()
+					+ "' of type '" + parameterTypeId.toString() + "' for set '" + setId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {

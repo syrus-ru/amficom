@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.73 2005/02/28 15:30:24 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.74 2005/03/01 15:15:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,12 +13,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -41,7 +40,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/02/28 15:30:24 $
+ * @version $Revision: 1.74 $, $Date: 2005/03/01 15:15:30 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -329,19 +328,20 @@ public class ResultDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(e);
 		}
 
+		Map resultParametersMap = new HashMap();
+		Identifier resultId;
+		Collection resultParameters;
+
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("ResultDatabase.retrieveResultParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
-			Map resultParametersMap = new HashMap();
-			Identifier resultId;
 			ParameterType parameterType;
 			SetParameter parameter;
-			List resultParameters;
 			while (resultSet.next()) {
 				try {
 					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
@@ -353,29 +353,16 @@ public class ResultDatabase extends StorableObjectDatabase {
 														parameterType,
 														ByteArrayDatabase.toByteArray(resultSet.getBlob(ResultWrapper.LINK_COLUMN_PARAMETER_VALUE)));
 				resultId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.LINK_COLUMN_RESULT_ID);
-				resultParameters = (List) resultParametersMap.get(resultId);
+				resultParameters = (Collection) resultParametersMap.get(resultId);
 				if (resultParameters == null) {
-					resultParameters = new ArrayList();
+					resultParameters = new HashSet();
 					resultParametersMap.put(resultId, resultParameters);
 				}
 				resultParameters.add(parameter);
 			}
-
-			Result result;
-			for (Iterator it = results.iterator(); it.hasNext();) {
-				result = (Result) it.next();
-				resultId = result.getId();
-				resultParameters = (List) resultParametersMap.get(resultId);
-
-				if (resultParameters != null)
-					result.setParameters0((SetParameter[]) resultParameters.toArray(new SetParameter[resultParameters.size()]));
-				else
-					result.setParameters0(new SetParameter[0]);
-			}
-			
 		}
 		catch (SQLException sqle) {
-			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result -- " + sqle.getMessage();
+			String mesg = "ResultDatabase.retrieveResultParametersByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -393,7 +380,20 @@ public class ResultDatabase extends StorableObjectDatabase {
 			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
-		}		
+		}
+
+		Result result;
+		for (Iterator it = results.iterator(); it.hasNext();) {
+			result = (Result) it.next();
+			resultId = result.getId();
+			resultParameters = (Collection) resultParametersMap.get(resultId);
+
+			if (resultParameters != null)
+				result.setParameters0((SetParameter[]) resultParameters.toArray(new SetParameter[resultParameters.size()]));
+			else
+				result.setParameters0(new SetParameter[0]);
+		}
+
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
@@ -421,7 +421,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		this.insertEntities(storableObjects);
 
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			Result result = (Result) it.next();
+			Result result = this.fromStorableObject((StorableObject) it.next());
 			this.insertResultParameters(result);
 		}
 
@@ -442,23 +442,20 @@ public class ResultDatabase extends StorableObjectDatabase {
 				+ QUESTION+ COMMA
 				+ SQL_FUNCTION_EMPTY_BLOB + CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
-		int i = 0;
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			for (i = 0; i < setParameters.length; i++) {
+			for (int i = 0; i < setParameters.length; i++) {
 				parameterId = setParameters[i].getId();
 				parameterTypeId = setParameters[i].getType().getId();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, resultId);
 
-				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter "
-						+ parameterTypeId.toString()
-						+ " for result "
-						+ resultId, Log.DEBUGLEVEL09);
+				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter " + parameterTypeId.toString()
+						+ " for result " + resultId, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
 						connection,
@@ -469,14 +466,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter '"
-					+ parameterId.toString()
-					+ "' of type '"
-					+ parameterTypeId.toString()
-					+ "' for result '"
-					+ resultId
-					+ "' -- "
-					+ sqle.getMessage();
+			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter '" + parameterId.toString()
+					+ "' of type '" + parameterTypeId.toString() + "' for result '" + resultId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
