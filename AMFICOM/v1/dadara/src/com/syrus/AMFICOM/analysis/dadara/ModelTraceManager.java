@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.15 2005/03/03 14:15:24 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.16 2005/03/03 15:10:55 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/03/03 14:15:24 $
+ * @version $Revision: 1.16 $, $Date: 2005/03/03 15:10:55 $
  * @module
  */
 public class ModelTraceManager
@@ -28,7 +28,6 @@ public class ModelTraceManager
 	private static final long SIGNATURE_THRESH = 3353620050119193102L;
 	public static final String CODENAME = "ModelTraceManager";
 
-	//private ReflectogramEvent[] re; // not null
 	private SimpleReflectogramEventImpl[] se; // not null //; was must be kept in sync with re
 	private ModelFunction mf;
 	private int traceLength;
@@ -57,13 +56,6 @@ public class ModelTraceManager
 		return thMTCache != null && thMTCache[key] != null;
 	}
 
-//	private void createSEByRE(ReflectogramEvent[] re)
-//	{
-//		se = new SimpleReflectogramEventImpl[re.length];
-//		for (int i = 0; i < re.length; i++)
-//			se[i] = new SimpleReflectogramEventImpl(re[i].getBegin(), re[i].getEnd(), re[i].getEventType());
-//	}
-//
 	private void createTH()
 	{
 		LinkedList thresholds = new LinkedList();
@@ -131,18 +123,6 @@ public class ModelTraceManager
 		tDY = (ThreshDY[] )thresholds.toArray(new ThreshDY[thresholds.size()]);
 	}
 
-//	public ModelTraceManager(ReflectogramEvent[] re, ModelFunction mf)
-//	{
-//		createSEByRE(re);
-//		this.mf = mf;
-//		this.deltaX = re.length > 0
-//		? re[0].getDeltaX()
-//		: 1.0; // XXX
-//		this.traceLength = calcTraceLength();
-//		this.mt = new ModelTraceImplMF(this.mf, this.traceLength);
-//		createTH();
-//	}
-//
 	public ModelTraceManager(SimpleReflectogramEventImpl[] se, ModelFunction mf, double deltaX)
 	{
 		this.se = se;

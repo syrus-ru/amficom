@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.3 2005/03/03 14:15:25 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.4 2005/03/03 15:10:55 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import org.w3c.dom.events.EventTarget;
-
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/03/03 14:15:25 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/03 15:10:55 $
  * @module
  */
 public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
