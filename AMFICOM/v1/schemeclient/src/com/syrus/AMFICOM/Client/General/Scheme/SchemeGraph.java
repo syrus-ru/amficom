@@ -45,7 +45,7 @@ import com.jgraph.graph.Port;
 import com.jgraph.graph.PortView;
 import com.jgraph.graph.VertexView;
 import com.jgraph.pad.GPGraph;
-import com.jgraph.pad.GPGraph$GPMarqueeHandler;
+//import com.jgraph.pad.GPGraph$GPMarqueeHandler;
 import com.jgraph.plaf.GraphUI;
 
 public class SchemeGraph extends GPGraph
@@ -531,7 +531,7 @@ public class SchemeGraph extends GPGraph
 	/**
 	 * MarqueeHandler that can insert cells.
 	 */
-	public class ShemeMarqueeHandler extends GPMarqueeHandler
+	public class ShemeMarqueeHandler extends GPGraph.GPMarqueeHandler
 	{
 		public transient JToggleButton ce = new JToggleButton();
 		public transient JToggleButton dev = new JToggleButton();

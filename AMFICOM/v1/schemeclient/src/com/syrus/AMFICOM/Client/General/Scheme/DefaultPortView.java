@@ -10,7 +10,7 @@ import com.jgraph.graph.CellMapper;
 import com.jgraph.graph.CellViewRenderer;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseView;
-import com.jgraph.pad.EllipseView$EllipseRenderer;
+//import com.jgraph.pad.EllipseView$EllipseRenderer;
 
 class DefaultPortView extends EllipseView
 {
@@ -38,7 +38,7 @@ class DefaultPortView extends EllipseView
 	}
 
 
-	static class SchemeEllipseRenderer extends EllipseRenderer
+	static class SchemeEllipseRenderer extends EllipseView.EllipseRenderer
 	{
 		protected void paintSelectionBorder(Graphics g)
 		{

@@ -12,7 +12,7 @@ import com.jgraph.graph.CellMapper;
 import com.jgraph.graph.CellViewRenderer;
 import com.jgraph.graph.EdgeRenderer;
 import com.jgraph.graph.EdgeView;
-import com.jgraph.graph.EdgeView$EdgeHandle;
+//import com.jgraph.graph.EdgeView$EdgeHandle;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.GraphContext;
 import com.jgraph.graph.Port;
@@ -62,7 +62,7 @@ public class LinkView extends EdgeView
 		return points.size();
 	}
 
-	public class ShemeEdgeHandle extends EdgeHandle
+	public class ShemeEdgeHandle extends EdgeView.EdgeHandle
 	{
 		public ShemeEdgeHandle(EdgeView edge, GraphContext ctx)
 		{

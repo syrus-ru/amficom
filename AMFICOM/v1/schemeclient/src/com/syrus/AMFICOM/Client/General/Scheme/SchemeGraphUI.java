@@ -16,8 +16,9 @@ import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.GraphContext;
 import com.jgraph.graph.GraphLayoutCache;
 import com.jgraph.pad.GPGraphUI;
-import com.jgraph.plaf.basic.BasicGraphUI$MouseHandler;
-import com.jgraph.plaf.basic.BasicGraphUI$RootHandle;
+import com.jgraph.plaf.basic.BasicGraphUI;
+//import com.jgraph.plaf.basic.BasicGraphUI$MouseHandler;
+//import com.jgraph.plaf.basic.BasicGraphUI$RootHandle;
 
 public class SchemeGraphUI extends GPGraphUI
 {
@@ -48,7 +49,7 @@ public class SchemeGraphUI extends GPGraphUI
 		return new SchemeMouseHandler();
 	}
 
-	public class SchemeMouseHandler extends MouseHandler
+	public class SchemeMouseHandler extends BasicGraphUI.MouseHandler
 	{
 		public void mousePressed(MouseEvent e)
 		{
@@ -125,7 +126,7 @@ public class SchemeGraphUI extends GPGraphUI
 		}
 	}
 
-	public class SchemeRootHandle extends RootHandle
+	public class SchemeRootHandle extends BasicGraphUI.RootHandle
 	{
 		public SchemeRootHandle(GraphContext ctx)
 		{

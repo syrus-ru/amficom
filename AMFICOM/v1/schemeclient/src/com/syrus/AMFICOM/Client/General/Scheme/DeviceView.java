@@ -21,7 +21,7 @@ import com.jgraph.graph.GraphContext;
 import com.jgraph.graph.Port;
 import com.jgraph.graph.VertexRenderer;
 import com.jgraph.graph.VertexView;
-import com.jgraph.graph.VertexView$SizeHandle;
+//import com.jgraph.graph.VertexView$SizeHandle;
 
 public class DeviceView extends VertexView
 {
@@ -54,7 +54,7 @@ public class DeviceView extends VertexView
 		return undo;
 	}
 
-	public class DeviceSizeHandle extends SizeHandle
+	public class DeviceSizeHandle extends VertexView.SizeHandle
 	{
 		public DeviceSizeHandle (DeviceView vertexview, GraphContext ctx)
 		{
