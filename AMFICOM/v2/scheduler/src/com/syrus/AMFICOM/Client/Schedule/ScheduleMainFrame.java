@@ -1,4 +1,4 @@
- package com.syrus.AMFICOM.Client.Schedule;
+package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.*;
 import java.awt.event.*;
