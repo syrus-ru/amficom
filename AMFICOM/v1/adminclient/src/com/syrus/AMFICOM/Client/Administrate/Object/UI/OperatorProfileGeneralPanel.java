@@ -1,23 +1,21 @@
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Object.*;
+
 import java.awt.*;
 import java.awt.event.*;
+
 import java.text.*;
+
 import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
 
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
 import oracle.jdeveloper.layout.*;
-import java.awt.*;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
 
 public class OperatorProfileGeneralPanel extends GeneralPanel
 {
