@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.21 2004/10/19 07:48:58 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.22 2004/10/27 09:52:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -33,8 +35,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/10/19 07:48:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2004/10/27 09:52:08 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -49,7 +51,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
     // finish_port_id VARCHAR2(32),
     public static final String COLUMN_FINISH_PORT_ID        = "finish_port_id";
 
-
+    public static final String COLUMN_TYPE_ID       = "type_id";
     // table :: TransmissionPathMELink
     // monitored_element_id Identifier,
     public static final String LINK_COLUMN_MONITORED_ELEMENT_ID  = "monitored_element_id";
@@ -79,6 +81,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		if (this.updateColumns == null){
 			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+                + COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_START_PORT_ID + COMMA
@@ -91,6 +94,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		if (this.updateMultiplySQLValues == null){
 			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
+                + QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -105,11 +109,32 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		TransmissionPath transmissionPath = fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ transmissionPath.getDomainId().toSQLString() + COMMA
+            + transmissionPath.getType().getId().toSQLString() + COMMA
 			+ APOSTOPHE + transmissionPath.getName() + APOSTOPHE + COMMA
 			+ APOSTOPHE + transmissionPath.getDescription() + APOSTOPHE + COMMA
 			+ transmissionPath.getStartPortId().toSQLString() + COMMA
 			+ transmissionPath.getFinishPortId().toSQLString();
 	}
+    
+    protected int setEntityForPreparedStatement(StorableObject storableObject,
+            PreparedStatement preparedStatement) throws IllegalDataException,
+            UpdateObjectException {
+        TransmissionPath transmissionPath = fromStorableObject(storableObject);
+        int i;
+        try {
+            i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+            preparedStatement.setString( ++i, transmissionPath.getDomainId().getCode());
+            preparedStatement.setString( ++i, transmissionPath.getType().getId().getCode());            
+            preparedStatement.setString( ++i, transmissionPath.getName());
+            preparedStatement.setString( ++i, transmissionPath.getDescription());
+            preparedStatement.setString( ++i, transmissionPath.getStartPortId().toString());
+            preparedStatement.setString( ++i, transmissionPath.getFinishPortId().toSQLString());            
+        } catch (SQLException sqle) {
+            throw new UpdateObjectException("KISDatabase." +
+                    "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+        }
+        return i;
+    }
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
@@ -122,6 +147,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	protected String retrieveQuery(String condition){
 		return super.retrieveQuery(condition) + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+            + COLUMN_TYPE_ID + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_START_PORT_ID + COMMA
@@ -135,11 +161,19 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TransmissionPath transmissionPath = (storableObject == null) ?
-				new TransmissionPath(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null) :
+				new TransmissionPath(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null, null) :
 					fromStorableObject(storableObject);
 		String name = resultSet.getString(COLUMN_NAME);
 		String description = resultSet.getString(COLUMN_DESCRIPTION);
-		transmissionPath.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		
+        TransmissionPathType type;
+        try {
+            type = (TransmissionPathType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+        }
+        catch (ApplicationException ae) {
+            throw new RetrieveObjectException(ae);
+        }
+        transmissionPath.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
 						  
 						  /**
@@ -157,6 +191,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 
 						  (name != null) ? name : "",
 						  (description != null) ? description : "",
+                          type,
 						  /**
 							* @todo when change DB Identifier model ,change getString() to getLong()
 							*/

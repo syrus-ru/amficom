@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.16 2004/10/27 08:18:52 max Exp $
+ * $Id: TransmissionPath.java,v 1.17 2004/10/27 09:52:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/27 08:18:52 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/27 09:52:08 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -60,6 +60,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 								Identifier domainId,
 								String name,
 								String description,
+                                TransmissionPathType type,
 								Identifier startPortId,
 								Identifier finishPortId){
 		super(id,
@@ -70,6 +71,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 				domainId);
 		this.name = name;
 		this.description = description;
+        this.type = type;
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
 		
@@ -95,6 +97,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 													Identifier domainId,
 													String name,
 													String description,
+                                                    TransmissionPathType type,
 													Identifier startPortId,
 													Identifier finishPortId) {
 				return new TransmissionPath(id,
@@ -102,6 +105,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 					 domainId,
 					 name,
 					 description,
+                     type,
 					 startPortId,
 					 finishPortId);
 		}
@@ -127,16 +131,12 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 			this.characteristics = new ArrayList(tpt.characteristic_ids.length);
 			for (int i = 0; i < tpt.characteristic_ids.length; i++)
 				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
+            
+            this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
 		}
         catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
-		}
-        try {
-            this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
-        }
-        catch (ApplicationException ae) {
-            throw new CreateObjectException(ae);
-        }  
+		}        
 	}
 	
 	public static TransmissionPath getInstance(TransmissionPath_Transferable tpt) throws CreateObjectException {
@@ -220,7 +220,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 																						Identifier domainId,
 																						String name,
 																						String description,
-																						Identifier startPortId,
+                                                                                        TransmissionPathType type,																						Identifier startPortId,
 																						Identifier finishPortId) {
 		super.setAttributes(created,
 												modified,
@@ -229,6 +229,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 												domainId);		
 		this.name = name;
 		this.description = description;
+        this.type = type;
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
 	}
