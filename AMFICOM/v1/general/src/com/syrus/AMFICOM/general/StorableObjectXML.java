@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.2 2005/01/25 06:10:48 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.3 2005/01/25 07:12:05 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,11 +18,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/25 06:10:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/25 07:12:05 $
  * @author $Author: bob $
  * @module general_v1
  */
-public abstract class StorableObjectXML {
+public class StorableObjectXML {
 
 	private StorableObjectXMLDriver	driver;
 
@@ -29,9 +30,47 @@ public abstract class StorableObjectXML {
 		this.driver = driver;
 	}
 
-	protected abstract Class getStorableObjectClass(final short entityCode);
+	private Class getStorableObjectClass(final short entityCode) throws IllegalDataException {
+		Class clazz = null;
+		String className = ObjectGroupEntities.getPackageName(entityCode) + "." + ObjectEntities.codeToString(entityCode);
+		try {
+			clazz = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new IllegalDataException("StorableObjectXML.getStorableObjectClass | Class " + className //$NON-NLS-1$
+				+ " not found on the classpath - " + e.getMessage());
+		}
+		return clazz;
+	}
 
-	protected abstract Wrapper getWrapper(final short entityCode);
+	private Wrapper getWrapper(final short entityCode) throws IllegalDataException {
+		Wrapper wrapper = null;
+		String className = ObjectGroupEntities.getPackageName(entityCode) + "." + ObjectEntities.codeToString(entityCode) + "Wrapper";
+		try {
+			Class clazz = Class.forName(className);
+			Method method = clazz.getMethod("getInstance", new Class[0]);
+			wrapper = (Wrapper)method.invoke(null, new Object[0]);
+			
+		} catch (ClassNotFoundException e) {
+			throw new IllegalDataException("StorableObjectXML.getWrapper | Class " + className //$NON-NLS-1$
+				+ " not found on the classpath - " + e.getMessage());
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return wrapper;
+	}
 
 	public StorableObject retrieve(final Identifier identifier) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {

@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.2 2005/01/25 06:10:48 bob Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.3 2005/01/25 07:12:05 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,17 +15,17 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/25 06:10:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/25 07:12:05 $
  * @author $Author: bob $
  * @module general_v1
  */
 public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 
-	private GeneralXML	generalXML;
+	private StorableObjectXML	generalXML;
 
 	public XMLGeneralObjectLoader(final File path) {
 		StorableObjectXMLDriver driver = new StorableObjectXMLDriver(path, "general");
-		this.generalXML = new GeneralXML(driver);
+		this.generalXML = new StorableObjectXML(driver);
 	}
 
 	private StorableObject loadStorableObject(Identifier id) throws CommunicationException {
