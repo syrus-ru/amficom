@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.5 2005/02/24 09:27:59 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.6 2005/02/25 12:11:59 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,22 +8,17 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 import junit.framework.Test;
 
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
-import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.SessionContext;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/24 09:27:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/02/25 12:11:59 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class TestMonitoredElement extends CommonConfigurationTest {
