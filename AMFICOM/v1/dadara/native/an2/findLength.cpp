@@ -1,6 +1,7 @@
 #include "findLength.h"
 
 const int TREAT_ONLY_DUPLICATE_ZEROES = 0;
+const double DELTAV = 0.1; // толерантность минимума, можно установить в ноль
 
 // определяет длину рефлектограммы до начала шума (т.е. до конца р/граммы)
 // если ничего не может сделать, должно вернуть data_length
@@ -27,11 +28,12 @@ int findReflectogramLength(double *data, int len)
 	int lastX = 0; // начало текущего интервала
 	for (i = 0; i < len - width; i++)
 	{
-		if (data[i] != vmin)
+		if (data[i] > vmin + DELTAV)
 			continue;
+
 		if (width)
 		{
-			if (data[i + 1] != vmin)
+			if (data[i + 1] > vmin + DELTAV)
 				continue;
 		}
 		// найден ноль
