@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.29 2004/12/22 10:07:41 bob Exp $
+ * $Id: EquipmentType.java,v 1.30 2004/12/24 18:25:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/12/22 10:07:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2004/12/24 18:25:49 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -62,18 +62,18 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 			  new String(ett.codename),
 			  new String(ett.description));	
 		this.name = ett.name;
-        this.manufacturer = ett.manufacturer;
-        this.manufacturerCode = ett.manufacturerCode;
-        try {
-            this.characteristics = new ArrayList(ett.characteristic_ids.length);
-            for (int i = 0; i < ett.characteristic_ids.length; i++)
-                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(ett.characteristic_ids[i]), true));
-        }
-        catch (ApplicationException ae) {
-            throw new CreateObjectException(ae);
-        }
+		this.manufacturer = ett.manufacturer;
+		this.manufacturerCode = ett.manufacturerCode;
+		try {
+			this.characteristics = new ArrayList(ett.characteristic_ids.length);
+			for (int i = 0; i < ett.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(ett.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
-	
+
 	protected EquipmentType(Identifier id,
 					 Identifier creatorId,
 					 String codename,
@@ -97,7 +97,7 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 
 
 	/**
-	 * create new instance for client 
+	 * Create new instance for client 
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -108,7 +108,7 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 											 String description,
 											 String name,
                                              String manufacturer,
-                                             String manufacturerCode) throws CreateObjectException{
+                                             String manufacturerCode) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null || name == null
                 || manufacturer == null || manufacturerCode == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -121,8 +121,9 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 								name,
                                 manufacturer,
                                 manufacturerCode);
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("EquipmentType.createInstance | cannot generate identifier ", e);
+		}
+		catch (IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("EquipmentType.createInstance | cannot generate identifier ", ioee);
 		}		
 	}
 
@@ -136,27 +137,12 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 		}
 	}
 
-//	public static EquipmentType getInstance(EquipmentType_Transferable ett) throws CreateObjectException {
-//		EquipmentType equipmentType = new EquipmentType(ett);
-//		
-//		equipmentType.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
-//		try {
-//			if (equipmentType.equipmentTypeDatabase != null)
-//				equipmentType.equipmentTypeDatabase.insert(equipmentType);
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new CreateObjectException(ide.getMessage(), ide);
-//		}
-//		
-//		return equipmentType;
-//	}
-	
 	public Object getTransferable() {
-        int i = 0;
-        Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-        for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-            charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
-        
+		int i = 0;
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+
 		return new EquipmentType_Transferable(super.getHeaderTransferable(),
 											  new String(super.codename),
 											  (super.description != null) ? (new String(super.description)) : "",
@@ -173,8 +159,8 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 																						String codename,
 																						String description,
 																						String name,
-                                                                                        String manufacturer,
-                                                                                        String manufacturerCode) {
+																						String manufacturer,
+																						String manufacturerCode) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -182,10 +168,10 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 												codename,
 												description);
 		this.name = name;
-        this.manufacturer = manufacturer;
-        this.manufacturerCode = manufacturerCode;
+		this.manufacturer = manufacturer;
+		this.manufacturerCode = manufacturerCode;
 	}
-	
+
 	public String getName(){
 		return this.name;
 	}
@@ -214,32 +200,32 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 	}
 
 	public List getCharacteristics() {
-        return Collections.unmodifiableList(this.characteristics);
-    }
-    
-    protected void setCharacteristics0(final List characteristics) {
-        this.characteristics.clear();
-        if (characteristics != null)
-                this.characteristics.addAll(characteristics);
-    }
-    
-    public void setCharacteristics(final List characteristics) {
-        this.setCharacteristics0(characteristics);
-        super.currentVersion = super.getNextVersion();
-    }
-    
+		return Collections.unmodifiableList(this.characteristics);
+	}
+
+	protected void setCharacteristics0(final List characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
+	}
+   
+	public void setCharacteristics(final List characteristics) {
+		this.setCharacteristics0(characteristics);
+		super.currentVersion = super.getNextVersion();
+	}
+
 	public String getManufacturer() {
 		return this.manufacturer;
 	}
-    
+
 	public void setManufacturer(String manufacturer) {
 		this.manufacturer = manufacturer;
 	}
-    
+
 	public String getManufacturerCode() {
 		return this.manufacturerCode;
 	}
-    
+
 	public void setManufacturerCode(String manufacturerCode) {
 		this.manufacturerCode = manufacturerCode;
 	}
