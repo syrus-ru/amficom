@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.15 2004/12/22 09:44:43 bass Exp $
+ * $Id: scheme-vt.idl,v 1.16 2004/12/22 11:09:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@
 #define SCHEME_VT_IDL
 
 #include "general-vt.idl"
-#include "map.idl"
 #include "scheme-configuration.idl"
 #include "scheme-map.idl"
 #include "scheme-resource.idl"
@@ -222,7 +221,8 @@ module com {
 
 					valuetype SchemeLink:
 							AbstractSchemeLink,
-							configuration::ComSyrusAmficomConfigurationSchemeLink {
+							configuration::ComSyrusAmficomConfigurationSchemeLink,
+							map::ComSyrusAmficomMapSchemeLink {
 						private general::corba::Identifier siteId;
 
 						/**
@@ -233,7 +233,6 @@ module com {
 						 * @see AbstractSchemeLink#targetAbstractSchemePortId
 						 */
 						attribute SchemePort targetSchemePort;
-						attribute CORBA::Map::MapSiteElement site;
 
 						SchemeLink cloneInstance();
 
@@ -485,7 +484,8 @@ module com {
 					valuetype SchemeElement:
 							AbstractSchemeElement,
 							resource::SchemeCellContainer,
-							configuration::ComSyrusAmficomConfigurationSchemeElement {
+							configuration::ComSyrusAmficomConfigurationSchemeElement,
+							map::ComSyrusAmficomMapSchemeElement {
 						/**
 						 * May be empty. Probably is subject removal (see {@link #equipmentTypeId}).
 						 */
@@ -523,7 +523,6 @@ module com {
 						 * Getter/setter pair for internalScheme property.
 						 */
 						attribute Scheme internalScheme;
-						attribute CORBA::Map::MapSiteElement site;
 						attribute general::corba::WString64 label;
 
 						SchemeElement cloneInstance();
@@ -566,7 +565,8 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							resource::SchemeCellContainer,
-							configuration::ComSyrusAmficomConfigurationScheme {
+							configuration::ComSyrusAmficomConfigurationScheme,
+							map::ComSyrusAmficomMapScheme {
 						enum Type {
 							BUILDING,
 							CABLE_SUBNETWORK,
@@ -611,7 +611,6 @@ module com {
 						attribute general::corba::WString64 label;
 						attribute long width;
 						attribute long height;
-						attribute CORBA::Map::Map map;
 
 						Scheme cloneInstance();
 
