@@ -6,6 +6,6 @@ rc
 cache
 orb.db
 classes
-.classpath
-.project
+arserver.jar
+arserver_interface.jar
 .settings
