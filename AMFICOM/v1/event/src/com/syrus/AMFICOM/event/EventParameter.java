@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.1 2005/01/28 15:15:28 arseniy Exp $
+ * $Id: EventParameter.java,v 1.2 2005/01/31 07:04:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/28 15:15:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 07:04:22 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -90,8 +90,7 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 
 	public static EventParameter createInstance(ParameterType type, int value) throws CreateObjectException {
 		try {
-			// TODO Maybe use specially added EVENTPARAMETER_ENTITY_CODE
-			return new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+			return new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTPARAMETER_ENTITY_CODE),
 					type,
 					value);
 		}
@@ -102,8 +101,7 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 
 	public static EventParameter createInstance(ParameterType type, String value) throws CreateObjectException {
 		try {
-			// TODO Maybe use specially added EVENTPARAMETER_ENTITY_CODE
-			return new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+			return new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTPARAMETER_ENTITY_CODE),
 					type,
 					value);
 		}
@@ -114,8 +112,7 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 
 	public static EventParameter createInstance(ParameterType type, byte[] value) throws CreateObjectException {
 		try {
-			// TODO Maybe use specially added EVENTPARAMETER_ENTITY_CODE
-			return new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+			return new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTPARAMETER_ENTITY_CODE),
 					type,
 					value);
 		}
