@@ -1,5 +1,5 @@
 /*
- * $Id: alarm.idl,v 1.6 2005/02/04 08:59:44 arseniy Exp $
+ * $Id: alarm.idl,v 1.7 2005/03/02 08:44:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -83,7 +83,7 @@ module Alarm {
 		wstring source_id;
 		wstring type_id;
 		wstring descriptor;
-		event::corba::EventStatus status;
+//		event::corba::EventStatus status;
 		long long created;
 	};
 	typedef sequence <Event_Transferable> EventSeq_Transferable;
