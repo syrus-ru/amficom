@@ -1,72 +1,26 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Класс хранения отображения БД на клиентскую часть          * //
-// *           задача модуля - для минимизации трафика клиент-сервер      * //
-// *           хранить подгружаемые с сервера объекты, так что при        * //
-// *           последующем запуске клиентской части проверяется образ     * //
-// *           на наличие необходимых объектов, и в случае их отсутствия  * //
-// *           они подгружаются с сервера                                 * //
-// *                                                                      * //
-// * Тип: Java 1.4.0                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 24 mar 2003                                                      * //
-// * Расположение: ISM\prog\java\AMFICOM\com\syrus\AMFICOM\Client\        * //
-// *        Resource\DataSourceImage.java                                 * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 9.0.3.9.93                       * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.4.0)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: DataSourceImage.java,v 1.6 2004/09/27 16:06:09 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
 package com.syrus.AMFICOM.Client.Resource;
 
 import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptorSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-
+import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.util.*;
+import java.io.*;
+import java.util.*;
+import java.util.zip.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.io.StreamCorruptedException;
-import java.io.FileNotFoundException;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 16:06:09 $
+ * @module generalclient_v1
+ */
 public class DataSourceImage
 {
 	protected DataSourceInterface di;
@@ -145,11 +99,7 @@ public class DataSourceImage
 	// получить каталог сераилизованных объектов фиксированного типа
 	protected void load2(String type)
 	{
-		ConnectionInterface ci = di.getSession().getConnectionInterface();
-		String s = ci.getServiceURL();
-		String s1 = s.replace(':', '-');
-		String s2 = s1.replace('/', '_');
-		String name = "resources/directory/" + s2 + "/" + type + "s.dsi";
+		String name = "resources/directory/" + di.getSession().getConnectionInterface().getServerName().replace(':', '-').replace('/', '_') + "/" + type + "s.dsi";
 
         Object obj = null;
 		
@@ -189,14 +139,11 @@ public class DataSourceImage
 			Pool.put(type, or.getId(), or);
 		}
 
-		Hashtable ht3 = (Hashtable )Pool.getHash("serverimage");
-		if(ht3 != null)
-		for(Enumeration e = ht3.elements(); e.hasMoreElements();)
-		{
-			ObjectResource or = (ObjectResource )e.nextElement();
-			or.updateLocalFromTransferable();
-		}
-		Pool.removeHash("serverimage");
+		Map map = Pool.getMap("serverimage");
+		if (map != null)
+			for (Iterator iterator = map.values().iterator(); iterator.hasNext();)
+				((ObjectResource) (iterator.next())).updateLocalFromTransferable();
+		Pool.removeMap("serverimage");
 	}
 	
 	// получить каталог сераилизованных объектов фиксированного типа
@@ -211,11 +158,7 @@ public class DataSourceImage
 		
 		Hashtable hc = (Hashtable )catalog.get(type);
 		
-		ConnectionInterface ci = di.getSession().getConnectionInterface();
-		String s = ci.getServiceURL();
-		String s1 = s.replace(':', '-');
-		String s2 = s1.replace('/', '_');
-		String name = "resources/directory/" + s2 + "/" + type + "s.dsi";
+		String name = "resources/directory/" + di.getSession().getConnectionInterface().getServerName().replace(':', '-').replace('/', '_') + "/" + type + "s.dsi";
 
         Object obj = null;
 
@@ -273,46 +216,34 @@ public class DataSourceImage
 			}
 		}
 
-		Hashtable ht3 = (Hashtable )Pool.getHash("serverimage");
-		if(ht3 != null)
-		for(Enumeration e = ht3.elements(); e.hasMoreElements();)
-		{
-			ObjectResource or = (ObjectResource )e.nextElement();
-			or.updateLocalFromTransferable();
-		}
-		Pool.removeHash("serverimage");
+		Map map = Pool.getMap("serverimage");
+		if(map != null)
+			for (Iterator iterator = map.values().iterator(); iterator.hasNext();)
+				((ObjectResource) (iterator.next())).updateLocalFromTransferable();
+		Pool.removeMap("serverimage");
 		loaded_catalog.put(type, Boolean.TRUE);
 	}
-	
+
 	// получить каталог сераилизованных объектов фиксированного типа
 	protected void loadFromPool(String type)
 	{
-		Hashtable h2 = (Hashtable )Pool.getHash(type);
-		if(h2 == null)
-			h2 = new Hashtable();
-
-		Hashtable h = new Hashtable();
-
-		for(Enumeration e = h2.elements(); e.hasMoreElements();)
+		Map map = Pool.getMap(type);
+		if (map == null)
+			map = new Hashtable();
+		Hashtable hashtable = new Hashtable();
+		for (Iterator iterator = map.values().iterator(); iterator.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )e.nextElement();
-			ResourceDescriptor rd = new ResourceDescriptor(or.getId(), or.getModified(), (Serializable )or);
-			h.put(or.getId(), rd);
+			ObjectResource or = (ObjectResource) (iterator.next());
+			hashtable.put(or.getId(), new ResourceDescriptor(or.getId(), or.getModified(), (Serializable) or));
 		}
-
-		catalog.put(type, h);
+		catalog.put(type, hashtable);
 	}
 	
 	// получить каталог сераилизованных объектов фиксированного типа
 	protected void load(String type, Hashtable h)
 	{
-		ConnectionInterface ci = di.getSession().getConnectionInterface();
-		String s = ci.getServiceURL();
-		String s1 = s.replace(':', '-');
-		String s2 = s1.replace('/', '_');
-		String name = "resources/directory/" + s2 + "/" + type + "s.dsi";
-
-        Object obj = null;
+		String name = "resources/directory/" + di.getSession().getConnectionInterface().getServerName().replace(':', '-').replace('/', '_') + "/" + type + "s.dsi";
+		Object obj = null;
 
 		CacheLockObject lock_result = null;
 
@@ -350,16 +281,13 @@ public class DataSourceImage
 			h.put(or.getId(), or);
 		}
 
-		Hashtable ht3 = (Hashtable )Pool.getHash("serverimage");
-		if(ht3 != null)
-		for(Enumeration e = ht3.elements(); e.hasMoreElements();)
-		{
-			ObjectResource or = (ObjectResource )e.nextElement();
-			or.updateLocalFromTransferable();
-		}
-		Pool.removeHash("serverimage");
+		Map map = Pool.getMap("serverimage");
+		if (map != null)
+			for(Iterator iterator = map.values().iterator(); iterator.hasNext();)
+				((ObjectResource) (iterator.next())).updateLocalFromTransferable();
+		Pool.removeMap("serverimage");
 	}
-	
+
 	// удалить из каталога объект
 	protected void remove(String type, String id)
 	{
@@ -369,14 +297,6 @@ public class DataSourceImage
 		h.remove(id);
 
 		Pool.remove(type, id);
-/*
-		Hashtable h2 = (Hashtable )Pool.getHash(type);
-		if(h2 == null)
-			return;
-		h2.remove(id);
-*/
-		// удалить сериализованный объект
-//		ConnectionInterface ci = di.getSession().getConnectionInterface();
 	}
 	
 	// сохранить каталог сераилизованных объектов
@@ -388,30 +308,21 @@ public class DataSourceImage
 	// сохранить каталог сераилизованных объектов фиксированного типа
 	protected void save(String type)
 	{
-		ConnectionInterface ci = di.getSession().getConnectionInterface();
-		Hashtable h = (Hashtable )Pool.getHash(type);
-		if(h == null)
-			h = new Hashtable();
-			
+		Map map = Pool.getMap(type);
+		if (map == null)
+			map = new Hashtable();
 		Hashtable h2 = (Hashtable )catalog.get(type);
 		if(h2 == null)
 		{
 			h2 = new Hashtable();
 			catalog.put(type, h2);
 		}
-
-		for(Enumeration e = h.elements(); e.hasMoreElements();)
+		for (Iterator iterator = map.values().iterator(); iterator.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )e.nextElement();
-			ResourceDescriptor rd = new ResourceDescriptor(or.getId(), or.getModified(), (Serializable )or);
-			h2.put(or.getId(), rd);
+			ObjectResource or = (ObjectResource) (iterator.next());
+			h2.put(or.getId(), new ResourceDescriptor(or.getId(), or.getModified(), (Serializable) or));
 		}
-
-		String s = ci.getServiceURL();
-		String s1 = s.replace(':', '-');
-		String s2 = s1.replace('/', '_');
-		String name = "resources/directory/" + s2 + "/" + type + "s.dsi";
-		
+		String name = "resources/directory/" + di.getSession().getConnectionInterface().getServerName().replace(':', '-').replace('/', '_') + "/" + type + "s.dsi";
 		CacheLockObject lock_result = null;
 		ObjectOutputStream out;
 
@@ -444,7 +355,6 @@ public class DataSourceImage
 	// сохранить каталог сераилизованных объектов фиксированного типа
 	protected void save(String type, Hashtable h)
 	{
-		ConnectionInterface ci = di.getSession().getConnectionInterface();
 		if(h == null)
 			h = new Hashtable();
 			
@@ -461,12 +371,7 @@ public class DataSourceImage
 			ResourceDescriptor rd = new ResourceDescriptor(or.getId(), or.getModified(), (Serializable )or);
 			h2.put(or.getId(), rd);
 		}
-
-		String s = ci.getServiceURL();
-		String s1 = s.replace(':', '-');
-		String s2 = s1.replace('/', '_');
-		String name = "resources/directory/" + s2 + "/" + type + "s.dsi";
-		
+		String name = "resources/directory/" + di.getSession().getConnectionInterface().getServerName().replace(':', '-').replace('/', '_') + "/" + type + "s.dsi";
 		CacheLockObject lock_result = null;
 		ObjectOutputStream out;
 		
@@ -553,7 +458,7 @@ public class DataSourceImage
 
 		try
 		{
-			ecode = si.ci.server.GetResourceDescriptors(si.accessIdentity, type, rdh);
+			ecode = si.ci.getServer().GetResourceDescriptors(si.accessIdentity, type, rdh);
 		}
 		catch (Exception ex)
 		{
@@ -592,7 +497,7 @@ public class DataSourceImage
 
 		try
 		{
-			ecode = si.ci.server.GetDomainResourceDescriptors(si.accessIdentity, type, rdh);
+			ecode = si.ci.getServer().GetDomainResourceDescriptors(si.accessIdentity, type, rdh);
 		}
 		catch (Exception ex)
 		{
@@ -630,7 +535,7 @@ public class DataSourceImage
 
 		try
 		{
-			ecode = si.ci.server.GetResourceDescriptorsByIds(si.accessIdentity, type, ids, rdh);
+			ecode = si.ci.getServer().GetResourceDescriptorsByIds(si.accessIdentity, type, ids, rdh);
 		}
 		catch (Exception ex)
 		{
@@ -666,7 +571,7 @@ public class DataSourceImage
 
 		try
 		{
-			ecode = si.ci.server.GetResourceDescriptor(si.accessIdentity, type, id, rdh);
+			ecode = si.ci.getServer().GetResourceDescriptor(si.accessIdentity, type, id, rdh);
 		}
 		catch (Exception ex)
 		{
