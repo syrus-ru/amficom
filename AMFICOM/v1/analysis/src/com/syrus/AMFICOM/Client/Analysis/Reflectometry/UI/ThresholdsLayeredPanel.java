@@ -79,10 +79,7 @@ implements OperationListener, bsHashChangeListener
 					}
 					if(rue.thresholdsUpdated())
 					{
-						String id = (String)(rue.getSource());
-
-						ModelTraceManager mtm = Heap.getMTMByKey(id);
-						((ThresholdsPanel)panel).updateThresholds(mtm);
+						((ThresholdsPanel)panel).updateThresholds(Heap.getMTMEtalon());
 
 						updScale2fitCurrentEv(.2, 1.);
 						jLayeredPane.repaint();

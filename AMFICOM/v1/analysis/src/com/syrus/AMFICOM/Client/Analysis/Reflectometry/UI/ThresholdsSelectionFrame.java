@@ -48,7 +48,7 @@ implements OperationListener, bsHashChangeListener
 	protected Dispatcher dispatcher;
 	JTable jTable;
 
-	protected ModelTraceManager mtm;
+	protected ModelTraceManager et_mtm; // etalon MTM
 
 	protected int current_ev = -1;
 
@@ -130,7 +130,7 @@ implements OperationListener, bsHashChangeListener
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if (mtm != null && current_ev != -1)
+				if (et_mtm != null && current_ev != -1)
 				{
 					// FIXME: outdated / useless mtm.setThreshold(...,init_Threshs...) removed
 					// the button should be removed or replaced with something more useful
@@ -144,9 +144,9 @@ implements OperationListener, bsHashChangeListener
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if (mtm != null && current_ev != -1)
+				if (et_mtm != null && current_ev != -1)
 				{
-					mtm.setDefaultThreshold(current_ev);
+					et_mtm.setDefaultThreshold(current_ev);
 					updateThresholds();
 					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 				}
@@ -293,10 +293,10 @@ implements OperationListener, bsHashChangeListener
 
 	protected ThreshEditor getCurrentTED()
 	{
-		if (mtm != null && current_ev != -1)
+		if (et_mtm != null && current_ev != -1)
 		{
 			// XXX - getThreshEditor will generate few unnecessary objects
-			ModelTraceManager.ThreshEditor[] teds = mtm.getThreshEditors(current_ev);
+			ModelTraceManager.ThreshEditor[] teds = et_mtm.getThreshEditors(current_ev);
 			int current_th = this.jTable.getSelectedColumn() - 1;
 			if (current_th >= 0 && current_th < teds.length)
 				return teds[current_th];
@@ -316,10 +316,8 @@ implements OperationListener, bsHashChangeListener
 		if (ae.getActionCommand().equals(RefUpdateEvent.typ)) {
 			RefUpdateEvent rue = (RefUpdateEvent) ae;
 			if (rue.thresholdsUpdated()) {
-				String id = (String) (rue.getSource());
-				// if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
-					mtm = Heap.getMTMByKey(id);
+					et_mtm = Heap.getMTMEtalon();
 					updateThresholds();
 				}
 			}
@@ -333,9 +331,9 @@ implements OperationListener, bsHashChangeListener
 				}
 			}
 			if (rue.eventSelected()) {
-				if (mtm != null) {
+				if (et_mtm != null) {
 					current_ev = Integer.parseInt((String) rue.getSource());
-					if (current_ev < 0 || current_ev >= mtm.getNEvents()) {
+					if (current_ev < 0 || current_ev >= et_mtm.getNEvents()) {
 						System.out.println("Warning: current_ev out of range");
 						current_ev = 0;
 					}
@@ -350,14 +348,14 @@ implements OperationListener, bsHashChangeListener
 
 	void updateThresholds()
 	{
-		if (mtm == null)
+		if (et_mtm == null)
 			return;
 		if (current_ev == -1)
 			return;
-		if (current_ev >= mtm.getNEvents())
-			current_ev = mtm.getNEvents() - 1;
+		if (current_ev >= et_mtm.getNEvents())
+			current_ev = et_mtm.getNEvents() - 1;
 
-		ModelTraceManager.ThreshEditor[] te = mtm.getThreshEditors(current_ev);
+		ModelTraceManager.ThreshEditor[] te = et_mtm.getThreshEditors(current_ev);
 		String[] pColumns = new String[te.length + 1];
 		pColumns[0] = LangModelAnalyse.getString("thresholdsKey");
 		for (int i = 1; i < pColumns.length; i++)
@@ -422,9 +420,9 @@ implements OperationListener, bsHashChangeListener
 		}
 
 		public void setValueAt(Object value, int row, int col) {
-			if (mtm != null && current_ev != -1) {
+			if (et_mtm != null && current_ev != -1) {
 				ModelTraceManager.ThreshEditor[] te =
-					mtm.getThreshEditors(current_ev);
+					et_mtm.getThreshEditors(current_ev);
 				try
 				{
 					te[col - 1].setValue(
@@ -484,7 +482,7 @@ implements OperationListener, bsHashChangeListener
 
 	public void bsHashRemovedAll()
 	{
-			this.mtm = null;
+			this.et_mtm = null;
 			this.jTable.setModel(this.tModelEmpty);
 	}
 }

@@ -123,7 +123,10 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			if (ms.getEtalon() != null)
 				AnalysisUtil.load_Etalon(ms);
 			else
-				Heap.removeAnyBSByName(AnalysisUtil.ETALON);
+			{
+				Heap.setBSEtalonTrace(null);
+				Heap.setMTMEtalon(null);
+			}
 	
 			AnalysisUtil.load_Thresholds(userId, ms);
 	
@@ -149,7 +152,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
-			dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,
+			dispatcher.notify(new RefUpdateEvent(this,
 				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		}
 		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

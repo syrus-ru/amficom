@@ -45,7 +45,7 @@ public class InitialAnalysisCommand extends VoidCommand {
 			a.decode(y, mtm);
 
 			Heap.setRefAnalysisByKey(RefUpdateEvent.PRIMARY_TRACE, a);
-			Heap.setMTMByKey(RefUpdateEvent.PRIMARY_TRACE, mtm);
+			Heap.setMTMPrimary(mtm);
 		}
 	}
 }

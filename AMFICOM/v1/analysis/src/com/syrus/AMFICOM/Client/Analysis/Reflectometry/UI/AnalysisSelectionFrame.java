@@ -292,7 +292,7 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 		Heap.setMinuitAnalysisParams(minuitParams);
 		new MinuitAnalyseCommand(dispatcher, aContext).execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
+		dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		if (this.selectedEventId != null) {
 			dispatcher.notify(new RefUpdateEvent(this.selectedEventId, RefUpdateEvent.EVENT_SELECTED_EVENT));
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.8 2005/04/01 11:02:52 saa Exp $
+ * $Id: Heap.java,v 1.9 2005/04/01 11:37:30 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/04/01 11:02:52 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/01 11:37:30 $
  * @module
  */
 public class Heap
@@ -74,6 +74,12 @@ public class Heap
 	}
 	public static void setMTMByKey(String key, ModelTraceManager mtm) {
 		MTMHash.put(key, mtm);
+	}
+	public static void setMTMPrimary(ModelTraceManager mtm) {
+		MTMHash.put(PRIMARY_TRACE_KEY, mtm);
+	}
+	public static void setMTMEtalon(ModelTraceManager mtm) {
+		MTMHash.put(ETALON_TRACE_KEY, mtm);
 	}
 	public static RefAnalysis getRefAnalysisByKey(String key) {
 		return (RefAnalysis)refAnalysisHash.get(key);

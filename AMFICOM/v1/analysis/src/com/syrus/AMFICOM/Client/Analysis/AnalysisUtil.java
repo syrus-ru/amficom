@@ -253,7 +253,7 @@ public class AnalysisUtil
 			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_EVENTS))
 			{
 				mtm = ModelTraceManager.eventsAndTraceFromByteArray(params[i].getValue());
-				Heap.setMTMByKey(Heap.ETALON_TRACE_KEY, mtm);
+				Heap.setMTMEtalon(mtm);
 				Heap.setEtalonEtalonMetas(metas);
 			}
 			else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
