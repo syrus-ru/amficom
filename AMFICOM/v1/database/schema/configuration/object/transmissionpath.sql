@@ -10,6 +10,9 @@ CREATE TABLE TransmissionPath (
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
 --
+ start_port_id VARCHAR2(32),
+ finish_port_id VARCHAR2(32),
+--
  CONSTRAINT tpath_pk PRIMARY KEY (id),
  CONSTRAINT tpath_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,
@@ -17,7 +20,14 @@ CREATE TABLE TransmissionPath (
   REFERENCES Users (id) ON DELETE CASCADE,
 --
  CONSTRAINT tpath_domain_fk FOREIGN KEY (domain_id)
-  REFERENCES Domain (id) ON DELETE CASCADE
+  REFERENCES Domain (id) ON DELETE CASCADE,
+--
+ CONSTRAINT tpath_start_port_fk FOREIGN KEY (start_port_id)
+  REFERENCES Port (id) ON DELETE CASCADE,
+-
+ CONSTRAINT tpath_finish_port_fk FOREIGN KEY (finish_port_id)
+  REFERENCES Port (id) ON DELETE CASCADE
+
 );
 
 CREATE SEQUENCE transmissionpath_seq ORDER;
