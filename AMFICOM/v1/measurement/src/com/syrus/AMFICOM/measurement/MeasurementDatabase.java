@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.71 2005/03/10 15:20:56 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.72 2005/03/11 09:08:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/03/10 15:20:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.72 $, $Date: 2005/03/11 09:08:23 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -57,10 +57,9 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException("MeasurementDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}	
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ MeasurementWrapper.COLUMN_SETUP_ID + COMMA
@@ -70,13 +69,12 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				+ MeasurementWrapper.COLUMN_LOCAL_ADDRESS + COMMA
 				+ MeasurementWrapper.COLUMN_TEST_ID;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -89,10 +87,9 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Measurement measurement = this.fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(measurement.getType().getId()) + COMMA
+		String sql = DatabaseIdentifier.toSQLString(measurement.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getMonitoredElementId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getSetup().getId()) + COMMA
@@ -104,20 +101,19 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		Measurement measurement = this.fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getMonitoredElementId());
-		DatabaseString.setString(preparedStatement, ++i, measurement.getName(), SIZE_NAME_COLUMN); 
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getSetup().getId());
-		preparedStatement.setTimestamp(++i, new Timestamp(measurement.getStartTime().getTime()));
-		preparedStatement.setLong(++i, measurement.getDuration());
-		preparedStatement.setInt(++i, measurement.getStatus().value());
-		DatabaseString.setString(preparedStatement, ++i, measurement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getTestId());
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurement.getType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurement.getMonitoredElementId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurement.getName(), SIZE_NAME_COLUMN); 
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurement.getSetup().getId());
+		preparedStatement.setTimestamp(++startParameterNumber, new Timestamp(measurement.getStartTime().getTime()));
+		preparedStatement.setLong(++startParameterNumber, measurement.getDuration());
+		preparedStatement.setInt(++startParameterNumber, measurement.getStatus().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurement.getTestId());
+		return startParameterNumber;
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {

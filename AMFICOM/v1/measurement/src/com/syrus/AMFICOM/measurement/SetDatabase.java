@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.78 2005/03/10 15:20:56 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.79 2005/03/11 09:08:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/03/10 15:20:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.79 $, $Date: 2005/03/11 09:08:23 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -56,39 +56,35 @@ public class SetDatabase extends StorableObjectDatabase {
 		return '"' + ObjectEntities.SET_ENTITY + '"';
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ SetWrapper.COLUMN_SORT  + COMMA
+			columns = SetWrapper.COLUMN_SORT  + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}	
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Set set = this.fromStorableObject(storableObject);
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ Integer.toString(set.getSort().value()) + COMMA
+		String values = Integer.toString(set.getSort().value()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(set.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return values;
 	}	
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		Set set = this.fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		preparedStatement.setInt(++i, set.getSort().value());
-		DatabaseString.setString(preparedStatement, ++i, set.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		return i;
+		preparedStatement.setInt(++startParameterNumber, set.getSort().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, set.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		return startParameterNumber;
 	}
 
 	private Set fromStorableObject(StorableObject storableObject) throws IllegalDataException {

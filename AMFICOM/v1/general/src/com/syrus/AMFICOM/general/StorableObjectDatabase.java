@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.120 2005/03/10 15:14:43 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.121 2005/03/11 09:08:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.120 $, $Date: 2005/03/10 15:14:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.121 $, $Date: 2005/03/11 09:08:19 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -112,19 +112,21 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getEnityName();
 
-	protected String getColumns(int mode) {
+	protected abstract String getColumnsTmpl();
+	
+	protected final String getColumns(int mode) {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CREATED + COMMA
 					+ StorableObjectWrapper.COLUMN_MODIFIED + COMMA
 					+ StorableObjectWrapper.COLUMN_CREATOR_ID + COMMA
 					+ StorableObjectWrapper.COLUMN_MODIFIER_ID + COMMA
-					+ StorableObjectWrapper.COLUMN_VERSION;
+					+ StorableObjectWrapper.COLUMN_VERSION + COMMA;
 		}
 		switch (mode) {
 			case MODE_INSERT:
-				return StorableObjectWrapper.COLUMN_ID + COMMA + columns;
+				return StorableObjectWrapper.COLUMN_ID + COMMA + columns + this.getColumnsTmpl();
 			case MODE_UPDATE:
-				return columns;
+				return columns + this.getColumnsTmpl();
 			default:
 				Log.errorMessage(this.getEnityName() + "Database.getColumns | Unknown mode: " + mode);
 				return null;
@@ -135,24 +137,29 @@ public abstract class StorableObjectDatabase {
 		return QUESTION + COMMA + this.getUpdateMultipleSQLValues();
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected abstract String getUpdateMultipleSQLValuesTmpl();
+	
+	protected final String getUpdateMultipleSQLValues() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
-					+ QUESTION;
+					+ QUESTION + COMMA;
 		}
-		return updateMultipleSQLValues;
+		return updateMultipleSQLValues + this.getUpdateMultipleSQLValuesTmpl();
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected abstract String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException;
+	
+	protected final String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		return DatabaseIdentifier.toSQLString(storableObject.getId()) + COMMA
 			+ DatabaseDate.toUpdateSubString(storableObject.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(storableObject.getModified()) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getCreatorId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getModifierId()) + COMMA
-			+ Long.toString(storableObject.getVersion());
+			+ Long.toString(storableObject.getVersion()) + COMMA
+			+ this.getUpdateSingleSQLValuesTmpl(storableObject);
 	}
 
 	protected String retrieveQuery(final String condition) {
@@ -178,7 +185,10 @@ public abstract class StorableObjectDatabase {
 		return buffer.toString();
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected abstract int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
+			throws IllegalDataException, SQLException;
+	
+	protected final int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, SQLException {
 		int i = 0;
 		switch (mode) {
@@ -195,7 +205,7 @@ public abstract class StorableObjectDatabase {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getCreatorId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getModifierId());
 		preparedStatement.setLong(++i, storableObject.getVersion());
-		return i;
+		return this.setEntityForPreparedStatementTmpl(storableObject, preparedStatement, i);
 	}
 
 	/**
@@ -330,7 +340,7 @@ public abstract class StorableObjectDatabase {
 	public abstract Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
-	protected void retrieveEntity(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	protected final void retrieveEntity(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		String strorableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 		String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + strorableObjectIdStr);
 		Statement statement = null;
@@ -523,7 +533,7 @@ public abstract class StorableObjectDatabase {
 
 	public abstract void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException;
 
-	protected void insertEntity(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+	protected final void insertEntity(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 
 		String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET
@@ -567,7 +577,7 @@ public abstract class StorableObjectDatabase {
 
 	}
 
-	protected void insertEntities(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	protected final void insertEntities(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 
@@ -722,7 +732,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected void checkAndUpdateEntity(StorableObject storableObject, Identifier modifierId, final boolean force)
+	protected final void checkAndUpdateEntity(StorableObject storableObject, Identifier modifierId, final boolean force)
 			throws UpdateObjectException, VersionCollisionException {
 		Identifier id = storableObject.getId();
 		String idStr = DatabaseIdentifier.toSQLString(storableObject.getId());
@@ -815,7 +825,7 @@ public abstract class StorableObjectDatabase {
 			throw new UpdateObjectException("Cannot obtain lock on object " + this.getEnityName() + " '" + id + "'");
 	}
 
-	protected void checkAndUpdateEntities(Collection storableObjects, Identifier modifierId, final boolean force)
+	protected final void checkAndUpdateEntities(Collection storableObjects, Identifier modifierId, final boolean force)
 			throws UpdateObjectException, VersionCollisionException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return;
@@ -917,7 +927,7 @@ public abstract class StorableObjectDatabase {
 
 	}
 
-	protected void updateEntity(StorableObject storableObject, Identifier modifierId) throws UpdateObjectException {
+	protected final void updateEntity(StorableObject storableObject, Identifier modifierId) throws UpdateObjectException {
 		storableObject.setUpdated(modifierId);
 
 		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
@@ -986,7 +996,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected void updateEntities(Collection storableObjects, Identifier modifierId) throws UpdateObjectException {
+	protected final void updateEntities(Collection storableObjects, Identifier modifierId) throws UpdateObjectException {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 
@@ -1095,7 +1105,6 @@ public abstract class StorableObjectDatabase {
 	 * @param idColumnName
 	 * @param linkedIdColumnName
 	 * @throws UpdateObjectException
-	 * @throws IllegalDataException
 	 */
 	protected void updateLinkedEntities(Map idLinkedIdMap, String tableName, String idColumnName, String linkedIdColumnName)
 			throws UpdateObjectException {

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.48 2005/03/10 15:20:56 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.49 2005/03/11 09:08:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/03/10 15:20:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2005/03/11 09:08:23 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -54,19 +54,17 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		return ObjectEntities.TEMPORALPATTERN_ENTITY;
 	}
 	
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+			columns = StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ TemporalPatternWrapper.COLUMN_VALUE;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {	
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -87,10 +85,9 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		return stringBuffer;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(temporalPattern.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTOPHE + DatabaseString.toQuerySubString(temporalPattern.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ this.getUpdateCronStringArray(temporalPattern);
 		return sql;
 	}	
@@ -154,14 +151,12 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		return preparedStatement;
 	}
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-
-		preparedStatement.setString(++i, temporalPattern.getDescription());
-		((OraclePreparedStatement) preparedStatement).setORAData(++i, new CronStringArray(temporalPattern.getCronStrings()));
-		return i;
+		preparedStatement.setString(++startParameterNumber, temporalPattern.getDescription());
+		((OraclePreparedStatement) preparedStatement).setORAData(++startParameterNumber, new CronStringArray(temporalPattern.getCronStrings()));
+		return startParameterNumber;
 	}	
 
 	private void insertTemporalPattern(TemporalPattern temporalPattern) throws CreateObjectException {

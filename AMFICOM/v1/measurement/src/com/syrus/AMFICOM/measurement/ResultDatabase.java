@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.79 2005/03/10 15:20:56 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.80 2005/03/11 09:08:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/03/10 15:20:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.80 $, $Date: 2005/03/11 09:08:23 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -54,7 +54,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return ObjectEntities.RESULT_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
 			StringBuffer buffer = new StringBuffer(COMMA);
 			buffer.append(ResultWrapper.COLUMN_MEASUREMENT_ID);
@@ -68,14 +68,12 @@ public class ResultDatabase extends StorableObjectDatabase {
 			buffer.append(ResultWrapper.COLUMN_SORT);
 			columns = buffer.toString();
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			StringBuffer buffer = new StringBuffer(super.getUpdateMultipleSQLValues());
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
+			StringBuffer buffer = new StringBuffer(QUESTION);
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
 			buffer.append(COMMA);
@@ -89,10 +87,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Result result = this.fromStorableObject(storableObject);
-		StringBuffer buffer = new StringBuffer(super.getUpdateSingleSQLValues(storableObject));
-		buffer.append(COMMA);
+		StringBuffer buffer = new StringBuffer(COMMA);
 		int resultSort = result.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
@@ -142,42 +139,41 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return buffer.toString();
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		Result result = this.fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		int resultSort = result.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:					
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);					
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);					
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
 				break;
 			default:
 				Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
 						+ " of result '" + result.getId().getIdentifierString() + "'");
 		}
-		preparedStatement.setInt(++i, result.getSort().value());
-		return i;
+		preparedStatement.setInt(++startParameterNumber, result.getSort().value());
+		return startParameterNumber;
 	}
 
 	private Result fromStorableObject(StorableObject storableObject) throws IllegalDataException {

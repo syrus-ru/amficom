@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.77 2005/03/10 15:20:56 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.78 2005/03/11 09:08:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/03/10 15:20:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.78 $, $Date: 2005/03/11 09:08:23 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -163,7 +163,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null){			
 			columns = COMMA
 				+ MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID + COMMA
@@ -173,13 +173,12 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ MeasurementSetupWrapper.COLUMN_MEASUREMENT_DURAION;
 		}		
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 	
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){			
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -190,13 +189,12 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}	
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {		
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {		
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
 		Set etalon = measurementSetup.getEtalon();
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(measurementSetup.getParameterSet().getId()) + COMMA
+		String values = DatabaseIdentifier.toSQLString(measurementSetup.getParameterSet().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString((criteriaSet != null) ? criteriaSet.getId() : null) + COMMA
 			+ DatabaseIdentifier.toSQLString((thresholdSet != null) ? thresholdSet.getId() : null) + COMMA
 			+ DatabaseIdentifier.toSQLString((etalon != null) ? etalon.getId() : null) + COMMA
@@ -206,20 +204,19 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected int  setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int  setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
 		Set etalon = measurementSetup.getEtalon();
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurementSetup.getParameterSet().getId()); 
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (criteriaSet != null) ? criteriaSet.getId() : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (thresholdSet != null) ? thresholdSet.getId() : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (etalon != null) ? etalon.getId() : null);
-		DatabaseString.setString(preparedStatement, ++i, measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setLong(++i, measurementSetup.getMeasurementDuration());
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurementSetup.getParameterSet().getId()); 
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (criteriaSet != null) ? criteriaSet.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (thresholdSet != null) ? thresholdSet.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (etalon != null) ? etalon.getId() : null);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setLong(++startParameterNumber, measurementSetup.getMeasurementDuration());
+		return startParameterNumber;
 	}
 
 	private void insertMeasurementSetupMELinks(MeasurementSetup measurementSetup) throws CreateObjectException {

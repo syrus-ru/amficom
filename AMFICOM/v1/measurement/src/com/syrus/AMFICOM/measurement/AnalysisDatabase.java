@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.51 2005/03/10 15:20:56 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.52 2005/03/11 09:08:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/03/10 15:20:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/03/11 09:08:23 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -54,21 +54,19 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		return ObjectEntities.ANALYSIS_ENTITY;
 	}	
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns =  COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			columns =  StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ AnalysisWrapper.COLUMN_MEASUREMENT_ID + COMMA
 				+ AnalysisWrapper.COLUMN_CRITERIA_SET_ID;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
@@ -76,27 +74,25 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		Measurement measurement = analysis.getMeasurement();
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ DatabaseIdentifier.toSQLString(analysis.getType().getId()) + COMMA
+		String values = DatabaseIdentifier.toSQLString(analysis.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getMonitoredElementId()) + COMMA
 			+ ((measurement != null) ? (DatabaseIdentifier.toSQLString(measurement.getId())) : "") + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getCriteriaSet().getId());
 		return values;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		Measurement measurement = analysis.getMeasurement();
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getType().getId()); 
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getMonitoredElementId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (measurement != null) ? measurement.getId() : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getCriteriaSet().getId());
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getType().getId()); 
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getMonitoredElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getCriteriaSet().getId());
+		return startParameterNumber;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

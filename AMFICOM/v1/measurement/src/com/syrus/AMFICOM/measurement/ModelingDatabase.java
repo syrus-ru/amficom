@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.35 2005/03/10 15:20:56 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.36 2005/03/11 09:08:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/03/10 15:20:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/03/11 09:08:23 $
+ * @author $Author: bob $
  * @module module_name
  */
 
@@ -54,21 +54,19 @@ public class ModelingDatabase extends StorableObjectDatabase {
 		return ObjectEntities.MODELING_ENTITY;
 	}
 
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ ModelingWrapper.COLUMN_ARGUMENT_SET_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
@@ -76,21 +74,19 @@ public class ModelingDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		Modeling modeling = this.fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getMonitoredElementId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getArgumentSet().getId());
-		DatabaseString.setString(preparedStatement, ++i, modeling.getName(), SIZE_NAME_COLUMN);
-		return i;
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, modeling.getType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, modeling.getMonitoredElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, modeling.getArgumentSet().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, modeling.getName(), SIZE_NAME_COLUMN);
+		return startParameterNumber;
 	}
 
-  protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+  protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
     Modeling modeling = this.fromStorableObject(storableObject);
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-				+ DatabaseIdentifier.toSQLString(modeling.getType().getId()) + COMMA
+		String values = DatabaseIdentifier.toSQLString(modeling.getType().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(modeling.getMonitoredElementId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(modeling.getArgumentSet().getId()) + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(modeling.getName(), SIZE_NAME_COLUMN) + APOSTOPHE;

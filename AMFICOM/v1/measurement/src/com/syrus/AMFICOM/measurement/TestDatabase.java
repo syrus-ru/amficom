@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.79 2005/03/10 21:07:27 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.80 2005/03/11 09:08:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/03/10 21:07:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.80 $, $Date: 2005/03/11 09:08:23 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -61,10 +61,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		return ObjectEntities.TEST_ENTITY;
 	}	
 	
-	protected String getColumns(int mode) {
+	protected String getColumnsTmpl() {
 		if (columns == null){
-			columns = COMMA
-				+ TestWrapper.COLUMN_TEMPORAL_TYPE + COMMA
+			columns = TestWrapper.COLUMN_TEMPORAL_TYPE + COMMA
 				+ TestWrapper.COLUMN_START_TIME + COMMA
 				+ TestWrapper.COLUMN_END_TIME + COMMA
 				+ TestWrapper.COLUMN_TEMPORAL_PATTERN_ID + COMMA
@@ -76,13 +75,12 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ TestWrapper.COLUMN_RETURN_TYPE + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
-		return super.getColumns(mode) + columns;
+		return columns;
 	}	
 
-	protected String getUpdateMultipleSQLValues() {
+	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
-			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
-				+ QUESTION + COMMA
+			updateMultipleSQLValues =  QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -97,7 +95,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}	
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Test test = this.fromStorableObject(storableObject);
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
@@ -105,8 +103,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		Identifier analysisTypeId = test.getAnalysisTypeId();
 		Identifier evaluationTypeId = test.getEvaluationTypeId();
 
-		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ test.getTemporalType().value() + COMMA
+		return test.getTemporalType().value() + COMMA
 			+ ((startTime != null) ? DatabaseDate.toUpdateSubString(startTime) : SQL_NULL ) + COMMA
 			+ ((endTime != null) ? DatabaseDate.toUpdateSubString(endTime) : SQL_NULL ) + COMMA
 			+ ((temporalPatternId != null) ? DatabaseIdentifier.toSQLString(temporalPatternId) : SQL_NULL) + COMMA
@@ -127,7 +124,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		return query;
 	}
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		
 		Test test = this.fromStorableObject(storableObject);
@@ -136,19 +133,18 @@ public class TestDatabase extends StorableObjectDatabase {
 		Identifier temporalPatternId = test.getTemporalPatternId();		
 		Identifier analysisTypeId = test.getAnalysisTypeId();
 		Identifier evaluationTypeId = test.getEvaluationTypeId();
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		preparedStatement.setInt(++i, test.getTemporalType().value());
-		preparedStatement.setTimestamp(++i, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
-		preparedStatement.setTimestamp(++i, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (temporalPatternId != null) ? temporalPatternId : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, test.getMeasurementTypeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (analysisTypeId != null) ? analysisTypeId : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (evaluationTypeId != null) ? evaluationTypeId : null);
-		preparedStatement.setInt(++i, test.getStatus().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, test.getMonitoredElement().getId());
-		preparedStatement.setInt(++i, test.getReturnType().value());
-		DatabaseString.setString(preparedStatement, ++i, test.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		return i;
+		preparedStatement.setInt(++startParameterNumber, test.getTemporalType().value());
+		preparedStatement.setTimestamp(++startParameterNumber, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
+		preparedStatement.setTimestamp(++startParameterNumber, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (temporalPatternId != null) ? temporalPatternId : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, test.getMeasurementTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (analysisTypeId != null) ? analysisTypeId : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (evaluationTypeId != null) ? evaluationTypeId : null);
+		preparedStatement.setInt(++startParameterNumber, test.getStatus().value());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, test.getMonitoredElement().getId());
+		preparedStatement.setInt(++startParameterNumber, test.getReturnType().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, test.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		return startParameterNumber;
 	}
 	
 	private Test fromStorableObject(StorableObject storableObject) throws IllegalDataException {
