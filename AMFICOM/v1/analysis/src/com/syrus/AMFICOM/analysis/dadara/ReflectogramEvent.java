@@ -1,7 +1,7 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/15 12:02:20 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/17 14:00:25 $
  * @author $Author: saa $
  * @module general_v1
  */
@@ -273,7 +273,7 @@ public class ReflectogramEvent
 		for (int i = 1; i < len; i++)
 			re[i].eventAtLeft = re[i - 1];
 		re[len - 1].eventAtRight = null;
-		for (int i = 1; i < len - 1; i++)
+		for (int i = 0; i < len - 1; i++)
 			re[i].eventAtRight = re[i + 1];
 	}
 
@@ -447,6 +447,7 @@ public class ReflectogramEvent
 	
 	private ReflectogramEvent copyWithoutMFAndTh()
 	{
+		// не копируем ни mf, ни порогов, ни left-right св€зей
 		ReflectogramEvent ret = new ReflectogramEvent();
 		ret.threshold = null;
 		ret.begin = begin;
@@ -474,9 +475,26 @@ public class ReflectogramEvent
 	public ReflectogramEvent copy()
 	{
 		ReflectogramEvent ret = copyWithoutMFAndTh();
-		ret.threshold = threshold; // XXX: три варианта - null, reference, deep
-		// copy; неизвестно какой правильнее
+		ret.threshold = threshold;
 		ret.mf = mf.copy();
+		// неизвестно, как быть с left-right св€з€ми
+		return ret;
+	}
+
+	/**
+	 * —оздает копию массива событий, и устанавливает в копии естественные
+	 * св€зи left-right, необходимые при использовании leftLink.
+	 * ѕороги новых событий указывают на пороги старых событий.
+	 * @param re входной массив событий
+	 * @return копи€ входного массива.
+	 */
+	public static ReflectogramEvent[] copyArray(ReflectogramEvent[] re)
+	{
+		int len = re.length;
+		ReflectogramEvent[] ret = new ReflectogramEvent[len];
+		for (int i = 0; i < len; i++)
+			ret[i] = re[i].copy();
+		createLeftRightLinks(ret);
 		return ret;
 	}
 
@@ -624,6 +642,8 @@ public class ReflectogramEvent
 				ret[i] = new ReflectogramEvent();
 				ret[i].readFromDIS(dis);
 			}
+			// устанавливаем left-right св€зи
+			createLeftRightLinks(ret);
 			return ret;
 		}
 		catch (IOException e)
@@ -843,12 +863,17 @@ public class ReflectogramEvent
 		setDefaultThreshold(y, primaryTrace, allTraces);
 	}
 
+	private boolean allowsLeftLinking()
+	{
+		return mf.allowsLeftLinking();
+	}
+
 	// returns true if event has changes
 	// needs fitting parameters already initialized (FIXME?)
 	public boolean setLeftLink(boolean leftLink)
 	{
 		int newLinkFlags = linkFlags & ~LINK_FIXLEFT;
-		if (leftLink)
+		if (leftLink && allowsLeftLinking())
 			newLinkFlags |= LINK_FIXLEFT;
 		if (newLinkFlags == linkFlags)
 			return false;
@@ -861,6 +886,50 @@ public class ReflectogramEvent
 	public boolean getLeftLink()
 	{
 		return (linkFlags & LINK_FIXLEFT) != 0;
+	}
+
+	/**
+	 * ѕровер€ем, что модельна€ функци€ данного событи€
+	 * лежит в пределах наших порогов,
+	 * находим первую точку выхода за пороги.
+	 * Ќачало и конец событий должны совпадать.
+	 * @param that пробна€ модельна€ функци€
+	 * @param softAlarms указывает, что надо сравнивать с soft-порогами
+	 *  (иначе сравниваетс€ с hard-порогами)
+	 * @return -1 если в пределах порогов;
+	 *  число [begin..end] - координата выхода за пороги. 
+	 */
+	public int isThatWithinMyThresholds(ReflectogramEvent that, boolean softAlarms)
+	{
+		ReflectogramEvent up = getThresholdReflectogramEvent(
+			softAlarms ? Threshold.UP1 : Threshold.UP2);
+		ReflectogramEvent down = getThresholdReflectogramEvent(
+			softAlarms ? Threshold.DOWN1 : Threshold.DOWN2);
+
+		for (int i = begin; i < end; i++)
+		{
+			double thatVal = that.refAmplitude(i);
+			if (thatVal > up.refAmplitude(i)
+					|| thatVal < down.refAmplitude(i))
+				return i;
+		}
+		return -1;
+	}
+
+	/**
+	 * —оздаем событие с модельной функцией, получаемой
+	 * из this линейной фитировкой по данному массиву.
+	 * @param y рефлектограмма, по которой делаетс€ лин. фит.
+	 * @return событие с искомой модельной функцией
+	 */
+	public ReflectogramEvent createLinearlyFitted(double[] y)
+	{
+		ReflectogramEvent ret = copyWithoutMFAndTh();
+		ModelFunction temp = mf.copy();
+		ret.mf = temp;
+		temp.fitLinearOnly(y, begin, end,
+			activeLinkFlags(), activeLinkData0());
+		return ret;
 	}
 
 	// cache methods

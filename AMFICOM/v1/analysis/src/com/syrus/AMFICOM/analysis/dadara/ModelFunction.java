@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.3 $, $Date: 2004/12/10 08:42:30 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/17 14:00:25 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -161,6 +161,11 @@ public class ModelFunction {
 	public double getEstimatedNoiseSuppressionLength()
 	{
 	    return nGetAttr("noiseSuppressionLength", 1.0);
+	}
+	
+	public boolean allowsLeftLinking()
+	{
+		return nGetAttr("canLeftLink", 0.0) != 0.0;
 	}
 
 	/**
