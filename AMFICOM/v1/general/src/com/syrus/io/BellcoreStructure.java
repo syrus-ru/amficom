@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.1 2004/10/20 07:11:44 bass Exp $
+ * $Id: BellcoreStructure.java,v 1.2 2004/10/27 15:20:42 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -8,54 +8,57 @@
 
 package com.syrus.io;
 
+import java.util.Date;
+
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/20 07:11:44 $
- * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/10/27 15:20:42 $
+ * @author $Author: stas $
  * @module general_v1
  */
 public class BellcoreStructure // extends ObjectResource
 {
-	public static final int MAP = 1;
-	public static final int GENPARAMS = 2;
-	public static final int SUPPARAMS = 3;
-	public static final int FXDPARAMS = 4;
-	public static final int KEYEVENTS = 5;
-	public static final int LNKPARAMS = 6;
-	public static final int DATAPOINTS = 7;
-	public static final int SPECIAL = 8;
-	public static final int CKSUM = 9;
+	static final int MAP = 1;
+	static final int GENPARAMS = 2;
+	static final int SUPPARAMS = 3;
+	static final int FXDPARAMS = 4;
+	static final int KEYEVENTS = 5;
+	static final int LNKPARAMS = 6;
+	static final int DATAPOINTS = 7;
+	static final int SPECIAL = 8;
+	static final int CKSUM = 9;
 
 	// флаг, показывающий есть ли в файле определенное поле
-	public boolean hasMap = false;
-	public boolean hasGen = false;
-	public boolean hasSup = false;
-	public boolean hasFxd = false;
-	public boolean hasKey = false;
-	public boolean hasLnk = false;
-	public boolean hasData = false;
-	public boolean hasSpecial = false;
-	public int specials = 0; // число полей specials (может быть произвольным)
-	int blocks = 0;          // общее число полей
+	private boolean hasMap = false;
+	private boolean hasGen = false;
+	private boolean hasSup = false;
+	private boolean hasFxd = false;
+	private boolean hasKey = false;
+	private boolean hasLnk = false;
+	private boolean hasData = false;
+	private boolean hasSpecial = false;
+	private int blocks = 0;          // общее число полей
+	int specials = 0; // число полей specials (может быть произвольным)
+
 
 	// экземпл€ры классов, представл€ющих собой пол€ данных в формате bellcore
-	public Map map;
-	public GenParams genParams;
-	public SupParams supParams;
-	public FxdParams fxdParams;
-	public KeyEvents keyEvents;
-	public LnkParams lnkParams;
-	public DataPts dataPts;
-	public Cksum cksum;
-	public Special[] special;
+	Map map;
+	GenParams genParams;
+	SupParams supParams;
+	FxdParams fxdParams;
+	KeyEvents keyEvents;
+	LnkParams lnkParams;
+	DataPts dataPts;
+	Cksum cksum;
+	Special[] special;
 
 	public String title = "";
 	public String schemePathId;
 	public Identifier measurementId;
 	public Identifier monitoredElementId;
 
-	public void addField (int type)
+	void addField (int type)
 	{
 		switch (type)
 		{
@@ -89,7 +92,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//------------------ Map -------------------//
-	public class Map
+	class Map
 	{
 		public int MRN = 0;          // Map Revision Number
 		public int MBS = 0;          // Map Block Size (in bytes)
@@ -109,7 +112,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- General Parameters ------------//
-	public class GenParams
+	class GenParams
 	{
 		public String LC = "EN";       // Language Code (2 bytes)
 		public String CID = " ";       // Cable ID
@@ -133,7 +136,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Supplier Parameters ------------//
-	public class SupParams
+	class SupParams
 	{
 		public String SN = " ";          // Supplier Name
 		public String MFID = " ";        // OTDR Mainframe ID
@@ -151,7 +154,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Fixed Parameters ------------//
-	public class FxdParams
+	class FxdParams
 	{
 		public long DTS = 0;           // Date/Time Stamp (in ms)
 		public String UD = "km";          // Units of Distanse (2 bytes)
@@ -185,7 +188,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Key Events ------------//
-	public class KeyEvents
+	class KeyEvents
 	{
 		public short TNKE;         // Number of Key Events
 		public short[] EN;         // Event Number
@@ -211,7 +214,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Link Parameters ------------//
-	public class LnkParams
+	class LnkParams
 	{
 		public short TNL;          // Total Number of Landmarks
 		public short[] LMN;        // Landmark Number
@@ -236,7 +239,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Data Points ------------//
-	public class DataPts
+	class DataPts
 	{
 		public int TNDP;           // Number of Data Points
 		public short TSF;          // Total number Scale Factor Used
@@ -254,7 +257,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Checksum ------------//
-	public class Cksum
+	class Cksum
 	{
 		public int CSM;            // Checksum
 
@@ -265,7 +268,7 @@ public class BellcoreStructure // extends ObjectResource
 	}
 
 	//----------- Special Field ------------//
-	public class Special
+	class Special
 	{
 		//public int size;           // Size Of Special Field
 		public byte [] spec_data;  // Special Data Field
@@ -276,10 +279,55 @@ public class BellcoreStructure // extends ObjectResource
 		}
 	}
 
-	public double getDeltaX()
+	public String getOpticalModuleId()
+	{
+		return supParams.OMID;
+	}
+
+	public int getPulsewidth()
+	{
+		return fxdParams.PWU[0];
+	}
+
+	public int getAverages()
+	{
+		return fxdParams.NAV;
+	}
+
+	public double getBackscatter()
+	{
+		return -(double)fxdParams.BC / 10d;
+	}
+
+	public Date getDate()
+	{
+		return new Date(fxdParams.DTS * 1000);
+	}
+
+	public String getUnits()
+	{
+		return fxdParams.UD;
+	}
+
+	public int getWavelength()
+	{
+		return fxdParams.AW / 10;
+	}
+
+	public double getIOR()
+	{
+		return ((double)fxdParams.GI) / 100000d;
+	}
+
+	public double getResolution()
 	{
 		int n = this.dataPts.TNDP;
 		return (this.fxdParams.AR - this.fxdParams.AO) * 3d / ((double)n * (double)this.fxdParams.GI/1000d);
+	}
+
+	public double getRange()
+	{
+		return (double)(fxdParams.AR - fxdParams.AO) * 3d / (double)fxdParams.GI * 1000;
 	}
 
 	public double[] getTraceData()
