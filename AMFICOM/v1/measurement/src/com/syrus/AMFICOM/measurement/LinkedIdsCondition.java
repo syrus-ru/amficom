@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.15 2004/10/29 14:37:47 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.16 2004/11/03 12:04:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/29 14:37:47 $
+ * @version $Revision: 1.16 $, $Date: 2004/11/03 12:04:52 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -261,7 +261,7 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 				this.entityCode = RESULT_SHORT;
 				break;
 			default:
-				throw new UnsupportedOperationException("entityCode is unknown for this condition");
+				super.setEntityCode(entityCode);
 		}
 
 	}

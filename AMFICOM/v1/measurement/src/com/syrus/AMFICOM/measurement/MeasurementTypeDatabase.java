@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.37 2004/11/03 11:59:57 max Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.38 2004/11/03 12:04:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import oracle.sql.BLOB;
-
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -39,14 +37,13 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
-import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/03 11:59:57 $
- * @author $Author: max $
+ * @version $Revision: 1.38 $, $Date: 2004/11/03 12:04:52 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -836,6 +833,14 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			if (condition instanceof LinkedIdsCondition){
 				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
 				list = this.retrieveButIdsByMeasurementPortType(ids, linkedIdsCondition.getMeasurementPortTypeIds());
+			} else if (condition instanceof StringFieldCondition){
+				StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
+				try {
+					list = Collections.singletonList(this.retrieveForCodename(stringFieldCondition.getString()));
+				} catch (ObjectNotFoundException e) {
+					String msg = getEnityName() + "Database.retrieveByCondition | object not found: " + e.getMessage();
+					throw new RetrieveObjectException(msg, e);
+				} 
 			} else{
 				Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
 				list = this.retrieveButIds(ids);

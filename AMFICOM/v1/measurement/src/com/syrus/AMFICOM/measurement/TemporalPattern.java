@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.45 2004/11/02 15:27:46 bob Exp $
+ * $Id: TemporalPattern.java,v 1.46 2004/11/03 12:04:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/11/02 15:27:46 $
+ * @version $Revision: 1.46 $, $Date: 2004/11/03 12:04:53 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -801,13 +801,13 @@ public class TemporalPattern extends StorableObject {
 
 		this.description = new String(tpt.description);
 		//this.cronStrings = new String[tpt.cronStrings.length];
-		long version = this.currentVersion;
+		long ver = this.currentVersion;
 		removeAll();
 		for (int i = 0; i < tpt.cron_strings.length; i++) {
 			//this.cronStrings[i] = new String(tpt.cronStrings[i]);
 			addTemplate(new String(tpt.cron_strings[i]));
 		}
-		this.currentVersion = version;
+		this.currentVersion = ver;
 
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 		try {
@@ -846,13 +846,13 @@ public class TemporalPattern extends StorableObject {
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
 		this.description = description;
-		long version = this.currentVersion;
+		long ver = this.currentVersion;
 		for (Iterator it = cronString.iterator(); it.hasNext();) {
 			String str = (String) it.next();
 			addTemplate(str);
 		}
 
-		this.currentVersion = version;
+		this.currentVersion = ver;
 		this.currentVersion = super.getNextVersion();
 
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
@@ -918,11 +918,11 @@ public class TemporalPattern extends StorableObject {
 		super.setAttributes(created, modified, creatorId, modifierId);
 		this.description = description;
 		this.cronStrings = cronStrings;
-		long version = this.currentVersion;
+		long ver = this.currentVersion;
 		removeAll();
 		for (int i = 0; i < cronStrings.length; i++)
 			addTemplate(cronStrings[i]);
-		this.currentVersion = version;
+		this.currentVersion = ver;
 
 	}
 
