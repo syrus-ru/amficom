@@ -16,6 +16,7 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
+import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerHelper;
 import com.syrus.AMFICOM.configuration.Domain;
@@ -52,6 +53,10 @@ public class CMServerTest {
 				System.out.println(domain.getId().toString());
 			}
 
+		} catch (AMFICOMRemoteException are) {
+			System.err.println("AMFICOMRemoteException code:" + are.code + " , " + are.getMessage());
+			System.err.println(are);
+			System.exit(-1);
 		} catch (Exception e) {
 			Log.errorException(e);
 			System.err.println(e);
