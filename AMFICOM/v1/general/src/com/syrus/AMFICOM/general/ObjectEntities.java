@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.51 2005/02/08 19:47:37 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.52 2005/03/24 15:46:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/02/08 19:47:37 $
+ * @version $Revision: 1.52 $, $Date: 2005/03/24 15:46:01 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -31,11 +31,12 @@ public final class ObjectEntities {
 
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
 	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink";
-	public static final String MNTTYMEASPORTTYPELINK_ENTITY = "MntTypMeasPortTypLink";
+	public static final String MNTTYPEMEASPORTTYPELINK_ENTITY = "MntTypMeasPortTypLink";
 	public static final String ANALYSISTYPE_ENTITY = "AnalysisType";
 	public static final String ANATYPPARTYPLINK_ENTITY = "AnaTypParTypLink";
 	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType";
 	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
+	public static final String MNTTYPANATYPEVATYP_ENTITY = "MntTypAnaTypEvaTyp";
 	public static final String MODELINGTYPE_ENTITY = "ModelingType";
 	public static final String MODTYPPARTYPLINK_ENTITY = "ModTypParTypLink";
 	//public static final String KISTYPE_ENTITY = "KISType";
