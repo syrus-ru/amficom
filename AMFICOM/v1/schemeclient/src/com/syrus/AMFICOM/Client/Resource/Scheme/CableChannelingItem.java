@@ -1,9 +1,10 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.io.*;
-
 import com.syrus.AMFICOM.CORBA.Scheme.CableChannelingItem_Transferable;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 public class CableChannelingItem extends StubResource implements Serializable
 {
@@ -11,13 +12,17 @@ public class CableChannelingItem extends StubResource implements Serializable
 	private static final long serialVersionUID = 01L;
 	public CableChannelingItem_Transferable transferable;
 
-	public String id;
+	protected String id;
 	public int n = 0;
 	public String startSiteId = "";
 	public double startSpare = 0;
 	public String physicalLinkId = "";
 	public double endSpare = 0;
 	public String endSiteId = "";
+	
+	public int row_x = -1;
+	public int place_y = -1;
+	
 
 	public CableChannelingItem(String id)
 	{
@@ -55,6 +60,8 @@ public class CableChannelingItem extends StubResource implements Serializable
 		physicalLinkId = transferable.physicalLinkId;
 		endSpare = transferable.endSpare;
 		endSiteId = transferable.endSiteId;
+		row_x = transferable.row_x;
+		place_y = transferable.place_y;
 	}
 
 	public void setTransferableFromLocal()
@@ -66,6 +73,9 @@ public class CableChannelingItem extends StubResource implements Serializable
 		transferable.physicalLinkId = physicalLinkId;
 		transferable.endSpare = endSpare;
 		transferable.endSiteId = endSiteId;
+
+		transferable.row_x = row_x;
+		transferable.place_y = place_y;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
@@ -77,6 +87,8 @@ public class CableChannelingItem extends StubResource implements Serializable
 		out.writeObject(physicalLinkId);
 		out.writeDouble(endSpare);
 		out.writeObject(endSiteId);
+		out.writeInt(row_x);
+		out.writeInt(place_y);
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
@@ -89,5 +101,7 @@ public class CableChannelingItem extends StubResource implements Serializable
 		physicalLinkId = (String) in.readObject();
 		endSpare = in.readDouble();
 		endSiteId = (String) in.readObject();
+		row_x = in.readInt();
+		place_y = in.readInt();
 	}
 }
