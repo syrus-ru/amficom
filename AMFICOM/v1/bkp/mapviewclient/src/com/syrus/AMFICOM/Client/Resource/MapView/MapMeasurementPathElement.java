@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.5 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.6 2004/10/06 09:27:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/06 09:27:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -207,26 +207,11 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		this.mapView = (MapView)Pool.get(MapView.typ, this.mapViewId);
 	}
 
-	public ObjectResourceModel getModel()
-	{
-		return null;//new MapPathElementModel(this);
-	}
-
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return null;//new MapPathElementDisplayModel();
-	}
-	
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
-	public static PropertiesPanel getPropertyPane()
-	{
-		return null;//new MapPathPane();
 	}
 	
 	public void setSchemePath(SchemePath schemePath)

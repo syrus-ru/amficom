@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -32,7 +32,7 @@ import java.util.Iterator;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -94,7 +94,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 			MapPhysicalNodeElement leftNode,
 			MapPhysicalNodeElement rightNode)
 	{
-		DataSourceInterface dataSource = getContext().getDataSourceInterface();
+		DataSourceInterface dataSource = getContext().getDataSource();
 
 		// удалить фрагмент линии
 		removeNodeLink(nodeLink);

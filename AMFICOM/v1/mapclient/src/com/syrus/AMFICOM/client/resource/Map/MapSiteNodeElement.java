@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.10 2004/10/06 09:19:20 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.11 2004/10/06 09:27:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/06 09:19:20 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/06 09:27:38 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -271,16 +271,6 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 					centerX,
 					centerY);
 		}
-	}
-
-	public ObjectResourceModel getModel()
-	{
-		return null;//new MapSiteNodeElementModel(this);
-	}
-	
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return null;//new MapSiteNodeElementDisplayModel();
 	}
 
 	private static final String PROPERTY_PANE_CLASS_NAME = 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.7 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapView.java,v 1.8 2004/10/06 09:27:28 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -54,7 +54,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/06 09:27:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -313,33 +313,12 @@ public final class MapView extends StubResource
 		return transferable;
 	}
 
-	/**
-	 * получить модель объекта
-	 */
-	public ObjectResourceModel getModel()
-	{
-		return null;//new MapViewModel(this);
-	}
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"com.syrus.AMFICOM.Client.Map.Props.MapViewPanel";
 
-	public static ObjectResourcePropertiesPane getPropertyPane1()
+	public static String getPropertyPaneClassName()
 	{
-		return null;
-	}
-
-	/**
-	 * получить панель свойств
-	 */
-	public static PropertiesPanel getPropertyPane()
-	{
-		return null;//new MapViewPane();
-	}
-
-	/**
-	 * получить модель отображени€ в таблице
-	 */
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return null;//new MapViewDisplayModel();
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 
 	/**

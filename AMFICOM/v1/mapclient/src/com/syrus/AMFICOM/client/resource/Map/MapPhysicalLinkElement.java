@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.19 2004/10/06 09:19:20 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.20 2004/10/06 09:27:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2004/10/06 09:19:20 $
+ * @version $Revision: 1.20 $, $Date: 2004/10/06 09:27:38 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -327,16 +327,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		proto = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, mapProtoId);
 
 		binding = new MapPhysicalLinkBinding(this, proto.getBindingDimension());
-	}
-
-	public ObjectResourceModel getModel()
-	{
-		return null;//new MapPhysicalLinkElementModel(this);
-	}
-
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return null;//new MapPhysicalLinkElementDisplayModel();
 	}
 
 	private static final String PROPERTY_PANE_CLASS_NAME = 

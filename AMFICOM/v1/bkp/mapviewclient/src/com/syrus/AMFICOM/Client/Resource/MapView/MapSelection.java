@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.5 2004/10/01 16:36:55 krupenn Exp $
+ * $Id: MapSelection.java,v 1.6 2004/10/06 09:27:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/01 16:36:55 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/06 09:27:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -213,9 +213,11 @@ public final class MapSelection extends StubResource
 		return true;
 	}
 	
-	public String getPropertyPaneClassName()
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public static String getPropertyPaneClassName()
 	{
-		return "";
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 
 	public String getToolTipText()

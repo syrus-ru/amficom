@@ -55,11 +55,11 @@ public class MapEditorAddSchemeToViewCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
 
 		if(dataSource == null)
 			return;
-
+/*
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapOpening")));
@@ -110,6 +110,7 @@ public class MapEditorAddSchemeToViewCommand extends VoidCommand
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));
 		}
+*/
 	}
 
 }

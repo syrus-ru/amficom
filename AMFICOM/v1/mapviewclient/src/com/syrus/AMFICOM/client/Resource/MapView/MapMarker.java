@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.8 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapMarker.java,v 1.9 2004/10/06 09:27:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/06 09:27:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -411,7 +411,7 @@ public class MapMarker extends MapNodeElement implements MapElement
 	
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}

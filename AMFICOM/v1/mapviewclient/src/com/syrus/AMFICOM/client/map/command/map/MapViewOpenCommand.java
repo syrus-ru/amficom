@@ -6,8 +6,7 @@ import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
+import com.syrus.AMFICOM.Client.Map.UI.MapViewController;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -16,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import java.util.List;
 
 import javax.swing.JDesktopPane;
@@ -58,7 +58,7 @@ public class MapViewOpenCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
 
 		if(dataSource == null)
 			return;
@@ -69,12 +69,11 @@ public class MapViewOpenCommand extends VoidCommand
 
 //		new MapDataSourceImage(dataSource).LoadMapViews();
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(dataSource, MapView.typ);//mapFrame, "Выберите карту", true);
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(com.syrus.AMFICOM.Client.Map.UI.MapViewController.getInstance(), MapView.typ);//mapFrame, "Выберите карту", true);
 		mcd.setCanDelete(canDelete);
 
-		List dataSet = Pool.getList(MapView.typ);
-		ObjectResourceDisplayModel odm = null;//new MapViewDisplayModel();
-		mcd.setContents(odm, dataSet);
+		List mvs = Pool.getList(MapView.typ);
+		mcd.setContents(mvs);
 
 		// отфильтровываем по домену
 		ObjectResourceTableModel ortm = mcd.getTableModel();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.13 2004/10/05 12:29:12 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.14 2004/10/06 09:27:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/10/05 12:29:12 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/06 09:27:38 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -214,19 +214,9 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		return transferable;
 	}
 
-	public ObjectResourceModel getModel()
-	{
-		return null;//new MapPhysicalNodeElementModel(this);
-	}
-	
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return null;//new MapPhysicalNodeElementDisplayModel();
-	}
-
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.awt.geom.Point2D;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -63,7 +63,7 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
 		
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
 	
 		Point2D.Double coordinatePoint = logicalNetLayer.convertScreenToMap(point);
 		

@@ -275,19 +275,9 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		return transferable;
 	}
 
-	public ObjectResourceModel getModel()
-	{
-		return null;//new MapMarkElementModel(this);
-	}
-	
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return null;//new MapMarkElementDisplayModel();
-	}
-
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}

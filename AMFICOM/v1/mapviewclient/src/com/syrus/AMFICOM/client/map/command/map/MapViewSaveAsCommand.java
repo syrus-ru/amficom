@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.3 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -66,7 +66,7 @@ public class MapViewSaveAsCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
 
 		if(dataSource == null)
 			return;

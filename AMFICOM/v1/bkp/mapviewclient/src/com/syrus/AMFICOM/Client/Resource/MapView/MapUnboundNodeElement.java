@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElement.java,v 1.2 2004/09/27 07:41:34 krupenn Exp $
+ * $Id: MapUnboundNodeElement.java,v 1.3 2004/10/06 09:27:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/27 07:41:34 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -102,20 +102,14 @@ public class MapUnboundNodeElement extends MapSiteNodeElement implements Seriali
 				height);
 	}
 
-	public ObjectResourceModel getModel()
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"";
+
+	public static String getPropertyPaneClassName()
 	{
-		return null;//new MapSiteNodeElementModel(this);
-	}
-	
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return null;//new MapSiteNodeElementDisplayModel();
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 
-	public static PropertiesPanel getPropertyPane()
-	{
-		return null;//new MapEquipmentPane();
-	}
 
 	public void setSchemeElement(SchemeElement schemeElement)
 	{

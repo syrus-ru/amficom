@@ -47,12 +47,12 @@ public class MapViewNewCommand extends VoidCommand
 					LangModelMap.getString("MapNew")));
 		mv = new MapView();
 
-		mv.setId(aContext.getDataSourceInterface().GetUId(MapView.typ));
+		mv.setId(aContext.getDataSource().GetUId(MapView.typ));
 		mv.setDomainId(aContext.getSessionInterface().getDomainId());
 		mv.setName(LangModelMap.getString("New"));
 
 		Map mc = new Map();
-		mc.setId(aContext.getDataSourceInterface().GetUId(com.syrus.AMFICOM.Client.Resource.Map.Map.typ));
+		mc.setId(aContext.getDataSource().GetUId(com.syrus.AMFICOM.Client.Resource.Map.Map.typ));
 		mc.setDomainId(aContext.getSessionInterface().getDomainId());
 		mc.setUserId(aContext.getSessionInterface().getUserId());
 		Pool.put( mc.getTyp(), mc.getId(), mc);

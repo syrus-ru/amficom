@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundLinkElement.java,v 1.5 2004/09/27 07:41:34 krupenn Exp $
+ * $Id: MapUnboundLinkElement.java,v 1.6 2004/10/06 09:27:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/27 07:41:34 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/06 09:27:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -61,19 +61,12 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 		super(id, stNode, eNode, map, proto);
 	}
 
-	public ObjectResourceModel getModel()
-	{
-		return null;//new MapPhysicalLinkElementModel(this);
-	}
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"";
 
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	public static String getPropertyPaneClassName()
 	{
-		return null;//new MapPhysicalLinkElementDisplayModel();
-	}
-	
-	public static PropertiesPanel getPropertyPane()
-	{
-		return null;//new MapLinkPane();
+		return PROPERTY_PANE_CLASS_NAME;
 	}
 
 	public boolean isSelectionVisible()

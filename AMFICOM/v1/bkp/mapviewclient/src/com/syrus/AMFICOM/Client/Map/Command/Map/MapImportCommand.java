@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.3 2004/10/05 12:55:58 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.4 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import java.util.List;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/05 12:55:58 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/06 09:27:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -61,7 +61,7 @@ public class MapImportCommand extends ImportCommand
 			return;
 			
 		ApplicationContext aContext = mapFrame.getContext();
-		super.setDsi(aContext.getDataSourceInterface());
+		super.setDsi(aContext.getDataSource());
         System.out.println("Import map");
 
 		Map map;

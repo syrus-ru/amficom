@@ -6,8 +6,7 @@ import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
+import com.syrus.AMFICOM.Client.Map.UI.MapController;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -18,6 +17,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import java.util.List;
 
 import javax.swing.JDesktopPane;
@@ -60,7 +60,7 @@ public class MapOpenCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
 
 		if(dataSource == null)
 			return;
@@ -71,19 +71,18 @@ public class MapOpenCommand extends VoidCommand
 
 		new MapDataSourceImage(dataSource).loadMaps();
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(dataSource, Map.typ);
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(com.syrus.AMFICOM.Client.Map.UI.MapController.getInstance(), Map.typ);
 
 		mcd.setCanDelete(canDelete);
-/*
-		List dataSet = Pool.getList(MapView.typ);
-		ObjectResourceDisplayModel odm = new MapContextDisplayModel();
-		mcd.setContents(odm, dataSet);
+
+		List ms = Pool.getList(Map.typ);
+		mcd.setContents(ms);
 
 		// отфильтровываем по домену
 		ObjectResourceTableModel ortm = mcd.getTableModel();
 		ortm.setDomainId(aContext.getSessionInterface().getDomainId());
 		ortm.restrictToDomain(true);//ф-я фильтрации схем по домену
-*/
+
 		mcd.setModal(true);
 		mcd.setVisible(true);
 		if(mcd.getReturnCode() == mcd.RET_CANCEL)

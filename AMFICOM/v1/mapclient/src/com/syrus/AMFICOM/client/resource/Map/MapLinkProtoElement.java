@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.7 2004/09/27 07:39:57 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.8 2004/10/06 09:27:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/09/27 07:39:57 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/06 09:27:38 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -165,7 +165,7 @@ public final class MapLinkProtoElement
 
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}

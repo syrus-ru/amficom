@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -125,7 +125,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 */
 	public void deletePhysicalNode(MapPhysicalNodeElement node)
 	{
-		DataSourceInterface dataSource = getContext().getDataSourceInterface();
+		DataSourceInterface dataSource = getContext().getDataSource();
 
 		if ( !getContext().getApplicationModel().isEnabled("mapActionDeleteNode"))
 			return;

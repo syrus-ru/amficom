@@ -49,7 +49,7 @@ public class MapNewCommand extends VoidCommand
 						LangModelMap.getString("MapNew")));
 		mc = new Map();
 
-		mc.setId(aContext.getDataSourceInterface().GetUId(Map.typ));
+		mc.setId(aContext.getDataSource().GetUId(Map.typ));
 		mc.setDomainId(aContext.getSessionInterface().getDomainId());
 		mc.setUserId(aContext.getSessionInterface().getUserId());
 /*
@@ -79,7 +79,7 @@ public class MapNewCommand extends VoidCommand
 
 		mv = new MapView();
 
-		mv.setId(aContext.getDataSourceInterface().GetUId(MapView.typ));
+		mv.setId(aContext.getDataSource().GetUId(MapView.typ));
 		mv.setDomainId(aContext.getSessionInterface().getDomainId());
 		mv.setName(LangModelMap.getString("New"));
 

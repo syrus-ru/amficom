@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.3 2004/09/23 10:07:14 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.4 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,13 +19,14 @@ import com.syrus.AMFICOM.Client.Resource.EmptyMapViewDataSource;
 import com.syrus.AMFICOM.Client.Resource.RISDMapDataSource;
 
 import com.syrus.AMFICOM.Client.Resource.EmptyMapDataSource;
+import com.syrus.AMFICOM.Client.Resource.RISDMapViewDataSource;
 
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/23 10:07:14 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/06 09:27:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -34,8 +35,6 @@ public class MapEditorApplicationModel extends ApplicationModel
 {
 	public MapEditorApplicationModel()
 	{
-		super();
-		
 		add("mapActionViewProperties");
 		add("mapActionEditProperties");
 
@@ -93,24 +92,22 @@ public class MapEditorApplicationModel extends ApplicationModel
 	
 	private static DataSourceInterface dataSource = null;
 	
-	public DataSourceInterface getDataSource(SessionInterface si)
+	public DataSourceInterface getDataSource(final SessionInterface session) 
 	{
 		String connection = Environment.getConnectionType();
-		if(connection.equalsIgnoreCase(Environment.CONNECTION_RISD))
-		{
-			if(dataSource == null)
-				dataSource = new RISDMapDataSource(si);
-			else
-				dataSource.setSession(si);
-		}
-		else
-		if(connection.equalsIgnoreCase(Environment.CONNECTION_EMPTY))
-		{
-			if(dataSource == null)
-				dataSource = new EmptyMapViewDataSource(si);
-			else
-				dataSource.setSession(si);
-		}
-		return dataSource;
+        if ((this.session == null) || (!this.session.equals(session)))
+			synchronized (this) 
+			{
+					if ((this.session == null) || (!this.session.equals(session))) 
+					{
+						this.session = session;
+						if(connection.equalsIgnoreCase(Environment.CONNECTION_RISD))
+							this.dataSource = new RISDMapViewDataSource(this.session);
+						else
+						if(connection.equalsIgnoreCase(Environment.CONNECTION_EMPTY))
+							this.dataSource = new EmptyMapViewDataSource(this.session);
+					}
+			}
+        return this.dataSource;
 	}
 }

@@ -118,7 +118,6 @@ src\com\syrus\AMFICOM\Client\Map\Props\MapCablePathGeneralPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapCablePathPane.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapCablePathPropertiesController.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapCollectorPropertiesController.java
-src\com\syrus\AMFICOM\Client\Map\Props\MapController.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapElementPropertiesController.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapLinkBindPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapLinkGeneralPanel.java
@@ -136,7 +135,6 @@ src\com\syrus\AMFICOM\Client\Map\Props\MapSiteBindPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapSiteGeneralPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapSiteNodePropertiesController.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapSitePane.java
-src\com\syrus\AMFICOM\Client\Map\Props\MapViewController.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapViewPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapVoidElementPropertiesController.java
 src\com\syrus\AMFICOM\Client\Map\Props\TunnelLayout.java
@@ -162,6 +160,7 @@ src\com\syrus\AMFICOM\Client\Map\Strategy\MapUnboundNodeElementStrategy.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\MapVoidElementStrategy.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\VoidStrategy.java
 src\com\syrus\AMFICOM\Client\Map\UI\ElementPaneToolBar.java
+src\com\syrus\AMFICOM\Client\Map\UI\MapController.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapDropTargetListener.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapElementLabel.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapElementsBarFrame.java
@@ -183,8 +182,9 @@ src\com\syrus\AMFICOM\Client\Map\UI\MapScrollPane.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapToolBar.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapToolTip.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapToolTippedPanel.java
+src\com\syrus\AMFICOM\Client\Map\UI\MapViewController.java
 src\com\syrus\AMFICOM\Client\Map\UI\NodeSizePanel.java
-src\com\syrus\AMFICOM\Client\Map\UI\ReusedGridBagConstraints.java
+src\com\syrus\AMFICOM\Client\Map\UI\SchemeController.java
 src\com\syrus\AMFICOM\Client\Map\UI\SimpleMapElementController.java
 src\com\syrus\AMFICOM\Client\Resource\EmptyMapViewDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\MapViewDataSourceImage.java

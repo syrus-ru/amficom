@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.2 2004/10/01 16:36:55 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.3 2004/10/06 09:27:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/01 16:36:55 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:28 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -66,7 +66,7 @@ public final class VoidMapElement extends StubResource implements MapElement
 	
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.3 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@ package com.syrus.AMFICOM.Client.Map.Setup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -33,7 +33,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:27 $
  * @author $Author: krupenn $
  * @see
  */
@@ -87,9 +87,9 @@ public class MapChooserPanel extends JPanel
 					mapSelected();
 				}
 			});
-		this.add(combo, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(selectButton, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(combo, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(selectButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(Box.createVerticalGlue(), com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(5, 5, 5, 5), 0, 0));
 	}
 
 	/**

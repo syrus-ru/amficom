@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
@@ -51,7 +51,7 @@ import javax.swing.table.JTableHeader;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
  * @author $Author: krupenn $
  * @see
  */
@@ -159,11 +159,11 @@ import javax.swing.table.JTableHeader;
 		scrollPane.getViewport().setBackground(SystemColor.window);
 		table.setBackground(SystemColor.window);
 		
-		this.add(searchField, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(searchButton, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(searchField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(searchButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 //		this.add(jth, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(scrollPane, ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(centerButton, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(scrollPane, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(centerButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
 		table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	}

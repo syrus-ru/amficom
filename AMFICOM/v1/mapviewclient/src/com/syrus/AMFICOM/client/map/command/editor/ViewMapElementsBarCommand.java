@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapElementsBarCommand.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: ViewMapElementsBarCommand.java,v 1.3 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -56,11 +56,11 @@ public class ViewMapElementsBarCommand extends VoidCommand
 
 	public void execute()
 	{
-		if(aContext.getDataSourceInterface() == null)
+		if(aContext.getDataSource() == null)
 			return;
 		
 //		if(Environment.getConnectionType().equalsIgnoreCase(Environment.CONNECTION_EMPTY))
-			new MapDataSourceImage(aContext.getDataSourceInterface()).loadProtoElements();
+			new MapDataSourceImage(aContext.getDataSource()).loadProtoElements();
 //		else
 //			new MapDataSourceImage(new EmptyMapDataSource(aContext.getSessionInterface())).LoadProtoElements();
 			

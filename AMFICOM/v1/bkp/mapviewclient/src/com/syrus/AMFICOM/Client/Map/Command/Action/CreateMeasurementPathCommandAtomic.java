@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.1 2004/09/23 10:07:14 krupenn Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/23 10:07:14 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -58,7 +58,7 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 	
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
 		
 		mp = new MapMeasurementPathElement(
 				path,

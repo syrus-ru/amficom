@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeProtoElement.java,v 1.6 2004/09/23 10:05:29 krupenn Exp $
+ * $Id: MapNodeProtoElement.java,v 1.7 2004/10/06 09:27:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/23 10:05:29 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/06 09:27:38 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -161,19 +161,9 @@ public final class MapNodeProtoElement
 		return modified;
 	}
 
-	public ObjectResourceModel getModel()
-	{
-		return null;//new MapProtoModel(this);
-	}
-
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return null;//new MapProtoDisplayModel();
-	}
-
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
-	public String getPropertyPaneClassName()
+	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}

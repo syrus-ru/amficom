@@ -47,7 +47,7 @@ public class RISDMapViewDataSource
 
 		try
 		{
-			ecode = si.ci.server.GetMapViewProtoElements(si.accessIdentity, ih, ph);
+			ecode = si.ci.getServer().GetMapViewProtoElements(si.accessIdentity, ih, ph);
 		}
 		catch (Exception ex)
 		{
@@ -111,7 +111,7 @@ public class RISDMapViewDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.GetStatedMapViewProtoElements(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().GetStatedMapViewProtoElements(
 					((RISDSessionInfo )getSession()).accessIdentity, 
 					pids, 
 					ph);
@@ -168,7 +168,7 @@ public class RISDMapViewDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.SaveMapViewProtoElements(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().SaveMapViewProtoElements(
 					((RISDSessionInfo )getSession()).accessIdentity, 
 					mpes);
 		}
@@ -197,7 +197,7 @@ public class RISDMapViewDataSource
 		String []gids = new String[0];
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.RemoveMapViewProtoElements(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().RemoveMapViewProtoElements(
 					((RISDSessionInfo )getSession()).accessIdentity, 
 					pathIds);
 		}
@@ -238,7 +238,7 @@ public class RISDMapViewDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.GetStatedMapViews(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().GetStatedMapViews(
 					((RISDSessionInfo )getSession()).accessIdentity, 
 					ids,
 					mh); 
@@ -317,7 +317,7 @@ public class RISDMapViewDataSource
 	
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.SaveMapViews(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().SaveMapViews(
 					((RISDSessionInfo )getSession()).accessIdentity,
 					maps);
 		}
@@ -354,7 +354,7 @@ public class RISDMapViewDataSource
 
 		try
 		{
-			ecode = ((RISDSessionInfo )getSession()).ci.server.RemoveMapViews(
+			ecode = ((RISDSessionInfo )getSession()).ci.getServer().RemoveMapViews(
 					((RISDSessionInfo )getSession()).accessIdentity,
 					maps);
 		}
@@ -409,7 +409,7 @@ public class RISDMapViewDataSource
 
 		try
 		{
-			ecode = si.ci.server.RemoveMapViews(
+			ecode = si.ci.getServer().RemoveMapViews(
 					si.accessIdentity,
 					maps,
 					paths);

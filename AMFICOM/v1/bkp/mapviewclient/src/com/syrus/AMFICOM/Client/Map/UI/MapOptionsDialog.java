@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 
 public class MapOptionsDialog extends JDialog 
 {

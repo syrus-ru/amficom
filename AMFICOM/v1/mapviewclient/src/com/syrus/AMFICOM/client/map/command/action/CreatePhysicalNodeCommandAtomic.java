@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.3 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:27 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -48,7 +48,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 	
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
 
 		node = new MapPhysicalNodeElement(
 				dataSource.GetUId( MapPhysicalNodeElement.typ),

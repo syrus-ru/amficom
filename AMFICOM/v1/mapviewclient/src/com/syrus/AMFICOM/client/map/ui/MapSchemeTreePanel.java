@@ -10,8 +10,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeModel;
@@ -21,6 +19,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -213,7 +212,7 @@ public final class MapSchemeTreePanel extends JPanel
 
 	protected void initTree()
 	{
-		model = new MapSchemeTreeModel(null, aContext.getDataSourceInterface());
+		model = new MapSchemeTreeModel(null, aContext.getDataSource());
 		setPanel(new UniTreePanel(aContext.getDispatcher(), aContext, model));
 	}
 
@@ -274,7 +273,7 @@ public final class MapSchemeTreePanel extends JPanel
 
 	private void addToView()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
 
 		if(dataSource == null)
 			return;
@@ -285,11 +284,10 @@ public final class MapSchemeTreePanel extends JPanel
 
 		new SchemeDataSourceImage(dataSource).LoadSchemes();
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(dataSource, Scheme.typ);
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(com.syrus.AMFICOM.Client.Map.UI.SchemeController.getInstance(), Scheme.typ);
 
-		List dataSet = Pool.getList(Scheme.typ);
-		ObjectResourceDisplayModel odm = Scheme.getDefaultDisplayModel();
-		mcd.setContents(odm, dataSet);
+		List ss = Pool.getList(Scheme.typ);
+		mcd.setContents(ss);
 
 		// отфильтровываем по домену
 		ObjectResourceTableModel ortm = mcd.getTableModel();

@@ -1,5 +1,5 @@
 /**
- * $Id: DropSchemeElementCommand.java,v 1.3 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: DropSchemeElementCommand.java,v 1.4 2004/10/06 09:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import java.awt.geom.Point2D;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/06 09:27:27 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -79,7 +79,7 @@ public class DropSchemeElementCommand extends MapActionCommand
 				.isEnabled("mapActionCreateEquipment"))
 			return;
 		
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
 	
 		if(coordinatePoint == null)
 			coordinatePoint = logicalNetLayer.convertScreenToMap(point);

@@ -46,7 +46,7 @@ public class MapEditorRemoveSchemeFromViewCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
 
 		if(dataSource == null)
 			return;
