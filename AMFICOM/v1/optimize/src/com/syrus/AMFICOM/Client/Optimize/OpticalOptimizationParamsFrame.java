@@ -3,21 +3,20 @@ package com.syrus.AMFICOM.Client.Optimize;
 import  com.syrus.AMFICOM.Client.General.UI.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelOptimize;
+
 import javax.swing.*;
 import java.awt.*;
-import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
 
 // окно в котором выводятся параметры оптимизации, которые можно в этом окне менять
 //-------------------------------------------------------------------------------------------------------------
 public class OpticalOptimizationParamsFrame extends JInternalFrame
 																						implements OperationListener
 {
-	private OpticalOptimizerContext optoptContext;
-
-	private EventTableModel paramsModel; // модель для нужд задания параметров
+	private EventTableModel paramsModel; // модель для нужд задания параметров (заготовка Стата, поэтому в назывании Event)
 	private JViewport viewport = new JViewport();
 
-	private FixedSizeEditableTableModel paramsTableModel;
 	private JPanel jPanel_params = new JPanel();
 	private JTable jTable_params;
 	private JScrollPane jScrollPane_params = new JScrollPane();
@@ -25,10 +24,13 @@ public class OpticalOptimizationParamsFrame extends JInternalFrame
 	private Dispatcher dispatcher;
 	private OptimizeMDIMain mdiMain;
 	//-----------------------------------------------------------------------------------------------------------
+	public EventTableModel getTableModelForReport()
+	{ return paramsModel;
+	}
+	//	-----------------------------------------------------------------------------------------------------------
 	public OpticalOptimizationParamsFrame(Dispatcher dispatcher, OpticalOptimizerContext optoptContext, OptimizeMDIMain mdiMain)
 	{ try
 		{ this.dispatcher = dispatcher;
-			this.optoptContext = optoptContext;
 			this.mdiMain = mdiMain;
 
 			jbInit();
@@ -42,9 +44,9 @@ public class OpticalOptimizationParamsFrame extends JInternalFrame
 	//-----------------------------------------------------------------------------------------------------------
 	//автопозиционирование и авторазмер
 	public void place()
-	{		Dimension dim = mdiMain.scrollPane.getSize();
+	{		Dimension dim = this.mdiMain.scrollPane.getSize();
 			int width = (int)(0.22*dim.width), height = (int)(0.18*dim.height);
-			if(mdiMain.kisSelectFrame != null){ setBounds(dim.width - width, mdiMain.kisSelectFrame.getHeight(), width, height);}
+			if(mdiMain.kisSelectFrame != null){ setBounds(dim.width - width, this.mdiMain.kisSelectFrame.getHeight(), width, height);}
       else { setBounds(dim.width - width, 0, width, height);}
 			setVisible(true);
 	}
@@ -52,10 +54,10 @@ public class OpticalOptimizationParamsFrame extends JInternalFrame
 	public void operationPerformed(OperationEvent ae){}
 	//-----------------------------------------------------------------------------------------------------------
 	private void jbInit() throws Exception
-	{ this.setFrameIcon( new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/general.gif")) );
+	{   this.setFrameIcon( new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/general.gif")) );
 		setDefaultCloseOperation(HIDE_ON_CLOSE); // не закрываем, а прячем
 		jPanel_params.setLayout(borderLayout1);
-    paramsModel = new EventTableModel
+        paramsModel = new EventTableModel
                   (  mdiMain,
                      new String[] {"",""}, // название окна говорит само за себя, подписи к столбцам излишни
                      new Object[] { new Double(-1), // значения по умолчанию (не используются)
@@ -63,22 +65,22 @@ public class OpticalOptimizationParamsFrame extends JInternalFrame
                      ((OpticalOptimizerContext)mdiMain.optimizerContext).param_descriptions, // описания
                      new int[]{ 1 }  // номера редактируемых столбцов (начинается с 0)
                   );
-    paramsModel.updateData( ((OpticalOptimizerContext)mdiMain.optimizerContext).param_values ); // значения
-    jTable_params = new JTable(paramsModel);
-    //
+       paramsModel.updateData( ((OpticalOptimizerContext)mdiMain.optimizerContext).param_values ); // значения
+       jTable_params = new JTable(paramsModel);
+       //
 		this.setMaximizable(true);
 		this.setPreferredSize(new Dimension(120, 24));
 		jScrollPane_params.getViewport().setBackground(Color.white);
-    jTable_params.setBackground(Color.white);
-    jPanel_params.setBackground(Color.white);
-    viewport.setBackground(Color.white);
-    this.getContentPane().add(jPanel_params, BorderLayout.CENTER);
+	    jTable_params.setBackground(Color.white);
+	    jPanel_params.setBackground(Color.white);
+	    viewport.setBackground(Color.white);
+	    this.getContentPane().add(jPanel_params, BorderLayout.CENTER);
 		jPanel_params.add(jScrollPane_params,  BorderLayout.CENTER);
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle("Параметры  оптимизации");
-    this.setBackground(Color.WHITE);
+		this.setTitle( LangModelOptimize.getString("frameOptimizationParamsTitle") );
+        this.setBackground(Color.WHITE);
     //
 		jTable_params.getColumnModel().getColumn(0).setPreferredWidth(250);
 		jTable_params.setPreferredScrollableViewportSize(new Dimension(200, 213));

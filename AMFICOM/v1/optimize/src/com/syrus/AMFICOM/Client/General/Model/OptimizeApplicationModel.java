@@ -25,13 +25,13 @@ public class OptimizeApplicationModel extends ApplicationModel
 		add("menuSchemeOpen");
 		add("menuSchemeSave");
 		add("menuSchemeSaveAs");
-    add("menuLoadSm");
-    add("menuClearScheme");
+		add("menuLoadSm");
+		add("menuClearScheme");
 
 		add("menuView");
 		add("menuViewMap");
 		add("menuViewMapElProperties");
-    add("menuViewSchElProperties");
+		add("menuViewSchElProperties");
 		add("menuViewScheme");
 		add("menuViewKIS");
 		add("menuViewGraph");
@@ -41,18 +41,21 @@ public class OptimizeApplicationModel extends ApplicationModel
 		add("menuViewShowall");
 
 		add("menuOptimize");
-    add("menuOptimizeCriteria");
-    add("menuOptimizeCriteriaPrice");
-    add("menuOptimizeCriteriaPriceLoad");
-    add("menuOptimizeCriteriaPriceSave");
-    add("menuOptimizeCriteriaPriceSaveas");
-    add("menuOptimizeCriteriaPriceClose");
-    add("menuOptimizeMode");
-    add("menuOptimizeModeUnidirect");
-    add("menuOptimizeModeBidirect");
+	    add("menuOptimizeCriteria");
+	    add("menuOptimizeCriteriaPrice");
+	    add("menuOptimizeCriteriaPriceLoad");
+	    add("menuOptimizeCriteriaPriceSave");
+	    add("menuOptimizeCriteriaPriceSaveas");
+	    add("menuOptimizeCriteriaPriceClose");
+	    add("menuOptimizeMode");
+	    add("menuOptimizeModeUnidirect");
+	    add("menuOptimizeModeBidirect");
 		add("menuOptimizeStart");
 		add("menuOptimizeStop");
 
+		add("menuReport");
+		add("menuReportCreate");
+		
 		add("menuHelp");
 		add("menuHelpContents");
 		add("menuHelpFind");
@@ -64,8 +67,8 @@ public class OptimizeApplicationModel extends ApplicationModel
 		add("menuHelpLicense");
 		add("menuHelpAbout");
 
-    add("mapActionViewProperties");// добавлено в соответствии с
-    add("mapActionEditProperties");// письмом јндре€ от 24 сент€бр€ 2003
+	    add("mapActionViewProperties");// добавлено в соответствии с
+	    add("mapActionEditProperties");// письмом јндре€ от 24 сент€бр€ 2003
 
 	}
 

@@ -6,8 +6,7 @@ import java.util.ResourceBundle;
 import java.util.MissingResourceException;
 
 public class LangModelOptimize
-{
-	private static final String BUNDLE_NAME = 	"com.syrus.AMFICOM.Client.General.Lang.optimize";
+{	private static final String BUNDLE_NAME = 	"com.syrus.AMFICOM.Client.General.Lang.optimize";
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle .getBundle(BUNDLE_NAME);
 
 	static public Locale locale;
@@ -18,39 +17,30 @@ public class LangModelOptimize
 	static public String resourceBundle;
 
 	public LangModelOptimize()
-	{
-		symbols = new DateFormatSymbols(locale);
+	{	symbols = new DateFormatSymbols(locale);
 	}
 
 	public static String getString(String keyName)
-	{
-		//System.out.println("keyName:" + keyName);
+	{	//System.out.println("keyName:" + keyName);
 		keyName = keyName.replaceAll(" ", "_");
 		String string = null;
 		try
-		{
-			string = RESOURCE_BUNDLE.getString(keyName);
+		{	string = RESOURCE_BUNDLE.getString(keyName);
 		}
 		catch (MissingResourceException e)
-		{
-			try
-			{
-				string = RESOURCE_BUNDLE.getString(keyName + "Text");
+		{	try
+			{	string = RESOURCE_BUNDLE.getString(keyName + "Text");
 			}
 			catch (MissingResourceException mre)
-			{
-				try
-				{
-					throw new Exception("key '" + keyName + "Text"  + "' "	  + "not found");
+			{	try
+				{	throw new Exception("key '" + keyName + "Text"  + "' "	  + "not found");
 				}
 				catch (Exception exc)
-				{
-					exc.printStackTrace();
+				{	exc.printStackTrace();
 				}
 			}
 			catch (Exception exc)
-			{
-				exc.printStackTrace();
+			{	exc.printStackTrace();
 			}
 		}
 		return string;

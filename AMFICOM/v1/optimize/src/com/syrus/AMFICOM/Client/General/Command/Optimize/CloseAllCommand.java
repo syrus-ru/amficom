@@ -127,15 +127,16 @@ public class CloseAllCommand extends VoidCommand
       aModel.disable("menuViewSchElProperties");
       aModel.disable("menuViewSolution");
       aModel.disable("menuViewKIS");
-      aModel.disable("menuViewMode");
+       aModel.disable("menuViewMode");
       aModel.disable("menuViewParams");
+      aModel.disable("menuViewGraph");
       aModel.disable("menuViewShowall");
       aModel.enable("menuOptimize"); // меню "оптимизация"
       aModel.disable("menuOptimizeStart");
       aModel.disable("menuOptimizeCriteria");
-      //aModel.disable("menuOptimizeMode");
+      aModel.disable("menuOptimizeMode");
       aModel.disable("menuOptimizeStop");
-
+      aModel.disable("menuReportCreate");
 
       aModel.fireModelChanged("");
   }

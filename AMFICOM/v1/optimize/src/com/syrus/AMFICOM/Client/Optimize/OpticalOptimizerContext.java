@@ -473,8 +473,9 @@ public class OpticalOptimizerContext
   // были ли уже связаны узлы, которые соединяются линком, другим линком из пути, который был изначально загружен вместе со схемой
   public boolean isLinkNodesConnectedBefore(SchemeLink sl)
   { boolean res = false;
-    String se1_id = ((SchemeElement)mdiMain.scheme.getSchemeElementByPort(sl.source_port_id)).id;
-    String se2_id = ((SchemeElement)mdiMain.scheme.getSchemeElementByPort(sl.target_port_id)).id;
+
+    String se1_id = ((SchemeElement)this.mdiMain.scheme.getSchemeElementByPort(sl.source_port_id)).id;
+    String se2_id = ((SchemeElement)this.mdiMain.scheme.getSchemeElementByPort(sl.target_port_id)).id;
     String ose1_id, ose2_id, osl_id;
     for(Iterator s = originally_lconnected_nodes.iterator(); s.hasNext(); )
     { ose1_id = (String) s.next();  ose2_id = (String) s.next();  osl_id = (String) s.next();

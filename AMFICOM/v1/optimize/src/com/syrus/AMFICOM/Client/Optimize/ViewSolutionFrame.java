@@ -7,7 +7,11 @@ import java.beans.*;//для PropertyChangeListener
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.TableModel;
+
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelOptimize;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Optimize.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -23,13 +27,17 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 																			 OperationListener,
 																			 ListSelectionListener, // чтобы отлавливать клики по строкам таблицы
 																			 Printable
-{ private BorderLayout borderLayout1 = new BorderLayout();
-	ObjectResourceTablePane tablePane = new ObjectResourceTablePane();
+{ 	private BorderLayout borderLayout1 = new BorderLayout();
+	private ObjectResourceTablePane tablePane = new ObjectResourceTablePane();
 
 	private Dispatcher dispatcher;
 	private OptimizeMDIMain mdiMain;
 	private SolutionRenderer solutionRenderer =  new SolutionRenderer();
-  private boolean has_been_updated = false;
+	private boolean has_been_updated = false;
+	//-------------------------------------------------------------------------------------------------------------
+	public TableModel getTableModelForReport()
+	{ return this.tablePane.getTable().getModel();
+	}
 	//-------------------------------------------------------------------------------------------------------------
 	//  это не совсем правильно - таскать за собой везде OptimizeMDIMain, но пока так...
 	public ViewSolutionFrame(OptimizeMDIMain mdiMain)
@@ -66,7 +74,7 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 	//-------------------------------------------------------------------------------------------------------------
 	private void jbInit() throws Exception
 	{	this.setFrameIcon( new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/general.gif")) );
-		this.setTitle("Детализация решения");
+		this.setTitle(LangModelOptimize.getString("frameSolutionTitle") );
 		setDefaultCloseOperation(HIDE_ON_CLOSE);// не закрываем, а прячем
 		this.getContentPane().setLayout(borderLayout1);
 		this.setClosable(true);

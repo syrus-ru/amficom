@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelOptimize;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Command.Optimize.*;  // это дл€ статус-бара ( модель )
 
@@ -63,7 +65,7 @@ public class IterationsHistoryFrame extends JInternalFrame implements OperationL
 	//---------------------------------------------------------------------------
 	private void jbInit() throws Exception
 	{ this.setFrameIcon( new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/general.gif")) );
-		this.setTitle("√рафик хода оптимизации");
+		this.setTitle( LangModelOptimize.getString("frameIterationsHistoryTitle") );
 		setDefaultCloseOperation(HIDE_ON_CLOSE);// не закрываем, а пр€чем
 		this.addInternalFrameListener ( new javax.swing.event.InternalFrameAdapter()
 			{  public void internalFrameClosing(InternalFrameEvent e)

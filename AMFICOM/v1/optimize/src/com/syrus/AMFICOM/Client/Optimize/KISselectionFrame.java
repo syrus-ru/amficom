@@ -10,6 +10,8 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 
 import oracle.jdeveloper.layout.*;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelOptimize;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
@@ -309,7 +311,7 @@ public class KISselectionFrame extends JInternalFrame
 		this.showReflectometerData(this.jComboBox1.getSelectedItem().toString());
 		this.showSwitcherData(this.jComboBox2.getSelectedIndex());
 		setToolTipText("");
-		this.setTitle("файл цен не выбран");
+		this.setTitle(LangModelOptimize.getString( "frameKISselectionPriceIsNotSetTitle") );
 		setMenuHightlight(false);
 
 		_width = this.getWidth();

@@ -29,9 +29,9 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 	JMenuItem menuMapOpen = new JMenuItem();
 	JMenuItem menuSchemeOpen = new JMenuItem();
 	JMenuItem menuSchemeSave = new JMenuItem();
-  JMenuItem menuSchemeSaveAs = new JMenuItem();
-  JMenuItem menuLoadSm = new JMenuItem();
-  JMenuItem menuClearScheme = new JMenuItem();
+	JMenuItem menuSchemeSaveAs = new JMenuItem();
+	JMenuItem menuLoadSm = new JMenuItem();
+	JMenuItem menuClearScheme = new JMenuItem();
 	JMenuItem menuSchemeClose = new JMenuItem();
 
 	JMenu menuView = new JMenu();
@@ -39,7 +39,7 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 	JMenuItem menuViewScheme = new JMenuItem();
 	JMenuItem menuViewGraph = new JMenuItem();
 	JMenuItem menuViewMapElProperties = new JMenuItem();
-  JMenuItem menuViewSchElProperties = new JMenuItem();
+	JMenuItem menuViewSchElProperties = new JMenuItem();
 	JMenuItem menuViewSolution = new JMenuItem();
 	JMenuItem menuViewKIS = new JMenuItem();
 	JMenuItem menuViewMode = new JMenuItem();
@@ -48,19 +48,22 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 	JMenuItem menuViewShowall = new JMenuItem();
 
 	JMenu menuOptimize = new JMenu();
-  JMenu menuOptimizeCriteria = new JMenu();
-  JMenu menuOptimizeMode = new JMenu();
-  JCheckBoxMenuItem menuOptimizeModeUnidirect = new JCheckBoxMenuItem();// одностороннее тестирование
-  JCheckBoxMenuItem menuOptimizeModeBidirect = new JCheckBoxMenuItem(); // двустороннее тестирование
-  JMenu menuOptimizeCriteriaPrice = new JMenu();
-  JMenuItem menuOptimizeCriteriaPriceLoad = new JMenuItem();
-  JMenuItem menuOptimizeCriteriaPriceSave = new JMenuItem();
-  JMenuItem menuOptimizeCriteriaPriceSaveas = new JMenuItem();
-  JMenuItem menuOptimizeCriteriaPriceClose = new JMenuItem();
+	JMenu menuOptimizeCriteria = new JMenu();
+	JMenu menuOptimizeMode = new JMenu();
+	JCheckBoxMenuItem menuOptimizeModeUnidirect = new JCheckBoxMenuItem();// одностороннее тестирование
+	JCheckBoxMenuItem menuOptimizeModeBidirect = new JCheckBoxMenuItem(); // двустороннее тестирование
+	JMenu menuOptimizeCriteriaPrice = new JMenu();
+	JMenuItem menuOptimizeCriteriaPriceLoad = new JMenuItem();
+	JMenuItem menuOptimizeCriteriaPriceSave = new JMenuItem();
+	JMenuItem menuOptimizeCriteriaPriceSaveas = new JMenuItem();
+	JMenuItem menuOptimizeCriteriaPriceClose = new JMenuItem();
 	JMenuItem menuOptimizeStart = new JMenuItem();
 	JMenuItem menuOptimizeStop = new JMenuItem();
-	//JMenuItem menuOptimizeAuto = new JMenuItem();
-	//JMenuItem menuOptimizeNext = new JMenuItem();
+
+
+	// меню "отчёт"
+	JMenu menuReport = new JMenu();
+	JMenuItem menuReportCreate = new JMenuItem();
 
 	JMenu menuHelp = new JMenu();
 	JMenuItem menuHelpContents = new JMenuItem();
@@ -136,16 +139,16 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 		menuSchemeOpen.addActionListener(actionAdapter);
 		menuSchemeSave.setText(LangModelOptimize.getString("menuSchemeSaveText"));
 		menuSchemeSave.setName("menuSchemeSave");
-    menuSchemeSave.addActionListener(actionAdapter);
-    menuSchemeSaveAs.setText(LangModelOptimize.getString("menuSchemeSaveAsText"));
+		menuSchemeSave.addActionListener(actionAdapter);
+		menuSchemeSaveAs.setText(LangModelOptimize.getString("menuSchemeSaveAsText"));
 		menuSchemeSaveAs.setName("menuSchemeSaveAs");
 		menuSchemeSaveAs.addActionListener(actionAdapter);
-    menuLoadSm.setText(LangModelOptimize.getString("menuLoadSmText"));
-    menuLoadSm.setName("menuLoadSm");
-    menuLoadSm.addActionListener(actionAdapter);
-    menuClearScheme.setText(LangModelOptimize.getString("menuClearSchemeText"));
-    menuClearScheme.setName("menuClearScheme");
-    menuClearScheme.addActionListener(actionAdapter);
+	    menuLoadSm.setText(LangModelOptimize.getString("menuLoadSmText"));
+	    menuLoadSm.setName("menuLoadSm");
+	    menuLoadSm.addActionListener(actionAdapter);
+	    menuClearScheme.setText(LangModelOptimize.getString("menuClearSchemeText"));
+	    menuClearScheme.setName("menuClearScheme");
+	    menuClearScheme.addActionListener(actionAdapter);
 		menuSchemeClose.setText(LangModelOptimize.getString("menuSchemeCloseText"));
 		menuSchemeClose.setName("menuSchemeClose");
 		menuSchemeClose.addActionListener(actionAdapter);
@@ -169,9 +172,9 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 		menuViewMapElProperties.setName("menuViewMapElProperties");
 		menuViewMapElProperties.addActionListener(actionAdapter);
 
-    menuViewSchElProperties.setText(LangModelOptimize.getString("menuViewSchElPropertiesText"));
-    menuViewSchElProperties.setName("menuViewSchElProperties");
-    menuViewSchElProperties.addActionListener(actionAdapter);
+	    menuViewSchElProperties.setText(LangModelOptimize.getString("menuViewSchElPropertiesText"));
+	    menuViewSchElProperties.setName("menuViewSchElProperties");
+	    menuViewSchElProperties.addActionListener(actionAdapter);
 
 		menuViewSolution.setText(LangModelOptimize.getString("menuViewSolutionText"));
 		menuViewSolution.setName("menuViewSolution");
@@ -200,49 +203,48 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 
 		menuOptimize.setText(LangModelOptimize.getString("menuOptimizeText"));
 		menuOptimize.setName("menuOptimize");
-    menuOptimizeCriteria.setText(LangModelOptimize.getString("menuOptimizeCriteriaText"));
-    menuOptimizeCriteria.setName("menuOptimizeCriteria");
-    menuOptimizeCriteria.addActionListener(actionAdapter);
-    menuOptimizeCriteriaPrice.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceText"));
-    menuOptimizeCriteriaPrice.setName("menuOptimizeCriteriaPrice");
-    menuOptimizeCriteriaPrice.addActionListener(actionAdapter);
+	    menuOptimizeCriteria.setText(LangModelOptimize.getString("menuOptimizeCriteriaText"));
+	    menuOptimizeCriteria.setName("menuOptimizeCriteria");
+	    menuOptimizeCriteria.addActionListener(actionAdapter);
+	    menuOptimizeCriteriaPrice.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceText"));
+	    menuOptimizeCriteriaPrice.setName("menuOptimizeCriteriaPrice");
+	    menuOptimizeCriteriaPrice.addActionListener(actionAdapter);
 		menuOptimizeCriteriaPriceLoad.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceLoadText"));
-    menuOptimizeCriteriaPriceLoad.setName("menuOptimizeCriteriaPriceLoad");
-    menuOptimizeCriteriaPriceLoad.addActionListener(actionAdapter);
-    menuOptimizeCriteriaPriceSave.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceSaveText"));
-    menuOptimizeCriteriaPriceSave.setName("menuOptimizeCriteriaPriceSave");
-    menuOptimizeCriteriaPriceSave.addActionListener(actionAdapter);
-    menuOptimizeCriteriaPriceSaveas.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceSaveasText"));
-    menuOptimizeCriteriaPriceSaveas.setName("menuOptimizeCriteriaPriceSaveas");
-    menuOptimizeCriteriaPriceSaveas.addActionListener(actionAdapter);
-    menuOptimizeCriteriaPriceClose.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceCloseText"));
-    menuOptimizeCriteriaPriceClose.setName("menuOptimizeCriteriaPriceClose");
-    menuOptimizeCriteriaPriceClose.addActionListener(actionAdapter);
+	    menuOptimizeCriteriaPriceLoad.setName("menuOptimizeCriteriaPriceLoad");
+	    menuOptimizeCriteriaPriceLoad.addActionListener(actionAdapter);
+	    menuOptimizeCriteriaPriceSave.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceSaveText"));
+	    menuOptimizeCriteriaPriceSave.setName("menuOptimizeCriteriaPriceSave");
+	    menuOptimizeCriteriaPriceSave.addActionListener(actionAdapter);
+	    menuOptimizeCriteriaPriceSaveas.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceSaveasText"));
+	    menuOptimizeCriteriaPriceSaveas.setName("menuOptimizeCriteriaPriceSaveas");
+	    menuOptimizeCriteriaPriceSaveas.addActionListener(actionAdapter);
+	    menuOptimizeCriteriaPriceClose.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceCloseText"));
+	    menuOptimizeCriteriaPriceClose.setName("menuOptimizeCriteriaPriceClose");
+	    menuOptimizeCriteriaPriceClose.addActionListener(actionAdapter);
 
-    menuOptimizeMode.setText(LangModelOptimize.getString("menuOptimizeModeText"));
-    menuOptimizeMode.setName("menuOptimizeMode");
-    menuOptimizeMode.addActionListener(actionAdapter);
-    menuOptimizeModeUnidirect.setText(LangModelOptimize.getString("menuOptimizeModeUnidirectText"));
-    menuOptimizeModeUnidirect.setName("menuOptimizeModeUnidirect");
-    menuOptimizeModeUnidirect.addActionListener(actionAdapter);
-    menuOptimizeModeBidirect.setText(LangModelOptimize.getString("menuOptimizeModeBidirectText"));
-    menuOptimizeModeBidirect.setName("menuOptimizeModeBidirect");
-    menuOptimizeModeBidirect.addActionListener(actionAdapter);
-
-    menuOptimizeStart.setText(LangModelOptimize.getString("menuOptimizeStartText"));
-    menuOptimizeStart.setName("menuOptimizeStart");
+	    menuOptimizeMode.setText(LangModelOptimize.getString("menuOptimizeModeText"));
+	    menuOptimizeMode.setName("menuOptimizeMode");
+	    menuOptimizeMode.addActionListener(actionAdapter);
+	    menuOptimizeModeUnidirect.setText(LangModelOptimize.getString("menuOptimizeModeUnidirectText"));
+	    menuOptimizeModeUnidirect.setName("menuOptimizeModeUnidirect");
+	    menuOptimizeModeUnidirect.addActionListener(actionAdapter);
+	    menuOptimizeModeBidirect.setText(LangModelOptimize.getString("menuOptimizeModeBidirectText"));
+	    menuOptimizeModeBidirect.setName("menuOptimizeModeBidirect");
+	    menuOptimizeModeBidirect.addActionListener(actionAdapter);
+	
+	    menuOptimizeStart.setText(LangModelOptimize.getString("menuOptimizeStartText"));
+	    menuOptimizeStart.setName("menuOptimizeStart");
 		menuOptimizeStart.addActionListener(actionAdapter);
 		menuOptimizeStop.setText(LangModelOptimize.getString("menuOptimizeStopText"));
 		menuOptimizeStop.setName("menuOptimizeStop");
 		menuOptimizeStop.addActionListener(actionAdapter);
 
-		//menuOptimizeAuto.setText(LangModelOptimize.getString("menuOptimizeAuto"));
-		//menuOptimizeAuto.setName("menuOptimizeAuto");
-		//menuOptimizeAuto.addActionListener(actionAdapter);
-		//menuOptimizeNext.setText(LangModelOptimize.getString("menuOptimizeNext"));
-		//menuOptimizeNext.setName("menuOptimizeNext");
-		//menuOptimizeNext.addActionListener(actionAdapter);
+		menuReport.setText(LangModelOptimize.getString("menuReportText"));
+		menuReportCreate.setText(LangModelOptimize.getString("menuReportCreateText"));
+	    menuReportCreate.setName("menuReportCreate");
+		menuReportCreate.addActionListener(actionAdapter);
 
+		
 		menuHelp.setText(LangModelOptimize.getString("menuHelpText"));
 		menuHelp.setName("menuHelp");
 		menuHelpContents.setText(LangModelOptimize.getString("menuHelpContentsText"));
@@ -289,45 +291,44 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 
 		menuScheme.add(menuMapOpen);
 		menuScheme.add(menuSchemeOpen);
-    menuScheme.addSeparator();
-    menuScheme.add(menuClearScheme);
-    menuScheme.add(menuLoadSm);
-    menuScheme.addSeparator();
-    menuScheme.add(menuSchemeSave);
-    menuScheme.add(menuSchemeSaveAs);
+	    menuScheme.addSeparator();
+	    menuScheme.add(menuClearScheme);
+	    menuScheme.add(menuLoadSm);
+	    menuScheme.addSeparator();
+	    menuScheme.add(menuSchemeSave);
+	    menuScheme.add(menuSchemeSaveAs);
 
 		menuScheme.add(menuSchemeClose);
 
 		menuView.add(menuViewMap);
 		menuView.add(menuViewScheme);
-    menuView.addSeparator();
-    menuView.add(menuViewMapElProperties);
-    menuView.add(menuViewSchElProperties);
-    menuView.add(menuViewKIS);
+	    menuView.addSeparator();
+	    menuView.add(menuViewMapElProperties);
+	    menuView.add(menuViewSchElProperties);
+	    menuView.add(menuViewKIS);
 		menuView.add(menuViewParams);
 		menuView.add(menuViewMode);
 		menuView.add(menuViewSolution);
 		menuView.add(menuViewGraph);
-    menuView.addSeparator();
-    //menuView.add(menuViewOptions);
-		menuView.add(menuViewShowall);
+		menuView.addSeparator();
+ 		menuView.add(menuViewShowall);
 
-    menuOptimize.add(menuOptimizeStart);
+		menuOptimize.add(menuOptimizeStart);
 		menuOptimize.add(menuOptimizeStop);
-    menuOptimize.addSeparator();
-    menuOptimize.add(menuOptimizeMode);
-    menuOptimizeMode.add(menuOptimizeModeUnidirect);
-    menuOptimizeMode.add(menuOptimizeModeBidirect);
-    menuOptimize.addSeparator();
-    menuOptimize.add(menuOptimizeCriteria);
-    menuOptimizeCriteria.add(menuOptimizeCriteriaPrice);
-    menuOptimizeCriteriaPrice.add(menuOptimizeCriteriaPriceLoad);
-    menuOptimizeCriteriaPrice.add(menuOptimizeCriteriaPriceSave);
-    menuOptimizeCriteriaPrice.add(menuOptimizeCriteriaPriceSaveas);
-    menuOptimizeCriteriaPrice.addSeparator();
-    menuOptimizeCriteriaPrice.add(menuOptimizeCriteriaPriceClose);
-		//menuOptimize.add(menuOptimizeAuto);
-		//menuOptimize.add(menuOptimizeNext);
+	    menuOptimize.addSeparator();
+	    menuOptimize.add(menuOptimizeMode);
+	    menuOptimizeMode.add(menuOptimizeModeUnidirect);
+	    menuOptimizeMode.add(menuOptimizeModeBidirect);
+	    menuOptimize.addSeparator();
+	    menuOptimize.add(menuOptimizeCriteria);
+	    menuOptimizeCriteria.add(menuOptimizeCriteriaPrice);
+	    menuOptimizeCriteriaPrice.add(menuOptimizeCriteriaPriceLoad);
+	    menuOptimizeCriteriaPrice.add(menuOptimizeCriteriaPriceSave);
+	    menuOptimizeCriteriaPrice.add(menuOptimizeCriteriaPriceSaveas);
+	    menuOptimizeCriteriaPrice.addSeparator();
+	    menuOptimizeCriteriaPrice.add(menuOptimizeCriteriaPriceClose);
+	    
+	    menuReport.add(menuReportCreate);
 
 		menuHelp.add(menuHelpContents);
 		menuHelp.add(menuHelpFind);
@@ -346,6 +347,7 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 		this.add(menuScheme);
 		this.add(menuView);
 		this.add(menuOptimize);
+		this.add(menuReport);
 		this.add(menuHelp);
 	}
 	//--------------------------------------------------------------------------------------------------------------
@@ -408,7 +410,7 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 		menuViewScheme.setEnabled(aModel.isEnabled("menuViewScheme"));
 		menuViewMapElProperties.setVisible(aModel.isVisible("menuViewMapElProperties"));
 		menuViewMapElProperties.setEnabled(aModel.isEnabled("menuViewMapElProperties"));
-    menuViewSchElProperties.setVisible(aModel.isVisible("menuViewSchElProperties"));
+		menuViewSchElProperties.setVisible(aModel.isVisible("menuViewSchElProperties"));
 		menuViewSchElProperties.setEnabled(aModel.isEnabled("menuViewSchElProperties"));
 		menuViewGraph.setVisible(aModel.isVisible("menuViewGraph"));
 		menuViewGraph.setEnabled(aModel.isEnabled("menuViewGraph"));
@@ -425,32 +427,37 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 
 		menuOptimize.setVisible(aModel.isVisible("menuOptimize"));
 		menuOptimize.setEnabled(aModel.isEnabled("menuOptimize"));
-    menuOptimizeCriteria.setVisible(aModel.isVisible("menuOptimizeCriteria"));
+		menuOptimizeCriteria.setVisible(aModel.isVisible("menuOptimizeCriteria"));
 		menuOptimizeCriteria.setEnabled(aModel.isEnabled("menuOptimizeCriteria"));
 
-    menuOptimizeMode.setVisible(aModel.isVisible("menuOptimizeMode"));
+		menuOptimizeMode.setVisible(aModel.isVisible("menuOptimizeMode"));
 		menuOptimizeMode.setEnabled(aModel.isEnabled("menuOptimizeMode"));
-    menuOptimizeModeUnidirect.setVisible(aModel.isVisible("menuOptimizeModeUnidirect"));
-    menuOptimizeModeUnidirect.setEnabled(aModel.isEnabled("menuOptimizeModeUnidirect"));
-    menuOptimizeModeBidirect.setVisible(aModel.isVisible("menuOptimizeModeBidirect"));
+	    menuOptimizeModeUnidirect.setVisible(aModel.isVisible("menuOptimizeModeUnidirect"));
+	    menuOptimizeModeUnidirect.setEnabled(aModel.isEnabled("menuOptimizeModeUnidirect"));
+	    menuOptimizeModeBidirect.setVisible(aModel.isVisible("menuOptimizeModeBidirect"));
 		menuOptimizeModeBidirect.setEnabled(aModel.isEnabled("menuOptimizeModeBidirect"));
-    menuOptimizeModeUnidirect.setSelected(aModel.isSelected("menuOptimizeModeUnidirect"));
-    menuOptimizeModeBidirect.setSelected(aModel.isSelected("menuOptimizeModeBidirect"));
+	    menuOptimizeModeUnidirect.setSelected(aModel.isSelected("menuOptimizeModeUnidirect"));
+	    menuOptimizeModeBidirect.setSelected(aModel.isSelected("menuOptimizeModeBidirect"));
 
-    menuOptimizeCriteriaPrice.setVisible(aModel.isVisible("menuOptimizeCriteriaPrice"));
+    	menuOptimizeCriteriaPrice.setVisible(aModel.isVisible("menuOptimizeCriteriaPrice"));
 		menuOptimizeCriteriaPrice.setEnabled(aModel.isEnabled("menuOptimizeCriteriaPrice"));
 		menuOptimizeStart.setVisible(aModel.isVisible("menuOptimizeStart"));
 		menuOptimizeStart.setEnabled(aModel.isEnabled("menuOptimizeStart"));
-    menuOptimizeCriteriaPriceLoad.setVisible(aModel.isVisible("menuOptimizeCriteriaPriceLoad"));
-    menuOptimizeCriteriaPriceLoad.setEnabled(aModel.isEnabled("menuOptimizeCriteriaPriceLoad"));
-    menuOptimizeCriteriaPriceSave.setVisible(aModel.isVisible("menuOptimizeCriteriaPriceSave"));
-    menuOptimizeCriteriaPriceSave.setEnabled(aModel.isEnabled("menuOptimizeCriteriaPriceSave"));
-    menuOptimizeCriteriaPriceSaveas.setVisible(aModel.isVisible("menuOptimizeCriteriaPriceSaveas"));
-    menuOptimizeCriteriaPriceSaveas.setEnabled(aModel.isEnabled("menuOptimizeCriteriaPriceSaveas"));
-    menuOptimizeCriteriaPriceClose.setVisible(aModel.isVisible("menuOptimizeCriteriaPriceClose"));
-    menuOptimizeCriteriaPriceClose.setEnabled(aModel.isEnabled("menuOptimizeCriteriaPriceClose"));
+	    menuOptimizeCriteriaPriceLoad.setVisible(aModel.isVisible("menuOptimizeCriteriaPriceLoad"));
+	    menuOptimizeCriteriaPriceLoad.setEnabled(aModel.isEnabled("menuOptimizeCriteriaPriceLoad"));
+	    menuOptimizeCriteriaPriceSave.setVisible(aModel.isVisible("menuOptimizeCriteriaPriceSave"));
+	    menuOptimizeCriteriaPriceSave.setEnabled(aModel.isEnabled("menuOptimizeCriteriaPriceSave"));
+	    menuOptimizeCriteriaPriceSaveas.setVisible(aModel.isVisible("menuOptimizeCriteriaPriceSaveas"));
+	    menuOptimizeCriteriaPriceSaveas.setEnabled(aModel.isEnabled("menuOptimizeCriteriaPriceSaveas"));
+	    menuOptimizeCriteriaPriceClose.setVisible(aModel.isVisible("menuOptimizeCriteriaPriceClose"));
+	    menuOptimizeCriteriaPriceClose.setEnabled(aModel.isEnabled("menuOptimizeCriteriaPriceClose"));
 		menuOptimizeStop.setVisible(aModel.isVisible("menuOptimizeStop"));
 		menuOptimizeStop.setEnabled(aModel.isEnabled("menuOptimizeStop"));
+		
+		menuReport.setVisible(aModel.isVisible("menuReport"));
+		menuReport.setEnabled(aModel.isEnabled("menuReport"));
+		menuReportCreate.setVisible(aModel.isVisible("menuReportCreate"));
+		menuReportCreate.setEnabled(aModel.isEnabled("menuReportCreate"));
 
 		menuHelp.setVisible(aModel.isVisible("menuHelp"));
 		menuHelp.setEnabled(aModel.isEnabled("menuHelp"));
