@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.84 2005/02/25 09:34:23 bob Exp $
+ * $Id: Test.java,v 1.85 2005/03/01 07:31:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/02/25 09:34:23 $
+ * @version $Revision: 1.85 $, $Date: 2005/03/01 07:31:09 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -190,9 +190,12 @@ public class Test extends StorableObject {
 									  TestReturnType returnType,
 									  String description,
 									  Collection measurementSetupIds) throws CreateObjectException {
-		if (creatorId == null || startTime == null || endTime == null || 
-				temporalPattern == null || temporalType == null || measurementType == null ||
-				monitoredElement == null || returnType == null || description == null)
+		if (creatorId == null
+				|| startTime == null
+				|| temporalType == null
+				|| (temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL) && (temporalPattern == null || endTime == null))
+				|| (temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS) && endTime == null)
+				|| measurementType == null || monitoredElement == null || returnType == null || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
