@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMeasurement;
+import com.syrus.AMFICOM.Resource.LangModelMeasurement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
@@ -267,7 +267,7 @@ public class TemporalPattern extends StorableObject {
 							long backDMTime = c.getTimeInMillis();
 							for (int dw = 0; dw < this.dayOfWeek.host.length; dw++) {
 								c.setTimeInMillis(backDMTime);
-								c.set(Calendar.DAY_OF_WEEK, weekNumber[this.dayOfWeek.host[dw]]);
+								c.set(Calendar.DAY_OF_WEEK, WEEK_NUMBER[this.dayOfWeek.host[dw]]);
 								mTime = c.getTimeInMillis();
 								if ((this.startPeriod - DAY_LONG / 2 <= mTime)
 										&& (mTime <= this.endPeriod + DAY_LONG / 2)) {
@@ -588,13 +588,13 @@ public class TemporalPattern extends StorableObject {
 		}
 	}
 
-	public static final String[]	DAY_OF_WEEK_NAMES	= new String[] {
+	static final String[]	DAY_OF_WEEK_NAMES	= new String[] {
 			LangModelMeasurement.getString("Sunday"), LangModelMeasurement.getString("Monday"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("Tuesday"), LangModelMeasurement.getString("Wednesday"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("Thursday"), LangModelMeasurement.getString("Friday"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("Saturday"),	};													//$NON-NLS-1$
 
-	public static final String[]	MONTH_NAMES			= new String[] {
+	static final String[]	MONTH_NAMES			= new String[] {
 			LangModelMeasurement.getString("January"), LangModelMeasurement.getString("February"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("March"), LangModelMeasurement.getString("April"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("May"), LangModelMeasurement.getString("June"), //$NON-NLS-1$ //$NON-NLS-2$
@@ -602,10 +602,10 @@ public class TemporalPattern extends StorableObject {
 			LangModelMeasurement.getString("September"), LangModelMeasurement.getString("October"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("November"), LangModelMeasurement.getString("December")};		//$NON-NLS-1$ //$NON-NLS-2$
 
-	public static final int[]		weekNumber			= new int[] { Calendar.SUNDAY, Calendar.MONDAY,
+	static final int[]		WEEK_NUMBER			= new int[] { Calendar.SUNDAY, Calendar.MONDAY,
 			Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY};
 
-	final static boolean			DEBUG				= false;
+	static final boolean			DEBUG				= false;
 
 	private String[]				cronStrings;
 	private String					description;
