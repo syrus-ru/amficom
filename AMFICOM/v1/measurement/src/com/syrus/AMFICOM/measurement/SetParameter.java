@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.18 2005/01/28 14:08:13 arseniy Exp $
+ * $Id: SetParameter.java,v 1.19 2005/01/28 14:29:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.TransferableObject;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/01/28 14:08:13 $
+ * @version $Revision: 1.19 $, $Date: 2005/01/28 14:29:23 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -40,7 +41,7 @@ public class SetParameter implements TransferableObject, TypedObject, Identified
 
 	public SetParameter(Parameter_Transferable pt) throws DatabaseException, CommunicationException {
 		this.id = new Identifier(pt.id);
-		this.type = (ParameterType)MeasurementStorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
+		this.type = (ParameterType) GeneralStorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
 		this.value = new byte[pt.value.length];
 		for (int i = 0; i < this.value.length; i++)
 			this.value[i] = pt.value[i];
