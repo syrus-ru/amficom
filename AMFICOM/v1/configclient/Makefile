@@ -12,8 +12,8 @@ PASSWORD=amficom
 DBHOSTNAME=mongol
 CONNECTSTRING=mongol
 
-LIBNAME=configure.jar
-ARCHFILE=configure.tar.gz
+LIBNAME=configureclient.jar
+ARCHFILE=configureclient.tar.gz
 
 SRC_SUFFIXES = \
 	.java \
@@ -26,7 +26,7 @@ CLASS_SUFFIXES = \
 	_SJProfileKeys.class
 
 ORACLECLASSPATH = $(ORACLE_HOME)/jdbc/lib/classes12.jar:$(ORACLE_HOME)/sqlj/lib/translator.jar:$(ORACLE_HOME)/sqlj/lib/runtime12ee.jar
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/generalclient.jar
 EXTCLASSPATH = $(EXTLIBDIR)/jgraphpad.jar:$(EXTLIBDIR)/jfreechartK.jar:$(EXTLIBDIR)/ofx.spatialfx.jar
 
 IDL2JAVA_FLAGS = \

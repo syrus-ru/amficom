@@ -1,1 +1,1 @@
-nmake /f makeconfig %1
+nmake /f makeconfigclient %1
