@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.86 2005/04/01 08:43:33 bob Exp $
+ * $Id: TestDatabase.java,v 1.87 2005/04/05 15:40:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,23 +45,21 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/04/01 08:43:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.87 $, $Date: 2005/04/05 15:40:23 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class TestDatabase extends StorableObjectDatabase {
 	public static final String LINK_COLMN_TEST_ID = "test_id";
-	
-    public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
-    
+
 	private static String columns;
 	private static String updateMultipleSQLValues;	
-	
+
 	protected String getEnityName() {
 		return ObjectEntities.TEST_ENTITY;
 	}	
-	
+
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = TestWrapper.COLUMN_TEMPORAL_TYPE + COMMA
@@ -77,7 +75,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
-	}	
+	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
@@ -95,7 +93,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		return updateMultipleSQLValues;
 	}	
-	
+
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Test test = this.fromStorableObject(storableObject);
 		Date startTime = test.getStartTime();
@@ -116,18 +114,17 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ test.getReturnType().value() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(test.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 	}
-	
-	
+
 	protected String retrieveQuery(String condition) {
 		String query = super.retrieveQuery(condition);
 		query = query.replaceFirst(TestWrapper.COLUMN_START_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_START_TIME));
 		query = query.replaceFirst(TestWrapper.COLUMN_END_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_END_TIME));
 		return query;
 	}
-	
+
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		
+
 		Test test = this.fromStorableObject(storableObject);
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
@@ -147,7 +144,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, test.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
-	
+
 	private Test fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Test)
 			return (Test)storableObject;
@@ -159,14 +156,14 @@ public class TestDatabase extends StorableObjectDatabase {
 		this.retrieveEntity(test);
 		this.retrieveMeasurementSetupTestLinks(test);
 	}
-	
+
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Test test = (storableObject == null)?
 				new Test(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
 						 null, null, null, null, 0, null, null) :
 					this.fromStorableObject(storableObject);
-				
+
 		MonitoredElement monitoredElement;
 		try {			
 			Identifier monitoredElementId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
@@ -195,7 +192,7 @@ public class TestDatabase extends StorableObjectDatabase {
 
 		return test;
 	}
-	
+
 	private void retrieveMeasurementSetupTestLinks(Test test) throws RetrieveObjectException {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_SELECT
@@ -238,11 +235,11 @@ public class TestDatabase extends StorableObjectDatabase {
 		else 
 			throw new RetrieveObjectException("TestDatabase.retrieveMeasurementSetupTestLinks | Measurement setup ids for test '" + testIdStr + "' not found.");
 	}
-	
+
 	private void retrieveMeasurementSetupTestLinksByOneQuery(java.util.Set tests) throws RetrieveObjectException {
 		if ((tests == null) || (tests.isEmpty()))
 			return;
-		
+
 		Map msIdsMap = null;
 		try {
 			msIdsMap = this.retrieveLinkedEntityIds(tests,
@@ -253,7 +250,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);
 		}
-		
+
 		Test test;
 		Identifier testId;
 		java.util.Set msIds;
@@ -261,7 +258,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			test = (Test) it.next();
 			testId = test.getId();
 			msIds = (java.util.Set) msIdsMap.get(testId);
-			
+
 			test.setMeasurementSetupIds0(msIds);
 		}
 	}
@@ -330,7 +327,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		return measurements;
 	}
-	
+
 	private Measurement retrieveLastMeasurement(Test test) throws RetrieveObjectException, ObjectNotFoundException {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_SELECT
@@ -494,7 +491,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			throw new CreateObjectException(uoe);
 		}
 	}
-	
+
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
