@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.17 2004/09/23 08:28:01 bob Exp $
+ * $Id: CMServerImpl.java,v 1.18 2004/09/23 10:14:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -73,7 +73,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/09/23 08:28:01 $
+ * @version $Revision: 1.18 $, $Date: 2004/09/23 10:14:44 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -1007,7 +1007,7 @@ public class CMServerImpl implements CMServerOperations {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
 					.getMessage());
-		}
+		} 
 	}
 
 	public Result_Transferable[] transmitResults(	Identifier_Transferable[] identifier_Transferables,

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.6 2004/09/22 10:59:00 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.7 2004/09/23 10:14:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.cmserver;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerPOATie;
 import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -25,7 +26,7 @@ import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.PortableServer.*;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/09/22 10:59:00 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/23 10:14:44 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -98,7 +99,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 		});
 	}
 
-	private static void activateCORBAServer() {
+	private static void activateCORBAServer_() {
 		/* Create local CORBA server end activate servant */
 		try {
 			ORB orb = JavaSoftORBUtil.getInstance().getORB();
@@ -130,6 +131,18 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 			Log.errorException(e);
 			System.err.println(e);
 			System.exit(-1);
+		}
+	}
+
+	private static void activateCORBAServer() {
+		try {
+			corbaServer = new CORBAServer();
+			corbaServer.activateServant(new CMServerPOATie(new CMServerImpl()), "CMServer");
+		} catch (CommunicationException ce) {
+			Log.errorException(ce);
+			System.exit(-1);
+		} catch (Exception e) {
+			Log.errorException(e);
 		}
 	}
 
@@ -183,6 +196,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 	public void run() {
 		while (this.running) {
+			System.out.print(".");
 			try {
 				sleep(super.initialTimeToSleep);
 			} catch (InterruptedException ie) {

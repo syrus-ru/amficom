@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.9 2004/09/23 08:28:01 bob Exp $
+ * $Id: CMServerTestCase.java,v 1.10 2004/09/23 10:14:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.cmserver.test;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
 
@@ -17,12 +16,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.omg.CORBA.ORB;
 import org.omg.CORBA.UserException;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.PortableServer.POA;
-import org.omg.PortableServer.POAHelper;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerHelper;
@@ -30,6 +24,8 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
+import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -44,10 +40,9 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
-import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/09/23 08:28:01 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/23 10:14:44 $
  * @author $Author: bob $
  * @module module
  */
@@ -90,17 +85,22 @@ public class CMServerTestCase extends TestCase {
 
 	static void oneTimeSetUp() {
 		try {
-			ORB orb = JavaSoftORBUtil.getInstance().getORB();
-
-			POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-			rootPOA.the_POAManager().activate();
-			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb
-					.resolve_initial_references("NameService"));
-
-			final String hostName = InetAddress.getLocalHost().getCanonicalHostName()
-					.replaceAll("\\.", "_");
-
-			server = CMServerHelper.narrow(rootNamingCtx.resolve_str(hostName + "/CMServer"));
+			
+//			ORB orb = JavaSoftORBUtil.getInstance().getORB();
+//
+//			POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+//			rootPOA.the_POAManager().activate();
+//			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb
+//					.resolve_initial_references("NameService"));
+//
+//			final String hostName = InetAddress.getLocalHost().getCanonicalHostName()
+//					.replaceAll("\\.", "_");
+//
+//			server = CMServerHelper.narrow(rootNamingCtx.resolve_str(hostName + "/CMServer"));
+			
+			CORBAServer corbaServer = new CORBAServer();
+			
+			server = CMServerHelper.narrow(corbaServer.resolveReference("CMServer"));
 
 			// initialize pool
 			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(server), 200);
@@ -124,12 +124,9 @@ public class CMServerTestCase extends TestCase {
 			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
 			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
 
-		} catch (UserException ue) {
-			ue.printStackTrace();
-			fail(ue.getMessage());
-		} catch (UnknownHostException uhe) {
-			uhe.printStackTrace();
-			fail(uhe.getMessage());
+		} catch (CommunicationException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 
