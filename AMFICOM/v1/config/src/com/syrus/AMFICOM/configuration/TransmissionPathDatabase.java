@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.41 2005/02/03 14:38:06 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.42 2005/02/03 20:22:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,43 +10,40 @@ package com.syrus.AMFICOM.configuration;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.sql.Statement;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainCondition;
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CharacteristicDatabase;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/02/03 14:38:06 $
+ * @version $Revision: 1.42 $, $Date: 2005/02/03 20:22:07 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -139,7 +136,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		this.retrieveEntity(transmissionPath);
-		this.retrieveTransmissionPathMELink(transmissionPath);
+		this.retrieveTransmissionPathMEIdsByOneQuery(Collections.singletonList(transmissionPath));
 		transmissionPath.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(transmissionPath.getId(), CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH));
 	}
 
@@ -178,141 +175,26 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		return transmissionPath;
 	}
 
-	private void retrieveTransmissionPathMELink(TransmissionPath transmissionPath) throws RetrieveObjectException{
-		String tpIdStr = DatabaseIdentifier.toSQLString(transmissionPath.getId());
-		String sql = SQL_SELECT
-			+ LINK_COLUMN_MONITORED_ELEMENT_ID
-			+ SQL_FROM + ObjectEntities.TRANSPATHMELINK_ENTITY
-			+ SQL_WHERE + LINK_COLUMN_TRANSMISSION_PATH_ID + EQUALS + tpIdStr;
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.retrieveEquipmentMELink | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			List meLink = new ArrayList();
-			while (resultSet.next()) {				
-				Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MONITORED_ELEMENT_ID);
-				meLink.add(meId);				
-			}
-			transmissionPath.setMonitoredElementIds0(meLink);
-		}
-		catch (SQLException sqle) {
-			String mesg = "TransmissionPathDatabase.retrieveEquipmentMELink | Cannot retrieve transmission path " + tpIdStr;
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-	}
-
-	private void retrieveTransmissionPathMELinkByOneQuery(List transmissionPaths) throws RetrieveObjectException {
+	private void retrieveTransmissionPathMEIdsByOneQuery(List transmissionPaths) throws RetrieveObjectException, IllegalDataException {
 		if ((transmissionPaths == null) || (transmissionPaths.isEmpty()))
 			return;     
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT
-			+ LINK_COLUMN_MONITORED_ELEMENT_ID + COMMA
-			+ LINK_COLUMN_TRANSMISSION_PATH_ID
-			+ SQL_FROM + ObjectEntities.TRANSPATHMELINK_ENTITY
-			+ SQL_WHERE + LINK_COLUMN_TRANSMISSION_PATH_ID
-			+ SQL_IN + OPEN_BRACKET);
-		int i = 1;
-		for (Iterator it = transmissionPaths.iterator(); it.hasNext();i++) {
-			TransmissionPath transmissionPath = (TransmissionPath)it.next();
-			sql.append(DatabaseIdentifier.toSQLString(transmissionPath.getId()));
-			if (it.hasNext()) {
-				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(LINK_COLUMN_TRANSMISSION_PATH_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}                   
-			}
-		}
-		sql.append(CLOSE_BRACKET);
+		Map linkedEntityIdsMap = this.retrieveLinkedEntityIds(transmissionPaths,
+				ObjectEntities.TRANSPATHMELINK_ENTITY,
+				LINK_COLUMN_TRANSMISSION_PATH_ID,
+				LINK_COLUMN_MONITORED_ELEMENT_ID);
+		TransmissionPath transmissionPath;
+		List meIds;
+		for (Iterator it = transmissionPaths.iterator(); it.hasNext();) {
+			transmissionPath = (TransmissionPath) it.next();
+			meIds = (List) linkedEntityIdsMap.get(transmissionPath.getId());
 
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.retrieveTransmissionPathMELinkByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-			Map meIdMap = new HashMap();
-			while (resultSet.next()) {
-				TransmissionPath transmissionPath = null;
-				Identifier transmissionPathId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TRANSMISSION_PATH_ID);
-				for (Iterator it = transmissionPaths.iterator(); it.hasNext();) {
-					TransmissionPath transmissionPathToCompare = (TransmissionPath) it.next();
-					if (transmissionPathToCompare.getId().equals(transmissionPathId)){
-						transmissionPath = transmissionPathToCompare;
-						break;
-					}                   
-				}
-
-				if (transmissionPath == null) {
-					String mesg = "TransmissionPathDatabase.retrieveTransmissionPathMELinkByOneQuery | Cannot found correspond result for '" + transmissionPathId.getIdentifierString() +"'" ;
-					throw new RetrieveObjectException(mesg);
-				}
-
-				Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MONITORED_ELEMENT_ID);
-				List meIds = (List)meIdMap.get(transmissionPath);
-				if (meIds == null) {
-					meIds = new LinkedList();
-					meIdMap.put(transmissionPath, meIds);
-				}               
-				meIds.add(meId);              
-			}
-
-			for (Iterator iter = transmissionPaths.iterator(); iter.hasNext();) {
-				TransmissionPath transmissionPath = (TransmissionPath) iter.next();
-				List meIds = (List)meIdMap.get(transmissionPath);
-				transmissionPath.setMonitoredElementIds0(meIds);
-			}
-
-		}
-		catch (SQLException sqle) {
-			String mesg = "TransmissionPathDatabase.retrieveTransmissionPathMELinkByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
+			transmissionPath.setMonitoredElementIds0(meIds);
 		}
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException{
-//		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
+		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -428,7 +310,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			list = this.retrieveByIdsOneQuery(ids, condition);
 
     if (list != null) {
-			retrieveTransmissionPathMELinkByOneQuery(list);
+			this.retrieveTransmissionPathMEIdsByOneQuery(list);
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
 			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
 					CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH);
