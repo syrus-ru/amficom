@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.21 2005/03/04 14:25:49 krupenn Exp $
+ * $Id: Map.java,v 1.22 2005/03/04 14:26:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,8 +42,9 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * линиях, коллекторов (объединяющих в себе линии).
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/03/04 14:25:49 $
+ * @version $Revision: 1.22 $, $Date: 2005/03/04 14:26:24 $
  * @module map_v1
+ * @todo make maps persistent 
  */
 public class Map extends DomainMember {
 
