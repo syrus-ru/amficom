@@ -1,8 +1,4 @@
-/*
- * TestResourceCellRenderer.java
- * Created on 20.08.2004 17:19:17
- * 
- */
+
 package com.syrus.AMFICOM.client.general.ui;
 
 import java.awt.Color;
@@ -11,6 +7,7 @@ import javax.swing.JTable;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.client.resource.ObjectResourceController;
 import com.syrus.AMFICOM.client.resource.TestResource;
 import com.syrus.AMFICOM.client.resource.TestResourceController;
 
@@ -31,7 +28,10 @@ public class TestResourceCellRenderer extends AbstractLabelCellRenderer {
 		return instance;
 	}
 
-	protected void customRendering(JTable table, ObjectResource objectResource, String key) {
+	protected void customRendering(	JTable table,
+					ObjectResource objectResource,
+					ObjectResourceController controller,
+					String key) {
 		if (objectResource instanceof TestResource) {
 			TestResource tr = (TestResource) objectResource;
 			if (key.equals(TestResourceController.KEY_NAME)) {
@@ -60,5 +60,4 @@ public class TestResourceCellRenderer extends AbstractLabelCellRenderer {
 		}
 
 	}
-
 }

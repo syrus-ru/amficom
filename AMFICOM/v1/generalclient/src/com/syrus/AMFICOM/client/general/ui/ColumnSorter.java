@@ -1,25 +1,47 @@
+
 package com.syrus.AMFICOM.client.general.ui;
 
 import java.util.Comparator;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client.resource.ObjectResourceController;
+
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/24 06:54:50 $
+ * ColumnSorter used for sorting elements with aid of Collections i.g.
+ * <code>Collections.sort(list, new ColumnSorter(controller, key, ascending))</code>
+ * 
+ * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ColumnSorter implements Comparator {
 
-	private boolean						ascending;
+	/**
+	 * if true, sort results will be presented in ascending order, and in
+	 * descending order otherwise.
+	 */
+	private boolean				ascending;
 
-	private String						key;
+	/**
+	 * key of the field at ObjectResourceController. 
+	 * see {@link ObjectResourceController#getKeys()}
+	 */
+	private String				key;
 
+	/**
+	 * ObjectResourceController of Model (ObjectResource) will be used for sorting.
+	 * see {@link ObjectResourceController}
+	 */
 	private ObjectResourceController	controller;
 
-	ColumnSorter(ObjectResourceController controller, String key, boolean ascending) {
+	/**
+	 * @param controller see {@link #controller}                
+	 * @param key see {@link #key}               
+	 * @param ascending see {@link #ascending}
+	 */
+	public ColumnSorter(ObjectResourceController controller, String key, boolean ascending) {
 		this.controller = controller;
-		this.key = key;		
+		this.key = key;
 		this.ascending = ascending;
 	}
 

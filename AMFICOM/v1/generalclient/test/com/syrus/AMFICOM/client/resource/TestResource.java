@@ -15,6 +15,7 @@ public class TestResource implements ObjectResource {
 	private String			name	= "";
 	private TestStatus		status	= TestStatus.TEST_STATUS_SCHEDULED;
 	private long			time;
+	private String			value	= "";
 
 	public TestResource(String id) {
 		this.id = id;
@@ -112,5 +113,21 @@ public class TestResource implements ObjectResource {
 
 	public void updateLocalFromTransferable() {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return Returns the value.
+	 */
+	public String getValue() {
+		return this.value;
+	}
+
+	/**
+	 * @param value
+	 *                The value to set.
+	 */
+	public void setValue(String value) {
+		this.changed = true;
+		this.value = value;
 	}
 }

@@ -1,3 +1,4 @@
+
 package com.syrus.AMFICOM.client.general.ui;
 
 import java.awt.Color;
@@ -10,57 +11,81 @@ import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.client.resource.ObjectResourceController;
+
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/24 06:54:50 $
+ * Abstract class for JComboBox rendering at JTable
+ * 
+ * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public abstract class AbstractComboBoxCellRenderer extends JComboBox implements TableCellRenderer {
 
-	private Color							unselectedForeground;
-	
+	private Color	unselectedForeground;
 
-	protected abstract void customRendering(JTable table, ObjectResource objectResource, String colId);
+	/**
+	 * abstract method to custom rendering objectResource with aid of
+	 * objectResourceController
+	 * 
+	 * @param table
+	 * @param objectResource
+	 *                see {@link ObjectResource}
+	 * @param objectResourceController
+	 *                see {@link ObjectResourceController}
+	 * @param key
+	 *                see {@link ObjectResourceController#getKeys()}
+	 */
+	protected abstract void customRendering(JTable table,
+						ObjectResource objectResource,
+						ObjectResourceController objectResourceController,
+						String key);
 
-	// This method is called each time a cell in a column
-	// using this renderer needs to be rendered.
+	/**
+	 * This method is called each time a cell in a column using this
+	 * renderer needs to be rendered.
+	 */
 	public Component getTableCellRendererComponent(	JTable table,
-													Object value,
-													boolean isSelected,
-													boolean hasFocus,
-													int rowIndex,
-													int vColIndex) {
+							Object value,
+							boolean isSelected,
+							boolean hasFocus,
+							int rowIndex,
+							int vColIndex) {
 		// 'value' is value contained in the cell located at
 		// (rowIndex, vColIndex)
 		//
 		ObjectResourceTableModel model = (ObjectResourceTableModel) table.getModel();
-
 		ObjectResource objectResource = model.getObjectResource(rowIndex);
 
 		int mColIndex = table.convertColumnIndexToModel(vColIndex);
-		String colId = model.controller.getKey(mColIndex);
+		String key = model.controller.getKey(mColIndex);
 
 		super.setBackground(table.getBackground());
-		customRendering(table, objectResource, colId);
+		customRendering(table, objectResource, model.controller, key);
 		Color color = super.getBackground();
 
 		if (isSelected) {
-			super
-					.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
-							.getForeground());
+			super.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
+					.getForeground());
 			Font font = table.getFont();
 			font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font.getSize());
 			setFont(font);
 			Color c = table.getSelectionBackground();
 			// calculate color with alpha-channel weight alpha
-			super.setBackground(new Color((int) (c.getRed() * AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA * color.getRed()) % 256, (int) (c
-					.getGreen()
-					* AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA * color.getGreen()) % 256, (int) (c.getBlue() * AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA
-					* color.getBlue()) % 256));
-		} else {
 			super
-					.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
-							.getForeground());
+					.setBackground(new Color(
+									(int) (c.getRed()
+											* AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA
+											* color.getRed()) % 256,
+									(int) (c.getGreen()
+											* AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA
+											* color.getGreen()) % 256,
+									(int) (c.getBlue()
+											* AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA
+											* color.getBlue()) % 256));
+		} else {
+			super.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
+					.getForeground());
 			setFont(table.getFont());
 			super.setBackground(color);
 		}
@@ -74,8 +99,7 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 		} else {
 			//setBorder(noFocusBorder);
 		}
-		
-		
+
 		System.out.println(getSelectedItem());
 
 		return this;
@@ -86,7 +110,7 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 	 * unselected-background color to the specified color.
 	 * 
 	 * @param c
-	 *            set the background color to this value
+	 *                set the background color to this value
 	 */
 	public void setBackground(Color c) {
 		super.setBackground(c);
@@ -98,7 +122,7 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 	 * unselected-foreground color to the specified color.
 	 * 
 	 * @param c
-	 *            set the foreground color to this value
+	 *                set the foreground color to this value
 	 */
 	public void setForeground(Color c) {
 		super.setForeground(c);

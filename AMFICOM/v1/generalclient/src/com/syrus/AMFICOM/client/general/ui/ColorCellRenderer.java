@@ -16,7 +16,9 @@ import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/24 06:54:50 $
+ * Renderer for java.awt.Color cell at JTable.
+ * see {@link java.awt.Color}
+ * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -32,12 +34,17 @@ public class ColorCellRenderer extends JComponent implements TableCellRenderer {
 		// empty
 	}
 
+	/**
+	 * There is no need in more than one instance of this renderer.
+	 * @return ColorCellRenderer instance. 
+	 */
 	public static ColorCellRenderer getInstance() {
 		if (instance == null)
 			instance = new ColorCellRenderer();
 		return instance;
 	}
 
+	
 	public Component getTableCellRendererComponent(	JTable table,
 							Object value,
 							boolean isSelected,
@@ -89,7 +96,9 @@ public class ColorCellRenderer extends JComponent implements TableCellRenderer {
 		return this;
 	}
 
-	// Paint current color
+	/**
+	 * Paint current color
+	 */ 
 	protected void paintComponent(Graphics g) {
 		int band = 2;
 		int w = getWidth();

@@ -13,7 +13,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/24 06:54:50 $
+ * Renderer for JCheckBox items based on JLabel.
+ * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -34,6 +35,10 @@ public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 		setBorder(noFocusBorder);
 	}
 	
+	/**
+	 * There is no need in more than one instance of this renderer.
+	 * @return LabelCheckBoxRenderer instance. 
+	 */
 	public static LabelCheckBoxRenderer getInstance(){
 		if (instance==null)
 			instance = new LabelCheckBoxRenderer();

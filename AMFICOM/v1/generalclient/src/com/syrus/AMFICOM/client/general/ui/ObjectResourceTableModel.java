@@ -12,43 +12,78 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/24 06:54:50 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ObjectResourceTableModel extends AbstractTableModel {
 
-	protected ObjectResourceController	controller;
+	/**
+	 * ObjectResourceController of Model (ObjectResource) will be used for sorting.
+	 * see {@link ObjectResourceController}
+	 */
+	protected ObjectResourceController	controller;	
+	
+	/**
+	 * ask Kruppen
+	 */
 	private String						domainId	= "";
 
+	/**
+	 * ask Kruppen
+	 */
 	private boolean						doRestrict	= false;
 
+	/**
+	 * list of Model (ObjectResouce) elements.
+	 * see {@link ObjectResource} 
+	 */
 	private List						orList;
 
-	private boolean[]					sortOrders;
+	/**
+	 * saved direction of column sorting. Used when change direction to negative to current.
+	 * see {@link ColumnSorter#ascending} 
+	 */
+	private boolean[]					ascendings;
 
+	/** 
+	 * @param controller see {@link #controller}
+	 */
 	public ObjectResourceTableModel(ObjectResourceController controller) {
 		this(controller, new ArrayList());
 	}
 
+	/** 
+	 * @param controller see {@link #controller}
+	 * @param objectResourceList see {@link #orList}
+	 */
 	public ObjectResourceTableModel(ObjectResourceController controller, List objectResourceList) {
 		this.controller = controller;
-		this.sortOrders = new boolean[this.controller.getKeys().size()];
+		this.ascendings = new boolean[this.controller.getKeys().length];
 		setContents(objectResourceList);
 	}
 
+	/**
+	 * clear model
+	 */
 	public void clear() {
 		this.orList.clear();
 		super.fireTableDataChanged();
 	}
 
+	/**
+	 * override {@link AbstractTableModel#getColumnClass(int)} method
+	 */
 	public Class getColumnClass(int columnIndex) {
 		String key = this.controller.getKey(columnIndex);
 		return this.controller.getPropertyClass(key);
 	}
 
+	/**
+	 * override {@link javax.swing.table.TableModel#getColumnCount()} method
+	 */
 	public int getColumnCount() {
-		return this.controller.getKeys().size();
+		return this.controller.getKeys().length;
 	}
 
 	public String getColumnName(int columnIndex) {
@@ -143,12 +178,12 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 	}
 
 	public boolean getSortOrder(int columnIndex) {
-		return this.sortOrders[columnIndex];
+		return this.ascendings[columnIndex];
 	}
 
 	public void sortRows(int columnIndex) {
-		sortRows(columnIndex, this.sortOrders[columnIndex]);
-		this.sortOrders[columnIndex] = !this.sortOrders[columnIndex];
+		sortRows(columnIndex, this.ascendings[columnIndex]);
+		this.ascendings[columnIndex] = !this.ascendings[columnIndex];
 	}
 
 	public void sortRows(int columnIndex, boolean ascending) {

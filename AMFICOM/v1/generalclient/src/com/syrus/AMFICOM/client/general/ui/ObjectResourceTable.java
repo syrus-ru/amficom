@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/24 06:54:50 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -67,6 +67,11 @@ public class ObjectResourceTable extends JTable {
 		}
 	}
 
+	/**
+	 * set custom renderer
+	 * @param renderer
+	 * @param key see {@link ObjectResourceController#getKeys()}
+	 */
 	public void setRenderer(TableCellRenderer renderer, String key) {
 		ObjectResourceTableModel model = (ObjectResourceTableModel) getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
@@ -77,7 +82,7 @@ public class ObjectResourceTable extends JTable {
 		}
 	}
 
-	public void updateModel() {
+	private void updateModel() {
 		ObjectResourceTableModel model = (ObjectResourceTableModel) getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
 			Object obj = model.controller.getPropertyValue(model.controller.getKey(mColIndex));

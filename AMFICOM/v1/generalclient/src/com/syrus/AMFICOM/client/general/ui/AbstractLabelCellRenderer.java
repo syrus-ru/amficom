@@ -1,3 +1,4 @@
+
 package com.syrus.AMFICOM.client.general.ui;
 
 import java.awt.Color;
@@ -10,15 +11,25 @@ import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.client.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/24 06:54:50 $
+ * Abstract class for JLabel and simple Component (witch extends JLabel)
+ * rendering at JTable
+ * 
+ * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public abstract class AbstractLabelCellRenderer extends JLabel implements TableCellRenderer {
 
+	/**
+	 * Weight of color blending using alpha-channel
+	 */
 	public static final double	ALPHA		= 0.3;
+	/**
+	 * 1.0 - ALPHA constant. see {@link #ALPHA}
+	 */
 	public static final double	ONE_MINUS_ALPHA	= 1.0 - ALPHA;
 
 	private Color			unselectedForeground;
@@ -29,10 +40,27 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 		setOpaque(true);
 	}
 
-	protected abstract void customRendering(JTable table, ObjectResource objectResource, String key);
+	/**
+	 * abstract method to custom rendering objectResource with aid of
+	 * objectResourceController
+	 * 
+	 * @param table
+	 * @param objectResource
+	 *                see {@link ObjectResource}
+	 * @param controller
+	 *                see {@link ObjectResourceController}
+	 * @param key
+	 *                see {@link ObjectResourceController#getKeys()}
+	 */
+	protected abstract void customRendering(JTable table,
+						ObjectResource objectResource,
+						ObjectResourceController controller,
+						String key);
 
-	// This method is called each time a cell in a column
-	// using this renderer needs to be rendered.
+	/**
+	 * This method is called each time a cell in a column using this
+	 * renderer needs to be rendered.
+	 */
 	public Component getTableCellRendererComponent(	JTable table,
 							Object value,
 							boolean isSelected,
@@ -41,20 +69,19 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 							int vColIndex) {
 		this.component = this;
 		if (value instanceof String) {
-			setValue(value);
+			setText((value == null) ? "" : value.toString());
 		} else if (value instanceof Component) {
 			this.component = (Component) value;
 		}
 
 		ObjectResourceTableModel model = (ObjectResourceTableModel) table.getModel();
-
 		ObjectResource objectResource = model.getObjectResource(rowIndex);
 
 		int mColIndex = table.convertColumnIndexToModel(vColIndex);
 		String colId = model.controller.getKey(mColIndex);
 
 		super.setBackground(table.getBackground());
-		customRendering(table, objectResource, colId);
+		customRendering(table, objectResource, model.controller, colId);
 		Color color = super.getBackground();
 
 		if (isSelected) {
@@ -65,15 +92,10 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 			this.component.setFont(font);
 			Color c = table.getSelectionBackground();
 			// calculate color with alpha-channel weight alpha
-			this.component.setBackground(new Color(
-								(int) (c.getRed() * ONE_MINUS_ALPHA + ALPHA
-										* color.getRed()) % 256, (int) (c
-										.getGreen()
-										* ONE_MINUS_ALPHA + ALPHA
-										* color.getGreen()) % 256, (int) (c
-										.getBlue()
-										* ONE_MINUS_ALPHA + ALPHA
-										* color.getBlue()) % 256));
+			this.component.setBackground(new Color((int) (c.getRed() * ONE_MINUS_ALPHA + ALPHA
+					* color.getRed()) % 256, (int) (c.getGreen() * ONE_MINUS_ALPHA + ALPHA
+					* color.getGreen()) % 256, (int) (c.getBlue() * ONE_MINUS_ALPHA + ALPHA
+					* color.getBlue()) % 256));
 
 		} else {
 			this.component.setForeground((this.unselectedForeground != null) ? this.unselectedForeground
@@ -103,10 +125,6 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 	public void setForeground(Color c) {
 		super.setForeground(c);
 		this.unselectedForeground = c;
-	}
-
-	protected void setValue(Object value) {
-		setText((value == null) ? "" : value.toString()); //$NON-NLS-1$
 	}
 
 }

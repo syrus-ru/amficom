@@ -10,8 +10,6 @@ import java.awt.Color;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
@@ -33,21 +31,15 @@ public final class TestResourceController implements ObjectResourceController {
 
 	private static TestResourceController	instance;
 
-	private List				keys;
+	private String[]			keys;
 
 	private Map				statusMap;
 	private Map				values;
 
 	private TestResourceController() {
 		// empty private constructor
-		this.keys = new LinkedList();
-		this.keys.add(KEY_ID);
-		this.keys.add(KEY_NAME);
-		this.keys.add(KEY_STATUS_COLOR);
-		this.keys.add(KEY_STATUS);
-		this.keys.add(KEY_TIME);
-		this.keys.add(KEY_CHANGED);
-		this.keys.add(KEY_VALUES);
+		this.keys = new String[] { KEY_ID, KEY_NAME, KEY_STATUS_COLOR, KEY_STATUS, KEY_TIME, KEY_CHANGED,
+				KEY_VALUES};
 
 		this.statusMap = new HashMap();
 		this.statusMap.put(new MLabel("Aborted", TestStatus._TEST_STATUS_ABORTED),
@@ -72,7 +64,7 @@ public final class TestResourceController implements ObjectResourceController {
 		return instance;
 	}
 
-	public List getKeys() {
+	public String[] getKeys() {
 		return this.keys;
 	}
 
@@ -90,6 +82,8 @@ public final class TestResourceController implements ObjectResourceController {
 			name = "Time";
 		else if (key.equals(KEY_CHANGED))
 			name = "Changed";
+		else if (key.equals(KEY_VALUES))
+			name = "Values";
 		return name;
 	}
 
@@ -124,8 +118,12 @@ public final class TestResourceController implements ObjectResourceController {
 				result = SIMPLE_DATE_FORMAT.format(new Date(testResource.getTime()));
 			else if (key.equals(KEY_CHANGED))
 				result = Boolean.valueOf(testResource.isChanged());
-			else if (key.equals(KEY_VALUES))
-				result = "add";
+			else if (key.equals(KEY_VALUES)) {
+				result = testResource.getValue();
+				if (!this.values.containsKey(result)) {
+					this.values.put(result, result);
+				}
+			}
 		}
 		return result;
 	}
@@ -161,9 +159,12 @@ public final class TestResourceController implements ObjectResourceController {
 			} else if (key.equals(KEY_CHANGED)) {
 				testResource.setChanged(((Boolean) value).booleanValue());
 			} else if (key.equals(KEY_VALUES)) {
-				if (value.equals("add")) {
-					String str = Integer.toString(this.values.keySet().size());
-					setPropertyValue(KEY_VALUES, str, str);
+				if (value != null) {
+					testResource.setValue((String) value);
+					if (value.equals("add")) {
+						String str = Integer.toString(this.values.keySet().size());
+						setPropertyValue(KEY_VALUES, str, str);
+					}
 				}
 			}
 		}
@@ -171,7 +172,7 @@ public final class TestResourceController implements ObjectResourceController {
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return ((index >= 0) && (index < this.keys.length)) ? this.keys[index] : null;
 	}
 
 	public Object getPropertyValue(final String key) {
