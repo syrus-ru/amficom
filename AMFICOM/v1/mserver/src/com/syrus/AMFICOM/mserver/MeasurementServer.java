@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.5 2004/08/06 16:09:26 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.6 2004/08/09 14:23:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,10 +25,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
-import com.syrus.AMFICOM.mcm.corba._MCMStub;
-
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/06 16:09:26 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/09 14:23:34 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -61,21 +59,21 @@ public class MeasurementServer extends SleepButWorkThread {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
-//		/*	Initialize object drivers
-//		 * 	for work with database*/
-//		DatabaseContextSetup.initDatabaseContext();
-//
-//		/*	Load object types*/
-//		DatabaseContextSetup.loadObjectTypes();
-//
-//		/*	Retrieve information abot myself*/
-//		try {
-//			iAm = new Server(new Identifier(ApplicationProperties.getString("ID", ID)));
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//			System.exit(-1);
-//		}
+		/*	Initialize object drivers
+		 * 	for work with database*/
+		DatabaseContextSetup.initDatabaseContext();
+
+		/*	Initialize object pools*/
+		DatabaseContextSetup.initObjectPools();
+
+		/*	Retrieve information abot myself*/
+		try {
+			iAm = new Server(new Identifier(ApplicationProperties.getString("ID", ID)));
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			System.exit(-1);
+		}
 
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();

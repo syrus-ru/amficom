@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.2 2004/08/02 14:51:56 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.3 2004/08/09 14:23:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,13 +14,20 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.configuration.ConfigurationObjectTypePool;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
-import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
+import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
+//import com.syrus.AMFICOM.configuration.UserDatabase;
+import com.syrus.AMFICOM.configuration.ServerDatabase;
+import com.syrus.AMFICOM.configuration.MCMDatabase;
+import com.syrus.AMFICOM.configuration.EquipmentDatabase;
+//import com.syrus.AMFICOM.configuration.PortDatabase;
+import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
-import com.syrus.AMFICOM.configuration.MCMDatabase;
+
 //import com.syrus.AMFICOM.configuration.ServerDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementObjectTypePool;
+import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
@@ -37,7 +44,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/02 14:51:56 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/09 14:23:34 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -48,134 +55,32 @@ public abstract class DatabaseContextSetup {
 	}
 
 	public static void initDatabaseContext() {
-		ConfigurationDatabaseContext.init(new CharacteristicDatabase(),
-																			new CharacteristicTypeDatabase(),
-																			null,
-																			new MonitoredElementDatabase(),
-																			new KISDatabase(),
+		ConfigurationDatabaseContext.init(new CharacteristicTypeDatabase(),
 																			new EquipmentTypeDatabase(),
+																			new CharacteristicDatabase(),
+																			null,	//UserDatabase
+																			new ServerDatabase(),
 																			new MCMDatabase(),
-																			null);
-		MeasurementDatabaseContext.init(new AnalysisDatabase(),
-																		new AnalysisTypeDatabase(),
-																		new EvaluationDatabase(),
-																		new EvaluationTypeDatabase(),
-																		new MeasurementDatabase(),
-																		new MeasurementSetupDatabase(),
+																			new EquipmentDatabase(),
+																			null,	//PortDatabase
+																			new TransmissionPathDatabase(),
+																			new KISDatabase(),
+																			new MonitoredElementDatabase());
+		MeasurementDatabaseContext.init(new ParameterTypeDatabase(),
 																		new MeasurementTypeDatabase(),
-																		new ParameterTypeDatabase(),
-																		new ResultDatabase(),
+																		new AnalysisTypeDatabase(),
+																		new EvaluationTypeDatabase(),
 																		new SetDatabase(),
-																		new TemporalPatternDatabase(),
-																		new TestDatabase());
-	}
-	
-	public static void loadObjectTypes() {
-		loadConfigurationObjectTypes();
-		loadMeasurementObjectTypes();
-	}
-
-	private static void loadConfigurationObjectTypes() {
-		List objectTypes = new ArrayList();
-		List types;
-
-		types = loadCharacteristicTypes();
-		if (types != null)
-			objectTypes.addAll(types);
-
-		types = loadEquipmentTypes();
-		if (types != null)
-			objectTypes.addAll(types);
-
-		ConfigurationObjectTypePool.init(objectTypes);
+																		new MeasurementSetupDatabase(),
+																		new MeasurementDatabase(),
+																		new AnalysisDatabase(),
+																		new EvaluationDatabase(),
+																		new TestDatabase(),
+																		new ResultDatabase(),
+																		new TemporalPatternDatabase());
 	}
 
-	private static void loadMeasurementObjectTypes() {
-		List objectTypes = new ArrayList();
-		List types;
-
-		types = loadParameterTypes();
-		if (types != null)
-			objectTypes.addAll(types);
-
-		types = loadMeasurementTypes();
-		if (types != null)
-			objectTypes.addAll(types);
-
-		types = loadAnalysisTypes();
-		if (types != null)
-			objectTypes.addAll(types);
-
-		types = loadEvaluationTypes();
-		if (types != null)
-			objectTypes.addAll(types);
-
-		MeasurementObjectTypePool.init(objectTypes);
-	}
-
-	private static List loadCharacteristicTypes() {
-		List characteristicTypes = null;
-		try {
-			characteristicTypes = CharacteristicTypeDatabase.retrieveAll();
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		return characteristicTypes;
-	}
-
-	private static List loadEquipmentTypes() {
-		List equipmentTypes = null;
-		try {
-			equipmentTypes = EquipmentTypeDatabase.retrieveAll();
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		return equipmentTypes;
-	}
-
-	private static List loadParameterTypes() {
-		List parameterTypes = null;
-		try {
-			parameterTypes = ParameterTypeDatabase.retrieveAll();
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		return parameterTypes;
-	}
-
-	private static List loadMeasurementTypes() {
-		List measurementTypes = null;
-		try {
-			measurementTypes = MeasurementTypeDatabase.retrieveAll();
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		return measurementTypes;
-	}
-
-	private static List loadAnalysisTypes() {
-		List analysisTypes = null;
-		try {
-			analysisTypes = AnalysisTypeDatabase.retrieveAll();
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		return analysisTypes;
-	}
-
-	private static List loadEvaluationTypes() {
-		List evaluationTypes = null;
-		try {
-			evaluationTypes = EvaluationTypeDatabase.retrieveAll();
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-		}
-		return evaluationTypes;
+	public static void initObjectPools() {
+		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader());
 	}
 }
