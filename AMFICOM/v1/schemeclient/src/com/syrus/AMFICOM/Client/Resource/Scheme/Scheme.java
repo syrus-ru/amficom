@@ -1,39 +1,3 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Класс содержит описание схемы сети, которая состоит из     * //
-// *           набора элементов, отображаемых на экране                   * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Resource\Scheme\Scheme.java                            * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
 import java.io.*;
@@ -61,25 +25,26 @@ public class Scheme extends StubResource implements Serializable
 
 	public String id = "";
 	public String name = "";
-	public String scheme_type = Scheme.NETWORK;
+	public String schemeType = Scheme.NETWORK;
 
-	public Collection elements_to_register;
+	public Collection elementsTo_register;
 	public Collection elements;
 	public Collection cablelinks;
 	public Collection links;
-	public Collection paths;
+//	public Collection paths;
+	public SolutionCompact solution;
 
-//	public String path_conditions_id = "";
+//	public String path_conditionsId = "";
 
 	public long created = 0;
 	public long modified = 0;
-	public String created_by = "";
-	public String modified_by = "";
+	public String createdBy = "";
+	public String modifiedBy = "";
 
-	public String owner_id = "";
+	public String ownerId = "";
 	public String description = "";
-	public String domain_id = "";
-	public String symbol_id = "";
+	public String domainId = "";
+	public String symbolId = "";
 	public String label = "";
 
 	public int width = 840;
@@ -93,11 +58,12 @@ public class Scheme extends StubResource implements Serializable
 
 	public Scheme()
 	{
-		elements_to_register = new ArrayList();
+		elementsTo_register = new ArrayList();
 		elements = new ArrayList();
 		cablelinks = new ArrayList();
 		links = new ArrayList();
-		paths = new ArrayList();
+//		paths = new ArrayList();
+		solution = new SolutionCompact();
 
 		transferable = new Scheme_Transferable();
 	}
@@ -135,17 +101,17 @@ public class Scheme extends StubResource implements Serializable
 
 	public String getDomainId()
 	{
-		return domain_id;
+		return domainId;
 	}
 
 	public Object clone(DataSourceInterface dataSource)
 	{
-		String cloned_id = (String)Pool.get("clonedids", id);
-		if (cloned_id != null)
+		String clonedId = (String)Pool.get("clonedids", id);
+		if (clonedId != null)
 		{
-			Scheme cloned = (Scheme)Pool.get(Scheme.typ, cloned_id);
+			Scheme cloned = (Scheme)Pool.get(Scheme.typ, clonedId);
 			if (cloned == null)
-				System.err.println("Scheme.clone() id not found: " + cloned_id);
+				System.err.println("Scheme.clone() id not found: " + clonedId);
 			else
 				return cloned;
 		}
@@ -154,7 +120,7 @@ public class Scheme extends StubResource implements Serializable
 
 		scheme.id = dataSource.GetUId(Scheme.typ);
 		scheme.name = name;
-		scheme.scheme_type = scheme_type;
+		scheme.schemeType = schemeType;
 
 		for (Iterator it = elements.iterator(); it.hasNext();)
 			scheme.elements.add(((SchemeElement)it.next()).clone(dataSource));
@@ -169,21 +135,21 @@ public class Scheme extends StubResource implements Serializable
 
 		scheme.created = 0;
 		scheme.modified = 0;
-		scheme.created_by = dataSource.getSession().getUserId();
-		scheme.modified_by = dataSource.getSession().getUserId();
+		scheme.createdBy = dataSource.getSession().getUserId();
+		scheme.modifiedBy = dataSource.getSession().getUserId();
 
-		for (Iterator it = elements_to_register.iterator(); it.hasNext();)
+		for (Iterator it = elementsTo_register.iterator(); it.hasNext();)
 		{
 			SchemeElement se = (SchemeElement)it.next();
-			String cloned_se_id = (String)Pool.get("clonedids", se.getId());
-			SchemeElement cloned_se = (SchemeElement)Pool.get(SchemeElement.typ, cloned_se_id);
-			scheme.elements_to_register.add(cloned_se);
+			String clonedSeId = (String)Pool.get("clonedids", se.getId());
+			SchemeElement clonedSe = (SchemeElement)Pool.get(SchemeElement.typ, clonedSeId);
+			scheme.elementsTo_register.add(clonedSe);
 		}
 
-		scheme.owner_id = dataSource.getSession().getUserId();
+		scheme.ownerId = dataSource.getSession().getUserId();
 		scheme.description = description;
-		scheme.domain_id = dataSource.getSession().getDomainId();
-		scheme.symbol_id = symbol_id;
+		scheme.domainId = dataSource.getSession().getDomainId();
+		scheme.symbolId = symbolId;
 		scheme.label = label;
 
 		if (schemecell != null)
@@ -213,7 +179,7 @@ public class Scheme extends StubResource implements Serializable
 			String id = ((SchemeCableLink)it.next()).getId();
 			scheme.clones.put(id, ht.get(id));
 		}
-		for (Iterator it = elements_to_register.iterator(); it.hasNext();)
+		for (Iterator it = elementsTo_register.iterator(); it.hasNext();)
 		{
 			String id = ((SchemeElement)it.next()).getId();
 			scheme.clones.put(id, ht.get(id));
@@ -231,42 +197,43 @@ public class Scheme extends StubResource implements Serializable
 	{
 		id = transferable.id;
 		name = transferable.name;
-		scheme_type = transferable.scheme_type;
+		schemeType = transferable.schemeType;
 		created = transferable.created;
 		modified = transferable.modified;
-		modified_by = transferable.modified_by;
-		created_by = transferable.created_by;
+		modifiedBy = transferable.modifiedBy;
+		createdBy = transferable.createdBy;
 
-		owner_id = transferable.owner_id;
-		domain_id = transferable.domain_id;
-		symbol_id = transferable.symbol_id;
+		ownerId = transferable.ownerId;
+		domainId = transferable.domainId;
+		symbolId = transferable.symbolId;
 		label = transferable.label;
 		description = transferable.description;
 
 		elements = new ArrayList();
-		elements_to_register = new ArrayList();
-		cablelinks = new ArrayList(transferable.cable_links.length);
+		elementsTo_register = new ArrayList();
+		cablelinks = new ArrayList(transferable.cableLinks.length);
 		links = new ArrayList(transferable.links.length);
-		paths = new ArrayList(transferable.paths.length);
+//		paths = new ArrayList(transferable.paths.length);
+		solution = new SolutionCompact(transferable.solution);
 
-		ArrayList transferable_element_ids = new ArrayList(transferable.element_ids.length);
+		ArrayList transferable_elementIds = new ArrayList(transferable.elementIds.length);
 
-		for (int i = 0; i < transferable.element_ids.length; i++)
-			transferable_element_ids.add(transferable.element_ids[i]);
+		for (int i = 0; i < transferable.elementIds.length; i++)
+			transferable_elementIds.add(transferable.elementIds[i]);
 		for (int i = 0; i < transferable.elements.length; i++)
 		{
 			SchemeElement element = new SchemeElement(transferable.elements[i]);
-			if (transferable_element_ids.contains(element.getId()))
+			if (transferable_elementIds.contains(element.getId()))
 				elements.add(element);
 			else
-				elements_to_register.add(element);
+				elementsTo_register.add(element);
 		}
-		for (int i = 0; i < transferable.cable_links.length; i++)
-			cablelinks.add(new SchemeCableLink(transferable.cable_links[i]));
+		for (int i = 0; i < transferable.cableLinks.length; i++)
+			cablelinks.add(new SchemeCableLink(transferable.cableLinks[i]));
 		for (int i = 0; i < transferable.links.length; i++)
 			links.add(new SchemeLink(transferable.links[i]));
-		for (int i = 0; i < transferable.paths.length; i++)
-			paths.add(new SchemePath(transferable.paths[i]));
+//		for (int i = 0; i < transferable.paths.length; i++)
+//			paths.add(new SchemePath(transferable.paths[i]));
 
 		width = (transferable.width != 0 ? transferable.width : 840);
 		height = (transferable.height != 0 ? transferable.height : 1190);
@@ -297,16 +264,16 @@ public class Scheme extends StubResource implements Serializable
 
 		transferable.id = id;
 		transferable.name = name;
-		transferable.scheme_type = scheme_type;
+		transferable.schemeType = schemeType;
 		transferable.created = created;
 		transferable.modified = modified;
-		transferable.created_by = created_by;
-		transferable.modified_by = modified_by;
-		transferable.modified_by = modified_by;
+		transferable.createdBy = createdBy;
+		transferable.modifiedBy = modifiedBy;
+		transferable.modifiedBy = modifiedBy;
 
-		transferable.owner_id = owner_id;
-		transferable.domain_id = domain_id;
-		transferable.symbol_id = symbol_id;
+		transferable.ownerId = ownerId;
+		transferable.domainId = domainId;
+		transferable.symbolId = symbolId;
 		transferable.label = label;
 		transferable.description = description;
 
@@ -328,19 +295,22 @@ public class Scheme extends StubResource implements Serializable
 			transferable.elements[counter++] = (SchemeElement_Transferable)element.getTransferable();
 		}
 		counter = 0;
-		transferable.element_ids = new String[elements.size()];
+		transferable.elementIds = new String[elements.size()];
 		for (Iterator it = elements.iterator(); it.hasNext();)
-			transferable.element_ids[counter++] = ((SchemeElement)it.next()).getId();
+			transferable.elementIds[counter++] = ((SchemeElement)it.next()).getId();
 
-		transferable.cable_links = new SchemeCableLink_Transferable[cablelinks.size()];
+		transferable.cableLinks = new SchemeCableLink_Transferable[cablelinks.size()];
 		transferable.links = new SchemeLink_Transferable[links.size()];
-		transferable.paths = new SchemePath_Transferable[paths.size()];
+//		transferable.paths = new SchemePath_Transferable[paths.size()];
+		solution.setTransferableFromLocal();
+		transferable.solution = (SchemeMonitoringSolution_Transferable)solution.getTransferable();
+
 		counter = 0;
 		for (Iterator it = cablelinks.iterator(); it.hasNext();)
 		{
 			SchemeCableLink cablelink = (SchemeCableLink)it.next();
 			cablelink.setTransferableFromLocal();
-			transferable.cable_links[counter++] = (SchemeCableLink_Transferable)cablelink.getTransferable();
+			transferable.cableLinks[counter++] = (SchemeCableLink_Transferable)cablelink.getTransferable();
 		}
 		counter = 0;
 		for (Iterator it = links.iterator(); it.hasNext();)
@@ -349,13 +319,13 @@ public class Scheme extends StubResource implements Serializable
 			link.setTransferableFromLocal();
 			transferable.links[counter++] = (SchemeLink_Transferable)link.getTransferable();
 		}
-		counter = 0;
-		for (Iterator it = paths.iterator(); it.hasNext();)
-		{
-			SchemePath path = (SchemePath)it.next();
-			path.setTransferableFromLocal();
-			transferable.paths[counter++] = (SchemePath_Transferable)path.getTransferable();
-		}
+//		counter = 0;
+//		for (Iterator it = paths.iterator(); it.hasNext();)
+//		{
+//			SchemePath path = (SchemePath)it.next();
+//			path.setTransferableFromLocal();
+//			transferable.paths[counter++] = (SchemePath_Transferable)path.getTransferable();
+//		}
 
 		transferable.width = width;
 		transferable.height = height;
@@ -379,81 +349,37 @@ public class Scheme extends StubResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
-		for(Iterator it = elements_to_register.iterator(); it.hasNext();)
+		for(Iterator it = elementsTo_register.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			////temporary
-			el.setSchemeId(getId());
-			//
 			Pool.put(SchemeElement.typ, el.getId(), el);
 			el.updateLocalFromTransferable();
 		}
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			////temporary
-			el.setSchemeId(getId());
-			//
 			Pool.put(SchemeElement.typ, el.getId(), el);
 			el.updateLocalFromTransferable();
 		}
 		for(Iterator it = cablelinks.iterator(); it.hasNext();)
 		{
 			SchemeCableLink link = (SchemeCableLink)it.next();
-			////temporary
-			link.setSchemeId(getId());
-/*			if (!scheme_type.equals(Scheme.CABLESUBNETWORK))
-			{
-				if (link.source_port_id.length() != 0)
-				{
-					SchemeElement se = getTopLevelElement(getSchemeElementByCablePort(link.source_port_id));
-					if (se.getInternalSchemeId().length() != 0)
-					{
-						Scheme source_scheme = se.getInternalScheme();
-						if (source_scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
-							link.setSchemeId(source_scheme.getId());
-					}
-				}
-				if (link.target_port_id.length() != 0)
-				{
-					SchemeElement se = getTopLevelElement(getSchemeElementByCablePort(link.target_port_id));
-					if (se.getInternalSchemeId().length() != 0)
-					{
-						Scheme target_scheme = se.getInternalScheme();
-						if (target_scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
-							link.setSchemeId(target_scheme.getId());
-					}
-				}
-			}*/
-			//
 			Pool.put(SchemeCableLink.typ, link.getId(), link);
 			link.updateLocalFromTransferable();
 		}
-		for(Iterator it = links.iterator(); it.hasNext();)
-		{
-			SchemeLink link = (SchemeLink)it.next();
-			////temporary
-			link.setSchemeId(getId());
-			//
-			Pool.put(SchemeLink.typ, link.getId(), link);
-			link.updateLocalFromTransferable();
-		}
-		for(Iterator it = paths.iterator(); it.hasNext();)
-		{
-			SchemePath path = (SchemePath)it.next();
-			////temporary
-			path.setSchemeId(getId());
-			//
-			Pool.put(SchemePath.typ, path.getId(), path);
-			path.updateLocalFromTransferable();
-		}
+//		for(Iterator it = paths.iterator(); it.hasNext();)
+//		{
+//			SchemePath path = (SchemePath)it.next();
+//			Pool.put(SchemePath.typ, path.getId(), path);
+//			path.updateLocalFromTransferable();
+//		}
+		solution.updateLocalFromTransferable();
 	}
 
 	public String getPropertyPaneClassName()
 	{
 		return "";
 	}
-
 
 	public synchronized boolean pack()
 	{
@@ -481,6 +407,7 @@ public class Scheme extends StubResource implements Serializable
 
 		return true;
 	}
+
 
 	private synchronized byte[] pack(Serializable cell)
 	{
@@ -512,6 +439,7 @@ public class Scheme extends StubResource implements Serializable
 			System.err.println(e.toString() + " packing scheme: retry...");
 			return null;
 		}
+
 	}
 
 	public synchronized void unpack()
@@ -550,28 +478,30 @@ public class Scheme extends StubResource implements Serializable
 			System.err.println("Exception unpacking scheme: " + e.toString());
 			return null;
 		}
+
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(scheme_type);
+		out.writeObject(schemeType);
 		out.writeLong(created);
 		out.writeLong(modified);
-		out.writeObject(created_by);
-		out.writeObject(modified_by);
-		out.writeObject(owner_id);
+		out.writeObject(createdBy);
+		out.writeObject(modifiedBy);
+		out.writeObject(ownerId);
 		out.writeObject(description);
-		out.writeObject(domain_id);
-		out.writeObject(symbol_id);
+		out.writeObject(domainId);
+		out.writeObject(symbolId);
 		out.writeObject(label);
 
 		out.writeObject(elements);
-		out.writeObject(elements_to_register);
+		out.writeObject(elementsTo_register);
 		out.writeObject(cablelinks);
 		out.writeObject(links);
-		out.writeObject(paths);
+//		out.writeObject(paths);
+		out.writeObject(solution);
 
 		out.writeInt(width);
 		out.writeInt(height);
@@ -586,22 +516,23 @@ public class Scheme extends StubResource implements Serializable
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		scheme_type = (String )in.readObject();
+		schemeType = (String )in.readObject();
 		created = in.readLong();
 		modified = in.readLong();
-		created_by = (String )in.readObject();
-		modified_by = (String )in.readObject();
-		owner_id = (String )in.readObject();
+		createdBy = (String )in.readObject();
+		modifiedBy = (String )in.readObject();
+		ownerId = (String )in.readObject();
 		description = (String )in.readObject();
-		domain_id = (String )in.readObject();
-		symbol_id = (String )in.readObject();
+		domainId = (String )in.readObject();
+		symbolId = (String )in.readObject();
 		label = (String )in.readObject();
 
 		elements = (Collection )in.readObject();
-		elements_to_register = (Collection )in.readObject();
+		elementsTo_register = (Collection )in.readObject();
 		cablelinks = (Collection )in.readObject();
 		links = (Collection )in.readObject();
-		paths = (Collection )in.readObject();
+//		paths = (Collection )in.readObject();
+		solution = (SolutionCompact)in.readObject();
 
 		width = in.readInt();
 		height = in.readInt();
@@ -617,7 +548,7 @@ public class Scheme extends StubResource implements Serializable
 	Iterator getChildElements(SchemeElement element)
 	{
 		HashSet v = new HashSet();
-		for(Iterator it = element.element_ids.iterator(); it.hasNext();)
+		for(Iterator it = element.elementIds.iterator(); it.hasNext();)
 		{
 			SchemeElement child = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
 			for(Iterator it2 = getChildElements(child); it2.hasNext();)
@@ -657,12 +588,12 @@ public class Scheme extends StubResource implements Serializable
 		return ht;
 	}
 /*
-	public Scheme getSchemeBySchemeElement(String scheme_element_id)
+	public Scheme getSchemeBySchemeElement(String scheme_elementId)
 	{
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (el.getId().equals(scheme_element_id))
+			if (el.getId().equals(scheme_elementId))
 				return this;
 		}
 
@@ -674,7 +605,7 @@ public class Scheme extends StubResource implements Serializable
 				for (Iterator it2 = el.getChildElements().iterator(); it2.hasNext();)
 				{
 					SchemeElement el2 = (SchemeElement)it2.next();
-					if (el2.getId().equals(scheme_element_id))
+					if (el2.getId().equals(scheme_elementId))
 						return this;
 				}
 			}
@@ -686,7 +617,7 @@ public class Scheme extends StubResource implements Serializable
 			if (el.getInternalSchemeId().length() != 0)
 			{
 				Scheme sch = el.getInternalScheme();
-				Scheme found = sch.getSchemeBySchemeElement(scheme_element_id);
+				Scheme found = sch.getSchemeBySchemeElement(scheme_elementId);
 				if (found != null)
 					return found;
 			}
@@ -694,12 +625,12 @@ public class Scheme extends StubResource implements Serializable
 		return null;
 	}*/
 
-	public Scheme getSchemeByLink(String link_id)
+	public Scheme getSchemeByLink(String linkId)
 	{
 		for (Iterator it = links.iterator(); it.hasNext();)
 		{
 			SchemeLink l = (SchemeLink)it.next();
-			if (l.getId().equals(link_id))
+			if (l.getId().equals(linkId))
 				return this;
 		}
 
@@ -711,7 +642,7 @@ public class Scheme extends StubResource implements Serializable
 				for (Iterator it2 = el.getAllElementsLinks().iterator(); it2.hasNext();)
 				{
 					SchemeLink l = (SchemeLink)it2.next();
-					if (l.getId().equals(link_id))
+					if (l.getId().equals(linkId))
 						return this;
 				}
 			}
@@ -723,7 +654,7 @@ public class Scheme extends StubResource implements Serializable
 			if (el.getInternalSchemeId().length() != 0)
 			{
 				Scheme sch = el.getInternalScheme();
-				Scheme found = sch.getSchemeByLink (link_id);
+				Scheme found = sch.getSchemeByLink (linkId);
 				if (found != null)
 					return found;
 			}
@@ -731,12 +662,12 @@ public class Scheme extends StubResource implements Serializable
 		return null;
 	}
 
-	public Scheme getSchemeByCableLink(String cable_link_id)
+	public Scheme getSchemeByCableLink(String cableLinkId)
 	{
 		for (Iterator it = cablelinks.iterator(); it.hasNext();)
 		{
 			SchemeCableLink l = (SchemeCableLink)it.next();
-			if (l.getId().equals(cable_link_id))
+			if (l.getId().equals(cableLinkId))
 				return this;
 		}
 
@@ -746,7 +677,7 @@ public class Scheme extends StubResource implements Serializable
 			if (el.getInternalSchemeId().length() != 0)
 			{
 				Scheme sch = el.getInternalScheme();
-				Scheme found = sch.getSchemeByCableLink (cable_link_id);
+				Scheme found = sch.getSchemeByCableLink (cableLinkId);
 				if (found != null)
 					return found;
 			}
@@ -814,7 +745,7 @@ public class Scheme extends StubResource implements Serializable
 
 	public Collection getTopLevelPaths()
 	{
-		return paths;
+		return solution.paths;
 	}
 
 	public Collection getTopologicalElements1()
@@ -829,7 +760,7 @@ public class Scheme extends StubResource implements Serializable
 
 	public Collection getTopologicalPaths1()
 	{
-		return paths;
+		return solution.paths;
 	}
 
 	// return all top level elements at scheme and at inner schemes
@@ -844,7 +775,7 @@ public class Scheme extends StubResource implements Serializable
 			else
 			{
 				Scheme scheme = el.getInternalScheme();
-				if(scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
+				if(scheme.schemeType.equals(Scheme.CABLESUBNETWORK))
 				{
 					for (Iterator inner = scheme.getTopologicalElements().iterator(); inner.hasNext();)
 						ht.add(inner.next());
@@ -868,7 +799,7 @@ public class Scheme extends StubResource implements Serializable
 			if (el.getInternalSchemeId().length() != 0)
 			{
 				Scheme scheme = (Scheme)el.getInternalScheme();
-				if(scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
+				if(scheme.schemeType.equals(Scheme.CABLESUBNETWORK))
 				{
 					for (Iterator inner = scheme.getTopologicalCableLinks().iterator(); inner.hasNext();)
 						ht.add(inner.next());
@@ -881,7 +812,7 @@ public class Scheme extends StubResource implements Serializable
 	public Collection getTopologicalPaths()
 	{
 		HashSet ht = new HashSet();
-		ht.addAll(paths);
+		ht.addAll(solution.paths);
 
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
@@ -889,7 +820,7 @@ public class Scheme extends StubResource implements Serializable
 			if (el.getInternalSchemeId().length() != 0)
 			{
 				Scheme scheme = (Scheme)el.getInternalScheme();
-				if(scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
+				if(scheme.schemeType.equals(Scheme.CABLESUBNETWORK))
 				{
 					for (Iterator inner = scheme.getTopologicalPaths().iterator(); inner.hasNext();)
 						ht.add(inner.next());
@@ -918,12 +849,12 @@ public class Scheme extends StubResource implements Serializable
 		return ht;
 	}
 
-	public SchemeElement getSchemeElement(String element_id)
+	public SchemeElement getSchemeElement(String elementId)
 	{
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement element = (SchemeElement)it.next();
-			if (element.getId().equals(element_id))
+			if (element.getId().equals(elementId))
 				return element;
 		}
 
@@ -932,8 +863,8 @@ public class Scheme extends StubResource implements Serializable
 			SchemeElement element = (SchemeElement)it.next();
 			if (element.getInternalSchemeId().length() != 0)
 			{
-				Scheme inner_scheme = element.getInternalScheme();
-				SchemeElement el = inner_scheme.getSchemeElement(element_id);
+				Scheme innerScheme = element.getInternalScheme();
+				SchemeElement el = innerScheme.getSchemeElement(elementId);
 				if (el != null)
 					return el;
 			}
@@ -942,7 +873,7 @@ public class Scheme extends StubResource implements Serializable
 				for (Iterator it2 = element.getAllChilds().iterator(); it2.hasNext();)
 				{
 					SchemeElement se = (SchemeElement)it2.next();
-					if (se.getId().equals(element_id))
+					if (se.getId().equals(elementId))
 						return se;
 				}
 			}
@@ -950,36 +881,36 @@ public class Scheme extends StubResource implements Serializable
 		return null;
 	}
 
-	public SchemeElement getSchemeElementByCablePort(String port_id)
+	public SchemeElement getSchemeElementByCablePort(String portId)
 	{
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			el = el.getSchemeElementByCablePort(port_id);
+			el = el.getSchemeElementByCablePort(portId);
 			if (el != null)
 				return el;
 		}
 		return null;
 	}
 
-	public SchemeElement getSchemeElementByPort(String port_id)
+	public SchemeElement getSchemeElementByPort(String portId)
 	{
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			el = el.getSchemeElementByPort(port_id);
+			el = el.getSchemeElementByPort(portId);
 			if (el != null)
 				return el;
 		}
 		return null;
 	}
 
-	public boolean isSchemeContainsLink(String link_id)
+	public boolean isSchemeContainsLink(String linkId)
 	{
 		for (Iterator it = links.iterator(); it.hasNext();)
 		{
 			SchemeLink sl = (SchemeLink)it.next();
-			if (sl.link_id.equals(link_id))
+			if (sl.linkId.equals(linkId))
 				return true;
 		}
 
@@ -991,25 +922,25 @@ public class Scheme extends StubResource implements Serializable
 				for (Iterator it2 = element.getAllElementsLinks().iterator(); it2.hasNext();)
 				{
 					SchemeLink sl = (SchemeLink)it2.next();
-					if (sl.link_id.equals(link_id))
+					if (sl.linkId.equals(linkId))
 						return true;
 				}
 			}
 			else
 			{
 				Scheme inner = element.getInternalScheme();
-				return inner.isSchemeContainsLink(link_id);
+				return inner.isSchemeContainsLink(linkId);
 			}
 		}
 		return false;
 	}
 
-	public boolean isSchemeContainsCableLink(String cable_link_id)
+	public boolean isSchemeContainsCableLink(String cableLinkId)
 	{
 		for (Iterator it = cablelinks.iterator(); it.hasNext();)
 		{
 			SchemeCableLink sl = (SchemeCableLink)it.next();
-			if (sl.cable_link_id.equals(cable_link_id))
+			if (sl.cableLinkId.equals(cableLinkId))
 				return true;
 		}
 
@@ -1019,27 +950,27 @@ public class Scheme extends StubResource implements Serializable
 			if (element.getInternalSchemeId().length() != 0)
 			{
 				Scheme inner = element.getInternalScheme();
-				return inner.isSchemeContainsCableLink(cable_link_id);
+				return inner.isSchemeContainsCableLink(cableLinkId);
 			}
 		}
 		return false;
 	}
 
-	public SchemeElement getSchemeElementByDevice(String device_id)
+	public SchemeElement getSchemeElementByDevice(String deviceId)
 	{
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			el = el.getSchemeElementByDevice(device_id);
+			el = el.getSchemeElementByDevice(deviceId);
 			if (el != null)
 				return el;
 		}
 		return null;
 	}
 
-	public SchemeElement getTopLevelNonSchemeElement(String se_id)
+	public SchemeElement getTopLevelNonSchemeElement(String seId)
 	{
-		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, se_id);
+		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, seId);
 		return getTopLevelNonSchemeElement(se);
 	}
 
@@ -1073,8 +1004,8 @@ public class Scheme extends StubResource implements Serializable
 			{
 				for (Iterator it2 = element.getAllChilds().iterator(); it2.hasNext();)
 				{
-					SchemeElement inner_se = (SchemeElement)it2.next();
-					if (inner_se.getId().equals(se.getId()))
+					SchemeElement innerSe = (SchemeElement)it2.next();
+					if (innerSe.getId().equals(se.getId()))
 						return element;
 				}
 			}
@@ -1086,11 +1017,11 @@ public class Scheme extends StubResource implements Serializable
 			if (element.getInternalSchemeId().length() != 0)
 			{
 				Scheme inner = element.getInternalScheme();
-				SchemeElement inner_se = inner.getTopLevelElement(se);
-				if (inner_se != null)
+				SchemeElement innerSe = inner.getTopLevelElement(se);
+				if (innerSe != null)
 				{
-					if(inner.scheme_type.equals(Scheme.CABLESUBNETWORK))
-						return inner_se;
+					if(inner.schemeType.equals(Scheme.CABLESUBNETWORK))
+						return innerSe;
 					else
 						return element;
 				}
@@ -1116,8 +1047,8 @@ public class Scheme extends StubResource implements Serializable
 			{
 				for (Iterator it2 = element.getAllChilds().iterator(); it2.hasNext();)
 				{
-					SchemeElement inner_se = (SchemeElement)it2.next();
-					if (inner_se.getId().equals(se.getId()))
+					SchemeElement innerSe = (SchemeElement)it2.next();
+					if (innerSe.getId().equals(se.getId()))
 						return element;
 				}
 			}
@@ -1129,24 +1060,23 @@ public class Scheme extends StubResource implements Serializable
 			if (element.getInternalSchemeId().length() != 0)
 			{
 				Scheme inner = element.getInternalScheme();
-				SchemeElement inner_se = inner.getTopLevelElement(se);
-				if (inner_se != null)
+				SchemeElement innerSe = inner.getTopLevelElement(se);
+				if (innerSe != null)
 					return element;
 			}
 		}
 		return null;
 	}
 
-	public SchemeElement getTopLevelElement(String se_id)
+	public SchemeElement getTopLevelElement(String seId)
 	{
-		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, se_id);
+		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, seId);
 		return getTopLevelElement(se);
 	}
 
-	public SchemeElement getTopologicalElement(String se_id)
+	public SchemeElement getTopologicalElement(String seId)
 	{
-		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, se_id);
+		SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, seId);
 		return getTopologicalElement(se);
 	}
 }
-

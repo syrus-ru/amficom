@@ -9,7 +9,6 @@ import java.awt.Color;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-
 public class SchemeDisplayModel extends StubDisplayModel
 {
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
@@ -65,7 +64,7 @@ public class SchemeDisplayModel extends StubDisplayModel
 		else if(col_id.equals("created"))
 			r.setText(sdf.format(new Date(scheme.created)));
 		else if(col_id.equals("created_by"))
-			r.setText(scheme.created_by);
+			r.setText(scheme.createdBy);
 		else if(col_id.equals("description"))
 			r.setText(scheme.description);
 		else

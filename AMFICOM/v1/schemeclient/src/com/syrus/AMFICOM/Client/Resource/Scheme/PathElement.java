@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
 import java.io.*;
-import java.util.Iterator;
 
 import com.syrus.AMFICOM.CORBA.Scheme.PathElement_Transferable;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -9,7 +8,7 @@ import com.syrus.AMFICOM.Client.Resource.Network.*;
 
 public class PathElement extends StubResource implements Serializable
 {
-	private static final long serialVersionUID = 02L;
+	private static final long serialVersionUID = 03L;
 
 	public static final int SCHEME_ELEMENT = 1;
 	public static final int CABLE_LINK = 2;
@@ -21,13 +20,12 @@ public class PathElement extends StubResource implements Serializable
 	private SchemeLink scheme_link;
 	private SchemeCableLink scheme_cable_link;
 	private SchemeElement scheme_element;
-	private String obj_id = "";
+	private String elementId = "";
 
-	public String thread_id = "";
-	public String start_port_id = "";
-	public String end_port_id = "";
-//	public String scheme_element_id = "";
-	public String scheme_id = "";
+	public String threadId = "";
+	public String startPortId = "";
+	public String endPortId = "";
+	public String schemeId = "";
 
 	PathElement_Transferable transferable;
 
@@ -37,15 +35,18 @@ public class PathElement extends StubResource implements Serializable
 
 	public PathElement(PathElement_Transferable transferable)
 	{
-		this.transferable = transferable;
 		n = transferable.n;
-		type = transferable.is_cable ? CABLE_LINK : LINK;
-		obj_id = transferable.link_id;
+		type = transferable.type;
+		elementId = transferable.elementId;
+		threadId = transferable.threadId;
+		startPortId = transferable.startPortId;
+		endPortId = transferable.endPortId;
+		schemeId = transferable.schemeId;
 	}
 
 	public void updateLocalFromTransferable()
 	{
-		setObject(type, obj_id);
+		setObject(type, elementId);
 	}
 
 	public String getPropertyPaneClassName()
@@ -59,12 +60,12 @@ public class PathElement extends StubResource implements Serializable
 		PathElement pe = new PathElement();
 		pe.n = n;
 		pe.type = type;
-		pe.link_id = link_id.length() == 0 ? "" : (String)Pool.get("clonedids", link_id);
-		pe.scheme_id = scheme_id.length() == 0 ? "" : (String)Pool.get("clonedids", scheme_id);
-		pe.scheme_element_id = scheme_element_id.length() == 0 ? "" : (String)Pool.get("clonedids", scheme_element_id);
-		pe.thread_id = thread_id.length() == 0 ? "" : (String)Pool.get("clonedids", thread_id);
-		pe.start_port_id = start_port_id.length() == 0 ? "" : (String)Pool.get("clonedids", start_port_id);
-		pe.end_port_id = end_port_id.length() == 0 ? "" : (String)Pool.get("clonedids", end_port_id);
+		pe.linkId = linkId.length() == 0 ? "" : (String)Pool.get("clonedids", linkId);
+		pe.schemeId = schemeId.length() == 0 ? "" : (String)Pool.get("clonedids", schemeId);
+		pe.scheme_elementId = scheme_elementId.length() == 0 ? "" : (String)Pool.get("clonedids", scheme_elementId);
+		pe.threadId = threadId.length() == 0 ? "" : (String)Pool.get("clonedids", threadId);
+		pe.startPortId = startPortId.length() == 0 ? "" : (String)Pool.get("clonedids", startPortId);
+		pe.endPortId = endPortId.length() == 0 ? "" : (String)Pool.get("clonedids", endPortId);
 		return pe;
 	}
 */
@@ -88,20 +89,11 @@ public class PathElement extends StubResource implements Serializable
 		switch (type)
 		{
 			case PathElement.SCHEME_ELEMENT:
-				if (scheme_element.equipment_id.length() == 0)
-					return scheme_element.getName();
-				else
-					return ((Equipment)Pool.get("kisequipment", scheme_element.equipment_id)).getName();
+				return scheme_element.getName();
 			case PathElement.CABLE_LINK:
-				if (scheme_cable_link.cable_link_id.length() == 0)
-					return scheme_cable_link.getName();
-				else
-					return ((CableLink)Pool.get(CableLink.typ, scheme_cable_link.cable_link_id)).getName();
+				return scheme_cable_link.getName();
 			case PathElement.LINK:
-				if (scheme_link.link_id.length() == 0)
-					return scheme_link.getName();
-				else
-					return ((Link)Pool.get(Link.typ, scheme_link.link_id)).getName();
+				return scheme_link.getName();
 			default:
 				return "";
 		}
@@ -122,18 +114,18 @@ public class PathElement extends StubResource implements Serializable
 		}
 	}
 
-	public void setObject(int type, String obj_id)
+	public void setObject(int type, String objId)
 	{
 		switch (type)
 		{
 			case PathElement.CABLE_LINK:
-				scheme_cable_link = (SchemeCableLink) Pool.get(SchemeCableLink.typ, obj_id);
+				scheme_cable_link = (SchemeCableLink) Pool.get(SchemeCableLink.typ, objId);
 				break;
 			case PathElement.LINK:
-				scheme_link = (SchemeLink) Pool.get(SchemeLink.typ, obj_id);
+				scheme_link = (SchemeLink) Pool.get(SchemeLink.typ, objId);
 				break;
 			case PathElement.SCHEME_ELEMENT:
-				scheme_element = (SchemeElement) Pool.get(SchemeElement.typ, obj_id);
+				scheme_element = (SchemeElement) Pool.get(SchemeElement.typ, objId);
 		}
 	}
 
@@ -202,7 +194,15 @@ public class PathElement extends StubResource implements Serializable
 
 	public Object getTransferable()
 	{
-		return new PathElement_Transferable(n, type == CABLE_LINK, "", thread_id);
+		PathElement_Transferable transferable = new PathElement_Transferable();
+		transferable.n = n;
+		transferable.type = type;
+		transferable.elementId = elementId;
+		transferable.threadId = threadId;
+		transferable.startPortId = startPortId;
+		transferable.endPortId = endPortId;
+		transferable.schemeId = schemeId;
+		return transferable;
 	}
 
 //	public ObjectResourceModel getModel()
@@ -214,9 +214,11 @@ public class PathElement extends StubResource implements Serializable
 	{
 		out.writeInt(n);
 		out.writeInt(type);
-		out.writeObject(obj_id);
-		out.writeObject(thread_id);
-		out.writeObject(scheme_id);
+		out.writeObject(elementId);
+		out.writeObject(threadId);
+		out.writeObject(startPortId);
+		out.writeObject(endPortId);
+		out.writeObject(schemeId);
 	}
 
 	private void readObject(java.io.ObjectInputStream in)
@@ -224,9 +226,11 @@ public class PathElement extends StubResource implements Serializable
 	{
 		n = in.readInt();
 		type = in.readInt();
-		obj_id = (String )in.readObject();
-		thread_id = (String )in.readObject();
-		scheme_id = (String )in.readObject();
+		elementId = (String )in.readObject();
+		threadId = (String) in.readObject();
+		startPortId = (String) in.readObject();
+		endPortId = (String) in.readObject();
+		schemeId = (String) in.readObject();
 	}
 
 	public SchemeCableLink getSchemeCableLink()
@@ -264,12 +268,12 @@ public class PathElement extends StubResource implements Serializable
 		switch (type)
 		{
 			case PathElement.CABLE_LINK:
-				return (SchemeCablePort)Pool.get(SchemeCablePort.typ, start_port_id);
+				return (SchemeCablePort)Pool.get(SchemeCablePort.typ, startPortId);
 			case PathElement.LINK:
-				return (SchemePort)Pool.get(SchemePort.typ, start_port_id);
+				return (SchemePort)Pool.get(SchemePort.typ, startPortId);
 			case PathElement.SCHEME_ELEMENT:
-				SchemePort port = (SchemePort)Pool.get(SchemePort.typ, start_port_id);
-				return port == null ? (ObjectResource)Pool.get(SchemeCablePort.typ, start_port_id) : port;
+				SchemePort port = (SchemePort)Pool.get(SchemePort.typ, startPortId);
+				return port == null ? (ObjectResource)Pool.get(SchemeCablePort.typ, startPortId) : port;
 			default:
 				return null;
 		}
@@ -280,12 +284,12 @@ public class PathElement extends StubResource implements Serializable
 		switch (type)
 		{
 			case PathElement.CABLE_LINK:
-				return (SchemeCablePort) Pool.get(SchemeCablePort.typ, end_port_id);
+				return (SchemeCablePort) Pool.get(SchemeCablePort.typ, endPortId);
 			case PathElement.LINK:
-				return (SchemePort) Pool.get(SchemePort.typ, end_port_id);
+				return (SchemePort) Pool.get(SchemePort.typ, endPortId);
 			case PathElement.SCHEME_ELEMENT:
-				SchemePort port = (SchemePort) Pool.get(SchemePort.typ, end_port_id);
-				return port == null ? (ObjectResource) Pool.get(SchemeCablePort.typ, end_port_id) : port;
+				SchemePort port = (SchemePort) Pool.get(SchemePort.typ, endPortId);
+				return port == null ? (ObjectResource) Pool.get(SchemeCablePort.typ, endPortId) : port;
 			default:
 				return null;
 		}

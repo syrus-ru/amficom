@@ -5,11 +5,13 @@ import java.util.*;
 
 import java.awt.datatransfer.*;
 
+import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapTransmissionPathProtoElement;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
+import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
 
 public class SchemePath extends StubResource
 		implements Transferable, Serializable
@@ -20,16 +22,16 @@ public class SchemePath extends StubResource
 
 	public String id = "";
 	public String name = "";
-	public String path_id = "";
-	public String type_id = "";
-	public String start_device_id = "";
-	public String end_device_id = "";
-	private String scheme_id = "";
+	public String pathId = "";
+	public TransmissionPath path;
+
+	public String typeId = "";
+	public String startDeviceId = "";
+	public String endDeviceId = "";
+	private String schemeId = "";
 
 	public Map attributes;
 	public List links;
-
-	public MapTransmissionPathProtoElement mtppe = null;
 
 	public SchemePath(SchemePath_Transferable transferable)
 	{
@@ -50,10 +52,10 @@ public class SchemePath extends StubResource
 	{
 		id  = path.id;
 		name = path.name;
-		start_device_id = path.start_device_id;
-		end_device_id = path.end_device_id;
-		type_id = path.type_id;
-		path_id = path.path_id;
+		startDeviceId = path.startDeviceId;
+		endDeviceId = path.endDeviceId;
+		typeId = path.typeId;
+		pathId = path.pathId;
 
 		links = new ArrayList(path.links.size());
 		attributes = new HashMap(path.attributes.size());
@@ -72,12 +74,12 @@ public class SchemePath extends StubResource
 /*
 	public Object clone(DataSourceInterface dataSource)
 	{
-		String cloned_id = (String)Pool.get("clonedids", id);
-		if (cloned_id != null)
+		String clonedId = (String)Pool.get("clonedids", id);
+		if (clonedId != null)
 		{
-			SchemePath cloned = (SchemePath)Pool.get(SchemePath.typ, cloned_id);
+			SchemePath cloned = (SchemePath)Pool.get(SchemePath.typ, clonedId);
 			if (cloned == null)
-				System.err.println("SchemePath.clone() id not found: " + cloned_id);
+				System.err.println("SchemePath.clone() id not found: " + clonedId);
 			else
 				return cloned;
 		}
@@ -85,14 +87,14 @@ public class SchemePath extends StubResource
 		SchemePath path = new SchemePath(dataSource.GetUId(SchemePath.typ));
 
 		path.name = name;
-		path.path_id = path_id;
-		path.type_id = type_id;
-		path.start_device_id = (String)Pool.get("clonedids", start_device_id);
-		if (path.start_device_id == null)
-			path.start_device_id = start_device_id;
-		path.end_device_id = (String)Pool.get("clonedids", end_device_id);
-		if (path.end_device_id == null)
-			path.end_device_id = end_device_id;
+		path.pathId = pathId;
+		path.typeId = typeId;
+		path.startDeviceId = (String)Pool.get("clonedids", startDeviceId);
+		if (path.startDeviceId == null)
+			path.startDeviceId = startDeviceId;
+		path.endDeviceId = (String)Pool.get("clonedids", endDeviceId);
+		if (path.endDeviceId == null)
+			path.endDeviceId = endDeviceId;
 
 		path.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 
@@ -131,12 +133,12 @@ public class SchemePath extends StubResource
 		return typ;
 	}
 
-	public boolean isElementInPath(String link_id)
+	public boolean isElementInPath(String linkId)
 	{
 		for (Iterator it = links.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
-			if (link_id.equals(pe.getObjectId()))
+			if (linkId.equals(pe.getObjectId()))
 				return true;
 		}
 		return false;
@@ -169,9 +171,9 @@ public class SchemePath extends StubResource
 		{
 			PathElement pe = (PathElement)it.next();
 			if (pe.type == PathElement.CABLE_LINK)
-				length += pe.getSchemeCableLink().physical_length;
+				length += pe.getSchemeCableLink().physicalLength;
 			else if (pe.type == PathElement.LINK)
-				length += pe.getSchemeLink().physical_length;
+				length += pe.getSchemeLink().physicalLength;
 		}
 		return length;
 	}
@@ -183,22 +185,21 @@ public class SchemePath extends StubResource
 		{
 			PathElement pe = (PathElement) it.next();
 			if (pe.type == PathElement.CABLE_LINK)
-				length += pe.getSchemeCableLink().optical_length;
+				length += pe.getSchemeCableLink().opticalLength;
 			else if (pe.type == PathElement.LINK)
-				length += pe.getSchemeLink().optical_length;
+				length += pe.getSchemeLink().opticalLength;
 		}
 		return length;
 	}
-
 
 	public void setLocalFromTransferable()
 	{
 		id  = transferable.id;
 		name = transferable.name;
-		start_device_id = transferable.start_device_id;
-		end_device_id = transferable.end_device_id;
-		type_id = transferable.type_id;
-		path_id = transferable.path_id;
+		startDeviceId = transferable.startDeviceId;
+		endDeviceId = transferable.endDeviceId;
+		typeId = transferable._typeId;
+		pathId = transferable.pathId;
 
 		attributes = new HashMap(transferable.attributes.length);
 		links = new ArrayList(transferable.links.length);
@@ -218,10 +219,10 @@ public class SchemePath extends StubResource
 	{
 		transferable.id  = id;
 		transferable.name = name;
-		transferable.start_device_id = start_device_id;
-		transferable.end_device_id = end_device_id;
-		transferable.type_id = type_id;
-		transferable.path_id = path_id;
+		transferable.startDeviceId = startDeviceId;
+		transferable.endDeviceId = endDeviceId;
+		transferable._typeId = typeId;
+		transferable.pathId = path == null ? pathId : path.getId();
 
 		transferable.links = new PathElement_Transferable[links.size()];
 
@@ -242,28 +243,39 @@ public class SchemePath extends StubResource
 
 	public void updateLocalFromTransferable()
 	{
+		if (pathId.length() != 0)
+			path = (TransmissionPath)Pool.get(TransmissionPath.typ, pathId);
 	}
 
 	public String getSchemeId()
 	{
-		return scheme_id;
+		return schemeId;
 	}
 
-	public void setSchemeId(String scheme_id)
+	public void setSchemeId(String schemeId)
 	{
-		this.scheme_id = scheme_id;
+		this.schemeId = schemeId;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(path_id);
+		out.writeObject(pathId);
+		TransmissionPath[] p;
+		if (path == null)
+			p = new TransmissionPath[0];
+		else
+		{
+			p = new TransmissionPath[1];
+			p[0] = path;
+		}
+
 		out.writeObject(links);
 		out.writeObject(attributes);
-		out.writeObject(type_id);
-		out.writeObject(start_device_id);
-		out.writeObject(end_device_id);
+		out.writeObject(typeId);
+		out.writeObject(startDeviceId);
+		out.writeObject(endDeviceId);
 	}
 
 	private void readObject(java.io.ObjectInputStream in)
@@ -271,12 +283,16 @@ public class SchemePath extends StubResource
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		path_id = (String )in.readObject();
+		pathId = (String )in.readObject();
+		TransmissionPath[] p = (TransmissionPath[])in.readObject();
+		if (p.length == 1)
+			path = p[0];
+
 		links = (List )in.readObject();
 		attributes = (Map )in.readObject();
-		type_id = (String )in.readObject();
-		start_device_id = (String )in.readObject();
-		end_device_id = (String )in.readObject();
+		typeId = (String )in.readObject();
+		startDeviceId = (String )in.readObject();
+		endDeviceId = (String )in.readObject();
 
 		transferable = new SchemePath_Transferable();
 	}
@@ -315,15 +331,15 @@ class SchemePathModel extends ObjectResourceModel
 		this.sp = sp;
 	}
 
-	public String getColumnValue(String col_id)
+	public String getColumnValue(String colId)
 	{
-		if(col_id.equals("id"))
+		if(colId.equals("id"))
 			return sp.getId();
-		if(col_id.equals("full_path"))
+		if(colId.equals("full_path"))
 		{
 			String s = "";
 			String id = "", name = "";
-			s += ((SchemeElement)Pool.get( SchemeElement.typ, sp.start_device_id)).name;
+			s += ((SchemeElement)Pool.get( SchemeElement.typ, sp.startDeviceId)).name;
 			PathElement pe;
 			for( Iterator links = sp.links.iterator();  links.hasNext();)
 			{ pe = (PathElement) links.next();
@@ -339,7 +355,7 @@ class SchemePathModel extends ObjectResourceModel
 
 			return s;
 		}
-		if(col_id.equals("name"))
+		if(colId.equals("name"))
 			return sp.getName();
 		return "";
 	}

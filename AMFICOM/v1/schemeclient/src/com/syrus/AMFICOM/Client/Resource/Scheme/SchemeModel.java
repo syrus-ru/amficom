@@ -27,7 +27,7 @@ public class SchemeModel extends ObjectResourceModel
 			if(col_id.equals("created"))
 				s = sdf.format(new Date(scheme.created));
 			if(col_id.equals("created_by"))
-				s = scheme.created_by;
+				s = scheme.createdBy;
 			if(col_id.equals("description"))
 				s = scheme.description;
 		}

@@ -3,21 +3,22 @@ package com.syrus.AMFICOM.Client.Resource.Scheme;
 import java.io.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.SchemeCableThread_Transferable;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 
 public class SchemeCableThread extends StubResource implements Serializable
 {
 	public static final String typ = "schemecablethread";
-	private static final long serialVersionUID = 01L;
+	private static final long serialVersionUID = 02L;
 	public SchemeCableThread_Transferable transferable;
 
 	public String id = "";
 	public String name = "";
-	public String link_type_id = "";
-	public String thread_id = "";
-
-	public transient String cable_link_id = "";
+	public String linkTypeId = "";
+	public String threadId = "";
+	public String cableLinkId = "";
 
 	public Map attributes;
 
@@ -54,6 +55,11 @@ public class SchemeCableThread extends StubResource implements Serializable
 		return transferable;
 	}
 
+	public String getPropertyPaneClassName()
+	{
+		return "";
+	}
+
 	public String getDomainId()
 	{
 		return "sysdomain";
@@ -63,8 +69,9 @@ public class SchemeCableThread extends StubResource implements Serializable
 	{
 		id  = transferable.id;
 		name = transferable.name;
-		link_type_id = transferable.link_type_id;
-		thread_id = transferable.thread_id;
+		linkTypeId = transferable.linkTypeId;
+		threadId = transferable.threadId;
+		cableLinkId = transferable.cableLinkId;
 
 		attributes = new HashMap(transferable.attributes.length);
 		for(int i = 0; i < transferable.attributes.length; i++)
@@ -75,8 +82,9 @@ public class SchemeCableThread extends StubResource implements Serializable
 	{
 		transferable.id  = id;
 		transferable.name = name;
-		transferable.link_type_id = link_type_id;
-		transferable.thread_id = thread_id;
+		transferable.linkTypeId = linkTypeId;
+		transferable.threadId = threadId;
+		transferable.cableLinkId = cableLinkId;
 
 		int l = this.attributes.size();
 		int i = 0;
@@ -93,18 +101,13 @@ public class SchemeCableThread extends StubResource implements Serializable
 	{
 	}
 
-	public String getPropertyPaneClassName()
-	{
-		return "";
-	}
-
 	public Object clone(DataSourceInterface dataSource)
 	{
 		SchemeCableThread thread = new SchemeCableThread(dataSource.GetUId(SchemeCableThread.typ));
 
 		thread.name = name;
-		thread.link_type_id = link_type_id;
-		thread.thread_id = thread_id;
+		thread.linkTypeId = linkTypeId;
+		thread.threadId = threadId;
 
 		thread.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 
@@ -116,8 +119,9 @@ public class SchemeCableThread extends StubResource implements Serializable
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(link_type_id);
-		out.writeObject(thread_id);
+		out.writeObject(linkTypeId);
+		out.writeObject(threadId);
+		out.writeObject(cableLinkId);
 		out.writeObject(attributes);
 	}
 
@@ -126,8 +130,9 @@ public class SchemeCableThread extends StubResource implements Serializable
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		link_type_id = (String )in.readObject();
-		thread_id = (String )in.readObject();
+		linkTypeId = (String )in.readObject();
+		threadId = (String )in.readObject();
+		cableLinkId = (String )in.readObject();
 		attributes = (Map )in.readObject();
 
 		transferable = new SchemeCableThread_Transferable();

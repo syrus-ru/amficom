@@ -3,8 +3,11 @@ package com.syrus.AMFICOM.Client.Resource.Scheme;
 import java.io.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.SchemeCablePort_Transferable;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
+import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
 
 public class SchemeCablePort extends StubResource implements Serializable
 {
@@ -14,14 +17,15 @@ public class SchemeCablePort extends StubResource implements Serializable
 
 	public String id = "";
 	public String name = "";
-	public String cable_port_id = "";
-	public String cable_port_type_id = "";
-	public String device_id = "";
-	public String cable_link_id = "";
-	public boolean is_access_port = false;
-	public String access_port_id = "";
-	public String access_port_type_id = "";
-	public String direction_type = "";
+	public String deviceId = "";
+	public String cableLinkId = "";
+	public String cablePortId = "";
+	public CablePort cablePort;
+
+	public String cablePortTypeId = "";
+	public String measurementPortId = "";
+	public String measurementPortTypeId = "";
+	public String directionType = "";
 
 	public Map attributes;
 
@@ -53,14 +57,14 @@ public class SchemeCablePort extends StubResource implements Serializable
 		return id;
 	}
 
-	public String getPropertyPaneClassName()
-	{
-		return "";
-	}
-
 	public Object getTransferable()
 	{
 		return transferable;
+	}
+
+	public String getPropertyPaneClassName()
+	{
+		return "";
 	}
 
 	public String getDomainId()
@@ -72,14 +76,13 @@ public class SchemeCablePort extends StubResource implements Serializable
 	{
 		id  = transferable.id;
 		name = transferable.name;
-		cable_port_id = transferable.cable_port_id;
-		cable_port_type_id = transferable.cable_port_type_id;
-		device_id = transferable.device_id;
-		cable_link_id = transferable.cable_link_id;
-		is_access_port = transferable.is_access_port;
-		access_port_id = transferable.access_port_id;
-		access_port_type_id = transferable.access_port_type_id;
-		direction_type = transferable.direction_type;
+		cablePortId = transferable.cablePortId;
+		cablePortTypeId = transferable.cablePortTypeId;
+		deviceId = transferable.deviceId;
+		cableLinkId = transferable.cableLinkId;
+		measurementPortId = transferable.measurementPortId;
+		measurementPortTypeId = transferable.measurementPortTypeId;
+		directionType = transferable.directionType;
 
 		attributes = new HashMap(transferable.attributes.length);
 		for(int i = 0; i < transferable.attributes.length; i++)
@@ -90,14 +93,13 @@ public class SchemeCablePort extends StubResource implements Serializable
 	{
 		transferable.id  = id;
 		transferable.name = name;
-		transferable.cable_port_id = cable_port_id;
-		transferable.cable_port_type_id = cable_port_type_id;
-		transferable.device_id = device_id;
-		transferable.cable_link_id = cable_link_id;
-		transferable.is_access_port = is_access_port;
-		transferable.access_port_id = access_port_id;
-		transferable.access_port_type_id = access_port_type_id;
-		transferable.direction_type = direction_type;
+		transferable.cablePortId = cablePort == null ? cablePortId : cablePort.getId();
+		transferable.cablePortTypeId = cablePortTypeId;
+		transferable.deviceId = deviceId;
+		transferable.cableLinkId = cableLinkId;
+		transferable.measurementPortId = measurementPortId;
+		transferable.measurementPortTypeId = measurementPortTypeId;
+		transferable.directionType = directionType;
 
 		int l = this.attributes.size();
 		int i = 0;
@@ -112,16 +114,18 @@ public class SchemeCablePort extends StubResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
+		if (cablePortId.length() != 0)
+			cablePort = (CablePort)Pool.get(CablePort.typ, cablePortId);
 	}
 
 	public Object clone(DataSourceInterface dataSource)
 	{
-		String cloned_id = (String)Pool.get("clonedids", id);
-		if (cloned_id != null)
+		String clonedId = (String)Pool.get("clonedids", id);
+		if (clonedId != null)
 		{
-			SchemeCablePort cloned = (SchemeCablePort)Pool.get(SchemeCablePort.typ, cloned_id);
+			SchemeCablePort cloned = (SchemeCablePort)Pool.get(SchemeCablePort.typ, clonedId);
 			if (cloned == null)
-				System.err.println("SchemeCablePort.clone() id not found: " + cloned_id);
+				System.err.println("SchemeCablePort.clone() id not found: " + clonedId);
 			else
 				return cloned;
 		}
@@ -129,14 +133,14 @@ public class SchemeCablePort extends StubResource implements Serializable
 		SchemeCablePort port = new SchemeCablePort(dataSource.GetUId(SchemeCablePort.typ));
 
 		port.name = name;
-		port.cable_port_id = cable_port_id;
-		port.cable_port_type_id = cable_port_type_id;
-		port.device_id = device_id;
-		port.cable_link_id = cable_link_id;
-		port.is_access_port = is_access_port;
-		port.access_port_id = access_port_id;
-		port.access_port_type_id = access_port_type_id;
-		port.direction_type = direction_type;
+		port.cablePortId = cablePortId;
+		port.cablePort = cablePort;
+		port.cablePortTypeId = cablePortTypeId;
+		port.deviceId = deviceId;
+		port.cableLinkId = cableLinkId;
+		port.measurementPortId = measurementPortId;
+		port.measurementPortTypeId = measurementPortTypeId;
+		port.directionType = directionType;
 
 		port.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 
@@ -149,14 +153,22 @@ public class SchemeCablePort extends StubResource implements Serializable
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(cable_port_id);
-		out.writeObject(cable_port_type_id);
-		out.writeObject(device_id);
-		out.writeObject(cable_link_id);
-		out.writeBoolean(is_access_port);
-		out.writeObject(access_port_id);
-		out.writeObject(access_port_type_id);
-		out.writeObject(direction_type);
+		out.writeObject(cablePortId);
+		CablePort[] p;
+		if (cablePort == null)
+			p = new CablePort[0];
+		else
+		{
+			p = new CablePort[1];
+			p[0] = cablePort;
+		}
+
+		out.writeObject(cablePortTypeId);
+		out.writeObject(deviceId);
+		out.writeObject(cableLinkId);
+		out.writeObject(measurementPortId);
+		out.writeObject(measurementPortTypeId);
+		out.writeObject(directionType);
 		out.writeObject(attributes);
 	}
 
@@ -165,14 +177,17 @@ public class SchemeCablePort extends StubResource implements Serializable
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		cable_port_id = (String )in.readObject();
-		cable_port_type_id = (String )in.readObject();
-		device_id = (String )in.readObject();
-		cable_link_id = (String )in.readObject();
-		is_access_port = in.readBoolean();
-		access_port_id = (String )in.readObject();
-		access_port_type_id = (String )in.readObject();
-		direction_type = (String )in.readObject();
+		cablePortId = (String )in.readObject();
+		CablePort[] p = (CablePort[])in.readObject();
+		if (p.length == 1)
+			cablePort = p[0];
+
+		cablePortTypeId = (String )in.readObject();
+		deviceId = (String )in.readObject();
+		cableLinkId = (String )in.readObject();
+		measurementPortId = (String )in.readObject();
+		measurementPortTypeId = (String )in.readObject();
+		directionType = (String )in.readObject();
 		attributes = (Map )in.readObject();
 
 		transferable = new SchemeCablePort_Transferable();

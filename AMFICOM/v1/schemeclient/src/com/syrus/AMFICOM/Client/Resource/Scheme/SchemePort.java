@@ -3,25 +3,29 @@ package com.syrus.AMFICOM.Client.Resource.Scheme;
 import java.io.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.SchemePort_Transferable;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
+import com.syrus.AMFICOM.Client.Resource.Network.Port;
 
 public class SchemePort extends StubResource implements Serializable
 {
 	public static final String typ = "schemeport";
-	private static final long serialVersionUID = 01L;
+	private static final long serialVersionUID = 02L;
 	public SchemePort_Transferable transferable;
 
 	public String id = "";
 	public String name = "";
-	public String port_id = "";
-	public String port_type_id = "";
-	public boolean is_access_port = false;
-	public String access_port_id = "";
-	public String access_port_type_id = "";
-	public String device_id = "";
-	public String link_id = "";
-	public String direction_type = "";
+	private String portId = "";
+	public Port port;
+
+	public String portTypeId = "";
+	public String measurementPortId = "";
+	public String measurementPortTypeId = "";
+	public String deviceId = "";
+	public String linkId = "";
+	public String directionType = "";
 
 	public Map attributes;
 
@@ -67,14 +71,13 @@ public class SchemePort extends StubResource implements Serializable
 	{
 		id  = transferable.id;
 		name = transferable.name;
-		port_type_id = transferable.port_type_id;
-		access_port_type_id = transferable.access_port_type_id;
-		device_id = transferable.device_id;
-		link_id = transferable.link_id;
-		port_id = transferable.port_id;
-		access_port_id = transferable.access_port_id;
-		is_access_port = transferable.is_access_port;
-		direction_type = transferable.direction_type;
+		portTypeId = transferable.portTypeId;
+		measurementPortTypeId = transferable.measurementPortTypeId;
+		deviceId = transferable.deviceId;
+		linkId = transferable.linkId;
+		portId = transferable.portId;
+		measurementPortId = transferable.measurementPortId;
+		directionType = transferable.directionType;
 
 		attributes = new HashMap(transferable.attributes.length);
 		for(int i = 0; i < transferable.attributes.length; i++)
@@ -85,14 +88,13 @@ public class SchemePort extends StubResource implements Serializable
 	{
 		transferable.id  = id;
 		transferable.name = name;
-		transferable.port_type_id = port_type_id;
-		transferable.access_port_type_id = access_port_type_id;
-		transferable.device_id = device_id;
-		transferable.link_id = link_id;
-		transferable.port_id = port_id;
-		transferable.access_port_id = access_port_id;
-		transferable.is_access_port = is_access_port;
-		transferable.direction_type = direction_type;
+		transferable.portTypeId = portTypeId;
+		transferable.measurementPortTypeId = measurementPortTypeId;
+		transferable.deviceId = deviceId;
+		transferable.linkId = linkId;
+		transferable.portId = port == null ? portId : port.getId();
+		transferable.measurementPortId = measurementPortId;
+		transferable.directionType = directionType;
 
 		int l = this.attributes.size();
 		int i = 0;
@@ -107,6 +109,8 @@ public class SchemePort extends StubResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
+		if (portId.length() != 0)
+			port = (Port)Pool.get(Port.typ, portId);
 	}
 
 	public String getPropertyPaneClassName()
@@ -116,12 +120,12 @@ public class SchemePort extends StubResource implements Serializable
 
 	public Object clone(DataSourceInterface dataSource)
 	{
-		String cloned_id = (String)Pool.get("clonedids", id);
-		if (cloned_id != null)
+		String clonedId = (String)Pool.get("clonedids", id);
+		if (clonedId != null)
 		{
-			SchemePort cloned = (SchemePort)Pool.get(SchemePort.typ, cloned_id);
+			SchemePort cloned = (SchemePort)Pool.get(SchemePort.typ, clonedId);
 			if (cloned == null)
-				System.err.println("SchemePort.clone() id not found: " + cloned_id);
+				System.err.println("SchemePort.clone() id not found: " + clonedId);
 			else
 				return cloned;
 		}
@@ -129,14 +133,14 @@ public class SchemePort extends StubResource implements Serializable
 		SchemePort port = new SchemePort(dataSource.GetUId(SchemePort.typ));
 
 		port.name = name;
-		port.port_type_id = port_type_id;
-		port.access_port_type_id = access_port_type_id;
-		port.device_id = device_id;
-		port.link_id = link_id;
-		port.port_id = port_id;
-		port.access_port_id = access_port_id;
-		port.is_access_port = is_access_port;
-		port.direction_type = direction_type;
+		port.portTypeId = portTypeId;
+		port.measurementPortTypeId = measurementPortTypeId;
+		port.deviceId = deviceId;
+		port.linkId = linkId;
+		port.portId = portId;
+		port.port = this.port;
+		port.measurementPortId = measurementPortId;
+		port.directionType = directionType;
 
 		port.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 
@@ -150,14 +154,22 @@ public class SchemePort extends StubResource implements Serializable
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(port_type_id);
-		out.writeObject(access_port_type_id);
-		out.writeObject(device_id);
-		out.writeObject(link_id);
-		out.writeObject(port_id);
-		out.writeObject(access_port_id);
-		out.writeBoolean(is_access_port);
-		out.writeObject(direction_type);
+		out.writeObject(portTypeId);
+		out.writeObject(measurementPortTypeId);
+		out.writeObject(deviceId);
+		out.writeObject(linkId);
+		out.writeObject(portId);
+		Port[] p;
+		if (port == null)
+			p = new Port[0];
+		else
+		{
+			p = new Port[1];
+			p[0] = port;
+		}
+
+		out.writeObject(measurementPortId);
+		out.writeObject(directionType);
 		out.writeObject(attributes);
 	}
 
@@ -166,14 +178,17 @@ public class SchemePort extends StubResource implements Serializable
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		port_type_id = (String )in.readObject();
-		access_port_type_id = (String )in.readObject();
-		device_id = (String )in.readObject();
-		link_id = (String )in.readObject();
-		port_id = (String )in.readObject();
-		access_port_id = (String )in.readObject();
-		is_access_port = in.readBoolean();
-		direction_type = (String )in.readObject();
+		portTypeId = (String )in.readObject();
+		measurementPortTypeId = (String )in.readObject();
+		deviceId = (String )in.readObject();
+		linkId = (String )in.readObject();
+		portId = (String )in.readObject();
+		Port[] p = (Port[])in.readObject();
+		if (p.length == 1)
+			port = p[0];
+
+		measurementPortId = (String )in.readObject();
+		directionType = (String )in.readObject();
 		attributes = (Map )in.readObject();
 
 		transferable = new SchemePort_Transferable();

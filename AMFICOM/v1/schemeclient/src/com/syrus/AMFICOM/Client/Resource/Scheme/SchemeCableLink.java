@@ -5,11 +5,12 @@ import java.util.*;
 
 import java.awt.datatransfer.*;
 
+import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkProtoElement;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
 
 public class SchemeCableLink extends StubResource
@@ -17,24 +18,24 @@ public class SchemeCableLink extends StubResource
 {
 	public static final String typ = "schemecablelink";
 	public static final char delimeter = ':';
-	private static final long serialVersionUID = 02L;
+	private static final long serialVersionUID = 03L;
 	public SchemeCableLink_Transferable transferable;
 
 	public String id = "";
 	private String name = "";
-	public String source_port_id = "";
-	public String target_port_id = "";
-	public String cable_link_id = "";
-	public String cable_link_type_id = "";
-	private String scheme_id = "";
+	public String sourcePortId = "";
+	public String targetPortId = "";
+	public String cableLinkId = "";
+	public CableLink cableLink;
+	public String cableLinkTypeId = "";
+	private String schemeId = "";
 
-	public double optical_length = 0;
-	public double physical_length = 0;
+	public double opticalLength = 0;
+	public double physicalLength = 0;
 
-	public Collection cable_threads;
+	public Collection cableThreads;
+	public Collection channelingItems;
 	public Map attributes;
-
-	public MapPhysicalLinkProtoElement mplpe = null;
 
 	public boolean alarmed = false;
 
@@ -49,7 +50,8 @@ public class SchemeCableLink extends StubResource
 		this.id = id;
 		transferable = new SchemeCableLink_Transferable();
 
-		cable_threads = new ArrayList();
+		cableThreads = new ArrayList();
+		channelingItems = new ArrayList();
 		attributes = new HashMap();
 	}
 
@@ -66,7 +68,7 @@ public class SchemeCableLink extends StubResource
 	public void setName(String name)
 	{
 		this.name = name;
-		for (Iterator it = cable_threads.iterator(); it.hasNext();)
+		for (Iterator it = cableThreads.iterator(); it.hasNext();)
 		{
 			SchemeCableThread thread = (SchemeCableThread)it.next();
 			thread.name = new StringBuffer(name).append(delimeter).append(parseName(thread.getName())).toString();
@@ -86,12 +88,12 @@ public class SchemeCableLink extends StubResource
 		return id;
 	}
 
-	public SchemeCableThread getCableThread(String thread_id)
+	public SchemeCableThread getCableThread(String threadId)
 	{
-		for (Iterator it = cable_threads.iterator(); it.hasNext();)
+		for (Iterator it = cableThreads.iterator(); it.hasNext();)
 		{
 			SchemeCableThread thread = (SchemeCableThread)it.next();
-			if (thread.getId().equals(thread_id))
+			if (thread.getId().equals(threadId))
 				return thread;
 		}
 		return null;
@@ -126,30 +128,33 @@ public class SchemeCableLink extends StubResource
 	{
 		id  = transferable.id;
 
-		source_port_id = transferable.source_port_id;
-		target_port_id = transferable.target_port_id;
-		cable_link_id = transferable.cable_link_id;
-		cable_link_type_id = transferable.cable_link_type_id;
+		sourcePortId = transferable.sourcePortId;
+		targetPortId = transferable.targetPortId;
+		cableLinkId = transferable.cableLinkId;
+		cableLinkTypeId = transferable.cableLinkTypeId;
 
 		try
 		{
-			optical_length = Double.parseDouble(transferable.optical_length);
+			opticalLength = Double.parseDouble(transferable.opticalLength);
 		}
 		catch (NumberFormatException ex)
 		{
-			optical_length = 0;
+			opticalLength = 0;
 		}
 		try
 		{
-			physical_length = Double.parseDouble(transferable.physical_length);
+			physicalLength = Double.parseDouble(transferable.physicalLength);
 		}
 		catch (NumberFormatException ex)
 		{
-			physical_length = 0;
+			physicalLength = 0;
 		}
-		cable_threads = new ArrayList();
-		for (int i = 0; i < transferable.cable_threads.length; i++)
-			cable_threads.add(new SchemeCableThread(transferable.cable_threads[i]));
+		cableThreads = new ArrayList();
+		for (int i = 0; i < transferable.cableThreads.length; i++)
+			cableThreads.add(new SchemeCableThread(transferable.cableThreads[i]));
+		channelingItems = new ArrayList();
+		for (int i = 0; i < transferable.channeling.length; i++)
+			channelingItems.add(new CableChannelingItem(transferable.channeling[i]));
 
 		setName(transferable.name);
 
@@ -162,21 +167,29 @@ public class SchemeCableLink extends StubResource
 	{
 		transferable.id  = id;
 		transferable.name = name;
-		transferable.source_port_id = source_port_id;
-		transferable.target_port_id = target_port_id;
-		transferable.cable_link_id = cable_link_id;
-		transferable.cable_link_type_id = cable_link_type_id;
+		transferable.sourcePortId = sourcePortId;
+		transferable.targetPortId = targetPortId;
+		transferable.cableLinkId = cableLinkId;
+		transferable.cableLinkTypeId = cableLinkTypeId;
+		transferable.cableLinkId = cableLink == null ? cableLinkId : cableLink.getId();
+		transferable.opticalLength = String.valueOf(opticalLength);
+		transferable.physicalLength = String.valueOf(physicalLength);
 
-		transferable.optical_length = String.valueOf(optical_length);
-		transferable.physical_length = String.valueOf(physical_length);
-
-		transferable.cable_threads = new SchemeCableThread_Transferable[cable_threads.size()];
+		transferable.cableThreads = new SchemeCableThread_Transferable[cableThreads.size()];
 		int counter = 0;
-		for (Iterator it = cable_threads.iterator(); it.hasNext();)
+		for (Iterator it = cableThreads.iterator(); it.hasNext();)
 		{
-			SchemeCableThread cable_thread = (SchemeCableThread)it.next();
-			cable_thread.setTransferableFromLocal();
-			transferable.cable_threads[counter++] = (SchemeCableThread_Transferable)cable_thread.getTransferable();
+			SchemeCableThread cableThread = (SchemeCableThread)it.next();
+			cableThread.setTransferableFromLocal();
+			transferable.cableThreads[counter++] = (SchemeCableThread_Transferable)cableThread.getTransferable();
+		}
+		transferable.channeling = new CableChannelingItem_Transferable[channelingItems.size()];
+		counter = 0;
+		for (Iterator it = channelingItems.iterator(); it.hasNext();)
+		{
+			CableChannelingItem item = (CableChannelingItem)it.next();
+			item.setTransferableFromLocal();
+			transferable.channeling[counter++] = (CableChannelingItem_Transferable)item.getTransferable();
 		}
 
 		int l = this.attributes.size();
@@ -192,47 +205,55 @@ public class SchemeCableLink extends StubResource
 
 	public void updateLocalFromTransferable()
 	{
+		if (cableLinkId.length() != 0)
+			cableLink = (CableLink)Pool.get(CableLink.typ, cableLinkId);
 	}
 
 	public Object clone(DataSourceInterface dataSource)
 	{
-		String cloned_id = (String)Pool.get("clonedids", id);
-		if (cloned_id != null)
+		String clonedId = (String)Pool.get("clonedids", id);
+		if (clonedId != null)
 		{
-			SchemeCableLink cloned_link = (SchemeCableLink)Pool.get(SchemeCableLink.typ, cloned_id);
-			if (cloned_link == null)
-				System.err.println("SchemeCableLink.clone() id not found: " + cloned_id);
+			SchemeCableLink clonedLink = (SchemeCableLink)Pool.get(SchemeCableLink.typ, clonedId);
+			if (clonedLink == null)
+				System.err.println("SchemeCableLink.clone() id not found: " + clonedId);
 			else
-				return cloned_link;
+				return clonedLink;
 		}
 
 		SchemeCableLink link = new SchemeCableLink(dataSource.GetUId(SchemeCableLink.typ));
 
-		link.cable_link_id = cable_link_id;
-		link.cable_link_type_id = cable_link_type_id;
-		link.source_port_id = (String)Pool.get("clonedids", source_port_id);
-		if (link.source_port_id == null)
-			link.source_port_id = source_port_id;
-		link.target_port_id = (String)Pool.get("clonedids", target_port_id);
-		if (link.target_port_id == null)
-			link.target_port_id = target_port_id;
+		link.cableLinkId = cableLinkId;
+		link.cableLink = cableLink;
+		link.cableLinkTypeId = cableLinkTypeId;
+		link.sourcePortId = (String)Pool.get("clonedids", sourcePortId);
+		if (link.sourcePortId == null)
+			link.sourcePortId = sourcePortId;
+		link.targetPortId = (String)Pool.get("clonedids", targetPortId);
+		if (link.targetPortId == null)
+			link.targetPortId = targetPortId;
 
-		link.optical_length = optical_length;
-		link.physical_length = physical_length;
+		link.opticalLength = opticalLength;
+		link.physicalLength = physicalLength;
 
-		if (!link.source_port_id.equals(""))
+		if (!link.sourcePortId.equals(""))
 		{
-			SchemeCablePort source_port = (SchemeCablePort)Pool.get(SchemeCablePort.typ, link.source_port_id);
-			source_port.cable_link_id = link.getId();
+			SchemeCablePort sourcePort = (SchemeCablePort)Pool.get(SchemeCablePort.typ, link.sourcePortId);
+			sourcePort.cableLinkId = link.getId();
 		}
-		if (!link.target_port_id.equals(""))
+		if (!link.targetPortId.equals(""))
 		{
-			SchemeCablePort target_port = (SchemeCablePort)Pool.get(SchemeCablePort.typ, link.target_port_id);
-			target_port.cable_link_id = link.getId();
+			SchemeCablePort targetPort = (SchemeCablePort)Pool.get(SchemeCablePort.typ, link.targetPortId);
+			targetPort.cableLinkId = link.getId();
 		}
 
-		for (Iterator it = cable_threads.iterator(); it.hasNext();)
-			link.cable_threads.add(((SchemeCableThread)it.next()).clone(dataSource));
+		for (Iterator it = cableThreads.iterator(); it.hasNext();)
+		{
+			SchemeCableThread thread = (SchemeCableThread)((SchemeCableThread)it.next()).clone(dataSource);
+			thread.cableLinkId = link.cableLinkId;
+			link.cableThreads.add(thread);
+		}
+
 		link.setName(name);
 
 		link.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
@@ -246,14 +267,23 @@ public class SchemeCableLink extends StubResource
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(source_port_id);
-		out.writeObject(target_port_id);
-		out.writeObject(cable_link_id);
-		out.writeObject(cable_link_type_id);
-		out.writeObject(scheme_id);
-		out.writeObject(cable_threads);
-		out.writeDouble(optical_length);
-		out.writeDouble(physical_length);
+		out.writeObject(sourcePortId);
+		out.writeObject(targetPortId);
+		out.writeObject(cableLinkId);
+		CableLink[] l;
+		if (cableLink == null)
+			l = new CableLink[0];
+		else
+		{
+			l = new CableLink[1];
+			l[0] = cableLink;
+		}
+
+		out.writeObject(cableLinkTypeId);
+		out.writeObject(schemeId);
+		out.writeObject(cableThreads);
+		out.writeDouble(opticalLength);
+		out.writeDouble(physicalLength);
 		out.writeObject(attributes);
 	}
 
@@ -262,73 +292,51 @@ public class SchemeCableLink extends StubResource
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		source_port_id = (String )in.readObject();
-		target_port_id = (String )in.readObject();
-		cable_link_id = (String )in.readObject();
-		cable_link_type_id = (String )in.readObject();
-		scheme_id = (String )in.readObject();
-		cable_threads = (Collection )in.readObject();
-		optical_length = in.readDouble();
-		physical_length = in.readDouble();
+		sourcePortId = (String )in.readObject();
+		targetPortId = (String )in.readObject();
+		cableLinkId = (String )in.readObject();
+		CableLink[] l = (CableLink[])in.readObject();
+		if (l.length == 1)
+			cableLink = l[0];
+
+		cableLinkTypeId = (String )in.readObject();
+		schemeId = (String )in.readObject();
+		cableThreads = (Collection )in.readObject();
+		opticalLength = in.readDouble();
+		physicalLength = in.readDouble();
 		attributes = (Map )in.readObject();
 
 		transferable = new SchemeCableLink_Transferable();
 	}
 
-//	double physical_length = 0.0D;
-
 	public double getPhysicalLength()
 	{
-		if (!cable_link_id.equals(""))
-		{
-			CableLink link = (CableLink)Pool.get(CableLink.typ, cable_link_id);
-			if (link != null)
-				return link.physical_length;
-		}
-		return physical_length;
+		return physicalLength;
 	}
 
 	public void setPhysicalLength(double d)
 	{
-		physical_length = d;
-		if (!cable_link_id.equals(""))
-		{
-			CableLink link = (CableLink)Pool.get(CableLink.typ, cable_link_id);
-			if (link != null)
-				link.physical_length = d;
-		}
+		physicalLength = d;
 	}
 
 	public double getOpticalLength()
 	{
-		if (!cable_link_id.equals(""))
-		{
-			CableLink link = (CableLink)Pool.get(CableLink.typ, cable_link_id);
-			if (link != null)
-				return link.optical_length;
-		}
-		return optical_length;
+		return opticalLength;
 	}
 
 	public void setOpticalLength(double d)
 	{
-		optical_length = d;
-		if (!cable_link_id.equals(""))
-		{
-			CableLink link = (CableLink)Pool.get(CableLink.typ, cable_link_id);
-			if (link != null)
-				link.optical_length = d;
-		}
+		opticalLength = d;
 	}
 
 	public String getSchemeId()
 	{
-		return scheme_id;
+		return schemeId;
 	}
 
-	public void setSchemeId(String scheme_id)
+	public void setSchemeId(String schemeId)
 	{
-		this.scheme_id = scheme_id;
+		this.schemeId = schemeId;
 	}
 
 //////////////////////////////////////////////////
@@ -366,21 +374,21 @@ class SchemeCableLinkModel extends ObjectResourceModel
 		scl = schemeCableLink;
 	}
 
-	public String getColumnValue(String col_id)
+	public String getColumnValue(String colId)
 	{
 		String s = "";
 		try
 		{
-			if(col_id.equals("optimizerRibAttribute"))
+			if(colId.equals("optimizerRibAttribute"))
 			{
 				ElementAttribute ea = (ElementAttribute )scl.attributes.get("optimizerRibAttribute");
 				s = ea.value;
 			}
-			if(col_id.equals("name"))
+			if(colId.equals("name"))
 			{
 				s = scl.getName();
 			}
-			if(col_id.equals("id"))
+			if(colId.equals("id"))
 			{
 				s = scl.getId();
 			}
@@ -393,11 +401,11 @@ class SchemeCableLinkModel extends ObjectResourceModel
 		return s;
 	}
 
-	public void setColumnValue(String col_id, Object obj)
+	public void setColumnValue(String colId, Object obj)
 	{
 		try
 		{
-			if(col_id.equals("optimizerRibAttribute"))
+			if(colId.equals("optimizerRibAttribute"))
 			{
 				ElementAttribute ea = (ElementAttribute )scl.attributes.get("optimizerRibAttribute");
 				ea.setValue(obj);

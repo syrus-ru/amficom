@@ -3,10 +3,12 @@ package com.syrus.AMFICOM.Client.Resource.Scheme;
 import java.io.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.SchemeLink_Transferable;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.Network.Link;
 
 public class SchemeLink extends StubResource implements Serializable
@@ -17,14 +19,17 @@ public class SchemeLink extends StubResource implements Serializable
 
 	public String id = "";
 	public String name = "";
-	public String source_port_id = "";
-	public String target_port_id = "";
-	public String link_id = "";
-	public String link_type_id = "";
-	private String scheme_id = "";
+	public String sourcePortId = "";
+	public String targetPortId = "";
+	public String linkId = "";
+	public Link link;
 
-	public double optical_length = 0;
-	public double physical_length = 0;
+	public String linkTypeId = "";
+	private String schemeId = "";
+	public String siteId = "";
+
+	public double opticalLength = 0;
+	public double physicalLength = 0;
 
 	public Map attributes;
 
@@ -87,28 +92,29 @@ public class SchemeLink extends StubResource implements Serializable
 	{
 		id  = transferable.id;
 		name = transferable.name;
-		source_port_id = transferable.source_port_id;
-		target_port_id = transferable.target_port_id;
-		link_type_id = transferable.link_type_id;
-		link_id = transferable.link_id;
+		sourcePortId = transferable.sourcePortId;
+		targetPortId = transferable.targetPortId;
+		linkTypeId = transferable.linkTypeId;
+		linkId = transferable.linkId;
+		siteId = transferable.siteId;
+		schemeId = transferable.schemeId;
 
 		try
 		{
-			optical_length = Double.parseDouble(transferable.optical_length);
+			opticalLength = Double.parseDouble(transferable.opticalLength);
 		}
 		catch (NumberFormatException ex)
 		{
-			optical_length = 0;
+			opticalLength = 0;
 		}
 		try
 		{
-			physical_length = Double.parseDouble(transferable.physical_length);
+			physicalLength = Double.parseDouble(transferable.physicalLength);
 		}
 		catch (NumberFormatException ex)
 		{
-			physical_length = 0;
+			physicalLength = 0;
 		}
-
 		attributes = new HashMap(transferable.attributes.length);
 		for(int i = 0; i < transferable.attributes.length; i++)
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
@@ -118,13 +124,15 @@ public class SchemeLink extends StubResource implements Serializable
 	{
 		transferable.id  = id;
 		transferable.name = name;
-		transferable.source_port_id = source_port_id;
-		transferable.target_port_id = target_port_id;
-		transferable.link_id = link_id;
-		transferable.link_type_id = link_type_id;
+		transferable.sourcePortId = sourcePortId;
+		transferable.targetPortId = targetPortId;
+		transferable.linkId = link == null ? linkId : link.getId();
+		transferable.linkTypeId = linkTypeId;
+		transferable.siteId = siteId;
+		transferable.schemeId = schemeId;
 
-		transferable.optical_length = String.valueOf(optical_length);
-		transferable.physical_length = String.valueOf(physical_length);
+		transferable.opticalLength = String.valueOf(opticalLength);
+		transferable.physicalLength = String.valueOf(physicalLength);
 
 		int l = this.attributes.size();
 		int i = 0;
@@ -139,44 +147,49 @@ public class SchemeLink extends StubResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
+		if (linkId.length() != 0)
+			link = (Link)Pool.get(Link.typ, linkId);
 	}
 
 	public Object clone(DataSourceInterface dataSource)
 	{
-		String cloned_id = (String)Pool.get("clonedids", id);
-		if (cloned_id != null)
+		String clonedId = (String)Pool.get("clonedids", id);
+		if (clonedId != null)
 		{
-			SchemeLink cloned_link = (SchemeLink)Pool.get(SchemeLink.typ, cloned_id);
-			if (cloned_link == null)
-				System.err.println("SchemeLink.clone() id not found: " + cloned_id);
+			SchemeLink clonedLink = (SchemeLink)Pool.get(SchemeLink.typ, clonedId);
+			if (clonedLink == null)
+				System.err.println("SchemeLink.clone() id not found: " + clonedId);
 			else
-				return cloned_link;
+				return clonedLink;
 		}
 
 		SchemeLink link = new SchemeLink(dataSource.GetUId(SchemeLink.typ));
 
 		link.name = name;
-		link.link_id = link_id;
-		link.link_type_id = link_type_id;
-		link.source_port_id = (String)Pool.get("clonedids", source_port_id);
-		if (link.source_port_id == null)
-			link.source_port_id = source_port_id;
-		link.target_port_id = (String)Pool.get("clonedids", target_port_id);
-		if (link.target_port_id == null)
-			link.target_port_id = target_port_id;
+		link.linkId = linkId;
+		link.link = this.link;
+		link.linkTypeId = linkTypeId;
+		link.schemeId = schemeId;
+		link.siteId = siteId;
+		link.sourcePortId = (String)Pool.get("clonedids", sourcePortId);
+		if (link.sourcePortId == null)
+			link.sourcePortId = sourcePortId;
+		link.targetPortId = (String)Pool.get("clonedids", targetPortId);
+		if (link.targetPortId == null)
+			link.targetPortId = targetPortId;
 
-		link.optical_length = optical_length;
-		link.physical_length = physical_length;
+		link.opticalLength = opticalLength;
+		link.physicalLength = physicalLength;
 
-		if (!link.source_port_id.equals(""))
+		if (!link.sourcePortId.equals(""))
 		{
-			SchemePort source_port = (SchemePort)Pool.get(SchemePort.typ, link.source_port_id);
-			source_port.link_id = link.getId();
+			SchemePort sourcePort = (SchemePort)Pool.get(SchemePort.typ, link.sourcePortId);
+			sourcePort.linkId = link.getId();
 		}
-		if (!link.target_port_id.equals(""))
+		if (!link.targetPortId.equals(""))
 		{
-			SchemePort target_port = (SchemePort)Pool.get(SchemePort.typ, link.target_port_id);
-			target_port.link_id = link.getId();
+			SchemePort targetPort = (SchemePort)Pool.get(SchemePort.typ, link.targetPortId);
+			targetPort.linkId = link.getId();
 		}
 
 		link.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
@@ -188,69 +201,55 @@ public class SchemeLink extends StubResource implements Serializable
 
 	public double getPhysicalLength()
 	{
-		if (!link_id.equals(""))
-		{
-			Link link = (Link)Pool.get(Link.typ, link_id);
-			if (link != null)
-				return link.physical_length;
-		}
-		return physical_length;
+		return physicalLength;
 	}
 
 	public void setPhysicalLength(double d)
 	{
-		physical_length = d;
-		if (!link_id.equals(""))
-		{
-			Link link = (Link)Pool.get(Link.typ, link_id);
-			if (link != null)
-				link.physical_length = d;
-		}
+		physicalLength = d;
 	}
 
 	public double getOpticalLength()
 	{
-		if (!link_id.equals(""))
-		{
-			Link link = (Link)Pool.get(Link.typ, link_id);
-			if (link != null)
-				return link.optical_length;
-		}
-		return optical_length;
+		return opticalLength;
 	}
 
 	public void setOpticalLength(double d)
 	{
-		optical_length = d;
-		if (!link_id.equals(""))
-		{
-			Link link = (Link)Pool.get(Link.typ, link_id);
-			if (link != null)
-				link.optical_length = d;
-		}
+		opticalLength = d;
 	}
 
 	public String getSchemeId()
 	{
-		return scheme_id;
+		return schemeId;
 	}
 
-	public void setSchemeId(String scheme_id)
+	public void setSchemeId(String schemeId)
 	{
-		this.scheme_id = scheme_id;
+		this.schemeId = schemeId;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(source_port_id);
-		out.writeObject(target_port_id);
-		out.writeObject(link_id);
-		out.writeObject(link_type_id);
-		out.writeObject(scheme_id);
-		out.writeDouble(optical_length);
-		out.writeDouble(physical_length);
+		out.writeObject(sourcePortId);
+		out.writeObject(targetPortId);
+		out.writeObject(linkId);
+		Link[] l;
+		if (link == null)
+			l = new Link[0];
+		else
+		{
+			l = new Link[1];
+			l[0] = link;
+		}
+
+		out.writeObject(linkTypeId);
+		out.writeObject(siteId);
+		out.writeObject(schemeId);
+		out.writeDouble(opticalLength);
+		out.writeDouble(physicalLength);
 		out.writeObject(attributes);
 	}
 
@@ -259,13 +258,18 @@ public class SchemeLink extends StubResource implements Serializable
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		source_port_id = (String )in.readObject();
-		target_port_id = (String )in.readObject();
-		link_id = (String )in.readObject();
-		link_type_id = (String )in.readObject();
-		scheme_id = (String )in.readObject();
-		optical_length = in.readDouble();
-		physical_length = in.readDouble();
+		sourcePortId = (String )in.readObject();
+		targetPortId = (String )in.readObject();
+		linkId = (String )in.readObject();
+		Link[] l = (Link[])in.readObject();
+		if (l.length == 1)
+			link = l[0];
+
+		linkTypeId = (String )in.readObject();
+		siteId = (String )in.readObject();
+		schemeId = (String )in.readObject();
+		opticalLength = in.readDouble();
+		physicalLength = in.readDouble();
 		attributes = (Map )in.readObject();
 
 		transferable = new SchemeLink_Transferable();
@@ -281,21 +285,21 @@ class SchemeLinkModel extends ObjectResourceModel
 		sl = schemeLink;
 	}
 
-	public String getColumnValue(String col_id)
+	public String getColumnValue(String colId)
 	{
 		String s = "";
 		try
 		{
-			if(col_id.equals("optimizerRibAttribute"))
+			if(colId.equals("optimizerRibAttribute"))
 			{
 				ElementAttribute ea = (ElementAttribute )sl.attributes.get("optimizerRibAttribute");
 				s = ea.value;
 			}
-			if(col_id.equals("name"))
+			if(colId.equals("name"))
 			{
 				s = sl.getName();
 			}
-			if(col_id.equals("id"))
+			if(colId.equals("id"))
 			{
 				s = sl.getId();
 			}
@@ -305,15 +309,15 @@ class SchemeLinkModel extends ObjectResourceModel
 			System.out.println("error gettin field value - Analysis");
 			s = "";
 		}
-		System.out.println("get COL VAL for " + sl.getId() + " - retrieve " + col_id + " value " + s);
+		System.out.println("get COL VAL for " + sl.getId() + " - retrieve " + colId + " value " + s);
 		return s;
 	}
 
-	public void setColumnValue(String col_id, Object obj)
+	public void setColumnValue(String colId, Object obj)
 	{
 		try
 		{
-			if(col_id.equals("optimizerRibAttribute"))
+			if(colId.equals("optimizerRibAttribute"))
 			{
 				ElementAttribute ea = (ElementAttribute )sl.attributes.get("optimizerRibAttribute");
 				ea.setValue(obj);
