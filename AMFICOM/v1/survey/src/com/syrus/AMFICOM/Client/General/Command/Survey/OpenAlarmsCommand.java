@@ -1,14 +1,17 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
-import java.awt.*;
-import javax.swing.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.SurveyEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Survey.Alarm.AlarmFrame;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Survey.Alarm.*;
+import java.awt.Component;
+import java.awt.Dimension;
+
+import javax.swing.JDesktopPane;
 
 public class OpenAlarmsCommand extends VoidCommand
 {
@@ -73,7 +76,7 @@ public class OpenAlarmsCommand extends VoidCommand
       {
 				frame = (AlarmFrame)comp;
         dispatcher.notify(
-          new OperationEvent(frame,0,SurveyMDIMain.alarmFrameDisplayed));
+          new OperationEvent(frame,0,SurveyEvent.ALARM_FRAME_DISPLAYED));
         break;        
       }
 		}
@@ -83,7 +86,7 @@ public class OpenAlarmsCommand extends VoidCommand
 			desktop.add(frame);
       
       dispatcher.notify(
-        new OperationEvent(frame,0,SurveyMDIMain.alarmFrameDisplayed));
+        new OperationEvent(frame,0,SurveyEvent.ALARM_FRAME_DISPLAYED));
 		}
 		Dimension dim = new Dimension(desktop.getWidth(), desktop.getHeight());
 		frame.setLocation(0, 0);

@@ -10,9 +10,9 @@ import java.awt.Dimension;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
-public class SurveyNewMapViewCommand extends MapEditorOpenViewCommand
+public class SurveyMapViewOpenCommand extends MapEditorOpenViewCommand
 {
-	public SurveyNewMapViewCommand(JDesktopPane desktop, ApplicationContext aContext)
+	public SurveyMapViewOpenCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
 		super(desktop, aContext);
 	}

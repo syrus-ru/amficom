@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersPanel;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.SurveyEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -14,7 +15,6 @@ import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
@@ -34,7 +34,6 @@ import com.syrus.AMFICOM.measurement.ResultSortCondition;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.ParameterTypeSort;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
@@ -110,7 +109,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		getActiveContext();
 
 		aContext.getDispatcher().notify (
-			new OperationEvent (this,0,SurveyMDIMain.resultFrameDisplayed));
+			new OperationEvent (this,0,SurveyEvent.RESULT_FRAME_DISPLAYED));
 	}
 
 	public ResultFrame()

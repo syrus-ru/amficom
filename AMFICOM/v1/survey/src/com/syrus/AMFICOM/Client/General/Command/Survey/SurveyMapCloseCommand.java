@@ -9,12 +9,12 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
-public class MapCloseCommand extends VoidCommand
+public class SurveyMapCloseCommand extends VoidCommand
 {
 	Dispatcher dispatcher;
 	ApplicationContext aContext;
 
-	public MapCloseCommand(Dispatcher dispatcher, ApplicationContext aContext)
+	public SurveyMapCloseCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
 		this.dispatcher = dispatcher;
 		this.aContext = aContext;

@@ -5,6 +5,7 @@ import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Event.SurveyEvent;
 import com.syrus.AMFICOM.Client.General.Filter.FilterDialog;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -18,7 +19,6 @@ import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
 import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.AlarmFilter;
 import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.DefaultAlarmFilter;
 import com.syrus.AMFICOM.Client.Survey.Alarm.UI.AlarmController;
-import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
 import com.syrus.AMFICOM.analysis.dadara.OpticalAlarmDescriptor;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
@@ -412,7 +412,7 @@ public class AlarmFrame extends JInternalFrame
 					aContext);
 
 			aContext.getDispatcher().notify (
-				new OperationEvent (f,0,SurveyMDIMain.alarmPopupFrameDisplayed));
+				new OperationEvent (f,0,SurveyEvent.ALARM_POPUP_FRAME_DISPLAYED));
 
 			Container desktop = this.getParent();
 			f.setLocation(this.getLocation());

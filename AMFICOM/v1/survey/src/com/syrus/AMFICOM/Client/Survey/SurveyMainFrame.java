@@ -14,21 +14,21 @@ import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.CreateSurveyReportCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.MapCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyMapCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.OpenAlarmsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.OpenAnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.OpenExtendedAnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.OpenMapEditorCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.OpenNormsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.OpenEvaluationCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.OpenPrognosisCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.OpenResultsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.OpenSchedulerCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.OpenSchemeEditorCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyNewMapViewCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewAllCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewAllSchemeCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyMapViewOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewAllWithMapViewCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewAllWithSchemeCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewMapSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Survey.ViewSurveyNavigatorCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.ViewMeasurementArchiveCommand;
 import com.syrus.AMFICOM.Client.General.ConnectionInterface;
 import com.syrus.AMFICOM.Client.General.Event.AlarmReceivedEvent;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
+import com.syrus.AMFICOM.Client.General.Event.SurveyEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -55,7 +56,10 @@ import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
+import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
+import com.syrus.AMFICOM.Client.Resource.MapViewDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -95,7 +99,7 @@ import javax.swing.JViewport;
 import javax.swing.WindowConstants;
 //import com.syrus.AMFICOM.Client.Survey.UI.ReloadAttributes;
 
-public class SurveyMDIMain extends JFrame 
+public class SurveyMainFrame extends JFrame 
 	implements OperationListener, Module
 {
 
@@ -103,11 +107,6 @@ public class SurveyMDIMain extends JFrame
 	public ApplicationContext	aContext			= new ApplicationContext();
 
 	public String				domainId;
-
-	public static final String alarmFrameDisplayed = "alarmFrameDisplayed";
-	public static final String alarmPopupFrameDisplayed =
-		"alarmPopupFrameDisplayed";
-	public static final String resultFrameDisplayed = "resultFrameDisplayed";
 
 	static IniFile				iniFile;
 	static String				iniFileName			= "Survey.properties";
@@ -139,7 +138,7 @@ public class SurveyMDIMain extends JFrame
 	ElementsListFrame elementsListFrame = null;
 	PropsFrame propsFrame = null;
 
-	public SurveyMDIMain(ApplicationContext aContext) 
+	public SurveyMainFrame(ApplicationContext aContext) 
 	{
 		super();
 		try 
@@ -156,7 +155,7 @@ public class SurveyMDIMain extends JFrame
 		setContext(aContext);
 	}
 
-	public SurveyMDIMain() 
+	public SurveyMainFrame() 
 	{
 		this(new ApplicationContext());
 	}
@@ -316,7 +315,7 @@ public class SurveyMDIMain extends JFrame
 					aContext,
 					new ReflectometryAnalyseApplicationModelFactory()));
 		aModel.setCommand("menuStartEvaluation", 
-				new OpenNormsCommand(
+				new OpenEvaluationCommand(
 					Environment.getDispatcher(), 
 					aContext,
 					new ReflectometryAnalyseApplicationModelFactory()));
@@ -327,7 +326,7 @@ public class SurveyMDIMain extends JFrame
 					new DefaultPredictionApplicationModelFactory()));
 
 		aModel.setCommand("menuViewMapOpen", 
-				new SurveyNewMapViewCommand(
+				new SurveyMapViewOpenCommand(
 					desktopPane,
 					aContext));
 //				new SurveyViewAllCommand(
@@ -340,7 +339,7 @@ public class SurveyMDIMain extends JFrame
 					aContext, 
 					new DefaultMapEditorApplicationModelFactory()));
 		aModel.setCommand("menuViewMapClose", 
-				new MapCloseCommand(
+				new SurveyMapCloseCommand(
 					internalDispatcher, 
 					aContext));
 		aModel.setCommand("menuViewMapSetup", 
@@ -350,7 +349,7 @@ public class SurveyMDIMain extends JFrame
 		//new SurveyNewMapViewCommand(internalDispatcher, desktopPane,
 		// aContext, new MapSurveyNetApplicationModelFactory()));
 		aModel.setCommand("menuViewSchemeOpen", 
-				new SurveyViewAllSchemeCommand(
+				new SurveyViewAllWithSchemeCommand(
 					internalDispatcher, 
 					desktopPane, 
 					aContext));
@@ -364,7 +363,7 @@ public class SurveyMDIMain extends JFrame
 					aContext, 
 					null));
 		aModel.setCommand("menuViewMeasurements",
-				new ViewSurveyNavigatorCommand(
+				new ViewMeasurementArchiveCommand(
 					internalDispatcher,
 					desktopPane, 
 					"Навигатор объектов", 
@@ -380,7 +379,7 @@ public class SurveyMDIMain extends JFrame
 					desktopPane, 
 					aContext));
 		aModel.setCommand("menuViewAll", 
-				new SurveyViewAllCommand(
+				new SurveyViewAllWithMapViewCommand(
 					internalDispatcher, 
 					desktopPane, 
 					aContext));
@@ -441,9 +440,9 @@ public class SurveyMDIMain extends JFrame
 				this.aContext.getDispatcher().unregister(this, "mapaddschemeevent");
 				this.aContext.getDispatcher().unregister(this, "mapaddschemeelementevent");
 
-				this.aContext.getDispatcher().unregister(this, SurveyMDIMain.alarmFrameDisplayed);
-				this.aContext.getDispatcher().unregister(this, SurveyMDIMain.alarmPopupFrameDisplayed);
-				this.aContext.getDispatcher().unregister(this, SurveyMDIMain.resultFrameDisplayed);
+				this.aContext.getDispatcher().unregister(this, SurveyEvent.ALARM_FRAME_DISPLAYED);
+				this.aContext.getDispatcher().unregister(this, SurveyEvent.ALARM_POPUP_FRAME_DISPLAYED);
+				this.aContext.getDispatcher().unregister(this, SurveyEvent.RESULT_FRAME_DISPLAYED);
 				this.aContext.getDispatcher().unregister(this, SchemeViewerFrame.schemeFrameDisplayed);
 
 				statusBar.removeDispatcher(this.aContext.getDispatcher());
@@ -484,9 +483,9 @@ public class SurveyMDIMain extends JFrame
 			this.aContext.getDispatcher().register(this, "mapaddschemeevent");
 			this.aContext.getDispatcher().register(this, "mapaddschemeelementevent");
 
-			this.aContext.getDispatcher().register(this, SurveyMDIMain.alarmFrameDisplayed);
-			this.aContext.getDispatcher().register(this, SurveyMDIMain.alarmPopupFrameDisplayed);
-			this.aContext.getDispatcher().register(this, SurveyMDIMain.resultFrameDisplayed);
+			this.aContext.getDispatcher().register(this, SurveyEvent.ALARM_FRAME_DISPLAYED);
+			this.aContext.getDispatcher().register(this, SurveyEvent.ALARM_POPUP_FRAME_DISPLAYED);
+			this.aContext.getDispatcher().register(this, SurveyEvent.RESULT_FRAME_DISPLAYED);
 			this.aContext.getDispatcher().register(this, SchemeViewerFrame.schemeFrameDisplayed);
 
 			statusBar.addDispatcher(this.aContext.getDispatcher());
@@ -795,15 +794,15 @@ public class SurveyMDIMain extends JFrame
 				setDomainSelected();
 			}
 		}
-		else if (ae.getActionCommand().equals(SurveyMDIMain.alarmFrameDisplayed))
+		else if (ae.getActionCommand().equals(SurveyEvent.ALARM_FRAME_DISPLAYED))
 		{
 			alarmsFrame = (AlarmFrame)ae.getSource();
 		}
-		else if (ae.getActionCommand().equals(SurveyMDIMain.alarmPopupFrameDisplayed))
+		else if (ae.getActionCommand().equals(SurveyEvent.ALARM_POPUP_FRAME_DISPLAYED))
 		{
 			alarmPopupFrame = (AlarmPopupFrame)ae.getSource();
 		}
-		else if (ae.getActionCommand().equals(SurveyMDIMain.resultFrameDisplayed))
+		else if (ae.getActionCommand().equals(SurveyEvent.RESULT_FRAME_DISPLAYED))
 		{
 			resultFrame = (ResultFrame)ae.getSource();
 		}
@@ -878,7 +877,10 @@ public class SurveyMDIMain extends JFrame
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE, 
 				LangModel.getString("Initiating")));
+
+		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
 		dataSource.GetAlarmTypes();
+
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("DataLoaded")));

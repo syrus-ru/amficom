@@ -23,7 +23,7 @@ public class Survey
 
 		aContext.setApplicationModel(factory.create());
 
-		Frame frame = new SurveyMDIMain(aContext);
+		Frame frame = new SurveyMainFrame(aContext);
 /*
 		//Center the window
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

@@ -75,7 +75,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 		menuViewMapOpen.setMaximumSize(buttonSize);
 		menuViewMapOpen.setPreferredSize(buttonSize);
 		menuViewMapOpen.setToolTipText(LangModelSurvey.getString("Topological_scheme_of_net"));
-		menuViewMapOpen.setName("menuVisualizeNetGIS");
+		menuViewMapOpen.setName("menuViewMapOpen");
 		menuViewMapOpen.addActionListener(actionAdapter);
 
 		menuViewSchemeOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/schematics_mini.gif").
@@ -83,7 +83,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 		menuViewSchemeOpen.setMaximumSize(buttonSize);
 		menuViewSchemeOpen.setPreferredSize(buttonSize);
 		menuViewSchemeOpen.setToolTipText(LangModelSurvey.getString("Net_scheme"));
-		menuViewSchemeOpen.setName("menuVisualizeNet");
+		menuViewSchemeOpen.setName("menuViewSchemeOpen");
 		menuViewSchemeOpen.addActionListener(actionAdapter);
 
 		menuViewMeasurements.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/archive_mini.gif").
@@ -99,7 +99,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 		menuViewAlarms.setMaximumSize(buttonSize);
 		menuViewAlarms.setPreferredSize(buttonSize);
 		menuViewAlarms.setToolTipText(LangModelSurvey.getString("Alarm_signals"));
-		menuViewAlarms.setName("menuMaintainAlarm");
+		menuViewAlarms.setName("menuViewAlarms");
 		menuViewAlarms.addActionListener(actionAdapter);
 
 		menuViewResults.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/result.gif").
@@ -107,7 +107,7 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 		menuViewResults.setMaximumSize(buttonSize);
 		menuViewResults.setPreferredSize(buttonSize);
 		menuViewResults.setToolTipText(LangModelSurvey.getString("Results_overview"));
-		menuViewResults.setName("menuStartResults");
+		menuViewResults.setName("menuViewResults");
 		menuViewResults.addActionListener(actionAdapter);
 
 		menuStartScheduler.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/scheduling_mini.gif").
@@ -180,16 +180,16 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 	{
 		menuSessionOpen.setVisible(aModel.isVisible("menuSessionNew"));
 		menuSessionOpen.setEnabled(aModel.isEnabled("menuSessionNew"));
-		menuViewMapOpen.setVisible(aModel.isVisible("menuVisualizeNet"));
-		menuViewMapOpen.setEnabled(aModel.isEnabled("menuVisualizeNet"));
-		menuViewSchemeOpen.setVisible(aModel.isVisible("menuVisualizeNetGIS"));
-		menuViewSchemeOpen.setEnabled(aModel.isEnabled("menuVisualizeNetGIS"));
-		menuViewMeasurements.setVisible(aModel.isVisible("menuStartArchive"));
-		menuViewMeasurements.setEnabled(aModel.isEnabled("menuStartArchive"));
-		menuViewAlarms.setVisible(aModel.isVisible("menuMaintainAlarm"));
-		menuViewAlarms.setEnabled(aModel.isEnabled("menuMaintainAlarm"));
-		menuViewResults.setVisible(aModel.isVisible("menuStartResults"));
-		menuViewResults.setEnabled(aModel.isEnabled("menuStartResults"));
+		menuViewMapOpen.setVisible(aModel.isVisible("menuViewMapOpen"));
+		menuViewMapOpen.setEnabled(aModel.isEnabled("menuViewMapOpen"));
+		menuViewSchemeOpen.setVisible(aModel.isVisible("menuViewSchemeOpen"));
+		menuViewSchemeOpen.setEnabled(aModel.isEnabled("menuViewSchemeOpen"));
+		menuViewMeasurements.setVisible(aModel.isVisible("menuViewMeasurements"));
+		menuViewMeasurements.setEnabled(aModel.isEnabled("menuViewMeasurements"));
+		menuViewAlarms.setVisible(aModel.isVisible("menuViewAlarms"));
+		menuViewAlarms.setEnabled(aModel.isEnabled("menuViewAlarms"));
+		menuViewResults.setVisible(aModel.isVisible("menuViewResults"));
+		menuViewResults.setEnabled(aModel.isEnabled("menuViewResults"));
 		menuStartScheduler.setVisible(aModel.isVisible("menuStartScheduler"));
 		menuStartScheduler.setEnabled(aModel.isEnabled("menuStartScheduler"));
 		menuStartAnalize.setVisible(aModel.isVisible("menuStartAnalize"));

@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
 import com.syrus.AMFICOM.Client.Survey.Report.ObserveReportModel;
-import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
+import com.syrus.AMFICOM.Client.Survey.SurveyMainFrame;
 
 import com.syrus.AMFICOM.Client.General.Command.OpenTypedTemplateCommand;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
@@ -13,7 +13,7 @@ public class CreateSurveyReportCommand extends VoidCommand
 {
 	ApplicationContext aContext;
 
-  private SurveyMDIMain mainFrame = null;
+  private SurveyMainFrame mainFrame = null;
 
 	public CreateSurveyReportCommand(ApplicationContext aContext)
 	{
@@ -30,9 +30,9 @@ public class CreateSurveyReportCommand extends VoidCommand
 
 	public void setParameter(Object value)
 	{
-		if (value instanceof SurveyMDIMain)
+		if (value instanceof SurveyMainFrame)
 		{
-			mainFrame = (SurveyMDIMain)value;
+			mainFrame = (SurveyMainFrame)value;
 		}
 	}
 

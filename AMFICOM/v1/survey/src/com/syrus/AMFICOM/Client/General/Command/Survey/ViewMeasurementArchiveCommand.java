@@ -14,11 +14,11 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Survey.*;
 
-public class ViewSurveyNavigatorCommand extends ViewNavigatorCommand
+public class ViewMeasurementArchiveCommand extends ViewNavigatorCommand
 {
 //	ApplicationContext aContext;
 
-	public ViewSurveyNavigatorCommand(Dispatcher dispatcher, JDesktopPane desktop, String title, ApplicationContext aContext)
+	public ViewMeasurementArchiveCommand(Dispatcher dispatcher, JDesktopPane desktop, String title, ApplicationContext aContext)
 	{
 		super(dispatcher, desktop, title);
 		this.aContext = aContext;
@@ -26,7 +26,7 @@ public class ViewSurveyNavigatorCommand extends ViewNavigatorCommand
 
 	public Object clone()
 	{
-		return new ViewSurveyNavigatorCommand(dispatcher, desktop, title, aContext);
+		return new ViewMeasurementArchiveCommand(dispatcher, desktop, title, aContext);
 	}
 
 	public void execute()

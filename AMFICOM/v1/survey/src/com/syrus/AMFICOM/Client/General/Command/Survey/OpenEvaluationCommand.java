@@ -4,19 +4,20 @@ import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.Evaluation;
 
-public class OpenNormsCommand extends VoidCommand
+public class OpenEvaluationCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
 	ApplicationModelFactory factory;
 
-	public OpenNormsCommand()
+	public OpenEvaluationCommand()
 	{
 		// nothing
 	}
 
-	public OpenNormsCommand(Dispatcher dispatcher, ApplicationContext aContext, ApplicationModelFactory factory)
+	public OpenEvaluationCommand(Dispatcher dispatcher, ApplicationContext aContext, ApplicationModelFactory factory)
 	{
 		this.dispatcher = dispatcher;
 		this.aContext = aContext;
@@ -44,7 +45,7 @@ public class OpenNormsCommand extends VoidCommand
 
 	public Object clone()
 	{
-		return new OpenNormsCommand(dispatcher, aContext, factory);
+		return new OpenEvaluationCommand(dispatcher, aContext, factory);
 	}
 
 	public void execute()

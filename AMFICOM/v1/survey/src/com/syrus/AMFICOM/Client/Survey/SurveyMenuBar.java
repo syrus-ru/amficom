@@ -116,8 +116,8 @@ public class SurveyMenuBar extends JMenuBar
 		menuExit.setName("menuExit");
 		menuExit.addActionListener(actionAdapter);
 
-		menuView.setText(LangModelSurvey.getString("View"));
-		menuView.setName("menuView");
+		menuStart.setText(LangModelSurvey.getString("menuStart"));
+		menuStart.setName("menuStart");
 		menuStartScheduler.setText(LangModelSurvey.getString("Scheduling"));
 		menuStartScheduler.setName("menuStartScheduler");
 		menuStartScheduler.addActionListener(actionAdapter);
@@ -157,13 +157,13 @@ public class SurveyMenuBar extends JMenuBar
 		menuViewSchemeClose.setText(LangModelSurvey.getString("Close_scheme"));
 		menuViewSchemeClose.setName("menuViewSchemeClose");
 		menuViewSchemeClose.addActionListener(actionAdapter);
-		menuViewMeasurements.setText(LangModelSurvey.getString("Alarm_signals"));
+		menuViewMeasurements.setText(LangModelSurvey.getString("Measurement_archive"));
 		menuViewMeasurements.setName("menuViewMeasurements");
 		menuViewMeasurements.addActionListener(actionAdapter);
-		menuViewResults.setText(LangModelSurvey.getString("Alert_messages"));
+		menuViewResults.setText(LangModelSurvey.getString("Results_overview"));
 		menuViewResults.setName("menuViewResults");
 		menuViewResults.addActionListener(actionAdapter);
-		menuViewAlarms.setText(LangModelSurvey.getString("Claims"));
+		menuViewAlarms.setText(LangModelSurvey.getString("Alarm_signals"));
 		menuViewAlarms.setName("menuViewAlarms");
 		menuViewAlarms.addActionListener(actionAdapter);
 		menuViewAll.setText(LangModelSurvey.getString("Allocate_windows"));
