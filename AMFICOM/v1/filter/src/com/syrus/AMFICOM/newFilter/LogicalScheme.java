@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalScheme.java,v 1.3 2005/04/01 08:37:09 max Exp $
+ * $Id: LogicalScheme.java,v 1.4 2005/04/01 10:44:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,10 @@
 package com.syrus.AMFICOM.newFilter;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -20,7 +22,7 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/01 08:37:09 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/01 10:44:52 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -35,9 +37,9 @@ public class LogicalScheme {
 		this.rootItem.addChild(conditionItem);		
 	}
 
-	private Collection getResultConditions(LogicalItem parentItem) throws CreateObjectException, IllegalDataException {
+	private Set getResultConditions(LogicalItem parentItem) throws CreateObjectException, IllegalDataException {
 		Collection children = parentItem.getChildren();
-		Collection conditions = new LinkedList();
+		Set conditions = new HashSet();
 		StorableObjectCondition condition;
 		for (Iterator it = children.iterator(); it.hasNext();) {
 			LogicalItem child = (LogicalItem) it.next();

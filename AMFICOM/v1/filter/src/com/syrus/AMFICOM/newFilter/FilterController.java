@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.3 2005/04/01 08:37:09 max Exp $
+ * $Id: FilterController.java,v 1.4 2005/04/01 10:44:06 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,15 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
-import com.syrus.AMFICOM.filterclient.ConditionWrapper;
+import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -29,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.Com
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/01 08:37:09 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/01 10:44:06 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -217,7 +219,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			break;
 		case ConditionWrapper.CONSTRAINT:
 			ListCondition listCondition2 = (ListCondition) tempCondition;
-			Collection conditions = new LinkedList();
+			Set conditions = new HashSet();
 			int[] linkedIndex2 = listCondition2.getLinkedIndex();
 			if(linkedIndex2.length == 0) {
 				this.view.showErrorMessage(Filter.WRONG_LIST_MESSAGE);
@@ -240,7 +242,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			break;
 		case ConditionWrapper.LIST:
 			ListCondition listCondition = (ListCondition) tempCondition;
-			Collection linkedObjects = new LinkedList(); 
+			Set linkedObjects = new HashSet(); 
 			int[] linkedIndex = listCondition.getLinkedIndex();
 			if(linkedIndex.length == 0) {
 				this.view.showErrorMessage(Filter.WRONG_LIST_MESSAGE);
