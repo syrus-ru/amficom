@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.21 2004/09/20 06:35:15 peskovsky Exp $
+ * $Id: Transceiver.java,v 1.22 2004/09/23 08:38:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/09/20 06:35:15 $
+ * @version $Revision: 1.22 $, $Date: 2004/09/23 08:38:35 $
  * @author $Author: peskovsky $
  * @module mcm_v1
  */
@@ -56,10 +56,6 @@ public class Transceiver extends SleepButWorkThread {
 
 	/*	Variables for method processFall()	*/
 	private Measurement measurementToRemove;
-
-	static {
-		System.loadLibrary("mcmtransceiver");
-	}
 	
 	public Transceiver(Identifier kisId) {
 		super(ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME) * 1000, ApplicationProperties.getInt("KISMaxFalls", KIS_MAX_FALLS));

@@ -8,6 +8,11 @@ import java.util.HashMap;
 
 public class TCPServer implements Runnable
 {
+  static
+  {
+    System.loadLibrary("mcmtransceiver");
+  }
+  
 	private class TCPAcceptingThread implements Runnable
 	{
 	  private TCPServer tcpServer = null;
