@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.1 2005/03/17 14:45:36 stas Exp $
+ * $Id: Constants.java,v 1.2 2005/03/25 10:27:12 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,14 +14,11 @@ import javax.swing.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/17 14:45:36 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/25 10:27:12 $
  * @module schemeclient_v1
  */
 
-public class Constants {
-	private Constants() {
-		// empty
-	}
+public interface Constants {
 	public static final Icon CATALOG_ICON = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")); //$NON-NLS-1$
 	public static final Icon SCHEME_ICON = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")); //$NON-NLS-1$
 	
