@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.35 2004/10/25 14:56:33 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.36 2004/10/27 07:39:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,18 +34,14 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/10/25 14:56:33 $
+ * @version $Revision: 1.36 $, $Date: 2004/10/27 07:39:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class MeasurementStorableObjectPool {
 
-	private static final int		OBJECT_POOL_MAP_SIZE			= 14;		/*
-														  * Number
-														  * of
-														  * entities
-														  */
+	private static final int		OBJECT_POOL_MAP_SIZE			= 14;		/* Number of entities  */
 
 	private static final int		PARAMETERTYPE_OBJECT_POOL_SIZE		= 9;
 
@@ -77,14 +73,10 @@ public class MeasurementStorableObjectPool {
 
 	private static final int		TEMPORALPATTERN_OBJECT_POOL_SIZE	= 2;
 
-	private static Map			objectPoolMap;						/*
-														 * Map
-														 * <String
-														 * objectEntity,
-														 * LRUMap
-														 * objectPool>
-														 */
-
+	/*
+	 *  Map <Short objectEntity, LRUMap objectPool>
+	 */
+	private static Map			objectPoolMap;						
 	private static MeasurementObjectLoader	mObjectLoader;
 	private static Class			cacheMapClass				= LRUMap.class;
 
@@ -187,7 +179,6 @@ public class MeasurementStorableObjectPool {
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader)
 			throws DatabaseException, CommunicationException {
 		if (objectId != null) {
-			Log.debugMessage("MeasurementStorableObjectPool.getStorableObject | Try get '" + objectId.getIdentifierString() + "'", Log.DEBUGLEVEL05);
 			short objectEntityCode = objectId.getMajor();
 			LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(objectEntityCode));
 			if (objectPool != null) {
@@ -196,7 +187,6 @@ public class MeasurementStorableObjectPool {
 					return storableObject;
 				else {
 					if (useLoader) {
-						Log.debugMessage("MeasurementStorableObjectPool.getStorableObject | Try load '" + objectId.getIdentifierString() + "'", Log.DEBUGLEVEL05);
 						storableObject = loadStorableObject(objectId);
 						if (storableObject != null)
 							try {

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.30 2004/10/26 14:48:45 bob Exp $
+ * $Id: ResultDatabase.java,v 1.31 2004/10/27 07:39:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/10/26 14:48:45 $
+ * @version $Revision: 1.31 $, $Date: 2004/10/27 07:39:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -400,7 +400,81 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 		return result;
 	}
+	
+	private void retrieveResultParameters(Result result) throws RetrieveObjectException {
+		List parameters = new LinkedList();
 
+		String resultIdStr = result.getId().toSQLString();
+		String sql = SQL_SELECT + COLUMN_ID + COMMA + LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_VALUE
+				+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY + SQL_WHERE + LINK_COLUMN_RESULT_ID
+				+ EQUALS + resultIdStr;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			SetParameter parameter;
+			ParameterType parameterType;
+			while (resultSet.next()) {
+				try {
+					/**
+					 * @todo when change DB Identifier model
+					 *       ,change getString() to
+					 *       getLong()
+					 */
+					parameterType = (ParameterType) MeasurementStorableObjectPool
+							.getStorableObject(new Identifier(resultSet
+									.getString(LINK_COLUMN_TYPE_ID)), true);
+				} catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
+				parameter = new SetParameter(/**
+							      * @todo when
+							      *       change DB
+							      *       Identifier
+							      *       model
+							      *       ,change
+							      *       getString()
+							      *       to
+							      *       getLong()
+							      */
+				new Identifier(resultSet.getString(COLUMN_ID)),
+				/**
+				 * @todo when change DB Identifier model ,change
+				 *       getString() to getLong()
+				 */
+				parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet
+						.getBlob(LINK_COLUMN_VALUE)));
+				parameters.add(parameter);
+			}
+		} catch (SQLException sqle) {
+			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result '"
+					+ resultIdStr + "' -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		} finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
+			}
+		}
+		result.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
+	}
+
+	/**
+	 * @deprecated untested, have an bug
+	 * @param results
+	 * @throws RetrieveObjectException
+	 */
 	private void retrieveResultParametersByOneQuery(List results) throws RetrieveObjectException {
 		List parameters = new LinkedList();
 
@@ -520,7 +594,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 					 */				
 					statement.setString(1, idStr);
 					ResultSet resultSet = statement.executeQuery();
-					if (resultSet.next()) {
+					while (resultSet.next()) {
 						try {
 							/**
 							 * @todo when change DB Identifier model
@@ -545,15 +619,10 @@ public class ResultDatabase extends StorableObjectDatabase {
 						 */
 						parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet
 								.getBlob(LINK_COLUMN_VALUE)));
-						parameters.add(parameter);
-						
-						result.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
-					} else {
-						Log.errorMessage(this.getEnityName()
-								+ "Database.retriveByIdsPreparedStatement | No such "
-								+ this.getEnityName() + " : " + idStr);
-					}
-
+						parameters.add(parameter);						
+					} 
+					
+					result.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
 				}
 
 			} catch (SQLException sqle) {
@@ -729,7 +798,11 @@ public class ResultDatabase extends StorableObjectDatabase {
 		else
 			list = retrieveByIdsOneQuery(ids, condition);
 
-		retrieveResultParametersByOneQuery(list);
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			Result result = (Result) it.next();
+			retrieveResultParameters(result);			
+		}
+		// retrieveResultParametersByOneQuery(list);
 		// retrieveResultParameters(list);
 		return list;
 	}
