@@ -6,40 +6,33 @@ import com.syrus.AMFICOM.CORBA.General.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:20:11 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/18 10:03:07 $
  * @author $Author: bass $
  */
-public class HashtableAlarmReceiverMap extends AbstractAlarmReceiverMap
-{
+public class HashtableAlarmReceiverMap extends AbstractAlarmReceiverMap {
 	private Hashtable hashtable;
 
-	public HashtableAlarmReceiverMap()
-	{
+	public HashtableAlarmReceiverMap() {
 		hashtable = new Hashtable();
 	}
 
-	public HashtableAlarmReceiverMap(int initialCapacity)
-	{
+	public HashtableAlarmReceiverMap(int initialCapacity) {
 		hashtable = new Hashtable(initialCapacity);
 	}
 
-	public HashtableAlarmReceiverMap(int initialCapacity, float loadFactor)
-	{
+	public HashtableAlarmReceiverMap(int initialCapacity, float loadFactor) {
 		hashtable = new Hashtable(initialCapacity, loadFactor);
 	}
 
-	public boolean containsKey(AccessIdentity_Transferable key) throws AMFICOMRemoteException
-	{
+	public boolean containsKey(AccessIdentity_Transferable key) throws AMFICOMRemoteException {
 		return hashtable.containsKey(key);
 	}
 
-	public AMFICOMClient put(AccessIdentity_Transferable key, AMFICOMClient value) throws AMFICOMRemoteException
-	{
+	public AMFICOMClient put(AccessIdentity_Transferable key, AMFICOMClient value) throws AMFICOMRemoteException {
 		return (AMFICOMClient) hashtable.put(key, value);
 	}
 
-	public AMFICOMClient remove(AccessIdentity_Transferable key) throws AMFICOMRemoteException
-	{
+	public AMFICOMClient remove(AccessIdentity_Transferable key) throws AMFICOMRemoteException {
 		return (AMFICOMClient) hashtable.remove(key);
 	}
 }

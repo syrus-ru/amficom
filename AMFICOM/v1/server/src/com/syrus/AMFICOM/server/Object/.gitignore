@@ -57,3 +57,5 @@ TestDatadbInterfaceLoad.java
 TestDatadbInterfaceSave.java
 TestTriggers.java
 *.generated.java
+*~
+.nbattrs

@@ -5,11 +5,10 @@ import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.CORBA.General.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:20:11 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/18 10:03:07 $
  * @author $Author: bass $
  */
-public interface AlarmReceiverMap
-{
+public interface AlarmReceiverMap {
 	/**
      * Returns <tt>true</tt> if this map contains a mapping for the specified
      * key.  More formally, returns <tt>true</tt> if and only if

@@ -1,9 +1,8 @@
 package com.syrus.AMFICOM.server.AlarmReceiver;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:20:11 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/18 10:03:07 $
  * @author $Author: bass $
  */
-public abstract class DBAlarmReceiverMap extends AbstractAlarmReceiverMap
-{
+public abstract class DBAlarmReceiverMap extends AbstractAlarmReceiverMap {
 }
