@@ -50,20 +50,37 @@ public class LangModelConfig {
 		//symbols = new DateFormatSymbols(locale);
 	}
 
-	public static String getString(String keyName) {
+	public static String getString(String keyName)
+	{
 		//System.out.println("keyName:" + keyName);
 		keyName = keyName.replaceAll(" ", "_");
 		String string = null;
-		try {
+		try
+		{
 			string = RESOURCE_BUNDLE.getString(keyName);
-		} catch (MissingResourceException e) {
-
-			try {
-				throw new Exception("key '"
-									+ keyName
-									+ "' "
-									+  "not found");
-			} catch (Exception exc) {
+		}
+		catch (MissingResourceException e)
+		{
+			try
+			{
+				string = RESOURCE_BUNDLE.getString(keyName + "Text");
+			}
+			catch (MissingResourceException mre)
+			{
+				try
+				{
+					throw new Exception("key '"
+											  + keyName + "Text"
+											  + "' "
+											  + "not found");
+				}
+				catch (Exception exc)
+				{
+					exc.printStackTrace();
+				}
+			}
+			catch (Exception exc)
+			{
 				exc.printStackTrace();
 			}
 		}

@@ -1,39 +1,3 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: модуль организации многоязыковой поддержки для модуля      * //
-// *         Конфигурирование клиентской части ПО АМФИКОМ                 * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 1.0                                                          * //
-// * От: 1 jul 2002                                                       * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\General\Lang\LangModelAdmin.java                       * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
 package com.syrus.AMFICOM.Client.General.Lang;
 
 import java.util.*;
@@ -50,20 +14,37 @@ public class LangModelAdmin {
 		//symbols = new DateFormatSymbols(locale);
 	}
 
-	public static String getString(String keyName) {
+	public static String getString(String keyName)
+	{
 		//System.out.println("keyName:" + keyName);
 		keyName = keyName.replaceAll(" ", "_");
 		String string = null;
-		try {
+		try
+		{
 			string = RESOURCE_BUNDLE.getString(keyName);
-		} catch (MissingResourceException e) {
-
-			try {
-				throw new Exception("key '"
-									+ keyName
-									+ "' "
-									+  "not found");
-			} catch (Exception exc) {
+		}
+		catch (MissingResourceException e)
+		{
+			try
+			{
+				string = RESOURCE_BUNDLE.getString(keyName + "Text");
+			}
+			catch (MissingResourceException mre)
+			{
+				try
+				{
+					throw new Exception("key '"
+											  + keyName + "Text"
+											  + "' "
+											  + "not found");
+				}
+				catch (Exception exc)
+				{
+					exc.printStackTrace();
+				}
+			}
+			catch (Exception exc)
+			{
 				exc.printStackTrace();
 			}
 		}
