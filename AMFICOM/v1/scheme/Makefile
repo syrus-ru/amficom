@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.16 2005/03/16 16:48:09 bass Exp $
+# $Id: Makefile,v 1.17 2005/03/17 09:39:32 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -11,6 +11,7 @@ ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.bz2
 
 IDLDIR=../idl_v1/idl
 
+ENCODING = KOI8-R
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
@@ -42,7 +43,7 @@ IDL_GENERATED_SCHEMA_CLASSES = $(subst \
 				.java,\
 				.class,\
 				$(shell cat $(srcdir)/.cvsignore)))))
-_CLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
+_CLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/corba.jar:$(LIBDIR)/general.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -51,7 +52,9 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
+		-sourcepath $(SRCDIR) \
 		-classpath $(_CLASSPATH):$(CLASSDIR) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
 	touch $@
 
@@ -75,9 +78,12 @@ corba: .corba
 # Compilation of stubs & skeletons
 .corba:	$(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(_CLASSPATH) \
 		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java
+		-classpath $(_CLASSPATH):$(CLASSES) \
+		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/AbstractSchemePortPackage/*.java \
+		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/PathElementPackage/*.java \
+		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/SchemeOptimizeInfoPackage/*.java \
+		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/SchemePackage/*.java
 	touch $@
 
 $(SRCDIR):
@@ -87,12 +93,6 @@ $(LIBDIR):
 
 .PHONY: idlclean
 idlclean:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/administration
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/configuration
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/general
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/map
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/resource
-	$(RM) -r $(IDL_GENERATED_SCHEMA_SOURCES)
 	$(RM) .idl
 
 .PHONY:	clean
