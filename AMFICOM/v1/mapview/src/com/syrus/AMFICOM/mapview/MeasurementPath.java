@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.1 2005/02/01 09:28:17 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.2 2005/02/01 11:33:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,12 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.PathElement;
+import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 import java.util.Collections;
@@ -45,9 +50,8 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/02/01 09:28:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 11:33:57 $
  * @module mapviewclient_v1
- * @todo getCablePaths(), getStartNode(), getEndNode()
  */
 public class MeasurementPath implements MapElement
 {
@@ -109,7 +113,6 @@ public class MeasurementPath implements MapElement
 		{
 			Identifier ide =
 				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
-//				IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
 			return new MeasurementPath(
 				schemePath,
 				ide,
@@ -330,7 +333,6 @@ public class MeasurementPath implements MapElement
 
 	protected List getCablePaths()
 	{
-/*
 		synchronized(unsortedCablePaths)
 		{
 			unsortedCablePaths.clear();
@@ -371,7 +373,6 @@ public class MeasurementPath implements MapElement
 				}
 			}
 		}
-*/
 		return unsortedCablePaths;
 	}
 
@@ -399,18 +400,12 @@ public class MeasurementPath implements MapElement
 	
 	public AbstractNode getStartNode()
 	{
-//		SiteNode[] mne = getMapView().getSideNodes(this.getSchemePath());
-		SiteNode[] mne = new SiteNode[2];
-		
-		return mne[0];
+		return getMapView().getStartNode(this.getSchemePath());
 	}
 	
 	public AbstractNode getEndNode()
 	{
-//		SiteNode[] mne = getMapView().getSideNodes(this.getSchemePath());
-		SiteNode[] mne = new SiteNode[2];
-		
-		return mne[1];
+		return getMapView().getEndNode(this.getSchemePath());
 	}
 	
 	public void sortPathElements()
