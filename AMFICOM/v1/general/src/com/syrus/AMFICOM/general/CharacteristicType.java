@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.7 2005/01/25 08:44:29 bob Exp $
+ * $Id: CharacteristicType.java,v 1.8 2005/01/26 15:27:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,15 +11,14 @@ package com.syrus.AMFICOM.general;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/25 08:44:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/01/26 15:27:29 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 

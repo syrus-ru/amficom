@@ -1,5 +1,5 @@
 /*
-* $Id: CompoundCondition.java,v 1.5 2005/01/21 10:37:17 bob Exp $
+* $Id: CompoundCondition.java,v 1.6 2005/01/26 15:27:29 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B), (A | B) , (A ^ B)
  * where A and B is conditions (they can be also compound condition too)
  *  
- * @version $Revision: 1.5 $, $Date: 2005/01/21 10:37:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/01/26 15:27:29 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class CompoundCondition implements StorableObjectCondition {
@@ -58,25 +58,25 @@ public class CompoundCondition implements StorableObjectCondition {
 			Serializable serializable1 = anies[0].extract_Value();
 			Serializable serializable2 = anies[1].extract_Value();
 			if (serializable1 instanceof StringFieldCondition_Transferable) {
-				StringFieldCondition_Transferable stringFieldCondition_Transferable = (StringFieldCondition_Transferable) serializable1;
-				this.firstCondition = new StringFieldCondition(stringFieldCondition_Transferable);
+				StringFieldCondition_Transferable sfct = (StringFieldCondition_Transferable) serializable1;
+				this.firstCondition = new StringFieldCondition(sfct);
 			} else if (serializable1 instanceof LinkedIdsCondition_Transferable) {
-				LinkedIdsCondition_Transferable linkedIdsCondition_Transferable = (LinkedIdsCondition_Transferable) serializable1;
-				this.firstCondition = new LinkedIdsCondition(linkedIdsCondition_Transferable);				
+				LinkedIdsCondition_Transferable lict = (LinkedIdsCondition_Transferable) serializable1;
+				this.firstCondition = new LinkedIdsCondition(lict);				
 			} else if (serializable1 instanceof CompoundCondition_Transferable) {
-				CompoundCondition_Transferable compoundCondition_Transferable = (CompoundCondition_Transferable) serializable1;
-				this.firstCondition = new CompoundCondition(compoundCondition_Transferable);
+				CompoundCondition_Transferable cct = (CompoundCondition_Transferable) serializable1;
+				this.firstCondition = new CompoundCondition(cct);
 			}
 			
 			if (serializable2 instanceof StringFieldCondition_Transferable) {
-				StringFieldCondition_Transferable stringFieldCondition_Transferable = (StringFieldCondition_Transferable) serializable2;
-				this.secondCondition = new StringFieldCondition(stringFieldCondition_Transferable);
+				StringFieldCondition_Transferable sfct = (StringFieldCondition_Transferable) serializable2;
+				this.secondCondition = new StringFieldCondition(sfct);
 			} else if (serializable2 instanceof LinkedIdsCondition_Transferable) {
-				LinkedIdsCondition_Transferable linkedIdsCondition_Transferable = (LinkedIdsCondition_Transferable) serializable2;
-				this.secondCondition = new LinkedIdsCondition(linkedIdsCondition_Transferable);				
+				LinkedIdsCondition_Transferable lict = (LinkedIdsCondition_Transferable) serializable2;
+				this.secondCondition = new LinkedIdsCondition(lict);				
 			} else if (serializable2 instanceof CompoundCondition_Transferable) {
-				CompoundCondition_Transferable compoundCondition_Transferable = (CompoundCondition_Transferable) serializable2;
-				this.secondCondition = new CompoundCondition(compoundCondition_Transferable);
+				CompoundCondition_Transferable cct = (CompoundCondition_Transferable) serializable2;
+				this.secondCondition = new CompoundCondition(cct);
 			}
 		} else 
 			throw new IllegalDataException("Illegal contition count " + anies.length);
