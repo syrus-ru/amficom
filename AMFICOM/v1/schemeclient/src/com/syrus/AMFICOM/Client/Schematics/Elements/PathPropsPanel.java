@@ -77,7 +77,8 @@ public class PathPropsPanel extends JPanel
 
 	UniTreePanel utp;
 	JScrollPane scroll = new JScrollPane();
-
+	Identifier user_id;
+	
 	public PathPropsPanel(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
@@ -89,6 +90,7 @@ public class PathPropsPanel extends JPanel
 		{
 			e.printStackTrace();
 		}
+		user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 	}
 	private void jbInit() throws Exception
 	{
@@ -293,13 +295,12 @@ public class PathPropsPanel extends JPanel
 																		JOptionPane.OK_OPTION);
 			return;
 		}
-
 		if (element_to_add instanceof SchemeLink)
-			PathBuilder.addLink(links, (SchemeLink)element_to_add);
+			PathBuilder.getInstance(user_id).addLink(links, (SchemeLink)element_to_add);
 		else if (element_to_add instanceof SchemeCableLink)
-			PathBuilder.addCableLink(links, (SchemeCableLink)element_to_add);
+			PathBuilder.getInstance(user_id).addCableLink(links, (SchemeCableLink)element_to_add);
 		else if (element_to_add instanceof SchemeElement)
-			PathBuilder.addSchemeElement(links, (SchemeElement)element_to_add);
+			PathBuilder.getInstance(user_id).addSchemeElement(links, (SchemeElement)element_to_add);
 
 //		table.setContents(path.links);
 //		table.updateUI();
@@ -314,7 +315,7 @@ public class PathPropsPanel extends JPanel
 		{
 			SchemeElement se = (SchemeElement)element_to_add;
 			links.clear();
-			PathElement pe = PathBuilder.addSchemeElement(links, se);
+			PathElement pe = PathBuilder.getInstance(user_id).addSchemeElement(links, se);
 			if (pe != null)
 			{
 				startDevTextField.setText(se.getName());
@@ -399,9 +400,6 @@ public class PathPropsPanel extends JPanel
 					return;
 				}
 			}
-			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().user_id);
-
 			TransmissionPathType new_type = null;
 			try {
 				new_type = TransmissionPathType.createInstance(

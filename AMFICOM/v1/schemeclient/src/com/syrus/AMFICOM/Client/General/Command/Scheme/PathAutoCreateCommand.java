@@ -2,10 +2,12 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.Scheme;
 
@@ -43,7 +45,8 @@ public class PathAutoCreateCommand extends VoidCommand
 																		JOptionPane.OK_OPTION);
 			return;
 		}
-		PathBuilder.explore(scheme, path);
+		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+		PathBuilder.getInstance(user_id).explore(scheme, path);
 		aContext.getDispatcher().notify(new SchemeNavigateEvent(new SchemePath[] {path}, SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT, true));
 	}
 }

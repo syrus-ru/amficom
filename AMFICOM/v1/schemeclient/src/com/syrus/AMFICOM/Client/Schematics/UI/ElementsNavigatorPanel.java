@@ -13,6 +13,8 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.PopulateChildrenFactory;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
@@ -25,16 +27,16 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 	JButton refreshButton;
 	ApplicationContext aContext;
 	Dispatcher dispatcher;
-	SOTreeDataModel model;
-	Tree utp;
+	PopulateChildrenFactory factory;
+	PopulatableTreeUI utp;
 
 	Object selectedObject;
 
-	public ElementsNavigatorPanel(ApplicationContext aContext, Dispatcher dispatcher, SOTreeDataModel model)
+	public ElementsNavigatorPanel(ApplicationContext aContext, Dispatcher dispatcher, PopulateChildrenFactory factory)
 	{
 		this.aContext = aContext;
 		this.dispatcher = dispatcher;
-		this.model = model;
+		this.factory = factory;
 
 		try
 		{
@@ -104,11 +106,11 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 		add(toolBar, BorderLayout.NORTH);
 
 		// TREE
-		utp = new Tree(dispatcher, new SOMutableNode(model, "root"));
+		utp = new PopulatableTreeUI(new IconedNode(factory, "root", "root"));
 
-		JScrollPane scroll_pane = new JScrollPane();
-		scroll_pane.getViewport().add(utp);
-		add(scroll_pane, BorderLayout.CENTER);
+//		JScrollPane scroll_pane = new JScrollPane();
+//		scroll_pane.getViewport().add(utp.getPanel());
+		add(utp.getPanel(), BorderLayout.CENTER);
 	}
 
 	void init_module(Dispatcher dispatcher)
@@ -117,10 +119,10 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 		dispatcher.register(this, TreeDataSelectionEvent.type);
 	}
 
-	public JTree getTree()
-	{
-		return utp;
-	}
+//	public JTree getTree()
+//	{
+//		return utp.getPanel();
+//	}
 
 	public void operationPerformed(OperationEvent oe)
 	{

@@ -5,17 +5,12 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeTabbedPane;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 public class PathNewCommand extends VoidCommand
 {
@@ -38,7 +33,17 @@ public class PathNewCommand extends VoidCommand
 		SchemeGraph graph = pane.getPanel().getGraph();
 		if (graph.getScheme() == null)
 			return;
-		SchemePath path = SchemePath.createInstance();
+		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+
+		SchemePath path;
+		try {
+			path = SchemePath.createInstance(userId);
+		} 
+		catch (CreateObjectException e) {
+			Log.errorException(e);
+			return;
+		}
+		
 		path.scheme(graph.getScheme());
 		graph.setCurrentPath(path);
 

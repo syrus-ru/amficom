@@ -5,21 +5,33 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
+import com.syrus.util.Log;
 
 public class PathBuilder
 {
+	private Identifier creatorId;
+	private static PathBuilder instance;
 	private static final int OK = 0;
 	private static final int MULTIPLE_PORTS = 1;
 	private static int state = OK;
 
-	private PathBuilder()
-			{}
+	private PathBuilder() {
+	}
+	
+	public static PathBuilder getInstance(Identifier creatorId) {
+		if (instance == null)
+			instance = new PathBuilder();
+		instance.creatorId = creatorId;
+		return instance;
+	}
 
-	private static boolean exploreScheme(List pes, Scheme scheme)
+	private boolean exploreScheme(List pes, Scheme scheme)
 	{
 		if (pes.size() == 0)
 			return false;
@@ -80,7 +92,7 @@ public class PathBuilder
 		}
 	}
 
-	private static boolean exploreSchemeElement(List pes, SchemeElement scheme_element)
+	private boolean exploreSchemeElement(List pes, SchemeElement scheme_element)
 	{
 		if (pes.size() == 0)
 			return false;
@@ -133,7 +145,7 @@ public class PathBuilder
 	}
 
 
-	public static boolean explore(Scheme scheme, SchemePath path)
+	public boolean explore(Scheme scheme, SchemePath path)
 	{
 		List links = Arrays.asList(path.links());
 
@@ -211,7 +223,7 @@ public class PathBuilder
 		}
 	}
 
-	public static PathElement addSchemeElement(List pes, SchemeElement se)
+	public PathElement addSchemeElement(List pes, SchemeElement se)
 	{
 		PathElement newPE = null;
 		ListIterator lit = pes.listIterator(pes.size());
@@ -231,7 +243,13 @@ public class PathBuilder
 
 			PathElement pe = (PathElement)lit.previous();
 
-			newPE = PathElement.createInstance();
+			try {
+				newPE = PathElement.createInstance(creatorId);
+			} 
+			catch (CreateObjectException e) {
+				Log.errorMessage("Can't create PathElement object " + e.getMessage());
+				return null;
+			}
 			newPE.type(Type.SCHEME_ELEMENT);
 			newPE.abstractSchemeElement(se);
 			newPE.scheme(se.getParentScheme());
@@ -341,7 +359,13 @@ public class PathBuilder
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "У начального устройства должен быть тестовый порт\nс которого должен начинаться маршрут тестирования", "Ошибка", JOptionPane.OK_OPTION);
 				return null;
 			}
-			newPE = PathElement.createInstance();
+			try {
+				newPE = PathElement.createInstance(creatorId);
+			} 
+			catch (CreateObjectException e) {
+				Log.errorMessage("Can't create PathElement object " + e.getMessage());
+				return null;
+			}
 			newPE.type(Type.SCHEME_ELEMENT);
 			newPE.abstractSchemeElement(se);
 			newPE.scheme(se.getParentScheme());
@@ -354,7 +378,7 @@ public class PathBuilder
 		return newPE;
 	}
 
-	public static PathElement addLink(List pes, SchemeLink link)
+	public PathElement addLink(List pes, SchemeLink link)
 	{
 		ListIterator lit = pes.listIterator(pes.size());
 		if (lit.hasPrevious())
@@ -392,14 +416,21 @@ public class PathBuilder
 		return null;
 	}
 
-	private static PathElement addLink(List pes, SchemePort port, SchemeLink link)
+	private PathElement addLink(List pes, SchemePort port, SchemeLink link)
 	{
 		int number = 0;
 		ListIterator it = pes.listIterator(pes.size());
 		if (it.hasPrevious())
 			number = ((PathElement)it.previous()).sequentialNumber() + 1;
 
-		PathElement newPE = PathElement.createInstance();
+		PathElement newPE;
+		try {
+			newPE = PathElement.createInstance(creatorId);
+		} 
+		catch (CreateObjectException e) {
+			Log.errorMessage("Can't create PathElement object " + e.getMessage());
+			return null;
+		}
 		newPE.type(Type.SCHEME_LINK);
 		newPE.abstractSchemeElement(link);
 		newPE.scheme(link.getParentScheme());
@@ -422,7 +453,7 @@ public class PathBuilder
 		return newPE;
 	}
 
-	public static PathElement addCableLink(List pes, SchemeCableLink link)
+	public PathElement addCableLink(List pes, SchemeCableLink link)
 	{
 		ListIterator lit = pes.listIterator(pes.size());
 		if (lit.hasPrevious())
@@ -469,7 +500,7 @@ public class PathBuilder
 		return null;
 	}
 
-	private static PathElement addCableLink(List pes, SchemeCablePort port, SchemeCableLink link, SchemeCableThread thread)
+	private PathElement addCableLink(List pes, SchemeCablePort port, SchemeCableLink link, SchemeCableThread thread)
 	{
 		if (thread == null)
 		{
@@ -485,7 +516,14 @@ public class PathBuilder
 		if (it.hasPrevious())
 			number = ((PathElement)it.previous()).sequentialNumber() + 1;
 
-		PathElement newPE = PathElement.createInstance();
+		PathElement newPE;
+		try {
+			newPE = PathElement.createInstance(creatorId);
+		} 
+		catch (CreateObjectException e) {
+			Log.errorMessage("Can't create PathElement object " + e.getMessage());
+			return null;
+		}
 		newPE.type(Type.SCHEME_CABLE_LINK);
 		newPE.abstractSchemeElement(link);
 		newPE.schemeCableThread(thread);
@@ -509,7 +547,7 @@ public class PathBuilder
 		return newPE;
 	}
 
-	private static SchemeCablePort getCablePortByThread(List cableports, SchemeCableThread thread)
+	private SchemeCablePort getCablePortByThread(List cableports, SchemeCableThread thread)
 	{
 		for (Iterator it = cableports.iterator(); it.hasNext(); )
 		{
@@ -524,7 +562,7 @@ public class PathBuilder
 	}
 
 
-	private static List findPorts(SchemeDevice dev, AbstractSchemePortDirectionType direction)
+	private List findPorts(SchemeDevice dev, AbstractSchemePortDirectionType direction)
 	{
 		List ports = new ArrayList();
 		SchemePort[] schemePorts = dev.getSchemePortsAsArray();
@@ -536,7 +574,7 @@ public class PathBuilder
 		return ports;
 	}
 
-	private static List findCablePorts(SchemeDevice dev, AbstractSchemePortDirectionType direction)
+	private List findCablePorts(SchemeDevice dev, AbstractSchemePortDirectionType direction)
 	{
 		List ports = new ArrayList();
 		SchemeCablePort[] schemeCablePorts = dev.getSchemeCablePortsAsArray();
@@ -547,4 +585,5 @@ public class PathBuilder
 		}
 		return ports;
 	}
+	
 }

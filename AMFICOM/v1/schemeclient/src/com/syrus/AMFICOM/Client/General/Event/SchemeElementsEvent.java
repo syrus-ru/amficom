@@ -1,5 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
+/**
+ * @deprecated use SchemeEvent
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2005/03/25 10:27:44 $
+ * @module schemeclient_v1
+ */
 public class SchemeElementsEvent extends OperationEvent
 {
 	public boolean UGO_TEXT_UPDATE = false;

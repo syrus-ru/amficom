@@ -680,7 +680,7 @@ public class SchemeGraph extends GPGraph
 //		private transient boolean sendEvents = true;
 
 		// Update Undo/Redo Button State based on Undo Manager
-		protected void updateHistoryButtons(GraphUndoManager undoManager)
+		public void updateHistoryButtons(GraphUndoManager undoManager)
 		{
 			undo.setEnabled(undoManager.canUndo(getGraphLayoutCache()));
 			redo.setEnabled(undoManager.canRedo(getGraphLayoutCache()));

@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.util.Log;
 
 public class SchemeNewCommand extends VoidCommand
 {
@@ -66,14 +67,19 @@ public class SchemeNewCommand extends VoidCommand
 		}
 		*/
 
-		Scheme scheme = Scheme.createInstance();
-		scheme.setName("Новая схема");
-
-		final Identifier domainId = new Identifier(
-				((RISDSessionInfo) aContext
-						.getSessionInterface())
-						.getAccessIdentifier().domain_id);
-		scheme.setDomainId(domainId);
+		final Identifier userId = new Identifier(((RISDSessionInfo) aContext
+				.getSessionInterface()).getAccessIdentifier().user_id);
+		final Identifier domainId = new Identifier(((RISDSessionInfo) aContext
+				.getSessionInterface()).getAccessIdentifier().domain_id);
+		
+		Scheme scheme;
+		try {
+			scheme = Scheme.createInstance(userId, domainId, "Новая схема", "");
+		} 
+		catch (CreateObjectException e) {
+			Log.errorException(e);
+			return;
+		}
 
 		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,
 				SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));

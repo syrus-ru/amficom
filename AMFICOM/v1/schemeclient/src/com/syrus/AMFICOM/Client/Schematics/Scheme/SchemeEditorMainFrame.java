@@ -6,6 +6,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
@@ -83,6 +84,49 @@ public class SchemeEditorMainFrame extends JFrame
 
 	private void jbInit() throws Exception
 	{
+//	 Get the currently installed look and feel
+    UIDefaults uidefs = UIManager.getLookAndFeelDefaults();
+    
+    // Retrieve the keys. Can't use an iterator since the map
+    // may be modified during the iteration. So retrieve all at once.
+    String[] keys = (String[])uidefs.keySet().toArray(new String[0]);
+    for (int i = 0; i < keys.length; i++)
+    	System.out.println(keys[i]);
+    
+    for (int i=0; i<keys.length; i++) {
+        Object v = uidefs.get(keys[i]);
+    
+        if (v instanceof Integer) {
+            int intVal = uidefs.getInt(keys[i]);
+        } else if (v instanceof Boolean) {
+            boolean boolVal = uidefs.getBoolean(keys[i]);
+        } else if (v instanceof String) {
+            String strVal = uidefs.getString(keys[i]);
+        } else if (v instanceof Dimension) {
+            Dimension dimVal = uidefs.getDimension(keys[i]);
+        } else if (v instanceof Insets) {
+            Insets insetsVal = uidefs.getInsets(keys[i]);
+        } else if (v instanceof Color) {
+            Color colorVal = uidefs.getColor(keys[i]);
+        } else if (v instanceof Font) {
+            Font fontVal = uidefs.getFont(keys[i]);
+        } else if (v instanceof Border) {
+            Border borderVal = uidefs.getBorder(keys[i]);
+        } else if (v instanceof Icon) {
+            Icon iconVal = uidefs.getIcon(keys[i]);
+        } else if (v instanceof javax.swing.text.JTextComponent.KeyBinding[]) {
+            javax.swing.text.JTextComponent.KeyBinding[] keyBindsVal =
+                (javax.swing.text.JTextComponent.KeyBinding[])uidefs.get(keys[i]);
+        } else if (v instanceof InputMap) {
+            InputMap imapVal = (InputMap)uidefs.get(keys[i]);
+        } else {
+            // Unknown type
+        }
+    }
+
+    
+
+		
 		this.addComponentListener(new SchemeEditorMainFrame_this_componentAdapter(this));
 		this.addWindowListener(new java.awt.event.WindowAdapter()
 		{
