@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.28 2004/10/13 07:52:39 bass Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.29 2004/10/17 14:34:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,11 +23,12 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.measurement.corba.ParameterTypeSort;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/10/13 07:52:39 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2004/10/17 14:34:11 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -36,6 +37,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	public static final String COLUMN_CODENAME = "codename";
 	public static final String COLUMN_DESCRIPTION = "description";	
 	public static final String COLUMN_NAME = "name";	
+	public static final String COLUMN_SORT = "sort";
 	
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 15;
 	
@@ -56,7 +58,8 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_NAME;
+				+ COLUMN_NAME + COMMA
+				+ COLUMN_SORT;
 		}
 		return this.updateColumns;
 	}	
@@ -64,6 +67,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
 			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
@@ -78,7 +82,8 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + parameterType.getCodename() + APOSTOPHE + COMMA
 			+ APOSTOPHE + parameterType.getDescription() + APOSTOPHE + COMMA
-			+ APOSTOPHE + parameterType.getName() + APOSTOPHE;
+			+ APOSTOPHE + parameterType.getName() + APOSTOPHE + COMMA +
+			+ parameterType.getSort().value();
 	}	
 
 	private ParameterType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -96,7 +101,8 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		return super.retrieveQuery(condition) + COMMA
 			+ COLUMN_CODENAME + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_NAME
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_SORT
 			+ SQL_FROM + ObjectEntities.PARAMETERTYPE_ENTITY
 			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
@@ -105,7 +111,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		ParameterType parameterType = (storableObject == null) ? 
-					new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null) : 
+					new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, ParameterTypeSort._PARAMETERTYPE_DATA) : 
 					fromStorableObject(storableObject);
 		/**
 		 * @todo when change DB Identifier model ,change getString() to getLong()
@@ -124,7 +130,8 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 												 resultSet.getString(COLUMN_CODENAME),
 												 resultSet.getString(COLUMN_DESCRIPTION),
-												 resultSet.getString(COLUMN_NAME));
+												 resultSet.getString(COLUMN_NAME),
+												 resultSet.getInt(COLUMN_SORT));
 		return parameterType;
 	}
 
@@ -213,6 +220,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			preparedStatement.setString(++i, parameterType.getCodename());
 			preparedStatement.setString(++i, parameterType.getDescription());
 			preparedStatement.setString(++i, parameterType.getName());
+			preparedStatement.setInt(++i, parameterType.getSort().value());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.20 2004/10/06 15:45:16 max Exp $
+ * $Id: ParameterType.java,v 1.21 2004/10/17 14:34:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,21 +19,24 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.corba.ParameterTypeSort;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/06 15:45:16 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2004/10/17 14:34:11 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class ParameterType extends StorableObjectType {
 	private String name;
+	private int sort;
 
 	private StorableObjectDatabase parameterTypeDatabase;
 	
 	protected static final String ID_NAME = "name"+KEY_VALUE_SEPERATOR;
+	protected static final String ID_SORT = "sort"+KEY_VALUE_SEPERATOR;
 
 	public ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -56,13 +59,15 @@ public class ParameterType extends StorableObjectType {
 					new String(ptt.codename),
 					new String(ptt.description));
 		this.name = new String(ptt.name);
+		this.sort = ptt.sort.value();
 	}
 
 	protected ParameterType(Identifier id,
 												Identifier creatorId,
 												String codename,
 												String description,
-												String name) {
+												String name,
+												int sort) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -72,6 +77,7 @@ public class ParameterType extends StorableObjectType {
 		super.codename = codename;
 		super.description = description;
 		this.name = name;
+		this.sort = sort;
 		super.currentVersion = super.getNextVersion();
 		
 		this.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
@@ -95,8 +101,34 @@ public class ParameterType extends StorableObjectType {
 														 creatorId,
 														 codename,
 														 description,
-														 name);
+														 name,
+														 ParameterTypeSort._PARAMETERTYPE_DATA);
 	}
+	
+	/**
+	 * create new instance for client
+	 * @param id
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 * @param name
+	 * @param sort {@link ParameterTypeSort}
+	 * @return
+	 */
+	public static ParameterType createInstance(Identifier id,
+												 Identifier creatorId,
+												 String codename,
+												 String description,
+												 String name,
+												 ParameterTypeSort sort) {
+		return new ParameterType(id,
+						 creatorId,
+						 codename,
+						 description,
+						 name,
+						 sort.value());
+	}
+
 	
 	public static ParameterType getInstance(ParameterType_Transferable ptt) throws CreateObjectException {
 		ParameterType parameterType = new ParameterType(ptt);
@@ -124,12 +156,17 @@ public class ParameterType extends StorableObjectType {
 																					(Identifier_Transferable)super.modifierId.getTransferable(),
 																					new String(super.codename),
 																					(super.description != null) ? (new String(super.description)) : "",
-																					new String(this.name));
+																					new String(this.name),
+																					ParameterTypeSort.from_int(this.sort));
 	}
 	
 
 	public String getName() {
 		return this.name;
+	}
+	
+	public ParameterTypeSort getSort(){
+		return ParameterTypeSort.from_int(this.sort);
 	}
 	
 	protected synchronized void setAttributes(Date created,
@@ -138,7 +175,8 @@ public class ParameterType extends StorableObjectType {
 																						Identifier modifierId,
 																						String codename,
 																						String description,
-																						String name) {
+																						String name,
+																						int sort) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -146,6 +184,7 @@ public class ParameterType extends StorableObjectType {
 												codename,
 												description);
 		this.name = name;
+		this.sort = sort;
 	}
 	/**
 	 * client setter for name 
@@ -168,7 +207,8 @@ public class ParameterType extends StorableObjectType {
 				 (this.modifierId.equals(type.modifierId))&&
 				 (this.codename.equals(type.codename))&&
 				 (this.description.equals(type.description))&&
-				 (this.name.equals(type.name)))
+				 (this.name.equals(type.name))&&
+				 (this.sort ==  type.sort))
 				 equals = true;
 		}
 		return equals;
@@ -185,6 +225,7 @@ public class ParameterType extends StorableObjectType {
 		hashCodeGenerator.addObject(this.codename);
 		hashCodeGenerator.addObject(this.description);
 		hashCodeGenerator.addObject(this.name);
+		hashCodeGenerator.addInt(this.sort);
 		int result = hashCodeGenerator.getResult();
 		hashCodeGenerator = null;
 		return result;
@@ -201,7 +242,9 @@ public class ParameterType extends StorableObjectType {
 					 + ID_MODIFIER_ID + this.modifierId.toString() + EOSL
 					 + TypedObject.ID_CODENAME + this.codename+ EOSL
 					 + TypedObject.ID_DESCRIPTION + this.description + EOSL
-					 + ID_NAME + this.name;			
+					 + ID_NAME + this.name + EOSL
+					 + ID_SORT + this.sort;
+					 
 		return str;
 	}
 }

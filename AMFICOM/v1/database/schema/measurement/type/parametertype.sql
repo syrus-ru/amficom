@@ -7,6 +7,7 @@ CREATE TABLE ParameterType (
 --
  codename VARCHAR2(32) NOT NULL,
  name VARCHAR2(128) NOT NULL,
+ sort NUMBER(2, 0) NOT NULL,
  description VARCHAR2(256),
 --
  CONSTRAINT partype_pk PRIMARY KEY (id),
