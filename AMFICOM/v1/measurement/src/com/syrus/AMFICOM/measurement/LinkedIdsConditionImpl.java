@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.15 2005/02/24 11:22:23 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.16 2005/02/24 14:53:45 bob Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -17,14 +17,16 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/24 11:22:23 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/24 14:53:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	protected static final Short	ANALYSISTYPE_SHORT		= new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-	protected static final Short	EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+	protected static final Short	EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);	
+	protected static final Short	ANALYSIS_SHORT		= new Short(ObjectEntities.ANALYSIS_ENTITY_CODE);
+	protected static final Short	EVALUATION_SHORT	= new Short(ObjectEntities.EVALUATION_ENTITY_CODE);
 	protected static final Short	MEASUREMENT_SHORT		= new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 	protected static final Short	RESULT_SHORT			= new Short(ObjectEntities.RESULT_ENTITY_CODE);
 	protected static final Short	MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
@@ -43,20 +45,26 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	/**
 	 * @return <code>true</code>
 	 *         <ul>
-	 *         <li>if {@link #entityCode}is {@link AnalysisType}for all
+	 *         <li>if {@link #entityCode} is {@link AnalysisType}for all
 	 *         analysesType for criteria ParameterTypes identifier in linkedIds;
 	 *         </li>
-	 *         <li>if {@link #entityCode}is {@link EvaluationType}for all
+	 *         <li>if {@link #entityCode} is {@link EvaluationType}for all
 	 *         analysesType for threshold ParameterTypes identifier in
 	 *         linkedIds;</li>
-	 *         <li>if {@link #entityCode}is {@link Measurement}for all
+	 *         <li>if {@link #entityCode} is {@link Analysis} for all
+	 *         analysis for parent action identifier in
+	 *         </li>
+   	 *         <li>if {@link #entityCode} is {@link Evaluation} for all
+	 *         evaluation for parent action identifier in
+	 *         </li>  
+	 *         <li>if {@link #entityCode} is {@link Measurement}for all
 	 *         measurements for Test identifier in linkedIds;</li>
-	 *         <li>if {@link #entityCode}is {@link Result}for all results for
+	 *         <li>if {@link #entityCode} is {@link Result}for all results for
 	 *         Measurement identifier in linkedIds;</li>
-	 *         <li>if {@link #entityCode}is {@link MeasurementType}for all
+	 *         <li>if {@link #entityCode} is {@link MeasurementType}for all
 	 *         measurementTypes MeasurementPortType identifier in linkedIds;
 	 *         </li>
-	 *         <li>if {@link #entityCode}is {@link MeasurementSetup}for all
+	 *         <li>if {@link #entityCode} is {@link MeasurementSetup}for all
 	 *         measurement setups for MonitoredElement identifier in linkedIds;
 	 *         </li>
 	 *         </ul>
@@ -127,6 +135,12 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 				this.entityCode = EVALUATIONTYPE_SHORT;
 				break;
+			case ObjectEntities.ANALYSIS_ENTITY_CODE:
+				this.entityCode = ANALYSIS_SHORT;
+				break;
+			case ObjectEntities.EVALUATION_ENTITY_CODE:
+				this.entityCode = EVALUATION_SHORT;
+				break;				
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 				this.entityCode = MEASUREMENT_SHORT;
 				break;
