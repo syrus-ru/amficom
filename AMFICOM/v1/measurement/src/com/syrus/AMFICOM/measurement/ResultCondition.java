@@ -1,5 +1,5 @@
 /*
- * $Id: ResultCondition.java,v 1.3 2004/10/18 14:25:19 bob Exp $
+ * $Id: ResultCondition.java,v 1.4 2004/10/18 14:26:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,10 +21,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultCondition_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TemporalCondition_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/18 14:25:19 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 14:26:09 $
  * @author $Author: bob $
  * @module measurement_v1
  */
