@@ -159,16 +159,16 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		desktopPane.setBackground(Color.darkGray);
 
 
-		statusBar.add();
+//		statusBar.add();
 		statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		statusBarPanel.setLayout(new BorderLayout());
 		statusBarPanel.add(statusBar, BorderLayout.CENTER);
 
-		statusBar.add("status");
-		statusBar.add("server");
-		statusBar.add("session");
-		statusBar.add("user");
-		statusBar.add("time");
+		statusBar.add(StatusBarModel.field_status);
+		statusBar.add(StatusBarModel.field_server);
+		statusBar.add(StatusBarModel.field_session);
+		statusBar.add(StatusBarModel.field_user);
+		statusBar.add(StatusBarModel.field_time);
 
 		viewport.setView(desktopPane);
 		scrollPane.setViewport(viewport);
@@ -341,8 +341,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				{
 					setConnectionOpened();
 
-					statusBar.setText("status", LangModelReport.getString("statusReady"));
-					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
+					statusBar.setText(StatusBarModel.field_status, LangModel.getString("statusReady"));
+					statusBar.setText(StatusBarModel.field_server, aContext.getConnectionInterface().getServiceURL());
 				}
 			}
 			if(cce.CONNECTION_CLOSED)
@@ -350,8 +350,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModelReport.getString("statusDisconnected"));
-					statusBar.setText("server", LangModelReport.getString("statusNoConnection"));
+					statusBar.setText(StatusBarModel.field_status, LangModel.getString("statusDisconnected"));
+					statusBar.setText(StatusBarModel.field_server, LangModel.getString("statusNoConnection"));
 
 					setConnectionClosed();
 
@@ -418,17 +418,6 @@ public class ReportMDIMain extends JFrame implements OperationListener
 							  desktopPane.getHeight());
 			desktopPane.remove(additionalPanel);
 		}
-
-		if (ae.getActionCommand().equals(
-			ReportBuilder.ev_startProgressBar))
-		{
-			statusBar.pbar.start("Идёт загрузка. Пожалуйста, подождите.");
-		}
-		if (ae.getActionCommand().equals(
-			ReportBuilder.ev_stopProgressBar))
-		{
-			statusBar.pbar.stop();
-		}
 	}
 
 	public void setConnectionOpened()
@@ -467,7 +456,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 	public void setSessionOpened()
 	{
 //		aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_startProgressBar));
-		statusBar.pbar.start("Идёт загрузка. Пожалуйста, подождите.");
+		statusBar.enableProgressBar(true);
 
 		ReportBuilder.invokeAsynchronously(new Runnable() {
 			public void run() {
@@ -501,7 +490,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				aModel.setEnabled("menuReportBuilder",true);
 				aModel.fireModelChanged("");
 //				aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_stopProgressBar));
-				statusBar.pbar.stop();
+				statusBar.enableProgressBar(false);
 			}
 		},
 		"Идёт загрузка. Пожалуйста, подождите.");
@@ -591,8 +580,6 @@ public class ReportMDIMain extends JFrame implements OperationListener
 			aContext.getDispatcher().register(this,com.syrus.AMFICOM.Client.General.Filter.SetRestrictionsWindow.ev_lsWindowCreated);
 			aContext.getDispatcher().register(this,com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane.state_filterClosed);
 			aContext.getDispatcher().register(this,SelectReportsPanel.ev_closingAdditionalPanel);
-			aContext.getDispatcher().register(this,ReportBuilder.ev_startProgressBar);
-			aContext.getDispatcher().register(this,ReportBuilder.ev_stopProgressBar);
 		}
 		catch (Exception exc)
 		{
