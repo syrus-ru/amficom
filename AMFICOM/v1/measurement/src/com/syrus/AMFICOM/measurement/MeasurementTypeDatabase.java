@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.68 2005/02/14 11:16:17 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.69 2005/02/14 13:05:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/02/14 11:16:17 $
+ * @version $Revision: 1.69 $, $Date: 2005/02/14 13:05:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -639,22 +639,22 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			}
 		}
 	}
+//
+//	public MeasurementType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
+//		Collection objects = null;
+//		try {
+//			objects = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+//		}
+//		catch (IllegalDataException ide) {				
+//			throw new RetrieveObjectException(ide);
+//		}
+//
+//		if ((objects == null) || (objects.isEmpty()))
+//			throw new ObjectNotFoundException("No measurement type with codename: '" + codename + "'");
+//
+//		return (MeasurementType) objects.iterator().next();
+//	}
 
-	public MeasurementType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
-		Collection objects = null;
-		try {
-			objects = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-		}
-		catch (IllegalDataException ide) {				
-			throw new RetrieveObjectException(ide);
-		}
-
-		if ((objects == null) || (objects.isEmpty()))
-			throw new ObjectNotFoundException("No measurement type with codename: '" + codename + "'");
-
-		return (MeasurementType) objects.iterator().next();
-	}
-	
 	public Collection retrieveAll() throws RetrieveObjectException {
 		try {
 			return this.retrieveByIds(null, null);
