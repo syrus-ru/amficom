@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.7 2004/07/28 12:54:18 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.8 2004/08/10 10:15:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/07/28 12:54:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2004/08/10 10:15:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -39,8 +39,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_USER_ID = "user_id";
 	public static final String COLUMN_SERVER_ID = "server_id";
-	public static final String COLUMN_LOCATION = "location";
-	public static final String COLUMN_HOSTNAME = "hostname";
+	//public static final String COLUMN_LOCATION = "location";
+	//public static final String COLUMN_HOSTNAME = "hostname";
 	
 	private MCM fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MCM)
@@ -66,9 +66,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 				+ COLUMN_NAME + COMMA 
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_USER_ID + COMMA
-				+ COLUMN_SERVER_ID + COMMA
-				+ COLUMN_LOCATION + COMMA
-				+ COLUMN_HOSTNAME
+				+ COLUMN_SERVER_ID 
 				+ SQL_FROM + ObjectEntities.MCM_ENTITY
 				+ SQL_WHERE + COLUMN_ID + EQUALS + mIdStr;
 		Statement statement = null;
@@ -106,9 +104,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 													 * @todo when change DB Identifier model ,change getString() to
 													 *       getLong()
 													 */
-													 new Identifier(resultSet.getString(COLUMN_SERVER_ID)),
-													 resultSet.getString(COLUMN_LOCATION),
-													 resultSet.getString(COLUMN_HOSTNAME));
+													 new Identifier(resultSet.getString(COLUMN_SERVER_ID)));
 			}
 			else
 				throw new ObjectNotFoundException("No such mcm: " + mIdStr);
@@ -218,9 +214,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_USER_ID + COMMA
-			+ COLUMN_SERVER_ID + COMMA
-			+ COLUMN_LOCATION + COMMA
-			+ COLUMN_HOSTNAME
+			+ COLUMN_SERVER_ID 
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ cIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(mcm.getCreated()) + COMMA
@@ -231,9 +225,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + mcm.getName() + APOSTOPHE + COMMA
 			+ APOSTOPHE + mcm.getDescription() + APOSTOPHE + COMMA
 			+ mcm.getUserId().toSQLString() + COMMA
-			+ mcm.getServerId().toSQLString() + COMMA
-			+ APOSTOPHE + mcm.getLocation() + APOSTOPHE + COMMA
-			+ APOSTOPHE + mcm.getHostName() + APOSTOPHE
+			+ mcm.getServerId().toSQLString() 
 			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {
@@ -257,9 +249,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind, Object obj) throws IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
 		MCM mcm = this.fromStorableObject(storableObject);
-		switch (update_kind) {
+		switch (updateKind) {
 			default:
 				return;
 		}

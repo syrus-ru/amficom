@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.9 2004/08/09 06:17:10 bob Exp $
+ * $Id: MCM.java,v 1.10 2004/08/10 10:15:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/09 06:17:10 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/10 10:15:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -32,8 +32,6 @@ public class MCM extends DomainMember implements Characterized {
 	private String description;
 	private Identifier userId;
 	private Identifier serverId;
-	private String location;
-	private String hostname;
 	private List characteristicIds;
 
 	private List kiss;
@@ -63,8 +61,6 @@ public class MCM extends DomainMember implements Characterized {
 		this.description = new String(mt.description);
 		this.userId = new Identifier(mt.user_id);
 		this.serverId = new Identifier(mt.server_id);
-		this.location = new String(mt.location);
-		this.hostname = new String(mt.hostname);
 
 		this.characteristicIds = new ArrayList(mt.characteristic_ids.length);
 		for (int i = 0; i < mt.characteristic_ids.length; i++)
@@ -100,9 +96,7 @@ public class MCM extends DomainMember implements Characterized {
 																new String(this.name),
 																new String(this.description),
 																(Identifier_Transferable)this.userId.getTransferable(),
-																(Identifier_Transferable)this.serverId.getTransferable(),
-																new String(this.location),
-																new String(this.hostname),
+																(Identifier_Transferable)this.serverId.getTransferable(),																
 																charIds,
 																kisIds);
 	}
@@ -123,13 +117,6 @@ public class MCM extends DomainMember implements Characterized {
 		return this.serverId;
 	}
 
-	public String getLocation() {
-		return this.location;
-	}
-
-	public String getHostName() {
-		return this.hostname;
-	}
 
 	public List getCharacteristicIds() {
 		return this.characteristicIds;
@@ -151,9 +138,7 @@ public class MCM extends DomainMember implements Characterized {
 																						String name,
 																						String description,
 																						Identifier userId,
-																						Identifier serverId,
-																						String location,
-																						String hostname) {
+																						Identifier serverId) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -162,9 +147,7 @@ public class MCM extends DomainMember implements Characterized {
 		this.name = name;
 		this.description = description;
 		this.userId = userId;
-		this.serverId = serverId;
-		this.location = location;
-		this.hostname = hostname;
+		this.serverId = serverId;		
 	}
 
 	protected synchronized void setKISs(List kiss) {
