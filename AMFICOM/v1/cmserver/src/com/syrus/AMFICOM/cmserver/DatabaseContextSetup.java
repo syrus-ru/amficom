@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.11 2004/12/16 10:20:28 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.12 2004/12/20 14:04:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.configuration.UserDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
-import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
@@ -50,7 +49,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/12/16 10:20:28 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/20 14:04:45 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -59,6 +58,7 @@ public abstract class DatabaseContextSetup {
 	
 	public static final String CONFIGURATION_POOL_SIZE_KEY = "ConfigurationPoolSize";
 	public static final String MEASUREMENT_POOL_SIZE_KEY = "MeasurementPoolSize";
+	public static final String REFRESH_TIMEOUT_KEY = "RefreshTimeout";
 
 	private DatabaseContextSetup() {
 		// empty
@@ -102,10 +102,12 @@ public abstract class DatabaseContextSetup {
 	}
 
 	public static void initObjectPools() {
-		ConfigurationStorableObjectPool.init(new CMServerConfigurationObjectLoader(), 
+		ConfigurationStorableObjectPool.init(new CMServerConfigurationObjectLoader(ApplicationProperties.getInt(REFRESH_TIMEOUT_KEY, 5) * 1000L * 60L), 
 			ApplicationProperties.getInt(CONFIGURATION_POOL_SIZE_KEY, 1000));
-		//MeasurementStorableObjectPool.init(new CMServerMeasurementObjectLoader(), ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));		
-		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), 
-			ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));
+		
+		MeasurementStorableObjectPool.init(new CMServerMeasurementObjectLoader(ApplicationProperties.getInt(REFRESH_TIMEOUT_KEY, 5) * 1000L * 60L), 
+			ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));		
+//		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), 
+//			ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));
 	}
 }

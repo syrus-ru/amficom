@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.4 2004/12/16 10:20:28 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.5 2004/12/20 14:04:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MCM;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -38,12 +41,14 @@ import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/16 10:20:28 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/20 14:04:45 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -51,11 +56,27 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
     protected static Identifier mcmId;
     protected static Object lock;
     
+    private long lastRefresh = 0;
+    
+    /**
+     * refresh timeout 
+     */
+    private long refreshTimeout;
+    
     static {
         lock = new Object();
     }
+    
+    public CMServerMeasurementObjectLoader(long refreshTimeout){
+    	this.refreshTimeout = refreshTimeout;
+    }
   
     public Set refresh(Set storableObjects) throws DatabaseException, CommunicationException {
+    		/* refresh no often than one in refreshTimeout ms */
+    		if (System.currentTimeMillis() - this.lastRefresh < this.refreshTimeout )
+    			return Collections.EMPTY_SET;
+    		
+    		this.lastRefresh = System.currentTimeMillis();    		
 
 			if (storableObjects.isEmpty())
 				return Collections.EMPTY_SET;
@@ -377,16 +398,37 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		try {
 			list = database.retrieveByCondition(ids2, condition);
 			for (Iterator it = list.iterator(); it.hasNext();) {
-				ids2.add( ((Analysis)it.next()).getId() );
+				ids2.add( ((Measurement)it.next()).getId() );
 			}
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids2.size()]; 
 			int i = 0;
 			for (Iterator it = ids2.iterator(); it.hasNext(); i++) {
 				identifierTransferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
 			}
-			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(mcmId);
-			measurementTransferables = mcmRef.transmitMeasurementsButIds( (LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable() , identifierTransferables);
-			list.add(measurementTransferables);
+			
+			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) condition;
+			LinkedIdsCondition_Transferable linkedIdsConditionTransferable = (LinkedIdsCondition_Transferable)linkedIdsCondition.getTransferable();
+			List tests;
+			if (linkedIdsCondition.getTestIds() != null)
+				tests = MeasurementStorableObjectPool.getStorableObjects(linkedIdsCondition.getTestIds(), true);
+			else tests = Collections.singletonList(MeasurementStorableObjectPool.getStorableObject(linkedIdsCondition.getIdentifier(), true));
+			for (Iterator it = tests.iterator(); it.hasNext();) {
+				Test test = (Test) it.next();				
+				MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
+				Identifier kisId = measurementPort.getKISId();
+				LinkedIdsCondition linkedIdsCondition2 = LinkedIdsCondition.getInstance();
+				linkedIdsCondition2.setEntityCode(ObjectEntities.MCM_ENTITY_CODE);
+				linkedIdsCondition2.setIdentifier(kisId);
+				List mcms = ConfigurationStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition2, true);
+				for (Iterator mcmIter = mcms.iterator(); mcmIter.hasNext();) {
+					MCM mcm = (MCM) mcmIter.next();
+					mcmId  = mcm.getId();
+					com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(mcmId);
+					measurementTransferables = mcmRef.transmitMeasurementsButIds(  linkedIdsConditionTransferable , identifierTransferables);
+					list.add(measurementTransferables);
+				}
+				
+			}
 			return list;
 		}
 		catch (org.omg.CORBA.SystemException se) {
@@ -400,8 +442,13 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		}
 		catch (AMFICOMRemoteException ae) {
 			Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + ae.getMessage());
-			throw new DatabaseException("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + ae.getMessage());
+			throw new CommunicationException("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + ae.getMessage());
 		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+			throw new CommunicationException("CMServerMeasurementObjectLoader.loadMeasurementsButIds | " + throwable);
+		}
+		
 	}
 
 	public List loadAnalysesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {

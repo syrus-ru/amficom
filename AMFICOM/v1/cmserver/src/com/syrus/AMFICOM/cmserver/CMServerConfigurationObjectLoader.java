@@ -1,5 +1,5 @@
 /*
-* $Id: CMServerConfigurationObjectLoader.java,v 1.1 2004/12/09 14:50:33 bob Exp $
+* $Id: CMServerConfigurationObjectLoader.java,v 1.2 2004/12/20 14:04:45 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,12 +17,21 @@ import com.syrus.AMFICOM.general.DatabaseException;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/09 14:50:33 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/20 14:04:45 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
 public class CMServerConfigurationObjectLoader extends DatabaseConfigurationObjectLoader {
 
+	 /**
+     * refresh timeout 
+     */
+    private long refreshTimeout;    
+    
+	public CMServerConfigurationObjectLoader(long refreshTimeout){
+    	this.refreshTimeout = refreshTimeout;
+    }
+	
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
 		/**
 		 * there is no reason to refresh due to configuration entities couldn't change out of cmserver
