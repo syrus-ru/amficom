@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.15 2005/02/01 16:16:13 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.16 2005/02/02 07:56:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import javax.swing.SwingUtilities;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/01 16:16:13 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/02 07:56:01 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends MapStrategy 
@@ -81,79 +81,84 @@ public final class MapVoidElementStrategy extends MapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
-	public void doContextChanges(MouseEvent me)
+	protected void leftMousePressed(MapState mapState, Point point)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
-		
-		MapState mapState = logicalNetLayer.getMapState();
+		int actionMode = mapState.getActionMode();
 
-		int mouseMode = mapState.getMouseMode();
+		if (actionMode == MapState.NULL_ACTION_MODE)
+		{
+			logicalNetLayer.deselectAll();
+		}//MapState.NULL_ACTION_MODE
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void leftMouseDragged(MapState mapState, Point point)
+	{
 		int actionMode = mapState.getActionMode();
 		int operationMode = mapState.getOperationMode();
 
-		if(SwingUtilities.isLeftMouseButton(me))
+		if (actionMode == MapState.NULL_ACTION_MODE &&
+			operationMode == MapState.NO_OPERATION)
 		{
-			if(mouseMode == MapState.MOUSE_PRESSED)
-			{
-				if (actionMode == MapState.NULL_ACTION_MODE)
-				{
-					logicalNetLayer.deselectAll();
-				}
-			}
-			else
-			if (mouseMode == MapState.MOUSE_DRAGGED)
-			{
-				if (actionMode == MapState.NULL_ACTION_MODE &&
-					operationMode == MapState.NO_OPERATION)
-				{
-					mapState.setActionMode(MapState.SELECT_MARKER_ACTION_MODE);
-				}
-			}
-			else
-			if (mouseMode == MapState.MOUSE_RELEASED)
-			{
-				if (actionMode == MapState.SELECT_MARKER_ACTION_MODE &&
-					operationMode == MapState.NO_OPERATION)
-				{
-//				mapState.setActionMode(MapState.NULL_ACTION_MODE);
-					int startX = logicalNetLayer.getStartPoint().x;
-					int startY = logicalNetLayer.getStartPoint().y;
-					int endX = me.getPoint().x;
-					int endY = me.getPoint().y;
-					Rectangle selectionRect = new Rectangle(
-							Math.min(startX, endX),
-							Math.min(startY, endY),
-							Math.abs(endX - startX),
-							Math.abs(endY - startY));
-					selectElementsInRect(selectionRect);
-				}
-			}
-		}
+			mapState.setActionMode(MapState.SELECT_MARKER_ACTION_MODE);
+		}//MapState.NULL_ACTION_MODE && MapState.NO_OPERATION
 	}
 
-	public void selectElementsInRect(Rectangle selectionRect)
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void leftMouseReleased(MapState mapState, Point point)
 	{
+		int actionMode = mapState.getActionMode();
+		int operationMode = mapState.getOperationMode();
+
+		if (actionMode == MapState.SELECT_MARKER_ACTION_MODE &&
+			operationMode == MapState.NO_OPERATION)
+		{
+			int startX = logicalNetLayer.getStartPoint().x;
+			int startY = logicalNetLayer.getStartPoint().y;
+			int endX = point.x;
+			int endY = point.y;
+			Rectangle selectionRect = new Rectangle(
+					Math.min(startX, endX),
+					Math.min(startY, endY),
+					Math.abs(endX - startX),
+					Math.abs(endY - startY));
+			selectElementsInRect(selectionRect);
+		}//MapState.SELECT_MARKER_ACTION_MODE && MapState.NO_OPERATION
+	}
+
+	/**
+	 * Выделить все элементы, попадающие в область.
+	 * @param selectionRect область выборки в экранных координатах
+	 */
+	protected  void selectElementsInRect(Rectangle selectionRect)
+	{
+		Map map = logicalNetLayer.getMapView().getMap();
 		//Здесь просто проверяется что элемент содержится в прямоугольной области
-		Iterator e = logicalNetLayer.getMapView().getMap().getNodes().iterator();
+		Iterator e = map.getNodes().iterator();
 		
-//		Rectangle2D.Double visibleBounds = logicalNetLayer.getVisibleBounds();
-	
 		//Пробегаем и смотрим вхотит ли в область MapNodeElement
 		while (e.hasNext())
 		{
 			AbstractNode node = (AbstractNode)e.next();
-//			if(node.isVisible(visibleBounds))
 			{
 				Point p = logicalNetLayer.convertMapToScreen(node.getLocation());
 	
 				if (selectionRect.contains(p))
+				{
 					node.setSelected(true);
+				}
 				else
+				{
 					node.setSelected(false);
+				}
 			}
 		}
 
-		e = logicalNetLayer.getMapView().getMap().getNodeLinks().iterator();
+		e = map.getNodeLinks().iterator();
 
 		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
 		{
@@ -180,7 +185,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 		else
 		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
 		{
-			for(Iterator it = logicalNetLayer.getMapView().getMap().getPhysicalLinks().iterator(); it.hasNext();)
+			for(Iterator it = map.getPhysicalLinks().iterator(); it.hasNext();)
 			{
 				PhysicalLink link = (PhysicalLink)it.next();
 				boolean select = true;

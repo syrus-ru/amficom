@@ -1,5 +1,5 @@
 /**
- * $Id: VoidStrategy.java,v 1.3 2005/02/01 16:16:13 krupenn Exp $
+ * $Id: VoidStrategy.java,v 1.4 2005/02/02 07:56:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import java.awt.event.MouseEvent;
 /**
  * Пустая стратегия. Ничего не делает.
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/01 16:16:13 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/02 07:56:01 $
  * @module mapviewclient_v1
  */
 public final class VoidStrategy extends MapStrategy 
@@ -41,14 +41,6 @@ public final class VoidStrategy extends MapStrategy
 	public static VoidStrategy getInstance()
 	{
 		return instance;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <br>Empty.
-	 */
-	public void doContextChanges(MouseEvent me)
-	{
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.11 2005/02/01 17:18:16 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.12 2005/02/02 07:56:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import javax.swing.SwingUtilities;
 /**
  * Стратегия управления выделенными объектами.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/01 17:18:16 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/02 07:56:01 $
  * @module mapviewclient_v1
  */
 public final class MapSelectionElementStrategy extends MapStrategy 
@@ -75,82 +75,7 @@ public final class MapSelectionElementStrategy extends MapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
-	public void doContextChanges(MouseEvent me)
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
-		
-		MapState mapState = logicalNetLayer.getMapState();
-
-		int mouseMode = mapState.getMouseMode();
-
-		Point point = me.getPoint();
-
-		if(SwingUtilities.isLeftMouseButton(me))
-		{
-			if(mouseMode == MapState.MOUSE_PRESSED)
-			{
-				leftMousePressed(mapState, point);
-			}//MapState.MOUSE_PRESSED
-			else
-			if(mouseMode == MapState.MOUSE_DRAGGED)
-			{
-				leftMouseDragged(mapState, point);
-			}//MapState.MOUSE_DRAGGED
-			else
-			if(mouseMode == MapState.MOUSE_RELEASED)
-			{
-				leftMouseReleased(mapState, point);
-			}//MapState.MOUSE_RELEASED
-		}//SwingUtilities.isLeftMouseButton(me)
-	}
-
-	/**
-	 * Process left mouse dragged.
-	 * @param mapState map state
-	 * @param point new point
-	 */
-	void leftMouseDragged(MapState mapState, Point point)
-	{
-		int actionMode = mapState.getActionMode();
-
-		if (actionMode == MapState.MOVE_ACTION_MODE)
-		{
-			if (aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
-			{
-				if (command == null)
-				{
-					command = new MoveSelectionCommandBundle(logicalNetLayer.getStartPoint());
-					((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
-				}
-				command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
-			}
-		}//MapState.MOVE_ACTION_MODE
-	}
-
-	/**
-	 * Process left mouse released.
-	 * @param mapState map state
-	 * @param point point
-	 */
-	void leftMouseReleased(MapState mapState, Point point)
-	{
-		int actionMode = mapState.getActionMode();
-
-		if (actionMode == MapState.MOVE_ACTION_MODE)
-		{
-			logicalNetLayer.getCommandList().add(command);
-			logicalNetLayer.getCommandList().execute();
-			command = null;
-		}//MapState.MOVE_ACTION_MODE
-		mapState.setActionMode(MapState.NULL_ACTION_MODE);
-	}
-
-	/**
-	 * Process left mouse pressed.
-	 * @param mapState map state
-	 * @param point new point
-	 */
-	void leftMousePressed(MapState mapState, Point point)
+	protected void leftMousePressed(MapState mapState, Point point)
 	{
 		int actionMode = mapState.getActionMode();
 
@@ -202,4 +127,42 @@ public final class MapSelectionElementStrategy extends MapStrategy
 			}
 		}// ! MapState.SELECT_ACTION_MODE
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void leftMouseDragged(MapState mapState, Point point)
+	{
+		int actionMode = mapState.getActionMode();
+
+		if (actionMode == MapState.MOVE_ACTION_MODE)
+		{
+			if (aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
+			{
+				if (command == null)
+				{
+					command = new MoveSelectionCommandBundle(logicalNetLayer.getStartPoint());
+					((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
+				}
+				command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
+			}
+		}//MapState.MOVE_ACTION_MODE
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void leftMouseReleased(MapState mapState, Point point)
+	{
+		int actionMode = mapState.getActionMode();
+
+		if (actionMode == MapState.MOVE_ACTION_MODE)
+		{
+			logicalNetLayer.getCommandList().add(command);
+			logicalNetLayer.getCommandList().execute();
+			command = null;
+		}//MapState.MOVE_ACTION_MODE
+		mapState.setActionMode(MapState.NULL_ACTION_MODE);
+	}
+
 }

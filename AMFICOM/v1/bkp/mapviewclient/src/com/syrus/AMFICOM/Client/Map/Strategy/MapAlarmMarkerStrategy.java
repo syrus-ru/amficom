@@ -1,5 +1,5 @@
 /**
- * $Id: MapAlarmMarkerStrategy.java,v 1.8 2005/02/01 17:18:16 krupenn Exp $
+ * $Id: MapAlarmMarkerStrategy.java,v 1.9 2005/02/02 07:56:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -25,7 +25,7 @@ import javax.swing.SwingUtilities;
 /**
  * —тратеги€ управлени€ маркером сигнала тревоги.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/01 17:18:16 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/02 07:56:01 $
  * @module mapviewclient_v1
  */
 public final class MapAlarmMarkerStrategy extends MapStrategy 
@@ -67,31 +67,7 @@ public final class MapAlarmMarkerStrategy extends MapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
-	public void doContextChanges(MouseEvent me)
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
-		
-		MapState mapState = logicalNetLayer.getMapState();
-
-		int mouseMode = mapState.getMouseMode();
-
-		Point point = me.getPoint();
-
-		if(SwingUtilities.isLeftMouseButton(me))
-		{
-			if(mouseMode == MapState.MOUSE_PRESSED)
-			{
-				leftMousePressed(mapState, point);
-			}//MapState.MOUSE_PRESSED
-		}//SwingUtilities.isLeftMouseButton(me)
-	}
-
-	/**
-	 * Process left mouse pressed.
-	 * @param mapState map state
-	 * @param point new point
-	 */
-	void leftMousePressed(MapState mapState, Point point)
+	protected void leftMousePressed(MapState mapState, Point point)
 	{
 		int actionMode = mapState.getActionMode();
 

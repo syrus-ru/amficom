@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.15 2005/02/01 17:18:16 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.16 2005/02/02 07:56:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import javax.swing.SwingUtilities;
  * Стратегия управления маркером.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/01 17:18:16 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/02 07:56:01 $
  * @module mapviewclient_v1
  */
 public final class MapMarkerStrategy extends MapStrategy 
@@ -74,43 +74,32 @@ public final class MapMarkerStrategy extends MapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
-	public void doContextChanges(MouseEvent me)
+	protected void leftMousePressed(MapState mapState, Point point)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
-		
-		MapState mapState = logicalNetLayer.getMapState();
-		
-		int mouseMode = mapState.getMouseMode();
+		int actionMode = mapState.getActionMode();
 
-		Point point = me.getPoint();
-
-		if(SwingUtilities.isLeftMouseButton(me))
+		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
-			if(mouseMode == MapState.MOUSE_PRESSED)
+			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			if (mel instanceof Selection)
 			{
-				leftMousePressed(mapState, point);
-			}//MapState.MOUSE_PRESSED
+			}
 			else
-			if(mouseMode == MapState.MOUSE_DRAGGED)
 			{
-				leftMouseDragged(mapState, point);
-			}//MapState.MOUSE_DRAGGED
-			else
-			if(mouseMode == MapState.MOUSE_RELEASED)
-			{
-				leftMouseReleased(mapState, point);
-			}//MapState.MOUSE_RELEASED
-
-		}//SwingUtilities.isLeftMouseButton(me)
-
+				logicalNetLayer.deselectAll();
+			}
+		}//MapState.SELECT_ACTION_MODE
+		else if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
+		{
+			logicalNetLayer.deselectAll();
+		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
+		marker.setSelected(true);
 	}
 
 	/**
-	 * Process left mouse dragged.
-	 * @param mapState map state
-	 * @param point new point
+	 * {@inheritDoc}
 	 */
-	void leftMouseDragged(MapState mapState, Point point)
+	protected void leftMouseDragged(MapState mapState, Point point)
 	{
 		int actionMode = mapState.getActionMode();
 
@@ -182,44 +171,15 @@ public final class MapMarkerStrategy extends MapStrategy
 	}
 
 	/**
-	 * Process left mouse released.
-	 * @param mapState map state
-	 * @param point new point
+	 * {@inheritDoc}
 	 */
-	void leftMouseReleased(MapState mapState, Point point)
+	protected void leftMouseReleased(MapState mapState, Point point)
 	{
 		int actionMode = mapState.getActionMode();
 
 		if (actionMode == MapState.MOVE_ACTION_MODE)
 		{
 		}
-	}
-
-	/**
-	 * Process left mouse pressed.
-	 * @param mapState map state
-	 * @param point new point
-	 */
-	void leftMousePressed(MapState mapState, Point point)
-	{
-		int actionMode = mapState.getActionMode();
-
-		if ((actionMode == MapState.SELECT_ACTION_MODE))
-		{
-			MapElement mel = logicalNetLayer.getCurrentMapElement();
-			if (mel instanceof Selection)
-			{
-			}
-			else
-			{
-				logicalNetLayer.deselectAll();
-			}
-		}//MapState.SELECT_ACTION_MODE
-		else if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
-		{
-			logicalNetLayer.deselectAll();
-		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
-		marker.setSelected(true);
 	}
 }
 

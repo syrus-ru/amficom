@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.13 2005/02/01 17:18:16 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.14 2005/02/02 07:56:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import javax.swing.SwingUtilities;
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/02/01 17:18:16 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/02 07:56:01 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalNodeElementStrategy extends MapStrategy 
@@ -85,41 +85,89 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 		this.aContext = logicalNetLayer.getContext();
 	}
 
-	public void doContextChanges(MouseEvent me)
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void leftMousePressed(MapState mapState, Point point)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
-		
-		MapState mapState = logicalNetLayer.getMapState();
+		int actionMode = mapState.getActionMode();
 
-		int mouseMode = mapState.getMouseMode();
-
-		Point point = me.getPoint();
-
-		if(SwingUtilities.isLeftMouseButton(me))
+		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
-			if(mouseMode == MapState.MOUSE_PRESSED)
+			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			if (mel instanceof Selection)
 			{
-				leftMousePressed(mapState, point);
-			}//MapState.MOUSE_PRESSED
+				Selection sel = (Selection)mel;
+				sel.add(node);
+			}
 			else
-			if(mouseMode == MapState.MOUSE_DRAGGED)
 			{
-				leftMouseDragged(mapState, point);
-			}//if(mouseMode == MapState.MOUSE_DRAGGED)
-			else
-			if(mouseMode == MapState.MOUSE_RELEASED)
-			{
-				leftMouseReleased(mapState, point);
-			}//if(mouseMode == MapState.MOUSE_RELEASED)
-		}//if(SwingUtilities.isLeftMouseButton(me))
+				Selection sel = new Selection(node.getMap());
+				sel.addAll(logicalNetLayer.getSelectedElements());
+				logicalNetLayer.setCurrentMapElement(sel);
+			}
+		}//MapState.SELECT_ACTION_MODE
+		if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
+		{
+			logicalNetLayer.deselectAll();
+		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
+		node.setSelected(true);
 	}
 
 	/**
-	 * Process left mouse released.
-	 * @param mapState map state
-	 * @param point new point
+	 * {@inheritDoc}
 	 */
-	void leftMouseReleased(MapState mapState, Point point)
+	protected void leftMouseDragged(MapState mapState, Point point)
+	{
+		int actionMode = mapState.getActionMode();
+		int operationMode = mapState.getOperationMode();
+
+		if (operationMode == MapState.MOVE_FIXDIST)
+		{
+			if (command == null)
+			{
+				command = new MoveFixedDistanceCommand(point, logicalNetLayer.getFixedNode(), node);
+				((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
+			}
+			command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
+		}//MapState.MOVE_FIXDIST
+		else if (actionMode == MapState.MOVE_ACTION_MODE)
+		{
+			if (aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
+			{
+				if (command == null)
+				{
+					command = new MoveSelectionCommandBundle(logicalNetLayer.getStartPoint());
+					((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
+				}
+				command.setParameter(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.END_POINT, point);
+			}
+			node.setCanBind(false);
+			for (Iterator it = node.getMap().getSiteNodes().iterator();it.hasNext();)
+			{
+				SiteNode sit = (SiteNode)it.next();
+				SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(sit);
+				if (!(sit instanceof UnboundNode))
+					if (snc.isMouseOnElement(sit, point))
+					{
+						node.setCanBind(true);
+						break;
+					}
+			}
+		}//MapState.MOVE_ACTION_MODE
+		else if (actionMode == MapState.NULL_ACTION_MODE)
+		{
+			if (!node.isActive())
+			{
+				mapState.setActionMode(MapState.DRAW_LINES_ACTION_MODE);
+			}
+		}//MapState.NULL_ACTION_MODE
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void leftMouseReleased(MapState mapState, Point point)
 	{
 		int actionMode = mapState.getActionMode();
 		int operationMode = mapState.getOperationMode();
@@ -173,88 +221,5 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 		}//MapState.DRAW_LINES_ACTION_MODE
 
 		mapState.setActionMode(MapState.NULL_ACTION_MODE);
-	}
-
-	/**
-	 * Process left mouse dragged.
-	 * @param mapState map state
-	 * @param point new point
-	 */
-	void leftMouseDragged(MapState mapState, Point point)
-	{
-		int actionMode = mapState.getActionMode();
-		int operationMode = mapState.getOperationMode();
-
-		if (operationMode == MapState.MOVE_FIXDIST)
-		{
-			if (command == null)
-			{
-				command = new MoveFixedDistanceCommand(point, logicalNetLayer.getFixedNode(), node);
-				((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
-			}
-			command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
-		}//MapState.MOVE_FIXDIST
-		else if (actionMode == MapState.MOVE_ACTION_MODE)
-		{
-			if (aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
-			{
-				if (command == null)
-				{
-					command = new MoveSelectionCommandBundle(logicalNetLayer.getStartPoint());
-					((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
-				}
-				command.setParameter(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.END_POINT, point);
-			}
-			node.setCanBind(false);
-			for (Iterator it = node.getMap().getSiteNodes().iterator();it.hasNext();)
-			{
-				SiteNode sit = (SiteNode)it.next();
-				SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(sit);
-				if (!(sit instanceof UnboundNode))
-					if (snc.isMouseOnElement(sit, point))
-					{
-						node.setCanBind(true);
-						break;
-					}
-			}
-		}//MapState.MOVE_ACTION_MODE
-		else if (actionMode == MapState.NULL_ACTION_MODE)
-		{
-			if (!node.isActive())
-			{
-				mapState.setActionMode(MapState.DRAW_LINES_ACTION_MODE);
-			}
-		}//MapState.NULL_ACTION_MODE
-	}
-
-	/**
-	 * Process left mouse pressed.
-	 * @param mapState map state
-	 * @param point new point
-	 */
-	void leftMousePressed(MapState mapState, Point point)
-	{
-		int actionMode = mapState.getActionMode();
-
-		if ((actionMode == MapState.SELECT_ACTION_MODE))
-		{
-			MapElement mel = logicalNetLayer.getCurrentMapElement();
-			if (mel instanceof Selection)
-			{
-				Selection sel = (Selection)mel;
-				sel.add(node);
-			}
-			else
-			{
-				Selection sel = new Selection(node.getMap());
-				sel.addAll(logicalNetLayer.getSelectedElements());
-				logicalNetLayer.setCurrentMapElement(sel);
-			}
-		}//MapState.SELECT_ACTION_MODE
-		if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
-		{
-			logicalNetLayer.deselectAll();
-		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
-		node.setSelected(true);
 	}
 }
