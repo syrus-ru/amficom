@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.35 2005/03/23 18:32:30 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.36 2005/03/23 19:07:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -99,7 +99,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/03/23 18:32:30 $
+ * @version $Revision: 1.36 $, $Date: 2005/03/23 19:07:54 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -655,6 +655,41 @@ public class MServerImplementation extends MServerPOA {
 			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				MeasurementPort measurementPort = (MeasurementPort) it.next();
 				transferables[i] = (MeasurementPort_Transferable) measurementPort.getTransferable();
+			}
+			return transferables;
+
+		}
+
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public TransmissionPath_Transferable[] transmitTransmissionPathsButIdsByCondition(Identifier_Transferable[] ids_Transferable,
+			StorableObjectCondition_Transferable condition_Transferable)
+			throws AMFICOMRemoteException {
+		try {
+			Collection collection;
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
+			if (ids_Transferable.length > 0) {
+				List idsList = new ArrayList(ids_Transferable.length);
+				for (int i = 0; i < ids_Transferable.length; i++)
+					idsList.add(new Identifier(ids_Transferable[i]));
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			}
+			else
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+			TransmissionPath_Transferable[] transferables = new TransmissionPath_Transferable[collection.size()];
+			int i = 0;
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
+				TransmissionPath transmissionPath = (TransmissionPath) it.next();
+				transferables[i] = (TransmissionPath_Transferable) transmissionPath.getTransferable();
 			}
 			return transferables;
 

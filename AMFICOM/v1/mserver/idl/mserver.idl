@@ -128,6 +128,11 @@ module corba {
 						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
+		configuration::corba::TransmissionPathSeq_Transferable transmitTransmissionPathsButIdsByCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
 
 /////////////////////////////////////////	Measurement //////////////////////////////////////////////////
 
