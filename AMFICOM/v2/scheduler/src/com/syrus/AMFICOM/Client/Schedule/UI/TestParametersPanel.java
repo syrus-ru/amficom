@@ -139,13 +139,18 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				TestSetup ts = (TestSetup) TestParametersPanel.this.testSetups.getSelectedObjectResource();
 				if (ts != null) {
 					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
-					DataSet dsAnalysis = new DataSet();
-					dsAnalysis.add((ObjectResource) Pool.get(AnalysisType.typ, ts.getAnalysisTypeId()));
+					//DataSet dsAnalysis = new DataSet();
+					//dsAnalysis.add((ObjectResource) Pool.get(AnalysisType.typ, ts.getAnalysisTypeId()));
 
-					DataSet dsEvaluation = new DataSet();
-					dsEvaluation.add((ObjectResource) Pool.get(EvaluationType.typ, ts.getEvaluationTypeId()));
-					TestParametersPanel.this.analysisComboBox.setContents(dsAnalysis.elements(), true);
-					TestParametersPanel.this.evaluationComboBox.setContents(dsEvaluation.elements(), true);
+					//DataSet dsEvaluation = new DataSet();
+					//dsEvaluation.add((ObjectResource) Pool.get(EvaluationType.typ, ts.getEvaluationTypeId()));
+					//TestParametersPanel.this.analysisComboBox.setContents(dsAnalysis.elements(), true);
+					TestParametersPanel.this.analysisComboBox.removeAll();
+					TestParametersPanel.this.analysisComboBox.add((ObjectResource) Pool.get(AnalysisType.typ, ts.getAnalysisTypeId()));
+					
+					//TestParametersPanel.this.evaluationComboBox.setContents(dsEvaluation.elements(), true);
+					TestParametersPanel.this.evaluationComboBox.removeAll();
+					TestParametersPanel.this.evaluationComboBox.add((ObjectResource) Pool.get(EvaluationType.typ, ts.getEvaluationTypeId()));
 
 					for (Iterator it = TestParametersPanel.this.testPanels.keySet().iterator(); it.hasNext();) {
 						String key = (String) it.next();

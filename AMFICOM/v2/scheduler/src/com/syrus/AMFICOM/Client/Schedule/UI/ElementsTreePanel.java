@@ -331,12 +331,20 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			TreeDataSelectionEvent dse = (TreeDataSelectionEvent) oe;
 			//			selectedObject = dse.selectedObject;
 			Class selectedClass = dse.getDataClass();
-			DataSet set = dse.getDataSet();
+			//DataSet set = dse.getDataSet();
+			Collection col = dse.getCollection();
 
 			if (selectedClass.equals(MonitoredElement.class)) {
-				this.loadButton.setEnabled(true);
-				MonitoredElement me = (MonitoredElement) set.get(dse.getSelectionNumber());
-				this.dispatcher.notify(new OperationEvent(me.getId(), 0, SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+				this.loadButton.setEnabled(true);				 
+					//(MonitoredElement) col.get(dse.getSelectedObject());
+				{
+					Object obj = dse.getSelectedObject();
+					if ((col.contains(obj))&&(obj instanceof MonitoredElement)){
+						MonitoredElement me = (MonitoredElement)obj;
+						this.dispatcher.notify(new OperationEvent(me.getId(), 0, SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+					}
+						
+				}				
 			} else
 				this.loadButton.setEnabled(false);
 

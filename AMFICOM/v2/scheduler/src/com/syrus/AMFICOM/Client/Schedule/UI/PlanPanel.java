@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
-import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 
 import oracle.jdeveloper.layout.*;
 
