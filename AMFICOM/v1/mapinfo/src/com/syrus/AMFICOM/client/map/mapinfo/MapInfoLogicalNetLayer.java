@@ -48,10 +48,9 @@ import java.util.List;
 
 public class MapInfoLogicalNetLayer extends LogicalNetLayer 
 {
-	protected MapImagePanel mapImagePanel = null;
+//	protected MapImagePanel mapImagePanel = null;
 	
-//	MapTool logicalLayerMapTool = null;
-  protected MapJ localMapJ = null;
+//  protected MapJ localMapJ = null;
   protected MapInfoNetMapViewer nmViewer = null;
 	
 	public static final double ZOOM_FACTOR = 2D;
@@ -72,7 +71,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
   public void setMapImageSize(int width, int height)
   {
     if ((width > 0) && (height > 0))
-      this.localMapJ.setDeviceBounds(new DoubleRect(
+      nmViewer.localMapJ.setDeviceBounds(new DoubleRect(
         0,
         0,
         width,
@@ -89,7 +88,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
       com.mapinfo.util.DoublePoint mapdp = new com.mapinfo.util.DoublePoint(
         point.getX(), point.getY());
       com.mapinfo.util.DoublePoint screendp =
-        this.localMapJ.transformNumericToScreen(mapdp);
+        nmViewer.localMapJ.transformNumericToScreen(mapdp);
       return new Point( (int) screendp.x, (int) screendp.y);
     }
     catch (Exception exc)
@@ -109,7 +108,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			com.mapinfo.util.DoublePoint screendp = new com.mapinfo.util.
 				DoublePoint(point.x, point.y);
 			com.mapinfo.util.DoublePoint mapdp =
-        this.localMapJ.transformScreenToNumeric(screendp);
+        nmViewer.localMapJ.transformScreenToNumeric(screendp);
 			return new DoublePoint(mapdp.x, mapdp.y);
 		}
 		catch (Exception e)
@@ -154,7 +153,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		try
 		{
-			return this.localMapJ.sphericalDistance(
+			return nmViewer.localMapJ.sphericalDistance(
 				new com.mapinfo.util.DoublePoint(from.getX(), from.getY()),
 				new com.mapinfo.util.DoublePoint(to.getX(), to.getY()));
 		}
@@ -172,11 +171,12 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
   {
     try
     {
-      localMapJ.setCenter(new com.mapinfo.util.DoublePoint(center.getX(),center.getY()));
+      nmViewer.localMapJ.setCenter(new com.mapinfo.util.DoublePoint(center.getX(),center.getY()));
     }
     catch(Exception exc)
     {
 			System.out.println("MILNL - Failed setting center.");
+			exc.printStackTrace();
     }
   }
 
@@ -188,7 +188,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
     com.mapinfo.util.DoublePoint center = null;
     try
     {
-      center = localMapJ.getCenter();
+      center = nmViewer.localMapJ.getCenter();
       return new DoublePoint(center.x,center.y);
     }
     catch(Exception exc)
@@ -203,7 +203,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		try
 		{
-			DoubleRect rect = this.localMapJ.getBounds();
+			DoubleRect rect = nmViewer.localMapJ.getBounds();
 			Rectangle2D.Double vb = new Rectangle2D.Double(rect.xmin, rect.ymin, rect.width(),
 													rect.height());
 
@@ -261,7 +261,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
         catch (IOException optExc)
         {}
         
-        int dataSize = mapImagePanel.getWidth() * mapImagePanel.getHeight() * 2;
+        int dataSize = nmViewer.mapImagePanel.getWidth() * nmViewer.mapImagePanel.getHeight() * 2;
         byte[] img = new byte[dataSize];
   
         try
@@ -276,7 +276,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
         System.out.println("MIFLNL - repaint - Stream closed");
         
         Image imageReceived = Toolkit.getDefaultToolkit().createImage(img);
-        mapImagePanel.setImage(imageReceived);
+        nmViewer.mapImagePanel.setImage(imageReceived);
         System.out.println("MIFLNL - repaint - Image setted");
       }
       catch(Exception exc)
@@ -285,9 +285,9 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
       }
     }
     else
-      mapImagePanel.repaint();
+      nmViewer.mapImagePanel.repaint();
 
-//    super.paint(mapImagePanel.getGraphics());
+//    super.paint(nmViewer.mapImagePanel.getGraphics());
 	}
 	
 	/**
@@ -296,12 +296,12 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public void setCursor(Cursor cursor)
 	{
 		System.out.println("Set cursor " + cursor.getName());
-		mapImagePanel.setCursor(cursor);
+		nmViewer.mapImagePanel.setCursor(cursor);
 	}
 
 	public Cursor getCursor()
 	{
-		return mapImagePanel.getCursor();
+		return nmViewer.mapImagePanel.getCursor();
 	}
 
 
@@ -313,7 +313,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
     double currentZoom = 0.0D;
     try
     {
-      currentZoom = localMapJ.getZoom();
+      currentZoom = nmViewer.localMapJ.getZoom();
     }
     catch(Exception exc)
     {
@@ -328,14 +328,15 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
   public void setScale(double z)
   {
-    try
+	try
     {
-      localMapJ.setZoom(z);
+      nmViewer.localMapJ.setZoom(z);
       updateZoom();
     }
     catch(Exception exc)
     {
 			System.out.println("MapImagePanel - Failed setting zoom.");
+			exc.printStackTrace();
     }
   }
 
@@ -373,7 +374,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 //								 to.getX() + ", " + to.getY() + ")");
 		try
 		{
-			localMapJ.setBounds(new DoubleRect(
+			nmViewer.localMapJ.setBounds(new DoubleRect(
 				from.getX(),
 				from.getY(),
 				to.getX(),
@@ -405,13 +406,13 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
     int shiftX = (int) (me.getX() - this.startPoint.getX());
     int shiftY = (int) (me.getY() - this.startPoint.getY());
 
-    this.mapImagePanel.repaint(this.mapImagePanel.getGraphics(),shiftX,shiftY);
+    nmViewer.mapImagePanel.repaint(nmViewer.mapImagePanel.getGraphics(),shiftX,shiftY);
 	}
 
 	public List findSpatialObjects(String searchText)
 	{
     List resultList = new ArrayList();
-    Iterator layersIt =  this.localMapJ.getLayers().iterator(LayerType.FEATURE);
+    Iterator layersIt =  nmViewer.localMapJ.getLayers().iterator(LayerType.FEATURE);
     for (;layersIt.hasNext();)
     {
       FeatureLayer currLayer = (FeatureLayer)layersIt.next();
@@ -472,15 +473,15 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		super.setMapViewer(mapViewer);
 		
 		this.nmViewer = (MapInfoNetMapViewer)mapViewer;
-		this.mapImagePanel = nmViewer.mapImagePanel;
-    this.localMapJ = nmViewer.localMapJ;
+//		this.mapImagePanel = nmViewer.mapImagePanel;
+//    this.localMapJ = nmViewer.localMapJ;
 	}
   
   public String getMapMainParamString()
   {
     String result = "";
-    result += "?" + ServletCommandNames.WIDTH + "=" + this.mapImagePanel.getWidth();
-    result += "&" + ServletCommandNames.HEIGHT + "=" + this.mapImagePanel.getHeight();
+    result += "?" + ServletCommandNames.WIDTH + "=" + nmViewer.mapImagePanel.getWidth();
+    result += "&" + ServletCommandNames.HEIGHT + "=" + nmViewer.mapImagePanel.getHeight();
     result += "&" + ServletCommandNames.CENTER_X + "=" + this.getCenter().getX();
     result += "&" + ServletCommandNames.CENTER_Y + "=" + this.getCenter().getY();
     result += "&" + ServletCommandNames.ZOOM_FACTOR + "=" + this.getScale();

@@ -38,7 +38,8 @@ LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
 REPORTCP=$(EXTLIB)\jfreechartK.jar
 JGRAPHCP=$(EXTLIB)\jgraphpad.jar
-MAPINFOCP=$(EXTLIB)\mxj.jar;$(EXTLIB)\miutil.jar;$(EXTLIB)\mxjclient.jar;$(EXTLIB)\mxjbeans.jar;$(EXTLIB)\micsys.jar
+MAPINFOCP=$(EXTLIB)\mapinfo\common\jdom.jar;$(EXTLIB)\mapinfo\common\log4j.jar;$(EXTLIB)\mapinfo\common\mijts.jar;$(EXTLIB)\mapinfo\common\mijsptaglibs.jar;$(EXTLIB)\mapinfo\common\midtds.jar;$(EXTLIB)\mapinfo\common\xalan.jar;$(EXTLIB)\mapinfo\common\micsys.jar;$(EXTLIB)\mapinfo\common\miutil.jar;$(EXTLIB)\mapinfo\common\mistyles.jar;$(EXTLIB)\mapinfo\common\mapinfo\commons-logging.jar;$(EXTLIB)\mapinfo\common\mxjgeom.jar;$(EXTLIB)\mapinfo\common\xmlParserAPIs.jar;$(EXTLIB)\mapinfo\common\xml-apis.jar;$(EXTLIB)\mapinfo\common\xercesImpl.jar;$(EXTLIB)\mapinfo\common\mxj.jar;$(EXTLIB)\mapinfo\common\mxjdtds.jar;$(EXTLIB)\mapinfo\common\mxjtabdp.jar;$(EXTLIB)\mapinfo\common\mxjoradp.jar;$(EXTLIB)\mapinfo\common\mxjsqlsvrdp.jar;$(EXTLIB)\mapinfo\common\mxjiusdp.jar;$(EXTLIB)\mapinfo\common\mxjdb2dp.jar;$(EXTLIB)\mapinfo\common\mxjrasterdp.jar;$(EXTLIB)\mapinfo\common\mxjotherdp.jar;$(EXTLIB)\mapinfo\common\mxjwmsdp.jar;$(EXTLIB)\mapinfo\client\rjsclient.jar;$(EXTLIB)\mapinfo\client\previewgifs.jar;$(EXTLIB)\mapinfo\client\mmjclient.jar;$(EXTLIB)\mapinfo\client\mxjclient.jar;$(EXTLIB)\mapinfo\client\mxjbeans.jar;$(EXTLIB)\mapinfo\client\mxjmanager.jar;$(EXTLIB)\mapinfo\client\mxjloc.jar;$(EXTLIB)\mapinfo\client\mxjdevsup.jar;$(EXTLIB)\mapinfo\client\mxjclientsamples.jar;$(EXTLIB)\mapinfo\client\miappletsup.jar;$(EXTLIB)\mapinfo\mapinfo\client
+# mxj.jar;$(EXTLIB)\miutil.jar;$(EXTLIB)\mxjclient.jar;$(EXTLIB)\mxjbeans.jar;$(EXTLIB)\micsys.jar
 
 CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP);$(SPATIALCP);$(MAPINFOCP)
 

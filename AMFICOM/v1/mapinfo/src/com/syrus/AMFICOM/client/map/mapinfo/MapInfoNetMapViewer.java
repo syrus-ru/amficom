@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.util.TooManyListenersException;
 import javax.swing.JComponent;
 import javax.swing.ToolTipManager;
 
@@ -56,9 +57,10 @@ public class MapInfoNetMapViewer extends NetMapViewer
 
 	protected MapScrollPane scrollPane = null;
 	protected MapImagePanel mapImagePanel = null;
-  protected MapJ localMapJ = null;  
-  protected String mapperServletURL = null;
-  protected String mapDefinitionFile = null;
+  
+	protected MapJ localMapJ = null;  
+	protected String mapperServletURL = null;
+	protected String mapDefinitionFile = null;
   
 	public void init()
 	{
@@ -69,59 +71,21 @@ public class MapInfoNetMapViewer extends NetMapViewer
 				"init()");
 		
 		super.init();
-		
-		if(lnl != null)
-		{
-			mapImagePanel.removeMouseListener(mttp.ls);
-			mapImagePanel.removeMouseMotionListener(mttp.ls);
-//			dropTarget.setActive(false);
-			dropTarget.removeDropTargetListener(dtl);
-			ttm.unregisterComponent(mttp);
-		}
+
+//		if(lnl != null)
+//		{
+//			mapImagePanel.removeMouseListener(mttp.ls);
+//			mapImagePanel.removeMouseMotionListener(mttp.ls);
+//			dropTarget.removeDropTargetListener(dtl);
+//			ttm.unregisterComponent(mttp);
+//		}
 		try
 		{
-      this.localMapJ = this.initMapJ(this.mapDefinitionFile);
 			lnl = new MapInfoLogicalNetLayer(this);
-
-//			lnl.getMapState().setActionMode(MapState.DRAW_ACTION_MODE);
-      mapImagePanel.setLogicalLayer(lnl);
-
-			dtl = new MapDropTargetListener(lnl);
-			dropTarget = mapImagePanel.getDropTarget();
-			if(dropTarget == null)
-			{
-				dropTarget = new DropTarget(mapImagePanel, dtl);
-				mapImagePanel.setDropTarget(dropTarget);
-			}
-			else
-				dropTarget.addDropTargetListener(dtl);
-        
-			dropTarget.setActive(true);
-
-			mttp = new MapToolTippedPanel(this);
-			mapImagePanel.addMouseListener(mttp.ls);
-			mapImagePanel.addMouseMotionListener(mttp.ls);
-
-			mka = new MapKeyAdapter(lnl);
-			getVisualComponent().addKeyListener(mka);
-			getVisualComponent().grabFocus();
-
-			ttm = ToolTipManager.sharedInstance();
-			ttm.registerComponent(mttp);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-		}
-		if(ml == null)
-		{
-			ml = new MapMouseListener(lnl);
-			mapImagePanel.addMouseListener(ml);
-		}
-		if(mml == null)
-		{
-			mml = new MapMouseMotionListener(lnl);
-			mapImagePanel.addMouseMotionListener(mml);
 		}
 	}
 
@@ -148,7 +112,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
     this.mapperServletURL = mapperServletURL;    
     
     this.localMapJ = this.initMapJ(this.mapDefinitionFile);
-    this.lnl.setCenter(new DoublePoint(0,0));
+    this.lnl.setCenter(MapPropertiesManager.getCenter());
     this.lnl.setScale(MapPropertiesManager.getZoom());
   }
 
@@ -227,9 +191,55 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	public JComponent getVisualComponent()
 	{
 		if(mapImagePanel == null)
+		{
 			mapImagePanel = new MapImagePanel();
-		if(scrollPane == null)
-			scrollPane = new MapScrollPane(this);
+
+			if(scrollPane == null)
+				scrollPane = new MapScrollPane(this);
+
+		    mapImagePanel.setLogicalLayer(lnl);
+
+			dtl = new MapDropTargetListener(lnl);
+			dropTarget = mapImagePanel.getDropTarget();
+			if(dropTarget == null)
+			{
+				dropTarget = new DropTarget(mapImagePanel, dtl);
+				mapImagePanel.setDropTarget(dropTarget);
+			}
+			else
+				try
+				{
+					dropTarget.addDropTargetListener(dtl);
+				}
+				catch (TooManyListenersException e)
+				{
+					e.printStackTrace();
+				}
+        
+			dropTarget.setActive(true);
+
+			mttp = new MapToolTippedPanel(this);
+			mapImagePanel.addMouseListener(mttp.ls);
+			mapImagePanel.addMouseMotionListener(mttp.ls);
+
+			mka = new MapKeyAdapter(lnl);
+			scrollPane.addKeyListener(mka);
+			scrollPane.grabFocus();
+
+			ttm = ToolTipManager.sharedInstance();
+			ttm.registerComponent(mttp);
+
+			if(ml == null)
+			{
+				ml = new MapMouseListener(lnl);
+				mapImagePanel.addMouseListener(ml);
+			}
+			if(mml == null)
+			{
+				mml = new MapMouseMotionListener(lnl);
+				mapImagePanel.addMouseMotionListener(mml);
+			}
+		}
 		return scrollPane;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.17 2005/01/12 14:23:19 krupenn Exp $
+ * $Id: MapFrame.java,v 1.18 2005/01/12 15:32:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,7 +79,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2005/01/12 14:23:19 $
+ * @version $Revision: 1.18 $, $Date: 2005/01/12 15:32:34 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -127,17 +127,17 @@ public class MapFrame extends JInternalFrame
 		// экземпляр обозревателя создается менеджером карты на основе
 		// данных, записанных в файле Map.properties
 
-		mapViewer = NetMapViewer.create(MapPropertiesManager.getNetMapViewerClassName());
-//		mapViewer = MapPropertiesManager.getNetMapViewer();
 
 		MapConnection mapConnection = MapConnection.create(MapPropertiesManager.getConnectionClassName());
-
 		mapConnection.setPath(MapPropertiesManager.getDataBasePath());
 		mapConnection.setView(MapPropertiesManager.getDataBaseView());
 		mapConnection.setURL(MapPropertiesManager.getDataBaseURL());
-
-//		MapConnection mapConnection = MapPropertiesManager.getConnection();
 		mapConnection.connect();
+
+		mapViewer = NetMapViewer.create(MapPropertiesManager.getNetMapViewerClassName());
+
+		mapViewer.init();
+		mapViewer.setConnection(mapConnection);
 
 		try
 		{
@@ -147,8 +147,9 @@ public class MapFrame extends JInternalFrame
 		{
 			e.printStackTrace();
 		}
+
 		initModule();
-		mapViewer.setConnection(mapConnection);
+
 		mapToolBar.setLogicalNetLayer(mapViewer.getLogicalNetLayer());
 	}
 	
@@ -225,8 +226,6 @@ public class MapFrame extends JInternalFrame
 	 */	
 	public void initModule()
 	{
-	    // load values from properties file
-		mapViewer.init();
 		Environment.getDispatcher().register(this, ContextChangeEvent.type);
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 	}

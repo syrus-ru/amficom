@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.32 2004/12/30 16:17:47 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.33 2005/01/12 15:32:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -103,7 +103,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.32 $, $Date: 2004/12/30 16:17:47 $
+ * @version $Revision: 1.33 $, $Date: 2005/01/12 15:32:34 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -311,6 +311,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		
 //		double sF = getDefaultScale() / getCurrentScale();
 
+		if(getMapView() == null)
+			return;
 		Map map = getMapView().getMap();
 		if(map != null)
 		{
