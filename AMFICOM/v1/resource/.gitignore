@@ -4,3 +4,12 @@
 classes
 docs
 lib
+.corba
+.mach
+*.swp
+*.jar
+*.tar
+*.gz
+*.zip
+*.jpr
+*.jpx

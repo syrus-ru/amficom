@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.5 2004/12/16 16:11:58 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.6 2004/12/21 10:37:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import java.util.Date;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/12/16 16:11:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2004/12/21 10:37:42 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -59,12 +59,12 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 			final String codename,
 			final byte image[]) throws CreateObjectException {
 		try {
-			final Date created = new Date();
+			final Date created1 = new Date();
 			return new BitmapImageResource(
 				IdentifierPool.getGeneratedIdentifier(
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
-				created,
-				created,
+				created1,
+				created1,
 				creatorId,
 				creatorId,
 				codename,
@@ -76,11 +76,11 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 
 	public static BitmapImageResource getInstance(final ImageResource_Transferable imageResource) throws CreateObjectException {
 		final BitmapImageResource bitmapImageResource = new BitmapImageResource(imageResource);
-		final StorableObjectDatabase imageResourceDatabase = ResourceDatabaseContext.getImageResourceDatabase();
-		if (imageResourceDatabase != null) {
-			bitmapImageResource.imageResourceDatabase = imageResourceDatabase;
+		final StorableObjectDatabase imageResourceDatabase1 = ResourceDatabaseContext.getImageResourceDatabase();
+		if (imageResourceDatabase1 != null) {
+			bitmapImageResource.imageResourceDatabase = imageResourceDatabase1;
 			try {
-				imageResourceDatabase.insert(bitmapImageResource);
+				imageResourceDatabase1.insert(bitmapImageResource);
 			} catch (IllegalDataException ide) {
 				throw new CreateObjectException(ide.getMessage(), ide);
 			}

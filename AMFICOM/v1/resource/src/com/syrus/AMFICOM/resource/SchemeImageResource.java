@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.8 2004/12/17 14:05:35 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.9 2004/12/21 10:37:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.*;
 import java.util.zip.*;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2004/12/17 14:05:35 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2004/12/21 10:37:42 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -63,12 +63,12 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 */
 	public static SchemeImageResource createInstance(final Identifier creatorId) throws CreateObjectException {
 		try {
-			final Date created = new Date();
+			final Date created1 = new Date();
 			return new SchemeImageResource(
 				IdentifierPool.getGeneratedIdentifier(
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
-				created,
-				created,
+				created1,
+				created1,
 				creatorId,
 				creatorId);
 		} catch (IllegalObjectEntityException ioee) {
@@ -78,11 +78,11 @@ public final class SchemeImageResource extends AbstractImageResource {
 
 	public static SchemeImageResource getInstance(final ImageResource_Transferable imageResource) throws CreateObjectException {
 		final SchemeImageResource schemeImageResource = new SchemeImageResource(imageResource);
-		final StorableObjectDatabase imageResourceDatabase = ResourceDatabaseContext.getImageResourceDatabase();
-		if (imageResourceDatabase != null) {
-			schemeImageResource.imageResourceDatabase = imageResourceDatabase;
+		final StorableObjectDatabase imageResourceDatabase1 = ResourceDatabaseContext.getImageResourceDatabase();
+		if (imageResourceDatabase1 != null) {
+			schemeImageResource.imageResourceDatabase = imageResourceDatabase1;
 			try {
-				imageResourceDatabase.insert(schemeImageResource);
+				imageResourceDatabase1.insert(schemeImageResource);
 			} catch (IllegalDataException ide) {
 				throw new CreateObjectException(ide.getMessage(), ide);
 			}

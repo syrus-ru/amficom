@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractBitmapImageResource.java,v 1.2 2004/12/16 16:11:58 bass Exp $
+ * $Id: AbstractBitmapImageResource.java,v 1.3 2004/12/21 10:37:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,13 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import java.util.Date;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/12/16 16:11:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2004/12/21 10:37:42 $
  * @module resource_v1
  */
 public abstract class AbstractBitmapImageResource extends AbstractImageResource {
+	static final long serialVersionUID = -7202305745749708023L;
+
 	protected AbstractBitmapImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 	}
