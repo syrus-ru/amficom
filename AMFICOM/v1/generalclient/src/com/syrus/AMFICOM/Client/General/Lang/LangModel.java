@@ -94,7 +94,8 @@ public class LangModel {
 				}
 				catch (Exception exc)
 				{
-					exc.printStackTrace();
+					System.out.println(exc.getMessage());
+//					exc.printStackTrace();
 				}
 			}
 		}

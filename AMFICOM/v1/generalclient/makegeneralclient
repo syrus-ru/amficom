@@ -56,6 +56,8 @@ loc:
 		src\com\syrus\AMFICOM\Client\General\Lang\*.properties \
 		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang\
 
+	md $(CLASSES)\com\syrus\AMFICOM\Client\Resource\Alarm\util
+
 	cp -f \
 		src\com\syrus\AMFICOM\Client\Resource\Alarm\util\*.properties \
 		$(CLASSES)\com\syrus\AMFICOM\Client\Resource\Alarm\util\
