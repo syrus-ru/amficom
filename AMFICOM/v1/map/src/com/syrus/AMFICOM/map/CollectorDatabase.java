@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.5 2004/12/06 17:37:09 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.6 2004/12/08 09:51:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/06 17:37:09 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/08 09:51:26 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -197,18 +197,18 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		return ObjectEntities.COLLECTOR_ENTITY;
 	}	
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
@@ -216,10 +216,10 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		Collector collector = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			preparedStatement.setString(++i, DatabaseString.toQuerySubString(collector.getName()));
 			preparedStatement.setString(++i, DatabaseString.toQuerySubString(collector.getDescription()));

@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.1 2004/12/01 15:29:41 bob Exp $
+ * $Id: MarkDatabase.java,v 1.2 2004/12/08 09:51:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/01 15:29:41 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/08 09:51:26 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -76,9 +76,9 @@ public class MarkDatabase extends StorableObjectDatabase {
 		return ObjectEntities.MARK_ENTITY;
 	}	
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_LONGITUDE + COMMA
@@ -92,9 +92,9 @@ public class MarkDatabase extends StorableObjectDatabase {
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -109,10 +109,10 @@ public class MarkDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		Mark mark = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			preparedStatement.setString(++i, DatabaseString.toQuerySubString(mark.getName()));
 			preparedStatement.setString(++i, DatabaseString.toQuerySubString(mark.getDescription()));

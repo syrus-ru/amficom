@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.2 2004/12/01 16:16:03 bob Exp $
+ * $Id: NodeLinkDatabase.java,v 1.3 2004/12/08 09:51:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/01 16:16:03 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/08 09:51:26 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -68,9 +68,9 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 		return ObjectEntities.NODE_LINK_ENTITY;
 	}	
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_PHYSICAL_LINK_ID + COMMA
 				+ COLUMN_START_NODE_ID + COMMA
@@ -80,9 +80,9 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -93,10 +93,10 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		NodeLink nodeLink = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			preparedStatement.setString(++i, DatabaseString.toQuerySubString(nodeLink.getName()));
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, nodeLink.getPhysicalLink().getId());

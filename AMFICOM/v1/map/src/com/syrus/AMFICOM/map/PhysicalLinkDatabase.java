@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.2 2004/12/03 15:06:46 bob Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.3 2004/12/08 09:51:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/03 15:06:46 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/08 09:51:26 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -82,9 +82,9 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 		return ObjectEntities.PHYSICAL_LINK_ENTITY;
 	}	
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_PHYSICAL_LINK_TYPE_ID + COMMA
@@ -100,9 +100,9 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -119,10 +119,10 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		PhysicalLink physicalLink = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			preparedStatement.setString(++i, DatabaseString.toQuerySubString(physicalLink.getName()));
 			preparedStatement.setString(++i, DatabaseString.toQuerySubString(physicalLink.getDescription()));
