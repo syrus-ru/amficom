@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.17 2004/10/15 08:18:55 max Exp $
+ * $Id: MCMImplementation.java,v 1.18 2004/10/20 10:52:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/15 08:18:55 $
+ * @version $Revision: 1.18 $, $Date: 2004/10/20 10:52:33 $
  * @author $Author: max $
  * @module mcm_v1
  */
@@ -100,7 +100,10 @@ public class MCMImplementation extends MCMPOA {
 		}
 		catch (ApplicationException ae) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, "Test '" + testIdT.identifier_string + "' not found -- " + ae.getMessage());
-		}
+		} catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
 	}
 
 	public Measurement_Transferable transmitMeasurement(Identifier_Transferable idT) throws AMFICOMRemoteException {
@@ -116,7 +119,10 @@ public class MCMImplementation extends MCMPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
+		} catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
 	}
 
 	public Measurement_Transferable[] transmitMeasurementsButIds(
@@ -155,6 +161,9 @@ public class MCMImplementation extends MCMPOA {
         } catch (ApplicationException e) {
             Log.errorException(e);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
         }
     }
     
@@ -171,7 +180,10 @@ public class MCMImplementation extends MCMPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
+		} catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
 	}
 	    
     public Analysis_Transferable[] transmitAnalysesButIds(
@@ -211,6 +223,9 @@ public class MCMImplementation extends MCMPOA {
         } catch (ApplicationException e) {
             Log.errorException(e);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
         }
         
     }
@@ -228,7 +243,10 @@ public class MCMImplementation extends MCMPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
+		} catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
 	}
     
     public Evaluation_Transferable[] transmitEvaluationsButIds(
@@ -267,6 +285,9 @@ public class MCMImplementation extends MCMPOA {
         } catch (ApplicationException e) {
             Log.errorException(e);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
         }
     }
 
