@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.27 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: PortType.java,v 1.28 2004/12/28 12:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.28 $, $Date: 2004/12/28 12:45:28 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -63,17 +63,19 @@ public class PortType extends StorableObjectType implements Characterized {
 			  new String(ptt.codename),
 			  new String(ptt.description));
 		this.name = ptt.name;
-        this.sort = ptt.sort.value();
-        try {
-            this.characteristics = new ArrayList(ptt.characteristic_ids.length);
-            for (int i = 0; i < ptt.characteristic_ids.length; i++)
-                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(ptt.characteristic_ids[i]), true));
-        }
-        catch (ApplicationException ae) {
-            throw new CreateObjectException(ae);
-        }
+		this.sort = ptt.sort.value();
+		try {
+			this.characteristics = new ArrayList(ptt.characteristic_ids.length);
+			for (int i = 0; i < ptt.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(ptt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
 	}
-	
+
 	protected PortType(Identifier id,
 						 Identifier creatorId,
 						 String codename,
@@ -88,8 +90,11 @@ public class PortType extends StorableObjectType implements Characterized {
 				codename,
 				description);
 		this.name = name;
-        this.sort = sort;
+		this.sort = sort;
 		this.characteristics = new LinkedList();
+
+		super.currentVersion = super.getNextVersion();
+
 		this.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
 	}
 	

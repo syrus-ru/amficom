@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.33 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.34 2004/12/28 12:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.34 $, $Date: 2004/12/28 12:45:28 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -67,9 +67,11 @@ public class MonitoredElement extends DomainMember {
 
 		this.monitoredDomainMemberIds = new ArrayList(met.monitored_domain_member_ids.length);
 		this.name = met.name;
-		
+
 		for (int i= 0; i < met.monitored_domain_member_ids.length; i++)
-			this.monitoredDomainMemberIds.add(new Identifier(met.monitored_domain_member_ids[i]));		
+			this.monitoredDomainMemberIds.add(new Identifier(met.monitored_domain_member_ids[i]));
+
+		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 	}
 	
 	protected MonitoredElement(Identifier id,
@@ -92,8 +94,11 @@ public class MonitoredElement extends DomainMember {
 		this.localAddress = localAddress;
 		if (monitoredDomainMemberIds != null)
 			this.monitoredDomainMemberIds = monitoredDomainMemberIds;
-		else this.monitoredDomainMemberIds = new LinkedList();
-		
+		else
+			this.monitoredDomainMemberIds = new LinkedList();
+
+		super.currentVersion = super.getNextVersion();
+
 		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 	}
 	

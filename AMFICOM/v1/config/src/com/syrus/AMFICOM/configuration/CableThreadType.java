@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.11 2004/12/15 12:36:51 max Exp $
+ * $Id: CableThreadType.java,v 1.12 2004/12/28 12:45:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/12/15 12:36:51 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2004/12/28 12:45:27 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -50,21 +50,24 @@ public class CableThreadType extends StorableObjectType {
 		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
 		try {
 			this.cableThreadTypeDatabase.retrieve(this);
-		} catch (IllegalDataException ide) {
+		}
+		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
 	public CableThreadType(CableThreadType_Transferable ctt) throws CreateObjectException {
 		super(ctt.header, new String(ctt.codename), new String(ctt.description));
-        this.name = ctt.name;
-        this.color = ctt.color;
-        try {
-            this.type = (LinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(ctt.linkTypeId), true);
-        }
-        catch (ApplicationException ae) {
-            throw new CreateObjectException(ae);
-        }
+		this.name = ctt.name;
+		this.color = ctt.color;
+		try {
+			this.type = (LinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(ctt.linkTypeId), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
 	}
 
 	protected CableThreadType(Identifier id,
@@ -80,6 +83,8 @@ public class CableThreadType extends StorableObjectType {
         this.color = color;
 		this.type = linkType;
 
+		super.currentVersion = super.getNextVersion();
+
 		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
 
 	}
@@ -88,13 +93,12 @@ public class CableThreadType extends StorableObjectType {
 	 * create new instance for client
 	 * @throws CreateObjectException
 	 */
-	public static CableThreadType createInstance(	Identifier creatorId,
-													String codename,
-													String description,
-
-													String name,
-                                                    int color,                                                    
-                                                    LinkType linkType) throws CreateObjectException {
+	public static CableThreadType createInstance(Identifier creatorId,
+																		String codename,
+																		String description,
+																		String name,
+																		int color,
+																		LinkType linkType) throws CreateObjectException {
 
 		if (creatorId == null || codename == null || description == null || 
 				name == null || linkType == null)

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.34 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.35 2004/12/28 12:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.35 $, $Date: 2004/12/28 12:45:28 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -42,7 +42,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	protected static final int		UPDATE_DETACH_ME	= 2;
 	
 	private TransmissionPathType type;
-    private List characteristics;
+	private List characteristics;
 	private String name;
 	private String description;	
 	private Identifier startPortId;
@@ -63,7 +63,33 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
-	
+
+	public TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
+		super(tpt.header,
+			  new Identifier(tpt.domain_id));
+		super.monitoredElementIds = new ArrayList(tpt.monitored_element_ids.length);
+		for (int i = 0; i < tpt.monitored_element_ids.length; i++)
+			super.monitoredElementIds.add(new Identifier(tpt.monitored_element_ids[i]));
+
+		this.name = new String(tpt.name);
+		this.description = new String(tpt.description);
+		this.startPortId = new Identifier(tpt.start_port_id);
+		this.finishPortId = new Identifier(tpt.finish_port_id);
+
+		try {
+			this.characteristics = new ArrayList(tpt.characteristic_ids.length);
+			for (int i = 0; i < tpt.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
+
+      this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
+	}
+
 	protected TransmissionPath(Identifier id,
 								Identifier creatorId,
 								Identifier domainId,
@@ -83,10 +109,12 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
         this.type = type;
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
-		
+
 		this.characteristics = new LinkedList();
 		super.monitoredElementIds = new LinkedList();
-		
+
+		super.currentVersion = super.getNextVersion();
+
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 	}
 	
@@ -110,44 +138,20 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		if (creatorId == null || domainId == null || name == null || description == null || 
 				type == null || startPortId == null || finishPortId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
-				try {
-					return new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_ENTITY_CODE),
-						 creatorId,					 
-						 domainId,
-						 name,
-						 description,
-					     type,
-						 startPortId,
-						 finishPortId);
-				} catch (IllegalObjectEntityException e) {
-					throw new CreateObjectException("TransmissionPath.createInstance | cannot generate identifier ", e);
-				}
-		}
-
-
-	public TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
-		super(tpt.header,
-			  new Identifier(tpt.domain_id));
-		super.monitoredElementIds = new ArrayList(tpt.monitored_element_ids.length);
-		for (int i = 0; i < tpt.monitored_element_ids.length; i++)
-			super.monitoredElementIds.add(new Identifier(tpt.monitored_element_ids[i]));
-
-		this.name = new String(tpt.name);
-		this.description = new String(tpt.description);
-		this.startPortId = new Identifier(tpt.start_port_id);
-		this.finishPortId = new Identifier(tpt.finish_port_id);
 
 		try {
-			this.characteristics = new ArrayList(tpt.characteristic_ids.length);
-			for (int i = 0; i < tpt.characteristic_ids.length; i++)
-				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
-            
-            this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
+			return new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_ENTITY_CODE),
+											creatorId,
+											domainId,
+											name,
+											description,
+											type,
+											startPortId,
+											finishPortId);
 		}
-        catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}        
+		catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("TransmissionPath.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public void insert() throws CreateObjectException {

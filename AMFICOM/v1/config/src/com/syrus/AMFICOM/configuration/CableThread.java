@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.2 2004/12/10 08:50:35 bob Exp $
+ * $Id: CableThread.java,v 1.3 2004/12/28 12:45:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/10 08:50:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/12/28 12:45:27 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {	
@@ -65,6 +65,8 @@ public class CableThread extends DomainMember implements TypedObject {
         catch (ApplicationException ae) {
             throw new CreateObjectException(ae);
         }
+
+				this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
     }
     
     protected CableThread(Identifier id,
@@ -82,6 +84,9 @@ public class CableThread extends DomainMember implements TypedObject {
 	    this.name = name;
 	    this.description = description;
 	    this.type = type;
+
+			super.currentVersion = super.getNextVersion();
+
 	    this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
     }
     
@@ -95,12 +100,15 @@ public class CableThread extends DomainMember implements TypedObject {
     		throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new CableThread(IdentifierPool
-					.getGeneratedIdentifier(ObjectEntities.CABLE_THREAD_ENTITY_CODE),
-					creatorId, domainId, name, description, type);
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException(
-					"CableThread.createInstance | cannot generate identifier ", e);
+			return new CableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLE_THREAD_ENTITY_CODE),
+											creatorId,
+											domainId,
+											name,
+											description,
+											type);
+		}
+		catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("CableThread.createInstance | cannot generate identifier ", e);
 		}
 	}
     

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.26 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.27 2004/12/28 12:45:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.27 $, $Date: 2004/12/28 12:45:27 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -59,6 +59,8 @@ public class CharacteristicType extends StorableObjectType {
 			  new String(ctt.description));
 		this.dataType = ctt.data_type.value();
 		this.sort = ctt.sort.value();
+
+		this.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
 	}
 	
 	protected CharacteristicType(Identifier id,
@@ -74,10 +76,12 @@ public class CharacteristicType extends StorableObjectType {
 							creatorId,
 							codename,
 							description);
-					this.dataType = dataType;
-					this.sort = sort;
-					
-					this.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
+		this.dataType = dataType;
+		this.sort = sort;
+
+		super.currentVersion = super.getNextVersion();
+
+		this.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
 	}
 	
 	/**

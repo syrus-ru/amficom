@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.25 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.26 2004/12/28 12:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.26 $, $Date: 2004/12/28 12:45:28 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -60,21 +60,23 @@ public class MeasurementPortType extends StorableObjectType implements Character
 			  new String(mptt.codename),
 			  new String(mptt.description));		
 		this.name = mptt.name;
-        try {
-            this.characteristics = new ArrayList(mptt.characteristic_ids.length);
-            for (int i = 0; i < mptt.characteristic_ids.length; i++)
-                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(mptt.characteristic_ids[i]), true));
-        }
-        catch (ApplicationException ae) {
-            throw new CreateObjectException(ae);
-        }
+		try {
+			this.characteristics = new ArrayList(mptt.characteristic_ids.length);
+			for (int i = 0; i < mptt.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(mptt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
 	}
-	
+
 	protected MeasurementPortType(Identifier id,
 								Identifier creatorId,
 								String codename,
 								String description,
-								String name){
+								String name) {
 			super(id,
 				  new Date(System.currentTimeMillis()),
 				  new Date(System.currentTimeMillis()),
@@ -83,7 +85,10 @@ public class MeasurementPortType extends StorableObjectType implements Character
 				  codename,
 				  description);				
 			this.name = name;
-            this.characteristics = new LinkedList();
+			this.characteristics = new LinkedList();
+
+			super.currentVersion = super.getNextVersion();
+
 			this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
 	}
 	

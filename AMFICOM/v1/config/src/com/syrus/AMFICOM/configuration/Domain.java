@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.28 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: Domain.java,v 1.29 2004/12/28 12:45:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.29 $, $Date: 2004/12/28 12:45:27 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -59,7 +59,7 @@ public class Domain extends DomainMember implements Characterized {
 			  (dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
 		this.name = new String(dt.name);
 		this.description = new String(dt.description);
-		
+
 		try {
 			this.characteristics = new ArrayList(dt.characteristic_ids.length);
 			for (int i = 0; i < dt.characteristic_ids.length; i++)
@@ -68,6 +68,8 @@ public class Domain extends DomainMember implements Characterized {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+
+		this.domainDatabase = ConfigurationDatabaseContext.domainDatabase;
 	}
 
 	protected Domain(Identifier id,
@@ -85,7 +87,9 @@ public class Domain extends DomainMember implements Characterized {
 		this.description = description;
 
 		this.characteristics = new ArrayList();
-		
+
+		super.currentVersion = super.getNextVersion();
+
 		this.domainDatabase = ConfigurationDatabaseContext.domainDatabase;
 	}
 

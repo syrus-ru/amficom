@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.18 2004/12/22 10:07:42 bob Exp $
+ * $Id: LinkType.java,v 1.19 2004/12/28 12:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/22 10:07:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2004/12/28 12:45:28 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -55,26 +55,30 @@ public class LinkType extends AbstractLinkType implements Characterized {
 		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
 		try {
 			this.linkTypeDatabase.retrieve(this);
-		} catch (IllegalDataException ide) {
+		}
+		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
 	public LinkType(LinkType_Transferable ltt) throws CreateObjectException {
 		super(ltt.header, new String(ltt.codename), new String(ltt.description));
+
 		this.sort = ltt.sort.value();
 		this.manufacturer = ltt.manufacturer;
 		this.manufacturerCode = ltt.manufacturerCode;
 		this.imageId = new Identifier(ltt.image_id);
 		this.name = ltt.name;
-        try {
-            this.characteristics = new ArrayList(ltt.characteristic_ids.length);
-            for (int i = 0; i < ltt.characteristic_ids.length; i++)
-                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(ltt.characteristic_ids[i]), true));
-        }
-        catch (ApplicationException ae) {
-            throw new CreateObjectException(ae);
-        }
+		try {
+			this.characteristics = new ArrayList(ltt.characteristic_ids.length);
+			for (int i = 0; i < ltt.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(ltt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
 	}
 
 	protected LinkType(Identifier id,
@@ -86,16 +90,23 @@ public class LinkType extends AbstractLinkType implements Characterized {
 			String manufacturer,
 			String manufacturerCode,
 			Identifier imageId) {
-		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId,
-				codename, description);
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId,
+					codename,
+					description);
 		this.name = name;
 		this.sort = sort;
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
 		this.characteristics = new ArrayList();
-		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
 
+		super.currentVersion = super.getNextVersion();
+
+		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
 	}
 
 	/**

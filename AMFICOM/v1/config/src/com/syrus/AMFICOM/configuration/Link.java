@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.22 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: Link.java,v 1.23 2004/12/28 12:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.23 $, $Date: 2004/12/28 12:45:28 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -76,25 +76,26 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		this.supplier = lt.supplier;
 		this.supplierCode = lt.supplierCode;
 		this.sort = lt.sort.value();
-				        
-        try {
-            this.characteristics = new ArrayList(lt.characteristic_ids.length);
-            for (int i = 0; i < lt.characteristic_ids.length; i++)
-                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.characteristic_ids[i]), true));
-        }
-        catch (ApplicationException ae) {
-            throw new CreateObjectException(ae);
-        }
-		
+
+    try {
+			this.characteristics = new ArrayList(lt.characteristic_ids.length);
+			for (int i = 0; i < lt.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
 		try {
 			this.type = (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.type_id), true);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
-		}		
+		}
 
+		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
 	}
-	
+
 	protected Link(Identifier id,
 				  Identifier creatorId,
 				  Identifier domainId,
@@ -119,11 +120,14 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		this.inventoryNo = inventoryNo;
 		this.supplier = supplier;
 		this.supplierCode = supplierCode;
-	
+
 		this.sort = sort;
 		this.color = color;
 		this.mark = mark;
 		this.characteristics = new LinkedList();
+
+		super.currentVersion = super.getNextVersion();
+
 		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
 	}
 	

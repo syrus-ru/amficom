@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.51 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: Equipment.java,v 1.52 2004/12/28 12:45:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.52 $, $Date: 2004/12/28 12:45:27 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -89,19 +89,19 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-		
+
 		this.name = new String(et.name);
 		this.description = new String(et.description);
 		this.imageId = new Identifier(et.image_id);
-        this.supplier = new String(et.supplier);
-        this.supplier = new String(et.supplierCode);
-        this.longitude = et.longitude;
-        this.latitude = et.latitude;
-        this.hwSerial = et.hwSerial;
-        this.hwVersion = et.hwVersion;
-        this.swSerial = et.swSerial;
-        this.swVersion = et.swVersion;
-        this.inventoryNumber = et.inventoryNumber;
+		this.supplier = new String(et.supplier);
+		this.supplier = new String(et.supplierCode);
+		this.longitude = et.longitude;
+		this.latitude = et.latitude;
+		this.hwSerial = et.hwSerial;
+		this.hwVersion = et.hwVersion;
+		this.swSerial = et.swSerial;
+		this.swVersion = et.swVersion;
+		this.inventoryNumber = et.inventoryNumber;
 
 		this.portIds = new ArrayList(et.port_ids.length);
 		for (int i = 0; i < et.port_ids.length; i++)
@@ -115,6 +115,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+
+		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 	}
 	
 	protected Equipment(Identifier id,
@@ -124,15 +126,15 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										String name,
 										String description,
 										Identifier imageId,
-                                        String supplier,
-                                        String supplierCode,
-                                        float longitude,
-                                        float latitude,
+										String supplier,
+										String supplierCode,
+										float longitude,
+										float latitude,
 										String hwSerial,
-                                        String hwVersion,
-                                        String swSerial,
-                                        String swVersion,
-                                        String inventoryNumber) {
+										String hwVersion,
+										String swSerial,
+										String swVersion,
+										String inventoryNumber) {
 				super(id,
 							new Date(System.currentTimeMillis()),
 							new Date(System.currentTimeMillis()),
@@ -146,23 +148,25 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 				this.name = name;
 				this.description = description;
 				this.imageId = imageId;
-                this.supplier = supplier;
-                this.supplierCode = supplierCode;
-                this.longitude = longitude;
-                this.latitude = latitude;
-                this.hwSerial = hwSerial;
-                this.hwVersion = hwVersion;
-                this.swSerial = swSerial;
-                this.swVersion = swVersion;
-                this.inventoryNumber = inventoryNumber;
-                
+				this.supplier = supplier;
+				this.supplierCode = supplierCode;
+				this.longitude = longitude;
+				this.latitude = latitude;
+				this.hwSerial = hwSerial;
+				this.hwVersion = hwVersion;
+				this.swSerial = swSerial;
+				this.swVersion = swVersion;
+				this.inventoryNumber = inventoryNumber;
+
 				this.portIds = new LinkedList();
 
 				this.characteristics = new LinkedList();
-				
+
+				super.currentVersion = super.getNextVersion();
+
 				this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 	}
-				
+
 	/**
 	 * create new instance for client 
 	 * @param creatorId

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.46 2004/12/22 10:07:41 bob Exp $
+ * $Id: KIS.java,v 1.47 2004/12/28 12:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/12/22 10:07:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.47 $, $Date: 2004/12/28 12:45:28 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -80,16 +80,17 @@ public class KIS extends DomainMember implements Characterized {
 		this.measurementPortIds = new ArrayList(kt.measurement_port_ids.length);
 		for (int i = 0; i < kt.measurement_port_ids.length; i++)
 			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));
-        
-        try {
-            this.characteristics = new ArrayList(kt.characteristic_ids.length);
-            for (int i = 0; i < kt.characteristic_ids.length; i++)
-                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(kt.characteristic_ids[i]), true));
-        }
-        catch (ApplicationException ae) {
-            throw new CreateObjectException(ae);
-        }
 
+		try {
+			this.characteristics = new ArrayList(kt.characteristic_ids.length);
+			for (int i = 0; i < kt.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(kt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 	}
 
 	protected KIS(Identifier id,
@@ -115,6 +116,9 @@ public class KIS extends DomainMember implements Characterized {
 		this.mcmId = mcmId;
 		this.measurementPortIds = new LinkedList();
 		this.characteristics = new LinkedList();
+
+		super.currentVersion = super.getNextVersion();
+
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.36 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: Characteristic.java,v 1.37 2004/12/28 12:45:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.37 $, $Date: 2004/12/28 12:45:27 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -78,6 +78,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.editable = ct.is_editable;
 		this.visible = ct.is_visible;
 
+		this.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
 	}
 	
 	protected Characteristic(Identifier id,
@@ -101,10 +102,12 @@ public class Characteristic extends StorableObject implements TypedObject {
 				this.sort = sort;
 				this.value = value;
 				this.characterizedId = characterizedId;
-				
+
 				this.editable = editable;
 				this.visible = visible;
-				
+
+				super.currentVersion = super.getNextVersion();
+
 				this.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
 	}
 	

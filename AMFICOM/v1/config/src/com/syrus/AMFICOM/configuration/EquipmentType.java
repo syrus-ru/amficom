@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.32 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.33 2004/12/28 12:45:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.33 $, $Date: 2004/12/28 12:45:27 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -72,15 +72,17 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+
+		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
 	}
 
 	protected EquipmentType(Identifier id,
-					 Identifier creatorId,
-					 String codename,
-					 String description,
-					 String name,
-                     String manufacturer,
-                     String manufacturerCode){
+								Identifier creatorId,
+								String codename,
+								String description,
+								String name,
+								String manufacturer,
+								String manufacturerCode) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -89,9 +91,12 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 				codename,
 				description);
 		this.name = name;
-        this.manufacturer = manufacturer;
-        this.manufacturerCode = manufacturerCode;
-        this.characteristics = new ArrayList();		
+		this.manufacturer = manufacturer;
+		this.manufacturerCode = manufacturerCode;
+		this.characteristics = new ArrayList();
+
+		super.currentVersion = super.getNextVersion();
+
 		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
 	}
 

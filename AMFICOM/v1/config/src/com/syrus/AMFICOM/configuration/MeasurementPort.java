@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.31 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.32 2004/12/28 12:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.32 $, $Date: 2004/12/28 12:45:28 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -71,20 +71,22 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-		
+
 		this.name = new String(mpt.name);
 		this.description = new String(mpt.description);
-		
+
 		this.kisId = new Identifier(mpt.kis_id);
 		this.portId = new Identifier(mpt.port_id);	
 		try {
-            this.characteristics = new ArrayList(mpt.characteristic_ids.length);
-            for (int i = 0; i < mpt.characteristic_ids.length; i++)
-                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(mpt.characteristic_ids[i]), true));
-        }
-        catch (ApplicationException ae) {
-            throw new CreateObjectException(ae);
-        }
+			this.characteristics = new ArrayList(mpt.characteristic_ids.length);
+			for (int i = 0; i < mpt.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(mpt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
 	}
 	
 	protected MeasurementPort(Identifier id,
@@ -93,7 +95,7 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 							String name,
 							String description,	
 							Identifier kisId,
-							Identifier portId){
+							Identifier portId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -105,6 +107,9 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 		this.kisId = kisId;
 		this.portId = portId;
 		this.characteristics = new ArrayList();
+
+		super.currentVersion = super.getNextVersion();
+
 		this.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
 	}
 	
