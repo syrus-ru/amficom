@@ -11,6 +11,14 @@ ArrList::ArrList()
 	used = 0;
 }
 
+ArrList::ArrList(ArrList &that)
+{
+	assert(0);
+	storage = 0;
+    allocated = 0;
+    used = 0;
+}
+
 ArrList::~ArrList()
 {
 	if (allocated)
@@ -73,6 +81,18 @@ void ArrList::slowInsert(int pos, void *obj)
 	for (i = used; i > pos; i--)
 		storage[i] = storage[i - 1];
 	storage[pos] = obj;
+    used++;
+}
+void ArrList::slowRemove(int pos)
+{
+	assert(pos >= 0);
+	assert(pos < used);
+	int i;
+    if (storage[pos])
+    	delete storage[pos];
+    used--;
+	for (i = pos; i < used; i++)
+		storage[i] = storage[i + 1];
 }
 
 int ArrList::getLength()

@@ -31,7 +31,8 @@ void Histogramm::init(double* data, int data_length, int start, int end)
 {
 	histo = new double[nBins];
 
-	for (int i = 0; i < nBins; i++)
+    int i;
+	for (i = 0; i < nBins; i++)
 		histo[i] = 0;
 
 	double deriv_delta = (up_limit - down_limit) / (double)nBins;

@@ -15,6 +15,7 @@ private:
 	int allocated;
 	int used;
 	void extendToUsedPlusOne();
+    ArrList(ArrList &that); // copy-constructor is disabled
 public:
 	ArrList();
 	void disposeAll(); // вспомогательная функция для удаления всех элементов, нулевые ссылки игнорируются
@@ -23,6 +24,7 @@ public:
 	void set(int id, void *obj); // установить новое значение для элемента (setter для ссылки)
 	void add(void *obj); // добавляет в конец массива новый элемент
 	void slowInsert(int pos, void *obj); // вставляет новый элемент на позицию pos; i м б от 0 до getLength() вкл.
+    void slowRemove(int pos);// удаляет элемент с указанной позиции, и смыкает массив  
 	int getLength(); // длина
 	void qsort(int(*fcmp)(const void**, const void**)); // вызывает qsort для ссылок
 };

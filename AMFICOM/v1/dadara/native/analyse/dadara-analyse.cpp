@@ -135,15 +135,14 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 	fprintf(dbg_stream, "#1\n");
 #endif
 
-	EventParams **ep = ia->getEventParams();
+	ArrList& ev = ia->getEvents();
 	// No mem leakage 'cause ep data is owned by IA and will be deleted when deleting IA
 
 #ifdef DEBUG_DADARA_ANALYSE
 	fprintf(dbg_stream, "#2\n");
 #endif
 
-
-	int nEvents = ia->getEventsCount();
+	int nEvents = ev.getLength();
 
 #ifdef DEBUG_DADARA_ANALYSE
 	fprintf( dbg_stream, "ia->getEventsCount = %d\n", nEvents);
@@ -160,7 +159,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 
 	for (i = 0; i < nEvents; i++)
 	{
-		EPold2EPnew(ep[i], re[i], delta_x);
+		EPold2EPnew((EventParams*)ev[i], re[i], delta_x);
 
 #ifdef DEBUG_DADARA_ANALYSE
 		fprintf (dbg_stream, "event [%d]: begin %d end %d gentype %d mf.ID %d\n", i, re[i].begin, re[i].end, re[i].gentype, re[i].mf.getID());
@@ -190,22 +189,14 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 	prf_b("analyse2() - sending to JNI");
 
 	// send to JNI
-	double meanAtt = ia->getMeanAttenuation();
 
 	delete ia;
 
 #ifdef DEBUG_DADARA_ANALYSE
-	fprintf( dbg_stream, "returning to java %d events, meanAtt=%g \n", nEvents, meanAtt);
+	fprintf( dbg_stream, "returning to java %d events\n", nEvents);
 #endif
 
-	jsize len = (env)->GetArrayLength(ret_meanAttenuation);
-
-	if (len)
-	{
-		jdouble *body = (env)->GetDoubleArrayElements(ret_meanAttenuation, 0);
-		body[0] = meanAtt;
-		(env)->ReleaseDoubleArrayElements(ret_meanAttenuation, body, 0); // copy-back
-	}
+	// FIXME - ret_meanAttenuation is not used anymore
 
 //Освобождение массивов в Java Native Interface
 	(env)->ReleaseDoubleArrayElements(y,data,JNI_ABORT);
