@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.2 2005/01/14 15:03:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/14 15:03:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -51,6 +51,14 @@ public class PhysicalLinkController extends AbstractLinkController
 {
 	private static PhysicalLinkController instance = null;
 	
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"com.syrus.AMFICOM.Client.Map.Props.MapLinkPane";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+
 	protected PhysicalLinkController()
 	{
 	}

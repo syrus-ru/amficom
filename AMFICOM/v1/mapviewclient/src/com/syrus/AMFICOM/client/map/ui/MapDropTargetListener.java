@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.9 2004/12/24 15:42:13 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.10 2005/01/14 15:03:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:13 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/14 15:03:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -60,7 +60,7 @@ public final class MapDropTargetListener implements DropTargetListener
 	//Здесь мы получаем объект который пользователь переносит с панели
 	public void drop(DropTargetDropEvent dtde)
 	{
-		ObjectResource or = null;
+		Object or = null;
 
 		Point point = dtde.getLocation();
 
@@ -79,7 +79,7 @@ public final class MapDropTargetListener implements DropTargetListener
 				else
 				if (df[0].getHumanPresentableName().equals("SchemeElementLabel"))
 				{
-					or = (ObjectResource )transferable.getTransferData(df[0]);
+					or = (Object )transferable.getTransferData(df[0]);
 
 					if(or instanceof SchemeElement)
 					{

@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.2 2004/12/30 16:17:48 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.3 2005/01/14 15:03:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,21 +33,13 @@ import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/30 16:17:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/14 15:03:13 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class TopologicalNodeController extends AbstractNodeController
 {
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
-	public static final String COLUMN_X = "x";
-	public static final String COLUMN_Y = "y";
-	public static final String COLUMN_ACTIVE = "active";
-
 	public final static Rectangle DEFAULT_BOUNDS = new Rectangle(10, 10);
 	public final static Rectangle MIN_BOUNDS = new Rectangle(2, 2);
 	public final static Rectangle MAX_BOUNDS = new Rectangle(15, 15);
@@ -61,6 +53,13 @@ public class TopologicalNodeController extends AbstractNodeController
 	private static boolean needInit = true;
 
 	private static TopologicalNodeController instance = null;
+	
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
 	
 	private TopologicalNodeController()
 	{
@@ -144,62 +143,4 @@ public class TopologicalNodeController extends AbstractNodeController
 					height);
 		}
 	}
-/*
-	protected static String[][] exportColumns = null;
-
-	public String[][] getExportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[7][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
-			exportColumns[4][0] = COLUMN_X;
-			exportColumns[5][0] = COLUMN_Y;
-			exportColumns[6][0] = COLUMN_ACTIVE;
-		}
-		exportColumns[0][1] = getId().toString();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = physicalLinkId;
-		exportColumns[4][1] = String.valueOf(getLocation().x);
-		exportColumns[5][1] = String.valueOf(getLocation().y);
-		exportColumns[6][1] = String.valueOf(isActive());
-		
-		return exportColumns;
-	}
-	
-	public void setColumn(String field, String value)
-	{
-		if(field.equals(COLUMN_ID))
-			setId(value);
-		else
-		if(field.equals(COLUMN_NAME))
-			setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			setDescription(value);
-		else
-		if(field.equals(COLUMN_PHYSICAL_LINK_ID))
-			physicalLinkId = value;
-		else
-		if(field.equals(COLUMN_X))
-			location.x = Double.parseDouble(value);
-		else
-		if(field.equals(COLUMN_Y))
-			location.y = Double.parseDouble(value);
-		else
-		if(field.equals(COLUMN_ACTIVE))
-			setActive(Boolean.valueOf(value).booleanValue());
-	}
-
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-*/	
 }

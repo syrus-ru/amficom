@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 import com.syrus.AMFICOM.resource.AbstractImageResource;
+import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -153,8 +154,19 @@ public final class MapProtoPane
 			{
 				AbstractImageResource imageResource = (AbstractImageResource )
 					ResourceStorableObjectPool.getStorableObject(imageId, true);
+				
+				ImageIcon icon = null;
 
-				ImageIcon icon = new ImageIcon(imageResource.getImage());
+				if(imageResource instanceof FileImageResource)
+				{
+					FileImageResource fir = (FileImageResource )imageResource;
+					icon = new ImageIcon(fir.getFileName());
+				}
+				else
+				{
+					icon = new ImageIcon(imageResource.getImage());
+				}
+
 				im = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 			}
 			catch (CommunicationException e)
@@ -214,7 +226,19 @@ public final class MapProtoPane
 			imagePanel.removeAll();
 			AbstractImageResource ir = frame.getImageResource();
 			imageId = ir.getId();
-			ImageIcon icon = new ImageIcon(ir.getImage());
+			ImageIcon icon;
+
+			if(ir instanceof FileImageResource)
+			{
+				FileImageResource fir = (FileImageResource )ir;
+				icon = new ImageIcon(fir.getFileName());
+			}
+			else
+			{
+				icon = new ImageIcon(ir.getImage());
+			}
+
+			
 			Image im = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 			imagePanel.add(new JLabel(new ImageIcon(im)));
 			imagePanel.revalidate();

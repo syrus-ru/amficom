@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.2 2005/01/14 15:03:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.AbstractLinkController;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/14 15:03:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -53,6 +53,13 @@ public final class NodeLinkController extends AbstractLinkController
 	private static Polygon searchPolygon = new Polygon(new int[6], new int[6], 6);
 
 	private static NodeLinkController instance = null;
+	
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
 	
 	private NodeLinkController()
 	{

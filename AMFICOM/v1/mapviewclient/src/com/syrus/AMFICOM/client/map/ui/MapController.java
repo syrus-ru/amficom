@@ -34,6 +34,14 @@ public final class MapController implements ObjectResourceController
 	  static SimpleDateFormat sdf =
 		new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"com.syrus.AMFICOM.Client.Map.Props.MapPanel";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+
 	private MapController() 
 	{
 		// empty private constructor

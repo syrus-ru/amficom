@@ -1,10 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptyMapDataSource;
-import com.syrus.AMFICOM.Client.Resource.EmptyMapViewDataSource;
-
 public class MapApplicationModel extends ApplicationModel
 {
 	public static final String ACTION_SAVE_MAP = "savemap";
@@ -62,26 +57,4 @@ public class MapApplicationModel extends ApplicationModel
 		super.add(OPERATION_MOVE_FIXED);
 
 	}
-/*
-	private static DataSourceInterface dataSource = null;
-	
-	public DataSourceInterface getDataSource(final SessionInterface session) 
-	{
-		String connection = Environment.getConnectionType();
-        if ((this.session == null) || (!this.session.equals(session)))
-			synchronized (this) 
-			{
-					if ((this.session == null) || (!this.session.equals(session))) 
-					{
-						this.session = session;
-						if(connection.equalsIgnoreCase(Environment.CONNECTION_RISD))
-							this.dataSource = new RISDMapViewDataSource(this.session);
-						else
-						if(connection.equalsIgnoreCase(Environment.CONNECTION_EMPTY))
-							this.dataSource = new EmptyMapViewDataSource(this.session);
-					}
-			}
-        return this.dataSource;
-	}
-*/
 }

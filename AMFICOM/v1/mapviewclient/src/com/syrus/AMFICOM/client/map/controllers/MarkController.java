@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.2 2004/12/30 16:17:48 krupenn Exp $
+ * $Id: MarkController.java,v 1.3 2005/01/14 15:03:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/30 16:17:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/14 15:03:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -56,7 +56,14 @@ public final class MarkController extends AbstractNodeController
 //	}
 
 	private static MarkController instance = null;
-	
+
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+
 	private MarkController()
 	{
 	}

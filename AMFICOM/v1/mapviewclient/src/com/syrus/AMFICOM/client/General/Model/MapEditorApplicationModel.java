@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.7 2005/01/12 14:23:19 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.8 2005/01/14 15:03:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,19 +12,13 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptyMapViewDataSource;
-
-import com.syrus.AMFICOM.Client.Resource.EmptyMapDataSource;
 
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/12 14:23:19 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/14 15:03:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -87,26 +81,4 @@ public class MapEditorApplicationModel extends ApplicationModel
 		add("menuHelpLicense");
 		add("menuHelpAbout");
 	}
-/*
-	private static DataSourceInterface dataSource = null;
-	
-	public DataSourceInterface getDataSource(final SessionInterface session) 
-	{
-		String connection = Environment.getConnectionType();
-        if ((this.session == null) || (!this.session.equals(session)))
-			synchronized (this) 
-			{
-					if ((this.session == null) || (!this.session.equals(session))) 
-					{
-						this.session = session;
-						if(connection.equalsIgnoreCase(Environment.CONNECTION_RISD))
-							this.dataSource = new RISDMapViewDataSource(this.session);
-						else
-						if(connection.equalsIgnoreCase(Environment.CONNECTION_EMPTY))
-							this.dataSource = new EmptyMapViewDataSource(this.session);
-					}
-			}
-        return this.dataSource;
-	}
-*/
 }

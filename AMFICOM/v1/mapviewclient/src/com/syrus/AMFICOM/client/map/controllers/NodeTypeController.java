@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.5 2005/01/13 15:15:53 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.6 2005/01/14 15:03:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import java.util.*;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/13 15:15:53 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/14 15:03:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -52,6 +52,13 @@ import java.util.*;
 public class NodeTypeController extends AbstractNodeController
 {
 	private static NodeTypeController instance = null;
+	
+	private static final String PROPERTY_PANE_CLASS_NAME = "";
+
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
 	
 	protected NodeTypeController()
 	{
