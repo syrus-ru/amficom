@@ -1,46 +1,14 @@
 package com.syrus.io;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.io.*;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CharacteristicType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.TestPortType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.MapProtoGroup;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableThread;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class DirectoryToFile
@@ -186,8 +154,8 @@ public class DirectoryToFile
 			{
 				String eqt_class = (String)eqt_classes_el.nextElement();
 
-				Vector vec = new Vector();
-				Hashtable hash = new Hashtable();
+				List vec = new ArrayList();
+				Map hash = new HashMap();
 				for(Enumeration enum = Pool.getHash(EquipmentType.typ).elements(); enum.hasMoreElements();)
 				{
 					EquipmentType eqt = (EquipmentType)enum.nextElement();
@@ -210,9 +178,9 @@ public class DirectoryToFile
 						pw.println ("@type " + EquipmentType.typ);
 						pw.println();
 
-						for (Enumeration en = vec.elements(); en.hasMoreElements();)
+						for (Iterator it = vec.iterator(); it.hasNext();)
 						{
-							EquipmentType eqt = (EquipmentType)en.nextElement();
+							EquipmentType eqt = (EquipmentType)it.next();
 							pw.println ("@name " + eqt.getName());
 							pw.println ("@id " + eqt.getId());
 							pw.println ("@eq_class " + eqt.eq_class);
@@ -223,9 +191,9 @@ public class DirectoryToFile
 							pw.println ("@manufacturer " + eqt.manufacturer);
 							pw.println ("@manufacturer_code " + eqt.manufacturer_code);
 							pw.println ("@characteristics ");
-							for (Iterator it = eqt.characteristics.values().iterator(); it.hasNext();)
+							for (Iterator cit = eqt.characteristics.values().iterator(); cit.hasNext();)
 							{
-								Characteristic ch = (Characteristic)it.next();
+								Characteristic ch = (Characteristic)cit.next();
 								pw.println(ch.type_id + " " + ch.value);
 							}
 							pw.println ("@end of characteristics");
@@ -522,8 +490,8 @@ public class DirectoryToFile
 			{
 				String cht_class = (String)cht_classes_el.nextElement();
 
-				Vector vec = new Vector();
-				Hashtable hash = new Hashtable();
+				List vec = new ArrayList();
+				Map hash = new HashMap();
 				for(Enumeration enum = Pool.getHash(CharacteristicType.typ).elements(); enum.hasMoreElements();)
 				{
 					CharacteristicType cht = (CharacteristicType)enum.nextElement();
@@ -545,10 +513,10 @@ public class DirectoryToFile
 						pw.println ("@type " + CharacteristicType.typ);
 						pw.println();
 
-						for (Enumeration en = vec.elements(); en.hasMoreElements();)
+						for (Iterator it = vec.iterator(); it.hasNext();)
 						//for(Enumeration en = Pool.getHash(CharacteristicType.typ).elements(); en.hasMoreElements();)
 						{
-							CharacteristicType ch = (CharacteristicType)en.nextElement();
+							CharacteristicType ch = (CharacteristicType)it.next();
 							pw.println ("@name " + ch.getName());
 							pw.println ("@id " + ch.getId());
 							pw.println ("@description " + ch.description);
@@ -600,16 +568,14 @@ public class DirectoryToFile
 					pw.println ("@name " + device.getName());
 					pw.println ("@id " + device.getId());
 					pw.println ("@ports ");
-					for (int i = 0; i < device.ports.size(); i++)
-					{
-						SchemePort port = (SchemePort)device.ports.get(i);
-						Pool.put(SchemePort.typ, port.getId(), port);
-						pw.println (port.getId());
-					}
+					for (Iterator pit = device.ports.iterator(); pit.hasNext();)
+						pw.println (((SchemePort)pit.next()).getId());
+//						SchemePort port = (SchemePort)pit.next();
+//						Pool.put(SchemePort.typ, port.getId(), port);
 					pw.println ("@end of ports");
 					pw.println ("@cableports ");
-					for (Enumeration e = device.cableports.elements(); e.hasMoreElements();)
-						pw.println (((SchemeCablePort)e.nextElement()).getId());
+					for (Iterator pit = device.cableports.iterator(); pit.hasNext();)
+						pw.println (((SchemeCablePort)pit.next()).getId());
 					pw.println ("@end of cableports");
 					pw.println ();
 					counter++;
@@ -850,7 +816,7 @@ public class DirectoryToFile
 			{
 				String proto_class = (String)proto_classes_el.nextElement();
 
-				Vector vec = new Vector();
+				List vec = new ArrayList();
 				for(Enumeration enum = Pool.getHash(ProtoElement.typ).elements(); enum.hasMoreElements();)
 				{
 					proto = (ProtoElement)enum.nextElement();
@@ -874,23 +840,23 @@ public class DirectoryToFile
 					pw.println ("@type " + ProtoElement.typ);
 					pw.println();
 
-					for (Enumeration en = vec.elements(); en.hasMoreElements();)
+					for (Iterator pit = vec.iterator(); pit.hasNext();)
 					{
-						proto = (ProtoElement)en.nextElement();
+						proto = (ProtoElement)pit.next();
 						pw.println ("@name " + proto.getName());
 						pw.println ("@id " + proto.getId());
 						pw.println ("@equipment_type_id " + proto.equipment_type_id);
 						pw.println ("@devices ");
-						for (Enumeration e = proto.devices.elements(); e.hasMoreElements();)
-							pw.println (((SchemeDevice)e.nextElement()).getId());
+						for (Iterator it = proto.devices.iterator(); it.hasNext();)
+							pw.println (((SchemeDevice)it.next()).getId());
 						pw.println ("@end of devices");
 						pw.println ("@links ");
-						for (Enumeration e = proto.links.elements(); e.hasMoreElements();)
-							pw.println (((SchemeLink)e.nextElement()).getId());
+						for (Iterator it = proto.links.iterator(); it.hasNext();)
+							pw.println (((SchemeLink)it.next()).getId());
 						pw.println ("@end of links");
 						pw.println ("@protoelements ");
-						for (Enumeration e = proto.protoelement_ids.elements(); e.hasMoreElements();)
-							pw.println (e.nextElement());
+						for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
+							pw.println (it.next());
 						pw.println ("@end of protoelements");
 						if (new File(proto_scheme_dir+proto.getId()).exists())
 							pw.println ("@schemecell " + proto_scheme_dir+proto.getId());
@@ -1084,9 +1050,9 @@ public class DirectoryToFile
 						pw.println (((SchemePath)it.next()).getId());
 					pw.println ("@end of paths");
 					pw.println ("@clones ");
-					for (Enumeration e = scheme.clones.keys(); e.hasMoreElements();)
+					for (Iterator it = scheme.clones.keySet().iterator(); it.hasNext();)
 					{
-						String id = (String)e.nextElement();
+						String id = (String)it.next();
 						pw.println (id + " " + (String)scheme.clones.get(id));
 					}
 					pw.println ("@end of clones");
@@ -1152,8 +1118,8 @@ public class DirectoryToFile
 					pw.println ("@proto_element_id " + el.proto_element_id);
 
 					pw.println ("@devices ");
-					for (Enumeration e = el.devices.elements(); e.hasMoreElements();)
-						pw.println (((SchemeDevice)e.nextElement()).getId());
+					for (Iterator it = el.devices.iterator(); it.hasNext();)
+						pw.println (((SchemeDevice)it.next()).getId());
 					pw.println ("@end of devices");
 					pw.println ("@elements ");
 					//for (Enumeration e = el.element_ids.elements(); e.hasMoreElements();)
@@ -1161,8 +1127,8 @@ public class DirectoryToFile
 						pw.println (((SchemeElement)it.next()).getId());
 					pw.println ("@end of elements");
 					pw.println ("@links ");
-					for (Enumeration e = el.links.elements(); e.hasMoreElements();)
-						pw.println (((SchemeLink)e.nextElement()).getId());
+					for (Iterator it = el.links.iterator(); it.hasNext();)
+						pw.println (((SchemeLink)it.next()).getId());
 					pw.println ("@end of links");
 /*				if (new File(scheme_element_dir+el.getId()).exists())
 		 pw.println ("@schemecell " + scheme_element_dir + el.getId());
@@ -2096,7 +2062,7 @@ public class DirectoryToFile
 							link.physical_length = Double.parseDouble(s[1]);
 						else if (s[0].equals("@cable_threads"))
 						{
-							link.cable_threads = new Vector();
+							link.cable_threads = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2163,7 +2129,7 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@ports"))
 						{
-							device.ports = new Vector();
+							device.ports = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2176,7 +2142,7 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@cableports"))
 						{
-							device.cableports = new Vector();
+							device.cableports = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2243,7 +2209,7 @@ public class DirectoryToFile
 							proto.equipment_type_id = s[1];
 						else if (s[0].equals("@devices"))
 						{
-							proto.devices = new Vector();
+							proto.devices = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2256,7 +2222,7 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@links"))
 						{
-							proto.links = new Vector();
+							proto.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2269,7 +2235,7 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@protoelements"))
 						{
-							proto.protoelement_ids = new Vector();
+							proto.protoelement_ids = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2513,7 +2479,7 @@ public class DirectoryToFile
 							scheme.owner_id = s[1];
 						else if (s[0].equals("@cablelinks"))
 						{
-							scheme.cablelinks = new Vector();
+							scheme.cablelinks = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2527,7 +2493,7 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@links"))
 						{
-							scheme.links = new Vector();
+							scheme.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2541,7 +2507,7 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@elements"))
 						{
-							scheme.elements = new Vector();
+							scheme.elements = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2554,7 +2520,7 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@paths"))
 						{
-							scheme.paths = new Vector();
+							scheme.paths = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2567,7 +2533,7 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@clones"))
 						{
-							scheme.clones = new Hashtable();
+							scheme.clones = new HashMap();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2647,7 +2613,7 @@ public class DirectoryToFile
 
 						else if (s[0].equals("@devices"))
 						{
-							se.devices = new Vector();
+							se.devices = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2660,7 +2626,7 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@elements"))
 						{
-							se.element_ids = new Vector();
+							se.element_ids = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2670,7 +2636,7 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@links"))
 						{
-							se.links = new Vector();
+							se.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2748,7 +2714,7 @@ public class DirectoryToFile
 							path.type_id = s[1];
 						else if (s[0].equals("@pathelements"))
 						{
-							path.links = new Vector();
+							path.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{

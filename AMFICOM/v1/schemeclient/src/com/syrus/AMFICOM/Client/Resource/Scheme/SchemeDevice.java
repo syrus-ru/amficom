@@ -15,10 +15,10 @@ public class SchemeDevice extends StubResource implements Serializable
 	public String id = "";
 	public String name = "";
 
-	public Vector ports = new Vector();
-	public Vector cableports = new Vector();
+	public Collection ports;
+	public Collection cableports;
 
-	public Map attributes = new HashMap();
+	public Map attributes;
 
 	public SchemeDevice(SchemeDevice_Transferable transferable)
 	{
@@ -29,8 +29,9 @@ public class SchemeDevice extends StubResource implements Serializable
 	public SchemeDevice(String id)
 	{
 		this.id = id;
-		ports = new Vector();
-		cableports = new Vector();
+		ports = new ArrayList();
+		cableports = new ArrayList();
+		attributes = new HashMap();
 		transferable = new SchemeDevice_Transferable();
 	}
 
@@ -56,10 +57,10 @@ public class SchemeDevice extends StubResource implements Serializable
 
 	public Enumeration getChildTypes()
 	{
-		Vector vec = new Vector();
+		ArrayList vec = new ArrayList(2);
 		vec.add("ports");
 		vec.add("cableports");
-		return vec.elements();
+		return Collections.enumeration(vec);
 	}
 
 	public Class getChildClass(String key)
@@ -79,13 +80,13 @@ public class SchemeDevice extends StubResource implements Serializable
 	{
 		if(key.equals("ports"))
 		{
-			return ports.elements();
+			return Collections.enumeration(ports);
 		}
 		else if(key.equals("cableports"))
 		{
-			return cableports.elements();
+			return Collections.enumeration(cableports);
 		}
-		return new Vector().elements();
+		return Collections.enumeration(new ArrayList(0));
 	}
 
 	public Object getTransferable()
@@ -98,8 +99,9 @@ public class SchemeDevice extends StubResource implements Serializable
 		id  = transferable.id;
 		name = transferable.name;
 
-		ports = new Vector();
-		cableports = new Vector();
+		ports = new ArrayList();
+		cableports = new ArrayList();
+		attributes = new HashMap();
 
 		for (int i = 0; i < transferable.ports.length; i++)
 			ports.add(new SchemePort(transferable.ports[i]));
@@ -174,7 +176,7 @@ public class SchemeDevice extends StubResource implements Serializable
 		SchemeDevice dev = new SchemeDevice(dataSource.GetUId(SchemeDevice.typ));
 		dev.name = name;
 
-		dev.ports = new Vector(ports.size());
+		dev.ports = new ArrayList(ports.size());
 		for (Iterator it = ports.iterator(); it.hasNext();)
 		{
 			SchemePort new_port = (SchemePort)((SchemePort)it.next()).clone(dataSource);
@@ -182,7 +184,7 @@ public class SchemeDevice extends StubResource implements Serializable
 			dev.ports.add(new_port);
 		}
 
-		dev.cableports = new Vector(cableports.size());
+		dev.cableports = new ArrayList(cableports.size());
 		for (Iterator it = cableports.iterator(); it.hasNext();)
 		{
 			SchemeCablePort new_port = (SchemeCablePort)((SchemeCablePort)it.next()).clone(dataSource);
@@ -211,9 +213,9 @@ public class SchemeDevice extends StubResource implements Serializable
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		ports = (Vector )in.readObject();
-		cableports = (Vector )in.readObject();
-		attributes = (Hashtable )in.readObject();
+		ports = (Collection)in.readObject();
+		cableports = (Collection)in.readObject();
+		attributes = (Map)in.readObject();
 
 		transferable = new SchemeDevice_Transferable();
 		updateLocalFromTransferable();

@@ -4,7 +4,7 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
@@ -116,8 +116,8 @@ public class SchemeFromFileCommand extends VoidCommand
 			for (Enumeration enum = Pool.getHash(ProtoElement.typ).elements(); enum.hasMoreElements();)
 			{
 				ProtoElement element = (ProtoElement)enum.nextElement();
-				for (int j = 0; j < element.protoelement_ids.size(); j++)
-					ids.add((String )element.protoelement_ids.get(j));
+				for (Iterator it = element.protoelement_ids.iterator(); it.hasNext();)
+					ids.add((String )it.next());
 				ht.put(element.getId(), element);
 			}
 
@@ -132,9 +132,9 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	ArrayList get_proto_ids (ArrayList ids, ProtoElement proto)
 	{
-		for (int i = 0; i < proto.protoelement_ids.size(); i++)
+		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)proto.protoelement_ids.get(i));
+			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			get_proto_ids(ids, p);
 		}
 		ids.add(proto.getId());

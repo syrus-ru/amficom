@@ -57,7 +57,7 @@ public class RISDSchemeDataSource
 		SchemeProtoElement_Transferable protos[];
 		ProtoElement proto;
 
-		Vector loaded_objects = new Vector();
+		List loaded_objects = new ArrayList();
 		ObjectResource or;
 
 		try
@@ -77,11 +77,10 @@ public class RISDSchemeDataSource
 			return;
 		}
 
-		Vector imvec = new Vector();
-			for (i = 0; i < peh.value.length; i++)
+		List imvec = new ArrayList(peh.value.length);
+		for (i = 0; i < peh.value.length; i++)
 			imvec.add(peh.value[i].symbol_id);
-		String[] imids = new String[imvec.size()];
-		imvec.copyInto(imids);
+		String[] imids = (String[])imvec.toArray(new String[imvec.size()]);
 		new DataSourceImage(this).LoadImages(imids);
 /*
 		images = ih.value;
@@ -112,7 +111,7 @@ public class RISDSchemeDataSource
 		}
 	}
 
-	public void LoadSchemeProto(Vector ids)
+	public void LoadSchemeProto(List ids)
 	{
 		if(si == null)
 			return;
@@ -124,8 +123,8 @@ public class RISDSchemeDataSource
 		int i;
 		int ecode = 0;
 		int count;
-		String[] id_s = new String[ids.size()];
-		ids.copyInto(id_s);
+		String[] id_s = (String[])ids.toArray(new String[ids.size()]);
+
 		ImageResourceSeq_TransferableHolder ih = new ImageResourceSeq_TransferableHolder();
 		ImageResource_Transferable images[];
 		ImageResource image;
@@ -134,7 +133,7 @@ public class RISDSchemeDataSource
 		SchemeProtoElement_Transferable protos[];
 		ProtoElement proto;
 
-		Vector loaded_objects = new Vector();
+		List loaded_objects = new ArrayList();
 		ObjectResource or;
 
 		try
@@ -154,11 +153,10 @@ public class RISDSchemeDataSource
 			return;
 		}
 
-		Vector imvec = new Vector();
-			for (i = 0; i < peh.value.length; i++)
+		List imvec = new ArrayList(peh.value.length);
+		for (i = 0; i < peh.value.length; i++)
 			imvec.add(peh.value[i].symbol_id);
-		String[] imids = new String[imvec.size()];
-		imvec.copyInto(imids);
+		String[] imids = (String[])imvec.toArray(new String[imvec.size()]);
 		new DataSourceImage(this).LoadImages(imids);
 /*
 		images = ih.value;
@@ -198,7 +196,7 @@ public class RISDSchemeDataSource
 
 		int ecode;
 		ImageResource_Transferable []images;
-		Vector image_vec = new Vector();
+		List image_vec = new ArrayList();
 
 		SchemeProtoElement_Transferable pes[] = new SchemeProtoElement_Transferable[ids.length];
 		for(int i = 0; i < ids.length; i++)
@@ -213,9 +211,9 @@ public class RISDSchemeDataSource
 		int count = image_vec.size();
 		int i = 0;
 		images = new ImageResource_Transferable[image_vec.size()];
-		for(Enumeration enum = image_vec.elements(); enum.hasMoreElements();)
+		for(Iterator it = image_vec.iterator(); it.hasNext();)
 		{
-			ObjectResource os = (ObjectResource )enum.nextElement();
+			ObjectResource os = (ObjectResource )it.next();
 			os.setTransferableFromLocal();
 			images[i++] = (ImageResource_Transferable )os.getTransferable();
 		}
@@ -284,7 +282,7 @@ public class RISDSchemeDataSource
 		Scheme_Transferable schemes[];
 		Scheme scheme;
 
-		Vector loaded_objects = new Vector();
+		List loaded_objects = new ArrayList();
 		ObjectResource or;
 
 		try
@@ -304,13 +302,12 @@ public class RISDSchemeDataSource
 			return;
 		}
 
-		Vector imvec = new Vector();
-			for (i = 0; i < ih.value.length; i++)
+		List imvec = new ArrayList(ih.value.length + sh.value.length);
+		for (i = 0; i < ih.value.length; i++)
 			imvec.add(ih.value[i].id);
-			for (i = 0; i < sh.value.length; i++)
+		for (i = 0; i < sh.value.length; i++)
 			imvec.add(sh.value[i].symbol_id);
-		String[] imids = new String[imvec.size()];
-		imvec.copyInto(imids);
+		String[] imids = (String[])imvec.toArray(new String[imvec.size()]);
 		new DataSourceImage(this).LoadImages(imids);
 
 /*
@@ -342,7 +339,7 @@ public class RISDSchemeDataSource
 		}
 	}
 
-	public void LoadSchemes(Vector ids)
+	public void LoadSchemes(List ids)
 	{
 		if(si == null)
 			return;
@@ -351,8 +348,7 @@ public class RISDSchemeDataSource
 
 		System.out.println("LoadSchemes:");
 
-		String[] id_s = new String[ids.size()];
-		ids.copyInto(id_s);
+		String[] id_s = (String[])ids.toArray(new String[ids.size()]);
 		int i;
 		int ecode = 0;
 		int count;
@@ -364,7 +360,7 @@ public class RISDSchemeDataSource
 		Scheme_Transferable schemes[];
 		Scheme scheme;
 
-		Vector loaded_objects = new Vector();
+		List loaded_objects = new ArrayList();
 		ObjectResource or;
 
 		try
@@ -384,13 +380,12 @@ public class RISDSchemeDataSource
 			return;
 		}
 
-		Vector imvec = new Vector();
-			for (i = 0; i < ih.value.length; i++)
+		List imvec = new ArrayList(ih.value.length + sh.value.length);
+		for (i = 0; i < ih.value.length; i++)
 			imvec.add(ih.value[i].id);
-			for (i = 0; i < sh.value.length; i++)
+		for (i = 0; i < sh.value.length; i++)
 			imvec.add(sh.value[i].symbol_id);
-		String[] imids = new String[imvec.size()];
-		imvec.copyInto(imids);
+		String[] imids = (String[])imvec.toArray(new String[imvec.size()]);
 		new DataSourceImage(this).LoadImages(imids);
 /*
 		images = ih.value;

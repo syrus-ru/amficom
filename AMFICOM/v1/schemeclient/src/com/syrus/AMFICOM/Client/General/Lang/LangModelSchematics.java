@@ -1,10 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Lang;
 
 import java.text.DateFormatSymbols;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Vector;
-import java.util.MissingResourceException;
+import java.util.*;
 
 public class LangModelSchematics
 {
@@ -45,9 +42,9 @@ public class LangModelSchematics
 				try
 				{
 					throw new Exception("key '"
-											  + keyName + "Text"
-											  + "' "
-											  + "not found");
+												+ keyName + "Text"
+												+ "' "
+												+ "not found");
 				}
 				catch (Exception exc)
 				{

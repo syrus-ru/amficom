@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
@@ -222,7 +221,7 @@ public class SchemePathDecompositor
 		Characteristic c;
 		ElementAttribute ea;
 		double length;
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 
 		PathElement []pe =
 				(PathElement[])sp.links.toArray(new PathElement[sp.links.size()]);

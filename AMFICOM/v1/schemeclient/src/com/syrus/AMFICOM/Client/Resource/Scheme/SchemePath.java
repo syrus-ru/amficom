@@ -26,8 +26,8 @@ public class SchemePath extends StubResource
 	public String start_device_id = "";
 	public String end_device_id = "";
 
-	public Map attributes = new HashMap();
-	public List links = new ArrayList();
+	public Map attributes;
+	public List links;
 
 	public MapTransmissionPathProtoElement mtppe = null;
 
@@ -41,6 +41,9 @@ public class SchemePath extends StubResource
 	{
 		this.id = id;
 		transferable = new SchemePath_Transferable();
+
+		attributes = new HashMap();
+		links = new ArrayList();
 	}
 
 	public SchemePath(SchemePath path)
@@ -90,7 +93,6 @@ public class SchemePath extends StubResource
 
 		path.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 
-		path.links = new Vector(links.size());
 		for (Iterator it = links.iterator(); it.hasNext();)
 			path.links.add(((PathElement)it.next()).clone(dataSource));
 
@@ -186,7 +188,7 @@ public class SchemePath extends StubResource
 		}
 		return length;
 	}
-
+/*
 	public Vector checkLinks()
 	{
 		Vector vec = new Vector();
@@ -287,7 +289,7 @@ public class SchemePath extends StubResource
 		return vec;
 	}
 
-
+*/
 	public void setLocalFromTransferable()
 	{
 		id  = transferable.id;
@@ -297,16 +299,15 @@ public class SchemePath extends StubResource
 		type_id = transferable.type_id;
 		path_id = transferable.path_id;
 
+		attributes = new HashMap(transferable.attributes.length);
+		links = new ArrayList(transferable.links.length);
+
 		for(int i = 0; i < transferable.links.length; i++)
 			links.add(new PathElement(transferable.links[i]));
 
 		ObjectResourceSorter sorter = getSorter();
-
 		sorter.setDataSet(links);
-		List ds = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
-		links = new Vector();
-		for (Iterator it = ds.iterator(); it.hasNext();)
-			links.add(it.next());
+		links = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
 
 		for(int i = 0; i < transferable.attributes.length; i++)
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
@@ -360,8 +361,8 @@ public class SchemePath extends StubResource
 		id = (String )in.readObject();
 		name = (String )in.readObject();
 		path_id = (String )in.readObject();
-		links = (Vector )in.readObject();
-		attributes = (Hashtable )in.readObject();
+		links = (List )in.readObject();
+		attributes = (Map )in.readObject();
 		type_id = (String )in.readObject();
 		start_device_id = (String )in.readObject();
 		end_device_id = (String )in.readObject();

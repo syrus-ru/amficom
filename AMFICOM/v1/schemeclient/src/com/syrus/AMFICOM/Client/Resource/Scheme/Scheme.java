@@ -63,11 +63,11 @@ public class Scheme extends StubResource implements Serializable
 	public String name = "";
 	public String scheme_type = Scheme.NETWORK;
 
-	public Collection elements_to_register = new ArrayList();
-	public Collection elements = new ArrayList();
-	public Collection cablelinks = new ArrayList();
-	public Collection links = new ArrayList();
-	public Collection paths = new ArrayList();
+	public Collection elements_to_register;
+	public Collection elements;
+	public Collection cablelinks;
+	public Collection links;
+	public Collection paths;
 
 //	public String path_conditions_id = "";
 
@@ -89,10 +89,16 @@ public class Scheme extends StubResource implements Serializable
 	public byte[] schemecell;
 	public Serializable serializable_ugo;
 	public byte[] ugo;
-	public Hashtable clones = new Hashtable();
+	public Map clones = new HashMap();
 
 	public Scheme()
 	{
+		elements_to_register = new ArrayList();
+		elements = new ArrayList();
+		cablelinks = new ArrayList();
+		links = new ArrayList();
+		paths = new ArrayList();
+
 		transferable = new Scheme_Transferable();
 	}
 
@@ -150,17 +156,13 @@ public class Scheme extends StubResource implements Serializable
 		scheme.name = name;
 		scheme.scheme_type = scheme_type;
 
-		scheme.elements = new ArrayList(elements.size());
 		for (Iterator it = elements.iterator(); it.hasNext();)
 			scheme.elements.add(((SchemeElement)it.next()).clone(dataSource));
-		scheme.cablelinks = new ArrayList(cablelinks.size());
 		for (Iterator it = cablelinks.iterator(); it.hasNext();)
 			scheme.cablelinks.add(((SchemeCableLink)it.next()).clone(dataSource));
-		scheme.links = new ArrayList(links.size());
 		for (Iterator it = links.iterator(); it.hasNext();)
 			scheme.links.add(((SchemeLink)it.next()).clone(dataSource));
 
-		scheme.paths = new ArrayList();
 		//scheme.paths = new Vector(paths.size());
 		//	for (int i = 0; i < paths.size(); i++)
 		//		scheme.paths.add(((SchemePath)paths.get(i)).clone(dataSource));
@@ -225,49 +227,6 @@ public class Scheme extends StubResource implements Serializable
 		return scheme;
 	}
 
-	public Enumeration getChildTypes()
-	{
-		ArrayList vec = new ArrayList();
-		vec.add("elements");
-		vec.add("cablelinks");
-		vec.add("paths");
-		return Collections.enumeration(vec);
-	}
-
-	public Class getChildClass(String key)
-	{
-		if(key.equals("elements"))
-		{
-			return SchemeElement.class;
-		}
-		else if(key.equals("cablelinks"))
-		{
-			return SchemeCableLink.class;
-		}
-		else if(key.equals("paths"))
-		{
-			return SchemePath.class;
-		}
-		return ObjectResource.class;
-	}
-
-	public Enumeration getChildren(String key)
-	{
-		if(key.equals("elements"))
-		{
-			return Collections.enumeration(elements);
-		}
-		else if(key.equals("cablelinks"))
-		{
-			return Collections.enumeration(cablelinks);
-		}
-		else if(key.equals("paths"))
-		{
-			return Collections.enumeration(paths);
-		}
-		return Collections.enumeration(new ArrayList(0));
-	}
-
 	public void setLocalFromTransferable()
 	{
 		id = transferable.id;
@@ -285,12 +244,13 @@ public class Scheme extends StubResource implements Serializable
 		description = transferable.description;
 
 		elements = new ArrayList();
-		cablelinks = new ArrayList();
-		links = new ArrayList();
-		paths = new ArrayList();
-
 		elements_to_register = new ArrayList();
-		ArrayList transferable_element_ids = new ArrayList();
+		cablelinks = new ArrayList(transferable.cable_links.length);
+		links = new ArrayList(transferable.links.length);
+		paths = new ArrayList(transferable.paths.length);
+
+		ArrayList transferable_element_ids = new ArrayList(transferable.element_ids.length);
+
 		for (int i = 0; i < transferable.element_ids.length; i++)
 			transferable_element_ids.add(transferable.element_ids[i]);
 		for (int i = 0; i < transferable.elements.length; i++)
@@ -311,19 +271,19 @@ public class Scheme extends StubResource implements Serializable
 		width = (transferable.width != 0 ? transferable.width : 840);
 		height = (transferable.height != 0 ? transferable.height : 1190);
 		if (transferable.clonez.length == 0)
-			clones = new Hashtable();
+			clones = new HashMap();
 		else
 		{
 			try
 			{
 				ByteArrayInputStream bais = new ByteArrayInputStream(transferable.clonez);
 				ObjectInputStream in = new ObjectInputStream(new GZIPInputStream(bais));
-				clones = (Hashtable)in.readObject();
+				clones = (Map)in.readObject();
 				in.close();
 			}
 			catch (Exception e)
 			{
-				clones = new Hashtable();
+				clones = new HashMap();
 			}
 		}
 
@@ -419,12 +379,6 @@ public class Scheme extends StubResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
-		/*Vector all_elements = new Vector();
-		for (int i = 0; i < elements.size(); i++)
-		{
-			all_elements.addAll(getChildElements((SchemeElement)elements.get(i)));
-			all_elements.add(elements.get(i));
-		}*/
 		for(Iterator it = elements_to_register.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
@@ -617,7 +571,7 @@ public class Scheme extends StubResource implements Serializable
 
 		schemecell = (byte[] )in.readObject();
 		ugo = (byte[] )in.readObject();
-		clones = (Hashtable )in.readObject();
+		clones = (Map )in.readObject();
 
 		transferable = new Scheme_Transferable();
 		updateLocalFromTransferable();

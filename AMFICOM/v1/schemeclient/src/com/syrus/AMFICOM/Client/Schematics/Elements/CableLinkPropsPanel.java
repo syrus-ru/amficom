@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class CableLinkPropsPanel extends JPanel
 {
@@ -398,7 +397,7 @@ public class CableLinkPropsPanel extends JPanel
 		for (int i = 0; i < links.length; i++)
 		{
 			links[i].cable_link_type_id = clt.getId();
-			links[i].cable_threads = new Vector();
+			links[i].cable_threads = new ArrayList();
 			for (int j = 0; j < clt.cable_threads.size(); j++)
 			{
 				CableTypeThread ctt = (CableTypeThread)clt.cable_threads.get(j);

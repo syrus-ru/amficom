@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -878,7 +878,7 @@ public class CopyDirectoryToFile
 							link.target_port_id = s[1];
 						else if (s[0].equals("@cable_threads"))
 						{
-							link.cable_threads = new Vector();
+							link.cable_threads = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -945,7 +945,7 @@ public class CopyDirectoryToFile
 						}
 						else if (s[0].equals("@ports"))
 						{
-							device.ports = new Vector();
+							device.ports = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -955,7 +955,7 @@ public class CopyDirectoryToFile
 						}
 						else if (s[0].equals("@cableports"))
 						{
-							device.cableports = new Vector();
+							device.cableports = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -1025,7 +1025,7 @@ public class CopyDirectoryToFile
 							proto.equipment_type_id = s[1];
 						else if (s[0].equals("@devices"))
 						{
-							proto.devices = new Vector();
+							proto.devices = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -1035,7 +1035,7 @@ public class CopyDirectoryToFile
 						}
 						else if (s[0].equals("@links"))
 						{
-							proto.links = new Vector();
+							proto.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -1045,7 +1045,7 @@ public class CopyDirectoryToFile
 						}
 						else if (s[0].equals("@protoelements"))
 						{
-							proto.protoelement_ids = new Vector();
+							proto.protoelement_ids = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -1216,7 +1216,7 @@ public class CopyDirectoryToFile
 						}
 						else if (s[0].equals("@elements"))
 						{
-							scheme.elements = new Vector();
+							scheme.elements = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -1226,7 +1226,7 @@ public class CopyDirectoryToFile
 						}
 						else if (s[0].equals("@paths"))
 						{
-							scheme.paths = new Vector();
+							scheme.paths = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -1302,7 +1302,7 @@ public class CopyDirectoryToFile
 
 						else if (s[0].equals("@devices"))
 						{
-							se.devices = new Vector();
+							se.devices = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -1312,7 +1312,7 @@ public class CopyDirectoryToFile
 						}
 						else if (s[0].equals("@elements"))
 						{
-							se.element_ids = new Vector();
+							se.element_ids = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -1322,7 +1322,7 @@ public class CopyDirectoryToFile
 						}
 						else if (s[0].equals("@links"))
 						{
-							se.links = new Vector();
+							se.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -1399,7 +1399,7 @@ public class CopyDirectoryToFile
 							path.type_id = s[1];
 						else if (s[0].equals("@links"))
 						{
-							path.links = new Vector();
+							path.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{

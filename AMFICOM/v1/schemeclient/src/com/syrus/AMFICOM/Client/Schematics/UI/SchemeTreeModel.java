@@ -488,9 +488,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				else if (parent instanceof SchemeElement)
 				{
 					SchemeElement el = (SchemeElement)parent;
-					for (Enumeration enum = el.element_ids.elements(); enum.hasMoreElements();)
+					for (Iterator it = el.element_ids.iterator(); it.hasNext();)
 					{
-						SchemeElement element = (SchemeElement)Pool.get(SchemeElement.typ, (String)enum.nextElement());
+						SchemeElement element = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
 						if (element != null)
 							ds.add(element);
 					}

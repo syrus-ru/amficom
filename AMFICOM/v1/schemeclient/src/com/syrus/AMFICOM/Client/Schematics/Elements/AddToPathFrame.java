@@ -1,17 +1,19 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.*;
 import java.util.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.util.List;
+
+import java.awt.*;
+import javax.swing.JDialog;
+
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class AddToPathFrame extends JDialog
 {
 	FixedSizeEditableTableModel tm;
-	Vector v = new Vector();
+	List v = new ArrayList(5);
 
 	String[] names = new String[]
 	{

@@ -28,11 +28,11 @@ public class SchemeElement extends StubResource
 	public String proto_element_id = "";
 	public String scheme_id = "";
 
-	public Vector devices = new Vector();
-	public Vector links = new Vector();
-	public Vector element_ids = new Vector();
+	public Collection devices;
+	public Collection links;
+	public Collection element_ids;
 
-	public Map attributes = new HashMap();
+	public Map attributes;
 
 	public Serializable serializable_cell;
 	public Serializable serializable_ugo;
@@ -55,6 +55,11 @@ public class SchemeElement extends StubResource
 	{
 		this.id = id;
 		transferable = new SchemeElement_Transferable();
+
+		devices = new ArrayList();
+		links = new ArrayList();
+		element_ids = new ArrayList();
+		attributes = new HashMap();
 	}
 
 	public String getDomainId()
@@ -76,11 +81,11 @@ public class SchemeElement extends StubResource
 		else
 			description = "";
 
-		devices = new Vector();
+		devices = new ArrayList(proto.devices.size());
 		for(Iterator it = proto.devices.iterator(); it.hasNext();)
 			devices.add(((SchemeDevice)it.next()).clone(dataSource));
 
-		element_ids = new Vector();
+		element_ids = new ArrayList(proto.protoelement_ids.size());
 		for(Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
 			ProtoElement inner_proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
@@ -89,7 +94,7 @@ public class SchemeElement extends StubResource
 			Pool.put("proto2schemeids", inner_proto.getId(), inner.getId());
 		}
 
-		links = new Vector();
+		links = new ArrayList(proto.links.size());
 		for(Iterator it = proto.links.iterator(); it.hasNext();)
 			links.add(((SchemeLink)it.next()).clone(dataSource));
 
@@ -132,18 +137,14 @@ public class SchemeElement extends StubResource
 			element.sch
 		}*/
 
-		element.element_ids = new Vector(element_ids.size());
 		for(Iterator it = element_ids.iterator(); it.hasNext();)
 		{
 			SchemeElement el = ((SchemeElement)Pool.get(SchemeElement.typ, (String)it.next()));
 			SchemeElement cel = (SchemeElement)el.clone(dataSource);
 			element.element_ids.add(cel.getId());
 		}
-		element.devices = new Vector(devices.size());
 		for(Iterator it = devices.iterator(); it.hasNext();)
 			element.devices.add(((SchemeDevice)it.next()).clone(dataSource));
-
-		element.links = new Vector(links.size());
 		for(Iterator it = links.iterator(); it.hasNext();)
 			element.links.add(((SchemeLink)it.next()).clone(dataSource));
 
@@ -231,52 +232,6 @@ public class SchemeElement extends StubResource
 		}
 	}
 
-	public Enumeration getChildTypes()
-	{
-		Vector vec = new Vector();
-		vec.add("devices");
-		vec.add("links");
-		vec.add("elements");
-		return vec.elements();
-	}
-
-	public Class getChildClass(String key)
-	{
-		if(key.equals("devices"))
-		{
-			return SchemeDevice.class;
-		}
-		else if(key.equals("links"))
-		{
-			return SchemeLink.class;
-		}
-		else if(key.equals("elements"))
-		{
-			return SchemeElement.class;
-		}
-		return ObjectResource.class;
-	}
-
-	public Enumeration getChildren(String key)
-	{
-		if(key.equals("devices"))
-		{
-			return devices.elements();
-		}
-		else if(key.equals("links"))
-		{
-			return links.elements();
-		}
-		else if(key.equals("elements"))
-		{
-			Vector elements = new Vector();
-			for (Iterator it = element_ids.iterator(); it.hasNext();)
-				elements.add(Pool.get(SchemeElement.typ, (String)it.next()));
-			return elements.elements();
-		}
-		return new Vector().elements();
-	}
-
 	public Object getTransferable()
 	{
 		return transferable;
@@ -291,9 +246,10 @@ public class SchemeElement extends StubResource
 		proto_element_id = transferable.proto_element_id;
 		scheme_id = transferable.scheme_id;
 
-		devices = new Vector();
-		links = new Vector();
-		element_ids = new Vector();
+		devices = new ArrayList(transferable.devices.length);
+		links = new ArrayList(transferable.links.length);
+		element_ids = new ArrayList(transferable.element_ids.length);
+		attributes = new HashMap(transferable.attributes.length);
 
 		for (int i = 0; i < transferable.devices.length; i++)
 			devices.add(new SchemeDevice(transferable.devices[i]));
@@ -644,10 +600,10 @@ public class SchemeElement extends StubResource
 		equipment_id = (String )in.readObject();
 		proto_element_id = (String )in.readObject();
 		scheme_id = (String )in.readObject();
-		devices = (Vector )in.readObject();
-		links = (Vector )in.readObject();
-		element_ids = (Vector )in.readObject();
-		attributes = (Hashtable )in.readObject();
+		devices = (Collection )in.readObject();
+		links = (Collection )in.readObject();
+		element_ids = (Collection )in.readObject();
+		attributes = (Map )in.readObject();
 		ugo_text = (String )in.readObject();
 
 		schemecell = (byte[] )in.readObject();

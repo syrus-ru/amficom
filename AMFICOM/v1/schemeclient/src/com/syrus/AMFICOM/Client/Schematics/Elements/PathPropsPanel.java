@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Schematics.Elements;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -31,8 +32,8 @@ public class PathPropsPanel extends JPanel
 	private String undoEndDevId;
 	private String undoStartDevId;
 	private String undoTypeId;
-	private Vector undoPathLinks;
-	private Hashtable undoPeOrder;
+	private List undoPathLinks;
+	private Map undoPeOrder;
 	boolean skip_change = false;
 
 	public ArrayList links_to_add = new ArrayList();
@@ -250,8 +251,8 @@ public class PathPropsPanel extends JPanel
 		undoStartDevId = path.start_device_id;
 		undoTypeId = path.type_id;
 
-		undoPathLinks = new Vector();
-		undoPeOrder = new Hashtable();
+		undoPathLinks = new ArrayList();
+		undoPeOrder = new HashMap();
 		for (Iterator it = path.links.iterator(); it.hasNext(); )
 		{
 			PathElement pe = (PathElement)it.next();
@@ -446,20 +447,20 @@ public class PathPropsPanel extends JPanel
 
 	boolean hasAccessPort (SchemeElement se)
 	{
-		for (int i = 0; i < se.devices.size(); i++)
+		for (Iterator it = se.devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice dev = (SchemeDevice)se.devices.get(i);
-			for (int j = 0; j < dev.ports.size(); j++)
+			SchemeDevice dev = (SchemeDevice)it.next();
+			for (Iterator pit = dev.ports.iterator(); pit.hasNext();)
 			{
-				SchemePort port = (SchemePort)dev.ports.get(j);
+				SchemePort port = (SchemePort)pit.next();
 				if (!port.access_port_type_id.equals(""))
 					return true;
 			}
 		}
 
-		for (int i = 0; i < se.element_ids.size(); i++)
+		for (Iterator it = se.element_ids.iterator(); it.hasNext();)
 		{
-			SchemeElement inner = (SchemeElement)Pool.get(SchemeElement.typ, (String)se.element_ids.get(i));
+			SchemeElement inner = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
 			if (hasAccessPort(inner))
 				return true;
 		}
@@ -468,16 +469,16 @@ public class PathPropsPanel extends JPanel
 
 	boolean hasCablePort (ProtoElement proto)
 	{
-		for (int i = 0; i < proto.devices.size(); i++)
+		for (Iterator it = proto.devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice dev = (SchemeDevice)proto.devices.get(i);
+			SchemeDevice dev = (SchemeDevice)it.next();
 			if (!dev.cableports.isEmpty())
 				return true;
 		}
 
-		for (int i = 0; i < proto.protoelement_ids.size(); i++)
+		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)proto.protoelement_ids.get(i));
+			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			if (hasCablePort(p))
 				return true;
 		}
@@ -490,10 +491,10 @@ public class PathPropsPanel extends JPanel
 		path.name = undoCompName;
 		path.end_device_id = undoEndDevId;
 		path.start_device_id = undoStartDevId;
-		path.links = new Vector();
-		for (Enumeration en = undoPathLinks.elements(); en.hasMoreElements(); )
+		path.links = new ArrayList();
+		for (Iterator it = undoPathLinks.iterator(); it.hasNext(); )
 		{
-			PathElement pe = (PathElement)en.nextElement();
+			PathElement pe = (PathElement)it.next();
 			pe.n = ((Integer)undoPeOrder.get(pe.link_id)).intValue();
 			path.links.add(pe);
 		}
@@ -548,9 +549,14 @@ public class PathPropsPanel extends JPanel
 
 class PathDisplayModel extends StubDisplayModel
 {
+	List cols;
 	public PathDisplayModel()
 	{
 		super();
+		cols = new ArrayList(3);
+		cols.add("num");
+		cols.add("thread");
+		cols.add("cable");
 	}
 
 	public int getColumnSize(String col_id)
@@ -564,13 +570,8 @@ class PathDisplayModel extends StubDisplayModel
 		return 100;
 	}
 
-	public java.util.List getColumns()
+	public List getColumns()
 	{
-		Vector cols = new Vector();
-
-		cols.add("num");
-		cols.add("thread");
-		cols.add("cable");
 		return cols;
 	}
 

@@ -1,11 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
+import java.io.Serializable;
+import java.util.*;
+import java.util.List;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.print.*;
-import java.io.Serializable;
-import java.util.*;
-
 import javax.swing.*;
 
 import com.jgraph.graph.*;
@@ -577,11 +578,11 @@ public class UgoPanel extends JPanel
 		if (remove_old)
 			GraphActions.clearGraph(graph);
 
-		if (serializable_cell != null && serializable_cell instanceof Vector)
+		if (serializable_cell != null && serializable_cell instanceof List)
 		{
 			Map clones = graph.copyFromArchivedState(serializable_cell, p);
 
-			Vector v = (Vector) serializable_cell;
+			List v = (List) serializable_cell;
 			Object[] cells = (Object[]) v.get(0);
 			ArrayList new_cells = new ArrayList();
 

@@ -831,8 +831,8 @@ class CreateUgoAction
 				Object child = enum.nextElement();
 				if (child instanceof DeviceCell)
 				{
-					((DeviceCell)child).getSchemeDevice().ports = new Vector();
-					((DeviceCell)child).getSchemeDevice().cableports = new Vector();
+					((DeviceCell)child).getSchemeDevice().ports = new ArrayList();
+					((DeviceCell)child).getSchemeDevice().cableports = new ArrayList();
 					if (!proto.symbol_id.equals(""))
 					for (Enumeration en = old_dev.children(); en.hasMoreElements();)
 					{
@@ -1081,8 +1081,8 @@ class CreateSchemeUgoAction
 				Object child = en.nextElement();
 				if (child instanceof DeviceCell)
 				{
-					((DeviceCell)child).getSchemeDevice().ports = new Vector();
-					((DeviceCell)child).getSchemeDevice().cableports = new Vector();
+					((DeviceCell)child).getSchemeDevice().ports = new ArrayList();
+					((DeviceCell)child).getSchemeDevice().cableports = new ArrayList();
 					ImageResource ir = ImageCatalogue.get(scheme.symbol_id);
 					if (ir != null)
 					{

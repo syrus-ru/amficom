@@ -1,42 +1,18 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Command.Scheme.ComponentSaveCommand;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
-import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class SaveComponentDialog extends JDialog
 {
@@ -201,9 +177,9 @@ public class SaveComponentDialog extends JDialog
 	ArrayList createProtoIdsList(ProtoElement proto)
 	{
 		ArrayList proto_ids = new ArrayList();
-		for (int i = 0; i < proto.protoelement_ids.size(); i++)
+		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)proto.protoelement_ids.get(i));
+			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			proto_ids.addAll(createProtoIdsList(p));
 		}
 		proto_ids.add(proto.getId());
@@ -213,9 +189,9 @@ public class SaveComponentDialog extends JDialog
 	ArrayList createEqTypesList(ProtoElement proto)
 	{
 		ArrayList eq_ids = new ArrayList();
-		for (int i = 0; i < proto.protoelement_ids.size(); i++)
+		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)proto.protoelement_ids.get(i));
+			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			eq_ids.addAll(createEqTypesList(p));
 		}
 		eq_ids.add(proto.equipment_type_id);
@@ -225,14 +201,14 @@ public class SaveComponentDialog extends JDialog
 	Hashtable createLinkIdsList(ProtoElement proto)
 	{
 		Hashtable l_ids = new Hashtable();
-		for (int i = 0; i < proto.protoelement_ids.size(); i++)
+		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)proto.protoelement_ids.get(i));
+			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			l_ids.putAll(createLinkIdsList(p));
 		}
-		for (int i = 0; i < proto.links.size(); i++)
+		for (Iterator it = proto.links.iterator(); it.hasNext();)
 		{
-			SchemeLink link = (SchemeLink)proto.links.get(i);
+			SchemeLink link = (SchemeLink)it.next();
 			l_ids.put(link.link_type_id, link.link_type_id);
 		}
 		return l_ids;
@@ -241,17 +217,17 @@ public class SaveComponentDialog extends JDialog
 	Hashtable createPortIdsList(ProtoElement proto)
 	{
 		Hashtable p_ids = new Hashtable();
-		for (int i = 0; i < proto.protoelement_ids.size(); i++)
+		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)proto.protoelement_ids.get(i));
+			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			p_ids.putAll(createPortIdsList(p));
 		}
-		for (int i = 0; i < proto.devices.size(); i++)
+		for (Iterator it = proto.devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice dev = (SchemeDevice)proto.devices.get(i);
-			for (int j = 0; j < dev.ports.size(); j++)
+			SchemeDevice dev = (SchemeDevice)it.next();
+			for (Iterator pit = dev.ports.iterator(); pit.hasNext();)
 			{
-				SchemePort port = (SchemePort)dev.ports.get(j);
+				SchemePort port = (SchemePort)pit.next();
 				p_ids.put(port.port_type_id, port.port_type_id);
 			}
 		}
@@ -261,17 +237,17 @@ public class SaveComponentDialog extends JDialog
 	Hashtable createCablePortIdsList(ProtoElement proto)
 	{
 		Hashtable p_ids = new Hashtable();
-		for (int i = 0; i < proto.protoelement_ids.size(); i++)
+		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)proto.protoelement_ids.get(i));
+			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			p_ids.putAll(createCablePortIdsList(p));
 		}
-		for (int i = 0; i < proto.devices.size(); i++)
+		for (Iterator it = proto.devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice dev = (SchemeDevice)proto.devices.get(i);
-			for (int j = 0; j < dev.cableports.size(); j++)
+			SchemeDevice dev = (SchemeDevice)it.next();
+			for (Iterator pit = dev.cableports.iterator(); pit.hasNext();)
 			{
-				SchemeCablePort port = (SchemeCablePort)dev.ports.get(j);
+				SchemeCablePort port = (SchemeCablePort)pit.next();
 				p_ids.put(port.cable_port_type_id, port.cable_port_type_id);
 			}
 		}

@@ -40,10 +40,10 @@ public class ProtoElement extends StubResource
 	public String symbol_id = "";
 	public String label = "";
 
-	public Map attributes = new HashMap();
-	public Vector devices = new Vector();
-	public Vector links = new Vector();
-	public Vector protoelement_ids = new Vector();
+	public Map attributes;
+	public Collection devices;
+	public Collection links;
+	public Collection protoelement_ids;
 
 	public Serializable serializable_cell;
 	public byte[] schemecell;
@@ -62,6 +62,11 @@ public class ProtoElement extends StubResource
 	{
 		this.id = id;
 		transferable = new SchemeProtoElement_Transferable();
+
+		devices = new ArrayList();
+		links = new ArrayList();
+		protoelement_ids = new ArrayList();
+		attributes = new HashMap();
 	}
 
 	public String getTyp()
@@ -117,9 +122,10 @@ public class ProtoElement extends StubResource
 		symbol_id = transferable.symbol_id;
 		label = transferable.label;
 
-		devices = new Vector();
-		links = new Vector();
-		protoelement_ids = new Vector();
+		devices = new ArrayList(transferable.devices.length);
+		links = new ArrayList(transferable.links.length);
+		protoelement_ids = new ArrayList(transferable.proto_element_ids.length);
+		attributes = new HashMap(transferable.attributes.length);
 
 		for (int i = 0; i < transferable.devices.length; i++)
 			devices.add(new SchemeDevice(transferable.devices[i]));
@@ -287,10 +293,10 @@ public class ProtoElement extends StubResource
 		symbol_id = (String )in.readObject();
 		domain_id = (String )in.readObject();
 		label = (String )in.readObject();
-		devices = (Vector )in.readObject();
-		links = (Vector )in.readObject();
-		protoelement_ids = (Vector )in.readObject();
-		attributes = (Hashtable )in.readObject();
+		devices = (Collection )in.readObject();
+		links = (Collection )in.readObject();
+		protoelement_ids = (Collection )in.readObject();
+		attributes = (Map)in.readObject();
 
 		Object ob = in.readObject();
 		schemecell = (byte[] )ob;
@@ -330,19 +336,14 @@ public class ProtoElement extends StubResource
 		proto.symbol_id = symbol_id;
 		proto.domain_id = domain_id;
 
-		proto.protoelement_ids = new Vector(protoelement_ids.size());
 		for (Iterator it = protoelement_ids.iterator(); it.hasNext();)
 		{
 			ProtoElement p = ((ProtoElement)Pool.get(ProtoElement.typ, (String)it.next()));
 			ProtoElement p1 = (ProtoElement)p.clone(dataSource);
 			proto.protoelement_ids.add(p1.getId());
 		}
-
-		proto.devices = new Vector(devices.size());
 		for (Iterator it = devices.iterator(); it.hasNext();)
 			proto.devices.add(((SchemeDevice)it.next()).clone(dataSource));
-
-		proto.links = new Vector(links.size());
 		for (Iterator it = links.iterator(); it.hasNext();)
 			proto.links.add(((SchemeLink)it.next()).clone(dataSource));
 
@@ -352,7 +353,6 @@ public class ProtoElement extends StubResource
 		System.arraycopy(ugo, 0, proto.ugo, 0, ugo.length);
 
 		proto.unpack();
-
 		proto.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 
 		Pool.put(ProtoElement.typ, proto.getId(), proto);

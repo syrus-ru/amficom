@@ -365,7 +365,7 @@ public class InsertToCatalogCommand extends VoidCommand
 
 			path.access_port_id = access_port_id;
 
-			path.links = new Vector();
+			path.links = new ArrayList();
 
 			for (Iterator it = scheme_path.links.iterator(); it.hasNext();)
 			{
@@ -465,85 +465,83 @@ public class InsertToCatalogCommand extends VoidCommand
 	{
 		try
 		{
-			if (element.devices.size() == 1)
+			Equipment eq = (Equipment) Pool.get(Equipment.typ, element.equipment_id);
+			KIS kis = null;
+			if (eq == null) {
+				kis = (KIS) Pool.get(KIS.typ, element.equipment_id);
+				if (kis != null) {
+					eq = kis;
+					if (eq.is_kis)
+						kis = (KIS) eq;
+				}
+			}
+
+			ProtoElement proto = (ProtoElement) Pool.get(ProtoElement.typ,
+					element.proto_element_id);
+			EquipmentType eqt = (EquipmentType) Pool.get(EquipmentType.typ,
+					proto.equipment_type_id);
+
+			if (eq == null) {
+				if (eqt.eq_class.equals("tester")) {
+					kis = new KIS();
+					eq = kis;
+					eq.id = dataSource.GetUId(KIS.typ);
+					Pool.put(KIS.typ, eq.getId(), eq);
+					Pool.put("kisequipment", eq.getId(), eq);
+					element.equipment_id = eq.getId();
+					eq.is_kis = true;
+					System.out.println("Add to catalog KIS with id " + kis.getId());
+				}
+				else {
+					eq = new Equipment();
+					eq.id = dataSource.GetUId(Equipment.typ);
+					Pool.put(Equipment.typ, eq.getId(), eq);
+					Pool.put("kisequipment", eq.getId(), eq);
+					element.equipment_id = eq.getId();
+					eq.is_kis = false;
+					System.out.println("Add to catalog Equipment with id " + eq.getId());
+				}
+				eq.port_ids = new ArrayList();
+				eq.ports = new ArrayList();
+				eq.cport_ids = new ArrayList();
+				eq.cports = new ArrayList();
+
+				eq.name = name.equals("") ? element.getName() : name;
+				eq.description = eqt.description;
+				eq.type_id = eqt.getId();
+				eq.longitude = "";
+				eq.latitude = "";
+				eq.hw_serial = "";
+				eq.sw_serial = "";
+				eq.hw_version = "";
+				eq.sw_version = "";
+				eq.inventory_nr = "";
+				eq.manufacturer = eqt.manufacturer;
+				eq.manufacturer_code = eqt.manufacturer_code;
+				eq.supplier = "";
+				eq.supplier_code = "";
+				eq.eq_class = eqt.eq_class;
+				eq.agent_id = "";
+				eq.domain_id = "";
+				eq.image_id = eqt.image_id;
+				eq.domain_id = dataSource.getSession().getDomainId();
+
+				eq.characteristics = ResourceUtil.copyCharacteristics(dataSource,
+						eqt.characteristics);
+			}
+
+			for (Iterator dit = element.devices.iterator(); dit.hasNext();)
 			{
-				Equipment eq = (Equipment)Pool.get(Equipment.typ, element.equipment_id);
-				KIS kis = null;
-				if (eq == null)
-				{
-					kis = (KIS)Pool.get(KIS.typ, element.equipment_id);
-					if (kis != null)
-					{
-						eq = kis;
-						if (eq.is_kis)
-							kis = (KIS)eq;
-					}
-				}
+				SchemeDevice dev = (SchemeDevice)dit.next();
 
-				ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, element.proto_element_id);
-				EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
-
-				if (eq == null)
-				{
-					if (eqt.eq_class.equals("tester"))
-					{
-						kis = new KIS();
-						eq = kis;
-						eq.id = dataSource.GetUId(KIS.typ);
-						Pool.put(KIS.typ, eq.getId(), eq);
-						Pool.put("kisequipment", eq.getId(), eq);
-						element.equipment_id = eq.getId();
-						eq.is_kis = true;
-						System.out.println("Add to catalog KIS with id " + kis.getId());
-					}
-					else
-					{
-						eq = new Equipment();
-						eq.id = dataSource.GetUId(Equipment.typ);
-						Pool.put(Equipment.typ, eq.getId(), eq);
-						Pool.put("kisequipment", eq.getId(), eq);
-						element.equipment_id = eq.getId();
-						eq.is_kis = false;
-						System.out.println("Add to catalog Equipment with id " + eq.getId());
-					}
-					eq.port_ids = new Vector();
-					eq.ports = new Vector();
-					eq.cport_ids = new Vector();
-					eq.cports = new Vector();
-
-					eq.name = name.equals("") ? element.getName() : name;
-					eq.description = eqt.description;
-					eq.type_id = eqt.getId();
-					eq.longitude = "";
-					eq.latitude = "";
-					eq.hw_serial = "";
-					eq.sw_serial = "";
-					eq.hw_version = "";
-					eq.sw_version = "";
-					eq.inventory_nr = "";
-					eq.manufacturer = eqt.manufacturer;
-					eq.manufacturer_code = eqt.manufacturer_code;
-					eq.supplier = "";
-					eq.supplier_code = "";
-					eq.eq_class = eqt.eq_class;
-					eq.agent_id = "";
-					eq.domain_id = "";
-					eq.image_id = eqt.image_id;
-					eq.domain_id = dataSource.getSession().getDomainId();
-
-					eq.characteristics = ResourceUtil.copyCharacteristics(dataSource, eqt.characteristics);
-				}
-
-				SchemeDevice dev = (SchemeDevice)element.devices.get(0);
-
-				for (int i = 0; i < dev.ports.size(); i++)
+				for (Iterator it = dev.ports.iterator(); it.hasNext();)
 				{
 					Port port = null;
-					SchemePort scheme_port = (SchemePort)dev.ports.get(i);
+					SchemePort scheme_port = (SchemePort)it.next();
 
-					for (Iterator it = eq.ports.iterator(); it.hasNext();)
+					for (Iterator pit = eq.ports.iterator(); pit.hasNext();)
 					{
-						Port p = (Port)it.next();
+						Port p = (Port)pit.next();
 						if (p.getId().equals(scheme_port.port_id))
 						{
 							port = p;
@@ -578,9 +576,9 @@ public class InsertToCatalogCommand extends VoidCommand
 						AccessPortType aport_type = (AccessPortType)Pool.get(AccessPortType.typ, scheme_port.access_port_type_id);
 						AccessPort aport = null;
 
-						for (Iterator it = kis.access_ports.iterator(); it.hasNext();)
+						for (Iterator pit = kis.access_ports.iterator(); pit.hasNext();)
 						{
-							AccessPort a = (AccessPort)it.next();
+							AccessPort a = (AccessPort)pit.next();
 							if (a.getId().equals(scheme_port.access_port_id))
 							{
 								aport = a;
@@ -607,14 +605,14 @@ public class InsertToCatalogCommand extends VoidCommand
 					}
 				}
 
-				for (int i = 0; i < dev.cableports.size(); i++)
+				for (Iterator it = dev.cableports.iterator(); it.hasNext();)
 				{
 					CablePort port = null;
-					SchemeCablePort scheme_port = (SchemeCablePort)dev.cableports.get(i);
+					SchemeCablePort scheme_port = (SchemeCablePort)it.next();
 
-					for (Iterator it = eq.cports.iterator(); it.hasNext();)
+					for (Iterator pit = eq.cports.iterator(); pit.hasNext();)
 					{
-						CablePort p = (CablePort)it.next();
+						CablePort p = (CablePort)pit.next();
 						if (p.getId().equals(scheme_port.cable_port_id))
 						{
 							port = p;
@@ -643,8 +641,8 @@ public class InsertToCatalogCommand extends VoidCommand
 						port.characteristics = ResourceUtil.copyCharacteristics(dataSource, port_type.characteristics);
 					}
 				}
-				eq.s_port_ids = new Vector();
-				eq.test_ports = new Vector();
+				eq.s_port_ids = new ArrayList();
+				eq.test_ports = new ArrayList();
 
 				if(eq.is_kis)
 				{
@@ -656,9 +654,9 @@ public class InsertToCatalogCommand extends VoidCommand
 				}
 			}
 
-			for (int i = 0; i < element.links.size(); i++)
+			for (Iterator it = element.links.iterator(); it.hasNext();)
 			{
-				SchemeLink link = (SchemeLink)element.links.get(i);
+				SchemeLink link = (SchemeLink)it.next();
 				if (link.link_id.equals(""))
 					saveLink(dataSource, link, link.getName());
 			}
@@ -693,7 +691,7 @@ public class InsertToCatalogCommand extends VoidCommand
 				scheme_link.cable_link_id = link.getId();
 				Pool.put(CableLink.typ, link.getId(), link);
 				System.out.println("Add to catalog CableLink with id " + link.getId());
-				link.threads = new Vector();
+				link.threads = new ArrayList();
 
 				CableLinkType link_type = (CableLinkType)Pool.get(CableLinkType.typ, scheme_link.cable_link_type_id);
 
@@ -784,18 +782,18 @@ public class InsertToCatalogCommand extends VoidCommand
 
 	SchemeElement getElementByPortId(SchemeElement element, String port_id)
 	{
-		for (int i = 0; i < element.devices.size(); i++)
+		for (Iterator it = element.devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice dev = (SchemeDevice)element.devices.get(i);
-			for (int j = 0; j < dev.cableports.size(); j++)
+			SchemeDevice dev = (SchemeDevice)it.next();
+			for (Iterator pit = dev.cableports.iterator(); pit.hasNext();)
 			{
-				SchemeCablePort port = (SchemeCablePort)dev.cableports.get(j);
+				SchemeCablePort port = (SchemeCablePort)pit.next();
 				if (port.getId().equals(port_id))
 					return element;
 			}
-			for (int j = 0; j < dev.ports.size(); j++)
+			for (Iterator pit = dev.ports.iterator(); pit.hasNext();)
 			{
-				SchemePort port = (SchemePort)dev.ports.get(j);
+				SchemePort port = (SchemePort)pit.next();
 				if (port.getId().equals(port_id))
 					return element;
 			}

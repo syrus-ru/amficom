@@ -1,32 +1,15 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
+import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ElementAttributeType;
 
 public class AddAttribFrame extends JDialog
@@ -36,7 +19,7 @@ public class AddAttribFrame extends JDialog
 
 	protected int res = CANCEL;
 	String selected = "Новый атрибут";
-	Hashtable h;
+
 	Hashtable h_named = new Hashtable();
 	ElementAttributeType type = new ElementAttributeType();
 
@@ -191,21 +174,21 @@ public class AddAttribFrame extends JDialog
 		}
 	}
 
-	public int showDialog(Vector attribs)
+	public int showDialog(Collection attribs)
 	{
-		h = Pool.getHash(ElementAttributeType.typ);
+		Map h = Pool.getHash(ElementAttributeType.typ);
 
 		Hashtable used = new Hashtable(attribs.size());
-		for (int i = 0; i < attribs.size(); i++)
+		for (Iterator it = attribs.iterator(); it.hasNext();)
 		{
-			Vector el = (Vector)attribs.get(i);
+			List el = (List)it.next();
 			used.put(el.get(0), el);
 		}
 		if (h != null)
 		{
-			for (Enumeration enum = h.elements(); enum.hasMoreElements();)
+			for (Iterator it = h.values().iterator(); it.hasNext();)
 			{
-				ElementAttributeType type = (ElementAttributeType)enum.nextElement();
+				ElementAttributeType type = (ElementAttributeType)it.next();
 				if (!used.containsKey(type.getName()))
 					jComboBox1.addItem(type.getName());
 				h_named.put(type.getName(), type);

@@ -1,30 +1,13 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Vector;
+import java.util.Collection;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import oracle.jdeveloper.layout.*;
 
 public class AddProtoFrame extends JDialog
 {
@@ -154,7 +137,7 @@ public class AddProtoFrame extends JDialog
 	{
 	}
 
-	public int showDialog(String ch_class, Vector chars)
+	public int showDialog(String ch_class, Collection chars)
 	{
 		setModal(true);
 		setVisible(true);

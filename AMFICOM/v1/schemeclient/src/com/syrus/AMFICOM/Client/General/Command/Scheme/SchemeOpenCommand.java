@@ -39,6 +39,7 @@ public class SchemeOpenCommand extends VoidCommand
 		SchemeChooserDialog mcd = new SchemeChooserDialog(aContext.getDataSourceInterface());//mapFrame, "Выберите карту", true);
 
 		Map dataSet = Pool.getHash(Scheme.typ);
+		java.util.HashMap h;
 		ObjectResourceDisplayModel odm = new SchemeDisplayModel();
 		ObjectResourceSorter sorter = Scheme.getDefaultSorter();
 		sorter.setDataSet(dataSet);
@@ -75,7 +76,6 @@ public class SchemeOpenCommand extends VoidCommand
 			}
 			//graph.setSchemeFromArchivedState(scheme.serializable_cell);
 		//	graph.copyFromArchivedState(scheme.serializable_cell, new java.awt.Point(0, 0));
-//			graph.updatePathsAtScheme(new Vector());
 
 			aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,
 					SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));

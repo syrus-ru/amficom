@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -248,16 +249,16 @@ public class SchemeElementPropsPanel extends JPanel
 
 	boolean hasCablePort (ProtoElement proto)
 	{
-		for (int i = 0; i < proto.devices.size(); i++)
+		for (Iterator it = proto.devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice dev = (SchemeDevice)proto.devices.get(i);
+			SchemeDevice dev = (SchemeDevice)it.next();
 			if (!dev.cableports.isEmpty())
 				return true;
 		}
 
-		for (int i = 0; i < proto.protoelement_ids.size(); i++)
+		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)proto.protoelement_ids.get(i));
+			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			if (hasCablePort(p))
 				return true;
 		}

@@ -1,14 +1,16 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.io.Serializable;
 import java.util.*;
+import java.util.List;
 
+import java.awt.*;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 import com.jgraph.graph.*;
 import com.jgraph.pad.*;
+import com.jgraph.pad.GPGraph.*;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -360,12 +362,10 @@ public class SchemeGraph extends GPGraph
 
 	public Serializable getArchiveableState(Object[] cells)
 	{
-
-
 		Object[] flat = DefaultGraphModel.getDescendants(getModel(), cells).toArray();
 		ConnectionSet cs = ConnectionSet.create(getModel(), flat, false);
 		Map viewAttributes = GraphConstants.createAttributes(cells, getGraphLayoutCache());
-		Vector v = new Vector();
+		ArrayList v = new ArrayList(3);
 		v.add(cells);
 		v.add(viewAttributes);
 		v.add(cs);
@@ -374,9 +374,9 @@ public class SchemeGraph extends GPGraph
 
 	public Object[] setFromArchivedState(Object s)
 	{
-		if (s instanceof Vector)
+		if (s instanceof List)
 		{
-			Vector v = (Vector) s;
+			List v = (List) s;
 			Object[] cells = (Object[]) v.get(0);
 			Map viewAttributes = (Map) v.get(1);
 			ConnectionSet cs = (ConnectionSet) v.get(2);
@@ -389,9 +389,9 @@ public class SchemeGraph extends GPGraph
 
 	public Map copyFromArchivedState_virtual(Object s)
 	{
-		if (s instanceof Vector)
+		if (s instanceof List)
 		{
-			Vector v = (Vector) s;
+			List v = (List) s;
 			Object[] cells = (Object[]) v.get(0);
 			Map viewAttributes = (Map) v.get(1);
 			ConnectionSet cs = (ConnectionSet) v.get(2);
@@ -430,9 +430,9 @@ public class SchemeGraph extends GPGraph
 
 	public Map copyFromArchivedState(Object s, Point p)
 	{
-		if (s instanceof Vector)
+		if (s instanceof List)
 		{
-			Vector v = (Vector) s;
+			List v = (List) s;
 			Object[] cells = (Object[]) v.get(0);
 			Map viewAttributes = (Map) v.get(1);
 			ConnectionSet cs = (ConnectionSet) v.get(2);
@@ -732,7 +732,7 @@ public class SchemeGraph extends GPGraph
 					{
 						Point p = fromScreen(new Point(start));
 						Point p2 = toScreen(new Point(current));
-						Vector list = new Vector();
+						List list = new ArrayList();
 						list.add(p);
 						list.add(p2);
 						Map map = GraphConstants.createMap();

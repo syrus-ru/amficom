@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Schematics.Elements;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.*;
@@ -490,7 +490,7 @@ public class PropsFrame extends JInternalFrame
 			tableUpdated(value, row, col);
 		}
 
-		public Vector getData()
+		public List getData()
 		{
 			return rows;
 		}

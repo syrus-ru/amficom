@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -275,11 +276,11 @@ public class SchemePanel extends ElementsPanel
 
 	private Map copySchemeElementFromArchivedState(SchemeElement element, Object s, Point p)
 	{
-		if (s instanceof Vector)
+		if (s instanceof List)
 		{
 			Map clones = graph.copyFromArchivedState(s, p);
 
-			Vector v = (Vector) s;
+			List v = (List) s;
 			Object[] cells = (Object[]) v.get(0);
 			if (cells.length == 1 && cells[0] instanceof DeviceGroup)
 			{
@@ -309,14 +310,14 @@ public class SchemePanel extends ElementsPanel
 
 	private void insertScheme (Scheme sch)
 	{
-		if (sch.serializable_ugo != null && sch.serializable_ugo instanceof Vector)
+		if (sch.serializable_ugo != null && sch.serializable_ugo instanceof List)
 		{
 			Map clones = graph.copyFromArchivedState(sch.serializable_ugo, new Point(0, 0));
 			//graph.setFromArchivedState(scheme.serializable_ugo);
-
-			Vector v = (Vector) sch.serializable_ugo;
+			List v = (List) sch.serializable_ugo;
 			Object[] cells = (Object[]) v.get(0);
-		if (cells.length == 1 && cells[0] instanceof DeviceGroup)
+
+			if (cells.length == 1 && cells[0] instanceof DeviceGroup)
 			{
 				DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
@@ -342,17 +343,17 @@ public class SchemePanel extends ElementsPanel
 
 	public boolean removeAllPathsFromScheme()
 	{
-		scheme.paths = new Vector();
-		for (Iterator it = scheme.paths.iterator(); it.hasNext();)
-		{
-			boolean b = removePathFromScheme((SchemePath)it.next());
-			if (!b)
-				return false;
-		}
+		scheme.paths = new ArrayList();
+//		for (Iterator it = scheme.paths.iterator(); it.hasNext();)
+//		{
+//			boolean b = removePathFromScheme((SchemePath)it.next());
+//			if (!b)
+//				return false;
+//		}
 		return true;
 	}
 
-	public boolean updatePathsAtScheme(Vector paths)
+	public boolean updatePathsAtScheme(Collection paths)
 	{
 		boolean b = removeAllPathsFromScheme();
 		if (!b)

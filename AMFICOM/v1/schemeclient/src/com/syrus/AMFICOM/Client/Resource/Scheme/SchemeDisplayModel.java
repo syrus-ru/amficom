@@ -10,8 +10,15 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 public class SchemeDisplayModel extends StubDisplayModel
 {
+	List cols;
+
 	public SchemeDisplayModel()
 	{
+		cols = new ArrayList(4);
+		cols.add("name");
+		cols.add("created");
+		cols.add("created_by");
+		cols.add("description");
 	}
 
 	public PropertyEditor getColumnEditor(ObjectResource o, String col_id)
@@ -76,14 +83,8 @@ public class SchemeDisplayModel extends StubDisplayModel
 		return false;
 	}
 
-	public java.util.List getColumns()
+	public List getColumns()
 	{
-		Vector cols = new Vector();
-		//cols.add("id");
-		cols.add("name");
-		cols.add("created");
-		cols.add("created_by");
-		cols.add("description");
 		return cols;
 	}
 

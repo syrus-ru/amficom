@@ -9,7 +9,7 @@ public class FileToDirectory
 	IntelStreamReader isr;
 
 	String type;
-	Vector elements;
+	List elements;
 	private int counter = 0;
 	Hashtable currentHash;
 
@@ -69,10 +69,10 @@ public class FileToDirectory
 		return type;
 	}
 
-	protected Vector readFromFile() throws IOException
+	protected List readFromFile() throws IOException
 	{
 		boolean continue_analyse = true;
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		Hashtable h = new Hashtable();
 		while (isr.ready())
 		{
