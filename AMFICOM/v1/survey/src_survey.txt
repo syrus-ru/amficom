@@ -41,6 +41,7 @@ src\com\syrus\AMFICOM\Client\Resource\Result\ActionParameterType.java
 src\com\syrus\AMFICOM\Client\Resource\Result\Analysis.java
 src\com\syrus\AMFICOM\Client\Resource\Result\AnalysisModel.java
 src\com\syrus\AMFICOM\Client\Resource\Result\CriteriaSet.java
+src\com\syrus\AMFICOM\Client\Resource\Result\DayTime.java
 src\com\syrus\AMFICOM\Client\Resource\Result\ElementaryTest.java
 src\com\syrus\AMFICOM\Client\Resource\Result\ElementaryTestModel.java
 src\com\syrus\AMFICOM\Client\Resource\Result\Etalon.java
@@ -59,6 +60,8 @@ src\com\syrus\AMFICOM\Client\Resource\Result\TestModel.java
 src\com\syrus\AMFICOM\Client\Resource\Result\TestRequest.java
 src\com\syrus\AMFICOM\Client\Resource\Result\TestSetup.java
 src\com\syrus\AMFICOM\Client\Resource\Result\ThresholdSet.java
+src\com\syrus\AMFICOM\Client\Resource\Result\Time.java
+src\com\syrus\AMFICOM\Client\Resource\Result\TimeStamp.java
 src\com\syrus\AMFICOM\Client\Resource\Test\AnalysisType.java
 src\com\syrus\AMFICOM\Client\Resource\Test\EvaluationType.java
 src\com\syrus\AMFICOM\Client\Resource\Test\ModelingType.java
