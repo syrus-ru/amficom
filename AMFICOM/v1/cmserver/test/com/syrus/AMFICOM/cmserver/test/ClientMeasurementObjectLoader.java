@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.19 2004/10/13 10:31:22 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.20 2004/10/15 11:00:24 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
+import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
+import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -30,7 +32,6 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -47,7 +48,6 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
-import com.syrus.AMFICOM.measurement.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetupCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
@@ -62,7 +62,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/10/13 10:31:22 $
+ * @version $Revision: 1.20 $, $Date: 2004/10/15 11:00:24 $
  * @author $Author: max $
  * @module cmserver_v1
  */
