@@ -1,5 +1,5 @@
 /*
- * $Id: SurveydbInterfaceLoad.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ * $Id: SurveydbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import java.util.*;
 import oracle.sql.BLOB;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -88,60 +88,6 @@ public class SurveydbInterfaceLoad
 		ClientParameter_Transferable[] args = new ClientParameter_Transferable[0];
 		ClientParameter_Transferable arg;
 		TestArgumentIterator tparIt = null;
-/*
-		try
-		{
-			#sql tparIt = {SELECT
-					id,
-					value,
-					type_id,
-					test_id
-					FROM amficom.testarguments
-					WHERE test_id = :test_id };
-
-			String str;
-			while (tparIt.next())
-			{
-				try { It_id = tparIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_arg_id = tparIt.type_id(); }
-				catch(SQLException e) { }
-				if(It_arg_id == null) It_arg_id = "";
-
-				#sql {SELECT name, codename, parameter_type_id
-						INTO :It_name, :It_codename, :It_parameter_type_id
-						FROM amficom.testtypearguments
-						WHERE id = :It_arg_id
-				};
-
-				#sql {
-					select NAME, TYPE_ID into
-						:It_parameter_type_name, :It_data_type
-					from AMFICOM.PARAMETERTYPES
-					where ID = :It_parameter_type_id };
-
-				arg = new Parameter_Transferable(
-						It_id,
-						It_name,
-						It_codename,
-						It_parameter_type_name,
-						It_parameter_type_id,
-						It_data_type,
-						test_id,
-						ByteArrayDatabase.toByteArr(tparIt.value()));
-				vector.add(arg);
-			}
-			tparIt.close();
-		}
-		catch(SQLException e)
-		{
-			System.out.println("could not get parameters for test " + test_id + ": " + e.getMessage());
-			e.printStackTrace();
-		}
-		args = new Parameter_Transferable[vector.size()];
-		vector.copyInto(args);
-*/
 		return args;
 	}
 
@@ -201,141 +147,9 @@ public class SurveydbInterfaceLoad
 
 		Vector vector2 = new Vector();
 		ResultParameterIterator paramIt = null;
-/*
-		try
-		{
-			#sql paramIt = {
-				select ID, PARAMETER_TYPE_ID, VALUE, RESULT_ID
-					from AMFICOM.PARAMETERS
-					where RESULT_ID = :result_id
-			};
-
-			while (paramIt.next())
-			{
-				osh = new octetSeqHolder();
-				osh.value = new byte[0];
-
-				try { It_id = paramIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_p_type_id = paramIt.parameter_type_id(); }
-				catch(SQLException e) { }
-				if(It_p_type_id == null) It_p_type_id = "";
-				try
-				{
-					It_value = paramIt.value();
-					val = ByteArrayDatabase.toByteArr(It_value);
-				}
-				catch(SQLException e)
-				{
-					System.out.println("could not get parameter " + It_id + ": " + e.getMessage());
-					e.printStackTrace();
-				}
-
-				try
-				{
-					ConnectionContext connCtx = DefaultContext.getDefaultContext();
-
-					Statement statement = null;
-					try
-					{
-						statement = connCtx.getConnection().createStatement();
-					}
-					catch(SQLException sqlexception)
-					{
-//						Log.systemLog.logDebugMessage("CharacterizationDatabase: Error (3)", 200);
-//						Log.systemLog.logErrorException(sqlexception);
-						System.out.println("Лажа");
-					}
-
-					String qry = "select NAME, CODENAME, PARAMETER_TYPE_ID " +
-							"from AMFICOM." + paramTableName +
-							" where ID = '" + It_p_type_id + "'";
-
-					System.out.println("Executing " + qry);
-
-					OracleResultSet resultset = null;
-					try
-					{
-						resultset = (OracleResultSet )statement.executeQuery(qry);
-						if(resultset.next())
-						{
-							It_name = resultset.getString("NAME");
-							It_codename = resultset.getString("CODENAME");
-							It_parameter_type_id = resultset.getString("PARAMETER_TYPE_ID");
-						}
-						else
-						{
-							System.out.println("Characterization does not exist");
-							return vector2;
-						}
-					}
-					catch(SQLException sqlexception1)
-					{
-						System.out.println("CharacterizationDatabase: Error (4)" + ": " + sqlexception1.getMessage());
-					}
-					finally
-					{
-						try
-						{
-							if(resultset != null)
-								resultset.close();
-							resultset = null;
-							if(statement != null)
-								statement.close();
-							statement = null;
-						}
-						catch(SQLException _ex) { }
-					}
-				}
-				catch(Exception e)
-				{
-					System.out.println("could not get parameter " + It_id + ": " + e.getMessage());
-					e.printStackTrace();
-				}
-
-				System.out.println("start retreive for " + It_parameter_type_id);
-				#sql {
-					select NAME, TYPE_ID into
-						:It_parameter_type_name, :It_data_type
-					from AMFICOM.PARAMETERTYPES
-					where ID = :It_parameter_type_id };
-
-				System.out.println("retreived " + It_parameter_type_name + " data type " + It_data_type);
-
-				Parameter_Transferable param =
-					new Parameter_Transferable(
-							It_id,
-							It_name,
-							It_codename,
-							It_parameter_type_name,
-							It_parameter_type_id,
-							It_data_type,
-							It_action_id,
-							val );
-//							osh.value);
-					vector2.addElement(param);
-
-			}// while(paramIt)
-			paramIt.close();
-		}
-		catch(SQLException e)
-		{
-			System.out.println("could not get parameters for result " + result_id + ": " + e.getMessage());
-			e.printStackTrace();
-		}
-*/
 		return vector2;
 	}
 
-/*
-	loadActionArguments(
-			"ANALYSISARGUMENTS",
-			"ANALYSIS_ID",
-			"ARGUMENT_TYPE_ID",
-			"ANALYSISTYPEARGUMENTS",
-			"ana1")
-*/
 	public static ClientParameter_Transferable[] loadActionArguments(
 			String argumentTableName,
 			String argumentFieldName,
@@ -356,124 +170,6 @@ public class SurveydbInterfaceLoad
 		Vector vector = new Vector();
 		ClientParameter_Transferable[] args = new ClientParameter_Transferable[0];
 		ClientParameter_Transferable arg;
-/*
-
-
-		try
-		{
-			ConnectionContext connCtx = DefaultContext.getDefaultContext();
-			Statement statement = null;
-			OracleResultSet resultset = null;
-			Statement statement2 = null;
-			OracleResultSet resultset2 = null;
-System.out.println("Zaebali ");
-			String qry =
-					"select ID, VALUE, " + argumentParameterFieldName +
-					" from AMFICOM." + argumentTableName +
-					" where " + argumentFieldName + " = '" + action_id + "'";
-
-			System.out.println("Executing " + qry);
-			try
-			{
-				statement = connCtx.getConnection().createStatement();
-				resultset = (OracleResultSet )statement.executeQuery(qry);
-				while(resultset.next())
-				{
-					It_arg_id = resultset.getString(argumentParameterFieldName);
-					It_id = resultset.getString("ID");
-					val = ByteArrayDatabase.toByteArr(resultset.getBLOB("VALUE"));
-					System.out.println("retreived id " + It_id + " argID " + It_arg_id);
-
-					String qry2 =
-							"select NAME, CODENAME, PARAMETER_TYPE_ID " +
-							" from AMFICOM." + argumentTypeTableName +
-							" where ID = '" + It_arg_id + "'";
-					System.out.println("Executing " + qry2);
-					try
-					{
-						statement2 = connCtx.getConnection().createStatement();
-						resultset2 = (OracleResultSet )statement.executeQuery(qry2);
-						if(resultset2.next())
-						{
-							It_name = resultset2.getString("NAME");
-							It_codename = resultset2.getString("CODENAME");
-							It_parameter_type_id = resultset2.getString("PARAMETER_TYPE_ID");
-						}
-						else
-						{
-							System.out.println("param does not exist");
-							return args;
-						}
-						resultset2.close();
-					}
-					catch(SQLException sqlexception1)
-					{
-						System.out.println("Фигня: " + sqlexception1.getMessage());
-						sqlexception1.printStackTrace();
-						return args;
-					}
-					finally
-					{
-						try
-						{
-							if(resultset2 != null)
-								resultset2.close();
-							resultset2 = null;
-							if(statement2 != null)
-								statement2.close();
-							statement2 = null;
-						}
-						catch(SQLException _ex) { }
-					}
-
-					#sql {
-						select NAME, TYPE_ID into
-							:It_parameter_type_name, :It_data_type
-						from AMFICOM.PARAMETERTYPES
-						where ID = :It_parameter_type_id };
-
-					arg = new Parameter_Transferable(
-							It_id,
-							It_name,
-							It_codename,
-							It_parameter_type_name,
-							It_parameter_type_id,
-							It_data_type,
-							action_id,
-							val);
-//							ByteArrayDatabase.toByteArr(resultset.getBLOB("VALUE")));
-					vector.add(arg);
-				}
-				resultset.close();
-			}
-			catch(SQLException sqlexception1)
-			{
-				System.out.println("Zhopa: " + sqlexception1.getMessage());
-				sqlexception1.printStackTrace();
-				return args;
-			}
-			finally
-			{
-				try
-				{
-					if(resultset != null)
-						resultset.close();
-					resultset = null;
-					if(statement != null)
-						statement.close();
-					statement = null;
-				}
-				catch(SQLException _ex) { }
-			}
-		}
-		catch(Exception e)
-		{
-			System.out.println("could not get parameters for " + action_id + ": " + e.getMessage());
-			e.printStackTrace();
-		}
-		args = new Parameter_Transferable[vector.size()];
-		vector.copyInto(args);
-*/
 		return args;
 	}
 
@@ -497,88 +193,6 @@ System.out.println("Zaebali ");
 		ClientParameter_Transferable args[] = new ClientParameter_Transferable[0];
 		ActionArgumentIterator argIt = null;
 		Vector vector = new Vector();
-/*
-		try
-		{
-			String qry =
-					"select ID, NAME, CODENAME, PARAMETER_TYPE_ID, VALUE " +
-					" from AMFICOM." + tableName +
-					" where " + actionFieldName + " = '" + element_id + "'";
-
-			#sql
-			{
-				BEGIN
-					open :OUT argIt for :qry;
-				END;
-			};
-			while(argIt.next())
-			{
-				try { It_id = argIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_name = argIt.name(); }
-				catch(SQLException e) { }
-				if(It_name == null) It_name = "";
-				try { It_codename = argIt.codename(); }
-				catch(SQLException e) { }
-				if(It_codename == null) It_codename = "";
-				try { It_parameter_type_id = argIt.parameter_type_id(); }
-				catch(SQLException e) { }
-				if(It_parameter_type_id == null) It_parameter_type_id = "";
-
-				osh = new octetSeqHolder();
-				osh.value = new byte[0];
-
-				try
-				{
-					It_value = argIt.value();
-					val = ByteArrayDatabase.toByteArr(It_value);
-				}
-				catch(SQLException e)
-				{
-					System.out.println("could not get argument " + It_id + ": " + e.getMessage());
-					e.printStackTrace();
-				}
-
-				try
-				{
-					#sql {
-						select NAME, TYPE_ID into
-							:It_parameter_type_name, :It_data_type
-						from AMFICOM.PARAMETERTYPES
-						where ID = :It_parameter_type_id };
-
-					arg = new Parameter_Transferable(
-							It_id,
-							It_name,
-							It_codename,
-							It_parameter_type_name,
-							It_parameter_type_id,
-							It_data_type,
-							element_id,
-							val );
-//							osh.value);
-					vector.addElement(arg);
-				}
-				catch(SQLException e)
-				{
-					System.out.println("could not get argument " + It_id + ": " + e.getMessage());
-					e.printStackTrace();
-				}
-			}
-			argIt.close();
-
-			#sql { commit };
-		}
-		catch (SQLException e)
-		{
-			System.out.println("could not load argument " + It_id + ": " + e.getMessage());
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-		}
-		args = new Parameter_Transferable[vector.size()];
-		vector.copyInto(args);
-*/
 		return args;
 	}
 
@@ -600,73 +214,6 @@ System.out.println("Zaebali ");
 		ClientParameter_Transferable[] params = new ClientParameter_Transferable[0];
 		ActionParameterIterator paramIt = null;
 		Vector vector = new Vector();
-/*
-		try
-		{
-			String qry =
-					"select ID, NAME, CODENAME, PARAMETER_TYPE_ID " +
-					" from AMFICOM." + tableName +
-					" where " + actionFieldName + " = '" + element_id + "'";
-
-			#sql
-			{
-				BEGIN
-					open :OUT paramIt for :qry;
-				END;
-			};
-			while(paramIt.next())
-			{
-				try { It_id = paramIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_name = paramIt.name(); }
-				catch(SQLException e) { }
-				if(It_name == null) It_name = "";
-				try { It_codename = paramIt.codename(); }
-				catch(SQLException e) { }
-				if(It_codename == null) It_codename = "";
-				try { It_parameter_type_id = paramIt.parameter_type_id(); }
-				catch(SQLException e) { }
-				if(It_parameter_type_id == null) It_parameter_type_id = "";
-
-				try
-				{
-					#sql {
-						select NAME, TYPE_ID into
-							:It_parameter_type_name, :It_data_type
-						from AMFICOM.PARAMETERTYPES
-						where ID = :It_parameter_type_id };
-
-					param = new Parameter_Transferable(
-							It_id,
-							It_name,
-							It_codename,
-							It_parameter_type_name,
-							It_parameter_type_id,
-							It_data_type,
-							element_id,
-							val);
-					vector.addElement(param);
-				}
-				catch(SQLException e)
-				{
-					System.out.println("could not get parameter " + It_id + ": " + e.getMessage());
-					e.printStackTrace();
-				}
-			}
-			paramIt.close();
-
-			#sql { commit };
-		}
-		catch (SQLException e)
-		{
-			System.out.println("could not load parameter " + It_id + ": " + e.getMessage());
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-		}
-		params = new Parameter_Transferable[vector.size()];
-		vector.copyInto(params);
-*/
 		return params;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: NetDirectorydbInterfaceSave.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: NetDirectorydbInterfaceSave.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.*;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -61,7 +61,6 @@ public class NetDirectorydbInterfaceSave
 						characteristics[j].value + "', '" +
 						element_id + "')";
 
-//					System.out.println(qry2);
 
 					#sql {
 						BEGIN
@@ -88,73 +87,7 @@ public class NetDirectorydbInterfaceSave
 			exx.printStackTrace();
 		}
 	}
-/*
-	public static void saveCharacteristicLinks2(
-			String charLinkTable,
-			String charLinkField,
-			String element_id,
-			Characteristic_Transferable[] characteristics)
-	{
-		int count;
-		int len2;
-		int j;
 
-		len2 = characteristics.length;
-		for(j = 0; j < len2; j++)
-		{
-			try
-			{
-				IdIterator idIt = null;
-				String qry = "select ID from AMFICOM." + charLinkTable +
-						" where " + charLinkField + " = '" + element_id +
-						"' and CHARACTERISTIC_TYPE_ID = '" + characteristics[j].type_id;
-				#sql {
-					BEGIN
-						open :OUT idIt for :qry;
-					END;
-				};
-				if(idIt.next())
-				{
-//					System.out.println("update characteristic " + characteristics[j].id);
-					String id = idIt.id();
-					String qry2 = "update AMFICOM." + charLinkTable +
-						" set DEFAULT_VALUE = '" + characteristics[j].value +
-						"' where ID = '" + id + "'";
-					#sql {
-						BEGIN
-							execute immediate :qry2;
-						END;
-					};
-				}
-				else
-				{
-					String at_s = ResourcedbInterface.getUId("characteristic");
-					String query = "insert into AMFICOM." +
-						charLinkTable + "(ID, CHARACTERISTIC_TYPE_ID, DEFAULT_VALUE, " +
-						charLinkField + ") values('" + at_s + "', '" +
-						characteristics[j].type_id + "', '" +
-						characteristics[j].value + "', '" +
-						element_id + "')";
-					#sql {
-						BEGIN
-							execute immediate :query;
-						END;
-					};
-					#sql { commit };
-				}
-			}
-			catch(SQLException exx)
-			{
-				System.out.println("error saVing characteristic: " + exx.getMessage());
-				exx.printStackTrace();
-			}
-			catch(Exception exxx)
-			{
-				System.out.println("error generating characteristic: " + exxx.getMessage());
-			}
-		}//for (characteristics)
-	}
-*/
 	public static int saveCharacteristicTypes(
 			CharacteristicType_Transferable[] characteristictypes)
 	{
@@ -173,10 +106,8 @@ public class NetDirectorydbInterfaceSave
 				};
 				if(count == 0)
 				{
-//						System.out.println("characteristic " + characteristics[j].id + " not found in database");
 					throw new SQLException("do insert!");
 				}
-//				System.out.println("update characteristic " + characteristics[j].id);
 				try
 				{
 					#sql {

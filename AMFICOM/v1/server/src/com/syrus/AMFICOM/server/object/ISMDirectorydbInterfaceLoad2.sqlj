@@ -1,5 +1,5 @@
 /*
- * $Id: ISMDirectorydbInterfaceLoad2.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: ISMDirectorydbInterfaceLoad2.sqlj,v 1.1.2.2 2004/08/20 17:12:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:08 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -102,7 +102,7 @@ public class ISMDirectorydbInterfaceLoad2
 					characteristics);
 
 				vector.add(apt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			apt_ts = new AccessPortType_Transferable[vector.size()];
 			vector.copyInto(apt_ts);
@@ -224,7 +224,7 @@ public class ISMDirectorydbInterfaceLoad2
 					characteristics);
 
 				vector.add(e_t);
-			}// while(ptIt)
+			}
 			eIt.close();
 			e_ts = new EquipmentType_Transferable[vector.size()];
 			vector.copyInto(e_ts);
@@ -298,15 +298,6 @@ public class ISMDirectorydbInterfaceLoad2
 				try { It_modified = ptIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-/*
-				vector2 = NetDirectorydbInterfaceLoad.loadCharacteristicLinks(
-						"ACCESSPORTTYPECHARLINKS",
-						"ACCESS_PORT_TYPE_ID",
-						It_id);
-				characteristics = new Characteristic_Transferable[vector2.size()];
-				vector2.copyInto(characteristics);
-*/
-
 				pt_t = new TransmissionPathType_Transferable(
 					It_id,
 					It_name,
@@ -314,7 +305,7 @@ public class ISMDirectorydbInterfaceLoad2
 					It_modified);
 
 				vector.add(pt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			pt_ts = new TransmissionPathType_Transferable[vector.size()];
 			vector.copyInto(pt_ts);

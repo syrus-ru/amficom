@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbGeneral.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: AMFICOMdbGeneral.sqlj,v 1.1.2.2 2004/08/20 17:12:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:08 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -33,25 +33,14 @@ public class AMFICOMdbGeneral
 	public static void CheckUserPrivileges(AccessIdentity_Transferable accessIdentity)
 		throws AMFICOMRemoteException
 	{
-//		System.out.println("		check user " + accessIdentity.sess_id);
 
 		try
 		{
-/*
-			Timestamp acc;
-			#sql {
-				select ACCESSED into :acc from AMFICOM.LOGGEDUSERS
-					where ID = :(accessIdentity.sess_id)
-			};
-
-			System.out.println("		(last accessed ) - " + SIMPLE_DATE_FORMAT.format(acc));
-*/
 			#sql {
 				update AMFICOM.LOGGEDUSERS
 					set ACCESSED = SYSDATE
 					where ID = :(accessIdentity.sess_id)
 			};
-//			System.out.println("		Ok!");
 			#sql { commit };
 		}
 		catch (Exception e)
@@ -77,12 +66,9 @@ public class AMFICOMdbGeneral
 			BLOB pwd_blob = null;
 			Timestamp tms = new Timestamp(System.currentTimeMillis());
 
-//			oracle.aurora.net.SessionIdentifier si = oracle.aurora.mts.session.Session.THIS_SESSION().sessionID();
-//			sess_code = si.toAsciiString();
 
 			accessIdentity.value = new AccessIdentity_Transferable(0, "", "", "", "sysdomain");
-//			System.out.println("logging on " + username + " pwd " + password);
-			// проверить права доступа пользователя в систему
+
 			try
 			{
 				#sql
@@ -95,14 +81,11 @@ public class AMFICOMdbGeneral
 				System.out.println("id " + id + " type " + type);
 				e.printStackTrace();
 				int errorCode = e.getErrorCode();
-				if (errorCode == 8000) // Нет контекста соединения с БД
-					// невозможно соединиться с РИСД
+				if (errorCode == 8000)
 					return Constants.ERROR_NO_CONNECT;
-				else if (errorCode == 2000) // Не найдено записей
-					// пользователь не имеет прав дост.
+				else if (errorCode == 2000)
 					return Constants.ERROR_WRONG_LOGIN;
-				else if (errorCode == 8003) // Нет контекста выполнения SQL
-					// сбой в работе РИСД
+				else if (errorCode == 8003)
 					return Constants.ERROR_RISD_ERROR;
 				else
 					throw e;
@@ -137,21 +120,14 @@ public class AMFICOMdbGeneral
 				}
 
 				byte pwd_bytes[] = ByteArrayDatabase.toByteArray(pwd_blob);
-//				System.out.println("decode...");
 				String decpwd = Rewriter.read(pwd_bytes);
 				String logpwd = Rewriter.read(password);
-//				System.out.println("pwd " + new String(pwd_bytes) + " decpwd " + decpwd + " compare to " + new String(password) + " logpwd " + logpwd + " pwd_exp " + pwd_exp + " curtime " + System.currentTimeMillis());
 				if (!decpwd.equals(logpwd))
-//				if (!pwd.equals(password))
-					// неправильно указан пароль
 					return Constants.ERROR_WRONG_PASSWORD;
 
 				if ((!id.equals("sys")) && (pwd_exp != 0) && (pwd_exp < System.currentTimeMillis()))
-//					return Constants.ERROR_PASSWORD_EXPIRED;
 					throw new AMFICOMRemoteException(Constants.ERROR_PASSWORD_EXPIRED, "fn Logon: Ограниечение времени действия логина");
 			}
-			// выделить пользователю идентификатор сессии и занести
-			// запись о нем в БД
 			try
 			{
 				sess = ResourcedbInterface.getUId("loggeduser");
@@ -162,24 +138,13 @@ public class AMFICOMdbGeneral
 				boolean autoc = conn.getAutoCommit();
 				conn.setAutoCommit(false);
 
-/*
-				System.out.println("commit1");
-				conn.createStatement().execute("COMMIT");
-
-				String sql = "insert into amficom.iors (id, ior) values('" + sess + "', empty_blob())";
-
-				System.out.println("EXECUTE: " + sql);
-
-				conn.createStatement().execute(sql);
-*/
 				#sql
 				{
 					insert into AMFICOM.IORS (ID, IOR) values(:sess, empty_blob() )
 				};
 
-				ByteArrayDatabase bArr = new ByteArrayDatabase(ior.getBytes());// можно указать кодировку US-ASCII
+				ByteArrayDatabase bArr = new ByteArrayDatabase(ior.getBytes());
 
-//				conn.createStatement().execute("COMMIT");
 				#sql
 				{
 					commit
@@ -205,8 +170,7 @@ public class AMFICOMdbGeneral
 			{
 				System.out.println("error sess " + sess + " error is " + e.getErrorCode() + " " + e.getMessage());
 				e.printStackTrace();
-				if(e.getErrorCode() == 8003) // Нет контекста выполнения SQL
-					// сбой в работе РИСД
+				if(e.getErrorCode() == 8003)
 					return Constants.ERROR_RISD_ERROR;
 				else
 					throw e;
@@ -217,13 +181,11 @@ public class AMFICOMdbGeneral
 				e.printStackTrace();
 				throw e;
 			}
-			// вернуть пользователю идентификатор сессии
 			#sql
 			{
 				commit
 			};
 
-//			tm = SIMPLE_DATE_FORMAT.format(tms);
 			System.out.println("sess " + sess + " at " + SIMPLE_DATE_FORMAT.format(tms));
 			accessIdentity.value = new AccessIdentity_Transferable(Calendar.getInstance().getTime().getTime(), username, id, sess, "sysdomain");
 
@@ -245,7 +207,6 @@ public class AMFICOMdbGeneral
 		String nm;
 		String sessid = accessIdentity.sess_id;
 
-		// удалить запись о сессии пользователя
 		#sql {delete from AMFICOM.IORS
 			where ID = :sessid };
 
@@ -301,8 +262,8 @@ public class AMFICOMdbGeneral
 
 	public static int ChangePassword(
 			AccessIdentity_Transferable accessIdentity,
-			byte[] oldpassword,	// пароль пользователя
-			byte[] newpassword)	// новый пароль пользователя
+			byte[] oldpassword,
+			byte[] newpassword)
 		throws AMFICOMRemoteException
 	{
 		String user_id;
@@ -344,9 +305,6 @@ public class AMFICOMdbGeneral
 						"AMFICOM.OPERATORPROFILES",
 						"PASSWORD",
 						"id = '" + op_id + "'");
-//				#sql { update AMFICOM.OPERATORPROFILES
-//						set PASSWORD = :newpassword
-//						where ID = :op_id };
 			}
 			#sql { commit };
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ISMdbInterfaceLoad.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: ISMdbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Vector;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -245,7 +245,7 @@ public class  ISMdbInterfaceLoad
 					characteristics);
 
 				vector.add(apt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			apt_ts = new AccessPort_Transferable[vector.size()];
 			vector.copyInto(apt_ts);
@@ -461,7 +461,7 @@ public class  ISMdbInterfaceLoad
 					characteristics);
 
 				vector.add(e_t);
-			}// while(ptIt)
+			}
 			eIt.close();
 			e_ts = new Equipment_Transferable[vector.size()];
 			vector.copyInto(e_ts);
@@ -590,19 +590,6 @@ public class  ISMdbInterfaceLoad
 					}
 					links = new TransmissionPathElement_Transferable[vector2.size()];
 					vector2.copyInto(links);
-/*
-					vector2 = new Vector();
-					#sql idIt = {
-						select ID from AMFICOM.PATHLINKS where PATH_ID = :It_id };
-					while(idIt.next())
-					{
-						try { vector2.add(tpIt.id()); }
-						catch(SQLException e) { }
-					}
-					idIt.close();
-					link_ids = new String[vector2.size()];
-					vector2.copyInto(link_ids);
-*/
 					try
 					{
 						#sql { select ID, LOCAL_ADDRESS
@@ -666,7 +653,7 @@ public class  ISMdbInterfaceLoad
 					System.out.println("Transmission path  " + It_id + " could not be loaded: " + e.getMessage());
 					e.printStackTrace();
 				}
-			}// while(tpIt)
+			}
 			tpIt.close();
 			tp_ts = new TransmissionPath_Transferable[vector.size()];
 			vector.copyInto(tp_ts);
@@ -791,7 +778,7 @@ public class  ISMdbInterfaceLoad
 						It_modified);
 
 				vector.add(me_t);
-			}// while(meIt)
+			}
 			meIt.close();
 			me_ts = new MonitoredElement_Transferable[vector.size()];
 			vector.copyInto(me_ts);

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: ReportTemplate.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -163,7 +163,6 @@ public class ReportTemplate
 	{
 		try
 		{
-			//Выбрали фильтры этого шаблона
 			ReportFilterIterator rfIt = null;
 				
 			#sql rfIt = { select
@@ -267,7 +266,6 @@ public class ReportTemplate
 	{
 		try
 		{
-			//Выбрали фильтры этого шаблона
 			ReportFilterIterator rfIt = null;
 			#sql rfIt = { select
 					REPORT_TEMPLATE_ID,
@@ -275,14 +273,12 @@ public class ReportTemplate
 				from AMFICOM.REPORTTEMPLATEFILTERS
 				where REPORT_TEMPLATE_ID = :id
 			};
-			//Уничтожили их
 			while(rfIt.next())
 			{
 				#sql { delete from AMFICOM.FILTERS
 					where ID = :(rfIt.filter_id())
 				};
 			}
-			//И уничтожили ссылки на них в связывающей таблице
 			#sql { delete from AMFICOM.REPORTTEMPLATEFILTERS
 				where REPORT_TEMPLATE_ID = :(this.id)
 			};

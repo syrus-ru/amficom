@@ -1,5 +1,5 @@
 /*
- * $Id: SurveydbInterfaceSave2.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ * $Id: SurveydbInterfaceSave2.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -21,27 +21,7 @@ public class SurveydbInterfaceSave2
 	protected SurveydbInterfaceSave2()
 	{
 	}
-/*
-	public static int deleteAlarm(String alarm_id)
-	{
-		try
-		{
-			#sql {
-				update AMFICOM.ALARMS
-					set STATUS = :(Constants.ALARM_DELETED)
-					where ID = :alarm_id
-			};
-			#sql { commit };
-		}
-		catch(SQLException e)
-		{
-			System.out.println("Error - alarm not deleted! " + e.getMessage());
-			e.printStackTrace();
-			return Constants.ERROR_SAVING;
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-*/
+
 	public static int userAlarm(String source_id, String descriptor)
 	{
 		System.out.println("user alarm on " + source_id + " ( desc: " + descriptor + ")");

@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceProto.sqlj,v 1.1.2.1 2004/08/20 14:03:47 bass Exp $
+ * $Id: MapdbInterfaceProto.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Vector;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:47 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -25,21 +25,7 @@ public class MapdbInterfaceProto
 	protected MapdbInterfaceProto()
 	{
 	}
-/*
-	public static int loadEquipmentProto(
-			MapEquipmentElementSeq_TransferableHolder equipmentseq,
-			Vector images)
-	{
-		return Constants.ERROR_NO_ERROR;
-	}
 
-	public static int loadKISProto(
-			MapKISElementSeq_TransferableHolder kisseq,
-			Vector images)
-	{
-		return Constants.ERROR_NO_ERROR;
-	}
-*/
 	public static int loadProtoElements(
 			String domain_id,
 			MapProtoElementSeq_TransferableHolder protoseq,
@@ -94,12 +80,10 @@ public class MapdbInterfaceProto
 					DOMAIN_ID
 				from AMFICOM.MAPPROTOELEMENTS
 			};
-//				where DOMAIN_ID = :domain_id
 			count = 0;
 			while (prIt.next())
 			{
 				count ++;
-//				System.out.println("checking nulls");
 				try { It_id = prIt.id(); }
 				catch(SQLException e) { }
 				if(It_id == null) It_id = "";
@@ -139,8 +123,6 @@ public class MapdbInterfaceProto
 						It_id);
 				attributes = new ElementAttribute_Transferable[vector2.size()];
 				vector2.copyInto(attributes);
-
-//				vector2 = MapdbInterfaceLoad1.loadProtoElementPEs(It_id);
 				try
 				{
 					vector3 = new Vector();
@@ -185,7 +167,7 @@ public class MapdbInterfaceProto
 				images.add(It_symbol_id);
 
 				vector.addElement(pr_t);
-			}// while(prIt)
+			}
 			prIt.close();
 			pr_ts = new MapProtoElement_Transferable[vector.size()];
 			vector.copyInto(pr_ts);
@@ -271,7 +253,6 @@ public class MapdbInterfaceProto
 					DOMAIN_ID
 				from AMFICOM.MAPPROTOELEMENTS
 			};
-//				where DOMAIN_ID = :domain_id
 			count = 0;
 			while (prIt.next())
 			{
@@ -279,7 +260,6 @@ public class MapdbInterfaceProto
 					continue;
 
 				count ++;
-//				System.out.println("checking nulls");
 				try { It_id = prIt.id(); }
 				catch(SQLException e) { }
 				if(It_id == null) It_id = "";
@@ -320,7 +300,6 @@ public class MapdbInterfaceProto
 				attributes = new ElementAttribute_Transferable[vector2.size()];
 				vector2.copyInto(attributes);
 
-//				vector2 = MapdbInterfaceLoad1.loadProtoElementPEs(It_id);
 				try
 				{
 					vector3 = new Vector();
@@ -365,7 +344,7 @@ public class MapdbInterfaceProto
 				images.add(It_symbol_id);
 
 				vector.addElement(pr_t);
-			}// while(prIt)
+			}
 			prIt.close();
 			pr_ts = new MapProtoElement_Transferable[vector.size()];
 			vector.copyInto(pr_ts);
@@ -564,7 +543,6 @@ public class MapdbInterfaceProto
 					MODIFIED
 				from AMFICOM.MAPPROTOGROUPS
 			};
-//				where DOMAIN_ID = :domain_id
 			count = 0;
 			while (prIt.next())
 			{
@@ -653,7 +631,7 @@ public class MapdbInterfaceProto
 						It_modified);
 
 				vector.addElement(pr_t);
-			}// while(prIt)
+			}
 			prIt.close();
 			pr_ts = new MapProtoGroup_Transferable[vector.size()];
 			vector.copyInto(pr_ts);
@@ -719,7 +697,6 @@ public class MapdbInterfaceProto
 					MODIFIED
 				from AMFICOM.MAPPROTOGROUPS
 			};
-//				where DOMAIN_ID = :domain_id
 			count = 0;
 			while (prIt.next())
 			{
@@ -815,7 +792,7 @@ public class MapdbInterfaceProto
 						It_modified);
 
 				vector.addElement(pr_t);
-			}// while(prIt)
+			}
 			prIt.close();
 			pr_ts = new MapProtoGroup_Transferable[vector.size()];
 			vector.copyInto(pr_ts);
@@ -1033,7 +1010,6 @@ public class MapdbInterfaceProto
 					DOMAIN_ID
 				from AMFICOM.MAPLINKPROTOELEMENTS
 				};
-//				where DOMAIN_ID = :domain_id
 
 			while (linkIt.next())
 			{
@@ -1062,7 +1038,6 @@ public class MapdbInterfaceProto
 				attributes = new ElementAttribute_Transferable[vector2.size()];
 				vector2.copyInto(attributes);
 
-//				System.out.println("getting node links for " + It_id);
 				vector2 = new Vector();
 				try
 				{
@@ -1095,7 +1070,7 @@ public class MapdbInterfaceProto
 						attributes);
 
 				vector.addElement(link_t);
-			}// while(linkIt)
+			}
 			linkIt.close();
 			link_ts = new MapLinkProtoElement_Transferable[vector.size()];
 			vector.copyInto(link_ts);
@@ -1160,7 +1135,6 @@ public class MapdbInterfaceProto
 					DOMAIN_ID
 				from AMFICOM.MAPLINKPROTOELEMENTS
 				};
-//				where DOMAIN_ID = :domain_id
 
 			while (linkIt.next())
 			{
@@ -1192,7 +1166,6 @@ public class MapdbInterfaceProto
 				attributes = new ElementAttribute_Transferable[vector2.size()];
 				vector2.copyInto(attributes);
 
-//				System.out.println("getting node links for " + It_id);
 				vector2 = new Vector();
 				try
 				{
@@ -1225,7 +1198,7 @@ public class MapdbInterfaceProto
 						attributes);
 
 				vector.addElement(link_t);
-			}// while(linkIt)
+			}
 			linkIt.close();
 			link_ts = new MapLinkProtoElement_Transferable[vector.size()];
 			vector.copyInto(link_ts);
@@ -1285,7 +1258,6 @@ public class MapdbInterfaceProto
 					DOMAIN_ID
 				from AMFICOM.MAPPATHPROTOELEMENTS
 				};
-//				where DOMAIN_ID = :domain_id
 
 			count = 0;
 			while (pathIt.next())
@@ -1349,7 +1321,7 @@ public class MapdbInterfaceProto
 						attributes);
 
 				vector.addElement(path_t);
-			}// while(pathIt)
+			}
 			pathIt.close();
 			path_ts = new MapPathProtoElement_Transferable[vector.size()];
 			vector.copyInto(path_ts);
@@ -1416,7 +1388,6 @@ public class MapdbInterfaceProto
 					DOMAIN_ID
 				from AMFICOM.MAPPATHPROTOELEMENTS
 				};
-//				where DOMAIN_ID = :domain_id
 
 			count = 0;
 			while (pathIt.next())
@@ -1483,7 +1454,7 @@ public class MapdbInterfaceProto
 						attributes);
 
 				vector.addElement(path_t);
-			}// while(pathIt)
+			}
 			pathIt.close();
 			path_ts = new MapPathProtoElement_Transferable[vector.size()];
 			vector.copyInto(path_ts);
@@ -1509,184 +1480,6 @@ public class MapdbInterfaceProto
 
 		return Constants.ERROR_NO_ERROR;
 	}
-/*
-	public static int loadProtoConnectionPoints(
-			MapConnectionPointElementSeq_TransferableHolder cpointseq)
-	{
-		int count;
-		MapConnectionPointElement_Transferable cp_t;
-		Vector vector = new Vector();
-		MapConnectionPointElement_Transferable cp_ts[];
-		MapConnectionPointIterator cpIt = null;
-		String It_id = "";
-		String It_name = "";
-		String It_description = "";
-		String It_map_id = "";
-		String It_in_out = "";
-		String It_element_id = "";
-		String It_physical_link_id = "";
-
-		String It_interface_id = "";
-		String It_port_id = "";
-		String It_port_local_id = "";
-		String It_port_type_id = "";
-		String It_test_port_id = "";
-		String It_test_port_type_id = "";
-		String It_test_port_local_id = "";
-		String It_access_port_id = "";
-		String It_access_port_type_id = "";
-		String It_access_port_local_id = "";
-
-		boolean It_is_test_port = false;
-		boolean It_is_access_port = false;
-		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
-
-		String It_e_id = "";
-		String It_attribute_id = "";
-		String It_attribute_type_id = "";
-		String It_attribute_value = "";
-		String It_attribute_name = "";
-		Vector vector2 = new Vector();
-		ElementAttributeIterator eaIt = null;
-
-		try
-		{
-			#sql cpIt = { select
-					ID,
-					NAME,
-					DESCRIPTION,
-					MAP_ID,
-					IN_OUT,
-					ELEMENT_ID,
-					PHYSICAL_LINK_ID,
-
-					INTERFACE_ID,
-					PORT_ID,
-					PORT_LOCAL_ID,
-					PORT_TYPE_ID,
-					TEST_PORT_ID,
-					TEST_PORT_TYPE_ID,
-					TEST_PORT_LOCAL_ID,
-					ACCESS_PORT_ID,
-					ACCESS_PORT_TYPE_ID,
-					ACCESS_PORT_LOCAL_ID,
-
-					IS_TEST_PORT,
-					IS_ACCESS_PORT
-					from AMFICOM.MAPCONNECTIONPOINTELEMENT
-				where MAP_ID is null
-			};
-
-			count = 0;
-			while (cpIt.next())
-			{
-				count ++;
-
-				try { It_id = cpIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_name = cpIt.name(); }
-				catch(SQLException e) { }
-				if(It_name == null) It_name = "";
-				try { It_description = cpIt.description(); }
-				catch(SQLException e) { }
-				if(It_description == null) It_description = "";
-				try { It_map_id = cpIt.map_id(); }
-				catch(SQLException e) { }
-				if(It_map_id == null) It_map_id = "";
-				try { It_in_out = cpIt.in_out(); }
-				catch(SQLException e) { }
-				if(It_in_out == null) It_in_out = "";
-				try { It_element_id = cpIt.element_id(); }
-				catch(SQLException e) { }
-				if(It_element_id == null) It_element_id = "";
-				try { It_physical_link_id = cpIt.physical_link_id(); }
-				catch(SQLException e) { }
-				if(It_physical_link_id == null) It_physical_link_id = "";
-
-				try { It_interface_id = cpIt.interface_id(); }
-				catch(SQLException e) { }
-				if(It_interface_id == null) It_interface_id = "";
-				try { It_port_id = cpIt.port_id(); }
-				catch(SQLException e) { }
-				if(It_port_id == null) It_port_id = "";
-				try { It_port_local_id = cpIt.port_local_id(); }
-				catch(SQLException e) { }
-				if(It_port_local_id == null) It_port_local_id = "";
-				try { It_port_type_id = cpIt.port_type_id(); }
-				catch(SQLException e) { }
-				if(It_port_type_id == null) It_port_type_id = "";
-				try { It_test_port_id = cpIt.test_port_id(); }
-				catch(SQLException e) { }
-				if(It_test_port_id == null) It_test_port_id = "";
-				try { It_test_port_type_id = cpIt.test_port_type_id(); }
-				catch(SQLException e) { }
-				if(It_test_port_type_id == null) It_test_port_type_id = "";
-				try { It_test_port_local_id = cpIt.test_port_local_id(); }
-				catch(SQLException e) { }
-				if(It_test_port_local_id == null) It_test_port_local_id = "";
-				try { It_access_port_id = cpIt.access_port_id(); }
-				catch(SQLException e) { }
-				if(It_access_port_id == null) It_access_port_id = "";
-				try { It_access_port_type_id = cpIt.access_port_type_id(); }
-				catch(SQLException e) { }
-				if(It_access_port_type_id == null) It_access_port_type_id = "";
-				try { It_access_port_local_id = cpIt.access_port_local_id(); }
-				catch(SQLException e) { }
-				if(It_access_port_local_id == null) It_access_port_local_id = "";
-
-				try { It_is_test_port = (cpIt.is_test_port() == 0)? false:true; }
-				catch(SQLException e) { }
-				try { It_is_access_port = (cpIt.is_access_port() == 0)? false:true; }
-				catch(SQLException e) { }
-
-				vector2 = MapdbInterfaceLoad4.loadAttributes(
-						"MAPCPELEMENTATTRIBUTES",
-						"MAP_CP_ELEMENT_ID",
-						It_id);
-				attributes = new ElementAttribute_Transferable[vector2.size()];
-				vector2.copyInto(attributes);
-
-				cp_t = new MapConnectionPointElement_Transferable(
-						It_id,
-						It_name,
-						It_description,
-						It_physical_link_id,
-						It_in_out,
-						It_map_id,
-						It_element_id,
-
-							It_interface_id,
-							It_port_id,
-							It_port_local_id,
-							It_port_type_id,
-							It_test_port_id,
-							It_test_port_type_id,
-							It_test_port_local_id,
-							It_access_port_id,
-							It_access_port_type_id,
-							It_access_port_local_id,
-						It_is_test_port,
-						It_is_access_port,
-						attributes);
-
-				vector.addElement(cp_t);
-			}// while(cpIt)
-			cpIt.close();
-			cp_ts = new MapConnectionPointElement_Transferable[vector.size()];
-			vector.copyInto(cp_ts);
-			cpointseq.value = cp_ts;
-
-		}
-		catch(SQLException e)
-		{
-			System.out.println("error loading connection points: " + e.getMessage());
-			e.printStackTrace();
-			return Constants.ERROR_LOADING;
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-*/
 
 	#sql public static iterator IdIterator ( String id );
 	#sql public static iterator CableTypeIdIterator ( String cable_type_id );
@@ -1786,14 +1579,6 @@ public class MapdbInterfaceProto
 		String link_id,
 		String link_type_id);
 
-/*		String port_id,
-		String local_address,
-		String interface_id,
-		String port_type_id,
-		String access_port_type_id,
-		String path_id,
-		String access_port_id,
-*/
 	#sql public static iterator MapConnectionPointIterator (
 		String id,
 		String name,

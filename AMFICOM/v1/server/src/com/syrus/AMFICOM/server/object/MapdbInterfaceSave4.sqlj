@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceSave4.sqlj,v 1.1.2.1 2004/08/20 14:03:47 bass Exp $
+ * $Id: MapdbInterfaceSave4.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:47 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -43,7 +43,6 @@ public class MapdbInterfaceSave4
 				};
 				if(count == 0)
 				{
-//					System.out.println("ism map " + mapseq[i].id + " not found in database");
 					throw new SQLException("do insert!");
 				}
 				System.out.println("update ism map " + mapseq[i].id);
@@ -135,89 +134,13 @@ public class MapdbInterfaceSave4
 				};
 				if(count == 0)
 				{
-//					System.out.println("kis " + kisseq[i].id + " not found in database");
 					throw new SQLException("do insert!");
 				}
 				System.out.println("update KIS element " + kisseq[i].id);
-/*				
-				try
-				{
-					#sql {
-						update AMFICOM.MAPKISELEMENTS
-							set
-								SCHEME_KIS_ELEMENT_ID = :(kisseq[i].scheme_kis_element_id),
-								OWNER_ID = :(kisseq[i].owner_id),
-								LATITUDE = :(kisseq[i].latitude),
-								NAME = :(kisseq[i].name),
-								SYMBOL_ID = :(kisseq[i].symbol_id),
-								TYPE_ID = :(kisseq[i].type_id),
-								DESCRIPTION = :(kisseq[i].description),
-								LONGITUDE = :(kisseq[i].longitude),
-								CODENAME = :(kisseq[i].codename),
-								ID = :(kisseq[i].id),
-								MAP_ID = :(kisseq[i].map_id),
-								ISM_MAP_ID = :(kisseq[i].ism_map_id),
-								KIS_ID = :(kisseq[i].KIS_id),
-								KIS_TYPE_ID = :(kisseq[i].KIS_type_id)
-							where ID = :(kisseq[i].id)
-					};
-					#sql { commit };
-				}
-				catch(SQLException e)
-				{
-					System.out.println("error saVing KIS elements: " + e.getMessage());
-					e.printStackTrace();
-					return Constants.ERROR_UPDATING;
-				}
-*/
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new KIS element " + kisseq[i].id);
-/*
-				try
-				{
-					#sql {
-						insert into AMFICOM.MAPKISELEMENTS(
-								SCHEME_KIS_ELEMENT_ID,
-								OWNER_ID,
-								LATITUDE,
-								NAME,
-								SYMBOL_ID,
-								TYPE_ID,
-								DESCRIPTION,
-								LONGITUDE,
-								CODENAME,
-								ID,
-								MAP_ID,
-								ISM_MAP_ID,
-								KIS_ID,
-								KIS_TYPE_ID)
-							values(
-								:(kisseq[i].scheme_kis_element_id),
-								:(kisseq[i].owner_id),
-								:(kisseq[i].latitude),
-								:(kisseq[i].name),
-								:(kisseq[i].symbol_id),
-								:(kisseq[i].type_id),
-								:(kisseq[i].description),
-								:(kisseq[i].longitude),
-								:(kisseq[i].codename),
-								:(kisseq[i].id),
-								:(kisseq[i].map_id),
-								:(kisseq[i].ism_map_id),
-								:(kisseq[i].KIS_id),
-								:(kisseq[i].KIS_type_id) )
-					};
-					#sql { commit };
-				}
-				catch(SQLException ex)
-				{
-					System.out.println("error saVing KIS elements: " + ex.getMessage());
-					ex.printStackTrace();
-					return Constants.ERROR_SAVING;
-				}
-*/
 			}
 			MapdbInterfaceSave3.saveAttributes(
 					"MAPKISELEMENTATTRIBUTES",
@@ -248,7 +171,6 @@ public class MapdbInterfaceSave4
 				};
 				if(count == 0)
 				{
-//					System.out.println("path " + pathseq[i].id + " not found in database");
 					throw new SQLException("do insert!");
 				}
 				System.out.println("update path " + pathseq[i].id);
@@ -377,8 +299,8 @@ public class MapdbInterfaceSave4
 						System.out.println("error generating path link: " + exxx.getMessage());
 					}
 				}
-			}//for (path links)
-		}// for (paths)
+			}
+		}
 		return Constants.ERROR_NO_ERROR;
 	}
 }

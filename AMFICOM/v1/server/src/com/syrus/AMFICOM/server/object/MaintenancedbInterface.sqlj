@@ -1,5 +1,5 @@
 /*
- * $Id: MaintenancedbInterface.sqlj,v 1.1.2.1 2004/08/20 14:03:47 bass Exp $
+ * $Id: MaintenancedbInterface.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import java.util.*;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:47 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -132,7 +132,7 @@ public class MaintenancedbInterface
 					rules);
 
 				vec.add(est);
-			}// while(estIt)
+			}
 		}
 		catch (SQLException e)
 		{
@@ -201,7 +201,7 @@ public class MaintenancedbInterface
 					It_message_type_id);
 
 				vec.add(am);
-			}// while(amIt)
+			}
 		}
 		catch (SQLException e)
 		{
@@ -270,7 +270,7 @@ public class MaintenancedbInterface
 					It_alerting_message_id);
 
 				vec.add(amu);
-			}// while(amuIt)
+			}
 		}
 		catch (SQLException e)
 		{
@@ -316,7 +316,6 @@ public class MaintenancedbInterface
 		}
 		catch (SQLException e)
 		{
-//			e.printStackTrace();
 			System.out.println("AlertingMessage exists - updating...");
 			try
 			{
@@ -361,7 +360,6 @@ public class MaintenancedbInterface
 		}
 		catch (SQLException e)
 		{
-//			e.printStackTrace();
 			System.out.println("AlertingMessageUser exists - updating...");
 			try
 			{
@@ -424,151 +422,9 @@ public class MaintenancedbInterface
 		String alerting_type_id,
 		String user_id );
 
-
-
-
-
-
-
 	public static int getAlarms(
 			AlarmSeq_TransferableHolder alarmseq)
 	{
-/*
-		String It_source_id = "";
-		long It_fixed = 0;
-		long It_appointed = 0;
-		String It_comments = "";
-		long It_time_to_fix = 0;
-		String It_alarm_type_id = "";
-		String It_alarm_type_name = "";
-		String It_fixed_by = "";
-		String It_alarm_rule_id = "";
-		String It_alarm_rule_name = "";
-		int It_status = 0;
-		int It_priority = 0;
-		String It_appointed_to = "";
-		String It_id = "";
-		long It_generated = 0;
-		long It_reacted = 0;
-
-		Vector vector = new Vector();
-
-		Alarm_Transferable a_t;
-		Alarm_Transferable[] a_ts;
-		AlarmIterator aIt = null;
-		Vector vector2;
-
-		try
-		{
-			#sql aIt = {
-				select
-						SOURCE_ID,
-						FIXED,
-						APPOINTED,
-						COMMENTS,
-						TIME_TO_FIX,
-						ALARM_TYPE_ID,
-						FIXED_BY,
-						ALARM_RULE_ID,
-						STATUS,
-						PRIORITY,
-						APPOINTED_TO,
-						ID,
-						GENERATED,
-						REACTED
-					from AMFICOM.ALARMS
-			};
-
-			while (aIt.next())
-			{
-				try { It_source_id = aIt.source_id(); }
-				catch (SQLException e) { }
-				if(It_source_id == null) It_source_id = "";
-				try { It_fixed = aIt.fixed().getTime(); }
-				catch (Exception e) { }
-				try { It_appointed = aIt.appointed().getTime(); }
-				catch (Exception e) { }
-				try { It_comments = aIt.comments(); }
-				catch (SQLException e) { }
-				if(It_comments == null) It_comments = "";
-				try { It_time_to_fix = aIt.time_to_fix().getTime(); }
-				catch (Exception e) { }
-				try { It_alarm_type_id = aIt.alarm_type_id(); }
-				catch (SQLException e) { }
-				if(It_alarm_type_id == null) It_alarm_type_id = "";
-				try { It_fixed_by = aIt.fixed_by(); }
-				catch (SQLException e) { }
-				if(It_fixed_by == null) It_fixed_by = "";
-				try { It_alarm_rule_id = aIt.alarm_rule_id(); }
-				catch (SQLException e) { }
-				if(It_alarm_rule_id == null) It_alarm_rule_id = "";
-				try { It_status = aIt.status(); }
-				catch (SQLException e) { }
-				try { It_priority = aIt.priority(); }
-				catch (SQLException e) { }
-				try { It_appointed_to = aIt.appointed_to(); }
-				catch (SQLException e) { }
-				if(It_appointed_to == null) It_appointed_to = "";
-				try { It_id = aIt.id(); }
-				catch (SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_generated = aIt.generated().getTime(); }
-				catch (Exception e) { }
-				try { It_reacted = aIt.reacted().getTime(); }
-				catch (Exception e) { }
-
-				#sql { select NAME into :It_alarm_type_name
-					from AMFICOM.ALARMTYPES
-						where ID = :It_alarm_type_id };
-
-				#sql { select NAME into :It_alarm_rule_name
-					from AMFICOM.ALARMRULES
-						where ID = :It_alarm_rule_id };
-
-				a_t = new Alarm_Transferable(
-					It_id,
-					It_generated,
-					It_source_id,
-					It_fixed,
-					It_appointed,
-					It_comments,
-					It_time_to_fix,
-					It_alarm_type_id,
-					It_alarm_type_name,
-					It_fixed_by,
-					It_alarm_rule_id,
-					It_alarm_rule_name,
-					It_status,
-					It_appointed_to,
-					It_reacted,
-					);
-
-				vector.add(a_t);
-			}// while(aIt)
-			a_ts = new Alarm_Transferable[vector.size()];
-			vector.copyInto(a_ts);
-			alarmseq.value = a_ts;
-
-		}
-		catch (SQLException e)
-		{
-			System.out.println("error loading alarms: " + e.getMessage());
-			return Constants.ERROR_LOADING;
-		}
-		finally
-		{
-			try
-			{
-				aIt.close();
-			}
-			catch (NullPointerException npe)
-			{
-			}
-			catch (SQLException sqle)
-			{
-			}
-		}
-*/
 		return Constants.ERROR_NO_ERROR;
 	}
 
@@ -579,10 +435,6 @@ public class MaintenancedbInterface
 		String id_v = ResourcedbInterface.getUId("systemevent");
 
 		String src_id = source_id;
-/*
-		#sql { select ID into :src_id from AMFICOM.SYSTEMEVENTSOURCES
-				where SOURCE_ID = :source_id };
-*/
 		System.out.println("Regevent: " + id_v + " on " + src_id + " type " + event_type);
 		#sql {
 			insert into EVENTS(ID, CREATED, SOURCE_ID, TYPE_ID, DESCRIPTOR, STATUS)
@@ -668,7 +520,7 @@ public class MaintenancedbInterface
 							{
 							}
 						}
-					}//while residIt
+					}
 				}
 				catch (Exception e)
 				{
@@ -686,7 +538,7 @@ public class MaintenancedbInterface
 					{
 					}
 				}
-			}// while idIt
+			}
 
 			alarmids.value = new ResourceDescriptor_Transferable[arrayList.size()];
 			alarmids.value = (ResourceDescriptor_Transferable[]) arrayList.toArray(alarmids.value);

@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceLoad5.sqlj,v 1.1.2.1 2004/08/20 14:03:47 bass Exp $
+ * $Id: MapdbInterfaceLoad5.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Vector;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:47 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -142,7 +142,7 @@ public class MapdbInterfaceLoad5
 
 					images.add(It_symbol_id);
 					vector.addElement(node_t);
-				}// while(nodeIt)
+				}
 				nodeIt.close();
 				node_ts = new MapPhysicalNodeElement_Transferable[vector.size()];
 				vector.copyInto(node_ts);
@@ -282,7 +282,7 @@ public class MapdbInterfaceLoad5
 							attributes);
 
 					vector.addElement(nl_t);
-				}// while(nlIt)
+				}
 				nlIt.close();
 				nl_ts = new MapNodeLinkElement_Transferable[vector.size()];
 				vector.copyInto(nl_ts);
@@ -365,7 +365,6 @@ public class MapdbInterfaceLoad5
 		for(int j = 0; j < mapcount; j++)
 		{
 			current_map_id = (String) map_ids.get(j);
-//			System.out.println("retreive links for " + current_map_id);
 			try
 			{
 				#sql linkIt = { select
@@ -384,7 +383,6 @@ public class MapdbInterfaceLoad5
 					where ISM_MAP_ID = :current_map_id
 					};
 
-//				System.out.println("sql ok - getting values");
 				count = 0;
 				while (linkIt.next())
 				{
@@ -428,7 +426,6 @@ public class MapdbInterfaceLoad5
 					attributes = new ElementAttribute_Transferable[vector2.size()];
 					vector2.copyInto(attributes);
 
-//					System.out.println("getting node links for " + It_id);
 					vector2 = new Vector();
 					try
 					{
@@ -466,7 +463,7 @@ public class MapdbInterfaceLoad5
 							nodelink_ids);
 
 					vector.addElement(link_t);
-				}// while(linkIt)
+				}
 				linkIt.close();
 				link_ts = new MapPhysicalLinkElement_Transferable[vector.size()];
 				vector.copyInto(link_ts);

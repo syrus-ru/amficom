@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceProtoSave.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ * $Id: SchemedbInterfaceProtoSave.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -41,7 +41,6 @@ public class SchemedbInterfaceProtoSave
 		{
 			vec.add(ports[i]);
 			id_vec.add(ports[i].id);
-//			System.out.println("id_vec: " + ports[i].id);
 		}
 
 		try
@@ -52,10 +51,8 @@ public class SchemedbInterfaceProtoSave
 
 			while (idIt.next())
 			{
-//				System.out.println("check port " + idIt.scheme_port_id());
 				if(id_vec.contains(idIt.scheme_port_id()))
 				{
-					//update
 					index = id_vec.indexOf(idIt.scheme_port_id());
 					System.out.println("update port " + ports[index].id);
 					int is_a_p = (ports[index].is_access_port)? 1 : 0;
@@ -216,7 +213,6 @@ public class SchemedbInterfaceProtoSave
 			{
 				if(id_vec.contains(idIt.scheme_cable_port_id()))
 				{
-					//update
 					index = id_vec.indexOf(idIt.scheme_cable_port_id());
 					System.out.println("update port " + ports[index].id);
 					int is_a_p = (ports[index].is_access_port)? 1 : 0;

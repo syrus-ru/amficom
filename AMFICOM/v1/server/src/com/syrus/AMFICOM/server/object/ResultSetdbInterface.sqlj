@@ -1,5 +1,5 @@
 /*
- * $Id: ResultSetdbInterface.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: ResultSetdbInterface.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -102,7 +102,7 @@ public class ResultSetdbInterface
 					It_comments);
 
 				vector.add(rs_t);
-			}// while(rsIt)
+			}
 			rsIt.close();
 			rs_ts = new ResultSet_Transferable[vector.size()];
 			vector.copyInto(rs_ts);
@@ -211,7 +211,7 @@ public class ResultSetdbInterface
 					It_comments);
 
 				vector.add(rs_t);
-			}// while(rsIt)
+			}
 			rsIt.close();
 			rs_ts = new ResultSet_Transferable[vector.size()];
 			vector.copyInto(rs_ts);
@@ -239,7 +239,6 @@ public class ResultSetdbInterface
 	public static int getResultIds(
 			String result_set_id,
 			ResourceDescriptorSeq_TransferableHolder result_ids)
-//			wstringSeqHolder result_ids)
 	{
 		String It_id = "";
 		Vector vector = new Vector();
@@ -260,7 +259,7 @@ public class ResultSetdbInterface
 				catch(SQLException e) { }
 				if(It_id != null)
 					vector.add(new ResourceDescriptor_Transferable(It_id, idIt.elementary_start_time().getTime()));
-			}// while(idIt)
+			}
 			idIt.close();
 
 			result_ids.value = new ResourceDescriptor_Transferable[vector.size()];
@@ -289,7 +288,6 @@ public class ResultSetdbInterface
 			String result_set_id,
 			String me_id,
 			ResourceDescriptorSeq_TransferableHolder result_ids)
-//			wstringSeqHolder result_ids)
 	{
 		String It_id = "";
 		String It_test_id = "";
@@ -328,7 +326,7 @@ public class ResultSetdbInterface
 						{
 						}
 					}
-			}// while(idIt)
+			}
 			idIt.close();
 
 			result_ids.value = new ResourceDescriptor_Transferable[vector.size()];

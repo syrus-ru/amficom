@@ -1,5 +1,5 @@
 /*
- * $Id: NetdbInterfaceSave.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: NetdbInterfaceSave.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -86,73 +86,7 @@ public class NetdbInterfaceSave
 			exx.printStackTrace();
 		}
 	}
-/*
-	public static void saveCharacteristics2(
-			String charTable,
-			String charField,
-			String element_id,
-			Characteristic_Transferable[] characteristics)
-	{
-		int count;
-		int len2;
-		int j;
 
-		len2 = characteristics.length;
-		for(j = 0; j < len2; j++)
-		{
-			try
-			{
-				IdIterator idIt = null;
-				String qry = "select ID from AMFICOM." + charTable +
-						" where " + charField + " = '" + element_id +
-						"' and CHARACTERISTIC_TYPE_ID = '" + characteristics[j].type_id;
-				#sql {
-					BEGIN
-						open :OUT idIt for :qry;
-					END;
-				};
-				if(idIt.next())
-				{
-//					System.out.println("update characteristic " + characteristics[j].id);
-					String id = idIt.id();
-					String qry2 = "update AMFICOM." + charTable +
-						" set VALUE = '" + characteristics[j].value +
-						"' where ID = '" + id + "'";
-					#sql {
-						BEGIN
-							execute immediate :qry2;
-						END;
-					};
-				}
-				else
-				{
-					String at_s = ResourcedbInterface.getUId("characteristic");
-					String query = "insert into AMFICOM." +
-						charTable + "(ID, CHARACTERISTIC_TYPE_ID, VALUE, " +
-						charField + ") values('" + at_s + "', '" +
-						characteristics[j].type_id + "', '" +
-						characteristics[j].value + "', '" +
-						element_id + "')";
-					#sql {
-						BEGIN
-							execute immediate :query;
-						END;
-					};
-					#sql { commit };
-				}
-			}
-			catch(SQLException exx)
-			{
-				System.out.println("error saVing characteristic: " + exx.getMessage());
-				exx.printStackTrace();
-			}
-			catch(Exception exxx)
-			{
-				System.out.println("error generating characteristic: " + exxx.getMessage());
-			}
-		}//for (characteristics)
-	}
-*/
 	public static int savePorts(
 			Port_Transferable[] ports)
 	{
@@ -227,19 +161,6 @@ public class NetdbInterfaceSave
 								 :(ports[i].type_id),
 								 :(ports[i].domain_id) )
 					};
-/*
-					String at_s = ResourcedbInterface.getUId("port");
-					#sql {
-						insert into AMFICOM.EQUIPMENTPORTS(
-								ID,
-								EQUIPMENT_ID,
-								PORT_ID)
-							values(
-								:at_s,
-								:(ports[i].equipment_id),
-								:(ports[i].id) )
-					};
-*/
 					#sql { commit };
 				}
 				catch(SQLException ex)
@@ -656,7 +577,6 @@ public class NetdbInterfaceSave
 			{
 				if(id_vec.contains(idIt.id()))
 				{
-					//update
 					index = id_vec.indexOf(idIt.id());
 					System.out.println("update cable thread " + threads[index].id);
 					try

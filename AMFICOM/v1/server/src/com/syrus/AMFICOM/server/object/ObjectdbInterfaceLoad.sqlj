@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectdbInterfaceLoad.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: ObjectdbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import oracle.sql.BLOB;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -94,13 +94,11 @@ public class ObjectdbInterfaceLoad
 				if(It_codename == null) It_codename = "";
 				try { It_created = exIt.created().getTime(); }
 				catch(Exception e) { }
-//				if(It_created == null) It_created = 0;
 				try { It_created_by = exIt.created_by(); }
 				catch(SQLException e) { }
 				if(It_created_by == null) It_created_by = "";
 				try { It_modified = exIt.modified().getTime(); }
 				catch(Exception e) { }
-//				if(It_modified == null) It_modified = 0;
 				try { It_modified_by = exIt.modified_by(); }
 				catch(SQLException e) { }
 				if(It_modified_by == null) It_modified_by = "";
@@ -131,7 +129,6 @@ public class ObjectdbInterfaceLoad
 				}
 				category_ids = new String[vector2.size()];
 				vector2.copyInto(category_ids);
-//				System.out.println("found " + vector2.size() + " categories for exec " + It_id);
 
 				vector2 = new Vector();
 				try
@@ -153,7 +150,6 @@ public class ObjectdbInterfaceLoad
 				}
 				group_ids = new String[vector2.size()];
 				vector2.copyInto(group_ids);
-//				System.out.println("found " + vector2.size() + " groups for exec " + It_id);
 
 				opa = new ObjectPermissionAttributes_Transferable(
 							It_id,
@@ -173,7 +169,7 @@ public class ObjectdbInterfaceLoad
 
 							It_whyrejected);
 
-			}// while(exIt)
+			}
 			exIt.close();
 		}
 		catch(SQLException e)
@@ -347,7 +343,7 @@ public class ObjectdbInterfaceLoad
 					It_opa);
 
 				vector.add(d_t);
-			}// while(dIt)
+			}
 			dIt.close();
 			d_ts = new Domain_Transferable[vector.size()];
 			vector.copyInto(d_ts);
@@ -553,7 +549,6 @@ public class ObjectdbInterfaceLoad
 				
 				user_ids = new String[vector2.size()];
 				vector2.copyInto(user_ids);
-//				System.out.println("found " + vector2.size() + " users for category " + It_id);
 
 				c_t = new OperatorCategory_Transferable(
 					It_id,
@@ -564,7 +559,7 @@ public class ObjectdbInterfaceLoad
 					user_ids);
 
 				vector.add(c_t);
-			}// while(cIt)
+			}
 			cIt.close();
 			c_ts = new OperatorCategory_Transferable[vector.size()];
 			vector.copyInto(c_ts);
@@ -759,8 +754,6 @@ public class ObjectdbInterfaceLoad
 
 		String [] user_ids = new String[0];
 		String [] exec_ids = new String[0];
-//		String [] role_ids = new String[0];
-//		String [] privilege_ids = new String[0];
 
 		Vector vector = new Vector();
 
@@ -843,7 +836,6 @@ public class ObjectdbInterfaceLoad
 				
 				user_ids = new String[vector2.size()];
 				vector2.copyInto(user_ids);
-//				System.out.println("found " + vector2.size() + " users for group " + It_id);
 
 				vector2 = new Vector();
 				try
@@ -887,7 +879,7 @@ public class ObjectdbInterfaceLoad
 					exec_ids);
 
 				vector.add(g_t);
-			}// while(gIt)
+			}
 			gIt.close();
 			g_ts = new OperatorGroup_Transferable[vector.size()];
 			vector.copyInto(g_ts);
@@ -912,21 +904,7 @@ public class ObjectdbInterfaceLoad
 		
 		return Constants.ERROR_NO_ERROR;
 	}
-/*
-	public static int loadRoles(
-			OperatorRoleSeq_TransferableHolder roleseq,
-			Vector images)
-	{
-		return Constants.ERROR_NO_ERROR;
-	}
 
-	public static int loadPrivileges(
-			OperatorPrivilegeSeq_TransferableHolder privilegeseq,
-			Vector images)
-	{
-		return Constants.ERROR_NO_ERROR;
-	}
-*/
 	public static int loadProfiles(
 			OperatorProfileSeq_TransferableHolder profileseq,
 			String []profile_ids)
@@ -1105,8 +1083,6 @@ public class ObjectdbInterfaceLoad
             else
             	It_password = ByteArrayDatabase.toByteArray(It_password_blob);
 
-//			if(It_password_expiry == null)
-//				It_password_expiry = 0L;
 			if(It_last_login == null)
 				It_last_login = new Timestamp(System.currentTimeMillis());
 			if(It_status == null) It_status = "";
@@ -1203,13 +1179,11 @@ public class ObjectdbInterfaceLoad
 
 						It_login,
 						It_password,
-//						Rewriter.read(It_password),
 						It_password_expiry,
 
 						It_last_login.getTime(),
 						It_status,
 						It_state,
-//						It_disabled.getTime(),
 						It_password_expiry,
 						It_disabled_comments,
 
@@ -1295,10 +1269,7 @@ public class ObjectdbInterfaceLoad
 		String It_e_mail = "";
 
 		String[] category_ids = new String[0];
-//		String[] object_ids = new String[0];
-//		String[] role_ids = new String[0];
 		String[] group_ids = new String[0];
-//		String[] privilege_ids = new String[0];
 
 		OperatorProfile_Transferable[] op_ts;
 		OperatorProfile_Transferable op_t;
@@ -1371,13 +1342,11 @@ public class ObjectdbInterfaceLoad
 				if(It_description == null) It_description = "";
 				try { It_created = opIt.created().getTime(); }
 				catch(Exception e) { }
-//				if(It_created == null) It_created = 0;
 				try { It_created_by = opIt.created_by(); }
 				catch(SQLException e) { }
 				if(It_created_by == null) It_created_by = "";
 				try { It_modified = opIt.modified().getTime(); }
 				catch(Exception e) { }
-//				if(It_modified == null) It_modified = 0;
 				try { It_modified_by = opIt.modified_by(); }
 				catch(SQLException e) { }
 				if(It_modified_by == null) It_modified_by = "";
@@ -1395,20 +1364,16 @@ public class ObjectdbInterfaceLoad
 				if(It_password == null) It_password = new byte[0];
 				try { It_password_expiry = opIt.password_expiry(); }
 				catch(Exception e) { }
-//				if(It_password_expiry == null) It_password_expiry = 0;
 				try { It_last_login = opIt.last_login().getTime(); }
 				catch(Exception e) { }
-//				if(It_last_login == null) It_last_login = 0;
 				try { It_status = opIt.status(); }
 				catch(SQLException e) { }
 				if(It_status == null) It_status = "";
 				try { It_state = opIt.state(); }
 				catch(SQLException e) { }
 				if(It_state == null) It_state = "";
-//				try { It_disabled = opIt.disabled().getTime(); }
 				try { It_disabled = opIt.password_expiry(); }
 				catch(Exception e) { }
-//				if(It_disabled == null) It_disabled = 0;
 				try { It_disabled_comments = opIt.disabled_comments(); }
 				catch(SQLException e) { }
 				if(It_disabled_comments == null) It_disabled_comments = "";
@@ -1488,7 +1453,6 @@ public class ObjectdbInterfaceLoad
 				
 				category_ids = new String[vector2.size()];
 				vector2.copyInto(category_ids);
-//				System.out.println("found " + vector2.size() + " categories for profile " + It_id);
 
 				vector2 = new Vector();
 				try
@@ -1517,7 +1481,6 @@ public class ObjectdbInterfaceLoad
 				
 				group_ids = new String[vector2.size()];
 				vector2.copyInto(group_ids);
-//				System.out.println("found " + vector2.size() + " groups for profile " + It_id);
 
 				op_t = new OperatorProfile_Transferable(
 							It_id,
@@ -1535,7 +1498,6 @@ public class ObjectdbInterfaceLoad
 
 							It_login,
 							It_password,
-//							Rewriter.read(It_password),
 							It_password_expiry,
 
 							It_last_login,
@@ -1549,10 +1511,7 @@ public class ObjectdbInterfaceLoad
 							It_logfile,
 
 							category_ids,
-//							object_ids,
-//							role_ids,
 							group_ids,
-//							privilege_ids,
 
 							It_first_name,
 							It_second_name,
@@ -1572,7 +1531,7 @@ public class ObjectdbInterfaceLoad
 							It_e_mail);
 
 				vector.addElement(op_t);
-			}// while(opIt)
+			}
 			opIt.close();
 			op_ts = new OperatorProfile_Transferable[vector.size()];
 			vector.copyInto(op_ts);
@@ -1664,13 +1623,11 @@ public class ObjectdbInterfaceLoad
 				if(It_codename == null) It_codename = "";
 				try { It_created = exIt.created().getTime(); }
 				catch(Exception e) { }
-//				if(It_created == null) It_created = 0;
 				try { It_created_by = exIt.created_by(); }
 				catch(SQLException e) { }
 				if(It_created_by == null) It_created_by = "";
 				try { It_modified = exIt.modified().getTime(); }
 				catch(Exception e) { }
-//				if(It_modified == null) It_modified = 0;
 				try { It_modified_by = exIt.modified_by(); }
 				catch(SQLException e) { }
 				if(It_modified_by == null) It_modified_by = "";
@@ -1706,7 +1663,6 @@ public class ObjectdbInterfaceLoad
 				
 				category_ids = new String[vector2.size()];
 				vector2.copyInto(category_ids);
-//				System.out.println("found " + vector2.size() + " categories for exec " + It_id);
 
 				vector2 = new Vector();
 				try
@@ -1735,7 +1691,6 @@ public class ObjectdbInterfaceLoad
 				
 				group_ids = new String[vector2.size()];
 				vector2.copyInto(group_ids);
-//				System.out.println("found " + vector2.size() + " groups for exec " + It_id);
 
 				ex_t = new CommandPermissionAttributes_Transferable(
 							It_id,
@@ -1756,7 +1711,7 @@ public class ObjectdbInterfaceLoad
 							It_whyrejected);
 
 				vector.addElement(ex_t);
-			}// while(exIt)
+			}
 			exIt.close();
 			ex_ts = new CommandPermissionAttributes_Transferable[vector.size()];
 			vector.copyInto(ex_ts);
@@ -1895,7 +1850,6 @@ public class ObjectdbInterfaceLoad
 				
 				category_ids = new String[vector2.size()];
 				vector2.copyInto(category_ids);
-//				System.out.println("found " + vector2.size() + " categories for profile " + It_id);
 
 				vector2 = new Vector();
 				try
@@ -1924,7 +1878,6 @@ public class ObjectdbInterfaceLoad
 				
 				group_ids = new String[vector2.size()];
 				vector2.copyInto(group_ids);
-//				System.out.println("found " + vector2.size() + " groups for profile " + It_id);
 
 				u_t = new User_Transferable(
 					It_id,
@@ -1938,7 +1891,7 @@ public class ObjectdbInterfaceLoad
 					group_ids);
 
 				vector.add(u_t);
-			}// while(opIt)
+			}
 			uIt.close();
 			u_ts = new User_Transferable[vector.size()];
 			vector.copyInto(u_ts);

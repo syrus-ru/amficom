@@ -1,5 +1,5 @@
 /*
- * $Id: SurveydbInterfaceLoad3.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ * $Id: SurveydbInterfaceLoad3.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Vector;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -60,22 +60,17 @@ public class SurveydbInterfaceLoad3
 			};
 			while (trIt.next())
 			{
-//ID
 				try {It_id = trIt.id();}
 				catch(SQLNullException e) { }
 				if(It_id == null) It_id = "";
-//NAME
 				try {It_name = trIt.name();}
 				catch(SQLNullException e) { }
 				if(It_name == null) It_name = "";
-//CREATED
 				try	{It_created = (trIt.created()).getTime();}
 				catch(SQLNullException e){ }
 				catch(NullPointerException e){ }
-//TEST_TYPE_ID
 				try	{It_status = trIt.status();}
 				catch(SQLNullException e){ }
-//USER_ID
 				try {It_user_id = trIt.user_id();}
 				catch(SQLNullException e){ }
 				if(It_user_id == null) It_user_id = "";

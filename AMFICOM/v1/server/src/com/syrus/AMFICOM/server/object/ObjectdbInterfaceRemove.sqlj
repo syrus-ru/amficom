@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectdbInterfaceRemove.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: ObjectdbInterfaceRemove.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -140,47 +140,11 @@ public class ObjectdbInterfaceRemove
 
 	public static int removeRoles(String[] roleseq)
 	{
-/*
-		int i;
-		for(i = roleseq.length - 1; i >= 0; i--)
-		{
-			try
-			{
-				#sql { delete from AMFICOM.OPERATORROLES
-					where ID = :(roleseq[i]) };
-
-				#sql { commit };
-			}
-			catch(SQLException e)
-			{
-				System.out.println("Error deleting role: " + e.getMessage());
-				return Constants.ERROR_DELETING;
-			}
-		}
-*/
 		return Constants.ERROR_NO_ERROR;
 	}
 
 	public static int removePrivileges(String[] privilegeseq)
 	{
-/*
-		int i;
-		for(i = privilegeseq.length - 1; i >= 0; i--)
-		{
-			try
-			{
-				#sql { delete from AMFICOM.OPERATORPRIVILEGES
-					where ID = :(privilegeseq[i]) };
-
-				#sql { commit };
-			}
-			catch(SQLException e)
-			{
-				System.out.println("Error deleting privilege: " + e.getMessage());
-				return Constants.ERROR_DELETING;
-			}
-		}
-*/
 		return Constants.ERROR_NO_ERROR;
 	}
 

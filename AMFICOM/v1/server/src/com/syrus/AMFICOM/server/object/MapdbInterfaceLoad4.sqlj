@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceLoad4.sqlj,v 1.1.2.1 2004/08/20 14:03:47 bass Exp $
+ * $Id: MapdbInterfaceLoad4.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import sqlj.runtime.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:47 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -49,7 +49,6 @@ public class MapdbInterfaceLoad4
 								" where " + elementAttributeField +
 								" = '" + element_id + "'";
 
-//		System.out.println("Executing " + qry);
 
 		try
 		{
@@ -101,7 +100,7 @@ public class MapdbInterfaceLoad4
 					System.out.println("could not get attribute " + It_e_id + ": " + e.getMessage());
 					e.printStackTrace();
 				}
-			}// while(eaIt)
+			}
 			eaIt.close();
 		}
 		catch(SQLException e)
@@ -135,7 +134,6 @@ public class MapdbInterfaceLoad4
 						"from AMFICOM." + elementAttributeTable +
 							" where MAP_ID = '" + map_id + "'";
 
-//		System.out.println("Executing " + qry);
 
 		try
 		{
@@ -150,11 +148,6 @@ public class MapdbInterfaceLoad4
 			{
 				try { vector2.addElement(idIt.id()); }
 				catch(SQLNullException e) { }
-//				try { It_id = idIt.id(); }
-//  				catch(SQLException e) { }
-//				if(It_id == null) It_id = "";
-
-//				vector2.add(It_id);
 			}
 			idIt.close();
 		}
@@ -190,7 +183,6 @@ public class MapdbInterfaceLoad4
 						" from AMFICOM." + elementAttributeTable +
 							" where MAP_ID = '" + map_id + "'";
 
-//		System.out.println("Executing " + qry);
 
 		ConnectionContext connCtx = DefaultContext.getDefaultContext();
 		Statement statement = null;
@@ -244,7 +236,6 @@ public class MapdbInterfaceLoad4
 							" where MAP_ID = '" + map_id + "' " +
 							" and ISM_MAP_ID is null";
 
-//		System.out.println("Executing " + qry);
 
 		try
 		{
@@ -259,11 +250,6 @@ public class MapdbInterfaceLoad4
 			{
 				try { vector2.addElement(idIt.id()); }
 				catch(SQLNullException e) { }
-//				try { It_id = idIt.id(); }
-//  				catch(SQLException e) { }
-//				if(It_id == null) It_id = "";
-
-//				vector2.add(It_id);
 			}
 			idIt.close();
 		}
@@ -298,8 +284,6 @@ public class MapdbInterfaceLoad4
 						"from AMFICOM." + elementAttributeTable +
 							" where ISM_MAP_ID = '" + map_id + "'";
 
-//		System.out.println("Executing " + qry);
-
 		try
 		{
 			#sql
@@ -313,11 +297,6 @@ public class MapdbInterfaceLoad4
 			{
 				try { vector2.addElement(idIt.id()); }
 				catch(SQLNullException e) { }
-//				try { It_id = idIt.id(); }
-//  				catch(SQLException e) { }
-//				if(It_id == null) It_id = "";
-
-//				vector2.add(It_id);
 			}
 			idIt.close();
 		}
@@ -346,7 +325,6 @@ public class MapdbInterfaceLoad4
 	{
 		int count;
 		int mapcount = map_ids.length;
-//		Vector vector = new Vector();
 		String current_map_id = "";
 		ElementAttribute_Transferable[] attributes;
 		IdIterator idIt = null;
@@ -425,14 +403,7 @@ public class MapdbInterfaceLoad4
 			}
 
 		}
-
-//		attributes = new ElementAttribute_Transferable[vector.size()];
-//		vector.copyInto(attributes);
-
-//		attrseq.value = attributes;
-
 		return Constants.ERROR_NO_ERROR;
-
 	}
 
 	public static int reloadISMAttributes(
@@ -441,7 +412,6 @@ public class MapdbInterfaceLoad4
 	{
 		int count;
 		int mapcount = ism_map_ids.length;
-//		Vector vector = new Vector();
 		String current_ism_map_id = "";
 		String current_map_id = "";
 		ElementAttribute_Transferable[] attributes;
@@ -494,14 +464,7 @@ public class MapdbInterfaceLoad4
 			}
 
 		}
-
-//		attributes = new ElementAttribute_Transferable[vector.size()];
-//		vector.copyInto(attributes);
-
-//		attrseq.value = attributes;
-
 		return Constants.ERROR_NO_ERROR;
-
 	}
 
 	public static int loadAttributeTypes(
@@ -568,7 +531,7 @@ public class MapdbInterfaceLoad4
 					It_modified);
 
 				vector.add(ch_t);
-			}// while(chIt)
+			}
 			chIt.close();
 			ch_ts = new ElementAttributeType_Transferable[vector.size()];
 			vector.copyInto(ch_ts);
@@ -665,7 +628,7 @@ public class MapdbInterfaceLoad4
 					It_modified);
 
 				vector.add(ch_t);
-			}// while(chIt)
+			}
 			chIt.close();
 			ch_ts = new ElementAttributeType_Transferable[vector.size()];
 			vector.copyInto(ch_ts);

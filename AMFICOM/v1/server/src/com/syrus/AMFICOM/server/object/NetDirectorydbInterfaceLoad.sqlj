@@ -1,5 +1,5 @@
 /*
- * $Id: NetDirectorydbInterfaceLoad.sqlj,v 1.1.2.1 2004/08/20 14:03:47 bass Exp $
+ * $Id: NetDirectorydbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:47 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -44,7 +44,6 @@ public class NetDirectorydbInterfaceLoad
 								" where " + charLinkField +
 								" = '" + element_id + "'";
 
-//		System.out.println("Executing " + qry);
 
 		try
 		{
@@ -84,15 +83,6 @@ public class NetDirectorydbInterfaceLoad
 						It_characteristic_name = "";
 					if(It_characteristic_class == null)
 						It_characteristic_class = "";
-/*
-					System.out.println(" 2 ret char " +
-						" It_characteristic_id " + It_characteristic_id +
-						" It_characteristic_class " + It_characteristic_class +
-						" It_characteristic_name " + It_characteristic_name +
-						" It_characteristic_type_id " + It_characteristic_type_id +
-						" It_characteristic_value " + It_characteristic_value +
-						" It_characteristic_value_type_id " + It_characteristic_value_type_id);
-*/
 					Characteristic_Transferable ch =
 						new Characteristic_Transferable(
 							It_characteristic_id,
@@ -109,7 +99,7 @@ public class NetDirectorydbInterfaceLoad
 					System.out.println("could not get characteristic_type " + It_characteristic_id + ": " + e.getMessage());
 					e.printStackTrace();
 				}
-			}// while(chIt)
+			}
 			chIt.close();
 		}
 		catch(SQLException e)
@@ -197,7 +187,7 @@ public class NetDirectorydbInterfaceLoad
 					It_modified);
 
 				vector.add(ch_t);
-			}// while(chIt)
+			}
 			chIt.close();
 			ch_ts = new CharacteristicType_Transferable[vector.size()];
 			vector.copyInto(ch_ts);
@@ -315,7 +305,7 @@ public class NetDirectorydbInterfaceLoad
 					characteristics);
 
 				vector.add(pt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			pt_ts = new PortType_Transferable[vector.size()];
 			vector.copyInto(pt_ts);
@@ -413,7 +403,7 @@ public class NetDirectorydbInterfaceLoad
 					characteristics);
 
 				vector.add(pt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			pt_ts = new CablePortType_Transferable[vector.size()];
 			vector.copyInto(pt_ts);
@@ -528,7 +518,7 @@ public class NetDirectorydbInterfaceLoad
 					characteristics);
 
 				vector.add(e_t);
-			}// while(ptIt)
+			}
 			eIt.close();
 			e_ts = new EquipmentType_Transferable[vector.size()];
 			vector.copyInto(e_ts);
@@ -661,7 +651,7 @@ public class NetDirectorydbInterfaceLoad
 					characteristics);
 
 				vector.add(lt_t);
-			}// while(lIt)
+			}
 			lIt.close();
 			lt_ts = new LinkType_Transferable[vector.size()];
 			vector.copyInto(lt_ts);
@@ -763,22 +753,7 @@ public class NetDirectorydbInterfaceLoad
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
-/*
-				lt_t = new CableLinkType_Transferable(
-					It_id,
-					It_name,
-					It_codename,
-					It_link_class,
-					It_manufacturer,
-					It_manufacturer_code,
-					It_image_id,
-					It_modified,
-					link_ids,
-					characteristics);
-
-				vector.add(lt_t);
-*/
-			}// while(lIt)
+			}
 			lIt.close();
 			lt_ts = new CableLinkType_Transferable[vector.size()];
 			vector.copyInto(lt_ts);
@@ -861,7 +836,7 @@ public class NetDirectorydbInterfaceLoad
 					characteristics);
 
 				vector.add(tpt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			tpt_ts = new TestPortType_Transferable[vector.size()];
 			vector.copyInto(tpt_ts);

@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceSave1.sqlj,v 1.1.2.1 2004/08/20 14:03:47 bass Exp $
+ * $Id: MapdbInterfaceSave1.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:47 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -46,7 +46,6 @@ public class MapdbInterfaceSave1
 				};
 				if(count == 0)
 				{
-//					System.out.println("map " + mapseq[i].id + " not found in database");
 					throw new SQLException("do insert!");
 				}
 				System.out.println("update map " + mapseq[i].id);
@@ -301,7 +300,6 @@ public class MapdbInterfaceSave1
 			};
 			if(count == 0)
 			{
-//				System.out.println("equipment " + equipmentseq[i].id + " not found in database");
 				throw new SQLException("do insert!");
 			}
 			System.out.println("update equipment element " + equipment.id);
@@ -398,113 +396,7 @@ public class MapdbInterfaceSave1
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
-/*
-	public static int saveMapEquipments(MapEquipmentElement_Transferable[] equipmentseq)
-	{
-		int i;
-		int j;
-		int len;
-		int len2;
-		String id = "";
-		int count = 0;
 
-		len = equipmentseq.length;
-		for (i = 0; i < len; i++)
-		{
-			try
-			{
-				#sql {
-					select count(*) into :count from AMFICOM.MAPEQUIPMENTELEMENTS
-						where ID = :(equipmentseq[i].id)
-				};
-				if(count == 0)
-				{
-//					System.out.println("equipment " + equipmentseq[i].id + " not found in database");
-					throw new SQLException("do insert!");
-				}
-				System.out.println("update equipment element " + equipmentseq[i].id);
-				try
-				{
-					#sql {
-						update AMFICOM.MAPEQUIPMENTELEMENTS
-							set
-								SCHEME_EQUIPMENT_ELEMENT_ID = :(equipmentseq[i].scheme_equipment_element_id),
-								OWNER_ID = :(equipmentseq[i].owner_id),
-								LATITUDE = :(equipmentseq[i].latitude),
-								NAME = :(equipmentseq[i].name),
-								SYMBOL_ID = :(equipmentseq[i].symbol_id),
-								TYPE_ID = :(equipmentseq[i].type_id),
-								DESCRIPTION = :(equipmentseq[i].description),
-								LONGITUDE = :(equipmentseq[i].longitude),
-								CODENAME = :(equipmentseq[i].codename),
-								ID = :(equipmentseq[i].id),
-								MAP_ID = :(equipmentseq[i].map_id),
-								EQUIPMENT_ID = :(equipmentseq[i].element_id),
-								EQUIPMENT_TYPE_ID = :(equipmentseq[i].element_type_id)
-							where ID = :(equipmentseq[i].id)
-					};
-				}
-				catch(SQLException e)
-				{
-					System.out.println("error saVing equipment elements: " + e.getMessage());
-					e.printStackTrace();
-					return Constants.ERROR_UPDATING;
-				}
-				#sql { commit };
-			}
-			catch(SQLException e)
-			{
-				System.out.println("insert new equipment element " + equipmentseq[i].id);
-				try
-				{
-					#sql {
-						insert into AMFICOM.MAPEQUIPMENTELEMENTS(
-								SCHEME_EQUIPMENT_ELEMENT_ID,
-								OWNER_ID,
-								LATITUDE,
-								NAME,
-								SYMBOL_ID,
-								TYPE_ID,
-								DESCRIPTION,
-								LONGITUDE,
-								CODENAME,
-								ID,
-								MAP_ID,
-								EQUIPMENT_ID,
-								EQUIPMENT_TYPE_ID)
-							values(
-								:(equipmentseq[i].scheme_equipment_element_id),
-								:(equipmentseq[i].owner_id),
-								:(equipmentseq[i].latitude),
-								:(equipmentseq[i].name),
-								:(equipmentseq[i].symbol_id),
-								:(equipmentseq[i].type_id),
-								:(equipmentseq[i].description),
-								:(equipmentseq[i].longitude),
-								:(equipmentseq[i].codename),
-								:(equipmentseq[i].id),
-								:(equipmentseq[i].map_id),
-								:(equipmentseq[i].element_id),
-								:(equipmentseq[i].element_type_id) )
-					};
-					#sql { commit };
-				}
-				catch(SQLException ex)
-				{
-					System.out.println("error saVing equipment elements: " + ex.getMessage());
-					ex.printStackTrace();
-					return Constants.ERROR_SAVING;
-				}
-			}
-			MapdbInterfaceSave3.saveAttributes(
-					"MAPEQUIPMENTELEMENTATTRIBUTES",
-					"MAP_EQUIPMENT_ELEMENT_ID",
-					equipmentseq[i].id,
-					equipmentseq[i].attributes);
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-*/
 	public static int saveMapMark(MapMarkElement_Transferable mark)
 	{
 		int count = 0;
@@ -520,7 +412,6 @@ public class MapdbInterfaceSave1
 			};
 			if(count == 0)
 			{
-//				System.out.println("equipment " + equipmentseq[i].id + " not found in database");
 				throw new SQLException("do insert!");
 			}
 			System.out.println("update mark element " + mark.id);
@@ -621,7 +512,6 @@ public class MapdbInterfaceSave1
 			};
 			if(count == 0)
 			{
-//				System.out.println("kis " + kisseq[i].id + " not found in database");
 				throw new SQLException("do insert!");
 			}
 			System.out.println("update KIS element " + kis.id);
@@ -696,111 +586,4 @@ public class MapdbInterfaceSave1
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
-/*
-	public static int saveMapKISs(MapKISElement_Transferable[] kisseq)
-	{
-		int i;
-		int j;
-		int len;
-		int len2;
-		String id = "";
-		int count = 0;
-
-		len = kisseq.length;
-		for (i = 0; i < len; i++)
-		{
-			try
-			{
-				#sql {
-					select count(*) into :count from AMFICOM.MAPKISELEMENTS
-						where ID = :(kisseq[i].id)
-				};
-				if(count == 0)
-				{
-//					System.out.println("kis " + kisseq[i].id + " not found in database");
-					throw new SQLException("do insert!");
-				}
-				System.out.println("update KIS element " + kisseq[i].id);
-				try
-				{
-					#sql {
-						update AMFICOM.MAPKISELEMENTS
-							set
-								SCHEME_KIS_ELEMENT_ID = :(kisseq[i].scheme_kis_element_id),
-								OWNER_ID = :(kisseq[i].owner_id),
-								LATITUDE = :(kisseq[i].latitude),
-								NAME = :(kisseq[i].name),
-								SYMBOL_ID = :(kisseq[i].symbol_id),
-								TYPE_ID = :(kisseq[i].type_id),
-								DESCRIPTION = :(kisseq[i].description),
-								LONGITUDE = :(kisseq[i].longitude),
-								CODENAME = :(kisseq[i].codename),
-								ID = :(kisseq[i].id),
-								MAP_ID = :(kisseq[i].map_id),
-								KIS_ID = :(kisseq[i].KIS_id),
-								KIS_TYPE_ID = :(kisseq[i].KIS_type_id)
-							where ID = :(kisseq[i].id)
-					};
-					#sql { commit };
-				}
-				catch(SQLException e)
-				{
-					System.out.println("error saVing KIS elements: " + e.getMessage());
-					e.printStackTrace();
-					return Constants.ERROR_UPDATING;
-				}
-			}
-			catch(SQLException e)
-			{
-				System.out.println("insert new KIS element " + kisseq[i].id);
-				try
-				{
-					#sql {
-						insert into AMFICOM.MAPKISELEMENTS(
-								SCHEME_KIS_ELEMENT_ID,
-								OWNER_ID,
-								LATITUDE,
-								NAME,
-								SYMBOL_ID,
-								TYPE_ID,
-								DESCRIPTION,
-								LONGITUDE,
-								CODENAME,
-								ID,
-								MAP_ID,
-								KIS_ID,
-								KIS_TYPE_ID)
-							values(
-								:(kisseq[i].scheme_kis_element_id),
-								:(kisseq[i].owner_id),
-								:(kisseq[i].latitude),
-								:(kisseq[i].name),
-								:(kisseq[i].symbol_id),
-								:(kisseq[i].type_id),
-								:(kisseq[i].description),
-								:(kisseq[i].longitude),
-								:(kisseq[i].codename),
-								:(kisseq[i].id),
-								:(kisseq[i].map_id),
-								:(kisseq[i].KIS_id),
-								:(kisseq[i].KIS_type_id) )
-					};
-					#sql { commit };
-				}
-				catch(SQLException ex)
-				{
-					System.out.println("error saVing KIS elements: " + ex.getMessage());
-					ex.printStackTrace();
-					return Constants.ERROR_SAVING;
-				}
-			}
-			MapdbInterfaceSave3.saveAttributes(
-					"MAPKISELEMENTATTRIBUTES",
-					"MAP_KIS_ELEMENT_ID",
-					kisseq[i].id,
-					kisseq[i].attributes);
-		}
-		return Constants.ERROR_NO_ERROR;
-	}
-*/
 }

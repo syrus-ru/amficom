@@ -1,5 +1,5 @@
 /*
- * $Id: ISMdbInterfaceSave.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: ISMdbInterfaceSave.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.server.event.EventSource;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -177,8 +177,6 @@ public class ISMdbInterfaceSave
 								MODIFIED = SYSDATE
 							where ID = :(kiss[i].id)
 					};
-
-//					EventSource es = new EventSource("KISsource", kiss[i].id, kiss[i].id);
 				}
 				catch(SQLException e)
 				{
@@ -476,7 +474,6 @@ public class ISMdbInterfaceSave
 				{
 				System.out.println("ME не существует!!!");
 					return Constants.ERROR_SAVING;
-//					throw new AMFICOMRemoteException(Constants.ERROR_SAVING, "ME не существует!!!");
 				}
 				System.out.println("update me " + mes[i].id);
 

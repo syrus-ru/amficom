@@ -1,5 +1,5 @@
 /*
- * $Id: NetDirectorydbInterfaceLoad2.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: NetDirectorydbInterfaceLoad2.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -98,7 +98,7 @@ public class NetDirectorydbInterfaceLoad2
 					It_modified);
 
 				vector.add(ch_t);
-			}// while(chIt)
+			}
 			chIt.close();
 			ch_ts = new CharacteristicType_Transferable[vector.size()];
 			vector.copyInto(ch_ts);
@@ -223,7 +223,7 @@ public class NetDirectorydbInterfaceLoad2
 					characteristics);
 
 				vector.add(pt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			pt_ts = new PortType_Transferable[vector.size()];
 			vector.copyInto(pt_ts);
@@ -328,7 +328,7 @@ public class NetDirectorydbInterfaceLoad2
 					characteristics);
 
 				vector.add(pt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			pt_ts = new CablePortType_Transferable[vector.size()];
 			vector.copyInto(pt_ts);
@@ -450,7 +450,7 @@ public class NetDirectorydbInterfaceLoad2
 					characteristics);
 
 				vector.add(e_t);
-			}// while(ptIt)
+			}
 			eIt.close();
 			e_ts = new EquipmentType_Transferable[vector.size()];
 			vector.copyInto(e_ts);
@@ -587,7 +587,7 @@ public class NetDirectorydbInterfaceLoad2
 					characteristics);
 
 				vector.add(lt_t);
-			}// while(lIt)
+			}
 			lIt.close();
 			lt_ts = new LinkType_Transferable[vector.size()];
 			vector.copyInto(lt_ts);
@@ -629,7 +629,6 @@ public class NetDirectorydbInterfaceLoad2
 		Vector vector2 = new Vector();
 		try
 		{
-//			System.out.println("getting links for cable " + cable_id);
 			#sql thIt = {
 				select
 					ID,
@@ -775,12 +774,9 @@ public class NetDirectorydbInterfaceLoad2
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
-//				System.out.println("fetch threads for cable type: " + It_id);
 				vector2 = loadCableTypeThreads(It_id);
 				threads = new CableTypeThread_Transferable[vector2.size()];
 				vector2.copyInto(threads);
-//				for(k = 0; k < threads.length; k++)
-//					link_vec.add(NetdbInterfaceLoad.loadLink(link_ids[k]));
 
 				lt_t = new CableLinkType_Transferable(
 					It_id,
@@ -795,7 +791,7 @@ public class NetDirectorydbInterfaceLoad2
 					characteristics);
 
 				vector.add(lt_t);
-			}// while(lIt)
+			}
 			lIt.close();
 			lt_ts = new CableLinkType_Transferable[vector.size()];
 			vector.copyInto(lt_ts);
@@ -885,7 +881,7 @@ public class NetDirectorydbInterfaceLoad2
 					characteristics);
 
 				vector.add(tpt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			tpt_ts = new TestPortType_Transferable[vector.size()];
 			vector.copyInto(tpt_ts);

@@ -1,5 +1,5 @@
 /*
- * $Id: NetdbInterfaceLoad2.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: NetdbInterfaceLoad2.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -120,7 +120,7 @@ public class NetdbInterfaceLoad2
 					characteristics);
 
 				vector.add(pt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			pt_ts = new Port_Transferable[vector.size()];
 			vector.copyInto(pt_ts);
@@ -349,7 +349,7 @@ public class NetdbInterfaceLoad2
 					characteristics);
 
 				vector.add(e_t);
-			}// while(ptIt)
+			}
 			eIt.close();
 			e_ts = new Equipment_Transferable[vector.size()];
 			vector.copyInto(e_ts);
@@ -537,7 +537,7 @@ public class NetdbInterfaceLoad2
 					characteristics);
 
 				vector.add(lt_t);
-			}// while(lIt)
+			}
 			lIt.close();
 			lt_ts = new Link_Transferable[vector.size()];
 			vector.copyInto(lt_ts);
@@ -727,7 +727,7 @@ public class NetdbInterfaceLoad2
 					characteristics);
 
 				vector.add(lt_t);
-			}// while(lIt)
+			}
 			lIt.close();
 			lt_ts = new CableLink_Transferable[vector.size()];
 			vector.copyInto(lt_ts);
@@ -823,7 +823,7 @@ public class NetdbInterfaceLoad2
 					characteristics);
 
 				vector.add(tpt_t);
-			}// while(tptIt)
+			}
 			tptIt.close();
 			tpt_ts = new TestPort_Transferable[vector.size()];
 			vector.copyInto(tpt_ts);

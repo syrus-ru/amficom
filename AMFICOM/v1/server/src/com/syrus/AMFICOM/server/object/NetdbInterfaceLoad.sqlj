@@ -1,5 +1,5 @@
 /*
- * $Id: NetdbInterfaceLoad.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: NetdbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Vector;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -45,7 +45,6 @@ public class NetdbInterfaceLoad
 								" where " + charField +
 								" = '" + element_id + "'";
 
-//		System.out.println("Execute " + qry);
 
 		try
 		{
@@ -85,15 +84,6 @@ public class NetdbInterfaceLoad
 						It_characteristic_name = "";
 					if(It_characteristic_class == null)
 						It_characteristic_class = "";
-/*
-					System.out.println(" ret char " +
-						" It_characteristic_id " + It_characteristic_id +
-						" It_characteristic_class " + It_characteristic_class +
-						" It_characteristic_name " + It_characteristic_name +
-						" It_characteristic_type_id " + It_characteristic_type_id +
-						" It_characteristic_value " + It_characteristic_value +
-						" It_characteristic_value_type_id " + It_characteristic_value_type_id);
-*/
 					Characteristic_Transferable ch =
 						new Characteristic_Transferable(
 							It_characteristic_id,
@@ -110,7 +100,7 @@ public class NetdbInterfaceLoad
 					System.out.println("could not get characteristic " + It_c_id + ": " + e.getMessage());
 					e.printStackTrace();
 				}
-			}// while(chIt)
+			}
 			chIt.close();
 		}
 		catch(SQLException e)
@@ -253,7 +243,6 @@ public class NetdbInterfaceLoad
 		Vector vector2 = new Vector();
 		try
 		{
-//			System.out.println("getting links for cable " + cable_id);
 			#sql thIt = {
 				select
 					ID,
@@ -292,7 +281,6 @@ public class NetdbInterfaceLoad
 					It_color,
 					It_mark,
 					It_link_type_id);
-//					characteristics);
 				vector.add(thread);
 			}
 			thIt.close();
@@ -741,7 +729,6 @@ public class NetdbInterfaceLoad
 				It_optical_length,
 				characteristics);
 
-//			System.out.println("loaded link: " + It_id + " (" + link_id + ")");
 			return lt_t;
 		}
 		catch(SQLException e)
@@ -917,7 +904,6 @@ public class NetdbInterfaceLoad
 				threads,
 				characteristics);
 
-//			System.out.println("loaded link: " + It_id + " (" + link_id + ")");
 			return lt_t;
 		}
 		catch(SQLException e)
@@ -1214,7 +1200,7 @@ public class NetdbInterfaceLoad
 					characteristics);
 
 				vector.add(pt_t);
-			}// while(ptIt)
+			}
 			ptIt.close();
 			pt_ts = new Port_Transferable[vector.size()];
 			vector.copyInto(pt_ts);
@@ -1437,7 +1423,7 @@ public class NetdbInterfaceLoad
 					characteristics);
 
 				vector.add(e_t);
-			}// while(ptIt)
+			}
 			eIt.close();
 			e_ts = new Equipment_Transferable[vector.size()];
 			vector.copyInto(e_ts);
@@ -1618,7 +1604,7 @@ public class NetdbInterfaceLoad
 					characteristics);
 
 				vector.add(lt_t);
-			}// while(lIt)
+			}
 			lIt.close();
 			lt_ts = new Link_Transferable[vector.size()];
 			vector.copyInto(lt_ts);
@@ -1801,7 +1787,7 @@ public class NetdbInterfaceLoad
 					characteristics);
 
 				vector.add(lt_t);
-			}// while(lIt)
+			}
 			lIt.close();
 			lt_ts = new CableLink_Transferable[vector.size()];
 			vector.copyInto(lt_ts);
@@ -1890,7 +1876,7 @@ public class NetdbInterfaceLoad
 					characteristics);
 
 				vector.add(tpt_t);
-			}// while(tptIt)
+			}
 			tptIt.close();
 			tpt_ts = new TestPort_Transferable[vector.size()];
 			vector.copyInto(tpt_ts);

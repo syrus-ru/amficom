@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceSave.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ * $Id: SchemedbInterfaceSave.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -56,7 +56,6 @@ public class SchemedbInterfaceSave
 			{
 				if(id_vec.contains(idIt.scheme_cable_thread_id()))
 				{
-					//update
 					index = id_vec.indexOf(idIt.scheme_cable_thread_id());
 					System.out.println("update cable thread " + threads[index].id);
 					try
@@ -728,15 +727,6 @@ public class SchemedbInterfaceSave
 					values(:a_id, :(scheme.id), :(scheme.element_ids[i]) )
 				};
 			}
-/*
-			for (i = 0; i < scheme.elements.length; i++)
-			{
-				String a_id = ResourcedbInterface.getUId("schemeelement");
-				#sql { insert into ELEMENTSONSCHEME(ID, SCHEME_ID, SCHEME_ELEMENT_ID)
-					values(:a_id, :(scheme.id), :(scheme.elements[i].id) )
-				};
-			}
-*/
 			#sql { commit };
 		}
 		catch(SQLException ex)
@@ -1033,33 +1023,6 @@ public class SchemedbInterfaceSave
 				System.out.println("Oblazhalis' - " + e.getMessage());
 				e.printStackTrace();
 			}
-/*
-				try
-				{
-					#sql mpIt = { select ID
-							from AMFICOM.MAPEQUIPMENTELEMENTS
-							where ELEMENT_ID = :element_id
-					};
-					#sql { delete from AMFICOM.MAPPROTOELEMENTPELINKS
-							where PROTO_ELEMENT_ID = :(proto_ids[i])
-					};
-					while(mpIt.next())
-					{
-						String mp_id = mpIt.map_proto_element_id();
-						#sql { update AMFICOM.MAPPROTOELEMENTS
-							set MODIFIED = SYSDATE
-							where ID = :mp_id
-						};
-					}
-					mpIt.close();
-					#sql { commit };
-				}
-				catch (Exception e)
-				{
-					System.out.println("Oblazhalis' - " + e.getMessage());
-					e.printStackTrace();
-				}
-*/
 			MapdbInterfaceRemove.removeElementAttributes(
 				"SCHEMEELEMENTATTRIBUTES",
 				"SCHEME_ELEMENT_ID",

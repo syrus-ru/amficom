@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMServer.java,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: AMFICOMServer.java,v 1.1.2.2 2004/08/20 17:12:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,136 +31,44 @@ import java.util.Vector;
 import org.omg.CORBA.*;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:08 $
  * @author $Author: bass $
  * @module server_v1
  */
 public class AMFICOMServer extends _AMFICOMImplBase
 {
-	static ServerTrafficReporterStream strs = new ServerTrafficReporterStream();
-	static boolean measuretraffic = false;
-
-	protected ServerTrafficReporter thisReporter;
-	protected static ServerTrafficReporter theReporter;
-
-	{
-		if (measuretraffic)
-		{
-			theReporter = new ServerTrafficReporter("d:\\traffic.log");
-		}
-	}
-
-	public AMFICOMServer()
-	{ 
-//		System.out.println("()AMFICOMServer()");
-		String st = getClass().getName() + "@" + Integer.toHexString(hashCode());
-		st = st.substring(st.lastIndexOf(".") + 1);
-		st = "d:\\log\\" + st + ".log";
-		if(measuretraffic)
-		{
-			theReporter.startLog();
-			thisReporter = new ServerTrafficReporter(st);
-		}
-	}
-
-	protected void finalize()
-			throws Throwable
-	{
-//		System.out.println("()finalize()");
-		if(measuretraffic)
-		{
-			theReporter.stopLog();
-			thisReporter.stopLog();
-		}
-		super.finalize();
-	}
-
-	public boolean _execute(org.omg.CORBA.portable.MethodPointer method, org.omg.CORBA.portable.InputStream input, org.omg.CORBA.portable.OutputStream output)
-	{
-//		System.out.println("()_execute(" + method.method_name + ")");
-		switch(method.interface_id)
-		{
-			case 0:
-				{
-					return com.syrus.AMFICOM.server.object.AMFICOMServer._execute(_this(), method.method_id, input, output);
-				}
-		}
-		throw new org.omg.CORBA.MARSHAL();
-	}
-
-	private static long starttm;
-	private static long endtm;
-
-	public static boolean _execute(com.syrus.AMFICOM.CORBA.AMFICOM _self, int _method_id, org.omg.CORBA.portable.InputStream _input, org.omg.CORBA.portable.OutputStream _output)
-	{
-		boolean ret;
-//		System.out.println("()static _execute()");
-
-		synchronized(ServerTrafficReporter.sdf)
-		{
-		if(measuretraffic)
-		{
-			theReporter.fnReport(((_AMFICOMImplBase )_self)._methods()[_method_id].method_name);
-			((AMFICOMServer )_self).thisReporter.fnReport(((_AMFICOMImplBase )_self)._methods()[_method_id].method_name);
-			strs.set(_input);
-//			System.out.println("()fnInReport(" + strs.length + ")");
-			theReporter.fnInReport("IN:  ", strs.length);
-			((AMFICOMServer )_self).thisReporter.fnInReport("IN:  ", strs.length);
-			starttm = System.currentTimeMillis();
-		}
-
-		ret = _AMFICOMImplBase._execute(_self, _method_id, _input, _output);
-
-		if(measuretraffic)
-		{
-			endtm = System.currentTimeMillis();
-			strs.set(_output);
-//			System.out.println("()fnOutReport(" + strs.length + ")");
-			theReporter.fnOutReport("OUT: ", strs.length);
-			((AMFICOMServer )_self).thisReporter.fnOutReport("OUT: ", strs.length);
-
-			((AMFICOMServer )_self).thisReporter.fnStrReport("elapsed time: " + String.valueOf(endtm - starttm) + " ms");
-
-			theReporter.fnReportEnd();
-			((AMFICOMServer )_self).thisReporter.fnReportEnd();
-		}
-		}
-
-		return ret;
-	}
-
-// *
-// * Открыть новую сессию взаимодействия оператора ИСМ с РИСД и провести
-// * процедуры идентификации и аутентификации пользователя по имени
-// * пользователя и паролю. В соответствии с указанием цели purpose соединения
-// * пользователя с РИСД на взаимодействие накладываются ограничения.
-// * все последующее взаимодействие осуществляется н основе назначаемого
-// * на данном этапе идентификатора новой сессии. Для поддержания сессии
-// * необходимо осуществлять вызов какой-либо функции объекта РИСД не реже,
-// * чем раз в период времени, устанавливаемый администратором, в противном
-// * случае сессия закрывается.
-// *
-// * Ограничения:
-// *	purpose = 0 - соединение для администрирования
-// *	purpose = 1 - соединение для проведения контроля
-// *
-// * Возвращаемое значение - результат работы функции:
-// * 	ERROR_NO_ERROR
-// *	ERROR_NO_CONNECT
-// *	ERROR_WRONG_LOGIN
-// *	ERROR_WRONG_PASSWORD
-// *	ERROR_CANNOT_CREATE_SESSION
-// *	ERROR_RISD_ERROR
-// *
-// *	sessid - иденлификатор сессии для работы пользователя с ИСМ
-// *
-// * Сделать:
-// *	использование purpose,
-// *	шифрование username и password
-// *	счетчик количества сессий одного пользователя
-// *	счетчик общего количества сессий
-// *	проверка времени действия лицензии и демо-версии
-// *
+	/**
+	 * Открыть новую сессию взаимодействия оператора ИСМ с РИСД и провести
+	 * процедуры идентификации и аутентификации пользователя по имени
+	 * пользователя и паролю. В соответствии с указанием цели purpose соединения
+	 * пользователя с РИСД на взаимодействие накладываются ограничения.
+	 * все последующее взаимодействие осуществляется н основе назначаемого
+	 * на данном этапе идентификатора новой сессии. Для поддержания сессии
+	 * необходимо осуществлять вызов какой-либо функции объекта РИСД не реже,
+	 * чем раз в период времени, устанавливаемый администратором, в противном
+	 * случае сессия закрывается.
+	 *
+	 * Ограничения:
+	 *	purpose = 0 - соединение для администрирования
+	 *	purpose = 1 - соединение для проведения контроля
+	 *
+	 * Возвращаемое значение - результат работы функции:
+	 * 	ERROR_NO_ERROR
+	 *	ERROR_NO_CONNECT
+	 *	ERROR_WRONG_LOGIN
+	 *	ERROR_WRONG_PASSWORD
+	 *	ERROR_CANNOT_CREATE_SESSION
+	 *	ERROR_RISD_ERROR
+	 *
+	 *	sessid - иденлификатор сессии для работы пользователя с ИСМ
+	 *
+	 * Сделать:
+	 *	использование purpose,
+	 *	шифрование username и password
+	 *	счетчик количества сессий одного пользователя
+	 *	счетчик общего количества сессий
+	 *	проверка времени действия лицензии и демо-версии
+	 */
 	public int Logon(
 			String username,
 			byte[] password,
@@ -176,29 +84,15 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			wstringSeqHolder userids)
 		throws AMFICOMRemoteException
 	{
-		if(measuretraffic)
-		{
-			theReporter.fnReport("GetLoggedUserIds");
-			AccessIdentity_TransferableHelper.write(strs.reset(), accessIdentity);
-			theReporter.fnInReport("accessIdentity", strs.length);
-		}
-
 		int retcode =
 			AMFICOMdbInterface.GetLoggedUserIds(accessIdentity, userids);
-
-		if(measuretraffic)
-		{
-			wstringSeqHelper.write(strs.reset(), userids.value);
-			theReporter.fnOutReport("userids", strs.length);
-			theReporter.fnReportEnd();
-		}
 		return retcode;
 	}
 
 	public int ChangePassword(
 			AccessIdentity_Transferable accessIdentity,
-			byte[] oldpassword,	// пароль пользователя
-			byte[] newpassword)	// новый пароль пользователя
+			byte[] oldpassword,
+			byte[] newpassword)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.ChangePassword(
@@ -213,8 +107,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			DomainSeq_TransferableHolder domainseq,
 			OperatorCategorySeq_TransferableHolder categoryseq,
 			OperatorGroupSeq_TransferableHolder groupseq,
-//			OperatorRoleSeq_TransferableHolder roleseq,
-//			OperatorPrivilegeSeq_TransferableHolder privilegeseq,
 			OperatorProfileSeq_TransferableHolder profileseq,
 			CommandPermissionAttributesSeq_TransferableHolder execseq,
 			UserSeq_TransferableHolder userseq)
@@ -226,8 +118,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 				domainseq,
 				categoryseq,
 				groupseq,
-//				roleseq,
-//				privilegeseq,
 				profileseq,
 				execseq,
 				userseq);
@@ -283,8 +173,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			Domain_Transferable[] domainseq,
 			OperatorCategory_Transferable[] categoryseq,
 			OperatorGroup_Transferable[] groupseq,
-//			OperatorRole_Transferable[] roleseq,
-//			OperatorPrivilege_Transferable[] privilegeseq,
 			OperatorProfile_Transferable[] profileseq,
 			CommandPermissionAttributes_Transferable[] execseq,
 			User_Transferable[] userseq)
@@ -296,8 +184,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 				domainseq,
 				categoryseq,
 				groupseq,
-//				roleseq,
-//				privilegeseq,
 				profileseq,
 				execseq,
 				userseq);
@@ -308,8 +194,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			String[] domainseq,
 			String[] categoryseq,
 			String[] groupseq,
-//			String[] roleseq,
-//			String[] privilegeseq,
 			String[] profileseq,
 			String[] execseq,
 			String[] userseq)
@@ -320,8 +204,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 				domainseq,
 				categoryseq,
 				groupseq,
-//				roleseq,
-//				privilegeseq,
 				profileseq,
 				execseq,
 				userseq);
@@ -389,17 +271,17 @@ public class AMFICOMServer extends _AMFICOMImplBase
 				agentseq);
 	}
 
-// *
-// * Закончить работу с ИСМ
-// *
-// * Ограничения:
-// *
-// * Возвращаемое значение - результат работы функции:
-// *	ERROR_INSUFFICIENT_PRIVILEGES
-// *	ERROR_NO_ERROR
-// *
-// * Сделать:
-// *
+	/**
+	 * Закончить работу с ИСМ
+	 *
+	 * Ограничения:
+	 *
+	 * Возвращаемое значение - результат работы функции:
+	 *	ERROR_INSUFFICIENT_PRIVILEGES
+	 *	ERROR_NO_ERROR
+	 *
+	 * Сделать:
+	 */
 	public int Logoff(AccessIdentity_Transferable accessIdentity)
 		throws AMFICOMRemoteException
 	{
@@ -419,14 +301,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			MapPathElementSeq_TransferableHolder pathseq)
 		throws AMFICOMRemoteException
 	{
-/*
-		if(measuretraffic)
-		{
-			ServerTrafficReporter.fnReport("GetMaps");
-			AccessIdentity_TransferableHelper.write(strs.reset(), accessIdentity);
-			ServerTrafficReporter.fnInReport("accessIdentity", strs.length);
-		}
-*/
 		int retcode = AMFICOMdbInterface.GetMaps(
 			accessIdentity,
 			imageseq,
@@ -438,30 +312,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			nodelinkseq,
 			linkseq,
 			pathseq);
-/*
-		if(measuretraffic)
-		{
-			ImageResourceSeq_TransferableHelper.write(strs.reset(), imageseq.value);
-			ServerTrafficReporter.fnOutReport("imageseq", strs.length);
-			MapContextSeq_TransferableHelper.write(strs.reset(), mapseq.value);
-			ServerTrafficReporter.fnOutReport("mapseq", strs.length);
-			MapElementSeq_TransferableHelper.write(strs.reset(), equipmentseq.value);
-			ServerTrafficReporter.fnOutReport("equipmentseq", strs.length);
-			MapElementSeq_TransferableHelper.write(strs.reset(), kisseq.value);
-			ServerTrafficReporter.fnOutReport("kisseq", strs.length);
-			MapMarkElementSeq_TransferableHelper.write(strs.reset(), markseq.value);
-			ServerTrafficReporter.fnOutReport("markseq", strs.length);
-			MapPhysicalNodeElementSeq_TransferableHelper.write(strs.reset(), nodeseq.value);
-			ServerTrafficReporter.fnOutReport("nodeseq", strs.length);
-			MapNodeLinkElementSeq_TransferableHelper.write(strs.reset(), nodelinkseq.value);
-			ServerTrafficReporter.fnOutReport("nodelinkseq", strs.length);
-			MapPhysicalLinkElementSeq_TransferableHelper.write(strs.reset(), linkseq.value);
-			ServerTrafficReporter.fnOutReport("linkseq", strs.length);
-			MapPathElementSeq_TransferableHelper.write(strs.reset(), pathseq.value);
-			ServerTrafficReporter.fnOutReport("pathseq", strs.length);
-			ServerTrafficReporter.fnReportEnd();
-		}
-*/
 		return retcode;
 	}
 
@@ -501,14 +351,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			MapPathElementSeq_TransferableHolder pathseq)
 		throws AMFICOMRemoteException
 	{
-		if(measuretraffic)
-		{
-			theReporter.fnReport("GetMaps");
-			AccessIdentity_TransferableHelper.write(strs.reset(), accessIdentity);
-			theReporter.fnInReport("accessIdentity", strs.length);
-			theReporter.fnInReport("map_id", 2 * map_id.length());
-		}
-
 		int retcode = AMFICOMdbInterface.GetMap(
 			accessIdentity,
 			map_id,
@@ -521,30 +363,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			nodelinkseq,
 			linkseq,
 			pathseq);
-
-		if(measuretraffic)
-		{
-			ImageResourceSeq_TransferableHelper.write(strs.reset(), imageseq.value);
-			theReporter.fnOutReport("imageseq", strs.length);
-			MapContextSeq_TransferableHelper.write(strs.reset(), mapseq.value);
-			theReporter.fnOutReport("mapseq", strs.length);
-			MapElementSeq_TransferableHelper.write(strs.reset(), equipmentseq.value);
-			theReporter.fnOutReport("equipmentseq", strs.length);
-			MapElementSeq_TransferableHelper.write(strs.reset(), kisseq.value);
-			theReporter.fnOutReport("kisseq", strs.length);
-			MapMarkElementSeq_TransferableHelper.write(strs.reset(), markseq.value);
-			theReporter.fnOutReport("markseq", strs.length);
-			MapPhysicalNodeElementSeq_TransferableHelper.write(strs.reset(), nodeseq.value);
-			theReporter.fnOutReport("nodeseq", strs.length);
-			MapNodeLinkElementSeq_TransferableHelper.write(strs.reset(), nodelinkseq.value);
-			theReporter.fnOutReport("nodelinkseq", strs.length);
-			MapPhysicalLinkElementSeq_TransferableHelper.write(strs.reset(), linkseq.value);
-			theReporter.fnOutReport("linkseq", strs.length);
-			MapPathElementSeq_TransferableHelper.write(strs.reset(), pathseq.value);
-			theReporter.fnOutReport("pathseq", strs.length);
-			theReporter.fnReportEnd();
-		}
-
 		return retcode;
 	}
 
@@ -998,7 +816,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String me_id,
 			ResourceDescriptorSeq_TransferableHolder alarmids)
-//			wstringSeqHolder alarmids)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetAlarmIdsForMonitoredElement(
@@ -1112,7 +929,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 		return Constants.ERROR_NO_ERROR;
 	}
 
-//---------------------------------------
 	public int LoadNetDirectory(
 			AccessIdentity_Transferable accessIdentity,
 			PortTypeSeq_TransferableHolder porttypes,
@@ -1470,8 +1286,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			t_ids,
 			ap_ids);
 	}
-//------------------------------------------------
-//------------------------------------------------
 
 	public int GetResults(
 			AccessIdentity_Transferable accessIdentity,
@@ -1559,7 +1373,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String me_id,
 			ResourceDescriptorSeq_TransferableHolder testids)
-//			wstringSeqHolder testids)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetTestIdsForMonitoredElement(
@@ -1582,7 +1395,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String me_id,
 			ResourceDescriptorSeq_TransferableHolder analysisids)
-//			wstringSeqHolder analysisids)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetAnalysisIdsForMonitoredElement(
@@ -1605,7 +1417,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String scheme_path_id,
 			ResourceDescriptorSeq_TransferableHolder modelingids)
-//			wstringSeqHolder modelingids)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetModelingIdsForSchemePath(
@@ -1628,7 +1439,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String me_id,
 			ResourceDescriptorSeq_TransferableHolder evaluationids)
-//			wstringSeqHolder evaluationids)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetEvaluationIdsForMonitoredElement(
@@ -1652,7 +1462,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	public int GetAlarmedTests(
 			AccessIdentity_Transferable accessIdentity,
 			ResourceDescriptorSeq_TransferableHolder testids)
-//			wstringSeqHolder testids)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetAlarmedTests(
@@ -1800,7 +1609,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String me_id,
 			ResourceDescriptor_TransferableHolder result)
-//			StringHolder result)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetLastResultId(
@@ -1813,7 +1621,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String test_id,
 			ResourceDescriptorSeq_TransferableHolder results)
-//			wstringSeqHolder results)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetTestResultIds(
@@ -1826,7 +1633,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String analysis_id,
 			ResourceDescriptorSeq_TransferableHolder results)
-//			wstringSeqHolder results)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetAnalysisResultIds(
@@ -1839,7 +1645,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String modeling_id,
 			ResourceDescriptor_TransferableHolder result)
-//			StringHolder result)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetModelingResultId(
@@ -1852,7 +1657,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String evaluation_id,
 			ResourceDescriptorSeq_TransferableHolder results)
-//			wstringSeqHolder results)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetEvaluationResultIds(
@@ -1935,7 +1739,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			AccessIdentity_Transferable accessIdentity,
 			String result_id,
 			ResourceDescriptorSeq_TransferableHolder result_ids)
-//			wstringSeqHolder result_ids)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetResultSetResultIds(
@@ -1949,7 +1752,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			String result_id,
 			String me_id,
 			ResourceDescriptorSeq_TransferableHolder result_ids)
-//			wstringSeqHolder result_ids)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.GetResultSetResultMEIds(
@@ -2116,25 +1918,12 @@ public class AMFICOMServer extends _AMFICOMImplBase
 		return Constants.ERROR_NO_ERROR;
 	}
 
-//******************** ANALYSIS FORMAL ******************************
 	public AnalysisType_Transferable[] getAnalysisTypes(
 			AccessIdentity_Transferable accessIdentity,
 			String test_type_id)
 		throws AMFICOMRemoteException
 	{
 	AnalysisType_Transferable[] an_types_t = new AnalysisType_Transferable[0];
-/*
-	AnalysisType[] antyps;
-	try {
-	  antypes = retrieveAnalysisTypeIds(test_type_id);
-	}
-	catch (SQLException e) {
-	  String mesg = "Exception while getting analysis types for test type '" + test_type_id + "': " + e.getMessage();
-	  System.out.println(mesg);
-	  e.printStackTrace();
-	  throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
-	}
-*/
 	return an_types_t;
   }
 
@@ -2155,7 +1944,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	}
 	return at.getTransferable().id;
   }
-//*******************************************************************
 
   public ClientTest_Transferable getTestByAnalysis(
 			AccessIdentity_Transferable accessIdentity,
@@ -2167,7 +1955,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	try {
 	  anal = new Analysis(analysis_id);
 	  test_t = anal.getTest().getClientTransferable();
-//	  test_t = Test.retrieveTestForAnalysis(analysis_id).getClientTransferable();
 	}
 	catch (SQLException e) {
 	  String mesg = "Exception while retrieving test for analysis id '" + analysis_id + "': " + e.getMessage();
@@ -2188,7 +1975,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	try {
 	  anal = new Analysis(analysis_id);
 	  test_t = anal.getTest().getClientTransferable();
-//	  test_t = Test.retrieveTestForAnalysis(analysis_id).getClientTransferable();
 	}
 	catch (SQLException e) {
 	  String mesg = "Exception while retrieving test for analysis id '" + analysis_id + "': " + e.getMessage();
@@ -2209,7 +1995,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	try {
 	  eval = new Evaluation(evaluation_id);
 	  test_t = eval.getTest().getClientTransferable();
-//	  test_t = Test.retrieveTestForEvaluation(evaluation_id).getClientTransferable();
 	}
 	catch (SQLException e) {
 	  String mesg = "Exception while retrieving test for evaluation id '" + evaluation_id + "': " + e.getMessage();
@@ -2230,7 +2015,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	try {
 	  eval = new Evaluation(evaluation_id);
 	  test_t = eval.getTest().getClientTransferable();
-//	  test_t = Test.retrieveTestForEvaluation(evaluation_id).getClientTransferable();
 	}
 	catch (SQLException e) {
 	  String mesg = "Exception while retrieving test for evaluation id '" + evaluation_id + "': " + e.getMessage();
@@ -2241,7 +2025,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	return new ResourceDescriptor_Transferable(test_t.id, test_t.modified);
   }
 
-//************************ ANALYSIS *********************************
   public String createAnalysis(
 			AccessIdentity_Transferable accessIdentity,
 			ClientAnalysis_Transferable analysis_t)
@@ -2340,8 +2123,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	return new ResourceDescriptor_Transferable(analysis_t.id, analysis_t.modified);
   }
 
-
-//************************ EVALUATION *********************************
   public String createEvaluation(
 			AccessIdentity_Transferable accessIdentity,
 			ClientEvaluation_Transferable evaluation_t)
@@ -2440,9 +2221,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	return new ResourceDescriptor_Transferable(evaluation_t.id, evaluation_t.modified);
   }
 
-
-//************************ ANALYSIS *********************************
-
   public ClientModeling_Transferable getModelingById(
 			AccessIdentity_Transferable accessIdentity,
 			String id)
@@ -2487,7 +2265,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	return Constants.ERROR_NO_ERROR;
   }
 
-//**************************** TEST SETUP ***************************************
   public String createTestSetup(
 			AccessIdentity_Transferable accessIdentity,
 			TestSetup_Transferable test_setup_t)
@@ -2661,7 +2438,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	return test_setups_t;
   }
 
-//**************************** TEST_ARGUMENT_SET ***************************************
   public String createTestArgumentSet(
 			AccessIdentity_Transferable accessIdentity,
 			ClientTestArgumentSet_Transferable arg_set_t)
@@ -2728,27 +2504,12 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	return arg_sets_t;
   }
 
-
-//************************ CRITERIA SET *****************************
   public String createCriteriaSet(
 			AccessIdentity_Transferable accessIdentity,
 			ClientCriteriaSet_Transferable criteria_set_t)
 		throws AMFICOMRemoteException
   {
 	return AMFICOMdbInterface.createCriteriaSet(accessIdentity, criteria_set_t);
-/*
-	CriteriaSet cs = null;
-	try {
-	  cs = new CriteriaSet(criteria_set_t);
-	}
-	catch (SQLException e) {
-	  String mesg = "Exception while creating criteria set '" + criteria_set_t.name + "' for analysis_type_id '" + criteria_set_t.analysis_type_id + "': " + e.getMessage();
-	  System.out.println(mesg);
-	  e.printStackTrace();
-	  throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
-	}
-	return cs.getId();
-*/
   }
 
   public void attachCriteriaSetToME(
@@ -2832,26 +2593,12 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	return criteria_sets_t;
   }
 
-//************************ THRESHOLD SET *****************************
   public String createThresholdSet(
 			AccessIdentity_Transferable accessIdentity,
 			ClientThresholdSet_Transferable th_set_t)
 		throws AMFICOMRemoteException
   {
 	return AMFICOMdbInterface.createThresholdSet(accessIdentity, th_set_t);
-/*
-	ThresholdSet th = null;
-	try {
-	  th = new ThresholdSet(th_set_t);
-	}
-	catch (SQLException e) {
-	  String mesg = "Exception while creating Threshold set '" + th_set_t.name + "' for evaluation_type_id '" + th_set_t.evaluation_type_id + "': " + e.getMessage();
-	  System.out.println(mesg);
-	  e.printStackTrace();
-	  throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
-	}
-	return th.getId();
-*/
   }
 
   public void attachThresholdSetToME(
@@ -2935,26 +2682,12 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	return th_sets_t;
   }
 
-//************************ ETALON *****************************
   public String createEtalon(
 			AccessIdentity_Transferable accessIdentity,
 			ClientEtalon_Transferable e_t)
 		throws AMFICOMRemoteException
   {
   	return AMFICOMdbInterface.createEtalon(accessIdentity, e_t);
-/*
-	String id = null;
-	try {
-	  id = (new Etalon(e_t)).getId();
-	}
-	catch (SQLException e) {
-	  String mesg = "Exception while creating Etalon '" + e_t.name + "' : " + e.getMessage();
-	  System.out.println(mesg);
-	  e.printStackTrace();
-	  throw new AMFICOMRemoteException(Constants.ERROR_SAVING, mesg);
-	}
-	return id;
-*/
   }
 
   public void attachEtalonToME(
@@ -3049,33 +2782,25 @@ public class AMFICOMServer extends _AMFICOMImplBase
 	}
   }
 
-//////////////////////////////////////////////////////////////////////////////
-// * Обработка Отчетов
-// *
-
 	public String saveReportTemplates(
 			AccessIdentity_Transferable accessIdentity,
-//			FieldReport_Transferable[] frs,
 			ReportTemplate_Transferable[] rts)
 		throws AMFICOMRemoteException
 	{
 		return AMFICOMdbInterface.saveReportTemplates(
 				accessIdentity,
-//				frs,
 				rts);
 	}
 
 	public void getStatedReportTemplates(
 			AccessIdentity_Transferable accessIdentity,
 			String[] ids,
-//			FieldReportSeq_TransferableHolder fieldReports,
 			ReportTemplateSeq_TransferableHolder reportTemplates)
 		throws AMFICOMRemoteException
 	{
 		AMFICOMdbInterface.getStatedReportTemplates(
 				accessIdentity,
 				ids,
-//				fieldReports,
 				reportTemplates);
 	}
 
@@ -3088,8 +2813,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			accessIdentity,
 			reportTemplate_ids);
 	}
-
-//-----------------------------------------------------------------------
 
 	public String saveSchemeOptimizeInfo(
 			AccessIdentity_Transferable accessIdentity,
@@ -3118,8 +2841,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			soi_ids);
 	}
 
-//-----------------------------------------------------------------------
-
 	public String saveSchemeMonitoringSolutions(
 			AccessIdentity_Transferable accessIdentity,
 			SchemeMonitoringSolution_Transferable sol)
@@ -3146,10 +2867,6 @@ public class AMFICOMServer extends _AMFICOMImplBase
 			accessIdentity,
 			sol_ids);
 	}
-
-//*******************************************************************// *
-// * Инициализация объекта для работы с Aurora ORB
-// *
 
 	public org.omg.CORBA.Object _initializeAuroraObject()
 	{

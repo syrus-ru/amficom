@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceLoad1.sqlj,v 1.1.2.1 2004/08/20 14:03:47 bass Exp $
+ * $Id: MapdbInterfaceLoad1.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:47 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -87,7 +87,6 @@ public class MapdbInterfaceLoad1
 					SCHEME_ID
 				from AMFICOM.MAPCONTEXTS
 			};
-//				where DOMAIN_ID = :domain_id
 
 		count = 0;
 		while (mcIt.next())
@@ -140,46 +139,33 @@ public class MapdbInterfaceLoad1
 			if(It_scheme_id == null) It_scheme_id = "";
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPELEMENTLINKS", "MAP_ELEMENT_ID", It_id);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds("MAPEQUIPMENTELEMENTS", It_id);
 			equipment_ids = new String[vector2.size()];
 			vector2.copyInto(equipment_ids);
-//			System.out.println("found " + vector2.size() + " equipments for map " + It_id);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPKISLINKS", "MAP_KIS_ID", It_id);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds("MAPKISELEMENTS", It_id);
 			kis_ids = new String[vector2.size()];
 			vector2.copyInto(kis_ids);
 			System.out.println("found " + vector2.size() + " kiss for map " + It_id);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPNODELINKS", "MAP_NODE_ID", It_id);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds/*NonISM*/("MAPPHYSICALNODEELEMENTS", It_id);
 			node_ids = new String[vector2.size()];
 			vector2.copyInto(node_ids);
-//			System.out.println("found " + vector2.size() + " nodes for map " + It_id);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPNODELINKLINKS", "MAP_NODE_LINK_ID", It_id);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds/*NonISM*/("MAPNODELINKELEMENTS", It_id);
 			nodeLink_ids = new String[vector2.size()];
 			vector2.copyInto(nodeLink_ids);
-//			System.out.println("found " + vector2.size() + " node links for map " + It_id);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPLINKLINKS", "MAP_LINK_ID", It_id);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds/*NonISM*/("MAPPHYSICALLINKELEMENTS", It_id);
 			physicalLink_ids = new String[vector2.size()];
 			vector2.copyInto(physicalLink_ids);
-//			System.out.println("found " + vector2.size() + " links for map " + It_id);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPPATHSLINKS", "MAP_PATH_ID", It_id);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIdsNonISM("MAPPATHELEMENTS", It_id);
 			path_ids = new String[vector2.size()];
 			vector2.copyInto(path_ids);
-//			System.out.println("found " + vector2.size() + " connection points for map " + It_id);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPMARKLINKS", "MAP_MARK_ID", It_id);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds("MAPMARKELEMENTS", It_id);
 			mark_ids = new String[vector2.size()];
 			vector2.copyInto(mark_ids);
-//			System.out.println("found " + vector2.size() + " paths for map " + It_id);
 
 			mc_t = new MapContext_Transferable(
 					It_id,
@@ -355,7 +341,7 @@ public class MapdbInterfaceLoad1
 						attributes);
 
 				images.add(It_symbol_id);
-			}// if(eqIt)
+			}
 			eqIt.close();
 		}
 		catch(SQLException e)
@@ -437,158 +423,7 @@ public class MapdbInterfaceLoad1
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
-/*
-	public static int loadMapElements(
-			Vector map_ids,
-			MapElementSeq_TransferableHolder equipmentseq,
-			Vector images)
-	{
-		int count;
-		int mapcount = map_ids.size();
-		MapElement_Transferable eq_t;
-		Vector vector = new Vector();
-		MapElement_Transferable eq_ts[];
-		MapElementIterator eqIt = null;
 
-		String It_owner_id = "";
-		String It_latitude = "";
-		String It_name = "";
-		String It_symbol_id = "";
-		String It_type_id = "";
-		String It_description = "";
-		String It_longitude = "";
-		String It_kis_type_id = "";
-		String It_id = "";
-		String It_map_id = "";
-		String It_element_id = "";
-		String It_element_type_id = "";
-
-		long modified = 0;
-		boolean has_kis = false;
-		String It_ism_map_id = "";
-		String It_map_kis_id = "";
-
-		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
-
-		String current_map_id = "";
-
-		Vector vector2 = new Vector();
-
-		IdIterator idIt = null;
-
-		for(int j = 0; j < mapcount; j++)
-		{
-			current_map_id = (String) map_ids.get(j);
-			try
-			{
-				#sql eqIt = { select
-						OWNER_ID,
-						LATITUDE,
-						NAME,
-						SYMBOL_ID,
-						TYPE_ID,
-						DESCRIPTION,
-						LONGITUDE,
-						KIS_TYPE_ID,
-						ID,
-						MAP_ID,
-						ELEMENT_ID,
-						ELEMENT_TYPE_ID
-					from AMFICOM.MAPELEMENTS
-					where MAP_ID = :current_map_id
-					};
-
-				count = 0;
-				while (eqIt.next())
-				{
-					count ++;
-
-					try { It_id = eqIt.id(); }
-					catch(SQLException e) { }
-					if(It_id == null) It_id = "";
-					try { It_scheme_equipment_element_id = eqIt.scheme_equipment_element_id(); }
-					catch(SQLException e) { }
-					if(It_scheme_equipment_element_id == null) It_scheme_equipment_element_id = "";
-					try { It_owner_id = eqIt.owner_id(); }
-					catch(SQLException e) { }
-					if(It_owner_id == null) It_owner_id = "";
-					try { It_latitude = eqIt.latitude(); }
-					catch(SQLException e) { }
-					if(It_latitude == null) It_latitude = "";
-					try { It_name = eqIt.name(); }
-					catch(SQLException e) { }
-					if(It_name == null) It_name = "";
-					try { It_symbol_id = eqIt.symbol_id(); }
-					catch(SQLException e) { }
-					if(It_symbol_id == null) It_symbol_id = "";
-					try { It_type_id = eqIt.type_id(); }
-					catch(SQLException e) { }
-					if(It_type_id == null) It_type_id = "";
-					try { It_description = eqIt.description(); }
-					catch(SQLException e) { }
-					if(It_description == null) It_description = "";
-					try { It_longitude = eqIt.longitude(); }
-					catch(SQLException e) { }
-					if(It_longitude == null) It_longitude = "";
-					try { It_kis_type_id = eqIt.kis_type_id(); }
-					catch(SQLException e) { }
-					if(It_kis_type_id == null) It_kis_type_id = "";
-					try { It_map_id = eqIt.map_id(); }
-					catch(SQLException e) { }
-					if(It_map_id == null) It_map_id = "";
-					try { It_element_id = eqIt.element_id(); }
-					catch(SQLException e) { }
-					if(It_element_id == null) It_element_id = "";
-					try { It_element_type_id = eqIt.element_type_id(); }
-					catch(SQLException e) { }
-					if(It_element_type_id == null) It_element_type_id = "";
-
-					vector2 = MapdbInterfaceLoad4.loadAttributes(
-							"MAPELEMENTATTRIBUTES",
-							"MAP_ELEMENT_ID",
-							It_id);
-					attributes = new ElementAttribute_Transferable[vector2.size()];
-					vector2.copyInto(attributes);
-
-					eq_t = new MapElement_Transferable(
-							It_id,
-							It_name,
-							It_type_id,
-							It_description,
-							It_owner_id,
-							It_longitude,
-							It_latitude,
-							It_map_id,
-							It_symbol_id,
-							It_element_id,
-							It_element_type_id,
-							It_modified,
-							It_has_kis,
-							It_kis_type_id,
-							It_ism_map_id,
-							It_map_kis_id,
-							attributes);
-
-					images.add(It_symbol_id);
-					vector.addElement(eq_t);
-				}// while(eqIt)
-				eqIt.close();
-				eq_ts = new MapElement_Transferable[vector.size()];
-				vector.copyInto(eq_ts);
-				equipmentseq.value = eq_ts;
-
-			}
-			catch(SQLException e)
-			{
-				System.out.println("error loading equipments: " + e.getMessage());
-				e.printStackTrace();
-				return Constants.ERROR_LOADING;
-			}
-		}
-
-		return Constants.ERROR_NO_ERROR;
-	}
-*/
 	public static MapMarkElement_Transferable loadMapMark(
 			String id,
 			Vector images)
@@ -680,8 +515,7 @@ public class MapdbInterfaceLoad1
 						It_link_id,
 						Double.parseDouble(It_distance),
 						attributes);
-//				images.add(It_symbol_id);
-			}// if(eqIt)
+			}
 			eqIt.close();
 		}
 		catch(SQLException e)
@@ -761,134 +595,6 @@ public class MapdbInterfaceLoad1
 		return Constants.ERROR_NO_ERROR;
 	}
 
-/*
-	public static int loadMapMarks(
-			Vector map_ids,
-			MapMarkElementSeq_TransferableHolder markseq,
-			Vector images)
-	{
-		int count;
-		int mapcount = map_ids.size();
-		MapMarkElement_Transferable eq_t;
-		Vector vector = new Vector();
-		MapMarkElement_Transferable eq_ts[];
-		MapMarkIterator eqIt = null;
-
-		String It_owner_id = "";
-		String It_latitude = "";
-		String It_name = "";
-		String It_symbol_id = "";
-		String It_description = "";
-		String It_longitude = "";
-		String It_id = "";
-		String It_map_id = "";
-		String It_link_id = "";
-		String It_distance = "";
-
-		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
-
-		String current_map_id = "";
-
-		Vector vector2 = new Vector();
-
-		IdIterator idIt = null;
-
-		for(int j = 0; j < mapcount; j++)
-		{
-			current_map_id = (String) map_ids.get(j);
-			try
-			{
-				#sql eqIt = { select
-						OWNER_ID,
-						LATITUDE,
-						NAME,
-						SYMBOL_ID,
-						DESCRIPTION,
-						LONGITUDE,
-						ID,
-						MAP_ID,
-						LINK_ID,
-						DISTANCE
-					from AMFICOM.MAPMARKELEMENTS
-					where MAP_ID = :current_map_id
-					};
-
-				count = 0;
-				while (eqIt.next())
-				{
-					count ++;
-
-					try { It_id = eqIt.id(); }
-					catch(SQLException e) { }
-					if(It_id == null) It_id = "";
-					try { It_owner_id = eqIt.owner_id(); }
-					catch(SQLException e) { }
-					if(It_owner_id == null) It_owner_id = "";
-					try { It_latitude = eqIt.latitude(); }
-					catch(SQLException e) { }
-					if(It_latitude == null) It_latitude = "";
-					try { It_name = eqIt.name(); }
-					catch(SQLException e) { }
-					if(It_name == null) It_name = "";
-					try { It_symbol_id = eqIt.symbol_id(); }
-					catch(SQLException e) { }
-					if(It_symbol_id == null) It_symbol_id = "";
-					try { It_description = eqIt.description(); }
-					catch(SQLException e) { }
-					if(It_description == null) It_description = "";
-					try { It_longitude = eqIt.longitude(); }
-					catch(SQLException e) { }
-					if(It_longitude == null) It_longitude = "";
-					try { It_map_id = eqIt.map_id(); }
-					catch(SQLException e) { }
-					if(It_map_id == null) It_map_id = "";
-					try { It_link_id = eqIt.link_id(); }
-					catch(SQLException e) { }
-					if(It_link_id == null) It_link_id = "";
-					try { It_distance = eqIt.distance(); }
-					catch(SQLException e) { }
-					if(It_distance == null) It_distance = "";
-
-					vector2 = MapdbInterfaceLoad4.loadAttributes(
-							"MAPMARKELEMENTATTRIBUTES",
-							"MAP_MARK_ELEMENT_ID",
-							It_id);
-					attributes = new ElementAttribute_Transferable[vector2.size()];
-					vector2.copyInto(attributes);
-
-					eq_t = new MapMarkElement_Transferable(
-							It_id,
-							It_name,
-							It_longitude,
-							It_latitude,
-							It_description,
-							It_owner_id,
-							It_map_id,
-							It_symbol_id,
-							It_link_id,
-							Double.parseDouble(It_distance),
-							attributes);
-
-					images.add(It_symbol_id);
-					vector.addElement(eq_t);
-				}// while(eqIt)
-				eqIt.close();
-				eq_ts = new MapMarkElement_Transferable[vector.size()];
-				vector.copyInto(eq_ts);
-				markseq.value = eq_ts;
-
-			}
-			catch(SQLException e)
-			{
-				System.out.println("error loading marks: " + e.getMessage());
-				e.printStackTrace();
-				return Constants.ERROR_LOADING;
-			}
-		}
-
-		return Constants.ERROR_NO_ERROR;
-	}
-*/
 	public static MapElement_Transferable loadMapKIS(
 			String id,
 			Vector images)
@@ -943,7 +649,7 @@ public class MapdbInterfaceLoad1
 				kis_t.has_kis = true;
 
 				System.out.println(" KIS element is: " + It_map_element_id);
-			}// if(kisIt)
+			}
 			kisIt.close();
 		}
 		catch(SQLException e)
@@ -1022,164 +728,6 @@ public class MapdbInterfaceLoad1
 		return Constants.ERROR_NO_ERROR;
 	}
 
-/*
-	public static int loadMapKISs(
-			Vector map_ids,
-			MapKISElementSeq_TransferableHolder kisseq,
-			Vector images)
-	{
-		int count;
-		int mapcount = map_ids.size();
-		MapKISElement_Transferable kis_t;
-		Vector vector = new Vector();
-		MapKISElement_Transferable kis_ts[];
-		MapKISIterator kisIt = null;
-
-		String It_scheme_kis_element_id = "";
-		String It_owner_id = "";
-		String It_latitude = "";
-		String It_name = "";
-		String It_symbol_id = "";
-		String It_type_id = "";
-		String It_description = "";
-		String It_longitude = "";
-		String It_codename = "";
-		String It_id = "";
-		String It_map_id = "";
-		String It_ism_map_id = "";
-		String It_kis_id = "";
-		String It_kis_type_id = "";
-		ElementAttribute_Transferable attributes[] = new ElementAttribute_Transferable[0];
-
-		String current_map_id = "";
-
-		String It_e_id = "";
-		String It_attribute_id = "";
-		String It_attribute_type_id = "";
-		String It_attribute_value = "";
-		String It_attribute_name = "";
-		Vector vector2 = new Vector();
-		ElementAttributeIterator eaIt = null;
-
-		String connection_point_ids[] = new String[0];
-		IdIterator idIt = null;
-
-		for(int j = 0; j < mapcount; j++)
-		{
-			current_map_id = (String) map_ids.get(j);
-			try
-			{
-				#sql kisIt = { select
-						SCHEME_KIS_ELEMENT_ID,
-						OWNER_ID,
-						LATITUDE,
-						NAME,
-						SYMBOL_ID,
-						TYPE_ID,
-						DESCRIPTION,
-						LONGITUDE,
-						CODENAME,
-						ID,
-						MAP_ID,
-						ISM_MAP_ID,
-						KIS_ID,
-						KIS_TYPE_ID
-					from AMFICOM.MAPKISELEMENTS
-					where MAP_ID = :current_map_id
-					};
-
-				count = 0;
-				while (kisIt.next())
-				{
-					count ++;
-
-					try { It_id = kisIt.id(); }
-					catch(SQLException e) { }
-					if(It_id == null) It_id = "";
-					try { It_scheme_kis_element_id = kisIt.scheme_kis_element_id(); }
-					catch(SQLException e) { }
-					if(It_scheme_kis_element_id == null) It_scheme_kis_element_id = "";
-					try { It_owner_id = kisIt.owner_id(); }
-					catch(SQLException e) { }
-					if(It_owner_id == null) It_owner_id = "";
-					try { It_latitude = kisIt.latitude(); }
-					catch(SQLException e) { }
-					if(It_latitude == null) It_latitude = "";
-					try { It_name = kisIt.name(); }
-					catch(SQLException e) { }
-					if(It_name == null) It_name = "";
-					try { It_symbol_id = kisIt.symbol_id(); }
-					catch(SQLException e) { }
-					if(It_symbol_id == null) It_symbol_id = "";
-					try { It_type_id = kisIt.type_id(); }
-					catch(SQLException e) { }
-					if(It_type_id == null) It_type_id = "";
-					try { It_description = kisIt.description(); }
-					catch(SQLException e) { }
-					if(It_description == null) It_description = "";
-					try { It_longitude = kisIt.longitude(); }
-					catch(SQLException e) { }
-					if(It_longitude == null) It_longitude = "";
-					try { It_codename = kisIt.codename(); }
-					catch(SQLException e) { }
-					if(It_codename == null) It_codename = "";
-					try { It_map_id = kisIt.map_id(); }
-					catch(SQLException e) { }
-					if(It_map_id == null) It_map_id = "";
-					try { It_ism_map_id = kisIt.ism_map_id(); }
-					catch(SQLException e) { }
-					if(It_ism_map_id == null) It_ism_map_id = "";
-					try { It_kis_id = kisIt.kis_id(); }
-					catch(SQLException e) { }
-					if(It_kis_id == null) It_kis_id = "";
-					try { It_kis_type_id = kisIt.kis_type_id(); }
-					catch(SQLException e) { }
-					if(It_kis_type_id == null) It_kis_type_id = "";
-
-					vector2 = MapdbInterfaceLoad4.loadAttributes(
-							"MAPKISELEMENTATTRIBUTES",
-							"MAP_KIS_ELEMENT_ID",
-							It_id);
-					attributes = new ElementAttribute_Transferable[vector2.size()];
-					vector2.copyInto(attributes);
-
-					kis_t = new MapKISElement_Transferable(
-							It_id,
-							It_name,
-							It_type_id,
-							It_description,
-							It_owner_id,
-							It_longitude,
-							It_latitude,
-							It_map_id,
-							It_ism_map_id,
-							It_symbol_id,
-							It_kis_id,
-							It_kis_type_id,
-							It_codename,
-							It_scheme_kis_element_id,
-							attributes);
-
-					images.add(It_symbol_id);
-					vector.addElement(kis_t);
-				}// while(kisIt)
-				kisIt.close();
-				kis_ts = new MapKISElement_Transferable[vector.size()];
-				vector.copyInto(kis_ts);
-				kisseq.value = kis_ts;
-
-			}
-			catch(SQLException e)
-			{
-				System.out.println("error loading KISs: " + e.getMessage());
-				e.printStackTrace();
-				return Constants.ERROR_LOADING;
-			}
-		}
-
-		return Constants.ERROR_NO_ERROR;
-	}
-*/
 	#sql public static iterator IdIterator ( String id );
 	#sql public static iterator MapElementIdIterator ( String map_element_id );
 	#sql public static iterator MapMarkIdIterator ( String map_mark_id );
@@ -1227,23 +775,6 @@ public class MapdbInterfaceLoad1
 		String ism_map_id,
 		String map_id);
 
-/*
-	#sql public static iterator MapKISIterator (
-		String scheme_kis_element_id,
-		String owner_id,
-		String latitude,
-		String name,
-		String symbol_id,
-		String type_id,
-		String description,
-		String longitude,
-		String codename,
-		String id,
-		String map_id,
-		String ism_map_id,
-		String kis_id,
-		String kis_type_id);
-*/
 	#sql public static iterator MapElementIterator (
 		String owner_id,
 		String latitude,

@@ -1,5 +1,5 @@
 /*
- * $Id: CatalogSchemeMapUpdater.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: CatalogSchemeMapUpdater.sqlj,v 1.1.2.2 2004/08/20 17:12:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:08 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -23,10 +23,6 @@ public class CatalogSchemeMapUpdater
 	public CatalogSchemeMapUpdater()
 	{
 	}
-
-///////////////////////////////////////////////////////////////////
-// ELEMENT
-///////////////////////////////////////////////////////////////////
 
 	public static String getElementScheme(String element_id)
 	{
@@ -45,7 +41,6 @@ public class CatalogSchemeMapUpdater
 		catch(Exception ex)
 		{
 			System.out.println("scheme element " + element_id + " not on any scheme - may be inside other element?..");
-//			ex.printStackTrace();
 		}
 		try
 		{
@@ -209,7 +204,6 @@ public class CatalogSchemeMapUpdater
 					where ID = :s2
 				};
 				#sql { commit };
-//						SYMBOL_ID = :(se.image_id)
 
 				if(s3 != null)
 				{
@@ -251,7 +245,6 @@ public class CatalogSchemeMapUpdater
 					and DESCRIPTION != :(me.description)
 				};
 				#sql { commit };
-//						IMAGE_ID = :(me.symbol_id)
 
 				#sql {
 					select EQUIPMENT_ID into :s1
@@ -285,10 +278,6 @@ public class CatalogSchemeMapUpdater
 			ex.printStackTrace();
 		}
 	}
-
-///////////////////////////////////////////////////////////////////
-// PATH
-///////////////////////////////////////////////////////////////////
 
 	public static String getPathScheme(String path_id)
 	{
@@ -345,7 +334,6 @@ public class CatalogSchemeMapUpdater
 				where PATH_ID = :(tp.id)
 			};
 			#sql { commit };
-//					NAME = :(tp.name),
 
 			#sql idIt = {
 				select ID from AMFICOM.SCHEMEPATHS
@@ -421,68 +409,7 @@ public class CatalogSchemeMapUpdater
 			ex.printStackTrace();
 		}
 	}
-/*
-	public static void updatePathLinks(SchemePath_Transferable sp)
-	{
-		PathLinkIterator lidIt = null;
 
-		int It_pl_n = 0;
-		boolean It_pl_is_cable = false;
-		String It_pl_link_id = "";
-		String It_pl_thread_id = "";
-
-		try
-		{
-			#sql {
-				delete from AMFICOM.PATHLINKS
-					where PATH_ID = :(sp.path_id)
-			};
-
-			#sql lidIt = { select N, IS_CABLE, LINK_ID, THREAD_ID
-					from AMFICOM.SCHEMEPATHLINKS
-					where SCHEME_PATH_ID = :(sp.id)
-			};
-			while(lidIt.next())
-			{
-				try { It_pl_n = lidIt.n(); }
-				catch(SQLException e) { }
-				try { It_pl_is_cable = (lidIt.is_cable() == 0)?false : true; }
-				catch(SQLException e) { }
-				try { It_pl_link_id = lidIt.link_id(); }
-				catch(SQLException e) { }
-				if(It_pl_link_id == null) It_pl_link_id = "";
-				try { It_pl_thread_id = lidIt.thread_id(); }
-				catch(SQLException e) { }
-				if(It_pl_thread_id == null) It_pl_thread_id = "";
-
-				String at_s = ResourcedbInterface.getUId("pathlink");
-				#sql {
-					insert into AMFICOM.PATHLINKS(
-							ID,
-							PATH_ID,
-							N,
-							IS_CABLE,
-							LINK_ID,
-							THREAD_ID)
-						values(
-							:at_s,
-							:(sp.path_id),
-							:It_pl_n,
-							:It_pl_is_cable,
-							:(paths[i].links[j].link_id),
-							:(paths[i].links[j].thread_id) )
-				};
-				#sql { commit };
-			}
-			lidIt.close();
-		}
-		catch(Exception ex)
-		{
-			System.out.println("error updated links for path " + sp.path_id + "!!!");
-			ex.printStackTrace();
-		}
-	}
-*/
 	public static void schemePathUpdated(SchemePath_Transferable sp)
 	{
 		IdIterator idIt = null;
@@ -501,9 +428,7 @@ public class CatalogSchemeMapUpdater
 				};
 				#sql { commit };
 
-//				updatePathLinks(sp);
 
-//						NAME = :(sp.name),
 				#sql {
 					update AMFICOM.MONITOREDELEMENTS
 					set
@@ -591,7 +516,6 @@ public class CatalogSchemeMapUpdater
 					};
 					#sql { commit };
 
-//							NAME = :(mp.name),
 					#sql {
 						update AMFICOM.MONITOREDELEMENTS
 						set
@@ -608,11 +532,6 @@ public class CatalogSchemeMapUpdater
 			ex.printStackTrace();
 		}
 	}
-
-
-///////////////////////////////////////////////////////////////////
-// LINK
-///////////////////////////////////////////////////////////////////
 
 	public static String getDeviceElement(String device_id)
 	{
@@ -768,8 +687,6 @@ public class CatalogSchemeMapUpdater
 			if(t_p_id == null)
 				t_p_id = "";
 
-//					SOURCE_PORT_ID = :s_p_id,
-//					TARGET_PORT_ID = :t_p_id
 			#sql idIt = {
 				select ID from AMFICOM.SCHEMELINKS
 				where LINK_ID = :(l.id)
@@ -839,10 +756,6 @@ public class CatalogSchemeMapUpdater
 				if(t_e_id == null)
 					t_e_id = "";
 
-//						START_PORT_ID = :s_p_id,
-//						START_EQUIPMENT_ID = :s_e_id,
-//						END_PORT_ID = :t_p_id,
-//						END_EQUIPMENT_ID = :t_e_id
 				#sql {
 					update AMFICOM.LINKS
 					set
@@ -865,10 +778,6 @@ public class CatalogSchemeMapUpdater
 		}
 	}
 
-///////////////////////////////////////////////////////////////////
-// CABLELINK
-///////////////////////////////////////////////////////////////////
-
 	public static String getCableLinkScheme(String link_id)
 	{
 		String s1;
@@ -887,21 +796,6 @@ public class CatalogSchemeMapUpdater
 		{
 			System.out.println("scheme cable link " + link_id + " not on any scheme");
 		}
-/*
-		try
-		{
-			#sql {
-				select SCHEME_ELEMENT_ID into :s2
-				from AMFICOM.SCHEMECABLELINKS
-				where SCHEME_CABLE_LINK_ID = :link_id
-			};
-			return getElementScheme(s2);
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-*/
 		return null;
 	}
 
@@ -1043,8 +937,6 @@ public class CatalogSchemeMapUpdater
 			if(t_p_id == null)
 				t_p_id = "";
 
-//					SOURCE_PORT_ID = :s_p_id,
-//					TARGET_PORT_ID = :t_p_id
 			#sql idIt = {
 				select ID from AMFICOM.SCHEMECABLELINKS
 				where CABLE_LINK_ID = :(l.id)
@@ -1095,8 +987,6 @@ public class CatalogSchemeMapUpdater
 					String s_n_id = getMapElement(getSchemePortElement(s_p_id));
 					String e_n_id = getMapElement(getSchemePortElement(t_p_id));
 
-//							START_NODE_ID = :(s_n_id),
-//							END_NODE_ID = :(e_n_id)
 					#sql {
 						update AMFICOM.MAPPHYSICALLINKELEMENTS
 						set
@@ -1155,10 +1045,6 @@ public class CatalogSchemeMapUpdater
 				if(t_e_id == null)
 					t_e_id = "";
 
-//						START_PORT_ID = :s_p_id,
-//						START_EQUIPMENT_ID = :s_e_id,
-//						END_PORT_ID = :t_p_id,
-//						END_EQUIPMENT_ID = :t_e_id
 				#sql {
 					update AMFICOM.CABLELINKS
 					set
@@ -1186,8 +1072,6 @@ public class CatalogSchemeMapUpdater
 					String s_n_id = getMapElement(getSchemePortElement(s_p_id));
 					String e_n_id = getMapElement(getSchemePortElement(t_p_id));
 
-//							START_NODE_ID = :(s_n_id),
-//							END_NODE_ID = :(e_n_id)
 					#sql {
 						update AMFICOM.MAPPHYSICALLINKELEMENTS
 						set
@@ -1264,10 +1148,6 @@ public class CatalogSchemeMapUpdater
 			ex.printStackTrace();
 		}
 	}
-
-///////////////////////////////////////////////////////////////////
-// CABLELINKTHREAD
-///////////////////////////////////////////////////////////////////
 
 	public static String getThreadSchemeCable(String thread_id)
 	{
@@ -1421,10 +1301,6 @@ public class CatalogSchemeMapUpdater
 		}
 	}
 
-///////////////////////////////////////////////////////////////////
-// PORT
-///////////////////////////////////////////////////////////////////
-
 	public static String getPortElement(String port_id)
 	{
 		String s1;
@@ -1542,10 +1418,6 @@ public class CatalogSchemeMapUpdater
 			ex.printStackTrace();
 		}
 	}
-
-///////////////////////////////////////////////////////////////////
-// CABLEPORT
-///////////////////////////////////////////////////////////////////
 
 	public static String getCablePortElement(String port_id)
 	{

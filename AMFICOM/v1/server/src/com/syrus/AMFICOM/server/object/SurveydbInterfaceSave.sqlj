@@ -1,5 +1,5 @@
 /*
- * $Id: SurveydbInterfaceSave.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ * $Id: SurveydbInterfaceSave.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -34,127 +34,8 @@ public class SurveydbInterfaceSave
 			String result_id,
 			ClientParameter_Transferable[] parameters)
 	{
-/*
-		boolean isOK;
-		String It_id = "";
-
-		for (int j = 0; j < parameters.length; j++)
-		{
-			isOK = false;
-			try
-			{
-				ConnectionContext connCtx = DefaultContext.getDefaultContext();
-
-				Statement statement = null;
-				try
-				{
-					statement = connCtx.getConnection().createStatement();
-				}
-				catch(SQLException sqlexception)
-				{
-//						Log.systemLog.logDebugMessage("CharacterizationDatabase: Error (3)", 200);
-//						Log.systemLog.logErrorException(sqlexception);
-					System.out.println("Лажа" + ": " + sqlexception.getMessage());
-				}
-
-				String qry = "select ID " +
-						"from AMFICOM." + paramTableName +
-						" where CODENAME = '" + parameters[j].codename + "'";
-
-				System.out.println("Executing " + qry);
-
-					OracleResultSet resultset = null;
-					try
-					{
-						resultset = (OracleResultSet )statement.executeQuery(qry);
-						if(resultset.next())
-						{
-							It_id = resultset.getString("ID");
-						}
-						else
-						{
-							System.out.println("param does not exist");
-							return;
-						}
-						resultset.close();
-					}
-					catch(SQLException sqlexception1)
-					{
-						System.out.println("CharacterizationDatabase: Error (4)" + ": " + sqlexception1.getMessage());
-					}
-					finally
-					{
-						try
-						{
-							if(resultset != null)
-								resultset.close();
-							resultset = null;
-							if(statement != null)
-								statement.close();
-							statement = null;
-						}
-						catch(SQLException _ex) { }
-					}
-
-				String result_parameter_id = ResourcedbInterface.getUId("resultparameter");
-				#sql {INSERT INTO amficom.parameters(
-						VALUE,
-						RESULT_ID,
-						PARAMETER_TYPE_ID,
-						ID)
-					VALUES (
-						EMPTY_BLOB(),
-						:result_id,
-						:It_id,
-						:result_parameter_id )
-				};
-//						:(parameters[j].param_type_id),
-
-				ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-				ByteArrayDatabase bArr = new ByteArrayDatabase(parameters[j].value);
-				bArr.saveAsBlob(
-						connCtx2.getConnection(),
-						"parameters",
-						"value",
-						"id = '" + result_parameter_id + "'");
-				isOK = true;
-			}
-			catch (Exception e)
-			{
-				isOK = false;
-				System.out.println("Failed to save parameter with name: " + parameters[j].codename + ": " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
-*/
 	}
-/*
-		saveActionArgument(
-			"TESTS",
-			"TEST_TYPE_ID",
-			"TESTARGUMENTS",
-			"TEST_ID",
-			"TEST_ARGUMENT_ID",
-			"TESTTYPES",
-			"TESTTYPEARGUMENTS",
-			"TEST_TYPE_ID",
-			"tst1",
-			"ref_ior",
-			val)
 
-		saveActionArgument(
-			"ANALYSIS",
-			"TYPE_ID",
-			"ANALYSISARGUMENTS",
-			"ANALYSIS_ID",
-			"ARGUMENT_TYPE_ID",
-			"ANALYSISTYPES",
-			"ANALYSISTYPEARGUMENTS",
-			"ANALYSIS_TYPE_ID",
-			"ana1",
-			"concavities",
-			val)
-*/
 	public static int saveActionArgument(
 			String actionTableName,
 			String actionTypeFieldName,
@@ -344,7 +225,6 @@ public class SurveydbInterfaceSave
 					"' and CODENAME = '" + argCodeName + "'";
 			String qry2;
 
-//			System.out.println("Executing " + qry);
 			#sql
 			{
 				BEGIN
@@ -372,7 +252,6 @@ public class SurveydbInterfaceSave
 			}
 			iIt.close();
 
-//			System.out.println("Executing " + qry2);
 			#sql
 			{
 				BEGIN
@@ -383,7 +262,6 @@ public class SurveydbInterfaceSave
 			try
 			{
 				ConnectionContext connCtx = DefaultContext.getDefaultContext();
-//				System.out.println("blob save for " + argCodeName);
 				ByteArrayDatabase bArr = new ByteArrayDatabase(val);
 				bArr.saveAsBlob(
 						connCtx.getConnection(),
@@ -432,7 +310,6 @@ public class SurveydbInterfaceSave
 
 			String qry2;
 
-//			System.out.println("Executing " + qry);
 			#sql
 			{
 				BEGIN
@@ -460,7 +337,6 @@ public class SurveydbInterfaceSave
 			}
 			iIt.close();
 
-//			System.out.println("Executing " + qry2);
 			#sql
 			{
 				BEGIN
@@ -488,19 +364,7 @@ public class SurveydbInterfaceSave
 		}
 		
 	}
-/*
-		saveArguments(
-			"ANALYSIS",
-			"TYPE_ID",
-			"ANALYSISARGUMENTS",
-			"ANALYSIS_ID",
-			"ARGUMENT_TYPE_ID",
-			"ANALYSISTYPES",
-			"ANALYSISTYPEARGUMENTS",
-			"ANALYSIS_TYPE_ID",
-			"ana1",
-			args)
-*/
+
 	public static void saveArguments(
 			String actionTableName,
 			String actionTypeFieldName,
@@ -536,19 +400,6 @@ public class SurveydbInterfaceSave
 			String element_id,
 			ClientParameter_Transferable[] arguments)
 	{
-/*
-		for(int j = 0; j < arguments.length; j++)
-		{
-			saveActionArgument(
-				tableName,
-				actionFieldName,
-				element_id,
-				arguments[j].codename,
-				arguments[j].param_type_id,
-				arguments[j].name,
-				arguments[j].value);
-		}
-*/
 	}
 
 	public static void saveParameters(
@@ -557,18 +408,6 @@ public class SurveydbInterfaceSave
 			String element_id,
 			ClientParameter_Transferable[] parameters)
 	{
-/*
-		for(int j = 0; j < parameters.length; j++)
-		{
-			saveActionParameter(
-				tableName,
-				actionFieldName,
-				element_id,
-				parameters[j].codename,
-				parameters[j].param_type_id,
-				parameters[j].name);
-		}
-*/
 	}
 
 	#sql public static iterator IdIterator ( String id );

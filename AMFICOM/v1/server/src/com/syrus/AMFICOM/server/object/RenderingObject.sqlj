@@ -1,5 +1,5 @@
 /*
- * $Id: RenderingObject.sqlj,v 1.1.2.1 2004/08/20 14:03:48 bass Exp $
+ * $Id: RenderingObject.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:48 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -30,7 +30,6 @@ public class RenderingObject
 	private int objectY;
 	private int width;
 	private int height;
-//	private String orrID;
 	private byte[] incapsulated_report;
 	private int[] column_widths;
 	private int tableDivisionsNumber;
@@ -46,18 +45,13 @@ public class RenderingObject
 		this.objectY = ro.objectY;
 		this.width = ro.width;
 		this.height = ro.height;
-//		this.orrID = ro.orrID;
 		this.incapsulated_report = ro.incapsulated_report;
 		this.column_widths = ro.column_widths;
 		this.tableDivisionsNumber = ro.tableDivisionsNumber;
 		
 		ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
 		boolean autoc = connCtx2.getConnection().getAutoCommit();
-//		connCtx2.getConnection().setAutoCommit(false);
 
-//				FIELD_REPORT_ID,
-//				:(this.orrID),
-//		#sql{ insert into AMFICOM.REPORTTEMPLATEFIELDS(
 
 		#sql{ insert into AMFICOM.REPORTTEMPLATEFIELDS(
 				REPORT_TEMPLATE_ID,
@@ -92,8 +86,6 @@ public class RenderingObject
 			byte[] bytes = baos.toByteArray();
 
 			System.out.println("Saving " + bytes.length + " bytes as blob:");
-//			for(int i = 0; i < bytes.length; i++)
-//				System.out.println(bytes[i]);
 			ByteArrayDatabase bArr = new ByteArrayDatabase(bytes);
 			bArr.saveAsBlob(
 				connCtx2.getConnection(),
@@ -104,8 +96,6 @@ public class RenderingObject
 			bytes = this.incapsulated_report;
 
 			System.out.println("Saving " + bytes.length + " bytes as blob:");
-//			for(int i = 0; i < bytes.length; i++)
-//				System.out.println(bytes[i]);
 			bArr = new ByteArrayDatabase(bytes);
 			bArr.saveAsBlob(
 				connCtx2.getConnection(),
@@ -181,23 +171,8 @@ public class RenderingObject
 
 			try
 			{
-/*				System.out.println("Retreived " + bytes.length + " bytes as blob:");
-				for(int i = 0; i < bytes.length; i++)
-					System.out.println(bytes[i]);*/
 				this.column_widths = new ByteArray(width_bytes).toIntArray();
-
-/*				System.out.println("Retreived " + bytes.length + " bytes as blob:");
-				for(int i = 0; i < bytes.length; i++)
-					System.out.println(bytes[i]);*/
 				this.incapsulated_report = report_bytes;
-        
-/*
-				ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-				DataInputStream ois = new DataInputStream(bais);
-				this.column_widths = new int[bytes.length / 4];
-				for(int i = 0; i < bytes.length / 4; i++)
-					this.column_widths[i] = ois.readInt();
-*/
 			}
 			catch(Exception ioe)
 			{
@@ -229,7 +204,6 @@ public class RenderingObject
 			this.objectY,
 			this.width,
 			this.height,
-//			this.orrID,
 			this.incapsulated_report,
 			this.column_widths,
 			this.tableDivisionsNumber);
@@ -244,12 +218,7 @@ public class RenderingObject
 	{
 		return this.roID;
 	}
-/*
-	public String getFieldReportId()
-	{
-		return this.orrID;
-	}
-*/
+
 	public void delete() throws Exception
 	{
 		#sql { delete from AMFICOM.REPORTTEMPLATEFIELDS
@@ -264,7 +233,6 @@ public class RenderingObject
 		this.objectY = ro.objectY;
 		this.width = ro.width;
 		this.height = ro.height;
-//		this.orrID = ro.orrID;
 		this.incapsulated_report = ro.incapsulated_report;
 		this.column_widths = ro.column_widths;
 		this.tableDivisionsNumber = ro.tableDivisionsNumber;
@@ -332,7 +300,6 @@ public class RenderingObject
 	#sql public static iterator IdIterator(
 		String id);
 
-//		String field_report_id,
 	#sql public static iterator RenderingObjectIterator(
 		String id,
 		String report_template_id,

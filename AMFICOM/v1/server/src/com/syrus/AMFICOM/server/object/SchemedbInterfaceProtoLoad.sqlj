@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceProtoLoad.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ * $Id: SchemedbInterfaceProtoLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -591,7 +591,6 @@ public class SchemedbInterfaceProtoLoad
 				It_optical_length,
 				attributes);
 
-//			System.out.println("loaded link: " + It_id + " (" + link_id + ")");
 			return lt_t;
 		}
 		catch(SQLException e)
@@ -919,7 +918,6 @@ public class SchemedbInterfaceProtoLoad
 					from AMFICOM.SCHEMEPROTOELEMENTS
 					where IS_TOP_LEVEL = 1
 			};
-//					and DOMAIN_ID = :domain_id
 
 			while (eIt.next())
 			{
@@ -958,7 +956,6 @@ public class SchemedbInterfaceProtoLoad
 						from AMFICOM.SCHEMEPROTOELEMENTS
 						where ID = :(ids[i])
 				};
-//						and DOMAIN_ID = :domain_id
 				if(is_top_level != 0)
 					loadProtoElement(ids[i], vector);
 			}

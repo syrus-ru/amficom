@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceRemove.sqlj,v 1.1.2.1 2004/08/20 14:03:47 bass Exp $
+ * $Id: MapdbInterfaceRemove.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:47 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -29,13 +29,6 @@ public class MapdbInterfaceRemove
 			String element_id)
 	{
 		int i;
-/*
-		Vector vector = MapdbInterfaceLoad4.loadAttributes(
-				elementAttributeTable,
-				elementAttributeField,
-				element_id);
-		ElementAttribute_Transferable[] attributes = new ElementAttribute_Transferable[vector.size()];
-*/
 		try
 		{
 			String qry = "delete from " + elementAttributeTable +
@@ -54,7 +47,6 @@ public class MapdbInterfaceRemove
 		{
 			System.out.println("Error deleting attributes for element " + element_id + ": " + e.getMessage());
 			e.printStackTrace();
-//			return Constants.ERROR_DELETING;
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
@@ -75,49 +67,42 @@ public class MapdbInterfaceRemove
 		for(i = mapseq.length - 1; i >= 0; i--)
 		{
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPELEMENTLINKS", "MAP_ELEMENT_ID", mapseq[i]);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds("MAPEQUIPMENTELEMENTS", mapseq[i]);
 			equipment_ids = new String[vector2.size()];
 			vector2.copyInto(equipment_ids);
 			removeElements(equipment_ids);
 			System.out.println("removing " + vector2.size() + " equipments for map " + mapseq[i]);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPKISLINKS", "MAP_KIS_ID", mapseq[i]);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds("MAPKISELEMENTS", mapseq[i]);
 			kis_ids = new String[vector2.size()];
 			vector2.copyInto(kis_ids);
 			removeKISs(kis_ids);
 			System.out.println("removing " + vector2.size() + " kiss for map " + mapseq[i]);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPNODELINKS", "MAP_NODE_ID", mapseq[i]);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds("MAPPHYSICALNODEELEMENTS", mapseq[i]);
 			node_ids = new String[vector2.size()];
 			vector2.copyInto(node_ids);
 			removeNodes(node_ids);
 			System.out.println("removing " + vector2.size() + " nodes for map " + mapseq[i]);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPNODELINKLINKS", "MAP_NODE_LINK_ID", mapseq[i]);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds("MAPNODELINKELEMENTS", mapseq[i]);
 			nodeLink_ids = new String[vector2.size()];
 			vector2.copyInto(nodeLink_ids);
 			removeNodeLinks(nodeLink_ids);
 			System.out.println("removing " + vector2.size() + " node links for map " + mapseq[i]);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPLINKLINKS", "MAP_LINK_ID", mapseq[i]);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds("MAPPHYSICALLINKELEMENTS", mapseq[i]);
 			physicalLink_ids = new String[vector2.size()];
 			vector2.copyInto(physicalLink_ids);
 			removeLinks(physicalLink_ids);
 			System.out.println("removing " + vector2.size() + " links for map " + mapseq[i]);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPPATHSLINKS", "MAP_PATH_ID", mapseq[i]);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds("MAPPATHELEMENTS", mapseq[i]);
 			path_ids = new String[vector2.size()];
 			vector2.copyInto(path_ids);
 			removePaths(path_ids);
 			System.out.println("removing " + vector2.size() + " paths for map " + mapseq[i]);
 
 			vector2 = MapdbInterfaceLoad4.loadMapElementIds2("MAPMARKLINKS", "MAP_MARK_ID", mapseq[i]);
-//			vector2 = MapdbInterfaceLoad4.loadMapElementIds("MAPMARKELEMENTS", mapseq[i]);
 			mark_ids = new String[vector2.size()];
 			vector2.copyInto(mark_ids);
 			removeMarks(mark_ids);
@@ -133,7 +118,6 @@ public class MapdbInterfaceRemove
 			{
 				System.out.println("Error deleting map: " + e.getMessage());
 				e.printStackTrace();
-//				return Constants.ERROR_DELETING;
 			}
 		}
 		return Constants.ERROR_NO_ERROR;
@@ -169,7 +153,6 @@ public class MapdbInterfaceRemove
 			{
 				System.out.println("Error deleting ism map: " + e.getMessage());
 				e.printStackTrace();
-//				return Constants.ERROR_DELETING;
 			}
 		}
 		return Constants.ERROR_NO_ERROR;
@@ -197,7 +180,6 @@ public class MapdbInterfaceRemove
 			{
 				System.out.println("Error deleting equipment: " + e.getMessage());
 				e.printStackTrace();
-//				return Constants.ERROR_DELETING;
 			}
 		}
 		return Constants.ERROR_NO_ERROR;
@@ -225,7 +207,6 @@ public class MapdbInterfaceRemove
 			{
 				System.out.println("Error deleting kis: " + e.getMessage());
 				e.printStackTrace();
-//				return Constants.ERROR_DELETING;
 			}
 		}
 		return Constants.ERROR_NO_ERROR;
@@ -253,7 +234,6 @@ public class MapdbInterfaceRemove
 			{
 				System.out.println("Error deleting mark: " + e.getMessage());
 				e.printStackTrace();
-//				return Constants.ERROR_DELETING;
 			}
 		}
 		return Constants.ERROR_NO_ERROR;
@@ -281,7 +261,6 @@ public class MapdbInterfaceRemove
 			{
 				System.out.println("Error deleting node: " + e.getMessage());
 				e.printStackTrace();
-//				return Constants.ERROR_DELETING;
 			}
 		}
 		return Constants.ERROR_NO_ERROR;
@@ -309,7 +288,6 @@ public class MapdbInterfaceRemove
 			{
 				System.out.println("Error deleting node link: " + e.getMessage());
 				e.printStackTrace();
-//				return Constants.ERROR_DELETING;
 			}
 		}
 		return Constants.ERROR_NO_ERROR;
@@ -337,7 +315,6 @@ public class MapdbInterfaceRemove
 			{
 				System.out.println("Error deleting link: " + e.getMessage());
 				e.printStackTrace();
-//				return Constants.ERROR_DELETING;
 			}
 		}
 		return Constants.ERROR_NO_ERROR;
@@ -367,7 +344,6 @@ public class MapdbInterfaceRemove
 			{
 				System.out.println("Error deleting path: " + e.getMessage());
 				e.printStackTrace();
-//				return Constants.ERROR_DELETING;
 			}
 		}
 		return Constants.ERROR_NO_ERROR;

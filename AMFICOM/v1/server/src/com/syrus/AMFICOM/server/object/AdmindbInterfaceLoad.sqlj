@@ -1,5 +1,5 @@
 /*
- * $Id: AdmindbInterfaceLoad.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: AdmindbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:08 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -195,7 +195,7 @@ public class AdmindbInterfaceLoad
 					It_sessions);
 
 				vector.add(d_t);
-			}// while(dIt)
+			}
 			dIt.close();
 			d_ts = new Server_Transferable[vector.size()];
 			vector.copyInto(d_ts);
@@ -385,7 +385,7 @@ public class AdmindbInterfaceLoad
 					It_modified);
 
 				vector.add(d_t);
-			}// while(dIt)
+			}
 			dIt.close();
 			d_ts = new Client_Transferable[vector.size()];
 			vector.copyInto(d_ts);
@@ -575,7 +575,7 @@ public class AdmindbInterfaceLoad
 					It_modified);
 
 				vector.add(d_t);
-			}// while(dIt)
+			}
 			dIt.close();
 			d_ts = new Agent_Transferable[vector.size()];
 			vector.copyInto(d_ts);

@@ -1,5 +1,5 @@
 /*
- * $Id: SurveydbInterfaceLoad5.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ * $Id: SurveydbInterfaceLoad5.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -29,14 +29,6 @@ public class SurveydbInterfaceLoad5
 	{
 	}
 
-/*
-	loadActionArguments(
-			"ANALYSISARGUMENTS",
-			"ANALYSIS_ID",
-			"ARGUMENT_TYPE_ID",
-			"ANALYSISTYPEARGUMENTS",
-			"ana1")
-*/
 	public static ClientParameter_Transferable[] loadActionArguments(
 			String argumentTableName,
 			String argumentFieldName,
@@ -238,7 +230,7 @@ System.out.println("Zaebali ");
 					It_modified);
 
 				vector.add(ch_t);
-			}// while(chIt)
+			}
 			chIt.close();
 			ch_ts = new GlobalParameterType_Transferable[vector.size()];
 			vector.copyInto(ch_ts);
@@ -342,7 +334,7 @@ System.out.println("Zaebali ");
 					It_modified);
 
 				vector.add(ch_t);
-			}// while(chIt)
+			}
 			chIt.close();
 			ch_ts = new GlobalParameterType_Transferable[vector.size()];
 			vector.copyInto(ch_ts);

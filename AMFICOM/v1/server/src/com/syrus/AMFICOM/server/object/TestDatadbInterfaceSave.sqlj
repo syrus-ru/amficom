@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatadbInterfaceSave.sqlj,v 1.1.2.1 2004/08/20 14:03:49 bass Exp $
+ * $Id: TestDatadbInterfaceSave.sqlj,v 1.1.2.2 2004/08/20 17:12:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.sql.*;
 import oracle.sql.BLOB;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:49 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:10 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -34,89 +34,6 @@ public class TestDatadbInterfaceSave
 		String test_type_id = "";
 		String test_type_argument_id = "";
 		BLOB blob;
-/*
-//		System.out.println("Saving test argument " + argCodeName +
-//  			" for test " + test_id);
-		try
-		{
-			#sql { select TEST_TYPE_ID into :test_type_id
-					from AMFICOM.TESTS
-					where ID = :test_id };
-
-//			System.out.println("Saving ta2");
-
-			#sql { select ID into :test_type_argument_id
-					from AMFICOM.TESTTYPEARGUMENTS
-					where TEST_TYPE_ID = :test_type_id
-					and CODENAME = :argCodeName };
-
-//			System.out.println("Saving ta3");
-			int count;
-			#sql
-			{
-				select count(*) into :count from AMFICOM.TESTARGUMENTS
-					where TEST_ID = :test_id
-					and TYPE_ID = :test_type_argument_id
-			};
-//			System.out.println("Saving ta4, count = " + count);
-			if(count != 0)
-				return Constants.ERROR_NO_ERROR;
-
-			String id_v = ResourcedbInterface.getUId("testargument");
-
-//			System.out.println("Saving ta5");
-			#sql {
-				INSERT INTO testarguments(
-						ID,
-						VALUE,
-						TYPE_ID,
-						TEST_ID)
-				VALUES(
-						:id_v,
-						EMPTY_BLOB(),
-						:test_type_argument_id,
-						:test_id)
-			};
-
-			#sql { commit };
-			try
-			{
-				System.out.println("blob save for " + argCodeName);
-				System.out.println("length " + val.length);
-
-				ConnectionContext connCtx = DefaultContext.getDefaultContext();
-//				System.out.println("blob save for " + argCodeName);
-				ByteArrayDatabase bArr = new ByteArrayDatabase(val);
-				bArr.saveAsBlob(
-						connCtx.getConnection(),
-						"AMFICOM.TESTARGUMENTS",
-						"VALUE",
-						"ID = '" + id_v + "'");
-
-//				#sql { select VALUE into :blob from AMFICOM.TESTARGUMENTS
-//					where ID = :id_v for update };
-//				ResourcedbInterface.PutBlob(blob, val);
-//				#sql { update AMFICOM.TESTARGUMENTS set VALUE = :blob where ID = :id_v };
-
-				#sql { commit };
-			}
-			catch(SQLException e)
-			{
-				System.out.println("error saVing arg value (blob): " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
-		catch (SQLException e)
-		{
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			return Constants.ERROR_SAVING;
-		}
-		catch(Exception ex)
-		{
-			System.out.println("error generating arg: " + ex.getMessage());
-		}
-*/
 		return Constants.ERROR_NO_ERROR;
 	}
 
@@ -187,124 +104,6 @@ public class TestDatadbInterfaceSave
 		int i;
 		int len;
 		Timestamp ts_start_time;
-/*
-		len = tests.length;
-		for (i = 0; i < len; i++)
-		{
-			System.out.println("Saving test " + tests[i].id);
-			try
-			{
-				System.out.println("Temporal type " + tests[i].temporal_type.value());
-				switch(tests[i].temporal_type.value())
-				{
-					case TestTemporalType._ONETIME:
-						ts_start_time = new Timestamp(tests[i].start_time);
-						#sql
-						{
-							INSERT INTO tests (
-								id,
-								test_type_id,
-								temporal_type,
-								start_time,
-								status,
-								kis_id,
-								request_id,
-								created,
-								monitored_element_id)
-							VALUES (
-								:(tests[i].id),
-								:(tests[i].test_type_id),
-								:(TestTemporalType._ONETIME),
-								:ts_start_time,
-								:(TestStatus._SCHEDULED),
-								:(tests[i].kis_id),
-								:(tests[i].request_id),
-								SYSDATE,
-								:(tests[i].monitored_element_id) )
-						};
-						break;
-					case TestTemporalType._PERIODICAL:
-						ts_start_time = new Timestamp(tests[i].start_time);
-						Timestamp ts_dt = new Timestamp(tests[i].time_stamps.ptpars().dt);
-						Timestamp ts_end_time = new Timestamp(tests[i].time_stamps.ptpars().end_time);
-						#sql
-						{
-							INSERT INTO tests (
-								id,
-								test_type_id,
-								temporal_type,
-								start_time,
-								period,
-								end_time,
-								status,
-								kis_id,
-								request_id,
-								created,
-								monitored_element_id)
-							VALUES (
-								:(tests[i].id),
-								:(tests[i].test_type_id),
-								:(TestTemporalType._PERIODICAL),
-								:ts_start_time,
-								:ts_dt,
-								:ts_end_time,
-								:(TestStatus._SCHEDULED),
-								:(tests[i].kis_id),
-								:(tests[i].request_id),
-								SYSDATE,
-								:(tests[i].monitored_element_id) )
-						};
-						break;
-					case TestTemporalType._TIMETABLE:
-						ts_start_time = new Timestamp(tests[i].start_time);
-						#sql
-						{
-							INSERT INTO tests (
-								id,
-								test_type_id,
-								temporal_type,
-								start_time,
-								status,
-								kis_id,
-								request_id,
-								created,
-								monitored_element_id)
-							VALUES (
-								:(tests[i].id),
-								:(tests[i].test_type_id),
-								:(TestTemporalType._TIMETABLE),
-								:ts_start_time,
-								:(TestStatus._SCHEDULED),
-								:(tests[i].kis_id),
-								:(tests[i].request_id),
-								SYSDATE,
-								:(tests[i].monitored_element_id) )
-						};
-						long[] ti = tests[i].time_stamps.ti();
-						System.out.println("timestamps count: " + ti.length);
-						for(int j = 0; j < ti.length; j++)
-							saveTestTimeStamp(new Timestamp(ti[j]), tests[i].id);
-						break;
-					default:
-						System.out.println("ERROR while saving test: Unknown temporal type of test id: " + tests[i].id);
-				}
-				#sql { commit };
-			}
-			catch(SQLException e)
-			{
-				System.out.println("Error - test exists!" + ": " + e.getMessage());
-				e.printStackTrace();
-				return Constants.ERROR_SAVING;
-			}
-
-			System.out.println("Save " + tests[i].arguments.length + " arguments");
-			for(int k = 0; k < tests[i].arguments.length; k++)
-				saveTestArgument(
-						tests[i].arguments[k].codename,
-						tests[i].id,
-						tests[i].arguments[k].value);
-		}
-*/
 		return Constants.ERROR_NO_ERROR;
 	}
 
@@ -313,50 +112,6 @@ public class TestDatadbInterfaceSave
 		int i;
 		int len;
 		Timestamp ts_start_time;
-/*
-		len = tests.length;
-		for (i = 0; i < len; i++)
-		{
-			try
-			{
-*/
-/*
-				System.out.println("Remove arguments");
-
-				#sql
-				{
-					delete from AMFICOM.TESTARGUMENTS where TEST_ID = :(tests[i])
-				};
-
-				System.out.println("Remove timestamps");
-				#sql
-				{
-					delete from testtimetablestamps  where test_id = :(tests[i])
-				};
-
-				System.out.println("Remove test " + tests[i]);
-				#sql
-				{
-					delete from AMFICOM.TESTS where ID = :(tests[i])
-				};
-*/
-/*
-				#sql
-				{
-					update AMFICOM.TESTS
-						set deleted = SYSDATE
-						where ID = :(tests[i])
-				};
-				#sql { commit };
-			}
-			catch(SQLException e)
-			{
-				System.out.println("Could not remove test: " + e.getMessage());
-				e.printStackTrace();
-				return Constants.ERROR_SAVING;
-			}
-		}
-*/
 		return Constants.ERROR_NO_ERROR;
 	}
 
@@ -365,86 +120,6 @@ public class TestDatadbInterfaceSave
 		int i;
 		int len;
 		Timestamp ts_start_time;
-/*
-		len = tests.length;
-		for (i = 0; i < len; i++)
-		{
-			System.out.println("Update test " + tests[i].id);
-			try
-			{
-				System.out.println("Temporal type " + tests[i].temporal_type.value());
-				switch(tests[i].temporal_type.value())
-				{
-					case TestTemporalType._ONETIME:
-						ts_start_time = new Timestamp(tests[i].start_time);
-						#sql
-						{
-							update tests
-								set start_time = :ts_start_time
-								where id = :(tests[i].id)
-
-						};
-						break;
-					case TestTemporalType._PERIODICAL:
-						ts_start_time = new Timestamp(tests[i].start_time);
-						Timestamp ts_dt = new Timestamp(tests[i].time_stamps.ptpars().dt);
-						Timestamp ts_end_time = new Timestamp(tests[i].time_stamps.ptpars().end_time);
-						#sql
-						{
-							update tests
-								set
-									start_time = :ts_start_time,
-									period = :ts_dt,
-									end_time = :ts_end_time
-								where id = :(tests[i].id)
-						};
-						break;
-					case TestTemporalType._TIMETABLE:
-						ts_start_time = new Timestamp(tests[i].start_time);
-						#sql
-						{
-							update tests
-								set start_time = :ts_start_time
-								where id = :(tests[i].id)
-
-						};
-
-						#sql
-						{
-							delete from testtimetablestamps  where test_id = :(tests[i].id)
-						};
-
-						long[] ti = tests[i].time_stamps.ti();
-						System.out.println("timestamps count: " + ti.length);
-						for(int j = 0; j < ti.length; j++)
-							saveTestTimeStamp(new Timestamp(ti[j]), tests[i].id);
-						break;
-					default:
-						System.out.println("ERROR while saving test: Unknown temporal type of test id: " + tests[i].id);
-				}
-
-				#sql
-				{
-					delete from AMFICOM.TESTARGUMENTS where TEST_ID = :(tests[i].id)
-				};
-				System.out.println("Save " + tests[i].arguments.length + " arguments");
-				for(int k = 0; k < tests[i].arguments.length; k++)
-					saveTestArgument(
-							tests[i].arguments[k].codename,
-							tests[i].id,
-							tests[i].arguments[k].value);
-
-				#sql { commit };
-			}
-			catch(SQLException e)
-			{
-				System.out.println("Error - test exists!" + ": " + e.getMessage());
-				e.printStackTrace();
-				return Constants.ERROR_SAVING;
-			}
-
-		}
-*/
 		return Constants.ERROR_NO_ERROR;
 	}
 }
