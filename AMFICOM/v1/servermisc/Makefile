@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2004/07/06 13:19:59 bass Exp $
+# $Id: Makefile,v 1.7 2004/07/06 13:50:59 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -45,7 +45,7 @@ idlclean:
 sqlj: .sqlj
 
 .sqlj: $(CLASSDIR)
-	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS)" > sqlj.properties
+	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS) -sourcepath $(SRCDIR)" > sqlj.properties
 	$(SQLJ) \
 		$(SQLJFLAGS) \
 		-classpath $(AMFICOMCLASSPATH)$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2004/07/06 07:56:26 bass Exp $
+# $Id: Makefile,v 1.2 2004/07/06 13:50:59 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -44,7 +44,10 @@ idlclean:
 sqlj: .sqlj
 
 .sqlj: $(CLASSDIR)
-	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS)" > sqlj.properties
+	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS) -sourcepath $(SRCDIR)" > sqlj.properties
+	$(RM) \
+		$(filter $(foreach source, $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj')), $(foreach src_suffix, $(SRC_SUFFIXES), $(source)$(src_suffix))), $(shell find $(SRCDIR) -name '*\.java')) \
+		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)')
 	touch $@
 
 .PHONY: sqljclean
