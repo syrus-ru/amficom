@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.6 2005/02/08 13:56:53 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.7 2005/02/08 14:25:25 bob Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -7,8 +7,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,19 +17,21 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/08 13:56:53 $
- * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/02/08 14:25:25 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
-	protected static final Short ANALYSISTYPE_SHORT = new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-	protected static final Short EVALUATIONTYPE_SHORT = new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
-	protected static final Short MEASUREMENT_SHORT = new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
-	protected static final Short RESULT_SHORT = new Short(ObjectEntities.RESULT_ENTITY_CODE);
-	protected static final Short MEASUREMENTTYPE_SHORT = new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-	protected static final Short MS_SHORT = new Short(ObjectEntities.MS_ENTITY_CODE);
+
+	protected static final Short	ANALYSISTYPE_SHORT		= new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+	protected static final Short	EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+	protected static final Short	MEASUREMENT_SHORT		= new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+	protected static final Short	RESULT_SHORT			= new Short(ObjectEntities.RESULT_ENTITY_CODE);
+	protected static final Short	MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+	protected static final Short	MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
 
 	private LinkedIdsConditionImpl(List linkedIds, Short entityCode) {
 		this.linkedIds = linkedIds;
@@ -48,14 +50,15 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 *         analysesType for criteria ParameterTypes identifier in linkedIds;
 	 *         </li>
 	 *         <li>if {@link #entityCode}is {@link EvaluationType}for all
-	 *         analysesType for threshold ParameterTypes identifier in linkedIds;
-	 *         </li>
+	 *         analysesType for threshold ParameterTypes identifier in
+	 *         linkedIds;</li>
 	 *         <li>if {@link #entityCode}is {@link Measurement}for all
 	 *         measurements for Test identifier in linkedIds;</li>
 	 *         <li>if {@link #entityCode}is {@link Result}for all results for
 	 *         Measurement identifier in linkedIds;</li>
 	 *         <li>if {@link #entityCode}is {@link MeasurementType}for all
-	 *         measurementTypes MeasurementPortType identifier in linkedIds;</li>
+	 *         measurementTypes MeasurementPortType identifier in linkedIds;
+	 *         </li>
 	 *         <li>if {@link #entityCode}is {@link MeasurementSetup}for all
 	 *         measurement setups for MonitoredElement identifier in linkedIds;
 	 *         </li>
@@ -79,35 +82,76 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				params.addAll(evaluationType.getInParameterTypes());
 				params.addAll(evaluationType.getOutParameterTypes());
 				params.addAll(evaluationType.getEtalonParameterTypes());
-				condition = super.conditionTest(params);				
+				condition = super.conditionTest(params);
 				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 				Identifier testId = ((Measurement) object).getTestId();
-				condition = super.conditionTest(testId);				
+				condition = super.conditionTest(testId);
 				break;
-			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE: {
 				MeasurementType measurementType = (MeasurementType) object;
 				params.addAll(measurementType.getMeasurementPortTypes());
 				params.addAll(measurementType.getInParameterTypes());
 				params.addAll(measurementType.getOutParameterTypes());
-				return super.conditionTest(params);									
+				return super.conditionTest(params);
+			}
 			case ObjectEntities.MS_ENTITY_CODE:
 				MeasurementSetup measurementSetup = (MeasurementSetup) object;
-				params.addAll((Collection)measurementSetup.getParameterSet());
-				params.addAll((Collection)measurementSetup.getThresholdSet());
-				params.addAll((Collection)measurementSetup.getCriteriaSet());
-				params.addAll((Collection)measurementSetup.getEtalon());
-				params.addAll(measurementSetup.getMonitoredElementIds());
-				condition = super.conditionTest(params);
+				Map codeIdsList = super.sort(this.linkedIds);
+				for (Iterator iterator = codeIdsList.keySet().iterator(); iterator.hasNext();) {
+					Short code = (Short) iterator.next();
+					List ids = (List) codeIdsList.get(code);
+					condition = super.conditionTest(ids);
+					if (condition)
+						return condition;
+
+					for (Iterator iter = ids.iterator(); iter.hasNext();) {
+						Identifier id = (Identifier) iter.next();
+						MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool
+								.getStorableObject(id, true);
+						SetParameter[] setParameters = measurementSetup.getParameterSet().getParameters();
+						for (int i = 0; (i < setParameters.length) && (!condition); i++) {
+							ParameterType parameterType = (ParameterType) setParameters[i].getType();
+							List inParameterTypes = measurementType.getInParameterTypes();
+							for (Iterator it = inParameterTypes.iterator(); it.hasNext();) {
+								Object element = it.next();
+								if (element instanceof ParameterType) {
+									ParameterType parameterType2 = (ParameterType) element;
+									if (parameterType.getId().equals(parameterType2.getId())) {
+										condition = true;
+										break;
+									}
+								}
+							}
+
+							if (!condition) {
+								List outParameterTypes = measurementType.getOutParameterTypes();
+								for (Iterator it = outParameterTypes.iterator(); it.hasNext();) {
+									Object element = it.next();
+									if (element instanceof ParameterType) {
+										ParameterType parameterType2 = (ParameterType) element;
+										if (parameterType.getId().equals(parameterType2.getId())) {
+											condition = true;
+											break;
+										}
+									}
+
+								}
+							}
+
+						}
+					}
+				}
+
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				Identifier actionId = ((Result) object).getAction().getId();
 				condition = super.conditionTest(actionId);
-				break;				
+				break;
 			default:
 				throw new UnsupportedOperationException("entityCode "
-						+ ObjectEntities.codeToString(this.entityCode.shortValue())
-						+ " is unknown for this condition");		}
+						+ ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
+		}
 		return condition;
 	}
 
@@ -133,8 +177,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				break;
 			default:
 				throw new UnsupportedOperationException("entityCode "
-						+ ObjectEntities.codeToString(entityCode.shortValue())
-						+ " is unknown for this condition");
+						+ ObjectEntities.codeToString(entityCode.shortValue()) + " is unknown for this condition");
 		}
 
 	}
