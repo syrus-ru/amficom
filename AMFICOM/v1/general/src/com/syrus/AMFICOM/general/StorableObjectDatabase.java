@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.74 2005/02/03 08:37:26 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.75 2005/02/03 14:44:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/02/03 08:37:26 $
- * @author $Author: bob $
+ * @version $Revision: 1.75 $, $Date: 2005/02/03 14:44:09 $
+ * @author $Author: max $
  * @module general_v1
  */
 
@@ -105,7 +105,7 @@ public abstract class StorableObjectDatabase {
 			statement = connection.createStatement();
 			String sql = SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS
 			+ storableObjectIdStr;
-			Log.debugMessage(this.getEnityName() + "Database.delete | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObjectDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);			
 		}
 		catch (SQLException sqle1) {
@@ -192,7 +192,7 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {			
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.delete | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObjectDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);			
 		}
 		catch (SQLException sqle1) {
@@ -292,12 +292,12 @@ public abstract class StorableObjectDatabase {
 			Connection connection = DatabaseConnection.getConnection();
 			try {
 				statement = connection.createStatement();
-				Log.debugMessage(this.getEnityName() + "Database.insertEntity | Trying: " + sql, Log.DEBUGLEVEL09);
+				Log.debugMessage("StorableObjectDatabase.insertEntity | Trying: " + sql, Log.DEBUGLEVEL09);
 				statement.executeUpdate(sql);
 				connection.commit();
 			}
 			catch (SQLException sqle) {
-				String mesg = this.getEnityName() + "Database.insertEntity | Cannot insert " + this.getEnityName() + " '" + storableObjectIdStr + "' -- " + sqle.getMessage();
+				String mesg = "StorableObjectDatabase.insertEntity | Cannot insert " + this.getEnityName() + " '" + storableObjectIdStr + "' -- " + sqle.getMessage();
 				try {
 					connection.rollback();
 				}
@@ -341,7 +341,7 @@ public abstract class StorableObjectDatabase {
 			StorableObject storableObject = (StorableObject)it.next();
 			Identifier localId = storableObject.getId();
 			if (idsList.contains(localId))
-				throw new CreateObjectException(getEnityName()+"Database.insertEntities | Input collection contains entity with the same id " + localId.getIdentifierString());
+				throw new CreateObjectException("StorableObejctDatabase.insertEntities | Input collection contains entity with the same id " + localId.getIdentifierString());
 			idsList.add(storableObject.getId());
 		}
 		idsList.clear();
@@ -358,19 +358,19 @@ public abstract class StorableObjectDatabase {
 
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			Log.debugMessage(this.getEnityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObejctDatabase.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObjectIdCode = storableObject.getId().getIdentifierString();
 				this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_INSERT);
-				Log.debugMessage(this.getEnityName() + "Database.insertEntities | Inserting  " + this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
+				Log.debugMessage("StorableObejctDatabase.insertEntities | Inserting  " + this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 
 			connection.commit();			
 		}
 		catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.insertEntities | Cannot insert " + this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
+			String mesg = "StorableObejctDatabase.insertEntities | Cannot insert " + this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		catch(UpdateObjectException uoe){
@@ -399,7 +399,7 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retrieveEntity | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObjectDatabase.retrieveEntity | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				updateEntityFromResultSet(storableObject, resultSet);
@@ -407,7 +407,7 @@ public abstract class StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such " + getEnityName() + ": " + strorableObjectTypeIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.retrieveEntity | Cannot retrieve " + getEnityName() + " '" + strorableObjectTypeIdStr + "' -- " + sqle.getMessage();
+			String mesg = "StorableObjectDatabase.retrieveEntity | Cannot retrieve " + getEnityName() + " '" + strorableObjectTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -507,7 +507,7 @@ public abstract class StorableObjectDatabase {
 						updateEntity(localStorableObject);
 					}
 					else {
-						String msg = getEnityName() + "Database.checkAndUpdateEntity | " + getEnityName() + " conflict version ";
+						String msg = "SorableObjectDatabase.checkAndUpdateEntity | " + getEnityName() + " conflict version ";
 						throw new VersionCollisionException(msg);
 					}
 
@@ -517,13 +517,13 @@ public abstract class StorableObjectDatabase {
 						insert(localStorableObject);
 					}
 					catch (IllegalDataException ide) {
-						String mesg = getEnityName() + "Database.checkAndUpdateEntity | Cannot update "
+						String mesg = "SorableObjectDatabase.checkAndUpdateEntity | Cannot update "
 								+ getEnityName() + " '" + atIdStr + "' -- "
 								+ ide.getMessage();
 						throw new UpdateObjectException(mesg, ide);
 					}
 					catch (CreateObjectException coe) {
-						String mesg = getEnityName() + "Database.checkAndUpdateEntity | Cannot update "
+						String mesg = "SorableObjectDatabase.checkAndUpdateEntity | Cannot update "
 								+ getEnityName() + " '" + atIdStr + "' -- "
 								+ coe.getMessage();
 						throw new UpdateObjectException(mesg, coe);
@@ -531,13 +531,13 @@ public abstract class StorableObjectDatabase {
 				}
 			}
 			catch (RetrieveObjectException roe) {
-				String mesg = getEnityName() + "Database.checkAndUpdateEntity | Cannot update "
+				String mesg = "SorableObjectDatabase.checkAndUpdateEntity | Cannot update "
 						+ getEnityName() + " '" + atIdStr + "' -- " + roe.getMessage();
 				throw new UpdateObjectException(mesg, roe);
 			}
 		}
 		catch (SQLException sqle) {			
-			String mesg = getEnityName() + "Database.checkAndUpdateEntity | Cannot update " + getEnityName() + " '"
+			String mesg = "SorableObjectDatabase.checkAndUpdateEntity | Cannot update " + getEnityName() + " '"
 					+ atIdStr + "' -- " + sqle.getMessage();
 			try {
 				connection.rollback();
@@ -709,7 +709,7 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.refresh | Trying: " + sql,
+			Log.debugMessage("StorableObjectDatabase.refresh | Trying: " + sql,
 						Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
@@ -717,7 +717,7 @@ public abstract class StorableObjectDatabase {
 				ids.add(identifier);
 			}
 		} catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.refresh | Cannot execute query "
+			String mesg = "StorableObjectDatabase.refresh | Cannot execute query "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
@@ -895,7 +895,7 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObjectDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				StorableObject storableObject = this.updateEntityFromResultSet(null, resultSet);
@@ -903,7 +903,7 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			String mesg = "StorableObjectDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -965,14 +965,13 @@ public abstract class StorableObjectDatabase {
 					StorableObject storableObject = updateEntityFromResultSet(null, resultSet);
 					result.add(storableObject);
 				} else {
-					Log.errorMessage(this.getEnityName()
-							+ "Database.retriveByIdsPreparedStatement | No such "
+					Log.errorMessage("StorableObjectDatabase.retriveByIdsPreparedStatement | No such "
 							+ this.getEnityName() + " : " + id.getIdentifierString());
 				}
 
 			}
 		} catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.retriveByIdsPreparedStatement | Cannot retrieve "
+			String mesg = "StorableObjectDatabase.retriveByIdsPreparedStatement | Cannot retrieve "
 					+ this.getEnityName() + " " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
@@ -999,7 +998,7 @@ public abstract class StorableObjectDatabase {
 		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
 		String[] values = this.parseInsertStringValues(this.getUpdateSingleSQLValues(storableObject), cols.length);
 		if (cols.length != values.length)
-			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+cols.length+"') is not equals count of values ('"+values.length+"')");
+			throw new UpdateObjectException("StorableObjectDatabase.updateEntities | Count of columns ('"+cols.length+"') is not equals count of values ('"+values.length+"')");
 		String sql = null;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_UPDATE);
@@ -1023,12 +1022,12 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.updateEntity | Trying: " + sql,
+			Log.debugMessage("StorableObjectDatabase.updateEntity | Trying: " + sql,
 						Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		} catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.updateEntity | Cannot update "
+			String mesg = "StorableObjectDatabase.updateEntity | Cannot update "
 					+ this.getEnityName() + " '" + storableObjectIdStr + "' -- "
 					+ sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
@@ -1060,7 +1059,7 @@ public abstract class StorableObjectDatabase {
 		// here we can split multyply sql values by COMMA because of it is only QUESTIONS separeted by COMMA
 		String[] values = this.getUpdateMultiplySQLValues(MODE_INSERT).split(COMMA);
 		if (cols.length != values.length)
-			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+cols.length+"') is not equals count of values ('"+values.length+"')");
+			throw new UpdateObjectException("StorableObjectDatabase.updateEntities | Count of columns ('"+cols.length+"') is not equals count of values ('"+values.length+"')");
 		String sql = null;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_UPDATE);
@@ -1086,7 +1085,7 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			Log.debugMessage(this.getEnityName() + "Database.updateEntities | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObjectDatabase.updateEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 
 				StorableObject storableObject = (StorableObject) it.next();
@@ -1094,14 +1093,14 @@ public abstract class StorableObjectDatabase {
 				int i = this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_UPDATE);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
 
-				Log.debugMessage(this.getEnityName() + "Database.updateEntities | Updating "
+				Log.debugMessage("StorableObjectDatabase.updateEntities | Updating "
 						+ this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.updateEntities | Cannot update "
+			String mesg = "StorableObjectDatabase.updateEntities | Cannot update "
 					+ this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
@@ -1184,7 +1183,7 @@ public abstract class StorableObjectDatabase {
 					id = (Identifier) object;
 				else if (object instanceof Identified)
 					id = ((Identified)object).getId();
-				else throw new IllegalDataException(this.getEnityName() + "Database.retrieveLinkedEntities | Object " +
+				else throw new IllegalDataException("StorableObjectDatabase.retrieveLinkedEntities | Object " +
 													object.getClass().getName()
 													+ " isn't Identifier or Identified");
 
@@ -1213,7 +1212,7 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retrieveLinkedEntities | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObjectDatabase.retrieveLinkedEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 
 			java.util.Map storableObjectLinkedEntityIds = new HashMap();
@@ -1228,7 +1227,7 @@ public abstract class StorableObjectDatabase {
 					}
 				}
 				if (storableObject == null){
-                    String mesg = this.getEnityName() + "Database.retrieveLinkedEntities | Cannot found correspond entity " ;
+                    String mesg = "StorableObjectDatabase.retrieveLinkedEntities | Cannot found correspond entity " ;
                     throw new RetrieveObjectException(mesg);
                 }
 				List linkedEntityIds = (List)storableObjectLinkedEntityIds.get(storableObject);
@@ -1242,7 +1241,7 @@ public abstract class StorableObjectDatabase {
 			return storableObjectLinkedEntityIds;
 			
 		} catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.retrieveLinkedEntities | Cannot retrieve linked entites for entity -- " + sqle.getMessage();
+			String mesg = "StorableObjectDatabase.retrieveLinkedEntities | Cannot retrieve linked entites for entity -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -1309,7 +1308,7 @@ public abstract class StorableObjectDatabase {
         Connection connection = DatabaseConnection.getConnection();
         try {
             statement = connection.createStatement();
-            Log.debugMessage(this.getEnityName() + "Database.updateLinkedEntities | Trying: " + sql, Log.DEBUGLEVEL09);
+            Log.debugMessage("StorableObjectDatabase.updateLinkedEntities | Trying: " + sql, Log.DEBUGLEVEL09);
             resultSet = statement.executeQuery(sql);
             
             while (resultSet.next()) {
@@ -1323,7 +1322,7 @@ public abstract class StorableObjectDatabase {
             	linkedObjIdList.add(linkedObjId);
             }	
         } catch (SQLException sqle) {
-            String mesg = this.getEnityName() + "Database.updateLinkedEntities | SQLException: " + sqle.getMessage();
+            String mesg = "StorableObjectDatabase.updateLinkedEntities | SQLException: " + sqle.getMessage();
             throw new UpdateObjectException(mesg, sqle);
         }
 		
@@ -1398,13 +1397,13 @@ public abstract class StorableObjectDatabase {
 				linkedId = (Identifier)idLinkedObjectIdsMap.get(id);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, linkedId);
-				Log.debugMessage(this.getEnityName() + "Database.insertLinkedEntityIds | Inserting linked entity  " + linkedId + " for " + id, Log.DEBUGLEVEL09);
+				Log.debugMessage("StorableObjectDatabase.insertLinkedEntityIds | Inserting linked entity  " + linkedId + " for " + id, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.insertLinkedEntityIds | Cannot insert linked entity  " + linkedId + " for " + id + " -- " + sqle.getMessage();
+			String mesg = "StorableObjectDatabase.insertLinkedEntityIds | Cannot insert linked entity  " + linkedId + " for " + id + " -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
