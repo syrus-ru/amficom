@@ -1,1 +1,1 @@
-nmake /f makescheme %1
+nmake /f makeschemeclient %1
